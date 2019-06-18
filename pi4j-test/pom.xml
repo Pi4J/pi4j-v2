@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>pi4j-parent</artifactId>
+        <groupId>com.pi4j</groupId>
+        <version>2.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>pi4j-test</artifactId>
+    <name>Pi4J :: UNITTEST :: Unit/Integration Tests</name>
+    <description>Pi4J Unit and Integration Tests</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <!--<scope>test</scope>-->
+        </dependency>
+
+        <!-- include Pi4J bindings to test with -->
+
+        <!-- include Pi4J providers to test with -->
+        <!--<dependency>-->
+            <!--<groupId>com.pi4j</groupId>-->
+            <!--<artifactId>pi4j-provider-raspberrypi</artifactId>-->
+            <!--<version>${project.version}</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-provider-mock</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>${project.build.directory}</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>LICENSE.txt</include>
+                    <include>NOTICE.txt</include>
+                    <include>README.md</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.pi4j.test.Main</mainClass>
+                    <arguments>
+                    </arguments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

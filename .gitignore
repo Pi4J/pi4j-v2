@@ -1,0 +1,34 @@
+# Build files
+out
+target
+gen
+bin
+
+# IntelliJ files
+.idea
+*.iml
+
+# Eclipse files
+.settings
+.classpath
+.project
+.externalToolBuilders
+.metadata
+maven-eclipse.xml
+
+# Vim files
+*.swp
+
+# Mac files
+.DS_Store
+
+# Windows files
+Thumbs.db
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.deb
+/nbactions.xml
