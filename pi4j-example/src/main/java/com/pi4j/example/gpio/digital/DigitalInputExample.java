@@ -45,7 +45,7 @@ public class DigitalInputExample {
 
         // create Pi4J console wrapper/helper
         // (This is a utility class to abstract some of the boilerplate stdin/stdout code)
-        final Console console = new Console();
+        final var console = new Console();
 
         // print program title/header
         console.title("<-- The Pi4J Project -->", "Basic Digital Input Example");
@@ -54,11 +54,11 @@ public class DigitalInputExample {
         console.promptForExit();
 
         // initialize the Pi4J library
-        Context pi4j = Pi4J.initialize();
+        var pi4j = Pi4J.initialize();
 
         // create a digital input instance using the default digital input provider
         // we will use the PULL_DOWN argument to set the pin pull-down resistance on this GPIO pin
-        DigitalInput input = DigitalInput.instance(DIGITAL_INPUT_PIN, PullResistance.PULL_DOWN);
+        var input = DigitalInput.instance(DIGITAL_INPUT_PIN, PullResistance.PULL_DOWN);
 
         // setup a digital output listener to listen for any state changes on the digital input
         input.addListener((DigitalChangeListener) event -> {

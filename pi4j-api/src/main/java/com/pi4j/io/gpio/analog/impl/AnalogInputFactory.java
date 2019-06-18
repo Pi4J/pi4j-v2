@@ -84,7 +84,7 @@ public class AnalogInputFactory {
             return (T)instance(config);
         }
         // get the specified analog input provider by ID
-        AnalogInputProvider provider = Pi4J.providers().analogInput().get(providerId);
+        var provider = Pi4J.providers().analogInput().get(providerId);
         return instance(provider, config, clazz);
     }
 

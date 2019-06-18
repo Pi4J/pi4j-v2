@@ -44,25 +44,6 @@ public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEven
         this.source = source; // cache analog I/O source
     }
 
-//    public AnalogChangeEvent(T source, byte value){
-//        this.value = value; // cache a copy of the event instance value
-//    }
-//    public AnalogChangeEvent(T source, short value){
-//        this.value = value; // cache a copy of the event instance value
-//    }
-//    public AnalogChangeEvent(T source, int value){
-//        this.value = value; // cache a copy of the event instance value
-//    }
-//    public AnalogChangeEvent(T source, long value){
-//        this.value = value; // cache a copy of the event instance value
-//    }
-//    public AnalogChangeEvent(T source, double value){
-//        this.value = value; // cache a copy of the event instance value
-//    }
-//    public AnalogChangeEvent(T source, float value){
-//        this.value = value; // cache a copy of the event instance value
-//    }
-
     /**
      * The value change for this event instance
      * @return

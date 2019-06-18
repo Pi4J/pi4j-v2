@@ -56,7 +56,7 @@ public class DigitalInputConfigImpl extends AbstractAddressConfig<DigitalInputCo
 
         // load any optional properties
         if(properties.containsKey(prefix + ".pull")){
-            PullResistance pullResistance = PullResistance.parse(properties.get(prefix + ".pull").toString());
+            var pullResistance = PullResistance.parse(properties.get(prefix + ".pull").toString());
             pull(pullResistance);
         }
 

@@ -133,7 +133,7 @@ public class DefaultBindings implements Bindings {
         if(!initialized) throw new BindingsNotInitialized();
 
         // create a map <binding-id, binding-instance> of bindings that extend of the given binding class/interface
-        Map<String, T> result = new ConcurrentHashMap<>();
+        var result = new ConcurrentHashMap<String, T>();
         bindings.values().stream().filter(bindingClass::isInstance).forEach(p -> {
             result.put(p.id(), bindingClass.cast(p));
         });
@@ -162,7 +162,7 @@ public class DefaultBindings implements Bindings {
         if(!initialized) throw new BindingsNotInitialized();
 
         // return true if the managed binding map contains the given binding-id and binding-class
-        Map<String, T> subset = all(bindingClass);
+        var subset = all(bindingClass);
         if(subset.containsKey(bindingId)){
             return true;
         }
@@ -189,7 +189,7 @@ public class DefaultBindings implements Bindings {
         if(!initialized) throw new BindingsNotInitialized();
 
         // return the binding instance from the managed binding map that contains the given binding-id and binding-class
-        Map<String, T> subset = all(bindingClass);
+        var subset = all(bindingClass);
         if(subset.containsKey(bindingId)){
             return (T)subset.get(bindingId);
         }
@@ -205,7 +205,7 @@ public class DefaultBindings implements Bindings {
         logger.trace("invoked 'add()' binding [count={}]", binding.length);
 
         // iterate the given binding array
-        for(T bindingInstance : binding) {
+        for(var bindingInstance : binding) {
 
             logger.trace("adding binding to managed binding map [id={}; name={}; class={}]",
                     bindingInstance.id(), bindingInstance.name(), bindingInstance.getClass().getName());
@@ -277,7 +277,7 @@ public class DefaultBindings implements Bindings {
         terminateBinding(oldBinding);
 
         // remove from managed set
-        Binding removedBinding = bindings.remove(bindingId);
+        var removedBinding = bindings.remove(bindingId);
         if(removedBinding != null) {
             logger.debug("removed binding from managed binding map [id={}; name={}; class={}]",
                     removedBinding.id(), removedBinding.name(), removedBinding.getClass().getName());
@@ -331,8 +331,8 @@ public class DefaultBindings implements Bindings {
 
         BindingException bindingException = null;
         // iterate over all providers and invoke the terminate method on each
-        Set<String> bindingIds = bindings.keySet();
-        for(String bindingId : bindingIds){
+        var bindingIds = bindings.keySet();
+        for(var bindingId : bindingIds){
             try {
                 remove(bindingId);
             } catch (Exception e) {

@@ -53,7 +53,7 @@ public class SpiFactory {
 
     public static Spi instance(SpiConfig config) throws ProviderException {
         // get default SPI io
-        SpiProvider provider = Pi4J.providers().spi().getDefault();
+        var provider = Pi4J.providers().spi().getDefault();
 
         // get SPI instance using default io
         return instance(provider, config);
@@ -69,7 +69,7 @@ public class SpiFactory {
             return instance(config);
         }
         else{
-            SpiProvider provider = Pi4J.providers().spi().get(providerId);
+            var provider = Pi4J.providers().spi().get(providerId);
             return instance(provider, config);
         }
     }

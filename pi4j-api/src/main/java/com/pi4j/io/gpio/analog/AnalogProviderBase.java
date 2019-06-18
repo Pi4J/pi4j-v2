@@ -50,7 +50,7 @@ public abstract class AnalogProviderBase<ANALOG_TYPE extends Analog, CONFIG_TYPE
 
     @Override
     public ANALOG_TYPE instance(CONFIG_TYPE config) throws Exception {
-        ANALOG_TYPE newInstance = create(config);
+        var newInstance = create(config);
         instances.put(newInstance.address(), newInstance);
         return newInstance;
     }

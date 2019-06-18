@@ -108,7 +108,7 @@ public class DigitalInputFactory {
             return (T)instance(config);
         }
         // get the specified digital input provider by ID
-        DigitalInputProvider provider = Pi4J.providers().digitalInput().get(providerId);
+        var provider = Pi4J.providers().digitalInput().get(providerId);
         return instance(provider, config, clazz);
     }
 

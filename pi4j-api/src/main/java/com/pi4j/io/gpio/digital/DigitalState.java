@@ -100,8 +100,8 @@ public enum DigitalState {
     }
 
     public static DigitalState getState(Number state) {
-        for (DigitalState item : DigitalState.values()) {
-            if (item.getValue() == state) {
+        for (var item : DigitalState.values()) {
+            if (item.getValue().doubleValue() == state.doubleValue()) {
                 return item;
             }
         }

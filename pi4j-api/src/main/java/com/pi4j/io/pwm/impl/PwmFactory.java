@@ -46,7 +46,7 @@ public class PwmFactory {
 
     public static Pwm instance(PwmConfig config) throws ProviderException {
         // get default PWM io
-        PwmProvider provider = Pi4J.providers().pwm().getDefault();
+        var provider = Pi4J.providers().pwm().getDefault();
 
         // get I2C instance using default io
         return instance(provider, config);
@@ -86,7 +86,6 @@ public class PwmFactory {
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {
-            //e.printStackTrace();
             throw new ProviderInstantiateException(provider, e);
         }
     }

@@ -81,7 +81,7 @@ public class Console {
     }
 
     public synchronized Console emptyLine(int number){
-        for(int index = 0; index < number; index++){
+        for(var index = 0; index < number; index++){
             println();
         }
         return this;
@@ -101,7 +101,7 @@ public class Console {
 
     public synchronized Console title(String ... title){
         clearScreen().separatorLine().separatorLine().emptyLine();
-        for(String s : title) {
+        for(var s : title) {
             println(StringUtil.center(s, LINE_WIDTH));
         }
         emptyLine().separatorLine().separatorLine().emptyLine();
@@ -114,15 +114,15 @@ public class Console {
 
     public synchronized Console box(int padding, String ... lines) {
         int max_length = 0;
-        for(String l : lines) {
+        for(var l : lines) {
             if (l.length() > max_length) {
                 max_length = l.length();
             }
         }
         separatorLine('-', max_length + padding * 2 + 2);
-        String left  = StringUtil.padRight("|", padding);
-        String right = StringUtil.padLeft("|", padding);
-        for(String l : lines){
+        var left  = StringUtil.padRight("|", padding);
+        var right = StringUtil.padLeft("|", padding);
+        for(var l : lines){
             println(StringUtil.concat(left, StringUtil.padRight(l, max_length - l.length()), right));
         }
         separatorLine('-', max_length + padding * 2 + 2);

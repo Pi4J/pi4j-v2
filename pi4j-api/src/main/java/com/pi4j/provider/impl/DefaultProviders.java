@@ -180,7 +180,7 @@ public class DefaultProviders implements Providers {
         if(!initialized) throw new ProvidersNotInitialized();
 
         // create a map <io-id, io-instance> of providers that extend of the given io class
-        Map<String, T> result = new ConcurrentHashMap<>();
+        var result = new ConcurrentHashMap<String, T>();
         providers.values().stream().filter(providerClass::isInstance).forEach(p -> {
             result.put(p.id(), providerClass.cast(p));
         });
@@ -204,7 +204,7 @@ public class DefaultProviders implements Providers {
         if(!initialized) throw new ProvidersNotInitialized();
 
         // create a map <io-id, io-instance> of providers that match the given ProviderType
-        Map<String, T> result = new ConcurrentHashMap<>();
+        var result = new ConcurrentHashMap<String, T>();
         providers.values().stream().filter(provider -> provider.isType(providerType)).forEach(provider -> {
             result.put(provider.id(), (T) provider);
         });
@@ -233,7 +233,7 @@ public class DefaultProviders implements Providers {
         if(!initialized) throw new ProvidersNotInitialized();
 
         // return true if the managed io map contains the given io-id and io-class
-        Map<String, T> subset = all(providerClass);
+        var subset = all(providerClass);
         if(subset.containsKey(providerId)){
             return true;
         }
@@ -247,7 +247,7 @@ public class DefaultProviders implements Providers {
         if(!initialized) throw new ProvidersNotInitialized();
 
         // return true if the managed io map contains the given io-id and io-type
-        Map<String, T> subset = all(providerType);
+        var subset = all(providerType);
         if(subset.containsKey(providerId)){
             return true;
         }
@@ -274,7 +274,7 @@ public class DefaultProviders implements Providers {
         if(!initialized) throw new ProvidersNotInitialized();
 
         // return the io instance from the managed io map that contains the given io-id and io-class
-        Map<String, T> subset = all(providerClass);
+        var subset = all(providerClass);
         if(subset.containsKey(providerId)){
             return (T)subset.get(providerId);
         }
@@ -288,7 +288,7 @@ public class DefaultProviders implements Providers {
         if(!initialized) throw new ProvidersNotInitialized();
 
         // return the io instance from the managed io map that contains the given io-id and io-type
-        Map<String, T> subset = all(providerType);
+        var subset = all(providerType);
         if(subset.containsKey(providerId)){
             return (T)subset.get(providerId);
         }
@@ -304,7 +304,7 @@ public class DefaultProviders implements Providers {
         logger.trace("invoked 'add()' io [count={}]", provider.length);
 
         // iterate the given io array
-        for(T providerInstance : provider) {
+        for(var providerInstance : provider) {
 
             if(providerInstance != null) {
                 logger.trace("adding io to managed io map [id={}; name={}; class={}]",
@@ -347,7 +347,7 @@ public class DefaultProviders implements Providers {
         }
 
         // get existing io instance
-        Provider oldProvider = providers.get(provider.id());
+        var oldProvider = providers.get(provider.id());
 
         // attempt to terminate old io instance
         terminateProvider(oldProvider);
@@ -377,13 +377,13 @@ public class DefaultProviders implements Providers {
         }
 
         // get existing io instance
-        Provider oldProvider = providers.get(providerId);
+        var oldProvider = providers.get(providerId);
 
         // attempt to terminate old io instance
         terminateProvider(oldProvider);
 
         // remove from managed set
-        Provider removedProvider = providers.remove(providerId);
+        var removedProvider = providers.remove(providerId);
         if(removedProvider != null) {
             logger.debug("removed io from managed io map [id={}; name={}; class={}]",
                     removedProvider.id(), removedProvider.name(), removedProvider.getClass().getName());
@@ -398,8 +398,8 @@ public class DefaultProviders implements Providers {
 
     @Override
     public <T extends Provider> Map<ProviderType, T> defaults() throws ProviderException {
-        Map<ProviderType, T> defaults = new ConcurrentHashMap<ProviderType, T>();
-        for(String providerId : defaultProviders.values()){
+        var defaults = new ConcurrentHashMap<ProviderType, T>();
+        for(var providerId : defaultProviders.values()){
             Provider provider = get(providerId);
             defaults.put(provider.type(), (T) provider);
         }
@@ -413,7 +413,7 @@ public class DefaultProviders implements Providers {
         if(!initialized) throw new ProvidersNotInitialized();
 
         // iterate the managed default set of providers looking for a default io with a matching io-class
-        for(Provider instance : defaults().values()){
+        for(var instance : defaults().values()){
             if(providerClass.isAssignableFrom(instance.getClass())){
                 return (T) instance;
             }
@@ -430,7 +430,7 @@ public class DefaultProviders implements Providers {
 
         // iterate the managed default set of providers looking for a default io with a matching io-type
         if(defaultProviders.containsKey(providerType)){
-            String providerId = defaultProviders.get(providerType);
+            var providerId = defaultProviders.get(providerType);
             return get(providerId, providerType);
         }
 
@@ -479,7 +479,7 @@ public class DefaultProviders implements Providers {
         logger.trace("invoked 'setDefault()' for io [id={}]", providerId);
 
         // get io instance and check to see if the default has already been assigned
-        Provider provider = providers.get(providerId);
+        var provider = providers.get(providerId);
 //        if(defaultProviders.containsKey(io.type())){
 //            throw new ProviderAlreadyAssignedException(defaultProviders.get(io.type()));
 //        }
@@ -500,7 +500,7 @@ public class DefaultProviders implements Providers {
         logger.trace("invoked 'removeDefault()' for io [id={}]", providerId);
 
         // ensure requested io id is detected
-        Iterator it = defaultProviders.entrySet().iterator();
+        var it = defaultProviders.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<ProviderType, String> instance = (Map.Entry<ProviderType, String>) it.next();
             ProviderType instanceType = instance.getKey();
@@ -527,7 +527,7 @@ public class DefaultProviders implements Providers {
             throw new ProviderNotFoundException();
 
         // remove default io type
-        String providerId = defaultProviders.remove(providerType.toString());
+        var providerId = defaultProviders.remove(providerType.toString());
         logger.debug("removed default io for [type={}; id={}]", providerType, providerId);
     }
 
@@ -540,7 +540,7 @@ public class DefaultProviders implements Providers {
         logger.trace("invoked 'removeDefault()' for io [class={}]", providerClass.getName());
 
         // ensure requested io id is detected
-        for(Provider provider : defaults().values()){
+        for(var provider : defaults().values()){
             if(providerClass.isAssignableFrom(provider.getClass())){
                 removeDefault(provider.id());
                 return;
@@ -565,8 +565,8 @@ public class DefaultProviders implements Providers {
             logger.trace("auto-detecting Pi4J io from the classpath.");
 
             // detect available providers by scanning the classpath looking for service io instances
-            ServiceLoader<Provider> detectedProviders = ServiceLoader.load(Provider.class);
-            for (Provider providerInstance : detectedProviders) {
+            var detectedProviders = ServiceLoader.load(Provider.class);
+            for (var providerInstance : detectedProviders) {
                 if (providerInstance != null) {
                     logger.trace("auto-detected io: [id={}; name={}; class={}]",
                             providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
@@ -603,8 +603,8 @@ public class DefaultProviders implements Providers {
 
         ProviderException providerException = null;
         // iterate over all providers and invoke the terminate method on each
-        Set<String> providerIds = providers.keySet();
-        for(String providerId : providerIds){
+        var providerIds = providers.keySet();
+        for(var providerId : providerIds){
             try {
                 remove(providerId);
             } catch (Exception e) {

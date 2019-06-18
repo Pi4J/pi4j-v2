@@ -47,7 +47,7 @@ public class DigitalInputSyncToOutputExample {
 
         // create Pi4J console wrapper/helper
         // (This is a utility class to abstract some of the boilerplate stdin/stdout code)
-        final Console console = new Console();
+        final var console = new Console();
 
         // print program title/header
         console.title("<-- The Pi4J Project -->", "Basic Digital Input Sync To Output Example");
@@ -56,13 +56,13 @@ public class DigitalInputSyncToOutputExample {
         console.promptForExit();
 
         // initialize the Pi4J library
-        Context pi4j = Pi4J.initialize();
+        var pi4j = Pi4J.initialize();
 
         // create a digital input instance using the default digital input provider
-        DigitalInput input = DigitalInput.instance(DIGITAL_INPUT_PIN);
+        var input = DigitalInput.instance(DIGITAL_INPUT_PIN);
 
         // create a digital output instance using the default digital output provider
-        DigitalOutput output = DigitalOutput.instance(DIGITAL_OUTPUT_PIN);
+        var output = DigitalOutput.instance(DIGITAL_OUTPUT_PIN);
 
         // setup a digital output listener to listen for any state changes on the digital output
         // we will just print out the detected state changes

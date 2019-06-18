@@ -42,7 +42,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         // initialize Pi4J
-        Context pi4j = Pi4J.initialize();
+        var pi4j = Pi4J.initialize();
 
 
 //        Serial serial = Serial.instance("/dev/ttyUSB1");
@@ -52,14 +52,14 @@ public class Main {
 
 
 
-        DigitalInput din1 = DigitalInput.instance(11);
-        AnalogInput ain1 = AnalogInput.instance(21);
+        var din1 = DigitalInput.instance(11);
+        var ain1 = AnalogInput.instance(21);
 
 
 
-        AnalogInput input = AnalogInput.instance(98);
-        AnalogOutput output1 = AnalogOutput.instance(99);
-        AnalogOutput output2 = AnalogOutput.instance(100);
+        var input = AnalogInput.instance(98);
+        var output1 = AnalogOutput.instance(99);
+        var output2 = AnalogOutput.instance(100);
 
         input.addListener((AnalogChangeListener) event -> {
             System.out.print("ANALOG INPUT [");

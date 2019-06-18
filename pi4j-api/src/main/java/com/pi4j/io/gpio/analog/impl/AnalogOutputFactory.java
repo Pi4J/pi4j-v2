@@ -53,7 +53,7 @@ public class AnalogOutputFactory {
 
     public static AnalogOutput instance(AnalogOutputConfig config) throws ProviderException {
         // get default analog output provider
-        AnalogOutputProvider provider = Pi4J.providers().analogOutput().getDefault();
+        var provider = Pi4J.providers().analogOutput().getDefault();
 
         // get SPI instance using default io
         return instance(provider, config);
@@ -69,7 +69,7 @@ public class AnalogOutputFactory {
             return instance(config);
         }
         else{
-            AnalogOutputProvider provider = Pi4J.providers().analogOutput().get(providerId);
+            var provider = Pi4J.providers().analogOutput().get(providerId);
             return instance(provider, config);
         }
     }

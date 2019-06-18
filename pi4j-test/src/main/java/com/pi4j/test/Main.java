@@ -54,7 +54,7 @@ public class Main {
         about.enumerateBindings();
         about.enumerateProviders();
         about.enumerateDefaultProviders();
-        for(ProviderType providerType : ProviderType.values()){
+        for(var providerType : ProviderType.values()){
             about.enumerateProviders(providerType);
         }
 
@@ -65,14 +65,14 @@ public class Main {
 
 
 
-        DigitalInput din1 = DigitalInput.instance(11);
-        AnalogInput ain1 = AnalogInput.instance(21);
+        var din1 = DigitalInput.instance(11);
+        var ain1 = AnalogInput.instance(21);
 
 
 
-        AnalogInput input = AnalogInput.instance("TestAnalogInputProvider", 98);
-        AnalogOutput output1 = AnalogOutput.instance(99);
-        AnalogOutput output2 = AnalogOutput.instance(100);
+        var input = AnalogInput.instance("TestAnalogInputProvider", 98);
+        var output1 = AnalogOutput.instance(99);
+        var output2 = AnalogOutput.instance(100);
 
         input.addListener((AnalogChangeListener) event -> {
             System.out.print("ANALOG INPUT [");

@@ -30,6 +30,8 @@ package com.pi4j.io.gpio.analog.impl;
 import com.pi4j.config.AbstractAddressConfig;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 
+import java.util.Properties;
+
 public class AnalogOutputConfigImpl extends AbstractAddressConfig<AnalogOutputConfig> implements AnalogOutputConfig {
 
     Number shutdownValue = null;
@@ -43,6 +45,21 @@ public class AnalogOutputConfigImpl extends AbstractAddressConfig<AnalogOutputCo
 
     public AnalogOutputConfig shutdownValue(Number value){
         this.shutdownValue = value;
+        return this;
+    }
+
+    @Override
+    public AnalogOutputConfig load(Properties properties, String prefix){
+
+        // ensure properties is not empty
+        super.load(properties, prefix);
+
+        // load any optional properties
+        if(properties.containsKey(prefix + ".shutdown")){
+            var shutdownValue = Double.parseDouble(properties.get(prefix + ".shutdown").toString());
+            shutdownValue(shutdownValue);
+        }
+
         return this;
     }
 }

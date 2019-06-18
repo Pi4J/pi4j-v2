@@ -49,7 +49,7 @@ public class DigitalOutputFromProperties {
 
         // create Pi4J console wrapper/helper
         // (This is a utility class to abstract some of the boilerplate stdin/stdout code)
-        final Console console = new Console();
+        final var console = new Console();
 
         // print program title/header
         console.title("<-- The Pi4J Project -->", "Digital Output Example From Properties");
@@ -58,7 +58,7 @@ public class DigitalOutputFromProperties {
         console.promptForExit();
 
         // initialize the Pi4J library
-        Context pi4j = Pi4J.initialize();
+        var pi4j = Pi4J.initialize();
 
         // create a properties map with ".address" and ".shutdown" properties for the digital output configuration
         Properties properties = new Properties();
@@ -66,7 +66,7 @@ public class DigitalOutputFromProperties {
         properties.put("my_digital_output.shutdown", "HIGH");
 
         // create a digital output instance using the default digital output provider
-        DigitalOutput output = DigitalOutput.instance(
+        var output = DigitalOutput.instance(
                 DigitalOutputConfig.instance(properties, "my_digital_output"));
 
         // setup a digital output listener to listen for any state changes on the digital output

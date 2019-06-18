@@ -45,7 +45,7 @@ public enum SpiMode {
     }
 
     public static SpiMode getByNumber(int modeNumber){
-        for(SpiMode item : SpiMode.values()){
+        for(var item : SpiMode.values()){
             if(item.getMode() == modeNumber){
                 return item;
             }

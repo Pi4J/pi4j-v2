@@ -56,13 +56,13 @@ public class AnalogInputSyncToOutputExample {
         console.promptForExit();
 
         // initialize the Pi4J library
-        Context pi4j = Pi4J.initialize();
+        var pi4j = Pi4J.initialize();
 
         // create a analog input instance using the default analog input provider
-        AnalogInput input = AnalogInput.instance(ANALOG_INPUT_PIN);
+        var input = AnalogInput.instance(ANALOG_INPUT_PIN);
 
         // create a analog output instance using the default analog output provider
-        AnalogOutput output = AnalogOutput.instance(ANALOG_OUTPUT_PIN);
+        var output = AnalogOutput.instance(ANALOG_OUTPUT_PIN);
 
         // setup a analog output listener to listen for any state changes on the analog output
         // we will just print out the detected state changes

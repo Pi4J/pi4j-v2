@@ -47,7 +47,7 @@ public class AnalogInputExampleWithMockProvider {
 
         // create Pi4J console wrapper/helper
         // (This is a utility class to abstract some of the boilerplate stdin/stdout code)
-        final Console console = new Console();
+        final var console = new Console();
 
         // print program title/header
         console.title("<-- The Pi4J Project -->", "Basic Analog Input Example With Mock Provider");
@@ -56,7 +56,7 @@ public class AnalogInputExampleWithMockProvider {
         console.promptForExit();
 
         // initialize the Pi4J library
-        Context pi4j = Pi4J.initialize();
+        var pi4j = Pi4J.initialize();
 
         // get the Mock Analog Input provider by ID
         console.println("ATTEMPTING TO GET MOCK ANALOG INPUT PROVIDER FROM Pi4J");
@@ -70,7 +70,7 @@ public class AnalogInputExampleWithMockProvider {
 
         // create an analog input instance using the mock analog input provider
         console.println("ATTEMPTING TO CREATE A MOCK ANALOG INPUT INSTANCE");
-        MockAnalogInput input = AnalogInput.instance(provider, ANALOG_INPUT_PIN, MockAnalogInput.class);
+        var input = AnalogInput.instance(provider, ANALOG_INPUT_PIN, MockAnalogInput.class);
 
         // display created instance
         console.println("--> CREATED IO INSTANCE: ");

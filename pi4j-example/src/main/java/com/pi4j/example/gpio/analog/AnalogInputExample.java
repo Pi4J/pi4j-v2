@@ -44,7 +44,7 @@ public class AnalogInputExample {
 
         // create Pi4J console wrapper/helper
         // (This is a utility class to abstract some of the boilerplate stdin/stdout code)
-        final Console console = new Console();
+        final var console = new Console();
 
         // print program title/header
         console.title("<-- The Pi4J Project -->", "Basic Analog Input Example");
@@ -53,10 +53,10 @@ public class AnalogInputExample {
         console.promptForExit();
 
         // initialize the Pi4J library
-        Context pi4j = Pi4J.initialize();
+        Pi4J.initialize();
 
         // create an analog input instance using the default analog input provider
-        AnalogInput input = AnalogInput.instance(ANALOG_INPUT_PIN);
+        var input = AnalogInput.instance(ANALOG_INPUT_PIN);
 
         // setup an analog input listener to listen for any value changes on the analog input
         input.addListener((AnalogChangeListener) event -> {

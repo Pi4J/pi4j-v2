@@ -57,7 +57,7 @@ public class DigitalOutputConfigImpl extends AbstractAddressConfig<DigitalOutput
 
         // load any optional properties
         if(properties.containsKey(prefix + ".shutdown")){
-            DigitalState shutdownState = DigitalState.parse(properties.get(prefix + ".shutdown").toString());
+            var shutdownState = DigitalState.parse(properties.get(prefix + ".shutdown").toString());
             shutdownState(shutdownState);
         }
 

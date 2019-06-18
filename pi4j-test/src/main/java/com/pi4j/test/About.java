@@ -65,7 +65,7 @@ public class About {
         System.out.println("=====================================================");
         System.out.println(providerType + " PROVIDERS");
         System.out.println("=====================================================");
-        for(Provider provider : Pi4J.providers().all(providerType).values()){
+        for(var provider : Pi4J.providers().all(providerType).values()){
             System.out.println("  " + provider.name() + "[" + provider.id() + "]; " + provider.type());
         }
     }
@@ -74,7 +74,7 @@ public class About {
         System.out.println("=====================================================");
         System.out.println("DEFAULT PROVIDERS");
         System.out.println("=====================================================");
-        for(Provider provider : Pi4J.providers().defaults().values()){
+        for(var provider : Pi4J.providers().defaults().values()){
             System.out.println("  " + provider.name() + "[" + provider.id() + "]; " + provider.type());
         }
     }

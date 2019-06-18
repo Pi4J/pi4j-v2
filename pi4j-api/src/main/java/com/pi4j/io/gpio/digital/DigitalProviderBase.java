@@ -50,7 +50,7 @@ public abstract class DigitalProviderBase<DIGITAL_TYPE extends Digital, CONFIG_T
 
     @Override
     public DIGITAL_TYPE instance(CONFIG_TYPE config) throws Exception {
-        DIGITAL_TYPE newInstance = create(config);
+        var newInstance = create(config);
         instances.put(newInstance.address(), newInstance);
         return newInstance;
     }

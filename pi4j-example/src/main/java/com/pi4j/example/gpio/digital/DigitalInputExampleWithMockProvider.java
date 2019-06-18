@@ -48,7 +48,7 @@ public class DigitalInputExampleWithMockProvider {
 
         // create Pi4J console wrapper/helper
         // (This is a utility class to abstract some of the boilerplate stdin/stdout code)
-        final Console console = new Console();
+        final var console = new Console();
 
         // print program title/header
         console.title("<-- The Pi4J Project -->", "Basic Digital Input Example With Mock Provider");
@@ -57,11 +57,11 @@ public class DigitalInputExampleWithMockProvider {
         console.promptForExit();
 
         // initialize the Pi4J library
-        Context pi4j = Pi4J.initialize();
+        var pi4j = Pi4J.initialize();
 
         // get the Mock Digital Input provider by ID
         console.println("ATTEMPTING TO GET MOCK DIGITAL INPUT PROVIDER FROM Pi4J");
-        MockDigitalInputProvider provider = pi4j.providers().get(MockDigitalInputProvider.ID, MockDigitalInputProvider.class);
+        var provider = pi4j.providers().get(MockDigitalInputProvider.ID, MockDigitalInputProvider.class);
 
         // display acquired provider
         console.println("--> ACQUIRED PROVIDER: ");
@@ -71,7 +71,7 @@ public class DigitalInputExampleWithMockProvider {
 
         // create a digital input instance using the default digital input provider
         console.println("ATTEMPTING TO CREATE A MOCK DIGITAL INPUT INSTANCE");
-        MockDigitalInput input = DigitalInput.instance(provider, DIGITAL_INPUT_PIN, MockDigitalInput.class);
+        var input = DigitalInput.instance(provider, DIGITAL_INPUT_PIN, MockDigitalInput.class);
 
         // display created instance
         console.println("--> CREATED IO INSTANCE: ");

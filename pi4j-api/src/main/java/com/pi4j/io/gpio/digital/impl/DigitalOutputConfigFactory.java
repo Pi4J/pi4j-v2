@@ -50,7 +50,7 @@ public class DigitalOutputConfigFactory {
     }
 
     public static DigitalOutputConfig instance(Properties properties, String prefix) throws ConfigException {
-        DigitalOutputConfig config = instance();
+        var config = instance();
         config.load(properties, prefix);
         return config;
     }

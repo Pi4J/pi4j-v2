@@ -46,7 +46,7 @@ public class I2CFactory {
 
     public static I2C instance(I2CConfig config) throws ProviderException {
         // get default I2C io
-        I2CProvider provider = Pi4J.providers().i2c().getDefault();
+        var provider = Pi4J.providers().i2c().getDefault();
 
         // get I2C instance using default io
         return instance(provider, config);
@@ -66,7 +66,7 @@ public class I2CFactory {
             return instance(config);
         }
         else{
-            I2CProvider provider = Pi4J.providers().i2c().get(providerId);
+            var provider = Pi4J.providers().i2c().get(providerId);
             return instance(provider, config);
         }
     }
@@ -86,7 +86,6 @@ public class I2CFactory {
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {
-            //e.printStackTrace();
             throw new ProviderInstantiateException(provider, e);
         }
     }

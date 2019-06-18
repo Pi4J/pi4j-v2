@@ -63,7 +63,7 @@ public class StringUtil {
 
     public static boolean contains(String source, String[] targets)  {
         if (null != source && null != targets) {
-            for(String target : targets) {
+            for(var target : targets) {
                 if (source.contains(target)) {
                     return true;
                 }
@@ -74,7 +74,7 @@ public class StringUtil {
 
     public static boolean contains(String[] sources, String target)  {
         if (null != sources && null != target) {
-            for (String source : sources) {
+            for (var source : sources) {
                 if(contains(source, target))
                     return true;
             }
@@ -84,7 +84,7 @@ public class StringUtil {
 
     public static boolean contains(String[] sources, String[] targets)  {
         if (null != sources && null != targets) {
-            for (String source : sources) {
+            for (var source : sources) {
                 if(contains(source, targets))
                     return true;
             }
@@ -98,14 +98,14 @@ public class StringUtil {
 
     public static String create(char c, int length)  {
         StringBuilder sb = new StringBuilder(length);
-        for(int index = 0; index < length; index++)
+        for(var index = 0; index < length; index++)
             sb.append(c);
         return sb.toString();
     }
 
     public static String create(String s, int length)  {
         StringBuilder sb = new StringBuilder(length * s.length());
-        for(int index = 0; index < length; index++)
+        for(var index = 0; index < length; index++)
             sb.append(s);
         return sb.toString();
     }
@@ -119,16 +119,16 @@ public class StringUtil {
     }
 
     public static String padLeft(String data, char pad, int length)  {
-        StringBuilder sb = new StringBuilder(data.length() + length);
-        for(int index = 0; index < length; index++)
+        var sb = new StringBuilder(data.length() + length);
+        for(var index = 0; index < length; index++)
             sb.append(pad);
         sb.append(data);
         return sb.toString();
     }
 
     public static String padLeft(String data, String pad, int length)  {
-        StringBuilder sb = new StringBuilder(data.length() + (length * pad.length()));
-        for(int index = 0; index < length; index++)
+        var sb = new StringBuilder(data.length() + (length * pad.length()));
+        for(var index = 0; index < length; index++)
             sb.append(pad);
         sb.append(data);
         return sb.toString();
@@ -139,17 +139,17 @@ public class StringUtil {
     }
 
     public static String padRight(String data, char pad, int length)  {
-        StringBuilder sb = new StringBuilder(data.length() + length);
+        var sb = new StringBuilder(data.length() + length);
         sb.append(data);
-        for(int index = 0; index < length; index++)
+        for(var index = 0; index < length; index++)
             sb.append(pad);
         return sb.toString();
     }
 
     public static String padRight(String data, String pad, int length)  {
-        StringBuilder sb = new StringBuilder(data.length() + (length * pad.length()));
+        var sb = new StringBuilder(data.length() + (length * pad.length()));
         sb.append(data);
-        for(int index = 0; index < length; index++)
+        for(var index = 0; index < length; index++)
             sb.append(pad);
         return sb.toString();
     }
@@ -190,7 +190,7 @@ public class StringUtil {
     }
 
     public static String trimLeft(String data, char trim)  {
-        for(int index = 0; index < data.length(); index++)
+        for(var index = 0; index < data.length(); index++)
             if(!(data.charAt(index) == trim))
                 return data.substring(index);
         return EMPTY;
@@ -202,7 +202,7 @@ public class StringUtil {
 
     public static String trimRight(String data, char trim)  {
         int count = 0;
-        for(int index = data.length(); index > 0; index--)
+        for(var index = data.length(); index > 0; index--)
             if(data.charAt(index-1) == trim)
                 count++;
             else
@@ -215,21 +215,21 @@ public class StringUtil {
     }
 
     public static String trim(String data, char trim)  {
-        String result = trimLeft(data, trim);
+        var result = trimLeft(data, trim);
         return trimRight(result, trim);
     }
 
     public static String center(String text, int length){
-        String out = String.format("%"+length+"s%s%"+length+"s", "",text,"");
-        float mid = (out.length()/2);
-        float start = mid - (length/2);
-        float end = start + length;
+        var out = String.format("%"+length+"s%s%"+length+"s", "",text,"");
+        var mid = (out.length()/2);
+        var start = mid - (length/2);
+        var end = start + length;
         return out.substring((int) start, (int) end);
     }
 
     public static String concat(String ... data)  {
-        StringBuilder sb = new StringBuilder();
-        for(String d : data){
+        var sb = new StringBuilder();
+        for(var d : data){
             sb.append(d);
         }
         return sb.toString();

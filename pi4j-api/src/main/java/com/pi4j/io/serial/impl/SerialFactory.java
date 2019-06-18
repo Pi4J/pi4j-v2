@@ -58,7 +58,7 @@ public class SerialFactory {
 
     public static Serial instance(SerialConfig config) throws ProviderException {
         // get default SPI io
-        SerialProvider provider = Pi4J.providers().serial().getDefault();
+        var provider = Pi4J.providers().serial().getDefault();
 
         // get SPI instance using default io
         return instance(provider, config);
