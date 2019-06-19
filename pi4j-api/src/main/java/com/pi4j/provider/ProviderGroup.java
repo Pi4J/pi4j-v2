@@ -29,6 +29,7 @@ package com.pi4j.provider;
 
 import com.pi4j.Pi4J;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.util.Descriptor;
 
 import java.util.Map;
 
@@ -68,5 +69,15 @@ public class ProviderGroup<T extends Provider>{
 
     public boolean hasDefault() throws ProviderException {
         return providers.hasDefault(providerType);
+    }
+
+    public void describe(Descriptor descriptor) {
+        providers.describe(descriptor);
+    }
+
+    public Descriptor describe() {
+        Descriptor descriptor = Descriptor.create("-----------------------------------\r\n" + "Pi4J - Providers Information\r\n" + "-----------------------------------");
+        describe(descriptor);
+        return descriptor;
     }
 }

@@ -37,7 +37,10 @@ import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.util.Descriptor;
+import com.pi4j.util.StringUtil;
 
+import java.io.PrintStream;
 import java.util.Map;
 
 /**
@@ -124,4 +127,21 @@ public interface Providers {
     default <T extends Provider> Map<String, T> getAll(ProviderType providerType) throws ProviderException {
         return all(providerType);
     }
+
+    default void describe(Descriptor descriptor) {
+        var providers = all();
+        var child = descriptor.add("PROVIDERS [" + providers.size() + "]");
+        if(providers != null && !providers.isEmpty()) {
+            providers.forEach((id, provider) -> {
+                provider.describe(child);
+            });
+        }
+    }
+
+    default Descriptor describe() {
+        Descriptor descriptor = Descriptor.create("-----------------------------------\r\n" + "Pi4J - Providers Information\r\n" + "-----------------------------------");
+        describe(descriptor);
+        return descriptor;
+    }
+
 }

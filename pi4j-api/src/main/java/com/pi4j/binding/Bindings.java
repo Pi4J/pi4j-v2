@@ -30,7 +30,10 @@ package com.pi4j.binding;
 import com.pi4j.binding.exception.BindingException;
 import com.pi4j.context.Context;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.util.Descriptor;
+import com.pi4j.util.StringUtil;
 
+import java.io.PrintStream;
 import java.util.Map;
 
 /**
@@ -73,5 +76,21 @@ public interface Bindings {
     default Map<String, Binding> getAll() { return all(); }
     default <T extends Binding> Map<String, T> getAll(Class<T> bindingClass) throws BindingException {
         return all(bindingClass);
+    }
+
+    default void describe(Descriptor descriptor) {
+        var bindings = all();
+        var child = descriptor.add("BINDINGS [" + bindings.size() + "]");
+        if(bindings != null && !bindings.isEmpty()) {
+            bindings.forEach((id, binding) -> {
+                binding.describe(child);
+            });
+        }
+    }
+
+    default Descriptor describe() {
+        Descriptor descriptor = Descriptor.create("-----------------------------------\r\n" + "Pi4J - Binding Information\r\n" + "-----------------------------------");
+        describe(descriptor);
+        return descriptor;
     }
 }

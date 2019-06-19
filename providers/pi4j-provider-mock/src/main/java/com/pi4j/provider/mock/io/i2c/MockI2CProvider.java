@@ -36,6 +36,7 @@ import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.provider.mock.Mock;
 
 import java.io.IOException;
+import java.util.Collection;
 
 public class MockI2CProvider implements I2CProvider {
 
@@ -61,5 +62,10 @@ public class MockI2CProvider implements I2CProvider {
     @Override
     public I2C instance(I2CConfig config) throws IOException {
         return new MockI2C(config);
+    }
+
+    @Override
+    public Collection<I2C> instances() {
+        return null;
     }
 }

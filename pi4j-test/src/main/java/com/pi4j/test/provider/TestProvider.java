@@ -33,6 +33,7 @@ import com.pi4j.io.IO;
 import com.pi4j.provider.Provider;
 
 import java.io.IOException;
+import java.util.Collection;
 
 public abstract class TestProvider<IO_TYPE extends IO, CONFIG_TYPE extends Config> implements Provider<IO_TYPE, CONFIG_TYPE> {
 
@@ -75,4 +76,10 @@ public abstract class TestProvider<IO_TYPE extends IO, CONFIG_TYPE extends Confi
     public void terminate(Context context) throws Exception {
         if(terminateFail) throw new IOException();
     }
+
+    @Override
+    public Collection<IO_TYPE> instances() {
+        return null;
+    }
+
 }

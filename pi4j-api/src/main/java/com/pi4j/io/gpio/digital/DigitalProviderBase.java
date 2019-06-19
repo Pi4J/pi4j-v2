@@ -2,6 +2,7 @@ package com.pi4j.io.gpio.digital;
 
 import com.pi4j.context.Context;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,11 @@ import java.util.Map;
 public abstract class DigitalProviderBase<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends DigitalConfig> implements DigitalProvider<DIGITAL_TYPE, CONFIG_TYPE> {
 
     protected Map<Integer, DIGITAL_TYPE> instances = Collections.synchronizedMap(new HashMap<>());
+
+    @Override
+    public Collection<DIGITAL_TYPE> instances() {
+        return this.instances.values();
+    }
 
     @Override
     public void terminate(Context context) throws Exception {

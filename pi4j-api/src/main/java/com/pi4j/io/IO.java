@@ -36,6 +36,7 @@ import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.util.Descriptor;
 
 import java.io.PrintStream;
 
@@ -66,5 +67,15 @@ public interface IO {
     default void println(PrintStream stream) {
         print(stream);
         stream.println();
+    }
+
+    default void describe(Descriptor descriptor) {
+        descriptor.add(getClass().getName());
+    }
+
+    default Descriptor describe() {
+        Descriptor descriptor = Descriptor.create("-----------------------------------\r\n" + "Pi4J - I/O Information\r\n" + "-----------------------------------");
+        describe(descriptor);
+        return descriptor;
     }
 }

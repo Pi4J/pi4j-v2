@@ -31,9 +31,14 @@ import com.pi4j.binding.exception.BindingException;
 import com.pi4j.context.Context;
 import com.pi4j.context.impl.DefaultContext;
 import com.pi4j.provider.Provider;
+import com.pi4j.provider.ProviderType;
 import com.pi4j.provider.Providers;
+import com.pi4j.util.Descriptor;
+import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.PrintStream;
 
 public class Pi4J {
 
@@ -85,5 +90,15 @@ public class Pi4J {
 
         logger.debug("Pi4J successfully terminated.'");
         return context;
+    }
+
+    public static void describe(Descriptor descriptor) {
+        context().describe(descriptor);
+    }
+
+    public static Descriptor describe() {
+        Descriptor descriptor = Descriptor.create("-----------------------------------\r\n" + "Pi4J - Runtime Information\r\n" + "-----------------------------------");
+        describe(descriptor);
+        return descriptor;
     }
 }

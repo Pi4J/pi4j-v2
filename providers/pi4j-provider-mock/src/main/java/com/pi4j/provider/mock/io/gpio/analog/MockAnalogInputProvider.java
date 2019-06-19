@@ -37,6 +37,7 @@ import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
 import com.pi4j.provider.mock.Mock;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class MockAnalogInputProvider extends AnalogInputProviderBase implements AnalogInputProvider {
 

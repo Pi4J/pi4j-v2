@@ -31,6 +31,7 @@ package com.pi4j.io.gpio.analog;
 import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 import com.pi4j.io.gpio.analog.binding.AnalogBinding;
+import com.pi4j.util.Descriptor;
 
 public interface Analog<ANALOG_TYPE extends Analog, CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>> extends IO {
 
@@ -52,24 +53,8 @@ public interface Analog<ANALOG_TYPE extends Analog, CONFIG_TYPE extends AnalogCo
     default int address() { return config().address(); }
     default int getAddress() { return address(); };
 
-
-//    default boolean equals(byte value){
-//        return equals(value);
-//    }
-//    default boolean equals(short value){
-//        return equals(value);
-//    }
-//    default boolean equals(int value){
-//        return equals(value);
-//    }
-//    default boolean equals(long value){
-//        return equals(value);
-//    }
-//    default boolean equals(float value){
-//        return equals(value);
-//    }
-//    default boolean equals(double value){
-//        return equals(value);
-//    }
-
+    @Override
+    default void describe(Descriptor descriptor) {
+        descriptor.add("[#" + address() +"] <" + getClass().getName() + ">");
+    }
 }

@@ -2,9 +2,7 @@ package com.pi4j.io.gpio.analog;
 
 import com.pi4j.context.Context;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /*
  * #%L
@@ -35,6 +33,11 @@ import java.util.Map;
 public abstract class AnalogProviderBase<ANALOG_TYPE extends Analog, CONFIG_TYPE extends AnalogConfig> implements AnalogProvider<ANALOG_TYPE, CONFIG_TYPE> {
 
     protected Map<Integer, ANALOG_TYPE> instances = Collections.synchronizedMap(new HashMap<>());
+
+    @Override
+    public Collection<ANALOG_TYPE> instances() {
+        return this.instances.values();
+    }
 
     @Override
     public void terminate(Context context) throws Exception {

@@ -114,6 +114,10 @@ public class StringUtil {
         return create(c, length);
     }
 
+    public static String repeat(String s, int length)  {
+        return create(s, length);
+    }
+
     public static String padLeft(String data, int length)  {
         return padLeft(data, DEFAULT_PAD_CHAR, length);
     }

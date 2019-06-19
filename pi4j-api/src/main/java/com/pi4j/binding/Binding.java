@@ -28,6 +28,7 @@ package com.pi4j.binding;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.util.Descriptor;
 
 public interface Binding {
     String name();
@@ -38,4 +39,14 @@ public interface Binding {
 
     void initialize(Context context) throws Exception;
     void terminate(Context context) throws Exception;
+
+    default void describe(Descriptor descriptor) {
+        descriptor.add(name() + " (" + id() + ") <" + getClass().getName() + ">");
+    }
+
+    default Descriptor describe() {
+        Descriptor descriptor = Descriptor.create("-----------------------------------\r\n" + "Pi4J - Binding Information\r\n" + "-----------------------------------");
+        describe(descriptor);
+        return descriptor;
+    }
 }

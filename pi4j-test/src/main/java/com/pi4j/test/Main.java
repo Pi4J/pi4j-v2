@@ -35,6 +35,7 @@ import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.provider.ProviderType;
 import com.pi4j.test.provider.TestAnalogInput;
 import com.pi4j.test.provider.TestAnalogInputProvider;
+import com.pi4j.util.Descriptor;
 
 public class Main {
 
@@ -47,7 +48,7 @@ public class Main {
         Context pi4j = Pi4J.initialize();
 
 
-        Pi4J.providers().add(new TestAnalogInputProvider("TestAnalogInputProvider"));
+        Pi4J.providers().add(new TestAnalogInputProvider("test-analog-input-provider", "TestAnalogInputProvider"));
 
         // create About class instance
         About about = new About();
@@ -70,7 +71,7 @@ public class Main {
 
 
 
-        var input = AnalogInput.instance("TestAnalogInputProvider", 98);
+        var input = AnalogInput.instance("test-analog-input-provider", 98);
         var output1 = AnalogOutput.instance(99);
         var output2 = AnalogOutput.instance(100);
 
@@ -110,7 +111,34 @@ public class Main {
         //AnalogOutput aout1 = AnalogOutput.in
 //        DigitalOutput dout1 = DigitalOutput;
 
+
+//        Descriptor descriptor = Descriptor.create("1");
+//        var des1 = descriptor.add("1.1");
+//        des1.add("1.1.1");
+//        des1.add("1.1.2");
+//        var des2 = descriptor.add("1.2");
+//        des2.add("1.2.1");
+//        des2.add("1.2.2");
+//        descriptor.add("1.2--1");
+//        descriptor.add("1.2--2");
+//        descriptor.add("1.2--3");
+//        var des3 = descriptor.add("1.3");
+//        var des4 = des3.add("1.3.1");
+//        des4.add("1.3.1.1");
+//        des4.add("1.3.1.2");
+//        des4.add("1.3.1.3");
+//        des4.add("1.3.1.4");
+//        var des5 = des3.add("1.3.2");
+//        des5.add("1.3.2.1");
+//        des5.add("1.3.2.2");
+//        des5.add("1.3.2.3");
+//        des5.add("1.3.2.4");
+//        descriptor.print(System.out);
+
+        pi4j.describe().print(System.out);
+
         // shutdown Pi4J
         Pi4J.terminate();
+
     }
 }

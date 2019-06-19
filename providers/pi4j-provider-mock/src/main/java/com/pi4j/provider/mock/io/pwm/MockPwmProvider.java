@@ -35,6 +35,9 @@ import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.provider.mock.Mock;
 
+import java.util.Collection;
+import java.util.Map;
+
 public class MockPwmProvider implements PwmProvider {
 
     public static final String NAME = Mock.PWM_PROVIDER_NAME;
@@ -59,5 +62,10 @@ public class MockPwmProvider implements PwmProvider {
     @Override
     public Pwm instance(PwmConfig config) throws Exception {
         return new MockPwm(config);
+    }
+
+    @Override
+    public Collection<Pwm> instances() {
+        return null;
     }
 }

@@ -35,6 +35,8 @@ import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.provider.mock.Mock;
 
+import java.util.Collection;
+
 
 public class MockSerialProvider implements SerialProvider {
 
@@ -62,5 +64,10 @@ public class MockSerialProvider implements SerialProvider {
     @Override
     public Serial instance(SerialConfig config) throws Exception {
         return new MockSerial(config);
+    }
+
+    @Override
+    public Collection<Serial> instances() {
+        return null;
     }
 }

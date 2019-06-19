@@ -35,6 +35,8 @@ import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.mock.Mock;
 
+import java.util.Collection;
+
 public class MockSpiProvider implements SpiProvider{
 
     public static final String NAME = Mock.SPI_PROVIDER_NAME;
@@ -59,6 +61,11 @@ public class MockSpiProvider implements SpiProvider{
 
     @Override
     public Spi instance(SpiConfig config) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Collection<Spi> instances() {
         return null;
     }
 }
