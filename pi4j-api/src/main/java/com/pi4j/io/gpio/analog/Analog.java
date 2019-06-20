@@ -29,12 +29,15 @@ package com.pi4j.io.gpio.analog;
 
 
 import com.pi4j.io.IO;
+import com.pi4j.io.gpio.Gpio;
 import com.pi4j.io.gpio.analog.binding.AnalogBinding;
 
 public interface Analog<ANALOG_TYPE extends Analog, CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>>
-        extends IO {
+        extends Gpio {
 
     Number value();
+
+    @Override
     CONFIG_TYPE config();
 
     ANALOG_TYPE addListener(AnalogChangeListener... listener);
@@ -47,7 +50,4 @@ public interface Analog<ANALOG_TYPE extends Analog, CONFIG_TYPE extends AnalogCo
         return this.value().doubleValue() == value.doubleValue();
     }
     default Number getValue() { return value(); };
-
-    default int address() { return config().address(); }
-    default int getAddress() { return address(); };
 }

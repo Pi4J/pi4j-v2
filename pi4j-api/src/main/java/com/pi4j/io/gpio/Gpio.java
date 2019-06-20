@@ -31,5 +31,9 @@ import com.pi4j.io.IO;
 
 public interface Gpio<IO_TYPE extends Gpio, CONFIG_TYPE extends GpioConfig>
         extends IO<IO_TYPE, CONFIG_TYPE> {
-    // MARKER INTERFACE
+
+    CONFIG_TYPE config();
+
+    default int address() { return config().address(); }
+    default int getAddress() { return address(); };
 }

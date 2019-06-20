@@ -29,6 +29,7 @@ package com.pi4j.io.gpio.digital;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.IOBase;
+import com.pi4j.io.gpio.GpioBase;
 import com.pi4j.io.gpio.digital.binding.DigitalBinding;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class DigitalBase<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>>
-        extends IOBase<DIGITAL_TYPE, CONFIG_TYPE>
+        extends GpioBase<DIGITAL_TYPE, CONFIG_TYPE>
         implements Digital<DIGITAL_TYPE, CONFIG_TYPE> {
 
 
@@ -49,7 +50,6 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital, CONFIG_TYPE exte
 
     public DigitalBase(CONFIG_TYPE config){
         super(config);
-        this.id = Integer.toString(config.address());
     }
 
     @Override

@@ -27,13 +27,14 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-import com.pi4j.io.IO;
 import com.pi4j.io.gpio.Gpio;
 import com.pi4j.io.gpio.digital.binding.DigitalBinding;
 
-public interface Digital<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>> extends IO {
+public interface Digital<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>> extends Gpio {
 
     DigitalState state();
+
+    @Override
     CONFIG_TYPE config();
 
     DIGITAL_TYPE addListener(DigitalChangeListener... listener);
@@ -42,8 +43,6 @@ public interface Digital<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends Digit
     DIGITAL_TYPE bind(DigitalBinding... binding);
     DIGITAL_TYPE unbind(DigitalBinding ... binding);
 
-    default int address() { return config().address(); }
-    default int getAddress() { return address(); };
     default boolean equals(DigitalState state){
         return this.state().equals(state);
     }

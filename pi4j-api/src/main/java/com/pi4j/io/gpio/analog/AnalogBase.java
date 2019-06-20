@@ -29,6 +29,7 @@ package com.pi4j.io.gpio.analog;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.IOBase;
+import com.pi4j.io.gpio.GpioBase;
 import com.pi4j.io.gpio.analog.binding.AnalogBinding;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class AnalogBase<ANALOG_TYPE extends Analog, CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>>
-        extends IOBase<ANALOG_TYPE, CONFIG_TYPE>
+        extends GpioBase<ANALOG_TYPE, CONFIG_TYPE>
         implements Analog<ANALOG_TYPE, CONFIG_TYPE> {
 
     // internal listeners collection
@@ -48,7 +49,6 @@ public abstract class AnalogBase<ANALOG_TYPE extends Analog, CONFIG_TYPE extends
 
     public AnalogBase(CONFIG_TYPE config){
         super(config);
-        this.id = Integer.toString(config.address());
     }
 
     @Override
