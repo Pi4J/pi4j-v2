@@ -28,7 +28,6 @@ package com.pi4j.io.gpio.analog;
  */
 
 
-import com.pi4j.io.IO;
 import com.pi4j.io.gpio.Gpio;
 import com.pi4j.io.gpio.analog.binding.AnalogBinding;
 

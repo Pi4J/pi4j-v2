@@ -27,19 +27,7 @@ package com.pi4j.io.gpio;
  * #L%
  */
 
-import com.pi4j.context.Context;
-import com.pi4j.io.IO;
 import com.pi4j.io.IOBase;
-import com.pi4j.io.gpio.analog.Analog;
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
-import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.AnalogConfig;
-import com.pi4j.io.gpio.analog.binding.AnalogBinding;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public abstract class GpioBase<IO_TYPE extends Gpio, CONFIG_TYPE extends GpioConfig<CONFIG_TYPE>>
         extends IOBase<IO_TYPE, CONFIG_TYPE>

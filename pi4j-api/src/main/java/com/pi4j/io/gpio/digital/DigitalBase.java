@@ -28,7 +28,6 @@ package com.pi4j.io.gpio.digital;
  */
 
 import com.pi4j.context.Context;
-import com.pi4j.io.IOBase;
 import com.pi4j.io.gpio.GpioBase;
 import com.pi4j.io.gpio.digital.binding.DigitalBinding;
 

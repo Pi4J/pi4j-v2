@@ -30,7 +30,6 @@ package com.pi4j.io;
 import com.pi4j.common.Descriptor;
 import com.pi4j.common.IdentityBase;
 import com.pi4j.common.exception.LifecycleException;
-import com.pi4j.config.AddressConfig;
 import com.pi4j.context.Context;
 
 
