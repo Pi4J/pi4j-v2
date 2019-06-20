@@ -36,7 +36,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class DigitalBase<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>>
+public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE>, CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>>
         extends GpioBase<DIGITAL_TYPE, CONFIG_TYPE>
         implements Digital<DIGITAL_TYPE, CONFIG_TYPE> {
 

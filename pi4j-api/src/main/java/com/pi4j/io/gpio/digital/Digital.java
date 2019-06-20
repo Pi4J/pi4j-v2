@@ -30,12 +30,10 @@ package com.pi4j.io.gpio.digital;
 import com.pi4j.io.gpio.Gpio;
 import com.pi4j.io.gpio.digital.binding.DigitalBinding;
 
-public interface Digital<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>> extends Gpio {
+public interface Digital<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE>, CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>>
+        extends Gpio<DIGITAL_TYPE, CONFIG_TYPE> {
 
     DigitalState state();
-
-    @Override
-    CONFIG_TYPE config();
 
     DIGITAL_TYPE addListener(DigitalChangeListener... listener);
     DIGITAL_TYPE removeListener(DigitalChangeListener... listener);

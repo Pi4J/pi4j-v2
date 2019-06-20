@@ -33,7 +33,7 @@ import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
 
 
-public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig> extends IdentityBase implements IO {
+public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig> extends IdentityBase implements IO<IO_TYPE,CONFIG_TYPE> {
 
     protected CONFIG_TYPE config = null;
 

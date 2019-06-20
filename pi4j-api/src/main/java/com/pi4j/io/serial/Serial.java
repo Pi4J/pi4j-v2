@@ -33,7 +33,7 @@ import com.pi4j.provider.exception.ProviderException;
 
 import java.io.IOException;
 
-public interface Serial extends IO, AutoCloseable {
+public interface Serial extends IO<Serial, SerialConfig>, AutoCloseable {
 
     static final String ID = "SERIAL";
 

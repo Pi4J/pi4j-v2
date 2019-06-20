@@ -31,13 +31,10 @@ package com.pi4j.io.gpio.analog;
 import com.pi4j.io.gpio.Gpio;
 import com.pi4j.io.gpio.analog.binding.AnalogBinding;
 
-public interface Analog<ANALOG_TYPE extends Analog, CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>>
-        extends Gpio {
+public interface Analog<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE>, CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>>
+        extends Gpio<ANALOG_TYPE, CONFIG_TYPE> {
 
     Number value();
-
-    @Override
-    CONFIG_TYPE config();
 
     ANALOG_TYPE addListener(AnalogChangeListener... listener);
     ANALOG_TYPE removeListener(AnalogChangeListener... listener);

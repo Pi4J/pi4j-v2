@@ -36,7 +36,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AnalogBase<ANALOG_TYPE extends Analog, CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>>
+public abstract class AnalogBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE>, CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>>
         extends GpioBase<ANALOG_TYPE, CONFIG_TYPE>
         implements Analog<ANALOG_TYPE, CONFIG_TYPE> {
 

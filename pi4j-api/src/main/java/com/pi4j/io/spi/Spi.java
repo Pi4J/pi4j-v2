@@ -38,7 +38,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-public interface Spi extends IO {
+public interface Spi extends IO<Spi, SpiConfig> {
 
     static final String ID = "SPI";
 

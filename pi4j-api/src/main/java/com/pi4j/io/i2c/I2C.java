@@ -40,7 +40,7 @@ import java.io.IOException;
  * @author Daniel Sendula, refactored by <a href="http://raspelikan.blogspot.co.at">RasPelikan</a>
  *
  */
-public interface I2C extends IO {
+public interface I2C extends IO<I2C, I2CConfig> {
 
     static final String ID = "I2C";
 

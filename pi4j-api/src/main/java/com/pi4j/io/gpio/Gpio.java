@@ -29,7 +29,7 @@ package com.pi4j.io.gpio;
 
 import com.pi4j.io.IO;
 
-public interface Gpio<IO_TYPE extends Gpio, CONFIG_TYPE extends GpioConfig>
+public interface Gpio<IO_TYPE extends Gpio<IO_TYPE,CONFIG_TYPE>, CONFIG_TYPE extends GpioConfig>
         extends IO<IO_TYPE, CONFIG_TYPE> {
 
     CONFIG_TYPE config();

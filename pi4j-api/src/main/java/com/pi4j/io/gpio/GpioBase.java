@@ -29,9 +29,9 @@ package com.pi4j.io.gpio;
 
 import com.pi4j.io.IOBase;
 
-public abstract class GpioBase<IO_TYPE extends Gpio, CONFIG_TYPE extends GpioConfig<CONFIG_TYPE>>
+public abstract class GpioBase<IO_TYPE extends Gpio<IO_TYPE, CONFIG_TYPE>, CONFIG_TYPE extends GpioConfig<CONFIG_TYPE>>
         extends IOBase<IO_TYPE, CONFIG_TYPE>
-        implements Gpio {
+        implements Gpio<IO_TYPE, CONFIG_TYPE> {
 
     public GpioBase(CONFIG_TYPE config){
         super(config);
