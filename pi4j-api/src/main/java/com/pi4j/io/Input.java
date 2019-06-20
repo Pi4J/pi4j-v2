@@ -28,6 +28,6 @@ package com.pi4j.io;
  */
 
 
-public interface Input extends IO {
+public interface Input  {
     // MARKER INTERFACE
 }

@@ -27,9 +27,14 @@ package com.pi4j.test.provider;
  * #L%
  */
 
+import com.pi4j.common.Metadata;
+import com.pi4j.common.exception.LifecycleException;
+import com.pi4j.context.Context;
+import com.pi4j.io.IOConfig;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
+import com.pi4j.io.spi.SpiProviderBase;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +42,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-public class TestSpiProvider extends TestProvider<Spi, SpiConfig> implements SpiProvider {
+public class TestSpiProvider extends SpiProviderBase implements SpiProvider {
 
     public TestSpiProvider(){ super(); }
 
@@ -50,52 +55,7 @@ public class TestSpiProvider extends TestProvider<Spi, SpiConfig> implements Spi
     }
 
     @Override
-    public Spi instance(SpiConfig config) throws Exception {
-        return new Spi() {
-            @Override
-            public String write(String data, Charset charset) throws IOException {
-                return null;
-            }
-
-            @Override
-            public String write(String data, String charset) throws IOException {
-                return null;
-            }
-
-            @Override
-            public ByteBuffer write(ByteBuffer data) throws IOException {
-                return null;
-            }
-
-            @Override
-            public byte[] write(InputStream input) throws IOException {
-                return new byte[0];
-            }
-
-            @Override
-            public int write(InputStream input, OutputStream output) throws IOException {
-                return 0;
-            }
-
-            @Override
-            public byte[] write(byte[] data, int start, int length) throws IOException {
-                return new byte[0];
-            }
-
-            @Override
-            public byte[] write(byte... data) throws IOException {
-                return new byte[0];
-            }
-
-            @Override
-            public short[] write(short[] data, int start, int length) throws IOException {
-                return new short[0];
-            }
-
-            @Override
-            public short[] write(short... data) throws IOException {
-                return new short[0];
-            }
-        };
+    public Spi create(SpiConfig config) throws Exception {
+        return null;
     }
 }

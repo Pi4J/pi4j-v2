@@ -33,31 +33,21 @@ import com.pi4j.context.Context;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
+import com.pi4j.io.spi.SpiProviderBase;
 import com.pi4j.provider.raspberrypi.RaspberryPi;
 
-public class RaspiSpiProvider implements SpiProvider {
+public class RaspiSpiProvider extends SpiProviderBase implements SpiProvider {
 
     public static final String NAME = RaspberryPi.SPI_PROVIDER_NAME;
     public static final String ID = RaspberryPi.SPI_PROVIDER_ID;
 
-    @Override
-    public String name() { return NAME; }
-
-    @Override
-    public String id() { return ID; }
-
-    @Override
-    public void initialize(Context context) throws Exception {
-
+    public RaspiSpiProvider(){
+        this.id = ID;
+        this.name = NAME;
     }
 
     @Override
-    public void terminate(Context context) throws Exception {
-
-    }
-
-    @Override
-    public Spi instance(SpiConfig config) throws Exception {
+    public Spi create(SpiConfig config) throws Exception {
         return null;
     }
 }

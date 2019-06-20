@@ -1,11 +1,6 @@
 package com.pi4j.io.gpio.digital;
 
-import com.pi4j.context.Context;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import com.pi4j.io.gpio.GpioProviderBase;
 
 /*
  * #%L
@@ -33,44 +28,22 @@ import java.util.Map;
  * limitations under the License.
  * #L%
  */
-public abstract class DigitalProviderBase<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends DigitalConfig> implements DigitalProvider<DIGITAL_TYPE, CONFIG_TYPE> {
+public abstract class DigitalProviderBase<
+            PROVIDER_TYPE extends DigitalProvider,
+            DIGITAL_TYPE extends Digital,
+            CONFIG_TYPE extends DigitalConfig>
+        extends GpioProviderBase<PROVIDER_TYPE, DIGITAL_TYPE, CONFIG_TYPE>
+        implements DigitalProvider<DIGITAL_TYPE, CONFIG_TYPE> {
 
-    protected Map<Integer, DIGITAL_TYPE> instances = Collections.synchronizedMap(new HashMap<>());
-
-    @Override
-    public Collection<DIGITAL_TYPE> instances() {
-        return this.instances.values();
+    public DigitalProviderBase(){
+        super();
     }
 
-    @Override
-    public void terminate(Context context) throws Exception {
-
-        // perform a shutdown on each digital I/O instance that is tracked in the internal cache
-        instances.forEach((address,instance)->{
-            instance.terminate(context);
-        });
-
-        // remove all managed instance from internal cache
-        instances.clear();
+    public DigitalProviderBase(String id){
+        super(id);
     }
 
-    @Override
-    public DIGITAL_TYPE instance(CONFIG_TYPE config) throws Exception {
-        var newInstance = create(config);
-        instances.put(newInstance.address(), newInstance);
-        return newInstance;
-    }
-
-    @Override
-    public abstract DIGITAL_TYPE create(CONFIG_TYPE config) throws Exception;
-
-    @Override
-    public DIGITAL_TYPE get(int address){
-        return instances.get(address);
-    }
-
-    @Override
-    public boolean has(int address){
-        return instances.containsKey(address);
+    public DigitalProviderBase(String id, String name){
+        super(id, name);
     }
 }

@@ -28,9 +28,9 @@ package com.pi4j.io.i2c;
  */
 
 import com.pi4j.config.AbstractDeviceAddressConfig;
-import com.pi4j.config.Config;
+import com.pi4j.io.IOConfig;
 
-public class I2CConfig extends AbstractDeviceAddressConfig<I2CConfig> implements Config<I2CConfig> {
+public class I2CConfig extends AbstractDeviceAddressConfig<I2CConfig> implements IOConfig<I2CConfig> {
     public I2CConfig(String device, int address){
         super(device, address);
     }

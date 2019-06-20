@@ -28,21 +28,21 @@ package com.pi4j.context;
  */
 
 import com.pi4j.binding.Bindings;
+import com.pi4j.common.Describable;
+import com.pi4j.common.Descriptor;
 import com.pi4j.provider.Providers;
-import com.pi4j.util.Descriptor;
 
-public interface Context {
+public interface Context extends Describable {
     Providers providers();
     Bindings bindings();
 
-    default void describe(Descriptor descriptor) {
-        bindings().describe(descriptor);
-        providers().describe(descriptor);
-    }
-
     default Descriptor describe() {
-        Descriptor descriptor = Descriptor.create("-----------------------------------\r\n" + "Pi4J - Runtime Information\r\n" + "-----------------------------------");
-        describe(descriptor);
+        Descriptor descriptor = Descriptor.create()
+                .category("CONTEXT")
+                .name("Runtime Context")
+                .type(this.getClass());
+        descriptor.add(bindings().describe());
+        descriptor.add(providers().describe());
         return descriptor;
     }
 }

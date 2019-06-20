@@ -28,9 +28,9 @@ package com.pi4j.io.spi;
  */
 
 import com.pi4j.config.AbstractDeviceConfig;
-import com.pi4j.config.Config;
+import com.pi4j.io.IOConfig;
 
-public class SpiConfig extends AbstractDeviceConfig<SpiConfig> implements Config<SpiConfig> {
+public class SpiConfig extends AbstractDeviceConfig<SpiConfig> implements IOConfig<SpiConfig> {
 
     SpiMode mode = Spi.DEFAULT_SPI_MODE;
     int speed = Spi.DEFAULT_SPI_SPEED;

@@ -66,7 +66,7 @@ public class DigitalInputExampleWithMockProvider {
         // display acquired provider
         console.println("--> ACQUIRED PROVIDER: ");
         console.print("--> ");
-        provider.println(System.out);
+        console.print(provider.id());
         console.println();
 
         // create a digital input instance using the default digital input provider
@@ -76,7 +76,7 @@ public class DigitalInputExampleWithMockProvider {
         // display created instance
         console.println("--> CREATED IO INSTANCE: ");
         console.print("--> ");
-        input.println(System.out);
+        console.print(input.id());
         console.println();
 
         // setup a digital output listener to listen for any state changes on the digital input

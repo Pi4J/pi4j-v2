@@ -29,7 +29,6 @@ package com.pi4j.provider.mock.io.gpio.analog;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
@@ -37,22 +36,15 @@ import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
 import com.pi4j.provider.mock.Mock;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class MockAnalogInputProvider extends AnalogInputProviderBase implements AnalogInputProvider {
 
     public static final String NAME = Mock.ANALOG_INPUT_PROVIDER_NAME;
     public static final String ID = Mock.ANALOG_INPUT_PROVIDER_ID;
 
-    @Override
-    public String name() { return NAME; }
-
-    @Override
-    public String id() { return ID; }
-
-    @Override
-    public void initialize(Context context) throws Exception {
-        // nothing to do for mock impl
+    public MockAnalogInputProvider(){
+        this.id = ID;
+        this.name = NAME;
     }
 
     @Override

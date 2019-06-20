@@ -30,37 +30,24 @@ package com.pi4j.provider.raspberrypi.io.serial;
  */
 
 import com.pi4j.context.Context;
-import com.pi4j.io.serial.Serial;
-import com.pi4j.io.serial.SerialConfig;
-import com.pi4j.io.serial.SerialProvider;
+import com.pi4j.io.serial.*;
 import com.pi4j.provider.raspberrypi.RaspberryPi;
 
+import java.util.Collection;
 
-public class RaspiSerialProvider implements SerialProvider {
+
+public class RaspiSerialProvider extends SerialProviderBase implements SerialProvider {
 
     public static final String NAME = RaspberryPi.SERIAL_PROVIDER_NAME;
     public static final String ID = RaspberryPi.SERIAL_PROVIDER_ID;
 
-    @Override
-    public String name() {
-        return NAME;
+    public RaspiSerialProvider(){
+        this.id = ID;
+        this.name = NAME;
     }
 
     @Override
-    public String id() { return ID; }
-
-    @Override
-    public void initialize(Context context) throws Exception {
-
-    }
-
-    @Override
-    public void terminate(Context context) throws Exception {
-
-    }
-
-    @Override
-    public Serial instance(SerialConfig config) throws Exception {
+    public Serial create(SerialConfig config) throws Exception {
         return null;
     }
 }

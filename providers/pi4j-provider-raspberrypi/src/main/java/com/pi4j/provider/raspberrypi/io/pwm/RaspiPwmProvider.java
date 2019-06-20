@@ -33,33 +33,23 @@ import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
+import com.pi4j.io.pwm.PwmProviderBase;
 import com.pi4j.provider.raspberrypi.RaspberryPi;
 
 import java.io.IOException;
 
-public class RaspiPwmProvider implements PwmProvider {
+public class RaspiPwmProvider extends PwmProviderBase implements PwmProvider {
 
     public static final String NAME = RaspberryPi.PWM_PROVIDER_NAME;
     public static final String ID = RaspberryPi.PWM_PROVIDER_ID;
 
-    @Override
-    public String name() { return NAME; }
-
-    @Override
-    public String id() { return ID; }
-
-    @Override
-    public void initialize(Context context) throws Exception {
-
+    public RaspiPwmProvider(){
+        this.id = ID;
+        this.name = NAME;
     }
 
     @Override
-    public void terminate(Context context) throws Exception {
-
-    }
-
-    @Override
-    public Pwm instance(PwmConfig config) throws IOException {
+    public Pwm create(PwmConfig config) throws Exception {
         return null;
     }
 }

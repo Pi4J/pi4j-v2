@@ -35,7 +35,6 @@ import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.provider.ProviderType;
 import com.pi4j.test.provider.TestAnalogInput;
 import com.pi4j.test.provider.TestAnalogInputProvider;
-import com.pi4j.util.Descriptor;
 
 public class Main {
 
@@ -67,11 +66,12 @@ public class Main {
 
 
         var din1 = DigitalInput.instance(11);
-        var ain1 = AnalogInput.instance(21);
+        var ain1 = AnalogInput.instance("test-analog-input-provider",21, TestAnalogInput.class);
 
+        var input = AnalogInput.instance(98);
 
+        input.name("My Analog Input #1");
 
-        var input = AnalogInput.instance("test-analog-input-provider", 98);
         var output1 = AnalogOutput.instance(99);
         var output2 = AnalogOutput.instance(100);
 
@@ -100,7 +100,7 @@ public class Main {
 
 
         System.out.println(input);
-        ((TestAnalogInput)input).test(21).test(22).test(23);
+        //((TestAnalogInput)input).test(21).test(22).test(23);
 
 
         //output.value(12);
@@ -135,6 +135,7 @@ public class Main {
 //        des5.add("1.3.2.4");
 //        descriptor.print(System.out);
 
+        System.out.println("\r\n\r\n-----------------------------------\r\n" + "Pi4J - Runtime Information\r\n" + "-----------------------------------");
         pi4j.describe().print(System.out);
 
         // shutdown Pi4J

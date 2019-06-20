@@ -29,45 +29,25 @@ package com.pi4j.provider.mock.io.serial;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
+import com.pi4j.io.serial.SerialProviderBase;
 import com.pi4j.provider.mock.Mock;
 
-import java.util.Collection;
 
-
-public class MockSerialProvider implements SerialProvider {
+public class MockSerialProvider extends SerialProviderBase implements SerialProvider {
 
     public static final String NAME = Mock.SERIAL_PROVIDER_NAME;
     public static final String ID = Mock.SERIAL_PROVIDER_ID;
 
-    @Override
-    public String name() {
-        return NAME;
+    public MockSerialProvider(){
+        this.id = ID;
+        this.name = NAME;
     }
 
     @Override
-    public String id() { return ID; }
-
-    @Override
-    public void initialize(Context context) throws Exception {
-
-    }
-
-    @Override
-    public void terminate(Context context) throws Exception {
-
-    }
-
-    @Override
-    public Serial instance(SerialConfig config) throws Exception {
+    public Serial create(SerialConfig config) throws Exception {
         return new MockSerial(config);
-    }
-
-    @Override
-    public Collection<Serial> instances() {
-        return null;
     }
 }

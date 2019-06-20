@@ -27,8 +27,6 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
-import com.pi4j.provider.Provider;
-
-public interface AnalogInputProvider extends Provider<AnalogInput, AnalogInputConfig> {
+public interface AnalogInputProvider extends AnalogProvider<AnalogInput, AnalogInputConfig> {
 
 }

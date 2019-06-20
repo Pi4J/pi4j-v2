@@ -27,10 +27,9 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.IO;
+import com.pi4j.io.gpio.Gpio;
 import com.pi4j.io.gpio.digital.binding.DigitalBinding;
-import com.pi4j.util.Descriptor;
 
 public interface Digital<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>> extends IO {
 
@@ -42,7 +41,6 @@ public interface Digital<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends Digit
 
     DIGITAL_TYPE bind(DigitalBinding... binding);
     DIGITAL_TYPE unbind(DigitalBinding ... binding);
-    DIGITAL_TYPE terminate(Context context);
 
     default int address() { return config().address(); }
     default int getAddress() { return address(); };
@@ -78,10 +76,5 @@ public interface Digital<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends Digit
     }
     default boolean isLow(){
         return this.state().isLow();
-    }
-
-    @Override
-    default void describe(Descriptor descriptor) {
-        descriptor.add("[#" + address() +"] <" + getClass().getName() + ">");
     }
 }

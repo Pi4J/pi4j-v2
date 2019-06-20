@@ -27,15 +27,19 @@ package com.pi4j.test.provider;
  * #L%
  */
 
+import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.config.Config;
 import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 import com.pi4j.provider.Provider;
+import com.pi4j.provider.ProviderBase;
 
 import java.io.IOException;
 import java.util.Collection;
 
-public abstract class TestProvider<IO_TYPE extends IO, CONFIG_TYPE extends Config> implements Provider<IO_TYPE, CONFIG_TYPE> {
+public abstract class TestProvider<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CONFIG_TYPE extends Config>
+        extends ProviderBase<PROVIDER_TYPE, IO_TYPE, CONFIG_TYPE>
+        implements Provider<IO_TYPE, CONFIG_TYPE> {
 
     public boolean initializeFail = false;
     public boolean terminateFail = false;
@@ -68,13 +72,18 @@ public abstract class TestProvider<IO_TYPE extends IO, CONFIG_TYPE extends Confi
     }
 
     @Override
-    public void initialize(Context context) throws Exception {
-        if(initializeFail) throw new IOException();
+    public String description() { return null; }
+
+    @Override
+    public PROVIDER_TYPE initialize(Context context) throws LifecycleException {
+        if(initializeFail) throw new LifecycleException("");
+        return (PROVIDER_TYPE) this;
     }
 
     @Override
-    public void terminate(Context context) throws Exception {
-        if(terminateFail) throw new IOException();
+    public PROVIDER_TYPE terminate(Context context) throws LifecycleException {
+        if(terminateFail) throw new LifecycleException("");
+        return (PROVIDER_TYPE) this;
     }
 
     @Override

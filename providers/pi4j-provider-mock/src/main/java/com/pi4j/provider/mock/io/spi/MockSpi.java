@@ -30,6 +30,8 @@ package com.pi4j.provider.mock.io.spi;
  */
 
 import com.pi4j.io.spi.Spi;
+import com.pi4j.io.spi.SpiBase;
+import com.pi4j.io.spi.SpiConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,10 +39,10 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-public class MockSpiDevice implements Spi {
+public class MockSpi extends SpiBase implements Spi {
 
-    public MockSpiDevice(int channel, int speed, int mode) throws IOException {
-
+    public MockSpi(SpiConfig config){
+        super(config);
     }
 
     @Override

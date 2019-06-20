@@ -28,12 +28,11 @@ package com.pi4j.binding;
  */
 
 import com.pi4j.binding.exception.BindingException;
+import com.pi4j.common.Describable;
+import com.pi4j.common.Descriptor;
 import com.pi4j.context.Context;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.util.Descriptor;
-import com.pi4j.util.StringUtil;
 
-import java.io.PrintStream;
 import java.util.Map;
 
 /**
@@ -44,7 +43,7 @@ import java.util.Map;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public interface Bindings {
+public interface Bindings extends Describable {
 
     /**
      * Get all bindings
@@ -78,19 +77,21 @@ public interface Bindings {
         return all(bindingClass);
     }
 
-    default void describe(Descriptor descriptor) {
+    default Descriptor describe() {
         var bindings = all();
-        var child = descriptor.add("BINDINGS [" + bindings.size() + "]");
+
+        Descriptor descriptor = Descriptor.create()
+                .category("BINDINGS")
+                .name("Plugins & Extensions")
+                .quantity((bindings == null) ? 0 : bindings.size())
+                .type(this.getClass());
+
         if(bindings != null && !bindings.isEmpty()) {
             bindings.forEach((id, binding) -> {
-                binding.describe(child);
+                descriptor.add(binding.describe());
             });
-        }
-    }
 
-    default Descriptor describe() {
-        Descriptor descriptor = Descriptor.create("-----------------------------------\r\n" + "Pi4J - Binding Information\r\n" + "-----------------------------------");
-        describe(descriptor);
+        }
         return descriptor;
     }
 }

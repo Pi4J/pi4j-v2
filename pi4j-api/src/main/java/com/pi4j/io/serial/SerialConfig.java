@@ -28,9 +28,9 @@ package com.pi4j.io.serial;
  */
 
 import com.pi4j.config.AbstractDeviceConfig;
-import com.pi4j.config.Config;
+import com.pi4j.io.IOConfig;
 
-public class SerialConfig extends AbstractDeviceConfig<SerialConfig> implements Config<SerialConfig> {
+public class SerialConfig extends AbstractDeviceConfig<SerialConfig> implements IOConfig<SerialConfig> {
 
     int baud = Serial.DEFAULT_BAUD;
 

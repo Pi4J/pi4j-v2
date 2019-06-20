@@ -27,8 +27,8 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-import com.pi4j.config.AddressConfig;
 import com.pi4j.config.Config;
+import com.pi4j.io.gpio.GpioConfig;
 
-public interface DigitalConfig<CONFIG_TYPE extends Config> extends AddressConfig<CONFIG_TYPE> {
+public interface DigitalConfig<CONFIG_TYPE extends Config> extends GpioConfig<CONFIG_TYPE> {
 }

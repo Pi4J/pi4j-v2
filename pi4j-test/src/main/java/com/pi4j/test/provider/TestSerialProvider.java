@@ -30,8 +30,9 @@ package com.pi4j.test.provider;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
+import com.pi4j.io.serial.SerialProviderBase;
 
-public class TestSerialProvider extends TestProvider<Serial, SerialConfig> implements SerialProvider {
+public class TestSerialProvider extends SerialProviderBase implements SerialProvider {
 
     public TestSerialProvider(){ super(); }
 
@@ -44,27 +45,7 @@ public class TestSerialProvider extends TestProvider<Serial, SerialConfig> imple
     }
 
     @Override
-    public Serial instance(SerialConfig config) throws Exception {
-        return new Serial() {
-            @Override
-            public void open() {
-
-            }
-
-            @Override
-            public void close() {
-
-            }
-
-            @Override
-            public void send(CharSequence data) {
-
-            }
-
-            @Override
-            public int hashCode() {
-                return super.hashCode();
-            }
-        };
+    public Serial create(SerialConfig config) throws Exception {
+        return null;
     }
 }

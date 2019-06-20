@@ -30,10 +30,11 @@ package com.pi4j.test.provider;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.io.i2c.I2CProviderBase;
 
 import java.io.IOException;
 
-public class TestI2CProvider extends TestProvider<I2C, I2CConfig> implements I2CProvider {
+public class TestI2CProvider extends I2CProviderBase implements I2CProvider {
 
     public TestI2CProvider(){ super(); }
 
@@ -46,67 +47,7 @@ public class TestI2CProvider extends TestProvider<I2C, I2CConfig> implements I2C
     }
 
     @Override
-    public I2C instance(I2CConfig config) throws IOException {
-        return new I2C() {
-            @Override
-            public int getAddress() {
-                return 0;
-            }
-
-            @Override
-            public void write(byte b) throws IOException {
-
-            }
-
-            @Override
-            public void write(byte[] buffer, int offset, int size) throws IOException {
-
-            }
-
-            @Override
-            public void write(byte[] buffer) throws IOException {
-
-            }
-
-            @Override
-            public void write(int address, byte b) throws IOException {
-
-            }
-
-            @Override
-            public void write(int address, byte[] buffer, int offset, int size) throws IOException {
-
-            }
-
-            @Override
-            public void write(int address, byte[] buffer) throws IOException {
-
-            }
-
-            @Override
-            public int read() throws IOException {
-                return 0;
-            }
-
-            @Override
-            public int read(byte[] buffer, int offset, int size) throws IOException {
-                return 0;
-            }
-
-            @Override
-            public int read(int address) throws IOException {
-                return 0;
-            }
-
-            @Override
-            public int read(int address, byte[] buffer, int offset, int size) throws IOException {
-                return 0;
-            }
-
-            @Override
-            public int read(byte[] writeBuffer, int writeOffset, int writeSize, byte[] readBuffer, int readOffset, int readSize) throws IOException {
-                return 0;
-            }
-        };
+    public I2C create(I2CConfig config) throws Exception {
+        return null;
     }
 }

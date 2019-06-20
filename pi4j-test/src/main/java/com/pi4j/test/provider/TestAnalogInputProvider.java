@@ -30,19 +30,22 @@ package com.pi4j.test.provider;
 import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
+import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
 
-public class TestAnalogInputProvider extends TestProvider<AnalogInput, AnalogInputConfig> implements AnalogInputProvider {
+public class TestAnalogInputProvider extends AnalogInputProviderBase implements AnalogInputProvider {
 
     public TestAnalogInputProvider(){ super(); }
+
     public TestAnalogInputProvider(String id){
         super(id);
     }
+
     public TestAnalogInputProvider(String id, String name){
         super(id, name);
     }
 
     @Override
-    public AnalogInput instance(AnalogInputConfig config) throws Exception {
+    public AnalogInput create(AnalogInputConfig config) throws Exception {
         return new TestAnalogInput(config);
     }
 }

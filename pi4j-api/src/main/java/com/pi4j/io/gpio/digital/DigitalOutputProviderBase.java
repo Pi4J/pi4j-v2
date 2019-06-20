@@ -26,7 +26,23 @@ package com.pi4j.io.gpio.digital;
  * limitations under the License.
  * #L%
  */
-public abstract class DigitalOutputProviderBase extends DigitalProviderBase<DigitalOutput, DigitalOutputConfig> implements DigitalOutputProvider {
+
+public abstract class DigitalOutputProviderBase
+        extends DigitalProviderBase<DigitalOutputProvider, DigitalOutput, DigitalOutputConfig>
+        implements DigitalOutputProvider {
+
+    public DigitalOutputProviderBase(){
+        super();
+    }
+
+    public DigitalOutputProviderBase(String id){
+        super(id);
+    }
+
+    public DigitalOutputProviderBase(String id, String name){
+        super(id, name);
+    }
+
     @Override
     public abstract DigitalOutput create(DigitalOutputConfig config) throws Exception;
 }

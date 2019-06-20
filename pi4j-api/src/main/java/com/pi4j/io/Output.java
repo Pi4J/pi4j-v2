@@ -27,6 +27,6 @@ package com.pi4j.io;
  * #L%
  */
 
-public interface Output extends IO {
+public interface Output {
     // MARKER INTERFACE
 }

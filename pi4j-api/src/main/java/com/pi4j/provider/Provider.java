@@ -28,53 +28,36 @@ package com.pi4j.provider;
  */
 
 import com.pi4j.binding.Binding;
+import com.pi4j.common.Descriptor;
 import com.pi4j.config.Config;
 import com.pi4j.io.IO;
-import com.pi4j.util.Descriptor;
-import com.pi4j.util.StringUtil;
 
-import java.io.PrintStream;
 import java.util.Collection;
-import java.util.Map;
 
 public interface Provider<IO_TYPE extends IO, CONFIG_TYPE extends Config> extends Binding {
+
     IO_TYPE instance(CONFIG_TYPE config) throws Exception;
     Collection<IO_TYPE> instances();
+
+    IO_TYPE get(String id);
+    boolean has(String id);
 
     default ProviderType type() { return ProviderType.getProviderType(this.getClass()); };
     default ProviderType getType() { return type(); }
     default boolean isType(ProviderType type) { return this.type().isType(type); }
 
-    default void print(PrintStream stream) {
-        stream.print(getId());
-        stream.print(" <");
-        stream.print(getType().name());
-        stream.print(">");
-        stream.print(" (");
-        stream.print(getClass().getName());
-        stream.print(")");
-    }
-
-    default void println(PrintStream stream) {
-        print(stream);
-        stream.println();
-    }
-
-    @Override
-    default void describe(Descriptor descriptor) {
-        var child = descriptor.add(name() + " (" + id() + ") <" + getClass().getName() + ">");
-        var instances = instances();
-        if(instances != null && !instances.isEmpty()) {
-            instances().forEach((instance) -> {
-                instance.describe(child);
-            });
-        }
-    }
-
     @Override
     default Descriptor describe() {
-        Descriptor descriptor = Descriptor.create("-----------------------------------\r\n" + "Pi4J - Provider Information\r\n" + "-----------------------------------");
-        describe(descriptor);
+        Descriptor descriptor = Binding.super.describe();
+        descriptor.category(this.type().name());
+
+        var instances = instances();
+        if(instances == null) return descriptor;
+        if(instances.isEmpty()) return descriptor;
+
+        instances().forEach((instance) -> {
+            descriptor.add(instance.describe());
+        });
         return descriptor;
     }
 }

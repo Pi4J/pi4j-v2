@@ -31,7 +31,6 @@ package com.pi4j.io.gpio.digital;
 import com.pi4j.io.Input;
 import com.pi4j.io.gpio.digital.impl.DigitalInputFactory;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.util.Descriptor;
 
 public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig>, Input {
 

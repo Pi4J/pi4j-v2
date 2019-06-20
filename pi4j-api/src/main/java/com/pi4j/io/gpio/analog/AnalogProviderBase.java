@@ -1,8 +1,6 @@
 package com.pi4j.io.gpio.analog;
 
-import com.pi4j.context.Context;
-
-import java.util.*;
+import com.pi4j.io.gpio.GpioProviderBase;
 
 /*
  * #%L
@@ -30,44 +28,23 @@ import java.util.*;
  * limitations under the License.
  * #L%
  */
-public abstract class AnalogProviderBase<ANALOG_TYPE extends Analog, CONFIG_TYPE extends AnalogConfig> implements AnalogProvider<ANALOG_TYPE, CONFIG_TYPE> {
+public abstract class AnalogProviderBase<
+            PROVIDER_TYPE extends AnalogProvider,
+            ANALOG_TYPE extends Analog,
+            CONFIG_TYPE extends AnalogConfig>
+        extends GpioProviderBase<PROVIDER_TYPE, ANALOG_TYPE, CONFIG_TYPE>
+        implements AnalogProvider<ANALOG_TYPE, CONFIG_TYPE> {
 
-    protected Map<Integer, ANALOG_TYPE> instances = Collections.synchronizedMap(new HashMap<>());
-
-    @Override
-    public Collection<ANALOG_TYPE> instances() {
-        return this.instances.values();
+    public AnalogProviderBase(){
     }
 
-    @Override
-    public void terminate(Context context) throws Exception {
-
-        // perform a shutdown on each digital I/O instance that is tracked in the internal cache
-        instances.forEach((address,instance)->{
-            instance.terminate(context);
-        });
-
-        // remove all managed instance from internal cache
-        instances.clear();
+    public AnalogProviderBase(String id){
+        this();
+        this.id = id;
     }
 
-    @Override
-    public ANALOG_TYPE instance(CONFIG_TYPE config) throws Exception {
-        var newInstance = create(config);
-        instances.put(newInstance.address(), newInstance);
-        return newInstance;
-    }
-
-    @Override
-    public abstract ANALOG_TYPE create(CONFIG_TYPE config) throws Exception;
-
-    @Override
-    public ANALOG_TYPE get(int address){
-        return instances.get(address);
-    }
-
-    @Override
-    public boolean has(int address){
-        return instances.containsKey(address);
+    public AnalogProviderBase(String id, String name){
+        this(id);
+        this.name = name;
     }
 }

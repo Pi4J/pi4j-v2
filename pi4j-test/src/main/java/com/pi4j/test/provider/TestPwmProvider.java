@@ -30,10 +30,11 @@ package com.pi4j.test.provider;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
+import com.pi4j.io.pwm.PwmProviderBase;
 
 import java.io.IOException;
 
-public class TestPwmProvider extends TestProvider<Pwm, PwmConfig> implements PwmProvider {
+public class TestPwmProvider extends PwmProviderBase implements PwmProvider {
 
     public TestPwmProvider(){ super(); }
 
@@ -46,12 +47,7 @@ public class TestPwmProvider extends TestProvider<Pwm, PwmConfig> implements Pwm
     }
 
     @Override
-    public Pwm instance(PwmConfig config) throws IOException {
-        return new Pwm() {
-            @Override
-            public int hashCode() {
-                return super.hashCode();
-            }
-        };
+    public Pwm create(PwmConfig config) throws Exception {
+        return null;
     }
 }

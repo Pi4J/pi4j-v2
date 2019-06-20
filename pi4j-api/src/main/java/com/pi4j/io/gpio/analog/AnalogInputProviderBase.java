@@ -26,7 +26,23 @@ package com.pi4j.io.gpio.analog;
  * limitations under the License.
  * #L%
  */
-public abstract class AnalogInputProviderBase extends AnalogProviderBase<AnalogInput, AnalogInputConfig> implements AnalogInputProvider {
+public abstract class AnalogInputProviderBase
+        extends AnalogProviderBase<AnalogInputProvider, AnalogInput, AnalogInputConfig>
+        implements AnalogInputProvider {
+
+    public AnalogInputProviderBase(){
+    }
+
+    public AnalogInputProviderBase(String id){
+        this();
+        this.id = id;
+    }
+
+    public AnalogInputProviderBase(String id, String name){
+        this(id);
+        this.name = name;
+    }
+
     @Override
     public abstract AnalogInput create(AnalogInputConfig config) throws Exception;
 }

@@ -27,10 +27,8 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-import com.pi4j.provider.Provider;
+import com.pi4j.io.gpio.GpioProvider;
 
-public interface DigitalProvider<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends DigitalConfig> extends Provider<DIGITAL_TYPE, CONFIG_TYPE> {
-    DIGITAL_TYPE create(CONFIG_TYPE config) throws Exception;
-    DIGITAL_TYPE get(int address);
-    boolean has(int address);
+public interface DigitalProvider<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends DigitalConfig> extends GpioProvider<DIGITAL_TYPE, CONFIG_TYPE> {
+
 }

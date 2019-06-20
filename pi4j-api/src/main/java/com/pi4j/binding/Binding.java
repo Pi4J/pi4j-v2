@@ -27,26 +27,17 @@ package com.pi4j.binding;
  * #L%
  */
 
-import com.pi4j.context.Context;
-import com.pi4j.util.Descriptor;
+import com.pi4j.common.Descriptor;
+import com.pi4j.common.Identity;
+import com.pi4j.common.Lifecycle;
 
-public interface Binding {
-    String name();
-    String id();
-
-    default String getName() { return name(); }
-    default String getId() { return id(); }
-
-    void initialize(Context context) throws Exception;
-    void terminate(Context context) throws Exception;
-
-    default void describe(Descriptor descriptor) {
-        descriptor.add(name() + " (" + id() + ") <" + getClass().getName() + ">");
-    }
+public interface Binding extends Identity, Lifecycle {
 
     default Descriptor describe() {
-        Descriptor descriptor = Descriptor.create("-----------------------------------\r\n" + "Pi4J - Binding Information\r\n" + "-----------------------------------");
-        describe(descriptor);
-        return descriptor;
+        return Descriptor.create()
+                .id(this.id())
+                .name(this.name())
+                .category("BINDING")
+                .description(this.description()).type(this.getClass());
     }
 }

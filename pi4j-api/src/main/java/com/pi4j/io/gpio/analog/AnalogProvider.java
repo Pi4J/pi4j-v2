@@ -27,11 +27,7 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
-import com.pi4j.provider.Provider;
+import com.pi4j.io.gpio.GpioProvider;
 
-public interface AnalogProvider<ANALOG_TYPE extends Analog, CONFIG_TYPE extends AnalogConfig> extends Provider<ANALOG_TYPE, CONFIG_TYPE> {
-    ANALOG_TYPE create(CONFIG_TYPE config) throws Exception;
-    ANALOG_TYPE get(int address);
-    boolean has(int address);
-
+public interface AnalogProvider<ANALOG_TYPE extends Analog, CONFIG_TYPE extends AnalogConfig> extends GpioProvider<ANALOG_TYPE, CONFIG_TYPE> {
 }

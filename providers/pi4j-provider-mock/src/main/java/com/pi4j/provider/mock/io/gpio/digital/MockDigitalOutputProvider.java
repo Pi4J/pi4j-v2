@@ -29,7 +29,6 @@ package com.pi4j.provider.mock.io.gpio.digital;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
@@ -41,15 +40,9 @@ public class MockDigitalOutputProvider extends DigitalOutputProviderBase impleme
     public static final String NAME = Mock.DIGITAL_OUTPUT_PROVIDER_NAME;
     public static final String ID = Mock.DIGITAL_OUTPUT_PROVIDER_ID;
 
-    @Override
-    public String name() { return NAME; }
-
-    @Override
-    public String id() { return ID; }
-
-    @Override
-    public void initialize(Context context) throws Exception {
-        // nothing to do for mock impl
+    public MockDigitalOutputProvider(){
+        this.id = ID;
+        this.name = NAME;
     }
 
     @Override

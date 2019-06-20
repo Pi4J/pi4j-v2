@@ -27,6 +27,8 @@ package com.pi4j.provider;
  * #L%
  */
 
+import com.pi4j.common.Describable;
+import com.pi4j.common.Descriptor;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
@@ -37,10 +39,7 @@ import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.util.Descriptor;
-import com.pi4j.util.StringUtil;
 
-import java.io.PrintStream;
 import java.util.Map;
 
 /**
@@ -53,7 +52,7 @@ import java.util.Map;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public interface Providers {
+public interface Providers extends Describable {
 
     ProviderGroup<AnalogInputProvider> analogInput();
     ProviderGroup<AnalogOutputProvider> analogOutput();
@@ -128,19 +127,20 @@ public interface Providers {
         return all(providerType);
     }
 
-    default void describe(Descriptor descriptor) {
+    default Descriptor describe() {
         var providers = all();
-        var child = descriptor.add("PROVIDERS [" + providers.size() + "]");
+
+        Descriptor descriptor = Descriptor.create()
+                .category("PROVIDERS")
+                .name("I/O Providers")
+                .quantity((providers == null) ? 0 : providers.size())
+                .type(this.getClass());
+
         if(providers != null && !providers.isEmpty()) {
             providers.forEach((id, provider) -> {
-                provider.describe(child);
+                descriptor.add(provider.describe());
             });
         }
-    }
-
-    default Descriptor describe() {
-        Descriptor descriptor = Descriptor.create("-----------------------------------\r\n" + "Pi4J - Providers Information\r\n" + "-----------------------------------");
-        describe(descriptor);
         return descriptor;
     }
 

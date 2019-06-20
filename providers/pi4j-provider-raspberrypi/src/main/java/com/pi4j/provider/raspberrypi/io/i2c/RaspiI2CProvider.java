@@ -33,33 +33,23 @@ import com.pi4j.context.Context;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.io.i2c.I2CProviderBase;
 import com.pi4j.provider.raspberrypi.RaspberryPi;
 
 import java.io.IOException;
 
-public class RaspiI2CProvider implements I2CProvider {
+public class RaspiI2CProvider extends I2CProviderBase implements I2CProvider {
 
     public static final String NAME = RaspberryPi.I2C_PROVIDER_NAME;
     public static final String ID = RaspberryPi.I2C_PROVIDER_ID;
 
-    @Override
-    public String name() { return NAME; }
-
-    @Override
-    public String id() { return ID; }
-
-    @Override
-    public void initialize(Context context) throws Exception {
-
+    public RaspiI2CProvider(){
+        this.id = ID;
+        this.name = NAME;
     }
 
     @Override
-    public void terminate(Context context) throws Exception {
-
-    }
-
-    @Override
-    public I2C instance(I2CConfig config) throws IOException {
+    public I2C create(I2CConfig config) throws Exception {
         return null;
     }
 }

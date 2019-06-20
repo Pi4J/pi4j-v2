@@ -27,6 +27,9 @@ package com.pi4j.io;
  * #L%
  */
 
+import com.pi4j.common.Describable;
+import com.pi4j.common.Identity;
+import com.pi4j.common.Lifecycle;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.pwm.Pwm;
@@ -36,11 +39,14 @@ import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.util.Descriptor;
 
-import java.io.PrintStream;
+public interface IO<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig>
+        extends Describable, Lifecycle, Identity {
 
-public interface IO {
+    CONFIG_TYPE config();
+
+    IO_TYPE name(String name);
+    IO_TYPE description(String description);
 
     // MARKER INTERFACE
 
@@ -58,24 +64,5 @@ public interface IO {
 
     static I2C instance(I2CConfig config) throws ProviderException {
         return I2C.instance(config);
-    }
-
-    default void print(PrintStream stream) {
-        stream.print(getClass().getName());
-    }
-
-    default void println(PrintStream stream) {
-        print(stream);
-        stream.println();
-    }
-
-    default void describe(Descriptor descriptor) {
-        descriptor.add(getClass().getName());
-    }
-
-    default Descriptor describe() {
-        Descriptor descriptor = Descriptor.create("-----------------------------------\r\n" + "Pi4J - I/O Information\r\n" + "-----------------------------------");
-        describe(descriptor);
-        return descriptor;
     }
 }

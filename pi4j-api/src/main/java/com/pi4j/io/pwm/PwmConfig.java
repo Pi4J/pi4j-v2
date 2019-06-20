@@ -28,9 +28,9 @@ package com.pi4j.io.pwm;
  */
 
 import com.pi4j.config.AbstractAddressConfig;
-import com.pi4j.config.Config;
+import com.pi4j.io.IOConfig;
 
-public class PwmConfig extends AbstractAddressConfig<PwmConfig> implements Config<PwmConfig> {
+public class PwmConfig extends AbstractAddressConfig<PwmConfig> implements IOConfig<PwmConfig> {
     public PwmConfig(int address) {
         super(address);
     }

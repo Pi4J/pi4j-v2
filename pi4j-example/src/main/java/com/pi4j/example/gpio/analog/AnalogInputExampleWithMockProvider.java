@@ -65,7 +65,7 @@ public class AnalogInputExampleWithMockProvider {
         // display acquired provider
         console.println("--> ACQUIRED PROVIDER: ");
         console.print("--> ");
-        provider.println(System.out);
+        console.println(provider.id());
         console.println();
 
         // create an analog input instance using the mock analog input provider
@@ -75,7 +75,7 @@ public class AnalogInputExampleWithMockProvider {
         // display created instance
         console.println("--> CREATED IO INSTANCE: ");
         console.print("--> ");
-        input.println(System.out);
+        console.println(input.id());
         console.println();
 
         // setup an analog output listener to listen for any value changes on the analog input

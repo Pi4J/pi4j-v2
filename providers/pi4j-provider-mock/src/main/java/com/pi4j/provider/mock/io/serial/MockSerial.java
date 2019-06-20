@@ -29,11 +29,11 @@ package com.pi4j.provider.mock.io.serial;
  * #L%
  */
 
-import com.pi4j.io.serial.BaseSerial;
+import com.pi4j.io.serial.SerialBase;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 
-public class MockSerial extends BaseSerial implements Serial {
+public class MockSerial extends SerialBase implements Serial {
 
     public MockSerial(SerialConfig config){
         super(config);

@@ -1,11 +1,11 @@
-package com.pi4j.io.serial;
+package com.pi4j.io.gpio;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  BaseSerial.java
+ * FILENAME      :  DigitalProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,31 +27,10 @@ package com.pi4j.io.serial;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.pi4j.io.IO;
+import com.pi4j.provider.Provider;
 
-import java.io.IOException;
-
-public abstract class BaseSerial implements Serial {
-
-    Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    public BaseSerial(SerialConfig config){
-        logger.trace("created instance with config: {}", config);
-    }
-
-    @Override
-    public void open() throws IOException {
-        logger.trace("invoked 'open()'");
-    }
-
-    @Override
-    public void close() throws IOException {
-        logger.trace("invoked 'closed()'");
-    }
-
-    @Override
-    public void send(CharSequence data) {
-        logger.trace("invoked 'send({})'", data);
-    }
+public interface GpioProvider<IO_TYPE extends IO, CONFIG_TYPE extends GpioConfig> extends Provider<IO_TYPE, CONFIG_TYPE> {
+    IO_TYPE get(int address);
+    boolean has(int address);
 }

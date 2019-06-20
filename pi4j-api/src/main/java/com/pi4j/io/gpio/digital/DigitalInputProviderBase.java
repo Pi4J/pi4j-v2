@@ -26,7 +26,22 @@ package com.pi4j.io.gpio.digital;
  * limitations under the License.
  * #L%
  */
-public abstract class DigitalInputProviderBase extends DigitalProviderBase<DigitalInput, DigitalInputConfig> implements DigitalInputProvider {
+public abstract class DigitalInputProviderBase
+        extends DigitalProviderBase<DigitalInputProvider, DigitalInput, DigitalInputConfig>
+        implements DigitalInputProvider {
+
+    public DigitalInputProviderBase(){
+        super();
+    }
+
+    public DigitalInputProviderBase(String id){
+        super(id);
+    }
+
+    public DigitalInputProviderBase(String id, String name){
+        super(id, name);
+    }
+
     @Override
     public abstract DigitalInput create(DigitalInputConfig config) throws Exception;
 }

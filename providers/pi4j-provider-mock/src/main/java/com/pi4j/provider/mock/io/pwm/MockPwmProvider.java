@@ -29,43 +29,24 @@ package com.pi4j.provider.mock.io.pwm;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
+import com.pi4j.io.pwm.PwmProviderBase;
 import com.pi4j.provider.mock.Mock;
 
-import java.util.Collection;
-import java.util.Map;
-
-public class MockPwmProvider implements PwmProvider {
+public class MockPwmProvider extends PwmProviderBase implements PwmProvider {
 
     public static final String NAME = Mock.PWM_PROVIDER_NAME;
     public static final String ID = Mock.PWM_PROVIDER_ID;
 
-    @Override
-    public String name() { return NAME; }
-
-    @Override
-    public String id() { return ID; }
-
-    @Override
-    public void initialize(Context context) throws Exception {
-
+    public MockPwmProvider(){
+        this.id = ID;
+        this.name = NAME;
     }
 
     @Override
-    public void terminate(Context context) throws Exception {
-
-    }
-
-    @Override
-    public Pwm instance(PwmConfig config) throws Exception {
+    public Pwm create(PwmConfig config) throws Exception {
         return new MockPwm(config);
-    }
-
-    @Override
-    public Collection<Pwm> instances() {
-        return null;
     }
 }

@@ -36,6 +36,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
 
     public AnalogOutputBase(AnalogOutputConfig config){
         super(config);
+        this.name = "AOUT-" + config.address();
     }
 
     @Override

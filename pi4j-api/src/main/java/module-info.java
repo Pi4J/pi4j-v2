@@ -28,6 +28,8 @@ module pi4j.api {
     exports com.pi4j;
     exports com.pi4j.binding;
     exports com.pi4j.binding.exception;
+    exports com.pi4j.common;
+    exports com.pi4j.common.exception;
     exports com.pi4j.config;
     exports com.pi4j.config.exception;
     exports com.pi4j.context;

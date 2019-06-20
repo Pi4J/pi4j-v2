@@ -29,43 +29,25 @@ package com.pi4j.provider.mock.io.i2c;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.io.i2c.I2CProviderBase;
 import com.pi4j.provider.mock.Mock;
 
-import java.io.IOException;
-import java.util.Collection;
-
-public class MockI2CProvider implements I2CProvider {
+public class MockI2CProvider extends I2CProviderBase implements I2CProvider {
 
     public static final String NAME = Mock.I2C_PROVIDER_NAME;
     public static final String ID = Mock.I2C_PROVIDER_ID;
 
-    @Override
-    public String name() { return NAME; }
-
-    @Override
-    public String id() { return ID; }
-
-    @Override
-    public void initialize(Context context) throws Exception {
-
+    public MockI2CProvider(){
+        this.id = ID;
+        this.name = NAME;
     }
 
     @Override
-    public void terminate(Context context) throws Exception {
-
-    }
-
-    @Override
-    public I2C instance(I2CConfig config) throws IOException {
+    public I2C create(I2CConfig config) throws Exception {
         return new MockI2C(config);
     }
 
-    @Override
-    public Collection<I2C> instances() {
-        return null;
-    }
 }
