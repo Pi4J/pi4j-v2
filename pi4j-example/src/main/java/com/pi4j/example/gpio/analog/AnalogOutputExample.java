@@ -62,10 +62,7 @@ public class AnalogOutputExample {
 
         // setup a analog output listener to listen for any state changes on the analog output
         output.addListener((AnalogChangeListener) event -> {
-            System.out.print("ANALOG OUTPUT [");
-            System.out.print(event.source().address());
-            System.out.print("] VALUE CHANGE: ");
-            System.out.println(event.value());
+            System.out.println(event);
         });
 
         // lets invoke some changes on the analog output
@@ -79,6 +76,7 @@ public class AnalogOutputExample {
         System.out.println(output.value() + "]");
 
         // shutdown Pi4J
+        console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
         Pi4J.terminate();
     }
 }

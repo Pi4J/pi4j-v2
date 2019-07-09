@@ -64,6 +64,7 @@ public class DigitalOutputFromProperties {
         Properties properties = new Properties();
         properties.put("my_digital_output.address", "4");
         properties.put("my_digital_output.shutdown", "HIGH");
+        properties.put("my_digital_output.name", "DIGI4");
 
         // create a digital output instance using the default digital output provider
         var output = DigitalOutput.instance(
@@ -71,10 +72,7 @@ public class DigitalOutputFromProperties {
 
         // setup a digital output listener to listen for any state changes on the digital output
         output.addListener((DigitalChangeListener) event -> {
-            System.out.print("DIGITAL OUTPUT [");
-            System.out.print(event.source().address());
-            System.out.print("] STATE CHANGE: ");
-            System.out.println(event.state());
+            System.out.println(event);
         });
 
         // lets invoke some changes on the digital output
@@ -102,6 +100,7 @@ public class DigitalOutputFromProperties {
         System.out.println("PULSING OUTPUT STATE COMPLETE");
 
         // shutdown Pi4J
+        console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
         Pi4J.terminate();
     }
 }

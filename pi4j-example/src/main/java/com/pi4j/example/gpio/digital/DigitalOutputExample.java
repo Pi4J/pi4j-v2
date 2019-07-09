@@ -65,10 +65,7 @@ public class DigitalOutputExample {
 
         // setup a digital output listener to listen for any state changes on the digital output
         output.addListener((DigitalChangeListener) event -> {
-            System.out.print("DIGITAL OUTPUT [");
-            System.out.print(event.source().address());
-            System.out.print("] STATE CHANGE: ");
-            System.out.println(event.state());
+            System.out.println(event);
         });
 
         // lets invoke some changes on the digital output
@@ -97,6 +94,7 @@ public class DigitalOutputExample {
         System.out.println("PULSING OUTPUT STATE COMPLETE");
 
         // shutdown Pi4J
+        console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
         Pi4J.terminate();
     }
 }

@@ -67,10 +67,7 @@ public class AnalogInputSyncToOutputExample {
         // setup a analog output listener to listen for any state changes on the analog output
         // we will just print out the detected state changes
         output.addListener((AnalogChangeListener) event -> {
-            console.print("ANALOG OUTPUT [");
-            console.print(event.source().address());
-            console.print("] VALUE CHANGE: ");
-            console.println(event.value());
+            console.println(event);
         });
 
         // bind the analog output state to synchronize with the analog input state
@@ -82,6 +79,7 @@ public class AnalogInputSyncToOutputExample {
         console.waitForExit();
 
         // shutdown Pi4J
+        console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
         Pi4J.terminate();
     }
 }

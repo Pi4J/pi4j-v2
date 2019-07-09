@@ -63,8 +63,7 @@ public class AnalogInputExampleWithMockProvider {
         MockAnalogInputProvider provider = pi4j.providers().get(MockAnalogInputProvider.ID, MockAnalogInputProvider.class);
 
         // display acquired provider
-        console.println("--> ACQUIRED PROVIDER: ");
-        console.print("--> ");
+        console.print("--> ACQUIRED PROVIDER: ");
         console.println(provider.id());
         console.println();
 
@@ -73,22 +72,23 @@ public class AnalogInputExampleWithMockProvider {
         var input = AnalogInput.instance(provider, ANALOG_INPUT_PIN, MockAnalogInput.class);
 
         // display created instance
-        console.println("--> CREATED IO INSTANCE: ");
-        console.print("--> ");
+        console.print("--> CREATED IO INSTANCE: ");
         console.println(input.id());
         console.println();
 
         // setup an analog output listener to listen for any value changes on the analog input
         input.addListener((AnalogChangeListener) event -> {
-            console.print("ANALOG INPUT [");
-            console.print(event.source().address());
-            console.print("] VALUE CHANGE: ");
-            console.println(event.value());
+            console.print("--> ");
+            console.println(event);
         });
 
         // lets read the analog input value
-        console.print("CURRENT ANALOG INPUT VALUE IS [");
+        console.println("ATTEMPTING TO READ CURRENT MOCK ANALOG INPUT VALUE");
+        console.print("--> CURRENT ANALOG INPUT VALUE IS [");
         console.println(input.value() + "]");
+        console.println();
+
+        console.println("ATTEMPTING TO UPDATE MOCK ANALOG INPUT VALUES TO GENERATE CHANGE EVENTS (4)");
 
         // change mock value of mock analog input so we can see some events firing
         input.mockValue(1.45f)
@@ -96,7 +96,15 @@ public class AnalogInputExampleWithMockProvider {
              .mockValue(-6787)
              .mockValue(345.99998f);
 
+        // lets read the analog input value
+        console.println();
+        console.println("ATTEMPTING TO READ FINAL MOCK ANALOG INPUT VALUE");
+        console.print("--> FINAL ANALOG INPUT VALUE IS [");
+        console.println(input.value() + "]");
+        console.println();
+
         // shutdown Pi4J
+        console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
         Pi4J.terminate();
     }
 }

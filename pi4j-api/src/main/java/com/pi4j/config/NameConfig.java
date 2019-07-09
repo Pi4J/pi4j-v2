@@ -1,11 +1,11 @@
-package com.pi4j.io;
+package com.pi4j.config;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Config.java
+ * FILENAME      :  AddressConfig.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,8 +27,7 @@ package com.pi4j.io;
  * #L%
  */
 
-import com.pi4j.config.NameConfig;
-
-public interface IOConfig<CONFIG_TYPE> {
-    // MARKER INTERFACE
+public interface NameConfig<CONFIG_TYPE extends Config> extends Config<CONFIG_TYPE> {
+    String name();
+    CONFIG_TYPE name(String name);
 }

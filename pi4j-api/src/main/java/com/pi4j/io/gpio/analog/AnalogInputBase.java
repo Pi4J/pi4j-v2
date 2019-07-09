@@ -30,7 +30,7 @@ package com.pi4j.io.gpio.analog;
 public abstract class AnalogInputBase extends AnalogBase<AnalogInput, AnalogInputConfig> implements AnalogInput {
     public AnalogInputBase(AnalogInputConfig config){
         super(config);
-        this.name = "AOUT-" + config.address();
+        this.name = (config.name() != null) ? config.name() : "AIN-" + config.address();
     }
 }
 

@@ -35,6 +35,7 @@ import java.util.Properties;
 
 public class DigitalOutputConfigImpl extends AbstractAddressConfig<DigitalOutputConfig> implements DigitalOutputConfig {
 
+    //String name = null;
     DigitalState shutdownState = DigitalState.UNKNOWN;
 
     public DigitalOutputConfigImpl(){
@@ -60,7 +61,22 @@ public class DigitalOutputConfigImpl extends AbstractAddressConfig<DigitalOutput
             var shutdownState = DigitalState.parse(properties.get(prefix + ".shutdown").toString());
             shutdownState(shutdownState);
         }
+//        if(properties.containsKey(prefix + ".name")){
+//            var name = properties.get(prefix + ".name").toString();
+//            name(name);
+//        }
 
         return this;
     }
+
+//    @Override
+//    public String name() {
+//        return this.name;
+//    }
+//
+//    @Override
+//    public DigitalOutputConfig name(String name) {
+//        this.name = name;
+//        return this;
+//    }
 }

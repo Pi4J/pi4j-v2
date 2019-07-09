@@ -39,7 +39,7 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
 
     public DigitalOutputBase(DigitalOutputConfig config){
         super(config);
-        this.name = "DOUT-" + config.address();
+        this.name = (config.name() != null) ? config.name() : "DOUT-" + config.address();
     }
 
     @Override

@@ -37,4 +37,15 @@ public abstract class GpioBase<IO_TYPE extends Gpio<IO_TYPE, CONFIG_TYPE>, CONFI
         super(config);
         this.id = Integer.toString(config.address());
     }
+
+    @Override
+    public String toString(){
+        StringBuilder result = new StringBuilder();
+        result.append("\"");
+        result.append(this.name());
+        result.append("\" (#");
+        result.append(this.address());
+        result.append(")");
+        return result.toString();
+    }
 }

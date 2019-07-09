@@ -36,15 +36,23 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
 
     public AnalogOutputBase(AnalogOutputConfig config){
         super(config);
-        this.name = "AOUT-" + config.address();
+        this.name = (config.name() != null) ? config.name() : "AOUT-" + config.address();
     }
 
     @Override
     public AnalogOutput value(Number value) {
 
-        if(!this.equals(value)){
+        // check to see of there is a value change; if there is then we need
+        // to update the internal value variable and dispatch the change event
+        if(this.value().doubleValue() != value.doubleValue()){
+            // cache copy of old value for change event
+            Number oldValue = this.value();
+
+            // update current/new value
             this.value = value;
-            this.dispatch(new AnalogChangeEvent<AnalogOutputBase>(this, this.value));
+
+            // dispatch value change event
+            this.dispatch(new AnalogChangeEvent<AnalogOutputBase>(this, this.value(), oldValue));
         }
         return this;
     }

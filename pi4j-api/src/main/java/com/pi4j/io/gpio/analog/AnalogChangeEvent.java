@@ -28,24 +28,35 @@ package com.pi4j.io.gpio.analog;
  */
 
 
+import com.pi4j.io.gpio.digital.DigitalState;
+
 public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEvent {
 
-    // internal event copy of the changed analog value
+    // internal event copy of the changed analog values and analog I/O source
+    protected Number oldValue;
     protected Number value;
-
     protected ANALOG_TYPE source;
 
     /**
      * Default constructor
-     * @param value the value changed for this event instance
+     * @param newValue the value changed for this event instance
      */
-    public AnalogChangeEvent(ANALOG_TYPE source, Number value){
-        this.value = value; // cache a copy of the event instance value
+    public AnalogChangeEvent(ANALOG_TYPE source, Number newValue, Number oldValue){
+        this.value = newValue; // cache a copy of the event instance new value
+        this.oldValue = oldValue; // cache a copy of the event instance old value
         this.source = source; // cache analog I/O source
     }
 
     /**
-     * The value change for this event instance
+     * The old/prior value change for this event instance
+     * @return
+     */
+    public Number oldValue() {
+        return this.oldValue;
+    }
+
+    /**
+     * The current/new value change for this event instance
      * @return
      */
     public Number value() {
@@ -55,5 +66,21 @@ public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEven
     @Override
     public ANALOG_TYPE source() {
         return this.source;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder result = new StringBuilder();
+        result.append("<<ANALOG CHANGE EVENT>> [\"");
+        result.append(source().name());
+        result.append("\" (#");
+        result.append(source().address());
+        result.append(")");
+        result.append("] VALUE: [");
+        result.append(this.oldValue().toString());
+        result.append(" -> ");
+        result.append(this.value().toString());
+        result.append("]");
+        return result.toString();
     }
 }

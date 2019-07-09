@@ -62,6 +62,7 @@ public class DigitalInputExampleFromProperties {
         Properties properties = new Properties();
         properties.put("my_digital_input.address", DIGITAL_INPUT_PIN);
         properties.put("my_digital_input.pull", "UP");
+        properties.put("my_digital_input.name", "MY-DIGITAL-INPUT");
 
         // create a digital input instance using the default digital input provider
         // we will use the PULL_DOWN argument to set the pin pull-down resistance on this GPIO pin
@@ -70,23 +71,28 @@ public class DigitalInputExampleFromProperties {
 
         // setup a digital output listener to listen for any state changes on the digital input
         input.addListener((DigitalChangeListener) event -> {
-            console.print("DIGITAL INPUT [");
-            console.print(event.source().address());
-            console.print("] STATE CHANGE: ");
-            console.println(event.state());
+            console.print(event);
         });
 
         // lets read the digital output state
-        console.print("CURRENT DIGITAL INPUT STATE IS [");
+        console.print("DIGITAL INPUT [");
+        console.print(input);
+        console.print("] STATE IS [");
         console.println(input.state() + "]");
 
-        console.print("CURRENT DIGITAL INPUT PULL RESISTANCE IS [");
+        console.print("DIGITAL INPUT [");
+        console.print(input);
+        console.print("] PULL RESISTANCE IS [");
         console.println(input.pull() + "]");
+
+        console.println();
+        console.println("CHANGE INPUT STATES VIA I/O HARDWARE AND CHANGE EVENTS WILL BE PRINTED BELOW:");
 
         // wait (block) for user to exit program using CTRL-C
         console.waitForExit();
 
         // shutdown Pi4J
+        console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
         Pi4J.terminate();
     }
 }

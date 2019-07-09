@@ -30,10 +30,7 @@ package com.pi4j.provider.mock.io.gpio.analog;
  */
 
 
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
-import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogInputBase;
-import com.pi4j.io.gpio.analog.AnalogInputConfig;
+import com.pi4j.io.gpio.analog.*;
 
 public class MockAnalogInput extends AnalogInputBase implements AnalogInput {
 
@@ -49,9 +46,19 @@ public class MockAnalogInput extends AnalogInputBase implements AnalogInput {
     }
 
     public MockAnalogInput mockValue(Number value){
+
+        // check to see of there is a value change; if there is then we need
+        // to update the internal value variable and dispatch the change event
         if(this.value().doubleValue() != value.doubleValue()) {
+
+            // cache copy of old value for change event
+            Number oldValue = this.value();
+
+            // update current/new value
             this.value = value;
-            this.dispatch(new AnalogChangeEvent(this, this.value));
+
+            // dispatch value change event
+            this.dispatch(new AnalogChangeEvent(this, this.value(), oldValue));
         }
         return this;
     }

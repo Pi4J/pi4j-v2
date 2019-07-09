@@ -60,20 +60,20 @@ public class AnalogInputExample {
 
         // setup an analog input listener to listen for any value changes on the analog input
         input.addListener((AnalogChangeListener) event -> {
-            console.print("ANALOG INPUT [");
-            console.print(event.source().address());
-            console.print("] VALUE CHANGE: ");
-            console.println(event.value());
+            console.println(event);
         });
 
         // lets read the analog output state
-        console.print("CURRENT ANALOG INPUT VALUE IS [");
+        console.print("THE STARTING ANALOG INPUT VALUE IS [");
         console.println(input.value() + "]");
+
+        console.println("CHANGE INPUT VALUES VIA I/O HARDWARE AND CHANGE EVENTS WILL BE PRINTED BELOW:");
 
         // wait (block) for user to exit program using CTRL-C
         console.waitForExit();
 
         // shutdown Pi4J
+        console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
         Pi4J.terminate();
     }
 }

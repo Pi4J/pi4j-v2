@@ -62,20 +62,20 @@ public class DigitalInputExample {
 
         // setup a digital output listener to listen for any state changes on the digital input
         input.addListener((DigitalChangeListener) event -> {
-            console.print("DIGITAL INPUT [");
-            console.print(event.source().address());
-            console.print("] STATE CHANGE: ");
-            console.println(event.state());
+            console.println(event);
         });
 
-        // lets read the digital output state
-        console.print("CURRENT DIGITAL INPUT STATE IS [");
+        // lets read the analog output state
+        console.print("THE STARTING DIGITAL INPUT STATE IS [");
         console.println(input.state() + "]");
+
+        console.println("CHANGE INPUT STATES VIA I/O HARDWARE AND CHANGE EVENTS WILL BE PRINTED BELOW:");
 
         // wait (block) for user to exit program using CTRL-C
         console.waitForExit();
 
         // shutdown Pi4J
+        console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
         Pi4J.terminate();
     }
 }

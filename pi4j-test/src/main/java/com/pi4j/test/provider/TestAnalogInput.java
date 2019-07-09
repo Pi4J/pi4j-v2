@@ -46,8 +46,21 @@ public class TestAnalogInput extends AnalogInputBase implements AnalogInput {
     }
 
     public TestAnalogInput test(Number value){
-        this.value = value;
-        this.dispatch(new AnalogChangeEvent(this, this.value));
+
+
+        // check to see of there is a value change; if there is then we need
+        // to update the internal value variable and dispatch the change event
+        if(this.value().doubleValue() != value.doubleValue()) {
+
+            // cache copy of old value for change event
+            Number oldValue = this.value();
+
+            // update current/new value
+            this.value = value;
+
+            // dispatch value change event
+            this.dispatch(new AnalogChangeEvent(this, this.value(), oldValue));
+        }
         return this;
     }
 }

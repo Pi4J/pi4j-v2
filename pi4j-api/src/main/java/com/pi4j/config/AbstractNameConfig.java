@@ -27,25 +27,23 @@ package com.pi4j.config;
  * #L%
  */
 
-import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
-
 import java.util.Properties;
 
-public abstract class AbstractAddressConfig<CONFIG_TYPE extends Config>
-        extends AbstractNameConfig<CONFIG_TYPE>
-        implements AddressConfig<CONFIG_TYPE> {
+public abstract class AbstractNameConfig<CONFIG_TYPE extends Config>
+        extends AbstractConfig<CONFIG_TYPE>
+        implements NameConfig<CONFIG_TYPE> {
 
-    private int address;
+    private String name = null;
 
-    public AbstractAddressConfig(){
-        this.address(0);
+    public AbstractNameConfig(){
+        this.name(null);
     }
-    public AbstractAddressConfig(int address){
-        this.address = address;
+    public AbstractNameConfig(String name){
+        this.name = name;
     }
 
-    public int address() { return this.address; };
-    public CONFIG_TYPE address(int address) { this.address = address; return (CONFIG_TYPE)this; }
+    public String name() { return this.name; };
+    public CONFIG_TYPE name(String name) { this.name = name; return (CONFIG_TYPE)this; }
 
     @Override
     public CONFIG_TYPE load(Properties properties, String prefix){
@@ -53,13 +51,12 @@ public abstract class AbstractAddressConfig<CONFIG_TYPE extends Config>
         // ensure properties is not empty
         super.load(properties, prefix);
 
-        // ensure required configuration properties are present
-        if(!properties.containsKey(prefix + ".address"))
-            throw new ConfigMissingRequiredKeyException(prefix + ".address");
-
-        // set address property
-        int address = Integer.parseInt(properties.get(prefix + ".address").toString());
-        this.address(address);
+        // determine if any optional configuration properties are present
+        if(properties.containsKey(prefix + ".name")){
+            // set name property
+            String name  = properties.get(prefix + ".name").toString();
+            this.name(name);
+        }
 
         return (CONFIG_TYPE) this;
     }

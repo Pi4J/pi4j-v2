@@ -57,4 +57,18 @@ public class DigitalChangeEvent<DIGITAL_TYPE extends Digital> implements Digital
     public DIGITAL_TYPE source() {
         return this.source;
     }
+
+
+    @Override
+    public String toString(){
+        StringBuilder result = new StringBuilder();
+        result.append("<<DIGITAL CHANGE EVENT>> [");
+        result.append(source());
+        result.append("] STATE: [");
+        result.append(DigitalState.getInverseState(this.state()));
+        result.append(" -> ");
+        result.append(this.state());
+        result.append("]");
+        return result.toString();
+    }
 }
