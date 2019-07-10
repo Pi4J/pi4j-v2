@@ -5,7 +5,7 @@ package com.pi4j.example.gpio.digital;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: EXAMPLE :: Sample Code
- * FILENAME      :  DigitalOutputExample.java
+ * FILENAME      :  DigitalOutputExampleUsingDependencyInjection.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,7 +28,10 @@ package com.pi4j.example.gpio.digital;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.annotation.Address;
 import com.pi4j.annotation.Inject;
+import com.pi4j.annotation.Name;
+import com.pi4j.annotation.ShutdownState;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalOutput;
@@ -49,10 +52,13 @@ public class DigitalOutputExampleUsingDependencyInjection {
 
     public static class ExampleRuntime implements Callable<Void> {
 
-        public static final String DIGITAL_OUTPUT_PIN = "4";
+        public static final int DIGITAL_OUTPUT_PIN = 4;
 
         // create a digital output instance using the default digital output provider
-        @Inject(id=DIGITAL_OUTPUT_PIN)
+        @Inject
+        @Address(DIGITAL_OUTPUT_PIN)
+        @Name("My Digi Out")
+        @ShutdownState(DigitalState.HIGH)
         public DigitalOutput output;
 
         @Inject
@@ -66,7 +72,7 @@ public class DigitalOutputExampleUsingDependencyInjection {
             final var console = new Console();
 
             // print program title/header
-            console.title("<-- The Pi4J Project -->", "Basic Digital Output Example");
+            console.title("<-- The Pi4J Project -->", "Basic Digital Output Example Using Dependency Injection");
 
             // allow for user to exit program using CTRL-C
             console.promptForExit();

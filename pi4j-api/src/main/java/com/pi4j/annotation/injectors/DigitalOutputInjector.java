@@ -28,12 +28,13 @@ package com.pi4j.annotation.injectors;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.Injector;
+import com.pi4j.annotation.*;
+import com.pi4j.annotation.exception.AnnotationException;
+import com.pi4j.annotation.impl.ProviderAnnotationProcessor;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
+import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.provider.Provider;
-import com.pi4j.provider.exception.ProviderNotFoundException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -55,41 +56,47 @@ public class DigitalOutputInjector implements Injector<Inject, DigitalOutput> {
 
     @Override
     public DigitalOutput instance(Field field, Inject annotation) throws Exception {
-        String id = null;
+
         Class<? extends Provider> providerClass = null;
 
-        // <<1>> inject instance by user defined ID property
-        if(annotation.id() != null || !annotation.id().isEmpty()){
-            id = annotation.id().trim();
+        // test for required peer annotations
+        if(!field.isAnnotationPresent(Address.class)){
+            throw new AnnotationException("Missing required '@Address' annotation for this I/O type.");
         }
 
-        // <<2>> alternatively, inject by user defined class type property
-        if(annotation.type() != null && annotation.type() != void.class && Provider.class.isAssignableFrom(annotation.type())){
-            providerClass = annotation.type();
+        // all supported additional annotations for configuring the digital output
+        Address address = field.getAnnotation(Address.class);
+        Name name = null;
+        Description description = null;
+        ShutdownState shutdownState = null;
+
+        if(field.isAnnotationPresent(Name.class)){
+            name = field.getAnnotation(Name.class);
         }
 
-        // <<3>> alternatively, if no user defined class type property was defined, then we can infer the type based on the target field
-        if(providerClass == null && field.getType() != null && Provider.class.isAssignableFrom(field.getType())){
-            providerClass = (Class<? extends Provider>) field.getType();
+        if(field.isAnnotationPresent(Description.class)){
+            description = field.getAnnotation(Description.class);
         }
 
-        if(id != null && !id.isEmpty()) {
-            if(providerClass == null) {
-                // get provider instance using ID only
-                return Pi4J.context().providers().digitalOutput().getDefault().instance(DigitalOutputConfig.instance(Integer.parseInt(id)));
-            }
-            else {
-                // get provider instance using ID and Provider Class
-                //return Pi4J.context().providers().get(id, providerClass).instance(DigitalOutputConfig.instance(Integer.parseInt(id)));
-            }
+        if(field.isAnnotationPresent(ShutdownState.class)){
+            shutdownState = field.getAnnotation(ShutdownState.class);
         }
 
-        if(providerClass != null){
-            // get default provider instance using only Provider Class
-            //return Pi4J.context().providers().getDefault(providerClass);
+        DigitalOutputConfig config = DigitalOutputConfig.instance(address.value());
+        if(name != null) config.name(name.value());
+        if(shutdownState != null) config.shutdownState(shutdownState.value());
+
+        DigitalOutputProvider provider = null;
+        if(field.isAnnotationPresent(com.pi4j.annotation.Provider.class)){
+            provider = ProviderAnnotationProcessor.instance(field, DigitalOutputProvider.class);
         }
+        else{
+            provider = Pi4J.providers().getDefault(DigitalOutputProvider.class);
+        }
+
+        return DigitalOutput.instance(provider, config);
 
         // unable to inject anything
-        throw new ProviderNotFoundException("ID=" + id + "; CLASS=" + providerClass);
+        //throw new ProviderNotFoundException("ID=" + id + "; CLASS=" + providerClass);
     }
 }

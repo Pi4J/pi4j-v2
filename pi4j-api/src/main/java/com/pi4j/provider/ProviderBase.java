@@ -87,6 +87,7 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
     @Override
     public IO_TYPE instance(CONFIG_TYPE config) throws Exception {
         var newInstance = create(config);
+        newInstance.provider(this);
         instances.put(newInstance.id(), newInstance);
         return newInstance;
     }

@@ -5,7 +5,7 @@ package com.pi4j.annotation;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  PwmInject.java
+ * FILENAME      :  Description.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -34,7 +34,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-public @interface PwmInject {
-    String provider() default "";
-    int address();
+public @interface Description {
+    String value();
 }

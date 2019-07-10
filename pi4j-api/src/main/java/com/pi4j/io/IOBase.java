@@ -31,11 +31,24 @@ import com.pi4j.common.Descriptor;
 import com.pi4j.common.IdentityBase;
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
+import com.pi4j.provider.Provider;
 
 
 public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig> extends IdentityBase implements IO<IO_TYPE,CONFIG_TYPE> {
 
     protected CONFIG_TYPE config = null;
+    protected Provider provider = null;
+
+    @Override
+    public Provider provider(){
+        return this.provider;
+    }
+
+    @Override
+    public IO_TYPE provider(Provider provider){
+        this.provider = provider;
+        return (IO_TYPE)this;
+    }
 
     public IOBase(CONFIG_TYPE config){
         super();

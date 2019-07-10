@@ -58,8 +58,7 @@ module pi4j.api {
                  com.pi4j.annotation.injectors.DigitalOutputInjector,
                  com.pi4j.annotation.injectors.ProviderGroupInjector,
                  com.pi4j.annotation.injectors.ProviderInjector,
-                 com.pi4j.annotation.injectors.ProvidersInjector,
-                 com.pi4j.annotation.injectors.PwmInjector;
+                 com.pi4j.annotation.injectors.ProvidersInjector;
 
     requires slf4j.api;
 }

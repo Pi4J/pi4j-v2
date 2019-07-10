@@ -38,6 +38,7 @@ import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
+import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 
 public interface IO<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig>
@@ -47,6 +48,9 @@ public interface IO<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig>
 
     IO_TYPE name(String name);
     IO_TYPE description(String description);
+
+    Provider provider();
+    IO_TYPE provider(Provider provider);
 
     // MARKER INTERFACE
 

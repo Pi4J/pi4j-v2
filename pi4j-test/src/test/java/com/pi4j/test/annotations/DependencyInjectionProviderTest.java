@@ -5,7 +5,7 @@ package com.pi4j.test.annotations;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
- * FILENAME      :  AutoProvidersTest.java
+ * FILENAME      :  DependencyInjectionProviderTest.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,14 +29,10 @@ package com.pi4j.test.annotations;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.RegisterProvider;
-import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.test.About;
-import com.pi4j.test.provider.TestAnalogInputProvider;
-import com.pi4j.test.provider.TestPwmProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

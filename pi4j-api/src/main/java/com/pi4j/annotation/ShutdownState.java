@@ -5,7 +5,7 @@ package com.pi4j.annotation;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  PwmInject.java
+ * FILENAME      :  ShutdownState.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,8 +27,7 @@ package com.pi4j.annotation;
  * #L%
  */
 
-import com.pi4j.config.Config;
-import com.pi4j.io.gpio.GpioConfig;
+import com.pi4j.io.gpio.digital.DigitalState;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -37,8 +36,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-public @interface InjectGpio {
-    String provider() default "";
-    int address();
-    Class<? extends GpioConfig> config();
+public @interface ShutdownState {
+    DigitalState value();
 }
