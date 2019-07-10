@@ -1,11 +1,11 @@
-package com.pi4j.provider.exception;
+package com.pi4j.annotation;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  ProvidersNotInitialized.java
+ * FILENAME      :  RegisterProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,23 +27,13 @@ package com.pi4j.provider.exception;
  * #L%
  */
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * <p>
- * This exception is thrown if a platform assignment is attempted when a
- * platform instance has already been assigned.
- * </p>
- *
- * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
- * @author Robert Savage (<a
- *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- */
-public class ProvidersNotInitialized extends ProviderException {
-
-    /**
-     * Default Constructor
-     */
-    public ProvidersNotInitialized(){
-        super("The Pi4J providers have not been initialized.  Make sure to call 'Pi4J.initialize()' before attempting to use any Pi4J io.");
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.TYPE})
+public @interface RegisterProvider {
+    // MARKER ANNOTATION INTERFACE
 }

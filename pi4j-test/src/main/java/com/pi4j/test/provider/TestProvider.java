@@ -34,7 +34,6 @@ import com.pi4j.io.IO;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderBase;
 
-import java.io.IOException;
 import java.util.Collection;
 
 public abstract class TestProvider<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CONFIG_TYPE extends Config>

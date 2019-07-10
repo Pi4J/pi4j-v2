@@ -29,14 +29,11 @@ package com.pi4j.provider.raspberrypi.io.i2c;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.i2c.I2CProviderBase;
 import com.pi4j.provider.raspberrypi.RaspberryPi;
-
-import java.io.IOException;
 
 public class RaspiI2CProvider extends I2CProviderBase implements I2CProvider {
 

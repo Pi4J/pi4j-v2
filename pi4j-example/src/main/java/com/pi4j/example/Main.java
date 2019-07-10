@@ -27,7 +27,6 @@ package com.pi4j.example;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogOutput;

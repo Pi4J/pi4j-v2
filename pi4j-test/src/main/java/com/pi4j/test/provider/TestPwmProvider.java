@@ -32,8 +32,6 @@ import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.pwm.PwmProviderBase;
 
-import java.io.IOException;
-
 public class TestPwmProvider extends PwmProviderBase implements PwmProvider {
 
     public TestPwmProvider(){ super(); }

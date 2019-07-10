@@ -28,6 +28,7 @@ package com.pi4j.test;/*-
 import com.pi4j.Pi4J;
 import com.pi4j.binding.Binding;
 import com.pi4j.binding.exception.BindingException;
+import com.pi4j.exception.Pi4JException;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderType;
 
@@ -37,10 +38,10 @@ public class About {
     public About() throws Exception {
     }
 
-    public void enumerateBindings() throws BindingException {
+    public void enumerateBindings() throws Pi4JException {
         enumerateBindings("BINDINGS");
     }
-    public void enumerateBindings(String title) throws BindingException {
+    public void enumerateBindings(String title) throws Pi4JException {
         System.out.println("=====================================================");
         System.out.println(title);
         System.out.println("=====================================================");

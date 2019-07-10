@@ -28,11 +28,10 @@ package com.pi4j.test.provider;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.binding.exception.BindingException;
+import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.serial.SerialProvider;
-import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.test.About;
 import org.junit.After;
 import org.junit.Before;
@@ -44,7 +43,7 @@ import static junit.framework.TestCase.assertNotNull;
 public class ManualProvidersCtorTest {
 
     @Before
-    public void beforeTest() throws BindingException {
+    public void beforeTest() throws Pi4JException {
 
         // create our own custom provider implementation classes
         PwmProvider pwmProvider = new TestPwmProvider();
@@ -62,11 +61,11 @@ public class ManualProvidersCtorTest {
     public void afterTest() {
         try {
             Pi4J.terminate();
-        } catch (BindingException e) { /* do nothing */ }
+        } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
-    public void testProvidersNotNull() throws ProviderException {
+    public void testProvidersNotNull() throws Pi4JException {
         // ensure that the io collection in the Pi4J context is not NULL
         assertNotNull(Pi4J.context().providers());
     }

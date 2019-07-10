@@ -1,11 +1,11 @@
-package com.pi4j.provider.exception;
+package com.pi4j.exception;
 
 /*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  ProvidersAlreadyInitialized.java
+ * FILENAME      :  Pi4JException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,7 +27,6 @@ package com.pi4j.provider.exception;
  * #L%
  */
 
-
 /**
  * <p>
  * This exception is thrown if a platform assignment is attempted when a
@@ -38,12 +37,22 @@ package com.pi4j.provider.exception;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public class ProvidersAlreadyInitialized extends ProviderException {
+public class Pi4JException extends Exception {
 
     /**
      * Default Constructor
+     *
+     * @param message error message
      */
-    public ProvidersAlreadyInitialized(){
-        super("The Pi4J providers have already been initialized. Make sure you only have one call to 'Pi4J.initialize()'; This method is not reentrant..");
+    public Pi4JException(String message){
+        super(message);
+    }
+
+    public Pi4JException(Throwable cause){
+        super(cause);
+    }
+
+    public Pi4JException(String message, Throwable cause){
+        super(message,cause);
     }
 }

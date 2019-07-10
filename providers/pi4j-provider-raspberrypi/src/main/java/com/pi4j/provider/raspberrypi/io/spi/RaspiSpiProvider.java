@@ -29,7 +29,6 @@ package com.pi4j.provider.raspberrypi.io.spi;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;

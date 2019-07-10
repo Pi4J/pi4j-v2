@@ -29,11 +29,11 @@ package com.pi4j.provider.raspberrypi.io.serial;
  * #L%
  */
 
-import com.pi4j.context.Context;
-import com.pi4j.io.serial.*;
+import com.pi4j.io.serial.Serial;
+import com.pi4j.io.serial.SerialConfig;
+import com.pi4j.io.serial.SerialProvider;
+import com.pi4j.io.serial.SerialProviderBase;
 import com.pi4j.provider.raspberrypi.RaspberryPi;
-
-import java.util.Collection;
 
 
 public class RaspiSerialProvider extends SerialProviderBase implements SerialProvider {

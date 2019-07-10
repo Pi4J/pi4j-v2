@@ -1,11 +1,11 @@
-package com.pi4j.test.context;
+package com.pi4j.annotation.injectors;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
- * FILENAME      :  ContextTests.java
+ * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
+ * FILENAME      :  ContextInjector.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,29 +28,31 @@ package com.pi4j.test.context;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.binding.exception.BindingException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import com.pi4j.annotation.Inject;
+import com.pi4j.annotation.Injector;
+import com.pi4j.context.Context;
 
-import static junit.framework.TestCase.assertNotNull;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 
-public class ContextTests {
+public class ContextInjector implements Injector<Inject, Context> {
 
-    @Before
-    public void beforeTest() throws BindingException {
-        Pi4J.initialize(true);
+    @Override
+    public boolean isAnnotationType(Annotation annotation) {
+        return annotation instanceof Inject;
     }
 
-    @After
-    public void afterTest() {
-        try {
-            Pi4J.terminate();
-        } catch (BindingException e) { /* do nothing */ }
+    @Override
+    public Class<Inject> getAnnotationType() {
+        return Inject.class;
     }
 
-    @Test
-    public void testFactoryContext() throws BindingException {
-        assertNotNull(Pi4J.context());
+    @Override
+    public Class<Context> getTargetType() { return Context.class; }
+
+    @Override
+    public Context instance(Field field, Inject annotation) throws Exception {
+        // return context instance
+        return Pi4J.context();
     }
 }

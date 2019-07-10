@@ -27,16 +27,20 @@ package com.pi4j.context.impl;
  * #L%
  */
 
+import com.pi4j.annotation.impl.DefaultAnnotationProcessor;
+import com.pi4j.annotation.processor.AnnotationProcessor;
 import com.pi4j.binding.Bindings;
 import com.pi4j.binding.impl.DefaultBindings;
 import com.pi4j.context.Context;
 import com.pi4j.provider.Providers;
+import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.impl.DefaultProviders;
 
 public class DefaultContext implements Context {
 
     protected Providers providers = DefaultProviders.singleton(this);
     protected Bindings bindings = DefaultBindings.singleton(this);
+    protected AnnotationProcessor annotationProcessor = DefaultAnnotationProcessor.singleton(this);
 
     private static Context singleton = null;
     public static Context singleton(){
@@ -59,5 +63,11 @@ public class DefaultContext implements Context {
     @Override
     public Bindings bindings() {
         return bindings;
+    }
+
+    @Override
+    public Context inject(Object... objects) throws ProviderException{
+        annotationProcessor.inject(objects);
+        return this;
     }
 }

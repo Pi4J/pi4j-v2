@@ -26,6 +26,7 @@
  */
 module pi4j.api {
     exports com.pi4j;
+    exports com.pi4j.annotation;
     exports com.pi4j.binding;
     exports com.pi4j.binding.exception;
     exports com.pi4j.common;
@@ -33,6 +34,7 @@ module pi4j.api {
     exports com.pi4j.config;
     exports com.pi4j.config.exception;
     exports com.pi4j.context;
+    exports com.pi4j.exception;
     exports com.pi4j.event;
     exports com.pi4j.io;
     exports com.pi4j.io.gpio.analog;
@@ -49,6 +51,15 @@ module pi4j.api {
 
     uses com.pi4j.binding.Binding;
     uses com.pi4j.provider.Provider;
+    uses com.pi4j.annotation.Injector;
+
+    provides com.pi4j.annotation.Injector
+            with com.pi4j.annotation.injectors.ContextInjector,
+                 com.pi4j.annotation.injectors.DigitalOutputInjector,
+                 com.pi4j.annotation.injectors.ProviderGroupInjector,
+                 com.pi4j.annotation.injectors.ProviderInjector,
+                 com.pi4j.annotation.injectors.ProvidersInjector,
+                 com.pi4j.annotation.injectors.PwmInjector;
 
     requires slf4j.api;
 }

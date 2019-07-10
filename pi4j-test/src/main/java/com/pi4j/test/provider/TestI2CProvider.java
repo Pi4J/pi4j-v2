@@ -32,8 +32,6 @@ import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.i2c.I2CProviderBase;
 
-import java.io.IOException;
-
 public class TestI2CProvider extends I2CProviderBase implements I2CProvider {
 
     public TestI2CProvider(){ super(); }

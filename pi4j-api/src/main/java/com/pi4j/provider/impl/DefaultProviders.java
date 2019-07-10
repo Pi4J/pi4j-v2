@@ -175,7 +175,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> Map<String, T> all(Class<T> providerClass) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         // create a map <io-id, io-instance> of providers that extend of the given io class
         var result = new ConcurrentHashMap<String, T>();
@@ -199,7 +199,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> Map<String, T> all(ProviderType providerType) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         // create a map <io-id, io-instance> of providers that match the given ProviderType
         var result = new ConcurrentHashMap<String, T>();
@@ -215,7 +215,7 @@ public class DefaultProviders implements Providers {
     public boolean exists(String providerId) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         // return true if the managed io map contains the given io-id
         if(providers.containsKey(providerId)){
@@ -228,7 +228,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> boolean exists(String providerId, Class<T> providerClass) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         // return true if the managed io map contains the given io-id and io-class
         var subset = all(providerClass);
@@ -242,7 +242,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> boolean exists(String providerId, ProviderType providerType) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         // return true if the managed io map contains the given io-id and io-type
         var subset = all(providerType);
@@ -256,7 +256,7 @@ public class DefaultProviders implements Providers {
     public Provider get(String providerId) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         // return the io instance from the managed io map that contains the given io-id
         if(providers.containsKey(providerId)){
@@ -269,7 +269,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> T get(String providerId, Class<T> providerClass) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         // return the io instance from the managed io map that contains the given io-id and io-class
         var subset = all(providerClass);
@@ -283,7 +283,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> T get(String providerId, ProviderType providerType) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         // return the io instance from the managed io map that contains the given io-id and io-type
         var subset = all(providerType);
@@ -297,7 +297,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> Providers add(T ... provider) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         logger.trace("invoked 'add()' io [count={}]", provider.length);
 
@@ -335,7 +335,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> void replace(T provider) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         logger.trace("invoked 'replace()' io [id={}] with [{}]", provider.id(), provider);
 
@@ -364,7 +364,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> void remove(String providerId) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         logger.trace("invoked 'remove() io' [id={}]", providerId);
 
@@ -408,7 +408,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> T getDefault(Class<T> providerClass) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         // iterate the managed default set of providers looking for a default io with a matching io-class
         for(var instance : defaults().values()){
@@ -424,7 +424,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> T getDefault(ProviderType providerType) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         // iterate the managed default set of providers looking for a default io with a matching io-type
         if(defaultProviders.containsKey(providerType)){
@@ -439,7 +439,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> boolean hasDefault(Class<T> providerClass) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         try {
             return getDefault(providerClass) != null;
@@ -453,7 +453,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> boolean hasDefault(ProviderType providerType) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         try {
             return getDefault(providerType) != null;
@@ -467,7 +467,7 @@ public class DefaultProviders implements Providers {
     public void setDefault(String providerId) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         // ensure requested io id is detected
         if(!providers.containsKey(providerId)){
@@ -493,7 +493,7 @@ public class DefaultProviders implements Providers {
     public void removeDefault(String providerId) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         logger.trace("invoked 'removeDefault()' for io [id={}]", providerId);
 
@@ -516,7 +516,7 @@ public class DefaultProviders implements Providers {
     public void removeDefault(ProviderType providerType) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         logger.trace("invoked 'removeDefault()' for io [type={}]", providerType);
 
@@ -533,7 +533,7 @@ public class DefaultProviders implements Providers {
     public <T extends Provider> void removeDefault(Class<T> providerClass) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         logger.trace("invoked 'removeDefault()' for io [class={}]", providerClass.getName());
 
@@ -552,7 +552,7 @@ public class DefaultProviders implements Providers {
     public void initialize(Context context, boolean autoDetect) throws ProviderException {
 
         // ensure providers have not been initialized
-        if(initialized) throw new ProvidersAlreadyInitialized();
+        if(initialized) throw new ProvidersAlreadyInitializedException();
 
         // set initialized flag
         initialized = true;
@@ -595,7 +595,7 @@ public class DefaultProviders implements Providers {
     public void terminate(Context context) throws ProviderException {
 
         // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitialized();
+        if(!initialized) throw new ProvidersNotInitializedException();
 
         logger.trace("invoked 'terminate();'");
 

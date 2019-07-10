@@ -28,11 +28,13 @@ package com.pi4j.provider;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.common.Describable;
+import com.pi4j.common.Descriptor;
 import com.pi4j.provider.exception.ProviderException;
 
 import java.util.Map;
 
-public class ProviderGroup<T extends Provider>{
+public class ProviderGroup<T extends Provider> implements Describable {
 
     private ProviderType providerType = null;
     private Providers providers;
@@ -46,7 +48,7 @@ public class ProviderGroup<T extends Provider>{
         this.providerType = providerType;
     }
 
-    public ProviderGroup(ProviderType providerType){
+    public ProviderGroup(ProviderType providerType) throws ProviderException {
         this(Pi4J.providers(),providerType);
     }
 
@@ -68,5 +70,23 @@ public class ProviderGroup<T extends Provider>{
 
     public boolean hasDefault() throws ProviderException {
         return providers.hasDefault(providerType);
+    }
+
+    @Override
+    public Descriptor describe() {
+        Descriptor descriptor = Descriptor.create()
+                .category("PROVIDER GROUP")
+                .name("Provider Group")
+                .type(this.getClass());
+        Map<String, T> all = null;
+        try {
+            all = all();
+            all.forEach((id, provider)->{
+                descriptor.add(provider.describe());
+            });
+        } catch (ProviderException e) {
+            e.printStackTrace();
+        }
+        return descriptor;
     }
 }

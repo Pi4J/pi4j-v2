@@ -28,8 +28,6 @@ package com.pi4j.io.gpio.analog;
  */
 
 
-import com.pi4j.io.gpio.digital.DigitalState;
-
 public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEvent {
 
     // internal event copy of the changed analog values and analog I/O source

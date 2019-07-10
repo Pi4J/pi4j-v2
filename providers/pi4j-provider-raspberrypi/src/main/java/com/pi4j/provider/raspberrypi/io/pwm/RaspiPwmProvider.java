@@ -29,14 +29,11 @@ package com.pi4j.provider.raspberrypi.io.pwm;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.pwm.PwmProviderBase;
 import com.pi4j.provider.raspberrypi.RaspberryPi;
-
-import java.io.IOException;
 
 public class RaspiPwmProvider extends PwmProviderBase implements PwmProvider {
 

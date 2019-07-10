@@ -27,20 +27,10 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.common.Metadata;
-import com.pi4j.common.exception.LifecycleException;
-import com.pi4j.context.Context;
-import com.pi4j.io.IOConfig;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.io.spi.SpiProviderBase;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 
 public class TestSpiProvider extends SpiProviderBase implements SpiProvider {
 

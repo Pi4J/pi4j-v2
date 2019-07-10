@@ -31,10 +31,13 @@ import com.pi4j.binding.Bindings;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
 import com.pi4j.provider.Providers;
+import com.pi4j.provider.exception.ProviderException;
 
 public interface Context extends Describable {
     Providers providers();
     Bindings bindings();
+
+    Context inject(Object... objects) throws ProviderException;
 
     default Descriptor describe() {
         Descriptor descriptor = Descriptor.create()

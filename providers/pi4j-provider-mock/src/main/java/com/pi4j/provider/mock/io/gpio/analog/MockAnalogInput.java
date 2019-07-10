@@ -30,7 +30,10 @@ package com.pi4j.provider.mock.io.gpio.analog;
  */
 
 
-import com.pi4j.io.gpio.analog.*;
+import com.pi4j.io.gpio.analog.AnalogChangeEvent;
+import com.pi4j.io.gpio.analog.AnalogInput;
+import com.pi4j.io.gpio.analog.AnalogInputBase;
+import com.pi4j.io.gpio.analog.AnalogInputConfig;
 
 public class MockAnalogInput extends AnalogInputBase implements AnalogInput {
 

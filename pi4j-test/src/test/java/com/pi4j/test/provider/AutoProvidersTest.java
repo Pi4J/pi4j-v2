@@ -28,8 +28,7 @@ package com.pi4j.test.provider;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.binding.exception.BindingException;
-import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.exception.Pi4JException;
 import com.pi4j.test.About;
 import org.junit.After;
 import org.junit.Before;
@@ -41,7 +40,7 @@ import static org.junit.Assert.assertFalse;
 public class AutoProvidersTest {
 
     @Before
-    public void beforeTest() throws BindingException {
+    public void beforeTest() throws Pi4JException {
 
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
@@ -55,16 +54,16 @@ public class AutoProvidersTest {
     public void afterTest() {
         try {
             Pi4J.terminate();
-        } catch (BindingException e) { /* do nothing */ }
+        } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
-    public void testProvidersNotNull() throws ProviderException {
+    public void testProvidersNotNull() throws Pi4JException {
         assertNotNull(Pi4J.context().providers());
     }
 
     @Test
-    public void testProvidersEmpty() throws Exception {
+    public void testProvidersNotEmpty() throws Exception {
         About about = new About();
 
         // ensure that 1 or more providers were detected/loaded into the Pi4J context

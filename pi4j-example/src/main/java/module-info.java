@@ -35,5 +35,9 @@ module pi4j.example {
     requires pi4j.provider.mock;
     uses com.pi4j.provider.mock.io.gpio.digital.MockDigitalInput;
     uses com.pi4j.provider.mock.io.gpio.digital.MockDigitalInputProvider;
+    uses com.pi4j.provider.mock.io.gpio.digital.MockDigitalOutput;
+    uses com.pi4j.provider.mock.io.gpio.digital.MockDigitalOutputProvider;
 
+    // allow access to classes in the following namespaces for Pi4J annotation processing
+    opens com.pi4j.example.gpio.digital;
 }

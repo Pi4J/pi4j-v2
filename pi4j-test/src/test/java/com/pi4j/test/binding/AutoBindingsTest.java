@@ -28,7 +28,7 @@ package com.pi4j.test.binding;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.binding.exception.BindingException;
+import com.pi4j.exception.Pi4JException;
 import com.pi4j.test.About;
 import org.junit.After;
 import org.junit.Before;
@@ -39,7 +39,7 @@ import static junit.framework.TestCase.assertNotNull;
 public class AutoBindingsTest {
 
     @Before
-    public void beforeTest() throws BindingException {
+    public void beforeTest() throws Pi4JException {
         // Initialize Pi4J with AUTO-DETECT BINDINGS enabled
         // we want to load all detected Pi4J binding libraries
         // in the class path for this test case
@@ -50,11 +50,11 @@ public class AutoBindingsTest {
     public void afterTest() {
         try {
             Pi4J.terminate();
-        } catch (BindingException e) { /* do nothing */ }
+        } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
-    public void testBindingsNotNull() throws BindingException {
+    public void testBindingsNotNull() throws Pi4JException {
         assertNotNull(Pi4J.context().bindings());
     }
 

@@ -5,7 +5,7 @@ package com.pi4j.io;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Config.java
+ * FILENAME      :  IOConfig.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -26,8 +26,6 @@ package com.pi4j.io;
  * limitations under the License.
  * #L%
  */
-
-import com.pi4j.config.NameConfig;
 
 public interface IOConfig<CONFIG_TYPE> {
     // MARKER INTERFACE

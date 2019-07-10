@@ -75,6 +75,21 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
     }
 
 
+    default DigitalOutput pulseHigh(int interval, TimeUnit unit){
+        return pulse(interval, unit, DigitalState.HIGH);
+    }
+    default DigitalOutput pulseLow(int interval, TimeUnit unit){
+        return pulse(interval, unit, DigitalState.LOW);
+    }
+
+    default Future<?> pulseHighAsync(int interval, TimeUnit unit, Callable<Void> callback){
+        return pulseAsync(interval, unit, DigitalState.HIGH, callback);
+    }
+
+    default Future<?> pulseLowAsync(int interval, TimeUnit unit, Callable<Void> callback){
+        return pulseAsync(interval, unit, DigitalState.LOW, callback);
+    }
+
     default DigitalOutput pulse(int interval, TimeUnit unit){
         return pulse(interval, unit, DigitalState.HIGH);
     }
