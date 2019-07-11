@@ -29,9 +29,16 @@ package com.pi4j.annotation.impl;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Injector;
+import com.pi4j.annotation.OnEvent;
+import com.pi4j.annotation.RegisterListener;
 import com.pi4j.annotation.RegisterProvider;
+import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.processor.AnnotationProcessor;
 import com.pi4j.context.Context;
+import com.pi4j.event.Event;
+import com.pi4j.io.gpio.analog.AnalogChangeListener;
+import com.pi4j.io.gpio.digital.DigitalChangeEvent;
+import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 import org.slf4j.Logger;
@@ -40,6 +47,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.AnnotationFormatError;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +90,7 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
     private static Map<Class<? extends Annotation>, List<Injector>> injectors = null;
 
     @Override
-    public void inject(Object... objects) throws ProviderException {
+    public void inject(Object... objects) throws ProviderException, AnnotationException {
 
         // lazy-load IO injectors
         if(injectors == null){
@@ -120,13 +130,71 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
                 // iterate over the annotations looking for Pi4J compatible injectors
                 for (Annotation annotation : annotations) {
                     processInjectionAnnotation(instance, field, annotation);
-                    processOtherAnnotation(instance, field, annotation);
+                    processFieldAnnotations(instance, field, annotation);
                 }
+            }
+
+            // get object class defined methods
+            Method[] methods = instanceClass.getDeclaredMethods();
+
+            // iterate method the methods looking for declared annotations
+            for (Method method : methods) {
+                Annotation[] annotations = method.getDeclaredAnnotations();
+                // iterate over the annotations looking for Pi4J compatible injectors
+                for (Annotation annotation : annotations) {
+                    processMethodAnnotations(instance, method, annotation);
+                }
+            }
+
+        }
+    }
+
+    private void processMethodAnnotations(Object instance, Method method, Annotation annotation) throws ProviderException, AnnotationException {
+
+        if(annotation.annotationType() == OnEvent.class){
+
+            // validate parameter count
+            if(method.getParameterCount() != 1) {
+                throw new AnnotationException("The '@" +annotation.annotationType().getSimpleName() + "' annotated method must include (1) parameter extended from `Event`");
+            }
+
+            // validate parameter type
+            if(!Event.class.isAssignableFrom(method.getParameters()[0].getType())) {
+                throw new AnnotationException("The '@OnEvent' annotated method must include a parameter extending from `Event`");
+            }
+
+            // get method parameters
+            Parameter[] parameters = method.getParameters();
+
+            // get event annotation object
+            OnEvent onEvent = (OnEvent)annotation;
+
+            // handle specific implementations
+
+            // validate parameter types
+            if(parameters[0].getType().isAssignableFrom(DigitalChangeEvent.class)) {
+
+                Pi4J.providers().digitalOutput().getDefault().get(onEvent.value()).addListener((DigitalChangeListener) event -> {
+                    try {
+                        method.invoke(instance, event);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                        logger.error(e.getMessage(), e);
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                        logger.error(e.getMessage(), e);
+                    }
+                });
+
+            }
+
+            else {
+                throw new AnnotationException("Unhandled '@OnEvent' annotation; unsupported method: " + method.getDeclaringClass().getName() + "::" + method.getName());
             }
         }
     }
 
-    private void processOtherAnnotation(Object instance, Field field, Annotation annotation) throws ProviderException {
+    private void processFieldAnnotations(Object instance, Field field, Annotation annotation) throws ProviderException, AnnotationException {
 
         if(annotation.annotationType() == RegisterProvider.class){
             if(Provider.class.isAssignableFrom(field.getType())) {
@@ -136,13 +204,51 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
                     Provider prov = (Provider) field.get(instance);
                     if(prov != null) Pi4J.providers().add(prov);
                 } catch (IllegalAccessException e) {
-                    //e.printStackTrace();
+                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             }
         }
+
+        if(annotation.annotationType() == RegisterListener.class){
+            RegisterListener registerListener = (RegisterListener)annotation;
+
+            // handle digital change listeners
+            if(DigitalChangeListener.class.isAssignableFrom(field.getType())) {
+
+                try {
+                    boolean accessible = field.canAccess(instance);
+                    if (!accessible) field.trySetAccessible();
+                    DigitalChangeListener listener = (DigitalChangeListener) field.get(instance);
+                    if(listener != null) {
+                        Pi4J.providers().digitalOutput().getDefault().get(registerListener.value()).addListener(listener);
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
+                }
+            }
+
+            // handle analog change listeners
+            if(AnalogChangeListener.class.isAssignableFrom(field.getType())) {
+
+                try {
+                    boolean accessible = field.canAccess(instance);
+                    if (!accessible) field.trySetAccessible();
+                    AnalogChangeListener listener = (AnalogChangeListener) field.get(instance);
+                    if(listener != null) {
+                        Pi4J.providers().analogOutput().getDefault().get(registerListener.value()).addListener(listener);
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
+                }
+            }
+
+        }
     }
 
-    private void processInjectionAnnotation(Object instance, Field field, Annotation annotation) throws ProviderException {
+    private void processInjectionAnnotation(Object instance, Field field, Annotation annotation) throws ProviderException, AnnotationException {
         if(injectors.containsKey(annotation.annotationType())){
             // get eligible injectors for this annotation type
             List<Injector> eligibleInjectors = injectors.get(annotation.annotationType());

@@ -27,6 +27,7 @@ package com.pi4j.context;
  * #L%
  */
 
+import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.binding.Bindings;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
@@ -37,7 +38,7 @@ public interface Context extends Describable {
     Providers providers();
     Bindings bindings();
 
-    Context inject(Object... objects) throws ProviderException;
+    Context inject(Object... objects) throws ProviderException, AnnotationException;
 
     default Descriptor describe() {
         Descriptor descriptor = Descriptor.create()

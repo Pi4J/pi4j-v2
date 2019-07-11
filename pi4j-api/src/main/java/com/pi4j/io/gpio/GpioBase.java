@@ -41,7 +41,9 @@ public abstract class GpioBase<IO_TYPE extends Gpio<IO_TYPE, CONFIG_TYPE>, CONFI
     @Override
     public String toString(){
         StringBuilder result = new StringBuilder();
-        result.append("\"");
+        result.append("@");
+        result.append(this.id());
+        result.append(" \"");
         result.append(this.name());
         result.append("\" (#");
         result.append(this.address());

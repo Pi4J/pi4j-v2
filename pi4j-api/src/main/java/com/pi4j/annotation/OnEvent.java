@@ -1,11 +1,11 @@
-package com.pi4j.annotation.processor;
+package com.pi4j.annotation;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnnotationProcessor.java
+ * FILENAME      :  OnEvent.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,9 +27,11 @@ package com.pi4j.annotation.processor;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.provider.exception.ProviderException;
+import java.lang.annotation.*;
 
-public interface AnnotationProcessor {
-    void inject(Object... objects) throws AnnotationException, ProviderException;
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.FIELD})
+@Inherited
+public @interface OnEvent {
+    String value();
 }

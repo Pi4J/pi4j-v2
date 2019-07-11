@@ -28,11 +28,9 @@ package com.pi4j.example.gpio.digital;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.annotation.Address;
-import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.Name;
-import com.pi4j.annotation.ShutdownState;
+import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
+import com.pi4j.io.gpio.digital.DigitalChangeEvent;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
@@ -46,16 +44,17 @@ public class DigitalOutputExampleUsingDependencyInjection {
     public static void main(String[] args) throws Exception {
 
         // Pi4J cannot perform dependency injection on static classes
-        // we will create a container class to run our example
-        new ExampleRuntime().call();
+        // we will create a container instance to run our example
+        new RuntimeContainer().call();
     }
 
-    public static class ExampleRuntime implements Callable<Void> {
+    public static class RuntimeContainer implements Callable<Void> {
 
         public static final int DIGITAL_OUTPUT_PIN = 4;
+        public static final String DIGITAL_OUTPUT_PIN_ID = "4"; //"my.digital.pin.four";
 
         // create a digital output instance using the default digital output provider
-        @Inject
+        @Inject(id = DIGITAL_OUTPUT_PIN_ID)
         @Address(DIGITAL_OUTPUT_PIN)
         @Name("My Digi Out")
         @ShutdownState(DigitalState.HIGH)
@@ -63,6 +62,17 @@ public class DigitalOutputExampleUsingDependencyInjection {
 
         @Inject
         public Context pi4j;
+
+        // register a digital output listener to listen for any state changes on the digital output
+        @RegisterListener(DIGITAL_OUTPUT_PIN_ID)
+        public DigitalChangeListener digitalChangeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
+
+        // setup a digital output event listener to listen for any state changes on the digital output
+        // using a custom method with a single event parameter
+        @OnEvent(DIGITAL_OUTPUT_PIN_ID)
+        public void onDigitalOutputChange(DigitalChangeEvent event){
+            System.out.println(" (LISTENER #2) :: " + event);
+        }
 
         @Override
         public Void call() throws Exception {
@@ -80,16 +90,6 @@ public class DigitalOutputExampleUsingDependencyInjection {
             // initialize the Pi4J library then inject this class for dependency injection on annotations
             Pi4J.initialize().inject(this);
 
-            // create a digital output instance using the default digital output provider
-            //var output = DigitalOutput.instance(DIGITAL_OUTPUT_PIN);
-            //output.config().shutdownState(DigitalState.HIGH);
-            output.config().shutdownState(DigitalState.HIGH);
-
-            // setup a digital output listener to listen for any state changes on the digital output
-            output.addListener((DigitalChangeListener) event -> {
-                System.out.println(event);
-            });
-
             // lets invoke some changes on the digital output
             output.state(DigitalState.HIGH)
                     .state(DigitalState.LOW)
@@ -98,9 +98,8 @@ public class DigitalOutputExampleUsingDependencyInjection {
 
             // lets toggle the digital output state a few times
             output.toggle()
-                    .toggle()
-                    .toggle();
-
+                  .toggle()
+                  .toggle();
 
             // additional friendly methods for setting output state
             output.high()

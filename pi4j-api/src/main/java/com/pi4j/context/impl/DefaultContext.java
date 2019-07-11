@@ -27,6 +27,7 @@ package com.pi4j.context.impl;
  * #L%
  */
 
+import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.DefaultAnnotationProcessor;
 import com.pi4j.annotation.processor.AnnotationProcessor;
 import com.pi4j.binding.Bindings;
@@ -66,7 +67,7 @@ public class DefaultContext implements Context {
     }
 
     @Override
-    public Context inject(Object... objects) throws ProviderException{
+    public Context inject(Object... objects) throws AnnotationException, ProviderException{
         annotationProcessor.inject(objects);
         return this;
     }
