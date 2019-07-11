@@ -1,4 +1,4 @@
-package com.pi4j.example.gpio.digital;
+package com.pi4j.example.gpio.analog;
 
 /*-
  * #%L
@@ -30,6 +30,9 @@ package com.pi4j.example.gpio.digital;
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
+import com.pi4j.io.gpio.analog.AnalogChangeEvent;
+import com.pi4j.io.gpio.analog.AnalogChangeListener;
+import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.digital.DigitalChangeEvent;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalOutput;
@@ -39,7 +42,7 @@ import com.pi4j.util.Console;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-public class DigitalOutputExampleUsingDependencyInjection {
+public class AnalogOutputExampleUsingDependencyInjection {
 
     public static void main(String[] args) throws Exception {
 
@@ -48,29 +51,29 @@ public class DigitalOutputExampleUsingDependencyInjection {
         new RuntimeContainer().call();
     }
 
-    public static class RuntimeContainer implements Callable<Void> {
+    private static class RuntimeContainer implements Callable<Void> {
 
-        public static final int DIGITAL_OUTPUT_PIN = 4;
-        public static final String DIGITAL_OUTPUT_PIN_ID = "4"; //"my.digital.pin.four";
+        private static final int ANALOG_OUTPUT_PIN = 4;
+        private static final String ANALOG_OUTPUT_PIN_ID = "uuid.analog.out.four";
 
-        // create a digital output instance using the default digital output provider
-        @Inject(id = DIGITAL_OUTPUT_PIN_ID)
-        @Address(DIGITAL_OUTPUT_PIN)
-        @Name("My Digi Out")
-        @ShutdownState(DigitalState.HIGH)
-        private DigitalOutput output;
+        // create an analog output instance using the default analog output provider
+        @Inject(id = ANALOG_OUTPUT_PIN_ID)
+        @Address(ANALOG_OUTPUT_PIN)
+        @Name("My Analog Out")
+        @ShutdownValue(99)
+        private AnalogOutput output;
 
         @Inject
         private Context pi4j;
 
-        // register a digital output listener to listen for any state changes on the digital output
-        @RegisterListener(DIGITAL_OUTPUT_PIN_ID)
-        private DigitalChangeListener digitalChangeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
+        // register an analog output listener to listen for any state changes on the analog output
+        @RegisterListener(ANALOG_OUTPUT_PIN_ID)
+        private AnalogChangeListener analogChangeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
 
-        // setup a digital output event listener to listen for any state changes on the digital output
+        // setup an analog output event listener to listen for any value changes on the analog output
         // using a custom method with a single event parameter
-        @OnEvent(DIGITAL_OUTPUT_PIN_ID)
-        private void onDigitalOutputChange(DigitalChangeEvent event){
+        @OnEvent(ANALOG_OUTPUT_PIN_ID)
+        private void onAnalogOutputChange(AnalogChangeEvent event){
             System.out.println(" (LISTENER #2) :: " + event);
         }
 
@@ -82,7 +85,7 @@ public class DigitalOutputExampleUsingDependencyInjection {
             final var console = new Console();
 
             // print program title/header
-            console.title("<-- The Pi4J Project -->", "Basic Digital Output Example Using Dependency Injection");
+            console.title("<-- The Pi4J Project -->", "Basic Analog Output Example Using Dependency Injection");
 
             // allow for user to exit program using CTRL-C
             console.promptForExit();
@@ -90,33 +93,15 @@ public class DigitalOutputExampleUsingDependencyInjection {
             // initialize the Pi4J library then inject this class for dependency injection on annotations
             Pi4J.initialize().inject(this);
 
-            // lets invoke some changes on the digital output
-            output.state(DigitalState.HIGH)
-                    .state(DigitalState.LOW)
-                    .state(DigitalState.HIGH)
-                    .state(DigitalState.LOW);
+            // lets invoke some changes on the analog output
+            output.value(1)
+                  .value(2)
+                  .value(3)
+                  .value(4);
 
-            // lets toggle the digital output state a few times
-            output.toggle()
-                  .toggle()
-                  .toggle();
-
-            // additional friendly methods for setting output state
-            output.high()
-                  .low();
-
-            // lets read the digital output state
-            console.print("CURRENT DIGITAL OUTPUT STATE IS [");
-            console.println(output.state() + "]");
-
-            // pulse to HIGH state for 3 seconds
-            console.println("PULSING OUTPUT STATE TO HIGH FOR 3 SECONDS");
-            output.pulse(3, TimeUnit.SECONDS, DigitalState.HIGH);
-
-            // friendly pulsing methods for setting output state
-            console.println("PULSING OUTPUT STATE TO HIGH FOR 2 SECONDS");
-            output.pulseHigh(2, TimeUnit.SECONDS);
-            console.println("PULSING OUTPUT STATE COMPLETE");
+            // lets read the analog output value
+            console.print("CURRENT ANALOG OUTPUT [" + output + "] VALUE IS [");
+            console.println(output.value() + "]");
 
             // shutdown Pi4J
             console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");

@@ -57,8 +57,8 @@ public class Main {
 
 
         var input = AnalogInput.instance(98);
-        var output1 = AnalogOutput.instance(99);
-        var output2 = AnalogOutput.instance(100);
+        var output1 = AnalogOutput.create(99);
+        var output2 = AnalogOutput.create(100);
 
         input.addListener((AnalogChangeListener) event -> {
             System.out.print("ANALOG INPUT [");

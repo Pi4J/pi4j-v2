@@ -1,11 +1,11 @@
-package com.pi4j.config;
+package com.pi4j.io.gpio.analog.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AbstractNameConfig.java
+ * FILENAME      :  AbstractConfig.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,37 +27,36 @@ package com.pi4j.config;
  * #L%
  */
 
+import com.pi4j.config.impl.AddressConfigBuilderBase;
+import com.pi4j.io.gpio.analog.AnalogOutputConfig;
+import com.pi4j.io.gpio.analog.AnalogOutputBuilder;
+
 import java.util.Properties;
 
-public abstract class AbstractNameConfig<CONFIG_TYPE extends Config>
-        extends AbstractConfig<CONFIG_TYPE>
-        implements NameConfig<CONFIG_TYPE> {
+public class DefaultAnalogOutputBuilder
+        extends AddressConfigBuilderBase<AnalogOutputBuilder, AnalogOutputConfig>
+        implements AnalogOutputBuilder {
 
-    private String name = null;
-
-    public AbstractNameConfig(){
-        this.name(null);
-    }
-    public AbstractNameConfig(String name){
-        this.name = name;
+    /**
+     * PRIVATE CONSTRUCTOR
+     */
+    protected DefaultAnalogOutputBuilder(){
+        super();
     }
 
-    public String name() { return this.name; };
-    public CONFIG_TYPE name(String name) { this.name = name; return (CONFIG_TYPE)this; }
+    protected DefaultAnalogOutputBuilder(Properties properties){
+        super(properties);
+    }
 
     @Override
-    public CONFIG_TYPE load(Properties properties, String prefix){
+    public AnalogOutputBuilder shutdownValue(Number value) {
+        this.properties.setProperty(AnalogOutputConfig.SHUTDOWN_VALUE_KEY, value.toString());
+        return this;
+    }
 
-        // ensure properties is not empty
-        super.load(properties, prefix);
-
-        // determine if any optional configuration properties are present
-        if(properties.containsKey(prefix + ".name")){
-            // set name property
-            String name  = properties.get(prefix + ".name").toString();
-            this.name(name);
-        }
-
-        return (CONFIG_TYPE) this;
+    @Override
+    public AnalogOutputConfig build() {
+        AnalogOutputConfig config = new DefaultAnalogOutputConfig(properties);
+        return config;
     }
 }

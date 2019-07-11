@@ -1,3 +1,4 @@
+com.pi4j.annotation.injectors.AnalogOutputInjector
 com.pi4j.annotation.injectors.ContextInjector
 com.pi4j.annotation.injectors.DigitalOutputInjector
 com.pi4j.annotation.injectors.ProviderGroupInjector

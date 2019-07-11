@@ -27,25 +27,29 @@ package com.pi4j.io.spi;
  * #L%
  */
 
-import com.pi4j.config.AbstractDeviceConfig;
+import com.pi4j.config.impl.DeviceConfigBase;
 import com.pi4j.io.IOConfig;
 
-public class SpiConfig extends AbstractDeviceConfig<SpiConfig> implements IOConfig<SpiConfig> {
+public class SpiConfig extends DeviceConfigBase<SpiConfig> implements IOConfig<SpiConfig> {
 
     SpiMode mode = Spi.DEFAULT_SPI_MODE;
     int speed = Spi.DEFAULT_SPI_SPEED;
 
+    public SpiConfig(){
+        super();
+    }
+
     public SpiConfig(String device) {
-        super(device);
+        //super(device);
     }
 
     public SpiConfig(String device, int speed) {
-        super(device);
+        //super(device);
         this.speed = speed;
     }
 
     public SpiConfig(String device, int speed, SpiMode mode) {
-        super(device);
+        //super(device);
         this.speed = speed;
         this.mode = mode;
     }

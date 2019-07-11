@@ -27,7 +27,12 @@ package com.pi4j.config;
  * #L%
  */
 
-public interface DeviceConfig<CONFIG_TYPE extends Config> extends Config<CONFIG_TYPE> {
+public interface DeviceConfig<CONFIG_TYPE extends DeviceConfig> extends AddressConfig<CONFIG_TYPE> {
+
+    String DEVICE_KEY = "device";
     String device();
-    CONFIG_TYPE device(String device);
+
+    default String getDevice(){
+        return this.device();
+    }
 }

@@ -53,6 +53,7 @@ public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig> e
     public IOBase(CONFIG_TYPE config){
         super();
         this.config = config;
+
 //        // if this config supports and address, then set the id field to the address
 //        if(config instanceof AddressConfig){
 //            this.id = Integer.toString(((AddressConfig) config).address());

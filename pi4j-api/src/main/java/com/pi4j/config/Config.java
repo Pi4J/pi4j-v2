@@ -30,25 +30,37 @@ package com.pi4j.config;
 import java.util.Properties;
 
 public interface Config<CONFIG_TYPE> {
-    // MARKER INTERFACE
+    String ID_KEY = "id";
+    String NAME_KEY = "name";
+    String DESCRIPTION_KEY = "description";
 
+    String id();
+
+    String name();
+    CONFIG_TYPE name(String name);
+
+    String description();
+    CONFIG_TYPE description(String description);
 
     CONFIG_TYPE load(Properties properties, String prefix);
 
-//    void setProperties(Map<String, String> properties);
-//    Map<String, String> getProperties();
-//    String[] getPropertyKeys();
-//
-//    default Map<String, String> properties(){
-//        return getProperties();
-//    }
-//
-//    default String[] propertyKeys(){
-//        return getPropertyKeys();
-//    }
-//
-//    default CONFIG_TYPE properties(Map<String, String> properties){
-//        setProperties(properties);
-//        return (CONFIG_TYPE)this;
-//    }
+
+    default String getId(){
+        return this.id();
+    }
+
+    default String getName(){
+        return this.name();
+    }
+
+    default String getDescription(){
+        return this.description();
+    }
+    default void setName(String name){
+        this.name(name);
+    }
+    default void setDescription(String description){
+        this.description(description);
+    }
+
 }

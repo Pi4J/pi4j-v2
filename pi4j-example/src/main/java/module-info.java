@@ -33,11 +33,16 @@ module pi4j.example {
 
     // Pi4J Mock Module
     requires pi4j.provider.mock;
+    uses com.pi4j.provider.mock.io.gpio.analog.MockAnalogInput;
+    uses com.pi4j.provider.mock.io.gpio.analog.MockAnalogInputProvider;
+    uses com.pi4j.provider.mock.io.gpio.analog.MockAnalogOutput;
+    uses com.pi4j.provider.mock.io.gpio.analog.MockAnalogOutputProvider;
     uses com.pi4j.provider.mock.io.gpio.digital.MockDigitalInput;
     uses com.pi4j.provider.mock.io.gpio.digital.MockDigitalInputProvider;
     uses com.pi4j.provider.mock.io.gpio.digital.MockDigitalOutput;
     uses com.pi4j.provider.mock.io.gpio.digital.MockDigitalOutputProvider;
 
     // allow access to classes in the following namespaces for Pi4J annotation processing
+    opens com.pi4j.example.gpio.analog;
     opens com.pi4j.example.gpio.digital;
 }

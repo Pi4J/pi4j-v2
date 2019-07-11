@@ -27,23 +27,24 @@ package com.pi4j.io.serial;
  * #L%
  */
 
-import com.pi4j.config.AbstractDeviceConfig;
+import com.pi4j.config.impl.DeviceConfigBase;
 import com.pi4j.io.IOConfig;
 
-public class SerialConfig extends AbstractDeviceConfig<SerialConfig> implements IOConfig<SerialConfig> {
+public class SerialConfig extends DeviceConfigBase<SerialConfig> implements IOConfig<SerialConfig> {
 
     int baud = Serial.DEFAULT_BAUD;
 
-    public SerialConfig() {
-        super(Serial.DEFAULT_DEVICE);
+    public SerialConfig(){
+        //super(Serial.DEFAULT_DEVICE);
+        super();
     }
 
     public SerialConfig(String device) {
-        super(device);
+        //super(device);
     }
 
     public SerialConfig(String device, int baud) {
-        super(device);
+        //super(device);
         this.baud = baud;
     }
 

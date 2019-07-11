@@ -1,11 +1,11 @@
-package com.pi4j.config;
+package com.pi4j.config.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AbstractAddressConfig.java
+ * FILENAME      :  AbstractDeviceConfig.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,25 +27,38 @@ package com.pi4j.config;
  * #L%
  */
 
+import com.pi4j.config.DeviceConfig;
 import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
 
 import java.util.Properties;
 
-public abstract class AbstractAddressConfig<CONFIG_TYPE extends Config>
-        extends AbstractNameConfig<CONFIG_TYPE>
-        implements AddressConfig<CONFIG_TYPE> {
+public abstract class DeviceConfigBase<CONFIG_TYPE extends DeviceConfig<CONFIG_TYPE>>
+        extends AddressConfigBase<CONFIG_TYPE>
+        implements DeviceConfig<CONFIG_TYPE> {
 
-    private int address;
+    // private configuration variables
+    protected String device =  null;
 
-    public AbstractAddressConfig(){
-        this.address(0);
+    /**
+     * PRIVATE CONSTRUCTOR
+     */
+    protected DeviceConfigBase(){
     }
-    public AbstractAddressConfig(int address){
-        this.address = address;
+
+    /**
+     * PRIVATE CONSTRUCTOR
+     * @param properties
+     */
+    protected DeviceConfigBase(Properties properties){
+        super(properties);
+
+        // load address property
+        if(properties.containsKey(DEVICE_KEY)){
+            this.device = properties.getProperty(DEVICE_KEY);
+        }
     }
 
-    public int address() { return this.address; };
-    public CONFIG_TYPE address(int address) { this.address = address; return (CONFIG_TYPE)this; }
+    public String device() { return this.device; };
 
     @Override
     public CONFIG_TYPE load(Properties properties, String prefix){
@@ -54,12 +67,12 @@ public abstract class AbstractAddressConfig<CONFIG_TYPE extends Config>
         super.load(properties, prefix);
 
         // ensure required configuration properties are present
-        if(!properties.containsKey(prefix + ".address"))
-            throw new ConfigMissingRequiredKeyException(prefix + ".address");
+        if(!properties.containsKey(prefix + "." + DEVICE_KEY))
+            throw new ConfigMissingRequiredKeyException(prefix + "." + DEVICE_KEY);
 
-        // set address property
-        int address = Integer.parseInt(properties.get(prefix + ".address").toString());
-        this.address(address);
+        // set local configuration properties
+        if(properties.containsKey(prefix + "." + DEVICE_KEY))
+            this.device = properties.get(prefix + "." + DEVICE_KEY).toString();
 
         return (CONFIG_TYPE) this;
     }

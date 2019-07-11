@@ -45,11 +45,13 @@ public interface DigitalInputConfig extends DigitalConfig<DigitalInputConfig> {
     }
 
     static DigitalInputConfig instance(int address){
-        return DigitalInputConfigFactory.instance().address(address);
+        //return DigitalInputConfigFactory.instance().address(address);
+        return null;
     }
 
     static DigitalInputConfig instance(int address, PullResistance pull){
-        return DigitalInputConfigFactory.instance().address(address).pull(pull);
+        //return DigitalInputConfigFactory.instance().address(address).pull(pull);
+        return null;
     }
 
     static DigitalInputConfig instance(Properties properties, String prefix) throws ConfigException {

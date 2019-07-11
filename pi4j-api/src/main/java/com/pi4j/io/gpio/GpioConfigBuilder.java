@@ -1,11 +1,11 @@
-package com.pi4j.config;
+package com.pi4j.io.gpio;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AbstractDeviceAddressConfig.java
+ * FILENAME      :  Config.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,9 @@ package com.pi4j.config;
  * #L%
  */
 
-public abstract class AbstractDeviceAddressConfig<CONFIG_TYPE extends Config<CONFIG_TYPE>>
-        extends AbstractDeviceConfig<CONFIG_TYPE>
-        implements AddressConfig<CONFIG_TYPE> {
+import com.pi4j.config.AddressConfigBuilder;
 
-    private int address;
-
-    public AbstractDeviceAddressConfig(String device, int address){
-        super(device);
-        this.address = address;
-    }
-
-    public int address() { return this.address; };
-    public CONFIG_TYPE address(int address) { this.address = address; return (CONFIG_TYPE)this; }
+public interface GpioConfigBuilder<BUILDER_TYPE extends GpioConfigBuilder, CONFIG_TYPE extends GpioConfig>
+        extends AddressConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
+    // MARKER INTERFACE
 }

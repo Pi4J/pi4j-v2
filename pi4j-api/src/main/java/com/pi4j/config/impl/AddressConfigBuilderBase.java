@@ -1,11 +1,11 @@
-package com.pi4j.io.i2c;
+package com.pi4j.config.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  I2CConfig.java
+ * FILENAME      :  AbstractConfig.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,16 +27,29 @@ package com.pi4j.io.i2c;
  * #L%
  */
 
-import com.pi4j.config.impl.DeviceConfigBase;
-import com.pi4j.io.IOConfig;
+import com.pi4j.config.AddressConfig;
+import com.pi4j.config.AddressConfigBuilder;
 
-public class I2CConfig extends DeviceConfigBase<I2CConfig> implements IOConfig<I2CConfig> {
+import java.util.Properties;
 
-    private I2CConfig(){
+public abstract class AddressConfigBuilderBase<BUILDER_TYPE extends AddressConfigBuilder, CONFIG_TYPE extends AddressConfig>
+        extends ConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
+        implements AddressConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
+
+    /**
+     * PRIVATE CONSTRUCTOR
+     */
+    protected AddressConfigBuilderBase(){
         super();
     }
 
-    public I2CConfig(String device, int address){
-        //super(device, address);
+    protected AddressConfigBuilderBase(Properties properties){
+        super(properties);
+    }
+
+    @Override
+    public BUILDER_TYPE address(Integer address){
+        this.properties.setProperty(AddressConfig.ADDRESS_KEY, address.toString());
+        return (BUILDER_TYPE) this;
     }
 }

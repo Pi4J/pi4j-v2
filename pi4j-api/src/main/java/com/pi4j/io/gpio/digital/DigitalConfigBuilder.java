@@ -1,11 +1,11 @@
-package com.pi4j.io.i2c;
+package com.pi4j.io.gpio.digital;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  I2CConfig.java
+ * FILENAME      :  Config.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,16 +27,10 @@ package com.pi4j.io.i2c;
  * #L%
  */
 
-import com.pi4j.config.impl.DeviceConfigBase;
-import com.pi4j.io.IOConfig;
+import com.pi4j.io.gpio.GpioConfigBuilder;
+import com.pi4j.io.gpio.analog.AnalogConfig;
 
-public class I2CConfig extends DeviceConfigBase<I2CConfig> implements IOConfig<I2CConfig> {
-
-    private I2CConfig(){
-        super();
-    }
-
-    public I2CConfig(String device, int address){
-        //super(device, address);
-    }
+public interface DigitalConfigBuilder<BUILDER_TYPE extends DigitalConfigBuilder, CONFIG_TYPE extends DigitalConfig>
+        extends GpioConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
+    // MARKER INTERFACE
 }

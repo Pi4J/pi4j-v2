@@ -44,14 +44,17 @@ public interface DigitalOutputConfig extends DigitalConfig<DigitalOutputConfig> 
     }
 
     static DigitalOutputConfig instance(int address){
-        return DigitalOutputConfigFactory.instance().address(address);
+        //return DigitalOutputConfigFactory.instance().address(address);
+        return null;
     }
 
     static DigitalOutputConfig instance(int address, DigitalState shutdownState){
-        return DigitalOutputConfigFactory.instance().address(address).shutdownState(shutdownState);
+        //return DigitalOutputConfigFactory.instance().address(address).shutdownState(shutdownState);
+        return null;
     }
 
     static DigitalOutputConfig instance(Properties properties, String prefix) throws ConfigException{
-        return DigitalOutputConfigFactory.instance(properties, prefix);
+        //return DigitalOutputConfigFactory.instance(properties, prefix);
+        return null;
     }
 }

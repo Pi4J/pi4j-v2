@@ -27,13 +27,13 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.AbstractAddressConfig;
+import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.PullResistance;
 
 import java.util.Properties;
 
-public class DigitalInputConfigImpl extends AbstractAddressConfig<DigitalInputConfig> implements DigitalInputConfig {
+public class DigitalInputConfigImpl extends AddressConfigBase<DigitalInputConfig> implements DigitalInputConfig {
     PullResistance pull = PullResistance.OFF;
 
     public DigitalInputConfigImpl(){

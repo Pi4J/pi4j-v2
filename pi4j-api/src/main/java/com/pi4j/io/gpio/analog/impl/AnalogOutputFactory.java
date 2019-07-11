@@ -30,9 +30,12 @@ package com.pi4j.io.gpio.analog.impl;
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
+import com.pi4j.io.gpio.analog.AnalogOutputBuilder;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderInstantiateException;
+
+import java.util.Properties;
 
 /**
  * Analog Output Factory - it returns instances of {@link AnalogOutput} interface.
@@ -47,38 +50,38 @@ public class AnalogOutputFactory {
         // forbid object construction
     }
 
-    public static AnalogOutput instance(int address) throws ProviderException {
-        return instance(AnalogOutputConfig.instance(address));
+    public static boolean exists(String id) throws ProviderException {
+        return false;
     }
 
-    public static AnalogOutput instance(AnalogOutputConfig config) throws ProviderException {
-        // get default analog output provider
-        var provider = Pi4J.providers().analogOutput().getDefault();
-
-        // get SPI instance using default io
-        return instance(provider, config);
+    public static AnalogOutput get(String id) throws ProviderException {
+        return null;
     }
 
-    public static AnalogOutput instance(String providerId, int address) throws ProviderException {
-        return instance(providerId, AnalogOutputConfig.instance(address));
+    public static AnalogOutputBuilder builder() throws ProviderException {
+        return new DefaultAnalogOutputBuilder();
     }
 
-    public static AnalogOutput instance(String providerId, AnalogOutputConfig config) throws ProviderException {
-        // if provided, lookup the specified io; else use the default io
+    public static AnalogOutputBuilder builder(Properties properties) throws ProviderException {
+        return new DefaultAnalogOutputBuilder(properties);
+    }
+
+    public static AnalogOutput create(AnalogOutputConfig config) throws ProviderException {
+        return AnalogOutputFactory.create((AnalogOutputProvider)null, config);
+    }
+
+    public static AnalogOutput create(String providerId, AnalogOutputConfig config) throws ProviderException {
+        // if provided, lookup the specified io provider; else use the default io provider
         if(providerId == null) {
-            return instance(config);
+            return create(config);
         }
         else{
             var provider = Pi4J.providers().analogOutput().get(providerId);
-            return instance(provider, config);
+            return create(provider, config);
         }
     }
 
-    public static AnalogOutput instance(AnalogOutputProvider provider, int address) throws ProviderException {
-        return instance(provider, AnalogOutputConfig.instance(address));
-    }
-
-    public static AnalogOutput instance(AnalogOutputProvider provider, AnalogOutputConfig config) throws ProviderException {
+    public static AnalogOutput create(AnalogOutputProvider provider, AnalogOutputConfig config) throws ProviderException {
         try {
             // get default provider if provider argument is null
             if(provider == null){

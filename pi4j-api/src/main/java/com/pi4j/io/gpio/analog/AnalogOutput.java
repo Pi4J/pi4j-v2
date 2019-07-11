@@ -31,32 +31,89 @@ import com.pi4j.io.Output;
 import com.pi4j.io.gpio.analog.impl.AnalogOutputFactory;
 import com.pi4j.provider.exception.ProviderException;
 
+import java.util.Properties;
+
 public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, Output {
     AnalogOutput value(Number value);
 
     default AnalogOutput setValue(Number value) { return value(value); };
 
-    static AnalogOutput instance(AnalogOutputConfig config) throws ProviderException {
-        return AnalogOutputFactory.instance(config);
+    // ---------------------------------------------------------------------------
+    // INSTANCE ACCESSOR STATIC METHODS
+    // ---------------------------------------------------------------------------
+
+    static boolean exists(String id) throws ProviderException {
+        return AnalogOutputFactory.exists(id);
     }
 
-    static AnalogOutput instance(int address) throws ProviderException {
-        return AnalogOutputFactory.instance(address);
+    static AnalogOutput get(String id) throws ProviderException {
+        return AnalogOutputFactory.get(id);
     }
 
-    static AnalogOutput instance(String providerId, int address) throws ProviderException {
-        return AnalogOutputFactory.instance(providerId, address);
+    // ---------------------------------------------------------------------------
+    // BUILDER CREATOR STATIC METHODS
+    // ---------------------------------------------------------------------------
+
+    static AnalogOutputBuilder builder() throws ProviderException {
+        return AnalogOutputFactory.builder();
     }
 
-    static AnalogOutput instance(String providerId, AnalogOutputConfig config) throws ProviderException {
-        return AnalogOutputFactory.instance(providerId, config);
+    static AnalogOutputBuilder builder(Properties properties) throws ProviderException {
+        return AnalogOutputFactory.builder(properties);
     }
 
-    static AnalogOutput instance(AnalogOutputProvider provider, int address) throws ProviderException {
-        return AnalogOutputFactory.instance(provider, address);
+    // ---------------------------------------------------------------------------
+    // FRIENDLY HELPER CREATOR STATIC METHODS
+    // ---------------------------------------------------------------------------
+
+    static AnalogOutput create(Integer address) throws ProviderException {
+        AnalogOutputBuilder builder = AnalogOutput.builder();
+        builder.address(address);
+        return AnalogOutput.create(builder.build());
     }
 
-    static AnalogOutput instance(AnalogOutputProvider provider, AnalogOutputConfig config) throws ProviderException {
-        return AnalogOutputFactory.instance(provider, config);
+    static AnalogOutput create(Integer address, String id) throws ProviderException {
+        AnalogOutputBuilder builder = AnalogOutput.builder();
+        builder.id(id).address(address);
+        return AnalogOutput.create(builder.build());
+    }
+
+    static AnalogOutput create(Integer address, String id, String name) throws ProviderException {
+        AnalogOutputBuilder builder = AnalogOutput.builder();
+        builder.id(id).address(address).name(name);
+        return AnalogOutput.create(builder.build());
+    }
+
+    static AnalogOutput create(Properties properties) throws ProviderException {
+        AnalogOutputBuilder builder = AnalogOutput.builder(properties);
+        return AnalogOutput.create(builder.build());
+    }
+
+    static AnalogOutput create(String providerId, Integer address) throws ProviderException {
+        AnalogOutputBuilder builder = AnalogOutput.builder();
+        builder.address(address);
+        return AnalogOutput.create(providerId, builder.build());
+    }
+
+    static AnalogOutput create(AnalogOutputProvider provider, Integer address) throws ProviderException {
+        AnalogOutputBuilder builder = AnalogOutput.builder();
+        builder.address(address);
+        return AnalogOutput.create(provider, builder.build());
+    }
+
+    // ---------------------------------------------------------------------------
+    // RAW FACTORY CREATOR STATIC METHODS
+    // ---------------------------------------------------------------------------
+
+    static AnalogOutput create(AnalogOutputConfig config) throws ProviderException {
+        return AnalogOutputFactory.create(config);
+    }
+
+    static AnalogOutput create(String providerId, AnalogOutputConfig config) throws ProviderException {
+        return AnalogOutputFactory.create(providerId, config);
+    }
+
+    static AnalogOutput create(AnalogOutputProvider provider, AnalogOutputConfig config) throws ProviderException {
+        return AnalogOutputFactory.create(provider, config);
     }
 }

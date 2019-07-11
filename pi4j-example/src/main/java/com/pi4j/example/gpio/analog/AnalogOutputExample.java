@@ -30,10 +30,15 @@ package com.pi4j.example.gpio.analog;
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.AnalogOutput;
+import com.pi4j.io.gpio.analog.AnalogOutputBuilder;
 import com.pi4j.util.Console;
+
+import java.util.Properties;
 
 public class AnalogOutputExample {
 
+    public static String ANALOG_OUTPUT_PIN_ID = "my.unique.analog.output.pin.id";
+    public static String ANALOG_OUTPUT_PIN_NAME = "My Unique Output Pin";
     public static int ANALOG_OUTPUT_PIN = 4;
     public static int SHUTDOWN_ANALOG_VALUE = -1;
 
@@ -46,6 +51,7 @@ public class AnalogOutputExample {
         // (This is a utility class to abstract some of the boilerplate stdin/stdout code)
         final var console = new Console();
 
+
         // print program title/header
         console.title("<-- The Pi4J Project -->", "Basic Analog Output Example");
 
@@ -55,8 +61,17 @@ public class AnalogOutputExample {
         // initialize the Pi4J library
         var pi4j = Pi4J.initialize();
 
+        AnalogOutputBuilder builder = AnalogOutput.builder();
+        builder.id(ANALOG_OUTPUT_PIN_ID)
+               .name(ANALOG_OUTPUT_PIN_NAME)
+               .address(ANALOG_OUTPUT_PIN);
+        var output = AnalogOutput.create(builder.build());
+
+        AnalogOutput.create(new Properties());
+
+
         // create an analog output instance using the default analog output provider
-        var output = AnalogOutput.instance(ANALOG_OUTPUT_PIN);
+        //var output = AnalogOutput.create(ANALOG_OUTPUT_PIN_ID, ANALOG_OUTPUT_PIN);
         output.config().shutdownValue(SHUTDOWN_ANALOG_VALUE);
 
         // setup a analog output listener to listen for any state changes on the analog output

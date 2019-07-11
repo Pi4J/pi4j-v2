@@ -27,13 +27,13 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.AbstractAddressConfig;
+import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalState;
 
 import java.util.Properties;
 
-public class DigitalOutputConfigImpl extends AbstractAddressConfig<DigitalOutputConfig> implements DigitalOutputConfig {
+public class DigitalOutputConfigImpl extends AddressConfigBase<DigitalOutputConfig> implements DigitalOutputConfig {
 
     //String name = null;
     DigitalState shutdownState = DigitalState.UNKNOWN;

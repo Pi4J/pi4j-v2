@@ -29,9 +29,8 @@ package com.pi4j.io.gpio;
 
 import com.pi4j.config.AddressConfig;
 import com.pi4j.config.Config;
-import com.pi4j.config.NameConfig;
 import com.pi4j.io.IOConfig;
 
 public interface GpioConfig<CONFIG_TYPE extends Config>
-        extends AddressConfig<CONFIG_TYPE>, NameConfig<CONFIG_TYPE>, IOConfig<CONFIG_TYPE> {
+        extends AddressConfig<CONFIG_TYPE>, IOConfig<CONFIG_TYPE> {
 }

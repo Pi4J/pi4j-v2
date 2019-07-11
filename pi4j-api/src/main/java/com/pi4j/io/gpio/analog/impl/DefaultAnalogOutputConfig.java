@@ -5,7 +5,7 @@ package com.pi4j.io.gpio.analog.impl;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogOutputConfigImpl.java
+ * FILENAME      :  AnalogOutputConfig.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,36 +27,58 @@ package com.pi4j.io.gpio.analog.impl;
  * #L%
  */
 
-import com.pi4j.config.AbstractAddressConfig;
+import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 
 import java.util.Properties;
 
-public class AnalogOutputConfigImpl extends AbstractAddressConfig<AnalogOutputConfig> implements AnalogOutputConfig {
+public class DefaultAnalogOutputConfig
+        extends AddressConfigBase<AnalogOutputConfig>
+        implements AnalogOutputConfig {
 
-    Number shutdownValue = null;
+    // private configuration properties
+    protected Number shutdownValue = null;
 
-    public AnalogOutputConfigImpl(){
+    /**
+     * PRIVATE CONSTRUCTOR
+     */
+    private DefaultAnalogOutputConfig(){
+        super();
     }
 
+    /**
+     * PRIVATE CONSTRUCTOR
+     * @param properties
+     */
+    protected DefaultAnalogOutputConfig(Properties properties){
+        super(properties);
+
+        // load address property
+        if(properties.containsKey(SHUTDOWN_VALUE_KEY)){
+            this.shutdownValue = Double.parseDouble(properties.getProperty(SHUTDOWN_VALUE_KEY));
+        }
+    }
+
+    @Override
     public Number shutdownValue(){
         return this.shutdownValue;
     }
 
-    public AnalogOutputConfig shutdownValue(Number value){
+    @Override
+    public DefaultAnalogOutputConfig shutdownValue(Number value){
         this.shutdownValue = value;
         return this;
     }
 
     @Override
-    public AnalogOutputConfig load(Properties properties, String prefix){
+    public DefaultAnalogOutputConfig load(Properties properties, String prefix){
 
         // ensure properties is not empty
         super.load(properties, prefix);
 
         // load any optional properties
-        if(properties.containsKey(prefix + ".shutdown")){
-            var shutdownValue = Double.parseDouble(properties.get(prefix + ".shutdown").toString());
+        if(properties.containsKey(prefix + "." + SHUTDOWN_VALUE_KEY)){
+            var shutdownValue = Double.parseDouble(properties.get(prefix + "." + SHUTDOWN_VALUE_KEY).toString());
             shutdownValue(shutdownValue);
         }
 

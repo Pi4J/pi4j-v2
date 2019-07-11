@@ -1,11 +1,11 @@
-package com.pi4j.config;
+package com.pi4j.config.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  NameConfig.java
+ * FILENAME      :  AbstractConfig.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,7 +27,31 @@ package com.pi4j.config;
  * #L%
  */
 
-public interface NameConfig<CONFIG_TYPE extends Config> extends Config<CONFIG_TYPE> {
-    String name();
-    CONFIG_TYPE name(String name);
+import com.pi4j.config.AddressConfigBuilder;
+import com.pi4j.config.DeviceConfig;
+import com.pi4j.config.DeviceConfigBuilder;
+import com.pi4j.config.impl.AddressConfigBuilderBase;
+
+import java.util.Properties;
+
+public abstract class DeviceConfigBuilderBase<BUILDER_TYPE extends AddressConfigBuilder, CONFIG_TYPE extends DeviceConfig>
+        extends AddressConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
+        implements DeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
+
+    /**
+     * PRIVATE CONSTRUCTOR
+     */
+    protected DeviceConfigBuilderBase(){
+        super();
+    }
+
+    protected DeviceConfigBuilderBase(Properties properties){
+        super(properties);
+    }
+
+    @Override
+    public BUILDER_TYPE device(String device){
+        this.properties.setProperty(DeviceConfig.DEVICE_KEY, device);
+        return (BUILDER_TYPE) this;
+    }
 }

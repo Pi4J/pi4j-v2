@@ -36,6 +36,7 @@ import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.processor.AnnotationProcessor;
 import com.pi4j.context.Context;
 import com.pi4j.event.Event;
+import com.pi4j.io.gpio.analog.AnalogChangeEvent;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.digital.DigitalChangeEvent;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
@@ -170,12 +171,11 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
             OnEvent onEvent = (OnEvent)annotation;
 
             // handle specific implementations
-
-            // validate parameter types
             if(parameters[0].getType().isAssignableFrom(DigitalChangeEvent.class)) {
 
                 Pi4J.providers().digitalOutput().getDefault().get(onEvent.value()).addListener((DigitalChangeListener) event -> {
                     try {
+                        method.trySetAccessible();
                         method.invoke(instance, event);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
@@ -186,6 +186,22 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
                     }
                 });
 
+            }
+
+            else if(parameters[0].getType().isAssignableFrom(AnalogChangeEvent.class)) {
+
+                Pi4J.providers().analogOutput().getDefault().get(onEvent.value()).addListener((AnalogChangeListener) event -> {
+                    try {
+                        method.trySetAccessible();
+                        method.invoke(instance, event);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                        logger.error(e.getMessage(), e);
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                        logger.error(e.getMessage(), e);
+                    }
+                });
             }
 
             else {

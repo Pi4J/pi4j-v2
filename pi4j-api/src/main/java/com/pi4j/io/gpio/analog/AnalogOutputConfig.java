@@ -27,25 +27,23 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
-import com.pi4j.io.gpio.analog.impl.AnalogOutputConfigFactory;
+import java.util.Properties;
 
-public interface AnalogOutputConfig extends AnalogConfig<AnalogOutputConfig> {
+public interface AnalogOutputConfig
+        extends AnalogConfig<AnalogOutputConfig> {
+
+    String SHUTDOWN_VALUE_KEY = "shutdown";
+
     Number shutdownValue();
     AnalogOutputConfig shutdownValue(Number value);
 
-    default Number getShutdownValue(){
-        return shutdownValue();
+    default Number getShutdownValue() {
+        return this.shutdownValue();
     }
-    default void setShutdownValue(Number value){
+
+    default void setShutdownValue(Number value) {
         this.shutdownValue(value);
     }
 
-
-    static AnalogOutputConfig instance(int address){
-        return AnalogOutputConfigFactory.instance().address(address);
-    }
-
-    static AnalogOutputConfig instance(int address, Number shutdownValue){
-        return AnalogOutputConfigFactory.instance().address(address).shutdownValue(shutdownValue);
-    }
+    AnalogOutputConfig load(Properties properties, String prefix);
 }

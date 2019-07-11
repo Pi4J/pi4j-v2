@@ -61,7 +61,7 @@ public class AnalogInputSyncToOutputExample {
         var input = AnalogInput.instance(ANALOG_INPUT_PIN);
 
         // create a analog output instance using the default analog output provider
-        var output = AnalogOutput.instance(ANALOG_OUTPUT_PIN);
+        var output = AnalogOutput.create(ANALOG_OUTPUT_PIN);
 
         // setup a analog output listener to listen for any state changes on the analog output
         // we will just print out the detected state changes

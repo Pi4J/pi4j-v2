@@ -5,7 +5,7 @@ package com.pi4j.config;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AbstractDeviceConfig.java
+ * FILENAME      :  Config.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,16 +27,6 @@ package com.pi4j.config;
  * #L%
  */
 
-public abstract class AbstractDeviceConfig<CONFIG_TYPE extends Config<CONFIG_TYPE>>
-        extends AbstractConfig<CONFIG_TYPE>
-        implements DeviceConfig<CONFIG_TYPE> {
-
-    private String device;
-
-    public AbstractDeviceConfig(String device){
-        this.device = device;
-    }
-
-    public String device() { return this.device; };
-    public CONFIG_TYPE device(String device) { this.device = device; return (CONFIG_TYPE)this; }
+public interface DeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends AddressConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
+    BUILDER_TYPE device(String device);
 }

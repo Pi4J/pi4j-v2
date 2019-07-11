@@ -28,6 +28,8 @@ package com.pi4j.io.gpio.analog;
  */
 
 
+import com.pi4j.util.DecimalFormatter;
+
 public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEvent {
 
     // internal event copy of the changed analog values and analog I/O source
@@ -68,16 +70,14 @@ public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEven
 
     @Override
     public String toString(){
+
         StringBuilder result = new StringBuilder();
-        result.append("<<ANALOG CHANGE EVENT>> [\"");
-        result.append(source().name());
-        result.append("\" (#");
-        result.append(source().address());
-        result.append(")");
+        result.append("<<ANALOG CHANGE EVENT>> [");
+        result.append(source());
         result.append("] VALUE: [");
-        result.append(this.oldValue().toString());
+        result.append(DecimalFormatter.format(this.oldValue()));
         result.append(" -> ");
-        result.append(this.value().toString());
+        result.append(DecimalFormatter.format(this.value()));
         result.append("]");
         return result.toString();
     }

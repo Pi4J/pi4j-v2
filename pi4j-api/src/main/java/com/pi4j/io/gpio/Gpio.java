@@ -34,6 +34,6 @@ public interface Gpio<IO_TYPE extends Gpio<IO_TYPE,CONFIG_TYPE>, CONFIG_TYPE ext
 
     CONFIG_TYPE config();
 
-    default int address() { return config().address(); }
-    default int getAddress() { return address(); };
+    default Number address() { return config().address(); }
+    default Number getAddress() { return address(); };
 }

@@ -55,6 +55,7 @@ module pi4j.api {
 
     provides com.pi4j.annotation.Injector
             with com.pi4j.annotation.injectors.ContextInjector,
+                 com.pi4j.annotation.injectors.AnalogOutputInjector,
                  com.pi4j.annotation.injectors.DigitalOutputInjector,
                  com.pi4j.annotation.injectors.ProviderGroupInjector,
                  com.pi4j.annotation.injectors.ProviderInjector,

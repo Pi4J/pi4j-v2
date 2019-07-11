@@ -43,7 +43,7 @@ public class AnalogOutputConfigFactory {
         // forbid object construction
     }
 
-    public static AnalogOutputConfig instance() {
-        return new AnalogOutputConfigImpl();
-    }
+//    public static AnalogOutputConfig instance() {
+//        return new AnalogOutputConfigImpl();
+//    }
 }

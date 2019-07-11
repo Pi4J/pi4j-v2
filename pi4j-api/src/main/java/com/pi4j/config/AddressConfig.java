@@ -28,6 +28,10 @@ package com.pi4j.config;
  */
 
 public interface AddressConfig<CONFIG_TYPE extends Config> extends Config<CONFIG_TYPE> {
-    int address();
-    CONFIG_TYPE address(int address);
+    String ADDRESS_KEY = "address";
+    Integer address();
+
+    default Integer getAddress(){
+        return this.address();
+    }
 }

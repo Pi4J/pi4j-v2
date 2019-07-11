@@ -31,7 +31,8 @@ import com.pi4j.io.gpio.analog.impl.AnalogInputConfigFactory;
 
 
 public interface AnalogInputConfig extends AnalogConfig<AnalogInputConfig> {
-    static AnalogInputConfig instance(int address){
-        return AnalogInputConfigFactory.instance().address(address);
+    static AnalogInputConfig instance(Number address){
+        //return AnalogInputConfigFactory.instance().address(address);
+        return null;
     }
 }
