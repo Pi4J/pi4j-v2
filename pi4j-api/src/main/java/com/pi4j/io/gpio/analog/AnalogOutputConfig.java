@@ -34,14 +34,14 @@ public interface AnalogOutputConfig
 
     String SHUTDOWN_VALUE_KEY = "shutdown";
 
-    Number shutdownValue();
-    AnalogOutputConfig shutdownValue(Number value);
+    Integer shutdownValue();
+    AnalogOutputConfig shutdownValue(Integer value);
 
     default Number getShutdownValue() {
         return this.shutdownValue();
     }
 
-    default void setShutdownValue(Number value) {
+    default void setShutdownValue(Integer value) {
         this.shutdownValue(value);
     }
 

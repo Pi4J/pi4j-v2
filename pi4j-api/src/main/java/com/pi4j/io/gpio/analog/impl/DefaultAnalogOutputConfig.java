@@ -37,7 +37,7 @@ public class DefaultAnalogOutputConfig
         implements AnalogOutputConfig {
 
     // private configuration properties
-    protected Number shutdownValue = null;
+    protected Integer shutdownValue = null;
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -55,17 +55,17 @@ public class DefaultAnalogOutputConfig
 
         // load address property
         if(properties.containsKey(SHUTDOWN_VALUE_KEY)){
-            this.shutdownValue = Double.parseDouble(properties.getProperty(SHUTDOWN_VALUE_KEY));
+            this.shutdownValue = Integer.parseInt(properties.getProperty(SHUTDOWN_VALUE_KEY));
         }
     }
 
     @Override
-    public Number shutdownValue(){
+    public Integer shutdownValue(){
         return this.shutdownValue;
     }
 
     @Override
-    public DefaultAnalogOutputConfig shutdownValue(Number value){
+    public DefaultAnalogOutputConfig shutdownValue(Integer value){
         this.shutdownValue = value;
         return this;
     }
@@ -78,7 +78,7 @@ public class DefaultAnalogOutputConfig
 
         // load any optional properties
         if(properties.containsKey(prefix + "." + SHUTDOWN_VALUE_KEY)){
-            var shutdownValue = Double.parseDouble(properties.get(prefix + "." + SHUTDOWN_VALUE_KEY).toString());
+            var shutdownValue = Integer.parseInt(properties.get(prefix + "." + SHUTDOWN_VALUE_KEY).toString());
             shutdownValue(shutdownValue);
         }
 

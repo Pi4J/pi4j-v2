@@ -34,9 +34,9 @@ import com.pi4j.provider.exception.ProviderException;
 import java.util.Properties;
 
 public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, Output {
-    AnalogOutput value(Number value);
+    AnalogOutput value(Integer value);
 
-    default AnalogOutput setValue(Number value) { return value(value); };
+    default AnalogOutput setValue(Integer value) { return value(value); };
 
     // ---------------------------------------------------------------------------
     // INSTANCE ACCESSOR STATIC METHODS

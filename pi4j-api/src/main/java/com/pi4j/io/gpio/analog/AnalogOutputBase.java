@@ -32,7 +32,7 @@ import com.pi4j.context.Context;
 
 public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOutputConfig> implements AnalogOutput {
 
-    protected Number value = 0;
+    protected Integer value = 0;
 
     public AnalogOutputBase(AnalogOutputConfig config){
         super(config);
@@ -41,13 +41,13 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
     }
 
     @Override
-    public AnalogOutput value(Number value) {
+    public AnalogOutput value(Integer value) {
 
         // check to see of there is a value change; if there is then we need
         // to update the internal value variable and dispatch the change event
-        if(this.value().doubleValue() != value.doubleValue()){
+        if(this.value().intValue() != value.intValue()){
             // cache copy of old value for change event
-            Number oldValue = this.value();
+            Integer oldValue = this.value();
 
             // update current/new value
             this.value = value;
@@ -68,7 +68,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
     }
 
     @Override
-    public Number value() {
+    public Integer value() {
         return this.value;
     }
 

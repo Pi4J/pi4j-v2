@@ -80,10 +80,10 @@ public class AnalogOutputExample {
         });
 
         // lets invoke some changes on the analog output
-        output.value(-101.6774)
+        output.value(101)
               .value(34)
-              .value(000999d)
-              .value(45.79942);
+              .value(999)
+              .value(45);
 
         // lets read the analog output state
         System.out.print("CURRENT ANALOG OUTPUT [" + output + "] VALUE IS [");

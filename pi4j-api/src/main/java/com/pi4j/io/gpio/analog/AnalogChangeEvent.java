@@ -28,20 +28,18 @@ package com.pi4j.io.gpio.analog;
  */
 
 
-import com.pi4j.util.DecimalFormatter;
-
 public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEvent {
 
     // internal event copy of the changed analog values and analog I/O source
-    protected Number oldValue;
-    protected Number value;
+    protected Integer oldValue;
+    protected Integer value;
     protected ANALOG_TYPE source;
 
     /**
      * Default constructor
      * @param newValue the value changed for this event instance
      */
-    public AnalogChangeEvent(ANALOG_TYPE source, Number newValue, Number oldValue){
+    public AnalogChangeEvent(ANALOG_TYPE source, Integer newValue, Integer oldValue){
         this.value = newValue; // cache a copy of the event instance new value
         this.oldValue = oldValue; // cache a copy of the event instance old value
         this.source = source; // cache analog I/O source
@@ -51,7 +49,7 @@ public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEven
      * The old/prior value change for this event instance
      * @return
      */
-    public Number oldValue() {
+    public Integer oldValue() {
         return this.oldValue;
     }
 
@@ -59,7 +57,7 @@ public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEven
      * The current/new value change for this event instance
      * @return
      */
-    public Number value() {
+    public Integer value() {
         return this.value;
     }
 
@@ -75,9 +73,9 @@ public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEven
         result.append("<<ANALOG CHANGE EVENT>> [");
         result.append(source());
         result.append("] VALUE: [");
-        result.append(DecimalFormatter.format(this.oldValue()));
+        result.append(this.oldValue().toString());
         result.append(" -> ");
-        result.append(DecimalFormatter.format(this.value()));
+        result.append(this.value().toString());
         result.append("]");
         return result.toString();
     }

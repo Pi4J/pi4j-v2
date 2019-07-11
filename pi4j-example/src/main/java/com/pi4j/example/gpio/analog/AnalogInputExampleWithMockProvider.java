@@ -91,10 +91,10 @@ public class AnalogInputExampleWithMockProvider {
         console.println("ATTEMPTING TO UPDATE MOCK ANALOG INPUT VALUES TO GENERATE CHANGE EVENTS (4)");
 
         // change mock value of mock analog input so we can see some events firing
-        input.mockValue(1.45f)
+        input.mockValue(145)
              .mockValue(99)
-             .mockValue(-6787)
-             .mockValue(345.99998f);
+             .mockValue(6787)
+             .mockValue(345);
 
         // lets read the analog input value
         console.println();

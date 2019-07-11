@@ -41,10 +41,10 @@ public enum DigitalState {
     LOW(0, "LOW"),
     HIGH(1, "HIGH");
 
-    private final Number value;
+    private final Integer value;
     private final String name;
 
-    private DigitalState(Number value, String name) {
+    private DigitalState(Integer value, String name) {
         this.value = value;
         this.name = name;
     }
@@ -101,7 +101,7 @@ public enum DigitalState {
 
     public static DigitalState getState(Number state) {
         for (var item : DigitalState.values()) {
-            if (item.getValue().doubleValue() == state.doubleValue()) {
+            if (item.getValue().intValue() == state.intValue()) {
                 return item;
             }
         }

@@ -34,7 +34,7 @@ import com.pi4j.io.gpio.analog.binding.AnalogBinding;
 public interface Analog<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE>, CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>>
         extends Gpio<ANALOG_TYPE, CONFIG_TYPE> {
 
-    Number value();
+    Integer value();
 
     ANALOG_TYPE addListener(AnalogChangeListener... listener);
     ANALOG_TYPE removeListener(AnalogChangeListener... listener);
@@ -43,7 +43,7 @@ public interface Analog<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE>, CO
     ANALOG_TYPE unbind(AnalogBinding ... binding);
 
     default boolean equals(Number value) {
-        return this.value().doubleValue() == value.doubleValue();
+        return this.value().intValue() == value.intValue();
     }
     default Number getValue() { return value(); };
 }
