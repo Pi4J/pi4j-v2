@@ -84,7 +84,7 @@ public class DigitalOutputExample {
               .low();
 
         // lets read the digital output state
-        System.out.print("CURRENT DIGITAL OUTPUT STATE IS [");
+        System.out.print("CURRENT DIGITAL OUTPUT [" + output + "] STATE IS [");
         System.out.println(output.state() + "]");
 
         // pulse to HIGH state for 3 seconds

@@ -63,7 +63,7 @@ public class AnalogInputExample {
         });
 
         // lets read the analog output state
-        console.print("THE STARTING ANALOG INPUT VALUE IS [");
+        console.print("THE STARTING ANALOG INPUT [" + input + "] VALUE IS [");
         console.println(input.value() + "]");
 
         console.println("CHANGE INPUT VALUES VIA I/O HARDWARE AND CHANGE EVENTS WILL BE PRINTED BELOW:");

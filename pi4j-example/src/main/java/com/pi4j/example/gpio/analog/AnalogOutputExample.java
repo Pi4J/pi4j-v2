@@ -86,7 +86,7 @@ public class AnalogOutputExample {
               .value(45.79942);
 
         // lets read the analog output state
-        System.out.print("CURRENT ANALOG OUTPUT VALUE IS [");
+        System.out.print("CURRENT ANALOG OUTPUT [" + output + "] VALUE IS [");
         System.out.println(output.value() + "]");
 
         // shutdown Pi4J

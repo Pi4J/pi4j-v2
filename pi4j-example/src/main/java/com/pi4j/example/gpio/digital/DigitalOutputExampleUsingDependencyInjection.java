@@ -106,17 +106,17 @@ public class DigitalOutputExampleUsingDependencyInjection {
                   .low();
 
             // lets read the digital output state
-            console.print("CURRENT DIGITAL OUTPUT STATE IS [");
+            console.print("CURRENT DIGITAL OUTPUT [" + output + "] STATE IS [");
             console.println(output.state() + "]");
 
             // pulse to HIGH state for 3 seconds
-            console.println("PULSING OUTPUT STATE TO HIGH FOR 3 SECONDS");
+            console.println("PULSING OUTPUT [" + output + "] STATE TO HIGH FOR 3 SECONDS");
             output.pulse(3, TimeUnit.SECONDS, DigitalState.HIGH);
 
             // friendly pulsing methods for setting output state
-            console.println("PULSING OUTPUT STATE TO HIGH FOR 2 SECONDS");
+            console.println("PULSING OUTPUT [" + output + "] STATE TO HIGH FOR 2 SECONDS");
             output.pulseHigh(2, TimeUnit.SECONDS);
-            console.println("PULSING OUTPUT STATE COMPLETE");
+            console.println("PULSING OUTPUT [" + output + "] STATE COMPLETE");
 
             // shutdown Pi4J
             console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");

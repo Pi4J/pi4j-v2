@@ -90,13 +90,13 @@ public class DigitalOutputFromProperties {
               .low();
 
         // lets read the digital output state
-        System.out.print("CURRENT DIGITAL OUTPUT STATE IS [");
+        System.out.print("CURRENT DIGITAL OUTPUT [" + output + "] STATE IS [");
         System.out.println(output.state() + "]");
 
         // pulse to HIGH state for 3 seconds
-        System.out.println("PULSING OUTPUT STATE TO HIGH FOR 3 SECONDS");
+        System.out.println("PULSING OUTPUT [" + output + "] STATE TO HIGH FOR 3 SECONDS");
         output.pulse(3, TimeUnit.SECONDS, DigitalState.HIGH);
-        System.out.println("PULSING OUTPUT STATE COMPLETE");
+        System.out.println("PULSING OUTPUT [" + output + "] STATE COMPLETE");
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");

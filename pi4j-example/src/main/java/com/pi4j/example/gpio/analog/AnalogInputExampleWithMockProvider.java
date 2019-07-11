@@ -71,8 +71,9 @@ public class AnalogInputExampleWithMockProvider {
         var input = AnalogInput.create(provider, ANALOG_INPUT_PIN, MockAnalogInput.class);
 
         // display created instance
-        console.print("--> CREATED IO INSTANCE: ");
-        console.println(input.id());
+        console.print("--> CREATED IO INSTANCE: [");
+        console.print(input);
+        console.println("]");
         console.println();
 
         // setup an analog output listener to listen for any value changes on the analog input
