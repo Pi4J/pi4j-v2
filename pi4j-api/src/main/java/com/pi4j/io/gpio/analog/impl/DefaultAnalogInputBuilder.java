@@ -5,7 +5,7 @@ package com.pi4j.io.gpio.analog.impl;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogInputConfigImpl.java
+ * FILENAME      :  DefaultAnalogInputBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,10 +27,30 @@ package com.pi4j.io.gpio.analog.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBase;
+import com.pi4j.config.impl.AddressConfigBuilderBase;
+import com.pi4j.io.gpio.analog.AnalogInputBuilder;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 
-public class AnalogInputConfigImpl extends AddressConfigBase<AnalogInputConfig> implements AnalogInputConfig {
-    public AnalogInputConfigImpl(){
+import java.util.Properties;
+
+public class DefaultAnalogInputBuilder
+        extends AddressConfigBuilderBase<AnalogInputBuilder, AnalogInputConfig>
+        implements AnalogInputBuilder {
+
+    /**
+     * PRIVATE CONSTRUCTOR
+     */
+    protected DefaultAnalogInputBuilder(){
+        super();
+    }
+
+    protected DefaultAnalogInputBuilder(Properties properties){
+        super(properties);
+    }
+
+    @Override
+    public AnalogInputConfig build() {
+        AnalogInputConfig config = new DefaultAnalogInputConfig(properties);
+        return config;
     }
 }

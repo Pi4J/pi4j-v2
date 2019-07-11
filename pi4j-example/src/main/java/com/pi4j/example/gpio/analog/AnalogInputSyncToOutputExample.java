@@ -58,7 +58,7 @@ public class AnalogInputSyncToOutputExample {
         var pi4j = Pi4J.initialize();
 
         // create a analog input instance using the default analog input provider
-        var input = AnalogInput.instance(ANALOG_INPUT_PIN);
+        var input = AnalogInput.create(ANALOG_INPUT_PIN);
 
         // create a analog output instance using the default analog output provider
         var output = AnalogOutput.create(ANALOG_OUTPUT_PIN);

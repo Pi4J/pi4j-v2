@@ -27,12 +27,9 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
-import com.pi4j.io.gpio.analog.impl.AnalogInputConfigFactory;
+import java.util.Properties;
 
-
-public interface AnalogInputConfig extends AnalogConfig<AnalogInputConfig> {
-    static AnalogInputConfig instance(Number address){
-        //return AnalogInputConfigFactory.instance().address(address);
-        return null;
-    }
+public interface AnalogInputConfig
+        extends AnalogConfig<AnalogInputConfig> {
+    AnalogInputConfig load(Properties properties, String prefix);
 }

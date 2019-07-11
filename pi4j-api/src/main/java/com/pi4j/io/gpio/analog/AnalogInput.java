@@ -29,50 +29,130 @@ package com.pi4j.io.gpio.analog;
 
 import com.pi4j.io.Input;
 import com.pi4j.io.gpio.analog.impl.AnalogInputFactory;
+import com.pi4j.io.gpio.analog.impl.AnalogOutputFactory;
 import com.pi4j.provider.exception.ProviderException;
+
+import java.util.Properties;
 
 public interface AnalogInput extends Analog<AnalogInput, AnalogInputConfig>, Input {
 
-    static AnalogInput instance(int address) throws ProviderException {
-        return AnalogInputFactory.instance(address);
-    }
-    static <T extends AnalogInput> T instance(int address, Class<T> clazz) throws ProviderException {
-        return AnalogInputFactory.instance(address, clazz);
+    // ---------------------------------------------------------------------------
+    // INSTANCE ACCESSOR STATIC METHODS
+    // ---------------------------------------------------------------------------
+
+    static boolean exists(String id) throws ProviderException {
+        return AnalogOutputFactory.exists(id);
     }
 
-    static AnalogInput instance(AnalogInputConfig config) throws ProviderException {
-        return AnalogInputFactory.instance(config);
-    }
-    static <T extends AnalogInput> T instance(AnalogInputConfig config, Class<T> clazz) throws ProviderException {
-        return AnalogInputFactory.instance(config, clazz);
+    static AnalogInput get(String id) throws ProviderException {
+        return AnalogInputFactory.get(id);
     }
 
-    static AnalogInput instance(String providerId, int address) throws ProviderException {
-        return AnalogInputFactory.instance(providerId, address);
-    }
-    static <T extends AnalogInput> T instance(String providerId, int address, Class<T> clazz) throws ProviderException {
-        return AnalogInputFactory.instance(providerId, address, clazz);
+    // ---------------------------------------------------------------------------
+    // BUILDER CREATOR STATIC METHODS
+    // ---------------------------------------------------------------------------
+
+    static AnalogInputBuilder builder() throws ProviderException {
+        return AnalogInputFactory.builder();
     }
 
-    static AnalogInput instance(String providerId, AnalogInputConfig config) throws ProviderException {
-        return AnalogInputFactory.instance(providerId, config);
-    }
-    static <T extends AnalogInput> T instance(String providerId, AnalogInputConfig config, Class<T> clazz) throws ProviderException {
-        return AnalogInputFactory.instance(providerId, config, clazz);
+    static AnalogInputBuilder builder(Properties properties) throws ProviderException {
+        return AnalogInputFactory.builder(properties);
     }
 
-    static AnalogInput instance(AnalogInputProvider provider, int address) throws ProviderException {
-        return AnalogInputFactory.instance(provider, address);
-    }
-    static <T extends AnalogInput> T instance(AnalogInputProvider provider, int address, Class<T> clazz) throws ProviderException {
-        return AnalogInputFactory.instance(provider, address,clazz);
+    // ---------------------------------------------------------------------------
+    // FRIENDLY HELPER CREATOR STATIC METHODS
+    // ---------------------------------------------------------------------------
+
+    static AnalogInput create(Integer address) throws ProviderException {
+        AnalogInputBuilder builder = AnalogInput.builder();
+        builder.address(address);
+        return AnalogInput.create(builder.build());
     }
 
-    static AnalogInput instance(AnalogInputProvider provider, AnalogInputConfig config) throws ProviderException {
-        return AnalogInputFactory.instance(provider, config);
+    static AnalogInput create(Integer address, String id) throws ProviderException {
+        AnalogInputBuilder builder = AnalogInput.builder();
+        builder.id(id).address(address);
+        return AnalogInput.create(builder.build());
     }
-    static <T extends AnalogInput> T instance(AnalogInputProvider provider, AnalogInputConfig config, Class<T> clazz) throws ProviderException {
-        return AnalogInputFactory.instance(provider, config, clazz);
+
+    static AnalogInput create(Integer address, String id, String name) throws ProviderException {
+        AnalogInputBuilder builder = AnalogInput.builder();
+        builder.id(id).address(address).name(name);
+        return AnalogInput.create(builder.build());
+    }
+
+    static AnalogInput create(Properties properties) throws ProviderException {
+        AnalogInputBuilder builder = AnalogInput.builder(properties);
+        return AnalogInput.create(builder.build());
+    }
+
+    static AnalogInput create(String providerId, Integer address) throws ProviderException {
+        AnalogInputBuilder builder = AnalogInput.builder();
+        builder.address(address);
+        return AnalogInput.create(providerId, builder.build());
+    }
+
+    static AnalogInput create(AnalogInputProvider provider, Integer address) throws ProviderException {
+        AnalogInputBuilder builder = AnalogInput.builder();
+        builder.address(address);
+        return AnalogInput.create(provider, builder.build());
+    }
+
+    // ---------------------------------------------------------------------------
+    // RAW FACTORY CREATOR STATIC METHODS
+    // ---------------------------------------------------------------------------
+
+    static AnalogInput create(AnalogInputConfig config) throws ProviderException {
+        return AnalogInputFactory.create(config);
+    }
+
+    static AnalogInput create(String providerId, AnalogInputConfig config) throws ProviderException {
+        return AnalogInputFactory.create(providerId, config);
+    }
+
+    static AnalogInput create(AnalogInputProvider provider, AnalogInputConfig config) throws ProviderException {
+        return AnalogInputFactory.create(provider, config);
+    }
+
+    // ---------------------------------------------------------------------------
+    // SPECIFIED RETURN CLASS HELPER METHODS
+    // ---------------------------------------------------------------------------
+
+    static <T extends AnalogInput> T create(Integer address, Class<T> clazz) throws ProviderException {
+        return (T)AnalogInput.create(address);
+    }
+
+    static <T extends AnalogInput> T create(Integer address, String id, Class<T> clazz) throws ProviderException {
+        return (T)AnalogInput.create(address, id);
+    }
+
+    static <T extends AnalogInput> T create(Integer address, String id, String name, Class<T> clazz) throws ProviderException {
+        return (T)AnalogInput.create(address, id, name);
+    }
+
+    static <T extends AnalogInput> T create(Properties properties, Class<T> clazz) throws ProviderException {
+        return (T)AnalogInput.create(properties);
+    }
+
+    static <T extends AnalogInput> T create(String providerId, Integer address, Class<T> clazz) throws ProviderException {
+        return (T)AnalogInput.create(providerId, address);
+    }
+
+    static <T extends AnalogInput> T create(AnalogInputProvider provider, Integer address, Class<T> clazz) throws ProviderException {
+        return (T)AnalogInput.create(provider, address);
+    }
+
+    static <T extends AnalogInput> T create(AnalogInputConfig config, Class<T> clazz) throws ProviderException {
+        return (T)AnalogInput.create(config);
+    }
+
+    static <T extends AnalogInput> T create(String providerId, AnalogInputConfig config, Class<T> clazz) throws ProviderException {
+        return (T)AnalogInput.create(providerId, config);
+    }
+
+    static <T extends AnalogInput> T create(AnalogInputProvider provider, AnalogInputConfig config, Class<T> clazz) throws ProviderException {
+        return (T)AnalogInput.create(provider, config);
     }
 }
 

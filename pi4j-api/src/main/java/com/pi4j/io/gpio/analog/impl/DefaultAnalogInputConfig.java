@@ -1,11 +1,11 @@
 package com.pi4j.io.gpio.analog.impl;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogOutputConfigFactory.java
+ * FILENAME      :  DefaultAnalogInputConfig.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,23 +27,27 @@ package com.pi4j.io.gpio.analog.impl;
  * #L%
  */
 
-import com.pi4j.io.gpio.analog.AnalogOutputConfig;
-import com.pi4j.io.gpio.digital.DigitalOutputConfig;
+import com.pi4j.config.impl.AddressConfigBase;
+import com.pi4j.io.gpio.analog.AnalogInputConfig;
 
-/**
- * DigitalOutputConfigFactory factory - it returns instances of {@link DigitalOutputConfig} interface.
- *
- * @author Robert Savage (<a
- *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- */
-public class AnalogOutputConfigFactory {
+import java.util.Properties;
 
-    // private constructor
-    private AnalogOutputConfigFactory() {
-        // forbid object construction
+public class DefaultAnalogInputConfig
+        extends AddressConfigBase<AnalogInputConfig>
+        implements AnalogInputConfig {
+
+    /**
+     * PRIVATE CONSTRUCTOR
+     */
+    private DefaultAnalogInputConfig(){
+        super();
     }
 
-//    public static AnalogOutputConfig instance() {
-//        return new AnalogOutputConfigImpl();
-//    }
+    /**
+     * PRIVATE CONSTRUCTOR
+     * @param properties
+     */
+    protected DefaultAnalogInputConfig(Properties properties){
+        super(properties);
+    }
 }

@@ -66,9 +66,9 @@ public class Main {
 
 
         var din1 = DigitalInput.instance(11);
-        var ain1 = AnalogInput.instance("test-analog-input-provider",21, TestAnalogInput.class);
+        var ain1 = AnalogInput.create("test-analog-input-provider",21, TestAnalogInput.class);
 
-        var input = AnalogInput.instance(98);
+        var input = AnalogInput.create(98);
 
         input.name("My Analog Input #1");
 

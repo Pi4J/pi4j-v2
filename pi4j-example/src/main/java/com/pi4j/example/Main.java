@@ -52,11 +52,11 @@ public class Main {
 
 
         var din1 = DigitalInput.instance(11);
-        var ain1 = AnalogInput.instance(21);
+        var ain1 = AnalogInput.create(21);
 
 
 
-        var input = AnalogInput.instance(98);
+        var input = AnalogInput.create(98);
         var output1 = AnalogOutput.create(99);
         var output2 = AnalogOutput.create(100);
 

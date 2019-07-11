@@ -116,4 +116,44 @@ public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, 
     static AnalogOutput create(AnalogOutputProvider provider, AnalogOutputConfig config) throws ProviderException {
         return AnalogOutputFactory.create(provider, config);
     }
+
+    // ---------------------------------------------------------------------------
+    // SPECIFIED RETURN CLASS HELPER METHODS
+    // ---------------------------------------------------------------------------
+
+    static <T extends AnalogOutput> T create(Integer address, Class<T> clazz) throws ProviderException {
+        return (T)AnalogOutput.create(address);
+    }
+
+    static <T extends AnalogOutput> T create(Integer address, String id, Class<T> clazz) throws ProviderException {
+        return (T)AnalogOutput.create(address, id);
+    }
+
+    static <T extends AnalogOutput> T create(Integer address, String id, String name, Class<T> clazz) throws ProviderException {
+        return (T)AnalogOutput.create(address, id, name);
+    }
+
+    static <T extends AnalogOutput> T create(Properties properties, Class<T> clazz) throws ProviderException {
+        return (T)AnalogOutput.create(properties);
+    }
+
+    static <T extends AnalogOutput> T create(String providerId, Integer address, Class<T> clazz) throws ProviderException {
+        return (T)AnalogOutput.create(providerId, address);
+    }
+
+    static <T extends AnalogOutput> T create(AnalogOutputProvider provider, Integer address, Class<T> clazz) throws ProviderException {
+        return (T)AnalogOutput.create(provider, address);
+    }
+
+    static <T extends AnalogOutput> T create(AnalogOutputConfig config, Class<T> clazz) throws ProviderException {
+        return (T)AnalogOutput.create(config);
+    }
+
+    static <T extends AnalogOutput> T create(String providerId, AnalogOutputConfig config, Class<T> clazz) throws ProviderException {
+        return (T)AnalogOutput.create(providerId, config);
+    }
+
+    static <T extends AnalogOutput> T create(AnalogOutputProvider provider, AnalogOutputConfig config, Class<T> clazz) throws ProviderException {
+        return (T)AnalogOutput.create(provider, config);
+    }
 }

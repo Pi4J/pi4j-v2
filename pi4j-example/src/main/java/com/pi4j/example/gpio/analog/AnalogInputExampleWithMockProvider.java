@@ -68,7 +68,7 @@ public class AnalogInputExampleWithMockProvider {
 
         // create an analog input instance using the mock analog input provider
         console.println("ATTEMPTING TO CREATE A MOCK ANALOG INPUT INSTANCE");
-        var input = AnalogInput.instance(provider, ANALOG_INPUT_PIN, MockAnalogInput.class);
+        var input = AnalogInput.create(provider, ANALOG_INPUT_PIN, MockAnalogInput.class);
 
         // display created instance
         console.print("--> CREATED IO INSTANCE: ");
