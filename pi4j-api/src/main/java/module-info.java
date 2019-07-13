@@ -57,12 +57,18 @@ module pi4j.api {
 
     provides com.pi4j.annotation.Injector
             with com.pi4j.annotation.injectors.ContextInjector,
+                 com.pi4j.annotation.injectors.AnalogInputInjector,
                  com.pi4j.annotation.injectors.AnalogOutputInjector,
+                 com.pi4j.annotation.injectors.DigitalInputInjector,
                  com.pi4j.annotation.injectors.DigitalOutputInjector,
+                 com.pi4j.annotation.injectors.I2CInjector,
                  com.pi4j.annotation.injectors.ProviderGroupInjector,
                  com.pi4j.annotation.injectors.ProviderInjector,
                  com.pi4j.annotation.injectors.ProvidersInjector,
-                 com.pi4j.annotation.injectors.RegistryInjector;
+                 com.pi4j.annotation.injectors.PwmInjector,
+                 com.pi4j.annotation.injectors.RegistryInjector,
+                 com.pi4j.annotation.injectors.SerialInjector,
+                 com.pi4j.annotation.injectors.SpiInjector;
 
     requires slf4j.api;
 }

@@ -5,7 +5,7 @@ package com.pi4j.annotation.injectors;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalOutputInjector.java
+ * FILENAME      :  DigitalInputInjector.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -31,13 +31,14 @@ import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
 import com.pi4j.annotation.Injector;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.analog.AnalogInput;
+import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-public class DigitalOutputInjector implements Injector<Inject, DigitalOutput> {
+public class DigitalInputInjector implements Injector<Inject, DigitalInput> {
 
     @Override
     public boolean isAnnotationType(Annotation annotation) {
@@ -50,10 +51,10 @@ public class DigitalOutputInjector implements Injector<Inject, DigitalOutput> {
     }
 
     @Override
-    public Class<DigitalOutput> getTargetType() { return DigitalOutput.class; }
+    public Class<DigitalInput> getTargetType() { return DigitalInput.class; }
 
     @Override
-    public DigitalOutput instance(Field field, Inject annotation) throws Exception {
+    public DigitalInput instance(Field field, Inject annotation) throws Exception {
 
         // test for required peer annotations
         if(StringUtil.isNullOrEmpty(annotation.value()))
@@ -61,6 +62,6 @@ public class DigitalOutputInjector implements Injector<Inject, DigitalOutput> {
                     field.getDeclaringClass().getName() + "::" + field.getName() + "@Inject");
 
         // get target I/O instance from the Pi4J registry
-        return Pi4J.context().registry().get(annotation.value(), DigitalOutput.class);
+        return Pi4J.context().registry().get(annotation.value(), DigitalInput.class);
     }
 }
