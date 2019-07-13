@@ -28,12 +28,13 @@ package com.pi4j.io.gpio.digital.impl;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.provider.exception.ProviderInstantiateException;
+import com.pi4j.registry.exception.RegistryException;
 
 /**
  * DigitalOutput factory - it returns instances of {@link DigitalOutput} interface.
@@ -48,85 +49,68 @@ public class DigitalOutputFactory {
         // forbid object construction
     }
 
-    public static DigitalOutput instance(int address) throws ProviderException {
+    public static DigitalOutput instance(int address) throws ProviderException, NotInitializedException, RegistryException {
         return instance(DigitalOutputConfig.instance(address));
     }
-    public static <T extends DigitalOutput> T instance(int address, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalOutput> T instance(int address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance(DigitalOutputConfig.instance(address), clazz);
     }
 
-    public static DigitalOutput instance(int address, DigitalState shutdownState) throws ProviderException {
+    public static DigitalOutput instance(int address, DigitalState shutdownState) throws ProviderException, NotInitializedException, RegistryException {
         return instance(DigitalOutputConfig.instance(address, shutdownState));
     }
-    public static <T extends DigitalOutput> T instance(int address, DigitalState shutdownState, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalOutput> T instance(int address, DigitalState shutdownState, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance(DigitalOutputConfig.instance(address, shutdownState), clazz);
     }
 
-    public static DigitalOutput instance(DigitalOutputConfig config) throws ProviderException {
+    public static DigitalOutput instance(DigitalOutputConfig config) throws ProviderException, NotInitializedException, RegistryException {
         return instance((DigitalOutputProvider)null, config);
     }
-    public static <T extends DigitalOutput> T instance(DigitalOutputConfig config, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalOutput> T instance(DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance((DigitalOutputProvider)null, config, clazz);
     }
 
-    public static DigitalOutput instance(String providerId, int address) throws ProviderException {
+    public static DigitalOutput instance(String providerId, int address) throws ProviderException, NotInitializedException, RegistryException {
         return instance(providerId, DigitalOutputConfig.instance(address));
     }
-    public static <T extends DigitalOutput> T instance(String providerId, int address, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalOutput> T instance(String providerId, int address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance(providerId, DigitalOutputConfig.instance(address), clazz);
     }
 
-    public static DigitalOutput instance(String providerId, int address, DigitalState shutdownState) throws ProviderException {
+    public static DigitalOutput instance(String providerId, int address, DigitalState shutdownState) throws ProviderException, NotInitializedException, RegistryException {
         return instance(providerId, DigitalOutputConfig.instance(address, shutdownState));
     }
-    public static <T extends DigitalOutput> T instance(String providerId, int address, DigitalState shutdownState, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalOutput> T instance(String providerId, int address, DigitalState shutdownState, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance(providerId, DigitalOutputConfig.instance(address, shutdownState), clazz);
     }
 
 
-    public static DigitalOutput instance(DigitalOutputProvider provider, int address) throws ProviderException {
+    public static DigitalOutput instance(DigitalOutputProvider provider, int address) throws ProviderException, NotInitializedException, RegistryException {
         return instance(provider, DigitalOutputConfig.instance(address));
     }
-    public static <T extends DigitalOutput> T instance(DigitalOutputProvider provider, int address, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalOutput> T instance(DigitalOutputProvider provider, int address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance(provider, DigitalOutputConfig.instance(address), clazz);
     }
 
-    public static DigitalOutput instance(DigitalOutputProvider provider, int address, DigitalState shutdownState) throws ProviderException {
+    public static DigitalOutput instance(DigitalOutputProvider provider, int address, DigitalState shutdownState) throws ProviderException, NotInitializedException, RegistryException {
         return instance(provider, DigitalOutputConfig.instance(address, shutdownState));
     }
-    public static <T extends DigitalOutput> T instance(DigitalOutputProvider provider, int address, DigitalState shutdownState, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalOutput> T instance(DigitalOutputProvider provider, int address, DigitalState shutdownState, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance(provider, DigitalOutputConfig.instance(address, shutdownState), clazz);
     }
 
 
-    public static DigitalOutput instance(String providerId, DigitalOutputConfig config) throws ProviderException {
+    public static DigitalOutput instance(String providerId, DigitalOutputConfig config) throws ProviderException, NotInitializedException, RegistryException {
         return instance(providerId, config, DigitalOutput.class);
     }
-    public static <T extends DigitalOutput> T instance(String providerId, DigitalOutputConfig config, Class<T> clazz) throws ProviderException {
-        // if provided, lookup the specified io provider; else use the default io provider
-        if(providerId == null) {
-            return (T)instance(config);
-        }
-        // get the specified digital input provider by ID
-        var provider = Pi4J.providers().digitalOutput().get(providerId);
-        return instance(provider, config, clazz);
+    public static <T extends DigitalOutput> T instance(String providerId, DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)Pi4J.context().registry().create(providerId, config, clazz);
     }
 
-    public static DigitalOutput instance(DigitalOutputProvider provider, DigitalOutputConfig config) throws ProviderException {
+    public static DigitalOutput instance(DigitalOutputProvider provider, DigitalOutputConfig config) throws ProviderException, NotInitializedException, RegistryException {
         return instance(provider, config, DigitalOutput.class);
     }
-    public static <T extends DigitalOutput> T instance(DigitalOutputProvider provider, DigitalOutputConfig config, Class<T> clazz) throws ProviderException {
-        try {
-            // get default digital output provider if the specified provider is null
-            if(provider == null){
-                provider = Pi4J.providers().digitalOutput().getDefault();
-            }
-            // create a digital output instance using the digital input provider
-            return (T)provider.instance(config);
-        } catch(ProviderException pe){
-            throw pe;
-        } catch (Exception e) {
-            throw new ProviderInstantiateException(provider, e);
-        }
+    public static <T extends DigitalOutput> T instance(DigitalOutputProvider provider, DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)Pi4J.context().registry().create(provider, config, clazz);
     }
 }

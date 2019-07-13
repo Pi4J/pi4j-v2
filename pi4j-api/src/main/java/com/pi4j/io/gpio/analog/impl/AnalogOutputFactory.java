@@ -28,12 +28,10 @@ package com.pi4j.io.gpio.analog.impl;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.io.gpio.analog.AnalogOutput;
-import com.pi4j.io.gpio.analog.AnalogOutputConfig;
-import com.pi4j.io.gpio.analog.AnalogOutputBuilder;
-import com.pi4j.io.gpio.analog.AnalogOutputProvider;
+import com.pi4j.exception.NotInitializedException;
+import com.pi4j.io.gpio.analog.*;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.provider.exception.ProviderInstantiateException;
+import com.pi4j.registry.exception.RegistryException;
 
 import java.util.Properties;
 
@@ -50,55 +48,43 @@ public class AnalogOutputFactory {
         // forbid object construction
     }
 
-    public static boolean exists(String id) throws ProviderException {
-        return false;
+    public static boolean exists(String id) throws ProviderException, NotInitializedException {
+        return Pi4J.context().registry().exists(id, AnalogOutput.class);
     }
 
-    public static AnalogOutput get(String id) throws ProviderException {
-        return null;
+    public static <T extends AnalogOutput> T get(String id) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)Pi4J.context().registry().get(id, AnalogOutput.class);
     }
 
     public static AnalogOutputBuilder builder() throws ProviderException {
         return new DefaultAnalogOutputBuilder();
     }
 
-    public static AnalogOutputBuilder builder(Properties properties) throws ProviderException {
+    public static AnalogOutputBuilder builder(Properties properties) {
         return new DefaultAnalogOutputBuilder(properties);
     }
 
-    public static AnalogOutput create(AnalogOutputConfig config) throws ProviderException {
-        return AnalogOutputFactory.create((AnalogOutputProvider)null, config);
+    public static <T extends AnalogOutput> T  create(AnalogOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
+        return (T)Pi4J.context().registry().create(config, AnalogOutput.class);
     }
 
-    public static AnalogOutput create(String providerId, AnalogOutputConfig config) throws ProviderException {
-        // if provided, lookup the specified io provider; else use the default io provider
-        if(providerId == null) {
-            return create(config);
-        }
-        else{
-            var provider = Pi4J.providers().analogOutput().get(providerId);
-            return create(provider, config);
-        }
+    public static <T extends AnalogOutput> T  create(AnalogOutputProvider provider, AnalogOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
+        return (T)Pi4J.context().registry().create(provider, config, AnalogOutput.class);
     }
 
-    public static AnalogOutput create(AnalogOutputProvider provider, AnalogOutputConfig config) throws ProviderException {
-        try {
-            // get default provider if provider argument is null
-            if(provider == null){
-                provider = Pi4J.providers().analogOutput().getDefault();
-            }
+    public static  <T extends AnalogOutput> T create(String providerId, AnalogOutputConfig config) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)Pi4J.context().registry().create(providerId, config, AnalogOutput.class);
+    }
 
+    public static <T extends AnalogOutput> T create(AnalogOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)Pi4J.context().registry().create(config, clazz);
+    }
 
-            Pi4J.context().registry().create(provider, config, AnalogOutput.class);
+    public static <T extends AnalogOutput> T create(String providerId, AnalogOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)Pi4J.context().registry().create(providerId, config, clazz);
+    }
 
-            // create an instance using the io provider
-            return provider.instance(config);
-
-        } catch(ProviderException pe){
-            throw pe;
-        } catch (Exception e) {
-            //e.printStackTrace();
-            throw new ProviderInstantiateException(provider, e);
-        }
+    public static <T extends AnalogOutput> T create(AnalogInputProvider provider, AnalogOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)Pi4J.context().registry().create(provider, config, clazz);
     }
 }

@@ -28,6 +28,7 @@ package com.pi4j.io.serial.impl;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
@@ -48,15 +49,15 @@ public class SerialFactory {
         // forbid object construction
     }
 
-    public static Serial instance(String device) throws ProviderException {
+    public static Serial instance(String device) throws ProviderException, NotInitializedException {
         return instance(new SerialConfig(device));
     }
 
-    public static Serial instance(String device, int baud) throws ProviderException {
+    public static Serial instance(String device, int baud) throws ProviderException, NotInitializedException {
         return instance(new SerialConfig(device, baud));
     }
 
-    public static Serial instance(SerialConfig config) throws ProviderException {
+    public static Serial instance(SerialConfig config) throws ProviderException, NotInitializedException {
         // get default SPI io
         var provider = Pi4J.providers().serial().getDefault();
 
@@ -64,15 +65,15 @@ public class SerialFactory {
         return instance(provider, config);
     }
 
-    public static Serial instance(String providerId, String device) throws ProviderException {
+    public static Serial instance(String providerId, String device) throws ProviderException, NotInitializedException {
         return instance(providerId, new SerialConfig(device));
     }
 
-    public static Serial instance(String providerId, String device, int baud) throws ProviderException {
+    public static Serial instance(String providerId, String device, int baud) throws ProviderException, NotInitializedException {
         return instance(providerId, new SerialConfig(device, baud));
     }
 
-    public static Serial instance(String providerId, SerialConfig config) throws ProviderException {
+    public static Serial instance(String providerId, SerialConfig config) throws ProviderException, NotInitializedException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
             return instance(config);

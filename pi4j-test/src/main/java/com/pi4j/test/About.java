@@ -27,7 +27,6 @@ package com.pi4j.test;/*-
 
 import com.pi4j.Pi4J;
 import com.pi4j.binding.Binding;
-import com.pi4j.binding.exception.BindingException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderType;
@@ -50,10 +49,10 @@ public class About {
         }
     }
 
-    public void enumerateProviders() throws BindingException {
+    public void enumerateProviders() throws Pi4JException {
         enumerateProviders("PROVIDERS");
     }
-    public void enumerateProviders(String title) throws BindingException {
+    public void enumerateProviders(String title) throws Pi4JException {
         System.out.println("=====================================================");
         System.out.println(title);
         System.out.println("=====================================================");
@@ -62,7 +61,7 @@ public class About {
         }
     }
 
-    public void enumerateProviders(ProviderType providerType) throws BindingException {
+    public void enumerateProviders(ProviderType providerType) throws Pi4JException {
         System.out.println("=====================================================");
         System.out.println(providerType + " PROVIDERS");
         System.out.println("=====================================================");
@@ -71,7 +70,7 @@ public class About {
         }
     }
 
-    public void enumerateDefaultProviders() throws BindingException {
+    public void enumerateDefaultProviders() throws Pi4JException {
         System.out.println("=====================================================");
         System.out.println("DEFAULT PROVIDERS");
         System.out.println("=====================================================");

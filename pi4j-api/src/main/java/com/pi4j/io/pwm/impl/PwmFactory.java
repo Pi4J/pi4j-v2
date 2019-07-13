@@ -28,6 +28,7 @@ package com.pi4j.io.pwm.impl;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
@@ -44,7 +45,7 @@ public class PwmFactory {
         // forbid object construction
     }
 
-    public static Pwm instance(PwmConfig config) throws ProviderException {
+    public static Pwm instance(PwmConfig config) throws ProviderException, NotInitializedException {
         // get default PWM io
         var provider = Pi4J.providers().pwm().getDefault();
 
@@ -52,15 +53,15 @@ public class PwmFactory {
         return instance(provider, config);
     }
 
-    public static Pwm instance(int address) throws ProviderException {
+    public static Pwm instance(int address) throws ProviderException, NotInitializedException {
         return instance(new PwmConfig(address));
     }
 
-    public static Pwm instance(String providerId, int address) throws ProviderException {
+    public static Pwm instance(String providerId, int address) throws ProviderException, NotInitializedException {
         return instance(providerId, new PwmConfig(address));
     }
 
-    public static Pwm instance(String providerId, PwmConfig config) throws ProviderException {
+    public static Pwm instance(String providerId, PwmConfig config) throws ProviderException, NotInitializedException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
             return instance(config);

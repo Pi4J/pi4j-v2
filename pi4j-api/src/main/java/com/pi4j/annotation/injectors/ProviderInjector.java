@@ -57,8 +57,8 @@ public class ProviderInjector implements Injector<Inject, Provider> {
         Class<? extends Provider> providerClass = null;
 
         // <<1>> inject instance by user defined ID property
-        if(annotation.id() != null || !annotation.id().isEmpty()){
-            id = annotation.id().trim();
+        if(annotation.value() != null || !annotation.value().isEmpty()){
+            id = annotation.value().trim();
         }
 
         // <<2>> alternatively, inject by user defined class type property

@@ -48,7 +48,7 @@ public class DependencyInjectionNamedProviderTest {
      * Use dependency injection to acquire a specific
      * I/O provider instance using the "id" attribute
      */
-    @Inject(id = MockPwmProvider.ID)
+    @Inject(MockPwmProvider.ID)
     PwmProvider pwmProvider;
 
     @Before

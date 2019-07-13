@@ -27,8 +27,6 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
-import com.pi4j.config.AddressConfigBuilder;
-import com.pi4j.io.gpio.GpioConfig;
 import com.pi4j.io.gpio.GpioConfigBuilder;
 
 public interface AnalogConfigBuilder<BUILDER_TYPE extends AnalogConfigBuilder, CONFIG_TYPE extends AnalogConfig>

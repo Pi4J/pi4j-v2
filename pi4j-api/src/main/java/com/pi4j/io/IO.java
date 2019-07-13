@@ -30,6 +30,7 @@ package com.pi4j.io;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Identity;
 import com.pi4j.common.Lifecycle;
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.pwm.Pwm;
@@ -54,19 +55,19 @@ public interface IO<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig>
 
     // MARKER INTERFACE
 
-    static Serial instance(SerialConfig config) throws ProviderException {
+    static Serial instance(SerialConfig config) throws ProviderException, NotInitializedException {
         return Serial.instance(config);
     }
 
-    static Pwm instance(PwmConfig config) throws ProviderException {
+    static Pwm instance(PwmConfig config) throws ProviderException, NotInitializedException {
         return Pwm.instance(config);
     }
 
-    static Spi instance(SpiConfig config) throws ProviderException {
+    static Spi instance(SpiConfig config) throws ProviderException, NotInitializedException {
         return Spi.instance(config);
     }
 
-    static I2C instance(I2CConfig config) throws ProviderException {
+    static I2C instance(I2CConfig config) throws ProviderException, NotInitializedException {
         return I2C.instance(config);
     }
 }

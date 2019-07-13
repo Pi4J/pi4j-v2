@@ -5,7 +5,7 @@ package com.pi4j.exception;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Pi4JAlreadyInitializedException.java
+ * FILENAME      :  InitializeException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -37,12 +37,20 @@ package com.pi4j.exception;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public class Pi4JAlreadyInitializedException extends Pi4JInitializeException {
+public class InitializeException extends Pi4JException {
 
     /**
      * Default Constructor
      */
-    public Pi4JAlreadyInitializedException(){
-        super("Pi4J has already been initialized; this function is not reentrant, please only call 'Pi4J.initialize()' one time at startup.");
+    public InitializeException(String message){
+        super(message);
     }
+
+    /**
+     * Default Constructor
+     */
+    public InitializeException(Throwable ex){
+        super(ex.getMessage(), ex);
+    }
+
 }

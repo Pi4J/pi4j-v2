@@ -28,74 +28,76 @@ package com.pi4j.io.gpio.digital;
  */
 
 
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.Input;
 import com.pi4j.io.gpio.digital.impl.DigitalInputFactory;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.registry.exception.RegistryException;
 
 public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig>, Input {
 
     default PullResistance pull() { return config().pull(); }
 
-    static DigitalInput instance(int address) throws ProviderException {
+    static DigitalInput instance(int address) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(address);
     }
-    static <T extends DigitalInput> T instance(int address, Class<T> clazz) throws ProviderException {
+    static <T extends DigitalInput> T instance(int address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(address, clazz);
     }
 
-    static DigitalInput instance(int address, PullResistance pull) throws ProviderException {
+    static DigitalInput instance(int address, PullResistance pull) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(address, pull);
     }
-    static <T extends DigitalInput> T instance(int address, PullResistance pull, Class<T> clazz) throws ProviderException {
+    static <T extends DigitalInput> T instance(int address, PullResistance pull, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(address, pull, clazz);
     }
 
-    static DigitalInput instance(DigitalInputConfig config) throws ProviderException {
+    static DigitalInput instance(DigitalInputConfig config) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(config);
     }
-    static <T extends DigitalInput> T instance(DigitalInputConfig config, Class<T> clazz) throws ProviderException {
+    static <T extends DigitalInput> T instance(DigitalInputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(config, clazz);
     }
 
-    static DigitalInput instance(String providerId, int address) throws ProviderException {
+    static DigitalInput instance(String providerId, int address) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(providerId, address);
     }
-    static <T extends DigitalInput> T instance(String providerId, int address, Class<T> clazz) throws ProviderException {
+    static <T extends DigitalInput> T instance(String providerId, int address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(providerId, address, clazz);
     }
 
-    static DigitalInput instance(String providerId, int address, PullResistance pull) throws ProviderException {
+    static DigitalInput instance(String providerId, int address, PullResistance pull) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(providerId, address, pull);
     }
-    static <T extends DigitalInput> T instance(String providerId, int address, PullResistance pull, Class<T> clazz) throws ProviderException {
+    static <T extends DigitalInput> T instance(String providerId, int address, PullResistance pull, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(providerId, address, pull, clazz);
     }
 
-    static DigitalInput instance(String providerId, DigitalInputConfig config) throws ProviderException {
+    static DigitalInput instance(String providerId, DigitalInputConfig config) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(providerId, config);
     }
-    static <T extends DigitalInput> T instance(String providerId, DigitalInputConfig config, Class<T> clazz) throws ProviderException {
+    static <T extends DigitalInput> T instance(String providerId, DigitalInputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(providerId, config, clazz);
     }
 
-    static DigitalInput instance(DigitalInputProvider provider, int address) throws ProviderException {
+    static DigitalInput instance(DigitalInputProvider provider, int address) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(provider, address);
     }
-    static <T extends DigitalInput> T instance(DigitalInputProvider provider, int address, Class<T> clazz) throws ProviderException {
+    static <T extends DigitalInput> T instance(DigitalInputProvider provider, int address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(provider, address,clazz);
     }
 
-    static DigitalInput instance(DigitalInputProvider provider, int address, PullResistance pull) throws ProviderException {
+    static DigitalInput instance(DigitalInputProvider provider, int address, PullResistance pull) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(provider, address, pull);
     }
-    static <T extends DigitalInput> T instance(DigitalInputProvider provider, int address, PullResistance pull, Class<T> clazz) throws ProviderException {
+    static <T extends DigitalInput> T instance(DigitalInputProvider provider, int address, PullResistance pull, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(provider, address, pull, clazz);
     }
 
-    static DigitalInput instance(DigitalInputProvider provider, DigitalInputConfig config) throws ProviderException {
+    static DigitalInput instance(DigitalInputProvider provider, DigitalInputConfig config) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(provider, config);
     }
-    static <T extends DigitalInput> T instance(DigitalInputProvider provider, DigitalInputConfig config, Class<T> clazz) throws ProviderException {
+    static <T extends DigitalInput> T instance(DigitalInputProvider provider, DigitalInputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return DigitalInputFactory.instance(provider, config, clazz);
     }
 }

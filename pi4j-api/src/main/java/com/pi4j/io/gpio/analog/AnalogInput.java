@@ -27,10 +27,11 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.Input;
 import com.pi4j.io.gpio.analog.impl.AnalogInputFactory;
-import com.pi4j.io.gpio.analog.impl.AnalogOutputFactory;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.registry.exception.RegistryException;
 
 import java.util.Properties;
 
@@ -40,12 +41,12 @@ public interface AnalogInput extends Analog<AnalogInput, AnalogInputConfig>, Inp
     // INSTANCE ACCESSOR STATIC METHODS
     // ---------------------------------------------------------------------------
 
-    static boolean exists(String id) throws ProviderException {
-        return AnalogOutputFactory.exists(id);
+    static boolean exists(String id) throws ProviderException, NotInitializedException {
+        return AnalogInputFactory.exists(id);
     }
 
-    static AnalogInput get(String id) throws ProviderException {
-        return AnalogInputFactory.get(id);
+    static <T extends AnalogInput> T get(String id) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)AnalogInputFactory.get(id);
     }
 
     // ---------------------------------------------------------------------------
@@ -64,95 +65,96 @@ public interface AnalogInput extends Analog<AnalogInput, AnalogInputConfig>, Inp
     // FRIENDLY HELPER CREATOR STATIC METHODS
     // ---------------------------------------------------------------------------
 
-    static AnalogInput create(Integer address) throws ProviderException {
+    static <T extends AnalogInput> T create(Integer address) throws ProviderException, NotInitializedException, RegistryException {
         AnalogInputBuilder builder = AnalogInput.builder();
         builder.address(address);
-        return AnalogInput.create(builder.build());
+        return (T)AnalogInput.create(builder.build());
     }
 
-    static AnalogInput create(Integer address, String id) throws ProviderException {
+    static <T extends AnalogInput> T create(Integer address, String id) throws ProviderException, NotInitializedException, RegistryException {
         AnalogInputBuilder builder = AnalogInput.builder();
-        builder.id(id).address(address);
-        return AnalogInput.create(builder.build());
+        builder.id(id).address(address).id(id);
+        return (T)AnalogInput.create(builder.build());
     }
 
-    static AnalogInput create(Integer address, String id, String name) throws ProviderException {
+    static <T extends AnalogInput> T create(Integer address, String id, String name) throws ProviderException, NotInitializedException, RegistryException {
         AnalogInputBuilder builder = AnalogInput.builder();
-        builder.id(id).address(address).name(name);
-        return AnalogInput.create(builder.build());
+        builder.id(id).address(address).id(id).name(name);
+        return (T)AnalogInput.create(builder.build());
     }
 
-    static AnalogInput create(Properties properties) throws ProviderException {
+    static <T extends AnalogInput> T create(Properties properties) throws ProviderException, NotInitializedException, RegistryException {
         AnalogInputBuilder builder = AnalogInput.builder(properties);
-        return AnalogInput.create(builder.build());
+        return (T)AnalogInput.create(builder.build());
     }
 
-    static AnalogInput create(String providerId, Integer address) throws ProviderException {
+    static <T extends AnalogInput> T create(String providerId, Integer address) throws ProviderException, NotInitializedException, RegistryException {
         AnalogInputBuilder builder = AnalogInput.builder();
         builder.address(address);
-        return AnalogInput.create(providerId, builder.build());
+        return (T)AnalogInput.create(providerId, builder.build());
     }
 
-    static AnalogInput create(AnalogInputProvider provider, Integer address) throws ProviderException {
+    static <T extends AnalogInput> T create(AnalogInputProvider provider, Integer address) throws ProviderException, NotInitializedException, RegistryException {
         AnalogInputBuilder builder = AnalogInput.builder();
         builder.address(address);
-        return AnalogInput.create(provider, builder.build());
+        return (T)AnalogInput.create(provider, builder.build());
     }
 
     // ---------------------------------------------------------------------------
     // RAW FACTORY CREATOR STATIC METHODS
     // ---------------------------------------------------------------------------
 
-    static AnalogInput create(AnalogInputConfig config) throws ProviderException {
-        return AnalogInputFactory.create(config);
+    static <T extends AnalogInput> T create(AnalogInputConfig config) throws NotInitializedException, ProviderException, RegistryException {
+        return (T)AnalogInputFactory.create(config);
     }
 
-    static AnalogInput create(String providerId, AnalogInputConfig config) throws ProviderException {
-        return AnalogInputFactory.create(providerId, config);
+    static <T extends AnalogInput> T create(String providerId, AnalogInputConfig config) throws NotInitializedException, ProviderException, RegistryException {
+        return (T)AnalogInputFactory.create(providerId, config);
     }
 
-    static AnalogInput create(AnalogInputProvider provider, AnalogInputConfig config) throws ProviderException {
-        return AnalogInputFactory.create(provider, config);
+    static <T extends AnalogInput> T create(AnalogInputProvider provider, AnalogInputConfig config) throws NotInitializedException, ProviderException, RegistryException {
+        return (T)AnalogInputFactory.create(provider, config);
     }
 
     // ---------------------------------------------------------------------------
     // SPECIFIED RETURN CLASS HELPER METHODS
     // ---------------------------------------------------------------------------
 
-    static <T extends AnalogInput> T create(Integer address, Class<T> clazz) throws ProviderException {
+    static <T extends AnalogInput> T create(Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return (T)AnalogInput.create(address);
     }
 
-    static <T extends AnalogInput> T create(Integer address, String id, Class<T> clazz) throws ProviderException {
+    static <T extends AnalogInput> T create(Integer address, String id, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return (T)AnalogInput.create(address, id);
     }
 
-    static <T extends AnalogInput> T create(Integer address, String id, String name, Class<T> clazz) throws ProviderException {
+    static <T extends AnalogInput> T create(Integer address, String id, String name, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return (T)AnalogInput.create(address, id, name);
     }
 
-    static <T extends AnalogInput> T create(Properties properties, Class<T> clazz) throws ProviderException {
+    static <T extends AnalogInput> T create(Properties properties, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return (T)AnalogInput.create(properties);
     }
 
-    static <T extends AnalogInput> T create(String providerId, Integer address, Class<T> clazz) throws ProviderException {
+    static <T extends AnalogInput> T create(String providerId, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return (T)AnalogInput.create(providerId, address);
     }
 
-    static <T extends AnalogInput> T create(AnalogInputProvider provider, Integer address, Class<T> clazz) throws ProviderException {
+    static <T extends AnalogInput> T create(AnalogInputProvider provider, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return (T)AnalogInput.create(provider, address);
     }
 
-    static <T extends AnalogInput> T create(AnalogInputConfig config, Class<T> clazz) throws ProviderException {
+    static <T extends AnalogInput> T create(AnalogInputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return (T)AnalogInput.create(config);
     }
 
-    static <T extends AnalogInput> T create(String providerId, AnalogInputConfig config, Class<T> clazz) throws ProviderException {
+    static <T extends AnalogInput> T create(String providerId, AnalogInputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return (T)AnalogInput.create(providerId, config);
     }
 
-    static <T extends AnalogInput> T create(AnalogInputProvider provider, AnalogInputConfig config, Class<T> clazz) throws ProviderException {
+    static <T extends AnalogInput> T create(AnalogInputProvider provider, AnalogInputConfig config, Class<T> clazz) throws NotInitializedException, ProviderException, RegistryException {
         return (T)AnalogInput.create(provider, config);
     }
+
 }
 

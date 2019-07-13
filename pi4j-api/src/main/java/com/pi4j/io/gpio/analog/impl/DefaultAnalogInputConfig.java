@@ -29,6 +29,7 @@ package com.pi4j.io.gpio.analog.impl;
 
 import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
+import com.pi4j.util.StringUtil;
 
 import java.util.Properties;
 
@@ -49,5 +50,10 @@ public class DefaultAnalogInputConfig
      */
     protected DefaultAnalogInputConfig(Properties properties){
         super(properties);
+
+        // define default property values if any are missing (based on the required address value)
+        this.id = StringUtil.setIfNullOrEmpty(this.id, "AIN-" + this.address, true);
+        this.name = StringUtil.setIfNullOrEmpty(this.name, "AIN-" + this.address, true);
+        this.description = StringUtil.setIfNullOrEmpty(this.description, "AIN-" + this.address, true);
     }
 }

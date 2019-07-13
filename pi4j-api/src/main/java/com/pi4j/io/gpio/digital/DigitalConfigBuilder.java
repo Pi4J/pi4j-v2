@@ -28,7 +28,6 @@ package com.pi4j.io.gpio.digital;
  */
 
 import com.pi4j.io.gpio.GpioConfigBuilder;
-import com.pi4j.io.gpio.analog.AnalogConfig;
 
 public interface DigitalConfigBuilder<BUILDER_TYPE extends DigitalConfigBuilder, CONFIG_TYPE extends DigitalConfig>
         extends GpioConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {

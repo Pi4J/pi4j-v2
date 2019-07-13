@@ -27,6 +27,7 @@ package com.pi4j.io.serial;
  * #L%
  */
 
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
 import com.pi4j.io.serial.impl.SerialFactory;
 import com.pi4j.provider.exception.ProviderException;
@@ -40,27 +41,27 @@ public interface Serial extends IO<Serial, SerialConfig>, AutoCloseable {
     static final int DEFAULT_BAUD = 9600;
     static final String DEFAULT_DEVICE = "{DEFAULT}";
 
-    static Serial instance(SerialConfig config) throws ProviderException {
+    static Serial instance(SerialConfig config) throws ProviderException, NotInitializedException {
         return SerialFactory.instance(config);
     }
 
-    static Serial instance(String device) throws ProviderException {
+    static Serial instance(String device) throws ProviderException, NotInitializedException {
         return SerialFactory.instance(device);
     }
 
-    static Serial instance(String device, int baud) throws ProviderException {
+    static Serial instance(String device, int baud) throws ProviderException, NotInitializedException {
         return SerialFactory.instance(device, baud);
     }
 
-    static Serial instance(String providerId, String device) throws ProviderException {
+    static Serial instance(String providerId, String device) throws ProviderException, NotInitializedException {
         return SerialFactory.instance(providerId, device);
     }
 
-    static Serial instance(String providerId, String device, int baud) throws ProviderException {
+    static Serial instance(String providerId, String device, int baud) throws ProviderException, NotInitializedException {
         return SerialFactory.instance(providerId, device);
     }
 
-    static Serial instance(String providerId, SerialConfig config) throws ProviderException {
+    static Serial instance(String providerId, SerialConfig config) throws ProviderException, NotInitializedException {
         return SerialFactory.instance(providerId, config);
     }
 

@@ -27,18 +27,19 @@ package com.pi4j;
  * #L%
  */
 
+import com.pi4j.annotation.exception.AnnotationException;
+import com.pi4j.annotation.exception.DependencyInjectionException;
+import com.pi4j.binding.exception.BindingException;
 import com.pi4j.common.Descriptor;
 import com.pi4j.context.Context;
-import com.pi4j.context.exception.ContextException;
-import com.pi4j.context.exception.ContextNotInitializedException;
 import com.pi4j.context.impl.DefaultContext;
-import com.pi4j.exception.Pi4JAlreadyInitializedException;
+import com.pi4j.exception.AlreadyInitializedException;
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.exception.Pi4JNotInitializedException;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.provider.exception.ProvidersNotInitializedException;
+import com.pi4j.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,17 +48,25 @@ public class Pi4J {
     private static Context context = null;
     private static Logger logger = LoggerFactory.getLogger(Pi4J.class);
 
-    public static final Context context() throws ContextException {
+    public static final Context context() throws NotInitializedException {
         // throw exception if Pi4J has not been initialized
-        if(context == null) throw new ContextNotInitializedException();
+        if(context == null) throw new NotInitializedException();
 
         // return initialized context
         return context;
     }
 
-    public static Providers providers() throws ProviderException {
+    public static final Registry registry() throws NotInitializedException {
         // throw exception if Pi4J has not been initialized
-        if(context == null) throw new ProvidersNotInitializedException();
+        if(context == null) throw new NotInitializedException();
+
+        // return registry
+        return context.registry();
+    }
+
+    public static Providers providers() throws NotInitializedException {
+        // throw exception if Pi4J has not been initialized
+        if(context == null) throw new NotInitializedException();
 
         // return initialized providers
         return context.providers();
@@ -79,7 +88,7 @@ public class Pi4J {
         logger.trace("invoked 'initialize()' [auto-detect={}]", autoDetect);
 
         // throw exception if Pi4J has not been initialized
-        if(context != null) throw new Pi4JAlreadyInitializedException();
+        if(context != null) throw new AlreadyInitializedException();
 
         // create context singleton
         if(context == null) {
@@ -100,11 +109,11 @@ public class Pi4J {
         return context;
     }
 
-    public static Context terminate() throws Pi4JException {
+    public static Context terminate() throws NotInitializedException,ProviderException, BindingException {
         logger.trace("invoked 'terminate();'");
 
         // throw exception if Pi4J has not been initialized
-        if(context == null) throw new Pi4JNotInitializedException();
+        if(context == null) throw new NotInitializedException();
 
         // terminate all providers
         providers().terminate(context);
@@ -119,18 +128,18 @@ public class Pi4J {
         return context;
     }
 
-    public static Context inject(Object... objects) throws Pi4JException {
+    public static Context inject(Object... objects) throws NotInitializedException, AnnotationException, DependencyInjectionException {
         // throw exception if Pi4J has not been initialized
-        if(context == null) throw new Pi4JNotInitializedException();
+        if(context == null) throw new NotInitializedException();
 
         context.inject(objects);
         return context;
     }
 
-    public static Descriptor describe() throws Pi4JException {
+    public static Descriptor describe() throws NotInitializedException {
 
         // throw exception if Pi4J has not been initialized
-        if(context == null) throw new Pi4JNotInitializedException();
+        if(context == null) throw new NotInitializedException();
 
         return context().describe();
     }

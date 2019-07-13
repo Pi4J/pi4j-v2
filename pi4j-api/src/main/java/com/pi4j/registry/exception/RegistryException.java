@@ -27,7 +27,6 @@ package com.pi4j.registry.exception;
  * #L%
  */
 
-import com.pi4j.binding.exception.BindingException;
 import com.pi4j.exception.Pi4JException;
 
 /**

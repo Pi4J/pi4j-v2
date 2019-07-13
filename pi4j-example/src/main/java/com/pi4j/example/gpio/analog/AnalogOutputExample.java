@@ -33,8 +33,6 @@ import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.AnalogOutputBuilder;
 import com.pi4j.util.Console;
 
-import java.util.Properties;
-
 public class AnalogOutputExample {
 
     public static String ANALOG_OUTPUT_PIN_ID = "my.unique.analog.output.pin.id";
@@ -66,8 +64,6 @@ public class AnalogOutputExample {
                .name(ANALOG_OUTPUT_PIN_NAME)
                .address(ANALOG_OUTPUT_PIN);
         var output = AnalogOutput.create(builder.build());
-
-        AnalogOutput.create(new Properties());
 
         // create an analog output instance using the default analog output provider
         //var output = AnalogOutput.create(ANALOG_OUTPUT_PIN_ID, ANALOG_OUTPUT_PIN);

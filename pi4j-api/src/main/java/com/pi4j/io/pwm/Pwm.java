@@ -27,6 +27,7 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
 import com.pi4j.io.pwm.impl.PwmFactory;
 import com.pi4j.provider.exception.ProviderException;
@@ -35,19 +36,19 @@ public interface Pwm extends IO<Pwm, PwmConfig> {
 
     static final String ID = "PWM";
 
-    static Pwm instance(PwmConfig config) throws ProviderException {
+    static Pwm instance(PwmConfig config) throws ProviderException, NotInitializedException {
         return PwmFactory.instance(config);
     }
 
-    static Pwm instance(int address) throws ProviderException {
+    static Pwm instance(int address) throws ProviderException, NotInitializedException {
         return PwmFactory.instance(address);
     }
 
-    static Pwm instance(String providerId, int address) throws ProviderException {
+    static Pwm instance(String providerId, int address) throws ProviderException, NotInitializedException {
         return PwmFactory.instance(providerId, address);
     }
 
-    static Pwm instance(String providerId, PwmConfig config) throws ProviderException {
+    static Pwm instance(String providerId, PwmConfig config) throws ProviderException, NotInitializedException {
         return PwmFactory.instance(providerId, config);
     }
 

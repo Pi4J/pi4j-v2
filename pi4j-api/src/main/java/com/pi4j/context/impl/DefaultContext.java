@@ -28,13 +28,13 @@ package com.pi4j.context.impl;
  */
 
 import com.pi4j.annotation.exception.AnnotationException;
+import com.pi4j.annotation.exception.DependencyInjectionException;
 import com.pi4j.annotation.impl.DefaultAnnotationProcessor;
 import com.pi4j.annotation.processor.AnnotationProcessor;
 import com.pi4j.binding.Bindings;
 import com.pi4j.binding.impl.DefaultBindings;
 import com.pi4j.context.Context;
 import com.pi4j.provider.Providers;
-import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.impl.DefaultProviders;
 import com.pi4j.registry.Registry;
 import com.pi4j.registry.impl.DefaultRegistry;
@@ -73,7 +73,7 @@ public class DefaultContext implements Context {
     }
 
     @Override
-    public Context inject(Object... objects) throws AnnotationException, ProviderException{
+    public Context inject(Object... objects) throws AnnotationException, DependencyInjectionException {
         annotationProcessor.inject(objects);
         return this;
     }

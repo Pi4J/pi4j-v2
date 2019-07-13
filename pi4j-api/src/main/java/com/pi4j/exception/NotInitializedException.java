@@ -5,7 +5,7 @@ package com.pi4j.exception;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Pi4JInitializeException.java
+ * FILENAME      :  NotInitializedException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -37,20 +37,12 @@ package com.pi4j.exception;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public class Pi4JInitializeException extends Pi4JException {
+public class NotInitializedException extends InitializeException {
 
     /**
      * Default Constructor
      */
-    public Pi4JInitializeException(String message){
-        super(message);
+    public NotInitializedException(){
+        super("Pi4J has not been initialized; please call 'Pi4J.initialize()' first.");
     }
-
-    /**
-     * Default Constructor
-     */
-    public Pi4JInitializeException(Throwable ex){
-        super(ex.getMessage(), ex);
-    }
-
 }

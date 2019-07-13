@@ -28,12 +28,13 @@ package com.pi4j.io.gpio.digital.impl;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
 import com.pi4j.io.gpio.digital.PullResistance;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.provider.exception.ProviderInstantiateException;
+import com.pi4j.registry.exception.RegistryException;
 
 /**
  * DigitalInput factory - it returns instances of {@link DigitalInput} interface.
@@ -48,87 +49,69 @@ public class DigitalInputFactory {
         // forbid object construction
     }
 
-    public static DigitalInput instance(int address) throws ProviderException {
+    public static DigitalInput instance(int address) throws ProviderException, NotInitializedException, RegistryException {
         return instance(DigitalInputConfig.instance(address));
     }
-    public static <T extends DigitalInput> T instance(int address, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalInput> T instance(int address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance(DigitalInputConfig.instance(address), clazz);
     }
 
-    public static DigitalInput instance(int address, PullResistance pull) throws ProviderException {
+    public static DigitalInput instance(int address, PullResistance pull) throws ProviderException, NotInitializedException, RegistryException {
         return instance(DigitalInputConfig.instance(address, pull));
     }
-    public static <T extends DigitalInput> T instance(int address, PullResistance pull, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalInput> T instance(int address, PullResistance pull, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance(DigitalInputConfig.instance(address, pull), clazz);
     }
 
-    public static DigitalInput instance(DigitalInputConfig config) throws ProviderException {
+    public static DigitalInput instance(DigitalInputConfig config) throws ProviderException, NotInitializedException, RegistryException {
         return instance((DigitalInputProvider)null, config);
     }
-    public static <T extends DigitalInput> T instance(DigitalInputConfig config, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalInput> T instance(DigitalInputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance((DigitalInputProvider)null, config, clazz);
     }
 
-    public static DigitalInput instance(String providerId, int address) throws ProviderException {
+    public static DigitalInput instance(String providerId, int address) throws ProviderException, NotInitializedException, RegistryException {
         return instance(providerId, DigitalInputConfig.instance(address));
     }
-    public static <T extends DigitalInput> T instance(String providerId, int address, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalInput> T instance(String providerId, int address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance(providerId, DigitalInputConfig.instance(address), clazz);
     }
 
-    public static DigitalInput instance(String providerId, int address, PullResistance pull) throws ProviderException {
+    public static DigitalInput instance(String providerId, int address, PullResistance pull) throws ProviderException, NotInitializedException, RegistryException {
         return instance(providerId, DigitalInputConfig.instance(address, pull));
     }
-    public static <T extends DigitalInput> T instance(String providerId, int address, PullResistance pull, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalInput> T instance(String providerId, int address, PullResistance pull, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance(providerId, DigitalInputConfig.instance(address, pull), clazz);
     }
 
 
-    public static DigitalInput instance(DigitalInputProvider provider, int address) throws ProviderException {
+    public static DigitalInput instance(DigitalInputProvider provider, int address) throws ProviderException, NotInitializedException, RegistryException {
         return instance(provider, DigitalInputConfig.instance(address));
     }
-    public static <T extends DigitalInput> T instance(DigitalInputProvider provider, int address, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalInput> T instance(DigitalInputProvider provider, int address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance(provider, DigitalInputConfig.instance(address), clazz);
     }
 
-    public static DigitalInput instance(DigitalInputProvider provider, int address, PullResistance pull) throws ProviderException {
+    public static DigitalInput instance(DigitalInputProvider provider, int address, PullResistance pull) throws ProviderException, NotInitializedException, RegistryException {
         return instance(provider, DigitalInputConfig.instance(address, pull));
     }
-    public static <T extends DigitalInput> T instance(DigitalInputProvider provider, int address, PullResistance pull, Class<T> clazz) throws ProviderException {
+    public static <T extends DigitalInput> T instance(DigitalInputProvider provider, int address, PullResistance pull, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return instance(provider, DigitalInputConfig.instance(address, pull), clazz);
     }
 
 
-    public static DigitalInput instance(String providerId, DigitalInputConfig config) throws ProviderException {
+    public static DigitalInput instance(String providerId, DigitalInputConfig config) throws ProviderException, NotInitializedException, RegistryException {
         return instance(providerId, config, DigitalInput.class);
     }
-    public static <T extends DigitalInput> T instance(String providerId, DigitalInputConfig config, Class<T> clazz) throws ProviderException {
-        // if provided, lookup the specified io provider; else use the default io provider
-        if(providerId == null) {
-            return (T)instance(config);
-        }
-        // get the specified digital input provider by ID
-        var provider = Pi4J.providers().digitalInput().get(providerId);
-        return instance(provider, config, clazz);
+    public static <T extends DigitalInput> T instance(String providerId, DigitalInputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)Pi4J.context().registry().create(providerId, config, clazz);
     }
 
-    public static DigitalInput instance(DigitalInputProvider provider, DigitalInputConfig config) throws ProviderException {
+    public static DigitalInput instance(DigitalInputProvider provider, DigitalInputConfig config) throws ProviderException, NotInitializedException, RegistryException {
         return instance(provider, config, DigitalInput.class);
     }
-    public static <T extends DigitalInput> T instance(DigitalInputProvider provider, DigitalInputConfig config, Class<T> clazz) throws ProviderException {
-        try {
-            // get default digital input provider if the specified provider is null
-            if(provider == null){
-                provider = Pi4J.providers().digitalInput().getDefault();
-            }
-            // create a digital input instance using the digital input provider
-            return (T)provider.instance(config);
-        } catch(ProviderException pe){
-            throw pe;
-        } catch (Exception e) {
-            //e.printStackTrace();
-            throw new ProviderInstantiateException(provider, e);
-        }
+    public static <T extends DigitalInput> T instance(DigitalInputProvider provider, DigitalInputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)Pi4J.context().registry().create(provider, config, clazz);
     }
 
 }

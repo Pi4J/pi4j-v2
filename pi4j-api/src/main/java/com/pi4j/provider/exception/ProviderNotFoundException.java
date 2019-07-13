@@ -47,7 +47,7 @@ public class ProviderNotFoundException extends ProviderException {
      * Default Constructor
      */
     public ProviderNotFoundException(){
-        super("Pi4J io could not be detected.  Please include the 'io' JAR in the classpath for your io.");
+        super("Pi4J io provider could not be detected.  Please include the 'io' JAR in the classpath for your io.");
     }
 
     /**

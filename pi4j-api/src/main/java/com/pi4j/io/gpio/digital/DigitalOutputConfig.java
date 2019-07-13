@@ -28,7 +28,6 @@ package com.pi4j.io.gpio.digital;
  */
 
 import com.pi4j.config.exception.ConfigException;
-import com.pi4j.io.gpio.digital.impl.DigitalOutputConfigFactory;
 
 import java.util.Properties;
 

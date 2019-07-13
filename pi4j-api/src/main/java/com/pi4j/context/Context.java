@@ -28,11 +28,11 @@ package com.pi4j.context;
  */
 
 import com.pi4j.annotation.exception.AnnotationException;
+import com.pi4j.annotation.exception.DependencyInjectionException;
 import com.pi4j.binding.Bindings;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
 import com.pi4j.provider.Providers;
-import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.Registry;
 
 public interface Context extends Describable {
@@ -40,7 +40,7 @@ public interface Context extends Describable {
     Providers providers();
     Registry registry();
 
-    Context inject(Object... objects) throws ProviderException, AnnotationException;
+    Context inject(Object... objects) throws AnnotationException, DependencyInjectionException;
 
     default Descriptor describe() {
         Descriptor descriptor = Descriptor.create()

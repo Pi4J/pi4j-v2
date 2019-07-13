@@ -28,6 +28,7 @@ package com.pi4j.annotation.impl;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
@@ -36,7 +37,7 @@ import java.lang.reflect.Field;
 
 public class ProviderAnnotationProcessor {
 
-    public static <T extends Provider> T instance(Field field, Class<T> providerClass) throws ProviderException {
+    public static <T extends Provider> T instance(Field field, Class<T> providerClass) throws ProviderException, NotInitializedException {
         String id = null;
 
         // if the '@Provider' annotation is missing, then just return

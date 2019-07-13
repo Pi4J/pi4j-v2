@@ -33,14 +33,9 @@ import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogChangeEvent;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.AnalogOutput;
-import com.pi4j.io.gpio.digital.DigitalChangeEvent;
-import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.util.Console;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 public class AnalogOutputExampleUsingDependencyInjection {
 
@@ -57,17 +52,21 @@ public class AnalogOutputExampleUsingDependencyInjection {
         private static final String ANALOG_OUTPUT_PIN_ID = "uuid.analog.out.four";
 
         // create an analog output instance using the default analog output provider
-        @Inject(id = ANALOG_OUTPUT_PIN_ID)
+        @Register(ANALOG_OUTPUT_PIN_ID)
         @Address(ANALOG_OUTPUT_PIN)
         @Name("My Analog Out")
         @ShutdownValue(99)
+        private AnalogOutput output1;
+
+        // create an analog output instance using the default analog output provider
+        @Inject(ANALOG_OUTPUT_PIN_ID)
         private AnalogOutput output;
 
         @Inject
         private Context pi4j;
 
         // register an analog output listener to listen for any state changes on the analog output
-        @RegisterListener(ANALOG_OUTPUT_PIN_ID)
+        @Register(ANALOG_OUTPUT_PIN_ID)
         private AnalogChangeListener analogChangeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
 
         // setup an analog output event listener to listen for any value changes on the analog output

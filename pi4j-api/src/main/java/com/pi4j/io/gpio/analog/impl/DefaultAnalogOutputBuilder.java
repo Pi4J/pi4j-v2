@@ -28,8 +28,8 @@ package com.pi4j.io.gpio.analog.impl;
  */
 
 import com.pi4j.config.impl.AddressConfigBuilderBase;
-import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 import com.pi4j.io.gpio.analog.AnalogOutputBuilder;
+import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 
 import java.util.Properties;
 

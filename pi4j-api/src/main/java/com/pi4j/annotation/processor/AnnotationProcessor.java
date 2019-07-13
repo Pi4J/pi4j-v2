@@ -28,8 +28,8 @@ package com.pi4j.annotation.processor;
  */
 
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.annotation.exception.DependencyInjectionException;
 
 public interface AnnotationProcessor {
-    void inject(Object... objects) throws AnnotationException, ProviderException;
+    void inject(Object... objects) throws AnnotationException, DependencyInjectionException;
 }

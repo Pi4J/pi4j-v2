@@ -58,8 +58,8 @@ public class ProviderGroupInjector implements Injector<Inject, ProviderGroup> {
     public ProviderGroup instance(Field field, Inject annotation) throws Exception {
 
         // <<1>> inject instance by user defined ID property
-        if(annotation.id() != null && !annotation.id().isEmpty()){
-            String id = annotation.id().trim();
+        if(annotation.value() != null && !annotation.value().isEmpty()){
+            String id = annotation.value().trim();
             for(ProviderType providerType : ProviderType.values()){
                 if(id.equalsIgnoreCase(providerType.name())){
                     return new ProviderGroup<Provider>(Pi4J.context().providers(), providerType);

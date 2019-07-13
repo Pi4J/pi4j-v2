@@ -57,6 +57,17 @@ public class StringUtil {
         return !(isNullOrEmpty(data, trim));
     }
 
+    public static String setIfNullOrEmpty(String data, String replacement, boolean trim){
+        if(isNullOrEmpty(data, trim)) {
+            return replacement;
+        }
+        return data;
+    }
+
+    public static String setIfNullOrEmpty(String data, String replacement){
+        return setIfNullOrEmpty(data, replacement, false);
+    }
+
     public static boolean contains(String source, String target)  {
         return (null != source && null != target && source.contains(target));
     }

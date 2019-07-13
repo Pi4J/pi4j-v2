@@ -1,11 +1,11 @@
-package com.pi4j.annotation.injectors;
+package com.pi4j.annotation.exception;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  RegistryInjector.java
+ * FILENAME      :  DependencyInjectionException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,32 +27,32 @@ package com.pi4j.annotation.injectors;
  * #L%
  */
 
-import com.pi4j.Pi4J;
-import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.Injector;
-import com.pi4j.registry.Registry;
+import com.pi4j.exception.Pi4JException;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
+/**
+ * <p>
+ * This exception is thrown if a platform assignment is attempted when a
+ * platform instance has already been assigned.
+ * </p>
+ *
+ * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
+ * @author Robert Savage (<a
+ *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ */
+public class DependencyInjectionException extends Pi4JException {
 
-public class RegistryInjector implements Injector<Inject, Registry> {
-
-    @Override
-    public boolean isAnnotationType(Annotation annotation) {
-        return annotation instanceof Inject;
+    /**
+     * Default Constructor
+     */
+    public DependencyInjectionException(String message){
+        super(message);
     }
 
-    @Override
-    public Class<Inject> getAnnotationType() {
-        return Inject.class;
+    /**
+     * Default Constructor
+     */
+    public DependencyInjectionException(Throwable ex){
+        super(ex.getMessage(), ex);
     }
 
-    @Override
-    public Class<Registry> getTargetType() { return Registry.class; }
-
-    @Override
-    public Registry instance(Field field, Inject annotation) throws Exception {
-        // return static registry instance
-        return Pi4J.context().registry();
-    }
 }

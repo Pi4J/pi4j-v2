@@ -1,11 +1,11 @@
-package com.pi4j.annotation;
+package com.pi4j.exception;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  RegisterListener.java
+ * FILENAME      :  AlreadyInitializedException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,11 +27,22 @@ package com.pi4j.annotation;
  * #L%
  */
 
-import java.lang.annotation.*;
+/**
+ * <p>
+ * This exception is thrown if a platform assignment is attempted when a
+ * platform instance has already been assigned.
+ * </p>
+ *
+ * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
+ * @author Robert Savage (<a
+ *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ */
+public class AlreadyInitializedException extends InitializeException {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-@Inherited
-public @interface RegisterListener {
-    String value();
+    /**
+     * Default Constructor
+     */
+    public AlreadyInitializedException(){
+        super("Pi4J has already been initialized; this function is not reentrant, please only call 'Pi4J.initialize()' one time at startup.");
+    }
 }

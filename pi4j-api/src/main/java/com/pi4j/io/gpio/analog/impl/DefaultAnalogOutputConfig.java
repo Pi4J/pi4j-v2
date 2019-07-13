@@ -29,6 +29,7 @@ package com.pi4j.io.gpio.analog.impl;
 
 import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
+import com.pi4j.util.StringUtil;
 
 import java.util.Properties;
 
@@ -53,7 +54,12 @@ public class DefaultAnalogOutputConfig
     protected DefaultAnalogOutputConfig(Properties properties){
         super(properties);
 
-        // load address property
+        // define default property values if any are missing (based on the required address value)
+        this.id = StringUtil.setIfNullOrEmpty(this.id, "AOUT-" + this.address, true);
+        this.name = StringUtil.setIfNullOrEmpty(this.name, "AOUT-" + this.address, true);
+        this.description = StringUtil.setIfNullOrEmpty(this.description, "AOUT-" + this.address, true);
+
+        // load shutdown property
         if(properties.containsKey(SHUTDOWN_VALUE_KEY)){
             this.shutdownValue = Integer.parseInt(properties.getProperty(SHUTDOWN_VALUE_KEY));
         }

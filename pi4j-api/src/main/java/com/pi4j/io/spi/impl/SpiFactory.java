@@ -28,6 +28,7 @@ package com.pi4j.io.spi.impl;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
@@ -47,11 +48,11 @@ public class SpiFactory {
         // forbid object construction
     }
 
-    public static Spi instance(String device) throws ProviderException {
+    public static Spi instance(String device) throws ProviderException, NotInitializedException {
         return instance(new SpiConfig(device));
     }
 
-    public static Spi instance(SpiConfig config) throws ProviderException {
+    public static Spi instance(SpiConfig config) throws ProviderException, NotInitializedException {
         // get default SPI io
         var provider = Pi4J.providers().spi().getDefault();
 
@@ -59,11 +60,11 @@ public class SpiFactory {
         return instance(provider, config);
     }
 
-    public static Spi instance(String providerId, String device) throws ProviderException {
+    public static Spi instance(String providerId, String device) throws ProviderException, NotInitializedException {
         return instance(providerId, new SpiConfig(device));
     }
 
-    public static Spi instance(String providerId, SpiConfig config) throws ProviderException {
+    public static Spi instance(String providerId, SpiConfig config) throws ProviderException, NotInitializedException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
             return instance(config);

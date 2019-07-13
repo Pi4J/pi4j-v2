@@ -27,11 +27,16 @@ package com.pi4j.registry.impl;
  * #L%
  */
 
+import com.pi4j.Pi4J;
 import com.pi4j.config.Config;
 import com.pi4j.context.Context;
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
 import com.pi4j.provider.Provider;
+import com.pi4j.provider.ProviderType;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.provider.exception.ProviderInvalidException;
+import com.pi4j.provider.exception.ProviderNotFoundException;
 import com.pi4j.registry.Registry;
 import com.pi4j.registry.exception.RegistryAlreadyExistsException;
 import com.pi4j.registry.exception.RegistryException;
@@ -67,25 +72,80 @@ public class DefaultRegistry implements Registry {
     }
 
     @Override
-    public <T extends IO> T create(String providerId, Config config, Class<T> type) throws RegistryException, ProviderException {
-        return null;
-    }
+    public <T extends IO> T create(String providerId, Config config, Class<T> type) throws RegistryException, ProviderException, NotInitializedException {
 
-    @Override
-    public <T extends IO> T create(Provider provider, Config config, Class<T> type) throws RegistryException, ProviderException {
-
+        // validate target I/O instance id
         String _id = validateId(config.id());
+
+        // validate provider exists
+        if(providerId == null)
+            throw new ProviderInvalidException();
 
         // first test to make sure this id does not already exist in the registry
         if(instances.containsKey(_id))
             throw new RegistryAlreadyExistsException(_id);
 
-        return (T)instances.put(_id, null);
+        try {
+            // validate named provider exists
+            if(!Pi4J.providers().exists(providerId))
+                throw new ProviderNotFoundException(providerId);
+
+            // create target I/O instance
+            IO instance = Pi4J.providers().get(providerId).instance(config);
+
+            // add instance to collection
+            return (T)instances.put(_id, instance);
+
+        } catch (Exception e) {
+            throw new ProviderException(e);
+        }
+    }
+
+    @Override
+    public <T extends IO> T create(Provider provider, Config config, Class<T> type) throws RegistryException, ProviderException {
+
+        // validate target I/O instance id
+        String _id = validateId(config.id());
+
+        // validate provider exists
+        if(provider == null)
+            throw new ProviderInvalidException();
+
+        // first test to make sure this id does not already exist in the registry
+        if(instances.containsKey(_id))
+            throw new RegistryAlreadyExistsException(_id);
+
+        try {
+            // create target I/O instance
+            IO instance = provider.instance(config);
+
+            // add target I/O instance to collection
+            instances.put(_id, instance);
+
+            // return new I/O created instance
+            return (T)instance;
+
+        } catch (Exception e) {
+            throw new ProviderException(e);
+        }
     }
 
     @Override
     public <T extends IO> T create(Config config, Class<T> type) throws RegistryException, ProviderException {
-        return null;
+
+        String _id = validateId(config.id());
+
+        // validate a default provider exists for the requested IO type
+        Provider provider = null;
+        try {
+            provider = Pi4J.providers().getDefault(ProviderType.getProviderTypeByIOClass(type));
+            if(provider == null)
+                throw new ProviderNotFoundException();
+        } catch (NotInitializedException e) {
+            throw new ProviderNotFoundException();
+        }
+
+        return create(provider, config, type);
     }
 
     @Override
@@ -115,11 +175,34 @@ public class DefaultRegistry implements Registry {
         String _id = null;
         try {
             _id = validateId(id);
+            // return 'false' if the requested ID is not found
+            // return 'true' if the requested ID is found
             return instances.containsKey(_id);
         } catch (RegistryException e) {
             return false;
         }
     }
+
+    @Override
+    public boolean exists(String id, Class<? extends IO> type){
+        String _id = null;
+        try {
+            _id = validateId(id);
+
+            // return 'false' if the requested ID is not found
+            if(!instances.containsKey(_id))
+                return false;
+
+            // get the I/O instance
+            IO instance = instances.get(id);
+
+            // return true if the I/O instance matches the requested I/O type
+            return instance.getClass().isAssignableFrom(type);
+        } catch (RegistryException e) {
+            return false;
+        }
+    }
+
 
     private String validateId(String id) throws RegistryException{
         if(id == null)

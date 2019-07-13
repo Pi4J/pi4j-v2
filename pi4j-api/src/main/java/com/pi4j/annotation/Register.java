@@ -1,11 +1,11 @@
-package com.pi4j.exception;
+package com.pi4j.annotation;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Pi4JNotInitializedException.java
+ * FILENAME      :  RegisterListener.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,22 +27,11 @@ package com.pi4j.exception;
  * #L%
  */
 
-/**
- * <p>
- * This exception is thrown if a platform assignment is attempted when a
- * platform instance has already been assigned.
- * </p>
- *
- * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
- * @author Robert Savage (<a
- *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- */
-public class Pi4JNotInitializedException extends Pi4JInitializeException {
+import java.lang.annotation.*;
 
-    /**
-     * Default Constructor
-     */
-    public Pi4JNotInitializedException(){
-        super("Pi4J has not been initialized; please call 'Pi4J.initialize()' first.");
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.FIELD})
+@Inherited
+public @interface Register {
+    String value();
 }

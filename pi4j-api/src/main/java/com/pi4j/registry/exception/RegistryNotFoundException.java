@@ -28,8 +28,6 @@ package com.pi4j.registry.exception;
  */
 
 
-import com.pi4j.provider.exception.ProviderException;
-
 /**
  * <p>
  * This exception is thrown if a platform assignment is attempted when a

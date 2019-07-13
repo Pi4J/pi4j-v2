@@ -27,12 +27,14 @@ package com.pi4j.io.i2c.impl;
  * #L%
  */
 
-import com.pi4j.Pi4J;
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderInstantiateException;
+
+import static com.pi4j.Pi4J.providers;
 
 /**
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www .savagehomeautomation.com</a>)
@@ -44,29 +46,29 @@ public class I2CFactory {
         // forbid object construction
     }
 
-    public static I2C instance(I2CConfig config) throws ProviderException {
+    public static I2C instance(I2CConfig config) throws ProviderException, NotInitializedException {
         // get default I2C io
-        var provider = Pi4J.providers().i2c().getDefault();
+        var provider = providers().i2c().getDefault();
 
         // get I2C instance using default io
         return instance(provider, config);
     }
 
-    public static I2C instance(String device, int address) throws ProviderException {
+    public static I2C instance(String device, int address) throws ProviderException, NotInitializedException {
         return instance(new I2CConfig(device, address));
     }
 
-    public static I2C instance(String providerId, String device, int address) throws ProviderException {
+    public static I2C instance(String providerId, String device, int address) throws ProviderException, NotInitializedException {
         return instance(providerId, new I2CConfig(device, address));
     }
 
-    public static I2C instance(String providerId, I2CConfig config) throws ProviderException {
+    public static I2C instance(String providerId, I2CConfig config) throws ProviderException, NotInitializedException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
             return instance(config);
         }
         else{
-            var provider = Pi4J.providers().i2c().get(providerId);
+            var provider = providers().i2c().get(providerId);
             return instance(provider, config);
         }
     }
@@ -79,7 +81,7 @@ public class I2CFactory {
         try {
             // get default I2C io if io is null
             if(provider == null){
-                provider = Pi4J.providers().i2c().getDefault();
+                provider = providers().i2c().getDefault();
             }
             // create a I2C instance using the io
             return provider.instance(config);
