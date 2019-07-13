@@ -29,7 +29,7 @@ package com.pi4j.test.annotations;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.RegisterProvider;
+import com.pi4j.annotation.Register;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
@@ -47,12 +47,12 @@ import static org.junit.Assert.assertFalse;
 public class DependencyInjectionRegisterCustomProviderTest {
 
     // create our own custom provider implementation classes
-    // use the "@RegisterProvider" annotation to automatically register this custom provider
+    // use the "@Register" annotation to automatically register this custom provider
 
-    @RegisterProvider
+    @Register
     PwmProvider pwmProvider = new TestPwmProvider();
 
-    @RegisterProvider
+    @Register
     AnalogInputProvider ainProvider = new TestAnalogInputProvider();
 
     @Inject

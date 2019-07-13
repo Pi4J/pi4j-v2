@@ -33,5 +33,5 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Inherited
 public @interface Register {
-    String value();
+    String value() default "";
 }

@@ -114,7 +114,7 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
         for(Object instance : objects) {
             // get object class
             Class instanceClass = instance.getClass();
-            Annotation rpa = instanceClass.getAnnotation(RegisterProvider.class);
+            Annotation rpa = instanceClass.getAnnotation(Register.class);
             if(rpa != null){
                 if(Provider.class.isAssignableFrom(instanceClass)) {
                     Provider prov = (Provider)instance;
@@ -235,7 +235,7 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
 
     private void processFieldAnnotations(Object instance, Field field, Annotation annotation) throws AnnotationException {
 
-        if(annotation.annotationType() == RegisterProvider.class){
+        if(annotation.annotationType() == Register.class){
             if(Provider.class.isAssignableFrom(field.getType())) {
                 try {
                     boolean accessible = field.canAccess(instance);
