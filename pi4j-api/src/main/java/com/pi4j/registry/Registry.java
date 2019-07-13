@@ -1,11 +1,11 @@
-package com.pi4j.context;
+package com.pi4j.registry;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Context.java
+ * FILENAME      :  Registry.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,28 +27,19 @@ package com.pi4j.context;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.binding.Bindings;
-import com.pi4j.common.Describable;
-import com.pi4j.common.Descriptor;
-import com.pi4j.provider.Providers;
+import com.pi4j.config.Config;
+import com.pi4j.io.IO;
+import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.registry.Registry;
+import com.pi4j.registry.exception.RegistryException;
 
-public interface Context extends Describable {
-    Bindings bindings();
-    Providers providers();
-    Registry registry();
+public interface Registry {
 
-    Context inject(Object... objects) throws ProviderException, AnnotationException;
+    <T extends IO> T create(String providerId, Config config, Class<T> type) throws RegistryException, ProviderException;
+    <T extends IO> T create(Provider provider, Config config, Class<T> type) throws RegistryException, ProviderException;
+    <T extends IO> T create(Config config, Class<T> type) throws RegistryException, ProviderException;
 
-    default Descriptor describe() {
-        Descriptor descriptor = Descriptor.create()
-                .category("CONTEXT")
-                .name("Runtime Context")
-                .type(this.getClass());
-        descriptor.add(bindings().describe());
-        descriptor.add(providers().describe());
-        return descriptor;
-    }
+    <T extends IO> T get(String id, Class<T> type) throws RegistryException;
+    <T extends IO> T destroy(String id) throws RegistryException;
+    boolean exists(String id);
 }

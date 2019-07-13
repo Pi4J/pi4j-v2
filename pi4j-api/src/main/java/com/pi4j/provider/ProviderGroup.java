@@ -52,7 +52,7 @@ public class ProviderGroup<T extends Provider> implements Describable {
         this(Pi4J.providers(),providerType);
     }
 
-    public Map<String, T> all() throws ProviderException {
+    private Map<String, T> all() throws ProviderException {
         return providers.all(providerType);
     }
 

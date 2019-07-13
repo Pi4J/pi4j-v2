@@ -87,8 +87,13 @@ public class AnalogOutputFactory {
             if(provider == null){
                 provider = Pi4J.providers().analogOutput().getDefault();
             }
+
+
+            Pi4J.context().registry().create(provider, config, AnalogOutput.class);
+
             // create an instance using the io provider
             return provider.instance(config);
+
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {

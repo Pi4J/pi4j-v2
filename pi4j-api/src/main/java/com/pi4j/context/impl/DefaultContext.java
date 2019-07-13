@@ -36,12 +36,15 @@ import com.pi4j.context.Context;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.impl.DefaultProviders;
+import com.pi4j.registry.Registry;
+import com.pi4j.registry.impl.DefaultRegistry;
 
 public class DefaultContext implements Context {
 
-    protected Providers providers = DefaultProviders.singleton(this);
-    protected Bindings bindings = DefaultBindings.singleton(this);
-    protected AnnotationProcessor annotationProcessor = DefaultAnnotationProcessor.singleton(this);
+    private Bindings bindings = DefaultBindings.singleton(this);
+    private Providers providers = DefaultProviders.singleton(this);
+    private Registry registry = DefaultRegistry.singleton(this);
+    private AnnotationProcessor annotationProcessor = DefaultAnnotationProcessor.singleton(this);
 
     private static Context singleton = null;
     public static Context singleton(){
@@ -60,6 +63,9 @@ public class DefaultContext implements Context {
     public Providers providers() {
         return providers;
     }
+
+    @Override
+    public Registry registry() { return this.registry; }
 
     @Override
     public Bindings bindings() {

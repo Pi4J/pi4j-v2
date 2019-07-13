@@ -47,6 +47,8 @@ module pi4j.api {
     exports com.pi4j.io.spi;
     exports com.pi4j.provider;
     exports com.pi4j.provider.exception;
+    exports com.pi4j.registry;
+    exports com.pi4j.registry.exception;
     exports com.pi4j.util;
 
     uses com.pi4j.binding.Binding;
@@ -59,7 +61,8 @@ module pi4j.api {
                  com.pi4j.annotation.injectors.DigitalOutputInjector,
                  com.pi4j.annotation.injectors.ProviderGroupInjector,
                  com.pi4j.annotation.injectors.ProviderInjector,
-                 com.pi4j.annotation.injectors.ProvidersInjector;
+                 com.pi4j.annotation.injectors.ProvidersInjector,
+                 com.pi4j.annotation.injectors.RegistryInjector;
 
     requires slf4j.api;
 }

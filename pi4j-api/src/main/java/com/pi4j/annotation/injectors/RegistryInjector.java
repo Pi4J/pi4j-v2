@@ -1,11 +1,11 @@
-package com.pi4j.context;
+package com.pi4j.annotation.injectors;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Context.java
+ * FILENAME      :  RegistryInjector.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,28 +27,33 @@ package com.pi4j.context;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.binding.Bindings;
-import com.pi4j.common.Describable;
-import com.pi4j.common.Descriptor;
-import com.pi4j.provider.Providers;
-import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.Pi4J;
+import com.pi4j.annotation.Inject;
+import com.pi4j.annotation.Injector;
+import com.pi4j.context.Context;
 import com.pi4j.registry.Registry;
 
-public interface Context extends Describable {
-    Bindings bindings();
-    Providers providers();
-    Registry registry();
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 
-    Context inject(Object... objects) throws ProviderException, AnnotationException;
+public class RegistryInjector implements Injector<Inject, Registry> {
 
-    default Descriptor describe() {
-        Descriptor descriptor = Descriptor.create()
-                .category("CONTEXT")
-                .name("Runtime Context")
-                .type(this.getClass());
-        descriptor.add(bindings().describe());
-        descriptor.add(providers().describe());
-        return descriptor;
+    @Override
+    public boolean isAnnotationType(Annotation annotation) {
+        return annotation instanceof Inject;
+    }
+
+    @Override
+    public Class<Inject> getAnnotationType() {
+        return Inject.class;
+    }
+
+    @Override
+    public Class<Registry> getTargetType() { return Registry.class; }
+
+    @Override
+    public Registry instance(Field field, Inject annotation) throws Exception {
+        // return static registry instance
+        return Pi4J.context().registry();
     }
 }

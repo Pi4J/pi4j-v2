@@ -52,7 +52,7 @@ public class ContextInjector implements Injector<Inject, Context> {
 
     @Override
     public Context instance(Field field, Inject annotation) throws Exception {
-        // return context instance
+        // return static context instance
         return Pi4J.context();
     }
 }

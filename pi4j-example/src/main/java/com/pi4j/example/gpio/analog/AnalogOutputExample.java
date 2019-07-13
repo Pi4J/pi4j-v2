@@ -69,7 +69,6 @@ public class AnalogOutputExample {
 
         AnalogOutput.create(new Properties());
 
-
         // create an analog output instance using the default analog output provider
         //var output = AnalogOutput.create(ANALOG_OUTPUT_PIN_ID, ANALOG_OUTPUT_PIN);
         output.config().shutdownValue(SHUTDOWN_ANALOG_VALUE);

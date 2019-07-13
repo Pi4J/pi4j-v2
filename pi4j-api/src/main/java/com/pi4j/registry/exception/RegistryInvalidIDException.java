@@ -1,11 +1,11 @@
-package com.pi4j.context;
+package com.pi4j.registry.exception;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Context.java
+ * FILENAME      :  RegistryInvalidIDException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,28 +27,23 @@ package com.pi4j.context;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.binding.Bindings;
-import com.pi4j.common.Describable;
-import com.pi4j.common.Descriptor;
-import com.pi4j.provider.Providers;
-import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.registry.Registry;
 
-public interface Context extends Describable {
-    Bindings bindings();
-    Providers providers();
-    Registry registry();
+/**
+ * <p>
+ * This exception is thrown if a platform assignment is attempted when a
+ * platform instance has already been assigned.
+ * </p>
+ *
+ * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
+ * @author Robert Savage (<a
+ *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ */
+public class RegistryInvalidIDException extends RegistryException {
 
-    Context inject(Object... objects) throws ProviderException, AnnotationException;
-
-    default Descriptor describe() {
-        Descriptor descriptor = Descriptor.create()
-                .category("CONTEXT")
-                .name("Runtime Context")
-                .type(this.getClass());
-        descriptor.add(bindings().describe());
-        descriptor.add(providers().describe());
-        return descriptor;
+    /**
+     * Default Constructor
+     */
+    public RegistryInvalidIDException(){
+        super("The requested operation is missing the ID attribute.  Unable to complete request.");
     }
 }

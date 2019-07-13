@@ -1,11 +1,11 @@
-package com.pi4j.context;
+package com.pi4j.registry.exception;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Context.java
+ * FILENAME      :  RegistryException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,28 +27,35 @@ package com.pi4j.context;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.binding.Bindings;
-import com.pi4j.common.Describable;
-import com.pi4j.common.Descriptor;
-import com.pi4j.provider.Providers;
-import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.registry.Registry;
+import com.pi4j.binding.exception.BindingException;
+import com.pi4j.exception.Pi4JException;
 
-public interface Context extends Describable {
-    Bindings bindings();
-    Providers providers();
-    Registry registry();
+/**
+ * <p>
+ * This exception is thrown if a platform assignment is attempted when a
+ * platform instance has already been assigned.
+ * </p>
+ *
+ * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
+ * @author Robert Savage (<a
+ *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ */
+public class RegistryException extends Pi4JException {
 
-    Context inject(Object... objects) throws ProviderException, AnnotationException;
+    /**
+     * Default Constructor
+     *
+     * @param message error message
+     */
+    public RegistryException(String message){
+        super(message);
+    }
 
-    default Descriptor describe() {
-        Descriptor descriptor = Descriptor.create()
-                .category("CONTEXT")
-                .name("Runtime Context")
-                .type(this.getClass());
-        descriptor.add(bindings().describe());
-        descriptor.add(providers().describe());
-        return descriptor;
+    public RegistryException(Throwable cause){
+        super(cause);
+    }
+
+    public RegistryException(String message, Throwable cause){
+        super(message,cause);
     }
 }

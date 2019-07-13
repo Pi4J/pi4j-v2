@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 public class Pi4J {
 
     private static Context context = null;
-
     private static Logger logger = LoggerFactory.getLogger(Pi4J.class);
 
     public static final Context context() throws ContextException {
