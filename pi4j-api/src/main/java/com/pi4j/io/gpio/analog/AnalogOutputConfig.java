@@ -63,6 +63,4 @@ public interface AnalogOutputConfig
 
     AnalogRange range();
     default AnalogRange getRange() { return this.range(); }
-
-    AnalogOutputConfig load(Properties properties, String prefix);
 }

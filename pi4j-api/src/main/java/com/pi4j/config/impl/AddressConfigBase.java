@@ -58,27 +58,12 @@ public abstract class AddressConfigBase<CONFIG_TYPE extends Config>
         // load address property
         if(properties.containsKey(ADDRESS_KEY)){
             this.address = Integer.parseInt(properties.getProperty(ADDRESS_KEY));
+        } else {
+            throw new ConfigMissingRequiredKeyException(ADDRESS_KEY);
         }
     }
 
     public Integer address() {
         return this.address;
     };
-
-    @Override
-    public CONFIG_TYPE load(Properties properties, String prefix){
-
-        // ensure properties is not empty
-        super.load(properties, prefix);
-
-        // ensure required configuration properties are present
-        if(!properties.containsKey(prefix + "." + ADDRESS_KEY))
-            throw new ConfigMissingRequiredKeyException(prefix + "." + ADDRESS_KEY);
-
-        // set address property
-        Integer address = Integer.parseInt(properties.get(prefix + "." + ADDRESS_KEY).toString());
-        this.address = address;
-
-        return (CONFIG_TYPE) this;
-    }
 }

@@ -57,5 +57,4 @@ public interface DigitalInputConfig extends DigitalConfig<DigitalInputConfig> {
     static DigitalInputConfig instance(Properties properties, String prefix) throws ConfigException {
         return DigitalInputConfigFactory.instance(properties, prefix);
     }
-
 }

@@ -47,19 +47,4 @@ public class DigitalInputConfigImpl extends AddressConfigBase<DigitalInputConfig
         this.pull = pull;
         return this;
     }
-
-    @Override
-    public DigitalInputConfig load(Properties properties, String prefix){
-
-        // ensure properties is not empty
-        super.load(properties, prefix);
-
-        // load any optional properties
-        if(properties.containsKey(prefix + ".pull")){
-            var pullResistance = PullResistance.parse(properties.get(prefix + ".pull").toString());
-            pull(pullResistance);
-        }
-
-        return this;
-    }
 }

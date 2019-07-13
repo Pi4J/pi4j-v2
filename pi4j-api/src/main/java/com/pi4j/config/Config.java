@@ -42,17 +42,12 @@ public interface Config<CONFIG_TYPE> {
     String description();
     CONFIG_TYPE description(String description);
 
-    CONFIG_TYPE load(Properties properties, String prefix);
-
-
     default String getId(){
         return this.id();
     }
-
     default String getName(){
         return this.name();
     }
-
     default String getDescription(){
         return this.description();
     }
@@ -62,5 +57,4 @@ public interface Config<CONFIG_TYPE> {
     default void setDescription(String description){
         this.description(description);
     }
-
 }

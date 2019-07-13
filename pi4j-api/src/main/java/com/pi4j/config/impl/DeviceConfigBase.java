@@ -55,25 +55,10 @@ public abstract class DeviceConfigBase<CONFIG_TYPE extends DeviceConfig<CONFIG_T
         // load address property
         if(properties.containsKey(DEVICE_KEY)){
             this.device = properties.getProperty(DEVICE_KEY);
+        } else {
+            throw new ConfigMissingRequiredKeyException(DEVICE_KEY);
         }
     }
 
     public String device() { return this.device; };
-
-    @Override
-    public CONFIG_TYPE load(Properties properties, String prefix){
-
-        // ensure properties is not empty
-        super.load(properties, prefix);
-
-        // ensure required configuration properties are present
-        if(!properties.containsKey(prefix + "." + DEVICE_KEY))
-            throw new ConfigMissingRequiredKeyException(prefix + "." + DEVICE_KEY);
-
-        // set local configuration properties
-        if(properties.containsKey(prefix + "." + DEVICE_KEY))
-            this.device = properties.get(prefix + "." + DEVICE_KEY).toString();
-
-        return (CONFIG_TYPE) this;
-    }
 }

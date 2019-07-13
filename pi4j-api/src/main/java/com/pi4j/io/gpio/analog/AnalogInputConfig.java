@@ -31,5 +31,4 @@ import java.util.Properties;
 
 public interface AnalogInputConfig
         extends AnalogConfig<AnalogInputConfig> {
-    AnalogInputConfig load(Properties properties, String prefix);
 }

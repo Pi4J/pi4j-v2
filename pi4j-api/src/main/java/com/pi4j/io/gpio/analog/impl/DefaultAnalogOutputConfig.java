@@ -127,43 +127,4 @@ public class DefaultAnalogOutputConfig
     public AnalogRange range() {
         return this.range;
     }
-
-    @Override
-    public DefaultAnalogOutputConfig load(Properties properties, String prefix){
-
-        // ensure properties is not empty
-        super.load(properties, prefix);
-
-        // load any optional properties
-        if(properties.containsKey(prefix + "." + SHUTDOWN_VALUE_KEY)){
-            var shutdownValue = Integer.parseInt(properties.get(prefix + "." + SHUTDOWN_VALUE_KEY).toString());
-            shutdownValue(shutdownValue);
-        }
-
-        // load any optional properties
-        if(properties.containsKey(prefix + "." + INITIAL_VALUE_KEY)){
-            var initialValue = Integer.parseInt(properties.get(prefix + "." + INITIAL_VALUE_KEY).toString());
-            this.initialValue = initialValue;
-        }
-
-        // load any optional properties
-        if(properties.containsKey(prefix + "." + INITIAL_VALUE_KEY)){
-            var initialValue = Integer.parseInt(properties.get(prefix + "." + INITIAL_VALUE_KEY).toString());
-            this.initialValue = initialValue;
-        }
-
-        // load optional range properties
-        Integer min = null;
-        Integer max = null;
-        if(properties.containsKey(prefix + "." + RANGE_MIN_KEY))
-            min = Integer.parseInt(properties.get(prefix + "." + RANGE_MIN_KEY).toString());
-        if(properties.containsKey(prefix + "." + RANGE_MAX_KEY))
-            max = Integer.parseInt(properties.get(prefix + "." + RANGE_MAX_KEY).toString());
-
-        // create new range from loaded properties
-        if(min != null || max != null)
-            this.range = new DefaultAnalogRange(min, max);
-
-        return this;
-    }
 }

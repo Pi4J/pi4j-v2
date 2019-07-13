@@ -27,8 +27,6 @@ package com.pi4j.config;
  * #L%
  */
 
-import com.pi4j.config.exception.ConfigEmptyException;
-import com.pi4j.config.exception.ConfigMissingPrefixException;
 import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
 
 import java.util.Properties;
@@ -51,9 +49,22 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
      * @param properties
      */
     protected ConfigBase(Properties properties){
-        this.id = properties.getProperty(ID_KEY);
-        this.name = properties.getProperty(NAME_KEY, null);
-        this.description = properties.getProperty(DESCRIPTION_KEY, null);
+
+        // load required 'id' property
+        if(properties.containsKey(ID_KEY)){
+            this.id = properties.getProperty(ID_KEY);
+        } else {
+            throw new ConfigMissingRequiredKeyException(ID_KEY);
+        }
+
+        // load optional 'name' property
+        if(properties.containsKey(NAME_KEY))
+            this.name = properties.getProperty(NAME_KEY, null);
+
+        // load optional 'description' property
+        if(properties.containsKey(DESCRIPTION_KEY))
+            this.description = properties.getProperty(DESCRIPTION_KEY, null);
+
     }
 
     @Override
@@ -80,29 +91,6 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
     @Override
     public CONFIG_TYPE description(String description){
         this.description = description;
-        return (CONFIG_TYPE) this;
-    }
-
-    @Override
-    public CONFIG_TYPE load(Properties properties, String prefix){
-        // ensure a prefix was provided
-        if(prefix == null || prefix.isEmpty()) throw new ConfigMissingPrefixException();
-
-        // ensure properties is not empty
-        if(properties.isEmpty()) throw new ConfigEmptyException();
-
-        // ensure required configuration properties are present
-        if(!properties.containsKey(prefix + "." + ID_KEY))
-            throw new ConfigMissingRequiredKeyException(prefix + "." + ID_KEY);
-
-        // set local configuration properties
-        if(properties.containsKey(prefix + "." + ID_KEY))
-            this.id = properties.get(prefix + "." + ID_KEY).toString();
-        if(properties.containsKey(prefix + "." + NAME_KEY))
-            this.name = properties.get(prefix + "." + NAME_KEY).toString();
-        if(properties.containsKey(prefix + "." + DESCRIPTION_KEY))
-            this.description = properties.get(prefix + "." + DESCRIPTION_KEY).toString();
-
         return (CONFIG_TYPE) this;
     }
 }
