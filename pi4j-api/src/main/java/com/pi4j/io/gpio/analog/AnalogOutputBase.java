@@ -29,19 +29,83 @@ package com.pi4j.io.gpio.analog;
 
 
 import com.pi4j.context.Context;
+import com.pi4j.io.exception.IOException;
+import com.pi4j.io.exception.IOIllegalValueException;
+import com.pi4j.io.exception.IOBoundsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOutputConfig> implements AnalogOutput {
 
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
     protected Integer value = 0;
 
     public AnalogOutputBase(AnalogOutputConfig config){
         super(config);
         if(this.id == null) this.id = "AOUT-" + config.address();
         if(this.name == null) this.name = "AOUT-" + config.address();
+
+        // update the analog value to the initial value if an initial value was configured
+        if(config().initialValue() != null){
+            try {
+                value(config().initialValue());
+            } catch (IOIllegalValueException e) {
+                logger.error(e.getMessage() ,e);
+            } catch (IOBoundsException e) {
+                logger.error(e.getMessage() ,e);
+            }
+        }
     }
 
     @Override
-    public AnalogOutput value(Integer value) {
+    public AnalogOutput stepUp(){
+        try {
+            return step(config().stepValue());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return this;
+        }
+    }
+
+    @Override
+    public AnalogOutput stepDown(){
+        try {
+            return step(0-config().stepValue());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return this;
+        }
+    }
+
+    @Override
+    public AnalogOutput step(Integer value) throws IOIllegalValueException, IOBoundsException {
+
+        // validate value
+        if(value == null)
+            throw new IOIllegalValueException();
+
+        Integer oldValue = this.value();
+        Integer newValue = value + oldValue; // increment value by step increment
+        if(config().range() != null){
+            newValue = config().range().sanitize(newValue);
+        }
+        return this.value(newValue);
+    }
+
+
+    @Override
+    public AnalogOutput value(Integer value) throws IOIllegalValueException, IOBoundsException {
+
+        // validate value
+        if(value == null)
+            throw new IOIllegalValueException();
+
+        // validate value bounds
+        if(config().range() != null) {
+            if(!config().range().validate(value)){
+                throw new IOBoundsException(value, config().range().min(), config().range().max());
+            }
+        }
 
         // check to see of there is a value change; if there is then we need
         // to update the internal value variable and dispatch the change event
@@ -62,7 +126,13 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
     public AnalogOutput terminate(Context context){
         // update the analog value to the shutdown value if a shutdown value is configured
         if(config().shutdownValue() != null){
-            value(config().shutdownValue());
+            try {
+                value(config().shutdownValue());
+            } catch (IOIllegalValueException e) {
+                logger.error(e.getMessage() ,e);
+            } catch (IOBoundsException e) {
+                logger.error(e.getMessage() ,e);
+            }
         }
         return this;
     }
@@ -71,5 +141,4 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
     public Integer value() {
         return this.value;
     }
-
 }

@@ -32,14 +32,24 @@ import com.pi4j.config.exception.ConfigException;
 import java.util.Properties;
 
 public interface DigitalOutputConfig extends DigitalConfig<DigitalOutputConfig> {
+    String SHUTDOWN_STATE_KEY = "shutdown";
+    String INITIAL_STATE_KEY = "initial";
+
     DigitalState shutdownState();
     DigitalOutputConfig shutdownState(DigitalState state);
+
+    DigitalState initialState();
+
 
     default DigitalState getShutdownState(){
         return shutdownState();
     }
     default void setShutdownState(DigitalState state){
         this.shutdownState(state);
+    }
+
+    default DigitalState getInitialState(){
+        return initialState();
     }
 
     static DigitalOutputConfig instance(int address){

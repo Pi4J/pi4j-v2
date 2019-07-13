@@ -40,6 +40,11 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
     public DigitalOutputBase(DigitalOutputConfig config){
         super(config);
         this.name = (config.name() != null) ? config.name() : "DOUT-" + config.address();
+
+        // update the analog value to the initial value if an initial value was configured
+        if(config().initialState() != null){
+            state(config().initialState());
+        }
     }
 
     @Override

@@ -37,12 +37,17 @@ public class DigitalOutputConfigImpl extends AddressConfigBase<DigitalOutputConf
 
     //String name = null;
     DigitalState shutdownState = DigitalState.UNKNOWN;
+    DigitalState initialState = DigitalState.UNKNOWN;
 
     public DigitalOutputConfigImpl(){
     }
 
     public DigitalState shutdownState(){
         return this.shutdownState;
+    }
+
+    public DigitalState initialState(){
+        return this.initialState;
     }
 
     public DigitalOutputConfig shutdownState(DigitalState state){

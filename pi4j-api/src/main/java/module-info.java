@@ -41,6 +41,7 @@ module pi4j.api {
     exports com.pi4j.io.gpio.analog.binding;
     exports com.pi4j.io.gpio.digital;
     exports com.pi4j.io.gpio.digital.binding;
+    exports com.pi4j.io.exception;
     exports com.pi4j.io.i2c;
     exports com.pi4j.io.pwm;
     exports com.pi4j.io.serial;

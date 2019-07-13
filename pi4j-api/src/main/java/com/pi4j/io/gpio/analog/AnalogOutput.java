@@ -29,6 +29,8 @@ package com.pi4j.io.gpio.analog;
 
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.Output;
+import com.pi4j.io.exception.IOBoundsException;
+import com.pi4j.io.exception.IOIllegalValueException;
 import com.pi4j.io.gpio.analog.impl.AnalogOutputFactory;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.exception.RegistryException;
@@ -36,9 +38,14 @@ import com.pi4j.registry.exception.RegistryException;
 import java.util.Properties;
 
 public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, Output {
-    AnalogOutput value(Integer value);
+    AnalogOutput value(Integer value) throws IOIllegalValueException, IOBoundsException;
 
-    default AnalogOutput setValue(Integer value) { return value(value); };
+    AnalogOutput stepUp();
+    AnalogOutput stepDown();
+    AnalogOutput step(Integer value) throws IOIllegalValueException, IOBoundsException;
+
+
+    default AnalogOutput setValue(Integer value) throws IOIllegalValueException, IOBoundsException { return value(value); };
 
     // ---------------------------------------------------------------------------
     // INSTANCE ACCESSOR STATIC METHODS

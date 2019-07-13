@@ -55,7 +55,10 @@ public class AnalogOutputExampleUsingDependencyInjection {
         @Register(ANALOG_OUTPUT_PIN_ID)
         @Address(ANALOG_OUTPUT_PIN)
         @Name("My Analog Out")
-        @ShutdownValue(99)
+        @ShutdownValue(9)
+        @InitialValue(10)
+        @Range(min = 1, max = 10)
+        @StepValue(3)
         private AnalogOutput output1;
 
         // create an analog output instance using the default analog output provider
@@ -96,7 +99,11 @@ public class AnalogOutputExampleUsingDependencyInjection {
             output.value(1)
                   .value(2)
                   .value(3)
-                  .value(4);
+                  .value(4)
+                  .stepUp()
+                  .stepDown()
+                  .step(100)
+                  .step(-100);
 
             // lets read the analog output value
             console.print("CURRENT ANALOG OUTPUT [" + output + "] VALUE IS [");

@@ -49,8 +49,14 @@ public class DefaultAnalogOutputBuilder
     }
 
     @Override
-    public AnalogOutputBuilder shutdownValue(Number value) {
+    public AnalogOutputBuilder shutdown(Integer value) {
         this.properties.setProperty(AnalogOutputConfig.SHUTDOWN_VALUE_KEY, value.toString());
+        return this;
+    }
+
+    @Override
+    public AnalogOutputBuilder initial(Integer value) {
+        this.properties.setProperty(AnalogOutputConfig.INITIAL_VALUE_KEY, value.toString());
         return this;
     }
 
@@ -58,5 +64,23 @@ public class DefaultAnalogOutputBuilder
     public AnalogOutputConfig build() {
         AnalogOutputConfig config = new DefaultAnalogOutputConfig(properties);
         return config;
+    }
+
+    @Override
+    public AnalogOutputBuilder min(Integer value) {
+        this.properties.setProperty(AnalogOutputConfig.RANGE_MIN_KEY, value.toString());
+        return this;
+    }
+
+    @Override
+    public AnalogOutputBuilder max(Integer value) {
+        this.properties.setProperty(AnalogOutputConfig.RANGE_MAX_KEY, value.toString());
+        return this;
+    }
+
+    @Override
+    public AnalogOutputBuilder step(Integer value) {
+        this.properties.setProperty(AnalogOutputConfig.STEP_VALUE_KEY, value.toString());
+        return this;
     }
 }

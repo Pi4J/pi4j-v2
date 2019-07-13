@@ -313,23 +313,37 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
                     boolean accessible = field.canAccess(instance);
                     if (!accessible) field.trySetAccessible();
 
-
                     // all supported additional annotations for configuring the digital output
                     Address address = field.getAnnotation(Address.class);
-                    Name name = null;
-                    Description description = null;
-                    ShutdownValue shutdownValue = null;
 
+                    Name name = null;
                     if (field.isAnnotationPresent(Name.class)) {
                         name = field.getAnnotation(Name.class);
                     }
 
+                    Description description = null;
                     if (field.isAnnotationPresent(Description.class)) {
                         description = field.getAnnotation(Description.class);
                     }
 
+                    ShutdownValue shutdownValue = null;
                     if (field.isAnnotationPresent(ShutdownValue.class)) {
                         shutdownValue = field.getAnnotation(ShutdownValue.class);
+                    }
+
+                    InitialValue initialValue = null;
+                    if (field.isAnnotationPresent(InitialValue.class)) {
+                        initialValue = field.getAnnotation(InitialValue.class);
+                    }
+
+                    StepValue stepValue = null;
+                    if (field.isAnnotationPresent(StepValue.class)) {
+                        stepValue = field.getAnnotation(StepValue.class);
+                    }
+
+                    Range range = null;
+                    if (field.isAnnotationPresent(Range.class)) {
+                        range = field.getAnnotation(Range.class);
                     }
 
                     AnalogOutputBuilder builder = AnalogOutput.builder();
@@ -338,7 +352,11 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
 
                     if (name != null) builder.name(name.value());
                     if (description != null) builder.description(description.value());
-                    if (shutdownValue != null) builder.shutdownValue(shutdownValue.value());
+                    if (shutdownValue != null) builder.shutdown(shutdownValue.value());
+                    if (initialValue != null) builder.initial(initialValue.value());
+                    if (stepValue != null) builder.step(stepValue.value());
+                    if (range != null) builder.min(range.min());
+                    if (range != null) builder.max(range.max());
 
                     AnalogOutputProvider provider = null;
                     if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {

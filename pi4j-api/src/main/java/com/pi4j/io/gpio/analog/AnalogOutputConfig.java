@@ -33,17 +33,36 @@ public interface AnalogOutputConfig
         extends AnalogConfig<AnalogOutputConfig> {
 
     String SHUTDOWN_VALUE_KEY = "shutdown";
+    String INITIAL_VALUE_KEY = "initial";
+    String RANGE_MIN_KEY = "min";
+    String RANGE_MAX_KEY = "max";
+    String STEP_VALUE_KEY = "step";
 
     Integer shutdownValue();
     AnalogOutputConfig shutdownValue(Integer value);
-
     default Number getShutdownValue() {
         return this.shutdownValue();
     }
-
     default void setShutdownValue(Integer value) {
         this.shutdownValue(value);
     }
+
+    Integer stepValue();
+    AnalogOutputConfig stepValue(Integer value);
+    default Number getStepValue() {
+        return this.stepValue();
+    }
+    default void setStepValue(Integer value) {
+        this.setStepValue(value);
+    }
+
+    Integer initialValue();
+    default Number getInitialValue() {
+        return this.initialValue();
+    }
+
+    AnalogRange range();
+    default AnalogRange getRange() { return this.range(); }
 
     AnalogOutputConfig load(Properties properties, String prefix);
 }

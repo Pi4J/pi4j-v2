@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.analog.binding;
+package com.pi4j.annotation;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogBindingSync.java
+ * FILENAME      :  Range.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,31 +27,14 @@ package com.pi4j.io.gpio.analog.binding;
  * #L%
  */
 
-import com.pi4j.io.exception.IOBoundsException;
-import com.pi4j.io.exception.IOIllegalValueException;
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
-import com.pi4j.io.gpio.analog.AnalogOutput;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class AnalogBindingSync extends AnalogBindingBase implements AnalogBinding<AnalogOutput> {
-
-    /**
-     * Default Constructor
-     * @param output Variable argument list of analog outputs
-     */
-    public AnalogBindingSync(AnalogOutput ... output){
-        super(output);
-    }
-
-    @Override
-    public void process(AnalogChangeEvent event) {
-        outputs.forEach((output)->{
-            try {
-                ((AnalogOutput)output).value(event.value());
-            } catch (IOIllegalValueException e) {
-                e.printStackTrace();
-            } catch (IOBoundsException e) {
-                e.printStackTrace();
-            }
-        });
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+public @interface Range {
+    int min();
+    int max();
 }

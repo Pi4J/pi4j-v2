@@ -30,6 +30,8 @@ package com.pi4j.provider.mock.io.gpio.analog;
  */
 
 
+import com.pi4j.io.exception.IOBoundsException;
+import com.pi4j.io.exception.IOIllegalValueException;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.AnalogOutputBase;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
@@ -41,7 +43,13 @@ public class MockAnalogOutput extends AnalogOutputBase implements AnalogOutput {
     }
 
     public MockAnalogOutput mockValue(Number number){
-        this.value(value);
+        try {
+            this.value(value);
+        } catch (IOIllegalValueException e) {
+            e.printStackTrace();
+        } catch (IOBoundsException e) {
+            e.printStackTrace();
+        }
         return this;
     }
 }
