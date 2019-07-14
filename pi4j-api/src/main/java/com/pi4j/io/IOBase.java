@@ -53,11 +53,6 @@ public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig> e
     public IOBase(CONFIG_TYPE config){
         super();
         this.config = config;
-
-//        // if this config supports and address, then set the id field to the address
-//        if(config instanceof AddressConfig){
-//            this.id = Integer.toString(((AddressConfig) config).address());
-//        }
     }
 
     @Override
@@ -85,19 +80,6 @@ public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig> e
 
     @Override
     public IO_TYPE terminate(Context context) throws LifecycleException {
-
-//        // perform a shutdown on each digital I/O instance that is tracked in the internal cache
-//        instances.forEach((address, instance)->{
-//            try {
-//                instance.terminate(context);
-//            } catch (LifecycleException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//
-//        // remove all managed instance from internal cache
-//        instances.clear();
-
         return (IO_TYPE)this;
     }
 

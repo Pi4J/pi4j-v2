@@ -94,7 +94,7 @@ public class DefaultRegistry implements Registry {
                 throw new ProviderNotFoundException(providerId);
 
             // create target I/O instance
-            IO instance = Pi4J.providers().get(providerId).instance(config);
+            IO instance = this.context.providers().get(providerId).instance(config);
 
             // add instance to collection
             return (T)instances.put(_id, instance);
