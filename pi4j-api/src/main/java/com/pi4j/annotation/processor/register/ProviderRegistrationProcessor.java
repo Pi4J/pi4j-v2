@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
-public class ProviderProcessor implements RegisterProcessor<Provider> {
+public class ProviderRegistrationProcessor implements RegisterProcessor<Provider> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

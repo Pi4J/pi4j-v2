@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
-public class AnalogInputProcessor implements RegisterProcessor<AnalogInput> {
+public class AnalogInputRegistrationProcessor implements RegisterProcessor<AnalogInput> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

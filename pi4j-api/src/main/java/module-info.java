@@ -1,3 +1,5 @@
+import com.pi4j.annotation.processor.register.*;
+
 /*-
  * #%L
  * **********************************************************************
@@ -70,13 +72,13 @@ module pi4j.api {
                     com.pi4j.annotation.processor.injector.RegistryInjector,
                     com.pi4j.annotation.processor.injector.SerialInjector,
                     com.pi4j.annotation.processor.injector.SpiInjector,
-                    com.pi4j.annotation.processor.register.AnalogChangeListenerProcessor,
-                    com.pi4j.annotation.processor.register.AnalogInputProcessor,
-                    com.pi4j.annotation.processor.register.AnalogOutputProcessor,
-                    com.pi4j.annotation.processor.register.DigitalChangeListenerProcessor,
-                    com.pi4j.annotation.processor.register.DigitalInputProcessor,
-                    com.pi4j.annotation.processor.register.DigitalOutputProcessor,
-                    com.pi4j.annotation.processor.register.ProviderProcessor,
+                    AnalogChangeListenerRegistrationProcessor,
+                    AnalogInputRegistrationProcessor,
+                    AnalogOutputRegistrationProcessor,
+                    DigitalChangeListenerRegistrationProcessor,
+                    DigitalInputRegistrationProcessor,
+                    DigitalOutputRegistrationProcessor,
+                    ProviderRegistrationProcessor,
                     com.pi4j.annotation.processor.event.AnalogChangeEventProcessor,
                     com.pi4j.annotation.processor.event.DigitalChangeEventProcessor;
 

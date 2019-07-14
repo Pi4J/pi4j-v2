@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
-public class AnalogChangeListenerProcessor implements RegisterProcessor<AnalogChangeListener> {
+public class AnalogChangeListenerRegistrationProcessor implements RegisterProcessor<AnalogChangeListener> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

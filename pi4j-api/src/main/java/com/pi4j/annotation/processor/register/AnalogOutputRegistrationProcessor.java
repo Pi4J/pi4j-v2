@@ -5,7 +5,7 @@ package com.pi4j.annotation.processor.register;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalInputProcessor.java
+ * FILENAME      :  AnalogOutputProcessor.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -31,23 +31,23 @@ import com.pi4j.annotation.*;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.ProviderAnnotationProcessor;
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.io.gpio.digital.DigitalInputProvider;
+import com.pi4j.io.gpio.analog.AnalogOutput;
+import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
-public class DigitalInputProcessor implements RegisterProcessor<DigitalInput> {
+public class AnalogOutputRegistrationProcessor implements RegisterProcessor<AnalogOutput> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public boolean isEligible(Context context, Object instance, Register annotation, Field field) throws Exception {
 
-        // make sure this field is of type 'DigitalInput'
-        if(!DigitalInput.class.isAssignableFrom(field.getType()))
+        // make sure this field is of type 'AnalogOutput'
+        if(!AnalogOutput.class.isAssignableFrom(field.getType()))
             return false;
 
         // this processor can process this annotated instance
@@ -55,7 +55,7 @@ public class DigitalInputProcessor implements RegisterProcessor<DigitalInput> {
     }
 
     @Override
-    public DigitalInput process(Context context, Object instance, Register annotation, Field field) throws Exception {
+    public AnalogOutput process(Context context, Object instance, Register annotation, Field field) throws Exception {
 
         // validate that the 'ID' (value) attribute is not empty on this field annotation
         if (StringUtil.isNullOrEmpty(annotation.value()))
@@ -68,7 +68,7 @@ public class DigitalInputProcessor implements RegisterProcessor<DigitalInput> {
                     "use the '@Inject(id)' annotation instead.");
 
         // create I/O config builder
-        var builder = DigitalInput.builder();
+        var builder = AnalogOutput.builder();
         if (annotation.value() != null) builder.id((annotation).value());
 
         // test for required additional annotations
@@ -91,20 +91,39 @@ public class DigitalInputProcessor implements RegisterProcessor<DigitalInput> {
             if (description != null) builder.description(description.value());
         }
 
-        Pull pull = null;
-        if (field.isAnnotationPresent(Pull.class)) {
-            pull = field.getAnnotation(Pull.class);
-            if (pull != null) builder.pull(pull.value());
+        Range range = null;
+        if (field.isAnnotationPresent(Range.class)) {
+            range = field.getAnnotation(Range.class);
+            if (range != null) builder.min(range.min());
+            if (range != null) builder.max(range.max());
         }
 
-        DigitalInputProvider provider = null;
+        ShutdownValue shutdownValue = null;
+        if (field.isAnnotationPresent(ShutdownValue.class)) {
+            shutdownValue = field.getAnnotation(ShutdownValue.class);
+            if (shutdownValue != null) builder.shutdown(shutdownValue.value());
+        }
+
+        InitialValue initialValue = null;
+        if (field.isAnnotationPresent(InitialValue.class)) {
+            initialValue = field.getAnnotation(InitialValue.class);
+            if (initialValue != null) builder.initial(initialValue.value());
+        }
+
+        StepValue stepValue = null;
+        if (field.isAnnotationPresent(StepValue.class)) {
+            stepValue = field.getAnnotation(StepValue.class);
+            if (stepValue != null) builder.step(stepValue.value());
+        }
+
+        AnalogOutputProvider provider = null;
         if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
-            provider = ProviderAnnotationProcessor.instance(field, DigitalInputProvider.class);
+            provider = ProviderAnnotationProcessor.instance(field, AnalogOutputProvider.class);
         } else {
-            provider = context.providers().getDefault(DigitalInputProvider.class);
+            provider = context.providers().getDefault(AnalogOutputProvider.class);
         }
 
         // create and return I/O instance from registry
-        return DigitalInput.create(provider, builder.build());
+        return AnalogOutput.create(provider, builder.build());
     }
 }

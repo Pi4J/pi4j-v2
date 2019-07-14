@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
-public class DigitalChangeListenerProcessor implements RegisterProcessor<DigitalChangeListener> {
+public class DigitalChangeListenerRegistrationProcessor implements RegisterProcessor<DigitalChangeListener> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
