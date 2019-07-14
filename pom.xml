@@ -433,20 +433,10 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
-
-                        <!-- TODO :: ENABLE BUILD FOR JDK 11 RELEASE -->
-                        <!--<release>${java.version}</release>-->
-
+                        <release>${java.version}</release>
                         <showDeprecation>true</showDeprecation>
                         <showWarnings>true</showWarnings>
                         <verbose>false</verbose>
-
-                        <compilerArgs>
-                            <!-- TODO :: ELIMINATE JDK INTERNAL REFS -->
-                            <arg>--add-exports</arg><arg>java.base/jdk.internal.misc=ALL-UNNAMED</arg>
-                            <arg>--add-exports</arg><arg>java.base/jdk.internal.ref=ALL-UNNAMED</arg>
-                        </compilerArgs>
-
                     </configuration>
                 </plugin>
 
@@ -474,26 +464,23 @@
                 </plugin>
 
                 <!-- INCLUDE JAVADOC JAR -->
-                <!--<plugin>-->
-                    <!--<groupId>org.apache.maven.plugins</groupId>-->
-                    <!--<artifactId>maven-javadoc-plugin</artifactId>-->
-                    <!--<version>${maven-javadoc-plugin.version}</version>-->
-                    <!--<configuration>-->
-                        <!--<additionalOptions>-->
-                            <!--&lt;!&ndash; TODO :: ELIMINATE JDK INTERNAL REFS &ndash;&gt;-->
-                            <!--<additionalOption>&#45;&#45;add-exports java.base/jdk.internal.misc=ALL-UNNAMED</additionalOption>-->
-                            <!--<additionalOption>&#45;&#45;add-exports java.base/jdk.internal.ref=ALL-UNNAMED</additionalOption>-->
-                        <!--</additionalOptions>-->
-                    <!--</configuration>-->
-                    <!--<executions>-->
-                        <!--<execution>-->
-                            <!--<id>attach-javadocs</id>-->
-                            <!--<goals>-->
-                                <!--<goal>jar</goal>-->
-                            <!--</goals>-->
-                        <!--</execution>-->
-                    <!--</executions>-->
-                <!--</plugin>-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                    <configuration>
+                        <additionalOptions>
+                        </additionalOptions>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
 
                 <!-- DOWNLOAD LICENSE, README & NOTICE ARTIFACTS -->
                 <plugin>

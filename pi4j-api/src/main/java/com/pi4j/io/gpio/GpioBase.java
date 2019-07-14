@@ -35,8 +35,9 @@ public abstract class GpioBase<IO_TYPE extends Gpio<IO_TYPE, CONFIG_TYPE>, CONFI
 
     public GpioBase(CONFIG_TYPE config){
         super(config);
-        this.name = (config.name() != null) ? config.name() : null;
-        this.id = (config.id() != null) ? config.id() : null;
+        this.name = config.name();
+        this.id = config.id();
+        this.description = config.description();
     }
 
     @Override

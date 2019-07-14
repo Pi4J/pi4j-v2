@@ -47,6 +47,7 @@ public interface IO<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig>
 
     CONFIG_TYPE config();
 
+    // TODO :: RECONCILE IDENTITY PROPERTIES BETWEEN IO INSTANCE AND UNDERLYING CONFIG; PROBABLY NEED TO REMOVE THESE SETTERS
     IO_TYPE name(String name);
     IO_TYPE description(String description);
 

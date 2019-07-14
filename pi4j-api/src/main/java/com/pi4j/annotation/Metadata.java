@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio;
+package com.pi4j.annotation;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Gpio.java
+ * FILENAME      :  Metadata.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,10 +27,15 @@ package com.pi4j.io.gpio;
  * #L%
  */
 
-import com.pi4j.io.IO;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface Gpio<IO_TYPE extends Gpio<IO_TYPE,CONFIG_TYPE>, CONFIG_TYPE extends GpioConfig>
-        extends IO<IO_TYPE, CONFIG_TYPE> {
-    default Number address() { return config().address(); }
-    default Number getAddress() { return address(); };
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+public @interface Metadata {
+    // TODO :: ADD ANNOTATION SUPPORT FOR METADATA
+    String id() default "";
+    String value() default "";
 }
