@@ -54,22 +54,30 @@ module pi4j.api {
 
     uses com.pi4j.binding.Binding;
     uses com.pi4j.provider.Provider;
-    uses com.pi4j.annotation.Injector;
+    uses com.pi4j.annotation.Processor;
 
-    provides com.pi4j.annotation.Injector
-            with com.pi4j.annotation.injectors.ContextInjector,
-                 com.pi4j.annotation.injectors.AnalogInputInjector,
-                 com.pi4j.annotation.injectors.AnalogOutputInjector,
-                 com.pi4j.annotation.injectors.DigitalInputInjector,
-                 com.pi4j.annotation.injectors.DigitalOutputInjector,
-                 com.pi4j.annotation.injectors.I2CInjector,
-                 com.pi4j.annotation.injectors.ProviderGroupInjector,
-                 com.pi4j.annotation.injectors.ProviderInjector,
-                 com.pi4j.annotation.injectors.ProvidersInjector,
-                 com.pi4j.annotation.injectors.PwmInjector,
-                 com.pi4j.annotation.injectors.RegistryInjector,
-                 com.pi4j.annotation.injectors.SerialInjector,
-                 com.pi4j.annotation.injectors.SpiInjector;
+    provides com.pi4j.annotation.Processor
+            with com.pi4j.annotation.processor.injector.ContextInjector,
+                    com.pi4j.annotation.processor.injector.AnalogInputInjector,
+                    com.pi4j.annotation.processor.injector.AnalogOutputInjector,
+                    com.pi4j.annotation.processor.injector.DigitalInputInjector,
+                    com.pi4j.annotation.processor.injector.DigitalOutputInjector,
+                    com.pi4j.annotation.processor.injector.I2CInjector,
+                    com.pi4j.annotation.processor.injector.ProviderGroupInjector,
+                    com.pi4j.annotation.processor.injector.ProviderInjector,
+                    com.pi4j.annotation.processor.injector.ProvidersInjector,
+                    com.pi4j.annotation.processor.injector.PwmInjector,
+                    com.pi4j.annotation.processor.injector.RegistryInjector,
+                    com.pi4j.annotation.processor.injector.SerialInjector,
+                    com.pi4j.annotation.processor.injector.SpiInjector,
+                    com.pi4j.annotation.processor.register.AnalogChangeListenerProcessor,
+                    com.pi4j.annotation.processor.register.AnalogInputProcessor,
+                    com.pi4j.annotation.processor.register.AnalogOutputProcessor,
+                    com.pi4j.annotation.processor.register.DigitalChangeListenerProcessor,
+                    com.pi4j.annotation.processor.register.DigitalOutputProcessor,
+                    com.pi4j.annotation.processor.register.ProviderProcessor,
+                    com.pi4j.annotation.processor.event.AnalogChangeEventProcessor,
+                    com.pi4j.annotation.processor.event.DigitalChangeEventProcessor;
 
     requires slf4j.api;
 }

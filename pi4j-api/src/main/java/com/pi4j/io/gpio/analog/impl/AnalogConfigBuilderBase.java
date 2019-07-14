@@ -5,7 +5,7 @@ package com.pi4j.io.gpio.analog.impl;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DefaultAnalogOutputBuilder.java
+ * FILENAME      :  AnalogConfigBuilderBase.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,47 +27,38 @@ package com.pi4j.io.gpio.analog.impl;
  * #L%
  */
 
-import com.pi4j.io.gpio.analog.AnalogOutputBuilder;
+import com.pi4j.config.impl.AddressConfigBuilderBase;
+import com.pi4j.io.gpio.analog.AnalogConfig;
+import com.pi4j.io.gpio.analog.AnalogConfigBuilder;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 
 import java.util.Properties;
 
-public class DefaultAnalogOutputBuilder
-        extends AnalogConfigBuilderBase<AnalogOutputBuilder, AnalogOutputConfig>
-        implements AnalogOutputBuilder {
+public abstract class AnalogConfigBuilderBase<BUILDER_TYPE extends AnalogConfigBuilder, CONFIG_TYPE extends AnalogConfig>
+        extends AddressConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
+        implements AnalogConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
 
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected DefaultAnalogOutputBuilder(){
+    protected AnalogConfigBuilderBase(){
         super();
     }
 
-    protected DefaultAnalogOutputBuilder(Properties properties){
+    protected AnalogConfigBuilderBase(Properties properties){
         super(properties);
     }
 
+
     @Override
-    public AnalogOutputBuilder shutdown(Integer value) {
-        this.properties.setProperty(AnalogOutputConfig.SHUTDOWN_VALUE_KEY, value.toString());
-        return this;
+    public BUILDER_TYPE min(Integer value) {
+        this.properties.setProperty(AnalogOutputConfig.RANGE_MIN_KEY, value.toString());
+        return (BUILDER_TYPE)this;
     }
 
     @Override
-    public AnalogOutputBuilder initial(Integer value) {
-        this.properties.setProperty(AnalogOutputConfig.INITIAL_VALUE_KEY, value.toString());
-        return this;
-    }
-
-    @Override
-    public AnalogOutputConfig build() {
-        AnalogOutputConfig config = new DefaultAnalogOutputConfig(properties);
-        return config;
-    }
-
-    @Override
-    public AnalogOutputBuilder step(Integer value) {
-        this.properties.setProperty(AnalogOutputConfig.STEP_VALUE_KEY, value.toString());
-        return this;
+    public BUILDER_TYPE max(Integer value) {
+        this.properties.setProperty(AnalogOutputConfig.RANGE_MAX_KEY, value.toString());
+        return (BUILDER_TYPE)this;
     }
 }

@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.analog;
+package com.pi4j.annotation;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogConfig.java
+ * FILENAME      :  Processor.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,13 +27,9 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
-import com.pi4j.config.Config;
-import com.pi4j.io.gpio.GpioConfig;
+import java.lang.annotation.Annotation;
 
-public interface AnalogConfig<CONFIG_TYPE extends Config> extends GpioConfig<CONFIG_TYPE> {
-    String RANGE_MIN_KEY = "min";
-    static String RANGE_MAX_KEY = "max";
-
-    AnalogRange range();
-    default AnalogRange getRange() { return this.range(); }
+public interface Processor<A extends Annotation, T> {
+    boolean isAnnotationType(Annotation annotation);
+    Class<A> getAnnotationType();
 }

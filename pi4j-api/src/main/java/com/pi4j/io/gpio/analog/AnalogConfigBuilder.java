@@ -31,5 +31,6 @@ import com.pi4j.io.gpio.GpioConfigBuilder;
 
 public interface AnalogConfigBuilder<BUILDER_TYPE extends AnalogConfigBuilder, CONFIG_TYPE extends AnalogConfig>
         extends GpioConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
-    // MARKER INTERFACE
+    BUILDER_TYPE min(Integer value);
+    BUILDER_TYPE max(Integer value);
 }

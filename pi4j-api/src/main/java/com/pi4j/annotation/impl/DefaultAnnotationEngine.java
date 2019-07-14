@@ -5,7 +5,7 @@ package com.pi4j.annotation.impl;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DefaultAnnotationProcessor.java
+ * FILENAME      :  DefaultAnnotationEngine.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -30,7 +30,8 @@ package com.pi4j.annotation.impl;
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.processor.AnnotationProcessor;
+import com.pi4j.annotation.processor.FieldProcessor;
+import com.pi4j.annotation.processor.MethodProcessor;
 import com.pi4j.context.Context;
 import com.pi4j.event.Event;
 import com.pi4j.exception.NotInitializedException;
@@ -53,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 
 /**
@@ -63,69 +65,70 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public class DefaultAnnotationProcessor implements AnnotationProcessor {
+public class DefaultAnnotationEngine implements AnnotationEngine {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private Context context = null;
 
     // static singleton instance
-    private static AnnotationProcessor singleton = null;
-    public static AnnotationProcessor singleton(Context context){
+    private static AnnotationEngine singleton = null;
+    public static AnnotationEngine singleton(Context context){
         if(singleton == null){
-            singleton = new DefaultAnnotationProcessor(context);
+            singleton = new DefaultAnnotationEngine(context);
         }
         return singleton;
     }
 
     // private constructor
-    private DefaultAnnotationProcessor(Context context) {
+    private DefaultAnnotationEngine(Context context) {
         // forbid object construction
 
         // set local context reference
         this.context = context;
     }
 
-    private static Map<Class<? extends Annotation>, List<Injector>> injectors = null;
+    private static Map<Class<? extends Annotation>, List<Processor>> processors = null;
 
     @Override
     public void inject(Object... objects) throws AnnotationException {
 
-        // lazy-load IO injectors
-        if(injectors == null){
-            injectors = new ConcurrentHashMap<>();
+        // lazy-load IO injector
+        if(processors == null){
+            processors = new ConcurrentHashMap<>();
 
-            // detect available IO injectors by scanning the classpath looking for service provider instances
-            ServiceLoader<Injector> detectedInjectors = ServiceLoader.load(Injector.class);
-            for (Injector injector : detectedInjectors) {
-                if (injector != null) {
-                    if(!injectors.containsKey(injector.getAnnotationType())){
-                        injectors.put(injector.getAnnotationType(), new ArrayList<>());
+            // detect available Pi4J annotation processors by scanning the classpath looking for service provider instances
+            ServiceLoader<Processor> detectedProcessors = ServiceLoader.load(Processor.class);
+            for (Processor processor : detectedProcessors) {
+                if (processor != null) {
+                    if(!processors.containsKey(processor.getAnnotationType())){
+                        processors.put(processor.getAnnotationType(), new ArrayList<>());
                     }
-                    injectors.get(injector.getAnnotationType()).add(injector);
+                    processors.get(processor.getAnnotationType()).add(processor);
                 }
             }
         }
 
         // iterate over the collection of class objects and perform reflective introspection
-        // looking for Pi4J eligible injection annotations
+        // looking for Pi4J eligible annotation processors
         for(Object instance : objects) {
             // get object class
             Class instanceClass = instance.getClass();
-            Annotation rpa = instanceClass.getAnnotation(Register.class);
-            if(rpa != null){
-                if(Provider.class.isAssignableFrom(instanceClass)) {
-                    Provider prov = (Provider)instance;
-                    try {
-                        Pi4J.providers().add(prov);
-                    } catch (ProviderException e) {
-                        logger.error(e.getMessage(), e);
-                        throw new AnnotationException(e);
-                    } catch (NotInitializedException e) {
-                        logger.error(e.getMessage(), e);
-                        throw new AnnotationException(e);
-                    }
-                }
-            }
+
+//            Annotation rpa = instanceClass.getAnnotation(Register.class);
+//            if(rpa != null){
+//                if(Provider.class.isAssignableFrom(instanceClass)) {
+//                    Provider prov = (Provider)instance;
+//                    try {
+//                        Pi4J.providers().add(prov);
+//                    } catch (ProviderException e) {
+//                        logger.error(e.getMessage(), e);
+//                        throw new AnnotationException(e);
+//                    } catch (NotInitializedException e) {
+//                        logger.error(e.getMessage(), e);
+//                        throw new AnnotationException(e);
+//                    }
+//                }
+//            }
 
             // get object class defined fields
             Field[] fields = instanceClass.getDeclaredFields();
@@ -133,9 +136,9 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
             // iterate over the fields looking for declared annotations
             for (Field field : fields) {
                 Annotation[] annotations = field.getDeclaredAnnotations();
-                // iterate over the annotations looking for Pi4J compatible injectors
+                // iterate over the annotations looking for Pi4J compatible injector
                 for (Annotation annotation : annotations) {
-                    processInjectionAnnotation(instance, field, annotation);
+                    //processInjectionAnnotation(instance, field, annotation);
                     processFieldAnnotations(instance, field, annotation);
                 }
             }
@@ -146,7 +149,7 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
             // iterate method the methods looking for declared annotations
             for (Method method : methods) {
                 Annotation[] annotations = method.getDeclaredAnnotations();
-                // iterate over the annotations looking for Pi4J compatible injectors
+                // iterate over the annotations looking for Pi4J compatible injector
                 for (Annotation annotation : annotations) {
                     processMethodAnnotations(instance, method, annotation);
                 }
@@ -155,7 +158,7 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
         }
     }
 
-    private void processMethodAnnotations(Object instance, Method method, Annotation annotation) throws AnnotationException {
+    private void processCustomMethodAnnotations(Object instance, Method method, Annotation annotation) throws AnnotationException {
 
         if(annotation.annotationType() == OnEvent.class){
 
@@ -230,7 +233,7 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
         }
     }
 
-    private void processFieldAnnotations(Object instance, Field field, Annotation annotation) throws AnnotationException {
+    private void processCustomFieldAnnotations(Object instance, Field field, Annotation annotation) throws AnnotationException {
 
         if(annotation.annotationType() == Register.class){
             if(Provider.class.isAssignableFrom(field.getType())) {
@@ -461,23 +464,79 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
         }
     }
 
-    private void processInjectionAnnotation(Object instance, Field field, Annotation annotation) throws AnnotationException {
-        if(injectors.containsKey(annotation.annotationType())){
-            // get eligible injectors for this annotation type
-            List<Injector> eligibleInjectors = injectors.get(annotation.annotationType());
+    private void processFieldAnnotations(Object instance, Field field, Annotation annotation) throws AnnotationException {
+        if(processors.containsKey(annotation.annotationType())){
 
-            boolean injected_successfully = false;
-            for(Injector injector : eligibleInjectors) {
-                // ensure that the injector supports injecting the user/field-defined IO interface
-                if (injector.getTargetType().isAssignableFrom(field.getType())) {
+            // get eligible annotation processors for this annotation type
+            List<Processor> eligibleProcessors = processors.get(annotation.annotationType());
+
+            boolean processed_successfully = false;
+            for(Processor p : eligibleProcessors) {
+                if(p instanceof FieldProcessor) {
+                    var processor = (FieldProcessor)p;
+
+                    // ensure that the annotation processor supports injecting the user/field-defined IO interface
+                    if (processor.getTargetType().isAssignableFrom(field.getType())) {
+                        // create the IO instance and inject the instance into the reflected field
+                        boolean accessible = field.canAccess(instance);
+                        if (!accessible) field.trySetAccessible();
+                        try {
+                            Object io = processor.process(instance, field, annotation);
+
+                            // if a valid object was returned, then update the annotated field instance
+                            if (io != null) field.set(instance, io);
+
+                            if (!accessible) field.setAccessible(false);
+                            processed_successfully = true;
+                        } catch (ProviderException e) {
+                            logger.error(e.getMessage(), e);
+                            throw new AnnotationException(e);
+                        } catch (Exception e) {
+                            logger.error(e.getMessage(), e);
+                            throw new AnnotationException(e);
+                        }
+                    }
+
+                    // if there is only one eligible processor for this annotation type, then throw an AnnotationFormatError
+                    else if (eligibleProcessors.size() == 1) {
+                        throw new AnnotationFormatError("Annotation '@" + annotation.annotationType().getSimpleName() + "' can only be applied to fields of type: " + processor.getTargetType());
+                    }
+                }
+            }
+
+            // if processing injection was not successful, then throw AnnotationFormatError now
+            if(!processed_successfully){
+                throw new AnnotationFormatError("Annotation '@" + annotation.annotationType().getSimpleName() + "' could not be applied to field type: " + field.getType());
+            }
+        }
+    }
+
+
+    private void processMethodAnnotations(Object instance, Method method, Annotation annotation) throws AnnotationException {
+        if(processors.containsKey(annotation.annotationType())){
+
+            // get eligible annotation processors for this annotation type
+            List<Processor> eligibleProcessors = processors.get(annotation.annotationType());
+
+            // filter the annotated supporting processors to only method processors
+            List<Processor> methodProcessors = eligibleProcessors.stream()
+                    .filter((processor -> processor instanceof MethodProcessor))
+                    .collect(Collectors.toList());
+
+            boolean processed_successfully = false;
+            for(Processor p : methodProcessors) {
+                var processor = (MethodProcessor)p;
+
+                if(processor.eligible(instance, method, annotation)){
+
                     // create the IO instance and inject the instance into the reflected field
-                    boolean accessible = field.canAccess(instance);
-                    if (!accessible) field.trySetAccessible();
+                    boolean accessible = method.canAccess(instance);
+                    if (!accessible) method.trySetAccessible();
                     try {
-                        Object io = injector.instance(field, annotation);
-                        field.set(instance, io);
-                        if (!accessible) field.setAccessible(false);
-                        injected_successfully = true;
+                        processor.process(instance, method, annotation);
+
+                        if (!accessible) method.setAccessible(false);
+                        processed_successfully = true;
                     } catch (ProviderException e) {
                         logger.error(e.getMessage(), e);
                         throw new AnnotationException(e);
@@ -486,17 +545,13 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
                         throw new AnnotationException(e);
                     }
                 }
-
-                // if there is only one eligible injector for this annotation type, then throw an AnnotationFormatError
-                else if(eligibleInjectors.size() == 1){
-                    throw new AnnotationFormatError("Annotation '@" + annotation.annotationType().getSimpleName() + "' can only be applied to fields of type: " + injector.getTargetType());
-                }
             }
 
-            // if not injection was successful, then throw AnnotationFormatError now
-            if(!injected_successfully){
-                throw new AnnotationFormatError("Annotation '@" + annotation.annotationType().getSimpleName() + "' could not be applied to field type: " + field.getType());
+            // if processing injection was not successful, then throw AnnotationFormatError now
+            if(!processed_successfully){
+                throw new AnnotationFormatError("Annotation '@" + annotation.annotationType().getSimpleName() + "' could not be applied to method " + method.getDeclaringClass().getName() + "::" + method.getName() + "; no supporting annotation processor found.");
             }
         }
     }
+
 }

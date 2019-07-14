@@ -27,7 +27,6 @@ package com.pi4j.io.gpio.analog.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 import com.pi4j.io.gpio.analog.AnalogRange;
 import com.pi4j.util.StringUtil;
@@ -35,14 +34,13 @@ import com.pi4j.util.StringUtil;
 import java.util.Properties;
 
 public class DefaultAnalogOutputConfig
-        extends AddressConfigBase<AnalogOutputConfig>
+        extends AnalogConfigBase<AnalogOutputConfig>
         implements AnalogOutputConfig {
 
     // private configuration properties
     protected Integer shutdownValue = null;
     protected Integer initialValue = null;
     protected Integer stepValue = null;
-    protected AnalogRange range = new DefaultAnalogRange();
 
     /**
      * PRIVATE CONSTRUCTOR

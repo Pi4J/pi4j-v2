@@ -1,11 +1,11 @@
-package com.pi4j.annotation.exception;
+package com.pi4j.annotation.processor.register;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DependencyInjectionException.java
+ * FILENAME      :  RegisterProcessor.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,32 +27,19 @@ package com.pi4j.annotation.exception;
  * #L%
  */
 
-import com.pi4j.exception.Pi4JException;
+import com.pi4j.annotation.Register;
+import com.pi4j.annotation.processor.FieldProcessor;
 
-/**
- * <p>
- * This exception is thrown if a platform assignment is attempted when a
- * platform instance has already been assigned.
- * </p>
- *
- * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
- * @author Robert Savage (<a
- *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- */
-public class DependencyInjectionException extends Pi4JException {
+import java.lang.annotation.Annotation;
 
-    /**
-     * Default Constructor
-     */
-    public DependencyInjectionException(String message){
-        super(message);
+public interface RegisterProcessor<T> extends FieldProcessor<Register,T> {
+    @Override
+    default boolean isAnnotationType(Annotation annotation) {
+        return annotation instanceof Register;
     }
 
-    /**
-     * Default Constructor
-     */
-    public DependencyInjectionException(Throwable ex){
-        super(ex.getMessage(), ex);
+    @Override
+    default Class<Register> getAnnotationType() {
+        return Register.class;
     }
-
 }

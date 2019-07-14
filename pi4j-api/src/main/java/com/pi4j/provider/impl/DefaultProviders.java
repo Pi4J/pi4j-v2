@@ -44,6 +44,7 @@ import com.pi4j.provider.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
@@ -160,7 +161,7 @@ public class DefaultProviders implements Providers {
      */
     @Override
     public Map<String, Provider> all(){
-        return providers;
+        return Collections.unmodifiableMap(this.providers);
     }
 
     /**
@@ -184,7 +185,7 @@ public class DefaultProviders implements Providers {
         });
 
         if(result.size() <= 0) throw new ProviderNotFoundException(providerClass);
-        return result;
+        return Collections.unmodifiableMap(result);
     }
 
     /**
@@ -208,7 +209,7 @@ public class DefaultProviders implements Providers {
         });
 
         if(result.size() <= 0) throw new ProviderNotFoundException(providerType);
-        return result;
+        return Collections.unmodifiableMap(result);
     }
 
     @Override

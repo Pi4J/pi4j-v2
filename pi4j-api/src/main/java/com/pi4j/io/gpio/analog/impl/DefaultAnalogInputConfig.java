@@ -27,14 +27,13 @@ package com.pi4j.io.gpio.analog.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.util.StringUtil;
 
 import java.util.Properties;
 
 public class DefaultAnalogInputConfig
-        extends AddressConfigBase<AnalogInputConfig>
+        extends AnalogConfigBase<AnalogInputConfig>
         implements AnalogInputConfig {
 
     /**

@@ -28,7 +28,6 @@ package com.pi4j.context;
  */
 
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.exception.DependencyInjectionException;
 import com.pi4j.binding.Bindings;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
@@ -40,15 +39,16 @@ public interface Context extends Describable {
     Providers providers();
     Registry registry();
 
-    Context inject(Object... objects) throws AnnotationException, DependencyInjectionException;
+    Context inject(Object... objects) throws AnnotationException;
 
     default Descriptor describe() {
         Descriptor descriptor = Descriptor.create()
                 .category("CONTEXT")
                 .name("Runtime Context")
                 .type(this.getClass());
-        descriptor.add(bindings().describe());
+        descriptor.add(registry().describe());
         descriptor.add(providers().describe());
+        descriptor.add(bindings().describe());
         return descriptor;
     }
 }

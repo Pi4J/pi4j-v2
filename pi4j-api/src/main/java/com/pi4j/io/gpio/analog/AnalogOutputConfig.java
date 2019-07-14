@@ -32,8 +32,6 @@ public interface AnalogOutputConfig
 
     String SHUTDOWN_VALUE_KEY = "shutdown";
     String INITIAL_VALUE_KEY = "initial";
-    String RANGE_MIN_KEY = "min";
-    String RANGE_MAX_KEY = "max";
     String STEP_VALUE_KEY = "step";
 
     Integer shutdownValue();
@@ -58,7 +56,4 @@ public interface AnalogOutputConfig
     default Number getInitialValue() {
         return this.initialValue();
     }
-
-    AnalogRange range();
-    default AnalogRange getRange() { return this.range(); }
 }

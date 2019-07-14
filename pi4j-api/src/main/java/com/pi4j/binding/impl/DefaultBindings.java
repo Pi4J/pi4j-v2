@@ -34,6 +34,7 @@ import com.pi4j.context.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
@@ -114,7 +115,7 @@ public class DefaultBindings implements Bindings {
      */
     @Override
     public Map<String, Binding> all(){
-        return bindings;
+        return Collections.unmodifiableMap(this.bindings);
     }
 
     /**
@@ -138,7 +139,7 @@ public class DefaultBindings implements Bindings {
         });
 
         if(result.size() <= 0) throw new BindingNotFoundException(bindingClass);
-        return result;
+        return Collections.unmodifiableMap(result);
     }
 
     @Override

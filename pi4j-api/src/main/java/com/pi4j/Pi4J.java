@@ -28,7 +28,6 @@ package com.pi4j;
  */
 
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.exception.DependencyInjectionException;
 import com.pi4j.binding.exception.BindingException;
 import com.pi4j.common.Descriptor;
 import com.pi4j.context.Context;
@@ -128,7 +127,7 @@ public class Pi4J {
         return context;
     }
 
-    public static Context inject(Object... objects) throws NotInitializedException, AnnotationException, DependencyInjectionException {
+    public static Context inject(Object... objects) throws NotInitializedException, AnnotationException {
         // throw exception if Pi4J has not been initialized
         if(context == null) throw new NotInitializedException();
 

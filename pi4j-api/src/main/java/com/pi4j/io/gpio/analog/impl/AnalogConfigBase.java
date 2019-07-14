@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.digital.impl;
+package com.pi4j.io.gpio.analog.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DefaultDigitalInputConfig.java
+ * FILENAME      :  AnalogConfigBase.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,46 +28,50 @@ package com.pi4j.io.gpio.digital.impl;
  */
 
 import com.pi4j.config.impl.AddressConfigBase;
-import com.pi4j.io.gpio.digital.DigitalInputConfig;
-import com.pi4j.io.gpio.digital.PullResistance;
-import com.pi4j.util.StringUtil;
+import com.pi4j.io.gpio.analog.AnalogConfig;
+import com.pi4j.io.gpio.analog.AnalogRange;
 
 import java.util.Properties;
 
-public class DefaultDigitalInputConfig
-        extends AddressConfigBase<DigitalInputConfig>
-        implements DigitalInputConfig {
+public abstract class AnalogConfigBase<CONFIG_TYPE extends AnalogConfig>
+        extends AddressConfigBase<CONFIG_TYPE>
+        implements AnalogConfig<CONFIG_TYPE> {
+
+    // private configuration properties
+    protected AnalogRange range = new DefaultAnalogRange();
 
     /**
      * PRIVATE CONSTRUCTOR
      */
-    private DefaultDigitalInputConfig(){
+    protected AnalogConfigBase(){
         super();
     }
-
-    // private configuration properties
-    protected PullResistance pullResistance = PullResistance.OFF;
 
     /**
      * PRIVATE CONSTRUCTOR
      * @param properties
      */
-    protected DefaultDigitalInputConfig(Properties properties){
+    protected AnalogConfigBase(Properties properties){
         super(properties);
 
-        // define default property values if any are missing (based on the required address value)
-        this.id = StringUtil.setIfNullOrEmpty(this.id, "DIN-" + this.address, true);
-        this.name = StringUtil.setIfNullOrEmpty(this.name, "DIN-" + this.address, true);
-        this.description = StringUtil.setIfNullOrEmpty(this.description, "DIN-" + this.address, true);
+        // load range value property
+        if(properties.containsKey(RANGE_MIN_KEY) || properties.containsKey(RANGE_MAX_KEY)){
+            // load optional range properties
+            Integer min = null;
+            Integer max = null;
+            if(properties.containsKey(RANGE_MIN_KEY))
+                min = Integer.parseInt(properties.getProperty(RANGE_MIN_KEY));
+            if(properties.containsKey( RANGE_MAX_KEY))
+                max = Integer.parseInt(properties.getProperty(RANGE_MAX_KEY));
 
-        // load optional pull resistance from properties
-        if(properties.containsKey(PULL_RESISTANCE_KEY)){
-            this.pullResistance = PullResistance.parse(properties.getProperty(PULL_RESISTANCE_KEY));
+            // create new range from loaded properties
+            if(min != null || max != null)
+                this.range = new DefaultAnalogRange(min, max);
         }
     }
 
     @Override
-    public PullResistance pull() {
-        return this.pullResistance;
+    public AnalogRange range() {
+        return this.range;
     }
 }

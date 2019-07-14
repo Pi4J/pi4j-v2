@@ -1,4 +1,4 @@
-package com.pi4j.annotation.injectors;
+package com.pi4j.annotation.processor.injector;
 
 /*-
  * #%L
@@ -29,33 +29,21 @@ package com.pi4j.annotation.injectors;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.Injector;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderGroup;
 import com.pi4j.provider.ProviderType;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public class ProviderGroupInjector implements Injector<Inject, ProviderGroup> {
-
-    @Override
-    public boolean isAnnotationType(Annotation annotation) {
-        return annotation instanceof Inject;
-    }
-
-    @Override
-    public Class<Inject> getAnnotationType() {
-        return Inject.class;
-    }
+public class ProviderGroupInjector implements InjectorProcessor<ProviderGroup> {
 
     @Override
     public Class<ProviderGroup> getTargetType() { return ProviderGroup.class; }
 
     @Override
-    public ProviderGroup instance(Field field, Inject annotation) throws Exception {
+    public ProviderGroup process(Field field, Inject annotation) throws Exception {
 
         // <<1>> inject instance by user defined ID property
         if(annotation.value() != null && !annotation.value().isEmpty()){

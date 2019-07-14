@@ -1,4 +1,4 @@
-package com.pi4j.annotation.injectors;
+package com.pi4j.annotation.processor.injector;
 
 /*-
  * #%L
@@ -29,30 +29,18 @@ package com.pi4j.annotation.injectors;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.Injector;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-public class ProviderInjector implements Injector<Inject, Provider> {
-
-    @Override
-    public boolean isAnnotationType(Annotation annotation) {
-        return annotation instanceof Inject;
-    }
-
-    @Override
-    public Class<Inject> getAnnotationType() {
-        return Inject.class;
-    }
+public class ProviderInjector implements InjectorProcessor<Provider> {
 
     @Override
     public Class<Provider> getTargetType() { return Provider.class; }
 
     @Override
-    public Provider instance(Field field, Inject annotation) throws Exception {
+    public Provider process(Field field, Inject annotation) throws Exception {
         String id = null;
         Class<? extends Provider> providerClass = null;
 

@@ -1,11 +1,11 @@
-package com.pi4j.annotation.processor;
+package com.pi4j.annotation.processor.injector;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnnotationProcessor.java
+ * FILENAME      :  ProvidersInjector.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,9 +27,20 @@ package com.pi4j.annotation.processor;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.exception.DependencyInjectionException;
+import com.pi4j.Pi4J;
+import com.pi4j.annotation.Inject;
+import com.pi4j.provider.Providers;
 
-public interface AnnotationProcessor {
-    void inject(Object... objects) throws AnnotationException, DependencyInjectionException;
+import java.lang.reflect.Field;
+
+public class ProvidersInjector implements InjectorProcessor<Providers> {
+
+    @Override
+    public Class<Providers> getTargetType() { return Providers.class; }
+
+    @Override
+    public Providers process(Field field, Inject annotation) throws Exception {
+        // return context instance
+        return Pi4J.context().providers();
+    }
 }

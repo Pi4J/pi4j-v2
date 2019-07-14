@@ -1,11 +1,11 @@
-package com.pi4j.annotation.injectors;
+package com.pi4j.annotation.processor.injector;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  ContextInjector.java
+ * FILENAME      :  PwmInjector.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,30 +29,26 @@ package com.pi4j.annotation.injectors;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.Injector;
-import com.pi4j.context.Context;
+import com.pi4j.annotation.exception.AnnotationException;
+import com.pi4j.io.pwm.Pwm;
+import com.pi4j.util.StringUtil;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-public class ContextInjector implements Injector<Inject, Context> {
+public class PwmInjector implements InjectorProcessor<Pwm> {
 
     @Override
-    public boolean isAnnotationType(Annotation annotation) {
-        return annotation instanceof Inject;
-    }
+    public Class<Pwm> getTargetType() { return Pwm.class; }
 
     @Override
-    public Class<Inject> getAnnotationType() {
-        return Inject.class;
-    }
+    public Pwm process(Field field, Inject annotation) throws Exception {
 
-    @Override
-    public Class<Context> getTargetType() { return Context.class; }
+        // test for required peer annotations
+        if(StringUtil.isNullOrEmpty(annotation.value()))
+            throw new AnnotationException("Missing required 'value(id)' annotation attribute for this field: " +
+                    field.getDeclaringClass().getName() + "::" + field.getName() + "@Inject");
 
-    @Override
-    public Context instance(Field field, Inject annotation) throws Exception {
-        // return static context instance
-        return Pi4J.context();
+        // get target I/O instance from the Pi4J registry
+        return Pi4J.context().registry().get(annotation.value(), Pwm.class);
     }
 }

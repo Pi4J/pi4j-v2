@@ -1,4 +1,4 @@
-package com.pi4j.annotation.injectors;
+package com.pi4j.annotation.processor.injector;
 
 /*-
  * #%L
@@ -29,31 +29,19 @@ package com.pi4j.annotation.injectors;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.Injector;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.util.StringUtil;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-public class DigitalOutputInjector implements Injector<Inject, DigitalOutput> {
-
-    @Override
-    public boolean isAnnotationType(Annotation annotation) {
-        return annotation instanceof Inject;
-    }
-
-    @Override
-    public Class<Inject> getAnnotationType() {
-        return Inject.class;
-    }
+public class DigitalOutputInjector implements InjectorProcessor<DigitalOutput> {
 
     @Override
     public Class<DigitalOutput> getTargetType() { return DigitalOutput.class; }
 
     @Override
-    public DigitalOutput instance(Field field, Inject annotation) throws Exception {
+    public DigitalOutput process(Field field, Inject annotation) throws Exception {
 
         // test for required peer annotations
         if(StringUtil.isNullOrEmpty(annotation.value()))

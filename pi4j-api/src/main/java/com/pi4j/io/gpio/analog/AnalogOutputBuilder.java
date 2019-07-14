@@ -30,7 +30,5 @@ package com.pi4j.io.gpio.analog;
 public interface AnalogOutputBuilder extends AnalogConfigBuilder<AnalogOutputBuilder, AnalogOutputConfig> {
     AnalogOutputBuilder shutdown(Integer value);
     AnalogOutputBuilder initial(Integer value);
-    AnalogOutputBuilder min(Integer value);
-    AnalogOutputBuilder max(Integer value);
     AnalogOutputBuilder step(Integer value);
 }

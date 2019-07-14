@@ -1,11 +1,11 @@
-package com.pi4j.annotation.injectors;
+package com.pi4j.annotation.processor.injector;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  PwmInjector.java
+ * FILENAME      :  AnalogInputInjector.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,31 +29,19 @@ package com.pi4j.annotation.injectors;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.Injector;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.io.pwm.Pwm;
+import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.util.StringUtil;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-public class PwmInjector implements Injector<Inject, Pwm> {
+public class AnalogInputInjector implements InjectorProcessor<AnalogInput> {
 
     @Override
-    public boolean isAnnotationType(Annotation annotation) {
-        return annotation instanceof Inject;
-    }
+    public Class<AnalogInput> getTargetType() { return AnalogInput.class; }
 
     @Override
-    public Class<Inject> getAnnotationType() {
-        return Inject.class;
-    }
-
-    @Override
-    public Class<Pwm> getTargetType() { return Pwm.class; }
-
-    @Override
-    public Pwm instance(Field field, Inject annotation) throws Exception {
+    public AnalogInput process(Field field, Inject annotation) throws Exception {
 
         // test for required peer annotations
         if(StringUtil.isNullOrEmpty(annotation.value()))
@@ -61,6 +49,6 @@ public class PwmInjector implements Injector<Inject, Pwm> {
                     field.getDeclaringClass().getName() + "::" + field.getName() + "@Inject");
 
         // get target I/O instance from the Pi4J registry
-        return Pi4J.context().registry().get(annotation.value(), Pwm.class);
+        return Pi4J.context().registry().get(annotation.value(), AnalogInput.class);
     }
 }

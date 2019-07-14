@@ -1,11 +1,11 @@
-package com.pi4j.annotation;
+package com.pi4j.annotation.processor.injector;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Injector.java
+ * FILENAME      :  RegistryInjector.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,12 +27,20 @@ package com.pi4j.annotation;
  * #L%
  */
 
-import java.lang.annotation.Annotation;
+import com.pi4j.Pi4J;
+import com.pi4j.annotation.Inject;
+import com.pi4j.registry.Registry;
+
 import java.lang.reflect.Field;
 
-public interface Injector<A extends Annotation, T> {
-    boolean isAnnotationType(Annotation annotation);
-    Class<A> getAnnotationType();
-    Class<T> getTargetType();
-    T instance(Field field, A annotation) throws Exception;
+public class RegistryInjector implements InjectorProcessor<Registry> {
+
+    @Override
+    public Class<Registry> getTargetType() { return Registry.class; }
+
+    @Override
+    public Registry process(Field field, Inject annotation) throws Exception {
+        // return static registry instance
+        return Pi4J.context().registry();
+    }
 }

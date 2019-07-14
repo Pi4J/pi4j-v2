@@ -45,6 +45,7 @@ import com.pi4j.registry.exception.RegistryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -181,6 +182,11 @@ public class DefaultRegistry implements Registry {
         } catch (RegistryException e) {
             return false;
         }
+    }
+
+    @Override
+    public Map<String, ? extends IO> all() throws RegistryException {
+        return Collections.unmodifiableMap(this.instances);
     }
 
     @Override

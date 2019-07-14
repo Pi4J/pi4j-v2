@@ -27,10 +27,9 @@ package com.pi4j.context.impl;
  * #L%
  */
 
+import com.pi4j.annotation.AnnotationEngine;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.exception.DependencyInjectionException;
-import com.pi4j.annotation.impl.DefaultAnnotationProcessor;
-import com.pi4j.annotation.processor.AnnotationProcessor;
+import com.pi4j.annotation.impl.DefaultAnnotationEngine;
 import com.pi4j.binding.Bindings;
 import com.pi4j.binding.impl.DefaultBindings;
 import com.pi4j.context.Context;
@@ -44,7 +43,7 @@ public class DefaultContext implements Context {
     private Bindings bindings = DefaultBindings.singleton(this);
     private Providers providers = DefaultProviders.singleton(this);
     private Registry registry = DefaultRegistry.singleton(this);
-    private AnnotationProcessor annotationProcessor = DefaultAnnotationProcessor.singleton(this);
+    private AnnotationEngine annotationEngine = DefaultAnnotationEngine.singleton(this);
 
     private static Context singleton = null;
     public static Context singleton(){
@@ -73,8 +72,8 @@ public class DefaultContext implements Context {
     }
 
     @Override
-    public Context inject(Object... objects) throws AnnotationException, DependencyInjectionException {
-        annotationProcessor.inject(objects);
+    public Context inject(Object... objects) throws AnnotationException {
+        annotationEngine.inject(objects);
         return this;
     }
 }

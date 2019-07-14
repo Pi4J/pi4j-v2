@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.analog;
+package com.pi4j.annotation.processor.register;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogConfig.java
+ * FILENAME      :  ProviderProcessor.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,13 +27,27 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
-import com.pi4j.config.Config;
-import com.pi4j.io.gpio.GpioConfig;
+import com.pi4j.Pi4J;
+import com.pi4j.annotation.Register;
+import com.pi4j.provider.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public interface AnalogConfig<CONFIG_TYPE extends Config> extends GpioConfig<CONFIG_TYPE> {
-    String RANGE_MIN_KEY = "min";
-    static String RANGE_MAX_KEY = "max";
+import java.lang.reflect.Field;
 
-    AnalogRange range();
-    default AnalogRange getRange() { return this.range(); }
+public class ProviderProcessor implements RegisterProcessor<Provider> {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Override
+    public Class<Provider> getTargetType() { return Provider.class; }
+
+    @Override
+    public Provider process(Object instance, Field field, Register annotation) throws Exception {
+        boolean accessible = field.canAccess(instance);
+        if (!accessible) field.trySetAccessible();
+        Provider prov = (Provider) field.get(instance);
+        if(prov != null) Pi4J.providers().add(prov);
+        return prov;
+    }
 }
