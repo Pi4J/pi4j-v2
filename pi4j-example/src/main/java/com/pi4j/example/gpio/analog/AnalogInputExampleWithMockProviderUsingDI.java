@@ -5,7 +5,7 @@ package com.pi4j.example.gpio.analog;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: EXAMPLE :: Sample Code
- * FILENAME      :  AnalogInputExampleUsingDependencyInjection.java
+ * FILENAME      :  AnalogInputExampleWithMockProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -30,20 +30,27 @@ package com.pi4j.example.gpio.analog;
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.AnalogInput;
+import com.pi4j.provider.mock.io.gpio.analog.MockAnalogInput;
+import com.pi4j.provider.mock.io.gpio.analog.MockAnalogInputProvider;
+import com.pi4j.provider.mock.io.gpio.analog.MockAnalogOutputProvider;
+import com.pi4j.provider.mock.io.gpio.digital.MockDigitalInputProvider;
 import com.pi4j.util.Console;
 
 import java.util.concurrent.Callable;
 
-public class AnalogInputExampleUsingDependencyInjection {
+
+public class AnalogInputExampleWithMockProviderUsingDI {
+
+    public AnalogInputExampleWithMockProviderUsingDI() {
+    }
 
     public static void main(String[] args) throws Exception {
 
         // Pi4J cannot perform dependency injection on static classes
         // we will create a container instance to run our example
-        new AnalogInputExampleUsingDependencyInjection.RuntimeContainer().call();
+        new AnalogInputExampleWithMockProviderUsingDI.RuntimeContainer().call();
     }
 
     public static class RuntimeContainer implements Callable<Void> {
@@ -55,21 +62,15 @@ public class AnalogInputExampleUsingDependencyInjection {
         @Register(ANALOG_INPUT_PIN_ID)
         @Address(ANALOG_INPUT_PIN_ID_ADDRESS)
         @Name("My Analog Input Pin")
-        private AnalogInput input;
+        @Provider(type = MockAnalogInputProvider.class)
+        private MockAnalogInput input;
 
         @Inject
         private Context pi4j;
 
         // register an analog input listener to listen for any value changes on the analog input pin
         @Register(ANALOG_INPUT_PIN_ID)
-        private AnalogChangeListener changeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
-
-        // setup an analog input event listener to listen for any value changes on the analog input
-        // using a custom method with a single event parameter
-        @OnEvent(ANALOG_INPUT_PIN_ID)
-        private void onAnalogInputChange(AnalogChangeEvent event){
-            System.out.println(" (LISTENER #2) :: " + event);
-        }
+        private AnalogChangeListener changeListener = event -> System.out.println("--> " + event);
 
         @Override
         public Void call() throws Exception {
@@ -79,21 +80,50 @@ public class AnalogInputExampleUsingDependencyInjection {
             final var console = new Console();
 
             // print program title/header
-            console.title("<-- The Pi4J Project -->", "Basic Analog Input Example Using Dependency Injection");
+            console.title("<-- The Pi4J Project -->", "Basic Analog Input Example With Mock Provider");
 
             // allow for user to exit program using CTRL-C
             console.promptForExit();
 
             // initialize the Pi4J library then inject this class for dependency injection on annotations
-            Pi4J.initialize().inject(this);
+            var pi4j = Pi4J.initialize().inject(this);
 
-            // lets read the analog output state
-            console.print("THE STARTING ANALOG INPUT [" + input + "] VALUE IS [");
+            // display acquired provider
+            console.print("--> ACQUIRED PROVIDER: ");
+            console.println(input.provider());
+            console.println();
+
+            // display created instance
+            console.print("--> CREATED IO INSTANCE: [");
+            console.print(input);
+            console.println("]");
+            console.println();
+
+            // lets read the analog input value
+            console.println("ATTEMPTING TO READ CURRENT MOCK ANALOG INPUT VALUE");
+            console.print("--> CURRENT ANALOG INPUT VALUE IS [");
             console.println(input.value() + "]");
+            console.println();
 
-            console.println("CHANGE INPUT VALUES VIA I/O HARDWARE AND CHANGE EVENTS WILL BE PRINTED BELOW:");
+            console.println("ATTEMPTING TO UPDATE MOCK ANALOG INPUT VALUES TO GENERATE CHANGE EVENTS (4)");
 
-            // we are done
+            // change mock value of mock analog input so we can see some events firing
+            input.mockValue(145)
+                    .mockValue(99)
+                    .mockValue(6787)
+                    .mockValue(345);
+
+            // lets read the analog input value
+            console.println();
+            console.println("ATTEMPTING TO READ FINAL MOCK ANALOG INPUT VALUE");
+            console.print("--> FINAL ANALOG INPUT VALUE IS [");
+            console.println(input.value() + "]");
+            console.println();
+
+            // shutdown Pi4J
+            console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
+            Pi4J.terminate();
+
             return null;
         }
     }

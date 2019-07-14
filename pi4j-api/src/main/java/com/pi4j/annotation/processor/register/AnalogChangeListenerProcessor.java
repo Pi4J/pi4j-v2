@@ -31,6 +31,7 @@ import com.pi4j.Pi4J;
 import com.pi4j.annotation.Register;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.exception.NotInitializedException;
+import com.pi4j.io.gpio.analog.Analog;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.provider.exception.ProviderException;
 import org.slf4j.Logger;
@@ -53,16 +54,17 @@ public class AnalogChangeListenerProcessor implements RegisterProcessor<AnalogCh
             if (!accessible) field.trySetAccessible();
             AnalogChangeListener listener = (AnalogChangeListener) field.get(instance);
             if(listener != null) {
-                Pi4J.providers().analogInput().getDefault().get(annotation.value()).addListener(listener);
+                // get analog I/O instance from registry
+                Analog analog = Pi4J.registry().get(annotation.value(), Analog.class);
+
+                // add the obtained annotated listener instance to the analog I/O instance
+                analog.addListener(listener);
             }
             return null;
         } catch (IllegalAccessException e) {
             logger.error(e.getMessage(), e);
             throw new AnnotationException(e);
         } catch (NotInitializedException e) {
-            logger.error(e.getMessage(), e);
-            throw new AnnotationException(e);
-        } catch (ProviderException e) {
             logger.error(e.getMessage(), e);
             throw new AnnotationException(e);
         }

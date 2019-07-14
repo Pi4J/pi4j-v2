@@ -74,6 +74,7 @@ module pi4j.api {
                     com.pi4j.annotation.processor.register.AnalogInputProcessor,
                     com.pi4j.annotation.processor.register.AnalogOutputProcessor,
                     com.pi4j.annotation.processor.register.DigitalChangeListenerProcessor,
+                    com.pi4j.annotation.processor.register.DigitalInputProcessor,
                     com.pi4j.annotation.processor.register.DigitalOutputProcessor,
                     com.pi4j.annotation.processor.register.ProviderProcessor,
                     com.pi4j.annotation.processor.event.AnalogChangeEventProcessor,

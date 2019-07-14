@@ -31,6 +31,8 @@ import com.pi4j.Pi4J;
 import com.pi4j.annotation.Register;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.exception.NotInitializedException;
+import com.pi4j.io.gpio.analog.Analog;
+import com.pi4j.io.gpio.digital.Digital;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.provider.exception.ProviderException;
 import org.slf4j.Logger;
@@ -53,16 +55,17 @@ public class DigitalChangeListenerProcessor implements RegisterProcessor<Digital
             if (!accessible) field.trySetAccessible();
             DigitalChangeListener listener = (DigitalChangeListener) field.get(instance);
             if(listener != null) {
-                Pi4J.providers().digitalOutput().getDefault().get(annotation.value()).addListener(listener);
+                // get digital I/O instance from registry
+                Digital digital = Pi4J.registry().get(annotation.value(), Digital.class);
+
+                // add the obtained annotated listener instance to the digital I/O instance
+                digital.addListener(listener);
             }
             return null;
         } catch (IllegalAccessException e) {
             logger.error(e.getMessage(), e);
             throw new AnnotationException(e);
         } catch (NotInitializedException e) {
-            logger.error(e.getMessage(), e);
-            throw new AnnotationException(e);
-        } catch (ProviderException e) {
             logger.error(e.getMessage(), e);
             throw new AnnotationException(e);
         }

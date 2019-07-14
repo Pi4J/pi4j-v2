@@ -1,4 +1,4 @@
-package com.pi4j.example.gpio.analog;
+package com.pi4j.example.gpio.digital;
 
 /*-
  * #%L
@@ -33,41 +33,44 @@ import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogChangeEvent;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.AnalogInput;
+import com.pi4j.io.gpio.digital.DigitalChangeEvent;
+import com.pi4j.io.gpio.digital.DigitalChangeListener;
+import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.util.Console;
 
 import java.util.concurrent.Callable;
 
-public class AnalogInputExampleUsingDependencyInjection {
+public class DigitalInputExampleUsingDependencyInjection {
 
     public static void main(String[] args) throws Exception {
 
         // Pi4J cannot perform dependency injection on static classes
         // we will create a container instance to run our example
-        new AnalogInputExampleUsingDependencyInjection.RuntimeContainer().call();
+        new DigitalInputExampleUsingDependencyInjection.RuntimeContainer().call();
     }
 
     public static class RuntimeContainer implements Callable<Void> {
 
-        public static final int ANALOG_INPUT_PIN_ID_ADDRESS = 4;
-        public static final String ANALOG_INPUT_PIN_ID = "my.analog.input.pin.four";
+        public static final int DIGITAL_INPUT_PIN_ID_ADDRESS = 4;
+        public static final String DIGITAL_INPUT_PIN_ID = "my.digital.input.pin.four";
 
-        // create a digital output instance using the default digital output provider
-        @Register(ANALOG_INPUT_PIN_ID)
-        @Address(ANALOG_INPUT_PIN_ID_ADDRESS)
-        @Name("My Analog Input Pin")
-        private AnalogInput input;
+        // create & register a digital input instance using annotations and dependency injection
+        @Register(DIGITAL_INPUT_PIN_ID)
+        @Address(DIGITAL_INPUT_PIN_ID_ADDRESS)
+        @Name("My Digital Input Pin")
+        private DigitalInput input;
 
         @Inject
         private Context pi4j;
 
-        // register an analog input listener to listen for any value changes on the analog input pin
-        @Register(ANALOG_INPUT_PIN_ID)
-        private AnalogChangeListener changeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
+        // register a digital input listener to listen for any value changes on the digital input pin
+        @Register(DIGITAL_INPUT_PIN_ID)
+        private DigitalChangeListener changeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
 
-        // setup an analog input event listener to listen for any value changes on the analog input
+        // setup a digital input event listener to listen for any value changes on the digital input
         // using a custom method with a single event parameter
-        @OnEvent(ANALOG_INPUT_PIN_ID)
-        private void onAnalogInputChange(AnalogChangeEvent event){
+        @OnEvent(DIGITAL_INPUT_PIN_ID)
+        private void onDigitalInputChange(DigitalChangeEvent event){
             System.out.println(" (LISTENER #2) :: " + event);
         }
 
@@ -79,7 +82,7 @@ public class AnalogInputExampleUsingDependencyInjection {
             final var console = new Console();
 
             // print program title/header
-            console.title("<-- The Pi4J Project -->", "Basic Analog Input Example Using Dependency Injection");
+            console.title("<-- The Pi4J Project -->", "Basic Digital Input Example Using Dependency Injection");
 
             // allow for user to exit program using CTRL-C
             console.promptForExit();
@@ -88,8 +91,8 @@ public class AnalogInputExampleUsingDependencyInjection {
             Pi4J.initialize().inject(this);
 
             // lets read the analog output state
-            console.print("THE STARTING ANALOG INPUT [" + input + "] VALUE IS [");
-            console.println(input.value() + "]");
+            console.print("THE STARTING DIGITAL INPUT [" + input + "] STATE IS [");
+            console.println(input.state() + "]");
 
             console.println("CHANGE INPUT VALUES VIA I/O HARDWARE AND CHANGE EVENTS WILL BE PRINTED BELOW:");
 

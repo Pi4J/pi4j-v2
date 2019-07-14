@@ -35,6 +35,9 @@ import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogInputBuilder;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
+import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalInputBuilder;
+import com.pi4j.io.gpio.digital.DigitalInputProvider;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.exception.RegistryException;
@@ -43,15 +46,15 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
-public class AnalogInputProcessor implements RegisterProcessor<AnalogInput> {
+public class DigitalInputProcessor implements RegisterProcessor<DigitalInput> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public Class<AnalogInput> getTargetType() { return AnalogInput.class; }
+    public Class<DigitalInput> getTargetType() { return DigitalInput.class; }
 
     @Override
-    public AnalogInput process(Object instance, Field field, Register annotation) throws Exception {
+    public DigitalInput process(Object instance, Field field, Register annotation) throws Exception {
 
         Class<? extends Provider> providerClass = null;
 
@@ -76,29 +79,28 @@ public class AnalogInputProcessor implements RegisterProcessor<AnalogInput> {
                 description = field.getAnnotation(Description.class);
             }
 
-            Range range = null;
-            if (field.isAnnotationPresent(Range.class)) {
-                range = field.getAnnotation(Range.class);
+            Pull pull = null;
+            if (field.isAnnotationPresent(Pull.class)) {
+                pull = field.getAnnotation(Pull.class);
             }
 
-            AnalogInputBuilder builder = AnalogInput.builder();
+            DigitalInputBuilder builder = DigitalInput.builder();
             if (annotation.value() != null) builder.id((annotation).value());
             builder.address(address.value());
 
             if (name != null) builder.name(name.value());
             if (description != null) builder.description(description.value());
-            if (range != null) builder.min(range.min());
-            if (range != null) builder.max(range.max());
+            if (pull != null) builder.pull(pull.value());
 
-            AnalogInputProvider provider = null;
+            DigitalInputProvider provider = null;
             if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
-                provider = ProviderAnnotationProcessor.instance(field, AnalogInputProvider.class);
+                provider = ProviderAnnotationProcessor.instance(field, DigitalInputProvider.class);
             } else {
-                provider = Pi4J.providers().getDefault(AnalogInputProvider.class);
+                provider = Pi4J.providers().getDefault(DigitalInputProvider.class);
             }
 
             // create I/O instance
-            AnalogInput input = AnalogInput.create(provider, builder.build());
+            DigitalInput input = DigitalInput.create(provider, builder.build());
 
             // return the I/O instance reference back on the annotated object
             return input;
