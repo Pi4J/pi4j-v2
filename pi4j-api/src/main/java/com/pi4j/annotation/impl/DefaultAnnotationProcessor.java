@@ -35,8 +35,7 @@ import com.pi4j.context.Context;
 import com.pi4j.event.Event;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.gpio.analog.*;
-import com.pi4j.io.gpio.digital.DigitalChangeEvent;
-import com.pi4j.io.gpio.digital.DigitalChangeListener;
+import com.pi4j.io.gpio.digital.*;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.exception.RegistryException;
@@ -386,73 +385,78 @@ public class DefaultAnnotationProcessor implements AnnotationProcessor {
                 }
             }
 
-//            // handle digital output
-//            if(DigitalOutput.class.isAssignableFrom(field.getType())) {
-//
-//                Class<? extends Provider> providerClass = null;
-//
-//                // test for required peer annotations
-//                if (!field.isAnnotationPresent(Address.class)) {
-//                    throw new AnnotationException("Missing required '@Address' annotation for this I/O type.");
-//                }
-//                try {
-//                    boolean accessible = field.canAccess(instance);
-//                    if (!accessible) field.trySetAccessible();
-//
-//
-//                    // all supported additional annotations for configuring the digital output
-//                    Address address = field.getAnnotation(Address.class);
-//                    Name name = null;
-//                    Description description = null;
-//                    ShutdownValue shutdownValue = null;
-//
-//                    if (field.isAnnotationPresent(Name.class)) {
-//                        name = field.getAnnotation(Name.class);
-//                    }
-//
-//                    if (field.isAnnotationPresent(Description.class)) {
-//                        description = field.getAnnotation(Description.class);
-//                    }
-//
-//                    if (field.isAnnotationPresent(ShutdownValue.class)) {
-//                        shutdownValue = field.getAnnotation(ShutdownValue.class);
-//                    }
-//
-//                    AnalogOutputBuilder builder = AnalogOutput.builder();
-//                    if (registerAnnotation.value() != null) builder.id((registerAnnotation).value());
-//                    builder.address(address.value());
-//
-//                    if (name != null) builder.name(name.value());
-//                    if (description != null) builder.description(description.value());
-//                    if (shutdownValue != null) builder.shutdownValue(shutdownValue.value());
-//
-//                    DigitalOutputProvider provider = null;
-//                    if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
-//                        provider = ProviderAnnotationProcessor.instance(field, DigitalOutputProvider.class);
-//                    } else {
-//                        provider = Pi4J.providers().getDefault(DigitalOutputProvider.class);
-//                    }
-//
-//                    // create I/O instance
-//                    DigitalOutput output = DigitalOutput.instance(provider, builder.build());
-//
-//                    // set the I/O instance reference back on the annotated object
-//                    field.set(instance, output);
-//
-//                } catch (NotInitializedException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (ProviderException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (RegistryException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (IllegalAccessException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                }
-//            }
+            // handle digital output
+            if(DigitalOutput.class.isAssignableFrom(field.getType())) {
+
+                Class<? extends Provider> providerClass = null;
+
+                // test for required peer annotations
+                if (!field.isAnnotationPresent(Address.class)) {
+                    throw new AnnotationException("Missing required '@Address' annotation for this I/O type.");
+                }
+                try {
+                    boolean accessible = field.canAccess(instance);
+                    if (!accessible) field.trySetAccessible();
+
+                    // all supported additional annotations for configuring the digital output
+                    Address address = field.getAnnotation(Address.class);
+
+                    Name name = null;
+                    if (field.isAnnotationPresent(Name.class)) {
+                        name = field.getAnnotation(Name.class);
+                    }
+
+                    Description description = null;
+                    if (field.isAnnotationPresent(Description.class)) {
+                        description = field.getAnnotation(Description.class);
+                    }
+
+                    ShutdownState shutdownState = null;
+                    if (field.isAnnotationPresent(ShutdownState.class)) {
+                        shutdownState = field.getAnnotation(ShutdownState.class);
+                    }
+
+                    InitialState initialState = null;
+                    if (field.isAnnotationPresent(InitialState.class)) {
+                        initialState = field.getAnnotation(InitialState.class);
+                    }
+
+                    DigitalOutputBuilder builder = DigitalOutput.builder();
+                    if (registerAnnotation.value() != null) builder.id((registerAnnotation).value());
+                    builder.address(address.value());
+
+                    if (name != null) builder.name(name.value());
+                    if (description != null) builder.description(description.value());
+                    if (shutdownState != null) builder.shutdown(shutdownState.value());
+                    if (initialState != null) builder.initial(initialState.value());
+
+                    DigitalOutputProvider provider = null;
+                    if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
+                        provider = ProviderAnnotationProcessor.instance(field, DigitalOutputProvider.class);
+                    } else {
+                        provider = Pi4J.providers().getDefault(DigitalOutputProvider.class);
+                    }
+
+                    // create I/O instance
+                    DigitalOutput output = DigitalOutput.create(provider, builder.build());
+
+                    // set the I/O instance reference back on the annotated object
+                    field.set(instance, output);
+
+                } catch (NotInitializedException e) {
+                    logger.error(e.getMessage(), e);
+                    throw new AnnotationException(e);
+                } catch (ProviderException e) {
+                    logger.error(e.getMessage(), e);
+                    throw new AnnotationException(e);
+                } catch (RegistryException e) {
+                    logger.error(e.getMessage(), e);
+                    throw new AnnotationException(e);
+                } catch (IllegalAccessException e) {
+                    logger.error(e.getMessage(), e);
+                    throw new AnnotationException(e);
+                }
+            }
 
         }
     }

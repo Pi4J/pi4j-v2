@@ -27,8 +27,6 @@ package com.pi4j.config;
  * #L%
  */
 
-import java.util.Properties;
-
 public interface Config<CONFIG_TYPE> {
     String ID_KEY = "id";
     String NAME_KEY = "name";
@@ -41,6 +39,8 @@ public interface Config<CONFIG_TYPE> {
 
     String description();
     CONFIG_TYPE description(String description);
+
+    void validate();
 
     default String getId(){
         return this.id();

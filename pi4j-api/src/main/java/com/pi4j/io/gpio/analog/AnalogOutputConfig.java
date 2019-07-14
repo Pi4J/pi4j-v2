@@ -27,8 +27,6 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
-import java.util.Properties;
-
 public interface AnalogOutputConfig
         extends AnalogConfig<AnalogOutputConfig> {
 

@@ -29,9 +29,9 @@ package com.pi4j.io.gpio.analog;
 
 
 import com.pi4j.context.Context;
+import com.pi4j.io.exception.IOBoundsException;
 import com.pi4j.io.exception.IOException;
 import com.pi4j.io.exception.IOIllegalValueException;
-import com.pi4j.io.exception.IOBoundsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

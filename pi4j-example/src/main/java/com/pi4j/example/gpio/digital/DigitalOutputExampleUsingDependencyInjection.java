@@ -54,10 +54,11 @@ public class DigitalOutputExampleUsingDependencyInjection {
         public static final String DIGITAL_OUTPUT_PIN_ID = "4"; //"my.digital.pin.four";
 
         // create a digital output instance using the default digital output provider
-        @Inject(DIGITAL_OUTPUT_PIN_ID)
+        @Register(DIGITAL_OUTPUT_PIN_ID)
         @Address(DIGITAL_OUTPUT_PIN)
         @Name("My Digi Out")
         @ShutdownState(DigitalState.HIGH)
+        @InitialState(DigitalState.HIGH)
         private DigitalOutput output;
 
         @Inject

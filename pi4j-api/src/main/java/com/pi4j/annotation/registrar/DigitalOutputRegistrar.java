@@ -82,21 +82,23 @@ public class DigitalOutputRegistrar implements Injector<Inject, DigitalOutput> {
             shutdownState = field.getAnnotation(ShutdownState.class);
         }
 
-        DigitalOutputConfig config = DigitalOutputConfig.instance(address.value());
-        //if(annotation.id() != null) config.id(annotation.id());
-        if(name != null) config.name(name.value());
-        if(description != null) config.description(description.value());
-        if(shutdownState != null) config.shutdownState(shutdownState.value());
+//        DigitalOutputConfig config = DigitalOutputConfig.cre(address.value());
+//        //if(annotation.id() != null) config.id(annotation.id());
+//        if(name != null) config.name(name.value());
+//        if(description != null) config.description(description.value());
+//        if(shutdownState != null) config.shutdownState(shutdownState.value());
+//
+//        DigitalOutputProvider provider = null;
+//        if(field.isAnnotationPresent(com.pi4j.annotation.Provider.class)){
+//            provider = ProviderAnnotationProcessor.instance(field, DigitalOutputProvider.class);
+//        }
+//        else{
+//            provider = Pi4J.providers().getDefault(DigitalOutputProvider.class);
+//        }
+//
+//        return DigitalOutput.instance(provider, config);
 
-        DigitalOutputProvider provider = null;
-        if(field.isAnnotationPresent(com.pi4j.annotation.Provider.class)){
-            provider = ProviderAnnotationProcessor.instance(field, DigitalOutputProvider.class);
-        }
-        else{
-            provider = Pi4J.providers().getDefault(DigitalOutputProvider.class);
-        }
-
-        return DigitalOutput.instance(provider, config);
+        return null;
 
         // unable to inject anything
         //throw new ProviderNotFoundException("ID=" + id + "; CLASS=" + providerClass);

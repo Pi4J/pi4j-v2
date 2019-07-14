@@ -28,6 +28,7 @@ package com.pi4j.config;
  */
 
 import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
+import com.pi4j.util.StringUtil;
 
 import java.util.Properties;
 
@@ -51,11 +52,8 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
     protected ConfigBase(Properties properties){
 
         // load required 'id' property
-        if(properties.containsKey(ID_KEY)){
+        if(properties.containsKey(ID_KEY))
             this.id = properties.getProperty(ID_KEY);
-        } else {
-            throw new ConfigMissingRequiredKeyException(ID_KEY);
-        }
 
         // load optional 'name' property
         if(properties.containsKey(NAME_KEY))
@@ -64,7 +62,6 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
         // load optional 'description' property
         if(properties.containsKey(DESCRIPTION_KEY))
             this.description = properties.getProperty(DESCRIPTION_KEY, null);
-
     }
 
     @Override
@@ -92,5 +89,12 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
     public CONFIG_TYPE description(String description){
         this.description = description;
         return (CONFIG_TYPE) this;
+    }
+
+    @Override
+    public void validate() {
+        if(StringUtil.isNullOrEmpty(this.id)){
+            throw new ConfigMissingRequiredKeyException(ID_KEY);
+        }
     }
 }

@@ -61,13 +61,13 @@ public class DigitalOutputFromProperties {
 
         // create a properties map with ".address" and ".shutdown" properties for the digital output configuration
         Properties properties = new Properties();
-        properties.put("my_digital_output.address", "4");
-        properties.put("my_digital_output.shutdown", "HIGH");
-        properties.put("my_digital_output.name", "DIGI4");
+        properties.put("id", "my_digital_output");
+        properties.put("address", "4");
+        properties.put("shutdown", "HIGH");
+        properties.put("name", "DIGI4");
 
         // create a digital output instance using the default digital output provider
-        var output = DigitalOutput.instance(
-                DigitalOutputConfig.instance(properties, "my_digital_output"));
+        var output = DigitalOutput.create(properties);
 
         // setup a digital output listener to listen for any state changes on the digital output
         output.addListener((DigitalChangeListener) event -> {

@@ -37,10 +37,6 @@ public interface DigitalOutputConfig extends DigitalConfig<DigitalOutputConfig> 
 
     DigitalState shutdownState();
     DigitalOutputConfig shutdownState(DigitalState state);
-
-    DigitalState initialState();
-
-
     default DigitalState getShutdownState(){
         return shutdownState();
     }
@@ -48,22 +44,8 @@ public interface DigitalOutputConfig extends DigitalConfig<DigitalOutputConfig> 
         this.shutdownState(state);
     }
 
+    DigitalState initialState();
     default DigitalState getInitialState(){
         return initialState();
-    }
-
-    static DigitalOutputConfig instance(int address){
-        //return DigitalOutputConfigFactory.instance().address(address);
-        return null;
-    }
-
-    static DigitalOutputConfig instance(int address, DigitalState shutdownState){
-        //return DigitalOutputConfigFactory.instance().address(address).shutdownState(shutdownState);
-        return null;
-    }
-
-    static DigitalOutputConfig instance(Properties properties, String prefix) throws ConfigException{
-        //return DigitalOutputConfigFactory.instance(properties, prefix);
-        return null;
     }
 }

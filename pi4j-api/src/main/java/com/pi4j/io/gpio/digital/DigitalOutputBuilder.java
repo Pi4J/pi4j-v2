@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.digital.impl;
+package com.pi4j.io.gpio.digital;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalOutputConfigFactory.java
+ * FILENAME      :  AnalogOutputBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,31 +27,10 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.exception.ConfigException;
-import com.pi4j.io.gpio.digital.DigitalOutputConfig;
+import com.pi4j.io.gpio.analog.AnalogConfigBuilder;
+import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 
-import java.util.Properties;
-
-/**
- * DigitalOutputConfigFactory factory - it returns instances of {@link DigitalOutputConfig} interface.
- *
- * @author Robert Savage (<a
- *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- */
-public class DigitalOutputConfigFactory {
-
-    // private constructor
-    private DigitalOutputConfigFactory() {
-        // forbid object construction
-    }
-
-    public static DigitalOutputConfig instance() {
-        return new DigitalOutputConfigImpl();
-    }
-
-    public static DigitalOutputConfig instance(Properties properties, String prefix) throws ConfigException {
-        var config = instance();
-        config.load(properties, prefix);
-        return config;
-    }
+public interface DigitalOutputBuilder extends DigitalConfigBuilder<DigitalOutputBuilder, DigitalOutputConfig> {
+    DigitalOutputBuilder shutdown(DigitalState state);
+    DigitalOutputBuilder initial(DigitalState state);
 }

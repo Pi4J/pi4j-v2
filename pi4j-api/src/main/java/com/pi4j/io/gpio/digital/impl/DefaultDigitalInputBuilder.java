@@ -1,11 +1,11 @@
-package com.pi4j.config.impl;
+package com.pi4j.io.gpio.digital.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AddressConfigBase.java
+ * FILENAME      :  DefaultAnalogInputBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,43 +27,37 @@ package com.pi4j.config.impl;
  * #L%
  */
 
-import com.pi4j.config.AddressConfig;
-import com.pi4j.config.Config;
-import com.pi4j.config.ConfigBase;
-import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
+import com.pi4j.config.impl.AddressConfigBuilderBase;
+import com.pi4j.io.gpio.digital.DigitalInputBuilder;
+import com.pi4j.io.gpio.digital.DigitalInputConfig;
+import com.pi4j.io.gpio.digital.PullResistance;
 
 import java.util.Properties;
 
-public abstract class AddressConfigBase<CONFIG_TYPE extends Config>
-        extends ConfigBase<CONFIG_TYPE>
-        implements AddressConfig<CONFIG_TYPE> {
-
-    // private configuration properties
-    protected Integer address = null;
+public class DefaultDigitalInputBuilder
+        extends AddressConfigBuilderBase<DigitalInputBuilder, DigitalInputConfig>
+        implements DigitalInputBuilder {
 
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected AddressConfigBase(){
+    protected DefaultDigitalInputBuilder(){
         super();
     }
 
-    /**
-     * PRIVATE CONSTRUCTOR
-     * @param properties
-     */
-    protected AddressConfigBase(Properties properties){
+    protected DefaultDigitalInputBuilder(Properties properties){
         super(properties);
-
-        // load address property
-        if(properties.containsKey(ADDRESS_KEY)){
-            this.address = Integer.parseInt(properties.get(ADDRESS_KEY).toString());
-        } else {
-            throw new ConfigMissingRequiredKeyException(ADDRESS_KEY);
-        }
     }
 
-    public Integer address() {
-        return this.address;
-    };
+    @Override
+    public DigitalInputConfig build() {
+        DigitalInputConfig config = new DefaultDigitalInputConfig(properties);
+        return config;
+    }
+
+    @Override
+    public DigitalInputBuilder pull(PullResistance value) {
+        this.properties.setProperty(DigitalInputConfig.PULL_RESISTANCE_KEY, value.toString());
+        return this;
+    }
 }

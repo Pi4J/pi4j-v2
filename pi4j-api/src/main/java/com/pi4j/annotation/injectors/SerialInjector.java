@@ -31,7 +31,6 @@ import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
 import com.pi4j.annotation.Injector;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.util.StringUtil;
 

@@ -32,7 +32,6 @@ import com.pi4j.annotation.Inject;
 import com.pi4j.annotation.Injector;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.util.StringUtil;
 
 import java.lang.annotation.Annotation;

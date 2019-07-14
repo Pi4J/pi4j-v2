@@ -58,10 +58,10 @@ public class DigitalInputSyncToOutputExample {
         var pi4j = Pi4J.initialize();
 
         // create a digital input instance using the default digital input provider
-        var input = DigitalInput.instance(DIGITAL_INPUT_PIN);
+        var input = DigitalInput.create(DIGITAL_INPUT_PIN);
 
         // create a digital output instance using the default digital output provider
-        var output = DigitalOutput.instance(DIGITAL_OUTPUT_PIN);
+        var output = DigitalOutput.create(DIGITAL_OUTPUT_PIN);
 
         // setup a digital output listener to listen for any state changes on the digital output
         // we will just print out the detected state changes

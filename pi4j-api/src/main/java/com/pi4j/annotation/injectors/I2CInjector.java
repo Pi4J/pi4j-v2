@@ -32,7 +32,6 @@ import com.pi4j.annotation.Inject;
 import com.pi4j.annotation.Injector;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.io.i2c.I2C;
-import com.pi4j.io.spi.Spi;
 import com.pi4j.util.StringUtil;
 
 import java.lang.annotation.Annotation;

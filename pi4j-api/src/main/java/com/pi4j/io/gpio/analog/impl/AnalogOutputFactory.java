@@ -84,7 +84,7 @@ public class AnalogOutputFactory {
         return (T)Pi4J.context().registry().create(providerId, config, clazz);
     }
 
-    public static <T extends AnalogOutput> T create(AnalogInputProvider provider, AnalogOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+    public static <T extends AnalogOutput> T create(AnalogOutputProvider provider, AnalogOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return (T)Pi4J.context().registry().create(provider, config, clazz);
     }
 }

@@ -65,23 +65,22 @@ public class DigitalInputExampleWithMockProvider {
         // display acquired provider
         console.println("--> ACQUIRED PROVIDER: ");
         console.print("--> ");
-        console.print(provider.id());
+        console.print(provider);
         console.println();
 
         // create a digital input instance using the default digital input provider
         console.println("ATTEMPTING TO CREATE A MOCK DIGITAL INPUT INSTANCE");
-        var input = DigitalInput.instance(provider, DIGITAL_INPUT_PIN, MockDigitalInput.class);
+        var input = DigitalInput.create(provider, DIGITAL_INPUT_PIN, MockDigitalInput.class);
 
         // display created instance
-        console.println("--> CREATED IO INSTANCE: ");
-        console.print("--> ");
-        console.print(input.id());
+        console.print("--> CREATED IO INSTANCE: ");
+        console.print(input);
         console.println();
 
         // setup a digital output listener to listen for any state changes on the digital input
         input.addListener((DigitalChangeListener) event -> {
             console.print("DIGITAL INPUT [");
-            console.print(event.source().address());
+            console.print(event.source());
             console.print("] STATE CHANGE: ");
             console.println(event.state());
         });

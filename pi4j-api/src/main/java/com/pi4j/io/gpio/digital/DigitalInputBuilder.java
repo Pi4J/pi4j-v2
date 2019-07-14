@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.digital.impl;
+package com.pi4j.io.gpio.digital;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalInputConfigFactory.java
+ * FILENAME      :  AnalogInputBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,32 +27,6 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.exception.ConfigException;
-import com.pi4j.io.gpio.digital.DigitalInputConfig;
-
-import java.util.Properties;
-
-/**
- * DigitalInputConfig factory - it returns instances of {@link DigitalInputConfig} interface.
- *
- * @author Robert Savage (<a
- *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- */
-public class DigitalInputConfigFactory {
-
-    // private constructor
-    private DigitalInputConfigFactory() {
-        // forbid object construction
-    }
-
-    public static DigitalInputConfig instance() {
-        return new DigitalInputConfigImpl();
-    }
-
-    public static DigitalInputConfig instance(Properties properties, String prefix) throws ConfigException {
-        var config = instance();
-        config.load(properties, prefix);
-        return config;
-    }
-
+public interface DigitalInputBuilder extends DigitalConfigBuilder<DigitalInputBuilder, DigitalInputConfig> {
+    DigitalInputBuilder pull(PullResistance value);
 }

@@ -31,4 +31,5 @@ import com.pi4j.config.Config;
 import com.pi4j.io.gpio.GpioConfig;
 
 public interface DigitalConfig<CONFIG_TYPE extends Config> extends GpioConfig<CONFIG_TYPE> {
+    // MARKER INTERFACE
 }

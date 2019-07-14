@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.digital.impl;
+package com.pi4j.annotation;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalInputConfigImpl.java
+ * FILENAME      :  Name.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,24 +27,15 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBase;
-import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.PullResistance;
 
-import java.util.Properties;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class DigitalInputConfigImpl extends AddressConfigBase<DigitalInputConfig> implements DigitalInputConfig {
-    PullResistance pull = PullResistance.OFF;
-
-    public DigitalInputConfigImpl(){
-    }
-
-    public PullResistance pull(){
-        return this.pull;
-    }
-
-    public DigitalInputConfig pull(PullResistance pull){
-        this.pull = pull;
-        return this;
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+public @interface Pull {
+    PullResistance value() default PullResistance.OFF;
 }

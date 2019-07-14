@@ -44,7 +44,6 @@ public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, 
     AnalogOutput stepDown();
     AnalogOutput step(Integer value) throws IOIllegalValueException, IOBoundsException;
 
-
     default AnalogOutput setValue(Integer value) throws IOIllegalValueException, IOBoundsException { return value(value); };
 
     // ---------------------------------------------------------------------------

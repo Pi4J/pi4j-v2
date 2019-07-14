@@ -59,14 +59,14 @@ public class DigitalInputExampleFromProperties {
 
         // create a properties map with ".address" and ".shutdown" properties for the digital output configuration
         Properties properties = new Properties();
-        properties.put("my_digital_input.address", DIGITAL_INPUT_PIN);
-        properties.put("my_digital_input.pull", "UP");
-        properties.put("my_digital_input.name", "MY-DIGITAL-INPUT");
+        properties.put("id", "my_digital_input");
+        properties.put("address", DIGITAL_INPUT_PIN);
+        properties.put("pull", "UP");
+        properties.put("name", "MY-DIGITAL-INPUT");
 
         // create a digital input instance using the default digital input provider
         // we will use the PULL_DOWN argument to set the pin pull-down resistance on this GPIO pin
-        var input = DigitalInput.instance(
-                DigitalInputConfig.instance(properties, "my_digital_input"));
+        var input = DigitalInput.create(properties);
 
         // setup a digital output listener to listen for any state changes on the digital input
         input.addListener((DigitalChangeListener) event -> {

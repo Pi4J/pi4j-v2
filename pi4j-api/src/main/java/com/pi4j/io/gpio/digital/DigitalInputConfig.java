@@ -27,34 +27,13 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-import com.pi4j.config.exception.ConfigException;
-import com.pi4j.io.gpio.digital.impl.DigitalInputConfigFactory;
-
-import java.util.Properties;
 
 public interface DigitalInputConfig extends DigitalConfig<DigitalInputConfig> {
+
+    String PULL_RESISTANCE_KEY = "pull";
+
     PullResistance pull();
-    DigitalInputConfig pull(PullResistance pull);
-
-    default void setPull(PullResistance pull){
-        this.pull(pull);
-    }
-
     default PullResistance getPull(){
         return pull();
-    }
-
-    static DigitalInputConfig instance(int address){
-        //return DigitalInputConfigFactory.instance().address(address);
-        return null;
-    }
-
-    static DigitalInputConfig instance(int address, PullResistance pull){
-        //return DigitalInputConfigFactory.instance().address(address).pull(pull);
-        return null;
-    }
-
-    static DigitalInputConfig instance(Properties properties, String prefix) throws ConfigException {
-        return DigitalInputConfigFactory.instance(properties, prefix);
     }
 }
