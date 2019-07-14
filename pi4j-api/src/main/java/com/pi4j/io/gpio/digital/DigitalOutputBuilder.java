@@ -27,9 +27,6 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-import com.pi4j.io.gpio.analog.AnalogConfigBuilder;
-import com.pi4j.io.gpio.analog.AnalogOutputConfig;
-
 public interface DigitalOutputBuilder extends DigitalConfigBuilder<DigitalOutputBuilder, DigitalOutputConfig> {
     DigitalOutputBuilder shutdown(DigitalState state);
     DigitalOutputBuilder initial(DigitalState state);

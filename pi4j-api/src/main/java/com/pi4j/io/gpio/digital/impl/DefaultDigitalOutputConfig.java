@@ -28,8 +28,6 @@ package com.pi4j.io.gpio.digital.impl;
  */
 
 import com.pi4j.config.impl.AddressConfigBase;
-import com.pi4j.io.gpio.analog.AnalogRange;
-import com.pi4j.io.gpio.analog.impl.DefaultAnalogRange;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.util.StringUtil;

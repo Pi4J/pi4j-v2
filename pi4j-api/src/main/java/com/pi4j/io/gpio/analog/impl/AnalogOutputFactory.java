@@ -29,7 +29,10 @@ package com.pi4j.io.gpio.analog.impl;
 
 import com.pi4j.Pi4J;
 import com.pi4j.exception.NotInitializedException;
-import com.pi4j.io.gpio.analog.*;
+import com.pi4j.io.gpio.analog.AnalogOutput;
+import com.pi4j.io.gpio.analog.AnalogOutputBuilder;
+import com.pi4j.io.gpio.analog.AnalogOutputConfig;
+import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.exception.RegistryException;
 

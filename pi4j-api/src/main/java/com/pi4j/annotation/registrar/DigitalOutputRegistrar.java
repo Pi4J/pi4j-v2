@@ -27,13 +27,9 @@ package com.pi4j.annotation.registrar;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.impl.ProviderAnnotationProcessor;
 import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalOutputConfig;
-import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.provider.Provider;
 
 import java.lang.annotation.Annotation;

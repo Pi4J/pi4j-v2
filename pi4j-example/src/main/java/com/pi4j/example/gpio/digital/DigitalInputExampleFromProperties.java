@@ -30,7 +30,6 @@ package com.pi4j.example.gpio.digital;
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.util.Console;
 
 import java.util.Properties;
