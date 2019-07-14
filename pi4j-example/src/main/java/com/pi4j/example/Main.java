@@ -61,24 +61,15 @@ public class Main {
         var output2 = AnalogOutput.create(100);
 
         input.addListener((AnalogChangeListener) event -> {
-            System.out.print("ANALOG INPUT [");
-            System.out.print(event.source().address());
-            System.out.print("] VALUE CHANGE: ");
-            System.out.println(event.value());
+            System.out.print(event);
         });
 
 
         output1.addListener((AnalogChangeListener) event -> {
-            System.out.print("ANALOG OUTPUT [");
-            System.out.print(event.source().address());
-            System.out.print("] VALUE CHANGE: ");
-            System.out.println(event.value());
+            System.out.println(event);
         });
         output2.addListener((AnalogChangeListener) event -> {
-            System.out.print("ANALOG OUTPUT [");
-            System.out.print(event.source().address());
-            System.out.print("] VALUE CHANGE: ");
-            System.out.println(event.value());
+            System.out.println(event);
         });
 
         input.bind(new AnalogBindingSync(output1, output2));
@@ -87,9 +78,9 @@ public class Main {
         //((TestAnalogInput)input).test(21).test(22).test(23);
 
 
-        //output.value(12);
-        //output.setValue(78);
-        //output.value(0x01);
+        output1.value(12);
+        output1.setValue(78);
+        output1.value(0x01);
 
 
         //AnalogOutput aout1 = AnalogOutput.in

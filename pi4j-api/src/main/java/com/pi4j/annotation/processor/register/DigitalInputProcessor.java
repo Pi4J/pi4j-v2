@@ -5,7 +5,7 @@ package com.pi4j.annotation.processor.register;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogInputProcessor.java
+ * FILENAME      :  DigitalInputProcessor.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -32,9 +32,6 @@ import com.pi4j.annotation.*;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.ProviderAnnotationProcessor;
 import com.pi4j.exception.NotInitializedException;
-import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogInputBuilder;
-import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputBuilder;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;

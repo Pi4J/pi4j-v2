@@ -1,11 +1,11 @@
-package com.pi4j.provider;
+package com.pi4j.test.provider;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Provider.java
+ * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
+ * FILENAME      :  TestDigitalInput.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,23 +27,33 @@ package com.pi4j.provider;
  * #L%
  */
 
-import com.pi4j.binding.Binding;
-import com.pi4j.common.Descriptor;
-import com.pi4j.config.Config;
-import com.pi4j.io.IO;
+import com.pi4j.io.gpio.digital.*;
 
-public interface Provider<IO_TYPE extends IO, CONFIG_TYPE extends Config> extends Binding {
+public class TestDigitalInput extends DigitalInputBase implements DigitalInput {
 
-    IO_TYPE instance(CONFIG_TYPE config) throws Exception;
-
-    default ProviderType type() { return ProviderType.getProviderType(this.getClass()); };
-    default ProviderType getType() { return type(); }
-    default boolean isType(ProviderType type) { return this.type().isType(type); }
+    private DigitalState state = DigitalState.UNKNOWN;
 
     @Override
-    default Descriptor describe() {
-        Descriptor descriptor = Binding.super.describe();
-        descriptor.category(this.type().name());
-        return descriptor;
+    public DigitalState state() {
+        return this.state;
+    }
+
+    public TestDigitalInput(DigitalInputConfig config){
+        super(config);
+    }
+
+    public TestDigitalInput test(DigitalState state){
+
+        // check to see of there is a state change; if there is then we need
+        // to update the internal value variable and dispatch the change event
+        if(this.state().equals(state)) {
+
+            // update current/new value
+            this.state = state;
+
+            // dispatch value change event
+            this.dispatch(new DigitalChangeEvent(this, this.state()));
+        }
+        return this;
     }
 }

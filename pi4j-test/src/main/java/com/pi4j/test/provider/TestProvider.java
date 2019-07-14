@@ -34,8 +34,6 @@ import com.pi4j.io.IO;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderBase;
 
-import java.util.Collection;
-
 public abstract class TestProvider<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CONFIG_TYPE extends Config>
         extends ProviderBase<PROVIDER_TYPE, IO_TYPE, CONFIG_TYPE>
         implements Provider<IO_TYPE, CONFIG_TYPE> {
@@ -84,10 +82,4 @@ public abstract class TestProvider<PROVIDER_TYPE extends Provider, IO_TYPE exten
         if(terminateFail) throw new LifecycleException("");
         return (PROVIDER_TYPE) this;
     }
-
-    @Override
-    public Collection<IO_TYPE> instances() {
-        return null;
-    }
-
 }

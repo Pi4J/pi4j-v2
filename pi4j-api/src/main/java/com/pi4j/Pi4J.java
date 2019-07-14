@@ -39,6 +39,7 @@ import com.pi4j.provider.Provider;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.Registry;
+import com.pi4j.registry.exception.RegistryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,11 +109,14 @@ public class Pi4J {
         return context;
     }
 
-    public static Context terminate() throws NotInitializedException,ProviderException, BindingException {
+    public static Context terminate() throws NotInitializedException, ProviderException, BindingException, RegistryException {
         logger.trace("invoked 'terminate();'");
 
         // throw exception if Pi4J has not been initialized
         if(context == null) throw new NotInitializedException();
+
+        // terminate all I/O instances
+        registry().terminate(context);
 
         // terminate all providers
         providers().terminate(context);

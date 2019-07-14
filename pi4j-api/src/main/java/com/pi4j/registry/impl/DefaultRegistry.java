@@ -28,6 +28,7 @@ package com.pi4j.registry.impl;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.config.Config;
 import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
@@ -48,6 +49,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 
 public class DefaultRegistry implements Registry {
 
@@ -161,14 +163,34 @@ public class DefaultRegistry implements Registry {
     }
 
     @Override
-    public <T extends IO> T destroy(String id) throws RegistryException {
+    public <T extends IO> T destroy(String id) throws RegistryException, LifecycleException {
         String _id = validateId(id);
 
         // first test to make sure this id is included in the registry
         if(!instances.containsKey(_id))
             throw new RegistryNotFoundException(_id);
 
-        return null;
+        // terminate instance
+        var terminatedInstance = instances.get(_id).terminate(this.context);
+
+        // remove the terminated instance from the registry
+        this.instances.remove(_id);
+
+        // return the terminated I/O instance
+        return (T)terminatedInstance;
+    }
+
+    @Override
+    public void terminate(Context context) throws ProviderException, RegistryException {
+        all().values().forEach(instance->{
+            try {
+                destroy(instance.id());
+            } catch (RegistryException e) {
+                logger.error(e.getMessage(), e);
+            } catch (LifecycleException e) {
+                logger.error(e.getMessage(), e);
+            }
+        });
     }
 
     @Override

@@ -1,14 +1,11 @@
-package com.pi4j.io.gpio;
+package com.pi4j.test.provider;
 
-import com.pi4j.io.IO;
-import com.pi4j.provider.ProviderBase;
-
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  GpioProviderBase.java
+ * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
+ * FILENAME      :  TestDigitalInputProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,22 +26,26 @@ import com.pi4j.provider.ProviderBase;
  * limitations under the License.
  * #L%
  */
-public abstract class GpioProviderBase<
-            PROVIDER_TYPE extends GpioProvider,
-            IO_TYPE extends IO,
-            CONFIG_TYPE extends GpioConfig>
-        extends ProviderBase<PROVIDER_TYPE, IO_TYPE, CONFIG_TYPE>
-        implements GpioProvider<IO_TYPE, CONFIG_TYPE> {
 
-    public GpioProviderBase(){
-        super();
-    }
+import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalInputConfig;
+import com.pi4j.io.gpio.digital.DigitalInputProvider;
+import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
 
-    public GpioProviderBase(String id){
+public class TestDigitalInputProvider extends DigitalInputProviderBase implements DigitalInputProvider {
+
+    public TestDigitalInputProvider(){ super(); }
+
+    public TestDigitalInputProvider(String id){
         super(id);
     }
 
-    public GpioProviderBase(String id, String name){
+    public TestDigitalInputProvider(String id, String name){
         super(id, name);
+    }
+
+    @Override
+    public DigitalInput create(DigitalInputConfig config) throws Exception {
+        return new TestDigitalInput(config);
     }
 }

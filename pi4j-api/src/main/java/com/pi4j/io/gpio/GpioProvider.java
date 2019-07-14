@@ -31,6 +31,5 @@ import com.pi4j.io.IO;
 import com.pi4j.provider.Provider;
 
 public interface GpioProvider<IO_TYPE extends IO, CONFIG_TYPE extends GpioConfig> extends Provider<IO_TYPE, CONFIG_TYPE> {
-    IO_TYPE get(int address);
-    boolean has(int address);
+    // MARKER INTERFACE
 }

@@ -31,10 +31,8 @@ import com.pi4j.Pi4J;
 import com.pi4j.annotation.Register;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.exception.NotInitializedException;
-import com.pi4j.io.gpio.analog.Analog;
 import com.pi4j.io.gpio.digital.Digital;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.provider.exception.ProviderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

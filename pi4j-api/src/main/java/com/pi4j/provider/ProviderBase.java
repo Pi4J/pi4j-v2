@@ -27,22 +27,24 @@ package com.pi4j.provider;
  * #L%
  */
 
+import com.pi4j.Pi4J;
 import com.pi4j.binding.BindingBase;
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.config.Config;
 import com.pi4j.context.Context;
+import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
+import com.pi4j.registry.exception.RegistryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CONFIG_TYPE extends Config>
         extends BindingBase
         implements Provider<IO_TYPE, CONFIG_TYPE> {
 
-    protected Map<String, IO_TYPE> instances = Collections.synchronizedMap(new HashMap<>());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public ProviderBase(){
         super();
@@ -57,11 +59,6 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
     }
 
     @Override
-    public Collection<IO_TYPE> instances() {
-        return this.instances.values();
-    }
-
-    @Override
     public PROVIDER_TYPE initialize(Context context) throws LifecycleException {
         return (PROVIDER_TYPE)this;
     }
@@ -69,38 +66,35 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
     @Override
     public PROVIDER_TYPE terminate(Context context) throws LifecycleException {
 
+        // TODO :: ABSTRACT VIA PROXY IMPL
+
         // perform a shutdown on each digital I/O instance that is tracked in the internal cache
-        instances.forEach((address, instance)->{
-            try {
-                instance.terminate(context);
-            } catch (LifecycleException e) {
-                e.printStackTrace();
-            }
-        });
-
-        // remove all managed instance from internal cache
-        instances.clear();
-
+        Map<String, IO> instances = null;
+        try {
+            instances = Pi4J.registry().allByProvider(this.id(), IO.class);
+            instances.forEach((address, instance)->{
+                try {
+                    instance.terminate(context);
+                } catch (LifecycleException e) {
+                    logger.error(e.getMessage(), e);
+                }
+            });
+        } catch (RegistryException e) {
+            logger.error(e.getMessage(), e);
+            throw new LifecycleException(e);
+        } catch (NotInitializedException e) {
+            logger.error(e.getMessage(), e);
+            throw new LifecycleException(e);
+        }
         return (PROVIDER_TYPE)this;
     }
 
     @Override
     public IO_TYPE instance(CONFIG_TYPE config) throws Exception {
         var newInstance = create(config);
-        newInstance.provider(this);
-        instances.put(newInstance.id(), newInstance);
+        newInstance.provider(this); // TODO :: PROXY IMPL, REMOVE PROVIDER SETTER
         return newInstance;
     }
 
     public abstract IO_TYPE create(CONFIG_TYPE config) throws Exception;
-
-    @Override
-    public IO_TYPE get(String id){
-        return instances.get(id);
-    }
-
-    @Override
-    public boolean has(String id){
-        return instances.containsKey(id);
-    }
 }
