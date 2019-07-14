@@ -48,6 +48,10 @@ public class AnnotationException extends Pi4JException {
         super(message);
     }
 
+    public AnnotationException(String message, Throwable ex){
+        super(message, ex);
+    }
+
     /**
      * Default Constructor
      */

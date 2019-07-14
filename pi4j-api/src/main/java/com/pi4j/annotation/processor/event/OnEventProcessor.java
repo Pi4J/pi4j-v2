@@ -30,9 +30,9 @@ package com.pi4j.annotation.processor.event;
 import com.pi4j.annotation.OnEvent;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.processor.MethodProcessor;
+import com.pi4j.context.Context;
 import com.pi4j.event.Event;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
@@ -41,33 +41,22 @@ public interface OnEventProcessor extends MethodProcessor<OnEvent> {
     Class<? extends Event> getEventType();
 
     @Override
-    default boolean isAnnotationType(Annotation annotation) {
-        return annotation instanceof OnEvent;
-    }
-
-    @Override
-    default Class<OnEvent> getAnnotationType() {
+    default Class<OnEvent> annotationType() {
         return OnEvent.class;
     }
 
     @Override
-    default boolean eligible(Object instance, Method method, OnEvent annotation) throws AnnotationException {
+    default boolean isEligible(Context context, Object instance, OnEvent annotation, Method method) throws Exception {
 
         // validate parameter count
         if(method.getParameterCount() != 1) {
             throw new AnnotationException("The '@" +annotation.annotationType().getSimpleName() + "' annotated method must include (1) parameter extended from `Event`");
         }
 
-        // validate parameter type
-        if(!Event.class.isAssignableFrom(method.getParameters()[0].getType())) {
-            throw new AnnotationException("The '@OnEvent' annotated method must include a parameter extending from `Event`");
-        }
-
         // get method parameters
         Parameter[] parameters = method.getParameters();
 
-        // handle specific implementations
-
+        // validate parameter type supports the event interface
         return parameters[0].getType().isAssignableFrom(getEventType());
     }
 }

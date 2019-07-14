@@ -30,15 +30,11 @@ package com.pi4j.annotation.impl;
 import com.pi4j.annotation.AnnotationEngine;
 import com.pi4j.annotation.Processor;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.processor.FieldProcessor;
-import com.pi4j.annotation.processor.MethodProcessor;
 import com.pi4j.context.Context;
-import com.pi4j.provider.exception.ProviderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
-import java.lang.annotation.AnnotationFormatError;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -46,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 
 /**
@@ -92,10 +87,10 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
             ServiceLoader<Processor> detectedProcessors = ServiceLoader.load(Processor.class);
             for (Processor processor : detectedProcessors) {
                 if (processor != null) {
-                    if(!processors.containsKey(processor.getAnnotationType())){
-                        processors.put(processor.getAnnotationType(), new ArrayList<>());
+                    if(!processors.containsKey(processor.annotationType())){
+                        processors.put(processor.annotationType(), new ArrayList<>());
                     }
-                    processors.get(processor.getAnnotationType()).add(processor);
+                    processors.get(processor.annotationType()).add(processor);
                 }
             }
         }
@@ -130,7 +125,11 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
                 Annotation[] annotations = field.getDeclaredAnnotations();
                 // iterate over the annotations looking for Pi4J compatible field processors
                 for (Annotation annotation : annotations) {
-                    processFieldAnnotations(instance, field, annotation);
+                    // now we only care about annotations that have been registered
+                    // via the annotation processors services -- IGNORE ANY OTHERS
+                    if(processors.containsKey(annotation.annotationType())){
+                        processFieldAnnotations(instance, field, annotation);
+                    }
                 }
             }
 
@@ -142,7 +141,11 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
                 Annotation[] annotations = method.getDeclaredAnnotations();
                 // iterate over the annotations looking for Pi4J compatible method processors
                 for (Annotation annotation : annotations) {
-                    processMethodAnnotations(instance, method, annotation);
+                    // now we only care about annotations that have been registered
+                    // via the annotation processors services -- IGNORE ANY OTHERS
+                    if(processors.containsKey(annotation.annotationType())) {
+                        processMethodAnnotations(instance, method, annotation);
+                    }
                 }
             }
 
@@ -150,91 +153,135 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
     }
 
     private void processFieldAnnotations(Object instance, Field field, Annotation annotation) throws AnnotationException {
-        if(processors.containsKey(annotation.annotationType())){
 
-            // get eligible annotation processors for this annotation type
-            List<Processor> eligibleProcessors = processors.get(annotation.annotationType());
+        // get eligible annotation processors for this annotation type
+        var eligibleProcessors = processors.get(annotation.annotationType());
 
-            boolean processed_successfully = false;
-            for(Processor p : eligibleProcessors) {
-                if(p instanceof FieldProcessor) {
-                    var processor = (FieldProcessor)p;
+        boolean processed_successfully = false;
+        for(Processor processor : eligibleProcessors) {
 
-                    // ensure that the annotation processor supports injecting the user/field-defined IO interface
-                    if (processor.getTargetType().isAssignableFrom(field.getType())) {
-                        // create the IO instance and inject the instance into the reflected field
-                        boolean accessible = field.canAccess(instance);
-                        if (!accessible) field.trySetAccessible();
-                        try {
-                            Object io = processor.process(instance, field, annotation);
+            try {
+                // attempt to use this annotation processor on this annotated field instance
+                boolean accessible = field.canAccess(instance);
+                if (!accessible) field.trySetAccessible();
 
-                            // if a valid object was returned, then update the annotated field instance
-                            if (io != null) field.set(instance, io);
+                // ensure that the annotation processor supports this annotated field instance
+                if (processor.isEligible(context, instance, annotation, field)) {
 
-                            if (!accessible) field.setAccessible(false);
-                            processed_successfully = true;
-                        } catch (ProviderException e) {
-                            logger.error(e.getMessage(), e);
-                            throw new AnnotationException(e);
-                        } catch (Exception e) {
-                            logger.error(e.getMessage(), e);
-                            throw new AnnotationException(e);
-                        }
-                    }
+                    // perform annotation processing on this annotated field instance using the annotation processor
+                    Object io = processor.process(context, instance, annotation, field);
 
-                    // if there is only one eligible processor for this annotation type, then throw an AnnotationFormatError
-                    else if (eligibleProcessors.size() == 1) {
-                        throw new AnnotationFormatError("Annotation '@" + annotation.annotationType().getSimpleName() + "' can only be applied to fields of type: " + processor.getTargetType());
-                    }
+                    // if a valid object was returned, then update the annotated field instance
+                    if (io != null) field.set(instance, io);
+
+                    // restore accessibility settings
+                    if (!accessible) field.setAccessible(false);
+
+                    // set success flag
+                    processed_successfully = true;
                 }
             }
-
-            // if processing injection was not successful, then throw AnnotationFormatError now
-            if(!processed_successfully){
-                throw new AnnotationFormatError("Annotation '@" + annotation.annotationType().getSimpleName() + "' could not be applied to field type: " + field.getType());
+            catch (Exception e){
+                StringBuilder message = new StringBuilder(e.getMessage());
+                message.append(" <");
+                message.append("Annotation '@");
+                message.append(annotation.annotationType().getSimpleName());
+                message.append("' could not be applied to: ");
+                message.append(field.getDeclaringClass().getName());
+                message.append("::(");
+                message.append(field.getType().getName());
+                message.append(")");
+                message.append(field.getName());
+                message.append("@");
+                message.append(annotation.annotationType().getName());
+                message.append(">");
+                logger.error(message.toString(), e);
+                throw new AnnotationException(message.toString(), e);
             }
+
+            // once processed successfully ; exit the loop
+            if(processed_successfully) break;
+        }
+
+        // if processing injection was not successful, then throw AnnotationFormatError now
+        if(!processed_successfully){
+            StringBuilder message = new StringBuilder();
+            message.append("No valid annotation processor could be found for '@");
+            message.append(annotation.annotationType().getSimpleName());
+            message.append("' <");
+            message.append(field.getDeclaringClass().getName());
+            message.append("::(");
+            message.append(field.getType().getName());
+            message.append(")");
+            message.append(field.getName());
+            message.append("@");
+            message.append(annotation.annotationType().getName());
+            message.append(">");
+            logger.error(message.toString());
+            throw new AnnotationException(message.toString());
         }
     }
 
     private void processMethodAnnotations(Object instance, Method method, Annotation annotation) throws AnnotationException {
-        if(processors.containsKey(annotation.annotationType())){
 
-            // get eligible annotation processors for this annotation type
-            List<Processor> eligibleProcessors = processors.get(annotation.annotationType());
+        // get eligible annotation processors for this annotation type
+        List<Processor> eligibleProcessors = processors.get(annotation.annotationType());
 
-            // filter the annotated supporting processors to only method processors
-            List<Processor> methodProcessors = eligibleProcessors.stream()
-                    .filter((processor -> processor instanceof MethodProcessor))
-                    .collect(Collectors.toList());
+        boolean processed_successfully = false;
+        for(Processor processor : eligibleProcessors) {
 
-            boolean processed_successfully = false;
-            for(Processor p : methodProcessors) {
-                var processor = (MethodProcessor)p;
+            try {
+                // attempt to use this annotation processor on this annotated method instance
+                boolean accessible = method.canAccess(instance);
+                if (!accessible) method.trySetAccessible();
 
-                if(processor.eligible(instance, method, annotation)){
+                // ensure that the annotation processor supports this annotated method instance
+                if (processor.isEligible(context, instance, annotation, method)) {
 
-                    // create the IO instance and inject the instance into the reflected field
-                    boolean accessible = method.canAccess(instance);
-                    if (!accessible) method.trySetAccessible();
-                    try {
-                        processor.process(instance, method, annotation);
+                    // perform annotation processing on this annotated method instance using the annotation processor
+                    processor.process(context, instance, annotation, method);
 
-                        if (!accessible) method.setAccessible(false);
-                        processed_successfully = true;
-                    } catch (ProviderException e) {
-                        logger.error(e.getMessage(), e);
-                        throw new AnnotationException(e);
-                    } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
-                        throw new AnnotationException(e);
-                    }
+                    // restore accessibility settings
+                    if (!accessible) method.setAccessible(false);
+
+                    // set success flag
+                    processed_successfully = true;
                 }
             }
-
-            // if processing injection was not successful, then throw AnnotationFormatError now
-            if(!processed_successfully){
-                throw new AnnotationFormatError("Annotation '@" + annotation.annotationType().getSimpleName() + "' could not be applied to method " + method.getDeclaringClass().getName() + "::" + method.getName() + "; no supporting annotation processor found.");
+            catch (Exception e){
+                StringBuilder message = new StringBuilder(e.getMessage());
+                message.append(" <");
+                message.append("Annotation '@");
+                message.append(annotation.annotationType().getSimpleName());
+                message.append("' could not be applied to: ");
+                message.append(method.getDeclaringClass().getName());
+                message.append("::");
+                message.append(method.getName());
+                message.append("@");
+                message.append(annotation.annotationType().getName());
+                message.append(">");
+                logger.error(message.toString(), e);
+                throw new AnnotationException(message.toString(), e);
             }
+
+            // once processed successfully ; exit the loop
+            if(processed_successfully) break;
+        }
+
+        // if processing injection was not successful, then throw AnnotationFormatError now
+        if(!processed_successfully){
+            StringBuilder message = new StringBuilder();
+            message.append("No valid annotation processor could be found for '@");
+            message.append(annotation.annotationType().getSimpleName());
+            message.append("' <");
+            message.append(method.getDeclaringClass().getName());
+            message.append("::");
+            message.append(method.getName());
+            message.append("@");
+            message.append(annotation.annotationType().getName());
+            message.append(">");
+            logger.error(message.toString());
+            throw new AnnotationException(message.toString());
         }
     }
 }

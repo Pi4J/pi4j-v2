@@ -29,25 +29,32 @@ package com.pi4j.annotation.processor.injector;
 
 import com.pi4j.annotation.Inject;
 import com.pi4j.annotation.processor.FieldProcessor;
+import com.pi4j.context.Context;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 public interface InjectorProcessor<T> extends FieldProcessor<Inject, T> {
-    T process(Field field, Inject annotation) throws Exception;
+
+    Class<T> getTargetType();
 
     @Override
-    default boolean isAnnotationType(Annotation annotation) {
-        return annotation instanceof Inject;
-    }
-
-    @Override
-    default Class<Inject> getAnnotationType() {
+    default Class<Inject> annotationType() {
         return Inject.class;
     }
 
     @Override
-    default T process(Object instance, Field field, Inject annotation) throws Exception {
-        return process(field, annotation);
+    default boolean isEligible(Context context, Object instance, Inject annotation, Field field) throws Exception {
+
+        // make sure this field is of the correct target type
+        if(!getTargetType().isAssignableFrom(field.getType()))
+            return false;
+
+        // make sure the field instance is null; we wont inject existing instantiated objects
+        if(field.get(instance) != null){
+            return false;
+        }
+
+        // this processor can process this annotated instance
+        return true;
     }
 }

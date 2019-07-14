@@ -27,28 +27,11 @@ package com.pi4j.annotation.processor.injector;
  * #L%
  */
 
-import com.pi4j.Pi4J;
-import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.exception.AnnotationException;
+import com.pi4j.annotation.processor.injector.impl.IOInjectorBase;
 import com.pi4j.io.serial.Serial;
-import com.pi4j.util.StringUtil;
 
-import java.lang.reflect.Field;
-
-public class SerialInjector implements InjectorProcessor<Serial> {
+public class SerialInjector extends IOInjectorBase<Serial> implements InjectorProcessor<Serial> {
 
     @Override
     public Class<Serial> getTargetType() { return Serial.class; }
-
-    @Override
-    public Serial process(Field field, Inject annotation) throws Exception {
-
-        // test for required peer annotations
-        if(StringUtil.isNullOrEmpty(annotation.value()))
-            throw new AnnotationException("Missing required 'value(id)' annotation attribute for this field: " +
-                    field.getDeclaringClass().getName() + "::" + field.getName() + "@Inject");
-
-        // get target I/O instance from the Pi4J registry
-        return Pi4J.context().registry().get(annotation.value(), Serial.class);
-    }
 }

@@ -27,12 +27,11 @@ package com.pi4j.annotation.processor.register;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.annotation.Register;
-import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.exception.NotInitializedException;
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.Digital;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
+import com.pi4j.registry.exception.RegistryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,29 +42,39 @@ public class DigitalChangeListenerProcessor implements RegisterProcessor<Digital
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public Class<DigitalChangeListener> getTargetType() { return DigitalChangeListener.class; }
+    public boolean isEligible(Context context, Object instance, Register annotation, Field field) throws Exception {
+
+        // make sure this field is of type 'DigitalChangeListener'
+        if(!DigitalChangeListener.class.isAssignableFrom(field.getType()))
+            return false;
+
+        // make sure the field instance is not null; the 'DigitalChangeListener' must have an instance already defined
+        if(field.get(instance) == null){
+            return false;
+        }
+
+        // this processor can process this annotated instance
+        return true;
+    }
 
     @Override
-    public DigitalChangeListener process(Object instance, Field field, Register annotation) throws Exception {
+    public DigitalChangeListener process(Context context, Object instance, Register annotation, Field field) throws Exception {
 
-        try {
-            boolean accessible = field.canAccess(instance);
-            if (!accessible) field.trySetAccessible();
-            DigitalChangeListener listener = (DigitalChangeListener) field.get(instance);
-            if(listener != null) {
-                // get digital I/O instance from registry
-                Digital digital = Pi4J.registry().get(annotation.value(), Digital.class);
+        DigitalChangeListener listener = (DigitalChangeListener) field.get(instance);
+        if(listener != null) {
 
-                // add the obtained annotated listener instance to the digital I/O instance
-                digital.addListener(listener);
-            }
-            return null;
-        } catch (IllegalAccessException e) {
-            logger.error(e.getMessage(), e);
-            throw new AnnotationException(e);
-        } catch (NotInitializedException e) {
-            logger.error(e.getMessage(), e);
-            throw new AnnotationException(e);
+            // test to determine if the I/O instance exists in the registry by 'ID'
+            if(!context.registry().exists(annotation.value(), Digital.class))
+                throw new RegistryNotFoundException(annotation.value());
+
+            // get I/O instance from registry
+            Digital io = context.registry().get(annotation.value(), Digital.class);
+
+            // add the obtained annotated listener instance to the I/O instance
+            io.addListener(listener);
         }
+
+        // in this case we don't want to assign the annotated instance value, so we return null
+        return null;
     }
 }

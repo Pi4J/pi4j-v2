@@ -5,7 +5,7 @@ package com.pi4j.test.annotations;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
- * FILENAME      :  DependencyInjectionContextTest.java
+ * FILENAME      :  DependencyInjectionDigitalInputTest.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/

@@ -27,10 +27,11 @@ package com.pi4j.annotation.processor.injector;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
+import com.pi4j.context.Context;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderNotFoundException;
+import com.pi4j.util.StringUtil;
 
 import java.lang.reflect.Field;
 
@@ -40,12 +41,16 @@ public class ProviderInjector implements InjectorProcessor<Provider> {
     public Class<Provider> getTargetType() { return Provider.class; }
 
     @Override
-    public Provider process(Field field, Inject annotation) throws Exception {
+    public Provider process(Context context, Object instance, Inject annotation, Field field) throws Exception {
         String id = null;
         Class<? extends Provider> providerClass = null;
 
+//        // validate that the 'ID' (value) attribute is not empty on this field annotation
+//        if (StringUtil.isNullOrEmpty(annotation.value()) && annotation.type() == void.class)
+//            throw new AnnotationException("Missing required '@Inject' annotation 'value <ID>' or 'type' attribute for 'Provider' instance.");
+
         // <<1>> inject instance by user defined ID property
-        if(annotation.value() != null || !annotation.value().isEmpty()){
+        if(StringUtil.isNotNullOrEmpty(annotation.value())){
             id = annotation.value().trim();
         }
 
@@ -62,17 +67,17 @@ public class ProviderInjector implements InjectorProcessor<Provider> {
         if(id != null && !id.isEmpty()) {
             if(providerClass == null) {
                 // get provider instance using ID only
-                return Pi4J.context().providers().get(id);
+                return context.providers().get(id);
             }
             else {
                 // get provider instance using ID and Provider Class
-                return Pi4J.context().providers().get(id, providerClass);
+                return context.providers().get(id, providerClass);
             }
         }
 
         if(providerClass != null){
             // get default provider instance using only Provider Class
-            return Pi4J.context().providers().getDefault(providerClass);
+            return context.providers().getDefault(providerClass);
         }
 
         // unable to inject anything

@@ -30,16 +30,10 @@ package com.pi4j.annotation.processor.register;
 import com.pi4j.annotation.Register;
 import com.pi4j.annotation.processor.FieldProcessor;
 
-import java.lang.annotation.Annotation;
-
-public interface RegisterProcessor<T> extends FieldProcessor<Register,T> {
-    @Override
-    default boolean isAnnotationType(Annotation annotation) {
-        return annotation instanceof Register;
-    }
+public interface RegisterProcessor<T> extends FieldProcessor<Register, T> {
 
     @Override
-    default Class<Register> getAnnotationType() {
+    default Class<Register> annotationType() {
         return Register.class;
     }
 }

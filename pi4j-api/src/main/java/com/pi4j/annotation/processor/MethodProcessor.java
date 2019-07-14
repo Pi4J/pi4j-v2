@@ -28,12 +28,22 @@ package com.pi4j.annotation.processor;
  */
 
 import com.pi4j.annotation.Processor;
-import com.pi4j.annotation.exception.AnnotationException;
+import com.pi4j.context.Context;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 
-public interface MethodProcessor<A extends Annotation> extends Processor<A,Void> {
-    boolean eligible(Object instance, Method method, A annotation) throws AnnotationException;
-    void process(Object instance, Method method, A annotation) throws Exception;
+public interface MethodProcessor<A extends Annotation> extends Processor<A, Void> {
+
+    @Override
+    default boolean isEligible(Context context, Object instance, A annotation, Field field) throws Exception {
+        // this annotation processor only supports 'Method' based annotated instances
+        return false;
+    }
+
+    @Override
+    default Void process(Context context, Object instance, A annotation, Field field) throws Exception {
+        // this annotation processor only supports 'Method' based annotated instances
+        return null;
+    }
 }

@@ -27,13 +27,13 @@ package com.pi4j.annotation.processor.event;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.annotation.OnEvent;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.exception.NotInitializedException;
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.Digital;
 import com.pi4j.io.gpio.digital.DigitalChangeEvent;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
+import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,34 +45,34 @@ public class DigitalChangeEventProcessor implements OnEventProcessor {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public void process(Object instance, Method method, OnEvent annotation) throws Exception {
-        try {
-            // get digital I/O instance from registry
-            Digital digital = Pi4J.registry().get(annotation.value(), Digital.class);
-
-            // register a digital change event listener on this digital I/O instance
-            digital.addListener((DigitalChangeListener) event -> {
-                try {
-                    method.trySetAccessible();
-                    method.invoke(instance, event);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    logger.error(e.getMessage(), e);
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                    logger.error(e.getMessage(), e);
-                }
-            });
-        } catch (NotInitializedException e) {
-            logger.error(e.getMessage(), e);
-            throw new AnnotationException(e);
-        }
-    }
-
-    @Override
     public Class getEventType() {
         return DigitalChangeEvent.class;
     }
 
+    @Override
+    public void process(Context context, Object instance, OnEvent annotation, Method method) throws Exception {
 
+        // validate that the 'ID' (value) attribute is not empty on this field annotation
+        if (StringUtil.isNullOrEmpty(annotation.value()))
+            throw new AnnotationException("The '@OnEvent' annotation is missing required 'value <ID>' attribute");
+
+        // get I/O instance from registry
+        Digital digital = context.registry().get(annotation.value(), Digital.class);
+
+        // register a digital change event listener on this I/O instance
+        digital.addListener((DigitalChangeListener) event -> {
+            try {
+                boolean accessible = method.canAccess(instance);
+                if(!accessible) method.trySetAccessible();
+                method.invoke(instance, event);
+                if(!accessible) method.setAccessible(false);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                logger.error(e.getMessage(), e);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+                logger.error(e.getMessage(), e);
+            }
+        });
+    }
 }

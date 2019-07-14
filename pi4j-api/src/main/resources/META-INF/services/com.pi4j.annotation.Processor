@@ -7,6 +7,7 @@ com.pi4j.annotation.processor.injector.I2CInjector
 com.pi4j.annotation.processor.injector.ProviderGroupInjector
 com.pi4j.annotation.processor.injector.ProviderInjector
 com.pi4j.annotation.processor.injector.ProvidersInjector
+com.pi4j.annotation.processor.injector.PwmInjector
 com.pi4j.annotation.processor.injector.RegistryInjector
 com.pi4j.annotation.processor.injector.RegistryInjector
 com.pi4j.annotation.processor.injector.SerialInjector

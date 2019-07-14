@@ -1,11 +1,11 @@
-package com.pi4j.annotation.processor.injector;
+package com.pi4j.annotation.processor.injector.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  ProvidersInjector.java
+ * FILENAME      :  IOInjectorBase.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,21 +28,24 @@ package com.pi4j.annotation.processor.injector;
  */
 
 import com.pi4j.annotation.Inject;
+import com.pi4j.annotation.exception.AnnotationException;
+import com.pi4j.annotation.processor.injector.InjectorProcessor;
 import com.pi4j.context.Context;
-import com.pi4j.provider.Providers;
+import com.pi4j.io.IO;
+import com.pi4j.util.StringUtil;
 
 import java.lang.reflect.Field;
 
-public class ProvidersInjector implements InjectorProcessor<Providers> {
+public abstract class IOInjectorBase<T extends IO> implements InjectorProcessor<T> {
 
     @Override
-    public Providers process(Context context, Object instance, Inject annotation, Field field) throws Exception {
-        // return providers instance
-        return context.providers();
-    }
+    public T process(Context context, Object instance, Inject annotation, Field field) throws Exception {
 
-    @Override
-    public Class<Providers> getTargetType() {
-        return Providers.class;
+        // test for required peer annotations
+        if(StringUtil.isNullOrEmpty(annotation.value()))
+            throw new AnnotationException("Missing required 'value(id)' annotation attribute for this field.");
+
+        // get target I/O instance from the Pi4J registry
+        return context.registry().get(annotation.value(), getTargetType());
     }
 }

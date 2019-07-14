@@ -27,28 +27,11 @@ package com.pi4j.annotation.processor.injector;
  * #L%
  */
 
-import com.pi4j.Pi4J;
-import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.exception.AnnotationException;
+import com.pi4j.annotation.processor.injector.impl.IOInjectorBase;
 import com.pi4j.io.i2c.I2C;
-import com.pi4j.util.StringUtil;
 
-import java.lang.reflect.Field;
-
-public class I2CInjector implements InjectorProcessor<I2C> {
+public class I2CInjector extends IOInjectorBase<I2C> implements InjectorProcessor<I2C> {
 
     @Override
     public Class<I2C> getTargetType() { return I2C.class; }
-
-    @Override
-    public I2C process(Field field, Inject annotation) throws Exception {
-
-        // test for required peer annotations
-        if(StringUtil.isNullOrEmpty(annotation.value()))
-            throw new AnnotationException("Missing required 'value(id)' annotation attribute for this field: " +
-                    field.getDeclaringClass().getName() + "::" + field.getName() + "@Inject");
-
-        // get target I/O instance from the Pi4J registry
-        return Pi4J.context().registry().get(annotation.value(), I2C.class);
-    }
 }

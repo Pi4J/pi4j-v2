@@ -27,7 +27,6 @@ package com.pi4j.annotation.processor.injector;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
 import com.pi4j.context.Context;
 
@@ -39,8 +38,8 @@ public class ContextInjector implements InjectorProcessor<Context> {
     public Class<Context> getTargetType() { return Context.class; }
 
     @Override
-    public Context process(Field field, Inject annotation) throws Exception {
+    public Context process(Context context, Object instance, Inject annotation, Field field) throws Exception {
         // return static context instance
-        return Pi4J.context();
+        return context;
     }
 }

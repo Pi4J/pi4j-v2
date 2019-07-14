@@ -5,7 +5,7 @@ package com.pi4j.test.registry;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
- * FILENAME      :  ProviderGetIoInstances.java
+ * FILENAME      :  RegistryGetIoInstance.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,16 +29,12 @@ package com.pi4j.test.registry;
 
 import com.pi4j.Pi4J;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.io.gpio.digital.Digital;
 import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.test.About;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertFalse;
 
 public class RegistryGetIoInstance {
 

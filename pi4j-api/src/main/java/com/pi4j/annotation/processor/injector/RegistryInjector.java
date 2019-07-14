@@ -27,8 +27,8 @@ package com.pi4j.annotation.processor.injector;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
+import com.pi4j.context.Context;
 import com.pi4j.registry.Registry;
 
 import java.lang.reflect.Field;
@@ -39,8 +39,8 @@ public class RegistryInjector implements InjectorProcessor<Registry> {
     public Class<Registry> getTargetType() { return Registry.class; }
 
     @Override
-    public Registry process(Field field, Inject annotation) throws Exception {
+    public Registry process(Context context, Object instance, Inject annotation, Field field) throws Exception {
         // return static registry instance
-        return Pi4J.context().registry();
+        return context.registry();
     }
 }

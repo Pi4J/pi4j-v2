@@ -27,9 +27,16 @@ package com.pi4j.annotation;
  * #L%
  */
 
+import com.pi4j.context.Context;
+
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public interface Processor<A extends Annotation, T> {
-    boolean isAnnotationType(Annotation annotation);
-    Class<A> getAnnotationType();
+    Class<A> annotationType();
+    boolean isEligible(Context context, Object instance, A annotation, Method method) throws Exception;
+    boolean isEligible(Context context,Object instance, A annotation, Field field) throws Exception;
+    void process(Context context, Object instance, A annotation, Method method) throws Exception;
+    T process(Context context, Object instance, A annotation, Field field) throws Exception;
 }

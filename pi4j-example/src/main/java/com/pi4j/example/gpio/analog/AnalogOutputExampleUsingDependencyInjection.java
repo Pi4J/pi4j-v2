@@ -48,12 +48,12 @@ public class AnalogOutputExampleUsingDependencyInjection {
 
     private static class RuntimeContainer implements Callable<Void> {
 
-        private static final int ANALOG_OUTPUT_PIN = 4;
+        private static final int ANALOG_OUTPUT_PIN_ADDRESS = 4;
         private static final String ANALOG_OUTPUT_PIN_ID = "uuid.analog.out.four";
 
         // create an analog output instance using the default analog output provider
         @Register(ANALOG_OUTPUT_PIN_ID)
-        @Address(ANALOG_OUTPUT_PIN)
+        @Address(ANALOG_OUTPUT_PIN_ADDRESS)
         @Name("My Analog Out")
         @ShutdownValue(9)
         @InitialValue(10)

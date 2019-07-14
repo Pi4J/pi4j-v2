@@ -28,11 +28,21 @@ package com.pi4j.annotation.processor;
  */
 
 import com.pi4j.annotation.Processor;
+import com.pi4j.context.Context;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
-public interface FieldProcessor<A extends Annotation, T> extends Processor<A,T> {
-    Class<T> getTargetType();
-    T process(Object instance, Field field, A annotation) throws Exception;
+public interface FieldProcessor<A extends Annotation, T> extends Processor<A, T> {
+    @Override
+    default boolean isEligible(Context context, Object instance, A annotation, Method method) throws Exception {
+        // this annotation processor only supports 'Field' based annotated instances
+        return false;
+    }
+
+    @Override
+    default void process(Context context, Object instance, A annotation, Method method) throws Exception {
+        // this annotation processor only supports 'Field' based annotated instances
+        return;
+    }
 }

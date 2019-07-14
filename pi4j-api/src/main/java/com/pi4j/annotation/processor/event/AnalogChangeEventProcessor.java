@@ -27,13 +27,13 @@ package com.pi4j.annotation.processor.event;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.annotation.OnEvent;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.exception.NotInitializedException;
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.Analog;
 import com.pi4j.io.gpio.analog.AnalogChangeEvent;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
+import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,32 +45,33 @@ public class AnalogChangeEventProcessor implements OnEventProcessor {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public void process(Object instance, Method method, OnEvent annotation) throws Exception {
-        try {
-            // get analog I/O instance from registry
-            Analog analog = Pi4J.registry().get(annotation.value(), Analog.class);
-
-            // register an analog change event listener on this analog I/O instance
-            analog.addListener((AnalogChangeListener) event -> {
-                try {
-                    method.trySetAccessible();
-                    method.invoke(instance, event);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    logger.error(e.getMessage(), e);
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                    logger.error(e.getMessage(), e);
-                }
-            });
-        } catch (NotInitializedException e) {
-            logger.error(e.getMessage(), e);
-            throw new AnnotationException(e);
-        }
+    public Class getEventType() {
+        return AnalogChangeEvent.class;
     }
 
     @Override
-    public Class getEventType() {
-        return AnalogChangeEvent.class;
+    public void process(Context context, Object instance, OnEvent annotation, Method method) throws Exception {
+        // validate that the 'ID' (value) attribute is not empty on this field annotation
+        if (StringUtil.isNullOrEmpty(annotation.value()))
+            throw new AnnotationException("The '@OnEvent' annotation is missing required 'value <ID>' attribute");
+
+        // get I/O instance from registry
+        Analog analog = context.registry().get(annotation.value(), Analog.class);
+
+        // register an analog change event listener on this I/O instance
+        analog.addListener((AnalogChangeListener) event -> {
+            try {
+                boolean accessible = method.canAccess(instance);
+                if(!accessible) method.trySetAccessible();
+                method.invoke(instance, event);
+                if(!accessible) method.setAccessible(false);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                logger.error(e.getMessage(), e);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+                logger.error(e.getMessage(), e);
+            }
+        });
     }
 }

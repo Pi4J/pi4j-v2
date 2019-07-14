@@ -49,7 +49,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiConsumer;
 
 public class DefaultRegistry implements Registry {
 
@@ -225,7 +224,7 @@ public class DefaultRegistry implements Registry {
             IO instance = instances.get(id);
 
             // return true if the I/O instance matches the requested I/O type
-            return instance.getClass().isAssignableFrom(type);
+            return type.isAssignableFrom(instance.getClass());
         } catch (RegistryException e) {
             return false;
         }
@@ -235,7 +234,7 @@ public class DefaultRegistry implements Registry {
     private String validateId(String id) throws RegistryException{
         if(id == null)
              throw new RegistryInvalidIDException();
-        String validatedId = id.trim().toLowerCase();
+        String validatedId = id.trim();
         if(validatedId.isEmpty())
             throw new RegistryInvalidIDException();
         return validatedId;
