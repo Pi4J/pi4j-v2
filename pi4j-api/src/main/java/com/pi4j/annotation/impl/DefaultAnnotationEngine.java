@@ -128,9 +128,8 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
             // iterate over the fields looking for declared annotations
             for (Field field : fields) {
                 Annotation[] annotations = field.getDeclaredAnnotations();
-                // iterate over the annotations looking for Pi4J compatible injector
+                // iterate over the annotations looking for Pi4J compatible field processors
                 for (Annotation annotation : annotations) {
-                    //processInjectionAnnotation(instance, field, annotation);
                     processFieldAnnotations(instance, field, annotation);
                 }
             }
@@ -141,7 +140,7 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
             // iterate method the methods looking for declared annotations
             for (Method method : methods) {
                 Annotation[] annotations = method.getDeclaredAnnotations();
-                // iterate over the annotations looking for Pi4J compatible injector
+                // iterate over the annotations looking for Pi4J compatible method processors
                 for (Annotation annotation : annotations) {
                     processMethodAnnotations(instance, method, annotation);
                 }
@@ -149,315 +148,6 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
 
         }
     }
-
-//    private void processCustomMethodAnnotations(Object instance, Method method, Annotation annotation) throws AnnotationException {
-//
-//        if(annotation.annotationType() == OnEvent.class){
-//
-//            // validate parameter count
-//            if(method.getParameterCount() != 1) {
-//                throw new AnnotationException("The '@" +annotation.annotationType().getSimpleName() + "' annotated method must include (1) parameter extended from `Event`");
-//            }
-//
-//            // validate parameter type
-//            if(!Event.class.isAssignableFrom(method.getParameters()[0].getType())) {
-//                throw new AnnotationException("The '@OnEvent' annotated method must include a parameter extending from `Event`");
-//            }
-//
-//            // get method parameters
-//            Parameter[] parameters = method.getParameters();
-//
-//            // get event annotation object
-//            OnEvent onEvent = (OnEvent)annotation;
-//
-//            // handle specific implementations
-//            if(parameters[0].getType().isAssignableFrom(DigitalChangeEvent.class)) {
-//
-//                try {
-//                    Pi4J.providers().digitalOutput().getDefault().get(onEvent.value()).addListener((DigitalChangeListener) event -> {
-//                        try {
-//                            method.trySetAccessible();
-//                            method.invoke(instance, event);
-//                        } catch (IllegalAccessException e) {
-//                            e.printStackTrace();
-//                            logger.error(e.getMessage(), e);
-//                        } catch (InvocationTargetException e) {
-//                            e.printStackTrace();
-//                            logger.error(e.getMessage(), e);
-//                        }
-//                    });
-//                } catch (ProviderException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (NotInitializedException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                }
-//
-//            }
-//
-//            else if(parameters[0].getType().isAssignableFrom(AnalogChangeEvent.class)) {
-//
-//                try {
-//                    Pi4J.providers().analogOutput().getDefault().get(onEvent.value()).addListener((AnalogChangeListener) event -> {
-//                        try {
-//                            method.trySetAccessible();
-//                            method.invoke(instance, event);
-//                        } catch (IllegalAccessException e) {
-//                            e.printStackTrace();
-//                            logger.error(e.getMessage(), e);
-//                        } catch (InvocationTargetException e) {
-//                            e.printStackTrace();
-//                            logger.error(e.getMessage(), e);
-//                        }
-//                    });
-//                } catch (ProviderException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (NotInitializedException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                }
-//            }
-//            else {
-//                throw new AnnotationException("Unhandled '@OnEvent' annotation; unsupported method: " + method.getDeclaringClass().getName() + "::" + method.getName());
-//            }
-//        }
-//    }
-//
-//    private void processCustomFieldAnnotations(Object instance, Field field, Annotation annotation) throws AnnotationException {
-//
-//        if(annotation.annotationType() == Register.class){
-//            if(Provider.class.isAssignableFrom(field.getType())) {
-//                try {
-//                    boolean accessible = field.canAccess(instance);
-//                    if (!accessible) field.trySetAccessible();
-//                    Provider prov = (Provider) field.get(instance);
-//                    if(prov != null) Pi4J.providers().add(prov);
-//                } catch (IllegalAccessException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (NotInitializedException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (ProviderException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                }
-//            }
-//        }
-//
-//        if(annotation.annotationType() == Register.class){
-//            Register registerAnnotation = (Register)annotation;
-//
-//            // handle digital change listeners
-//            if(DigitalChangeListener.class.isAssignableFrom(field.getType())) {
-//
-//                try {
-//                    boolean accessible = field.canAccess(instance);
-//                    if (!accessible) field.trySetAccessible();
-//                    DigitalChangeListener listener = (DigitalChangeListener) field.get(instance);
-//                    if(listener != null) {
-//                        //Pi4J.providers().digitalOutput().getDefault().get(registerAnnotation.value()).addListener(listener);
-//                        Pi4J.registry().get(registerAnnotation.value(), Digital.class).addListener(listener);
-//                    }
-//                } catch (IllegalAccessException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (NotInitializedException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (RegistryException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                }
-//            }
-//
-//            // handle analog change listeners
-//            if(AnalogChangeListener.class.isAssignableFrom(field.getType())) {
-//
-//                try {
-//                    boolean accessible = field.canAccess(instance);
-//                    if (!accessible) field.trySetAccessible();
-//                    AnalogChangeListener listener = (AnalogChangeListener) field.get(instance);
-//                    if(listener != null) {
-//                        Pi4J.registry().get(registerAnnotation.value(), Analog.class).addListener(listener);
-//
-//                        //Pi4J.providers().analogOutput().getDefault().get(registerAnnotation.value()).addListener(listener);
-//                    }
-//                } catch (IllegalAccessException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (NotInitializedException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (RegistryException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                }
-//            }
-//
-//            // handle analog output
-//            if(AnalogOutput.class.isAssignableFrom(field.getType())) {
-//
-//                Class<? extends Provider> providerClass = null;
-//
-//                // test for required peer annotations
-//                if (!field.isAnnotationPresent(Address.class)) {
-//                    throw new AnnotationException("Missing required '@Address' annotation for this I/O type.");
-//                }
-//                try {
-//                    boolean accessible = field.canAccess(instance);
-//                    if (!accessible) field.trySetAccessible();
-//
-//                    // all supported additional annotations for configuring the digital output
-//                    Address address = field.getAnnotation(Address.class);
-//
-//                    Name name = null;
-//                    if (field.isAnnotationPresent(Name.class)) {
-//                        name = field.getAnnotation(Name.class);
-//                    }
-//
-//                    Description description = null;
-//                    if (field.isAnnotationPresent(Description.class)) {
-//                        description = field.getAnnotation(Description.class);
-//                    }
-//
-//                    ShutdownValue shutdownValue = null;
-//                    if (field.isAnnotationPresent(ShutdownValue.class)) {
-//                        shutdownValue = field.getAnnotation(ShutdownValue.class);
-//                    }
-//
-//                    InitialValue initialValue = null;
-//                    if (field.isAnnotationPresent(InitialValue.class)) {
-//                        initialValue = field.getAnnotation(InitialValue.class);
-//                    }
-//
-//                    StepValue stepValue = null;
-//                    if (field.isAnnotationPresent(StepValue.class)) {
-//                        stepValue = field.getAnnotation(StepValue.class);
-//                    }
-//
-//                    Range range = null;
-//                    if (field.isAnnotationPresent(Range.class)) {
-//                        range = field.getAnnotation(Range.class);
-//                    }
-//
-//                    AnalogOutputBuilder builder = AnalogOutput.builder();
-//                    if (registerAnnotation.value() != null) builder.id((registerAnnotation).value());
-//                    builder.address(address.value());
-//
-//                    if (name != null) builder.name(name.value());
-//                    if (description != null) builder.description(description.value());
-//                    if (shutdownValue != null) builder.shutdown(shutdownValue.value());
-//                    if (initialValue != null) builder.initial(initialValue.value());
-//                    if (stepValue != null) builder.step(stepValue.value());
-//                    if (range != null) builder.min(range.min());
-//                    if (range != null) builder.max(range.max());
-//
-//                    AnalogOutputProvider provider = null;
-//                    if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
-//                        provider = ProviderAnnotationProcessor.instance(field, AnalogOutputProvider.class);
-//                    } else {
-//                        provider = Pi4J.providers().getDefault(AnalogOutputProvider.class);
-//                    }
-//
-//                    // create I/O instance
-//                    AnalogOutput output = AnalogOutput.create(provider, builder.build());
-//
-//                    // set the I/O instance reference back on the annotated object
-//                    field.set(instance, output);
-//
-//                } catch (NotInitializedException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (ProviderException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (RegistryException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (IllegalAccessException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                }
-//            }
-//
-//            // handle digital output
-//            if(DigitalOutput.class.isAssignableFrom(field.getType())) {
-//
-//                Class<? extends Provider> providerClass = null;
-//
-//                // test for required peer annotations
-//                if (!field.isAnnotationPresent(Address.class)) {
-//                    throw new AnnotationException("Missing required '@Address' annotation for this I/O type.");
-//                }
-//                try {
-//                    boolean accessible = field.canAccess(instance);
-//                    if (!accessible) field.trySetAccessible();
-//
-//                    // all supported additional annotations for configuring the digital output
-//                    Address address = field.getAnnotation(Address.class);
-//
-//                    Name name = null;
-//                    if (field.isAnnotationPresent(Name.class)) {
-//                        name = field.getAnnotation(Name.class);
-//                    }
-//
-//                    Description description = null;
-//                    if (field.isAnnotationPresent(Description.class)) {
-//                        description = field.getAnnotation(Description.class);
-//                    }
-//
-//                    ShutdownState shutdownState = null;
-//                    if (field.isAnnotationPresent(ShutdownState.class)) {
-//                        shutdownState = field.getAnnotation(ShutdownState.class);
-//                    }
-//
-//                    InitialState initialState = null;
-//                    if (field.isAnnotationPresent(InitialState.class)) {
-//                        initialState = field.getAnnotation(InitialState.class);
-//                    }
-//
-//                    DigitalOutputBuilder builder = DigitalOutput.builder();
-//                    if (registerAnnotation.value() != null) builder.id((registerAnnotation).value());
-//                    builder.address(address.value());
-//
-//                    if (name != null) builder.name(name.value());
-//                    if (description != null) builder.description(description.value());
-//                    if (shutdownState != null) builder.shutdown(shutdownState.value());
-//                    if (initialState != null) builder.initial(initialState.value());
-//
-//                    DigitalOutputProvider provider = null;
-//                    if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
-//                        provider = ProviderAnnotationProcessor.instance(field, DigitalOutputProvider.class);
-//                    } else {
-//                        provider = Pi4J.providers().getDefault(DigitalOutputProvider.class);
-//                    }
-//
-//                    // create I/O instance
-//                    DigitalOutput output = DigitalOutput.create(provider, builder.build());
-//
-//                    // set the I/O instance reference back on the annotated object
-//                    field.set(instance, output);
-//
-//                } catch (NotInitializedException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (ProviderException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (RegistryException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                } catch (IllegalAccessException e) {
-//                    logger.error(e.getMessage(), e);
-//                    throw new AnnotationException(e);
-//                }
-//            }
-//
-//        }
-//    }
 
     private void processFieldAnnotations(Object instance, Field field, Annotation annotation) throws AnnotationException {
         if(processors.containsKey(annotation.annotationType())){
@@ -506,7 +196,6 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
         }
     }
 
-
     private void processMethodAnnotations(Object instance, Method method, Annotation annotation) throws AnnotationException {
         if(processors.containsKey(annotation.annotationType())){
 
@@ -548,5 +237,4 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
             }
         }
     }
-
 }
