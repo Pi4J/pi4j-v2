@@ -30,8 +30,6 @@ package com.pi4j.config.impl;
 import com.pi4j.config.AddressConfig;
 import com.pi4j.config.AddressConfigBuilder;
 
-import java.util.Properties;
-
 public abstract class AddressConfigBuilderBase<BUILDER_TYPE extends AddressConfigBuilder, CONFIG_TYPE extends AddressConfig>
         extends ConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
         implements AddressConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
@@ -43,13 +41,9 @@ public abstract class AddressConfigBuilderBase<BUILDER_TYPE extends AddressConfi
         super();
     }
 
-    protected AddressConfigBuilderBase(Properties properties){
-        super(properties);
-    }
-
     @Override
     public BUILDER_TYPE address(Integer address){
-        this.properties.setProperty(AddressConfig.ADDRESS_KEY, address.toString());
+        this.properties.put(AddressConfig.ADDRESS_KEY, address.toString());
         return (BUILDER_TYPE) this;
     }
 }

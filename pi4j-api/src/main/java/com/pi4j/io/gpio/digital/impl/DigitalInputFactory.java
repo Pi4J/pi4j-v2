@@ -36,8 +36,6 @@ import com.pi4j.io.gpio.digital.DigitalInputProvider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.exception.RegistryException;
 
-import java.util.Properties;
-
 /**
  * DigitalInput factory - it returns instances of {@link DigitalInput} interface.
  *
@@ -61,10 +59,6 @@ public class DigitalInputFactory {
 
     public static DigitalInputBuilder builder() throws ProviderException {
         return new DefaultDigitalInputBuilder();
-    }
-
-    public static DigitalInputBuilder builder(Properties properties) {
-        return new DefaultDigitalInputBuilder(properties);
     }
 
     public static <T extends DigitalInput> T  create(DigitalInputConfig config) throws NotInitializedException, ProviderException, RegistryException {

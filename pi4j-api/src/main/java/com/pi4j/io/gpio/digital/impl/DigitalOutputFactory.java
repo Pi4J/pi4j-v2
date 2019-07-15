@@ -36,8 +36,6 @@ import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.exception.RegistryException;
 
-import java.util.Properties;
-
 /**
  * Analog Output Factory - it returns instances of {@link DigitalOutput} interface.
  *
@@ -61,10 +59,6 @@ public class DigitalOutputFactory {
 
     public static DigitalOutputBuilder builder() throws ProviderException {
         return new DefaultDigitalOutputBuilder();
-    }
-
-    public static DigitalOutputBuilder builder(Properties properties) {
-        return new DefaultDigitalOutputBuilder(properties);
     }
 
     public static <T extends DigitalOutput> T  create(DigitalOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {

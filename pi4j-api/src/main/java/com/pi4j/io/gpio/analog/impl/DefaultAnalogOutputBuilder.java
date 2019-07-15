@@ -30,8 +30,6 @@ package com.pi4j.io.gpio.analog.impl;
 import com.pi4j.io.gpio.analog.AnalogOutputBuilder;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 
-import java.util.Properties;
-
 public class DefaultAnalogOutputBuilder
         extends AnalogConfigBuilderBase<AnalogOutputBuilder, AnalogOutputConfig>
         implements AnalogOutputBuilder {
@@ -43,19 +41,15 @@ public class DefaultAnalogOutputBuilder
         super();
     }
 
-    protected DefaultAnalogOutputBuilder(Properties properties){
-        super(properties);
-    }
-
     @Override
     public AnalogOutputBuilder shutdown(Integer value) {
-        this.properties.setProperty(AnalogOutputConfig.SHUTDOWN_VALUE_KEY, value.toString());
+        this.properties.put(AnalogOutputConfig.SHUTDOWN_VALUE_KEY, value.toString());
         return this;
     }
 
     @Override
     public AnalogOutputBuilder initial(Integer value) {
-        this.properties.setProperty(AnalogOutputConfig.INITIAL_VALUE_KEY, value.toString());
+        this.properties.put(AnalogOutputConfig.INITIAL_VALUE_KEY, value.toString());
         return this;
     }
 
@@ -67,7 +61,7 @@ public class DefaultAnalogOutputBuilder
 
     @Override
     public AnalogOutputBuilder step(Integer value) {
-        this.properties.setProperty(AnalogOutputConfig.STEP_VALUE_KEY, value.toString());
+        this.properties.put(AnalogOutputConfig.STEP_VALUE_KEY, value.toString());
         return this;
     }
 }

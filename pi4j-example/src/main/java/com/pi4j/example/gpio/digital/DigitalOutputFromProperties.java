@@ -66,7 +66,8 @@ public class DigitalOutputFromProperties {
         properties.put("name", "DIGI4");
 
         // create a digital output instance using the default digital output provider
-        var output = DigitalOutput.create(properties);
+        var builder = DigitalOutput.builder().load(properties);
+        var output = DigitalOutput.create(builder.build());
 
         // setup a digital output listener to listen for any state changes on the digital output
         output.addListener((DigitalChangeListener) event -> {

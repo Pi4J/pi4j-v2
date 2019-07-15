@@ -31,7 +31,7 @@ import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 import com.pi4j.io.gpio.analog.AnalogRange;
 import com.pi4j.util.StringUtil;
 
-import java.util.Properties;
+import java.util.Map;
 
 public class DefaultAnalogOutputConfig
         extends AnalogConfigBase<AnalogOutputConfig>
@@ -53,7 +53,7 @@ public class DefaultAnalogOutputConfig
      * PRIVATE CONSTRUCTOR
      * @param properties
      */
-    protected DefaultAnalogOutputConfig(Properties properties){
+    protected DefaultAnalogOutputConfig(Map<String,String> properties){
         super(properties);
 
         // define default property values if any are missing (based on the required address value)
@@ -63,17 +63,17 @@ public class DefaultAnalogOutputConfig
 
         // load initial value property
         if(properties.containsKey(INITIAL_VALUE_KEY)){
-            this.initialValue = Integer.parseInt(properties.getProperty(INITIAL_VALUE_KEY));
+            this.initialValue = Integer.parseInt(properties.get(INITIAL_VALUE_KEY));
         }
 
         // load shutdown value property
         if(properties.containsKey(SHUTDOWN_VALUE_KEY)){
-            this.shutdownValue = Integer.parseInt(properties.getProperty(SHUTDOWN_VALUE_KEY));
+            this.shutdownValue = Integer.parseInt(properties.get(SHUTDOWN_VALUE_KEY));
         }
 
         // load shutdown value property
         if(properties.containsKey(STEP_VALUE_KEY)){
-            this.stepValue = Integer.parseInt(properties.getProperty(STEP_VALUE_KEY));
+            this.stepValue = Integer.parseInt(properties.get(STEP_VALUE_KEY));
         }
 
         // load range value property
@@ -82,9 +82,9 @@ public class DefaultAnalogOutputConfig
             Integer min = null;
             Integer max = null;
             if(properties.containsKey(RANGE_MIN_KEY))
-                min = Integer.parseInt(properties.getProperty(RANGE_MIN_KEY));
+                min = Integer.parseInt(properties.get(RANGE_MIN_KEY));
             if(properties.containsKey( RANGE_MAX_KEY))
-                max = Integer.parseInt(properties.getProperty(RANGE_MAX_KEY));
+                max = Integer.parseInt(properties.get(RANGE_MAX_KEY));
 
             // create new range from loaded properties
             if(min != null || max != null)

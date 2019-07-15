@@ -31,8 +31,6 @@ import com.pi4j.config.AddressConfigBuilder;
 import com.pi4j.config.DeviceConfig;
 import com.pi4j.config.DeviceConfigBuilder;
 
-import java.util.Properties;
-
 public abstract class DeviceConfigBuilderBase<BUILDER_TYPE extends AddressConfigBuilder, CONFIG_TYPE extends DeviceConfig>
         extends AddressConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
         implements DeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
@@ -44,13 +42,9 @@ public abstract class DeviceConfigBuilderBase<BUILDER_TYPE extends AddressConfig
         super();
     }
 
-    protected DeviceConfigBuilderBase(Properties properties){
-        super(properties);
-    }
-
     @Override
     public BUILDER_TYPE device(String device){
-        this.properties.setProperty(DeviceConfig.DEVICE_KEY, device);
+        this.properties.put(DeviceConfig.DEVICE_KEY, device);
         return (BUILDER_TYPE) this;
     }
 }

@@ -34,8 +34,6 @@ import com.pi4j.io.gpio.digital.impl.DigitalInputFactory;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.exception.RegistryException;
 
-import java.util.Properties;
-
 public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig>, Input {
 
     default PullResistance pull() { return config().pull(); }
@@ -60,10 +58,6 @@ public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig>,
         return DigitalInputFactory.builder();
     }
 
-    static DigitalInputBuilder builder(Properties properties) throws ProviderException {
-        return DigitalInputFactory.builder(properties);
-    }
-
     // ---------------------------------------------------------------------------
     // FRIENDLY HELPER CREATOR STATIC METHODS
     // ---------------------------------------------------------------------------
@@ -83,11 +77,6 @@ public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig>,
     static <T extends DigitalInput> T create(Integer address, String id, String name) throws ProviderException, NotInitializedException, RegistryException {
         DigitalInputBuilder builder = DigitalInput.builder();
         builder.id(id).address(address).id(id).name(name);
-        return (T)DigitalInput.create(builder.build());
-    }
-
-    static <T extends DigitalInput> T create(Properties properties) throws ProviderException, NotInitializedException, RegistryException {
-        DigitalInputBuilder builder = DigitalInput.builder(properties);
         return (T)DigitalInput.create(builder.build());
     }
 
@@ -133,10 +122,6 @@ public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig>,
 
     static <T extends DigitalInput> T create(Integer address, String id, String name, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return (T)DigitalInput.create(address, id, name);
-    }
-
-    static <T extends DigitalInput> T create(Properties properties, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalInput.create(properties);
     }
 
     static <T extends DigitalInput> T create(String providerId, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {

@@ -31,7 +31,7 @@ import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.analog.AnalogConfig;
 import com.pi4j.io.gpio.analog.AnalogRange;
 
-import java.util.Properties;
+import java.util.Map;
 
 public abstract class AnalogConfigBase<CONFIG_TYPE extends AnalogConfig>
         extends AddressConfigBase<CONFIG_TYPE>
@@ -51,7 +51,7 @@ public abstract class AnalogConfigBase<CONFIG_TYPE extends AnalogConfig>
      * PRIVATE CONSTRUCTOR
      * @param properties
      */
-    protected AnalogConfigBase(Properties properties){
+    protected AnalogConfigBase(Map<String,String> properties){
         super(properties);
 
         // load range value property
@@ -60,9 +60,9 @@ public abstract class AnalogConfigBase<CONFIG_TYPE extends AnalogConfig>
             Integer min = null;
             Integer max = null;
             if(properties.containsKey(RANGE_MIN_KEY))
-                min = Integer.parseInt(properties.getProperty(RANGE_MIN_KEY));
+                min = Integer.parseInt(properties.get(RANGE_MIN_KEY));
             if(properties.containsKey( RANGE_MAX_KEY))
-                max = Integer.parseInt(properties.getProperty(RANGE_MAX_KEY));
+                max = Integer.parseInt(properties.get(RANGE_MAX_KEY));
 
             // create new range from loaded properties
             if(min != null || max != null)

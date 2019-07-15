@@ -33,7 +33,6 @@ import com.pi4j.io.gpio.digital.impl.DigitalOutputFactory;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.exception.RegistryException;
 
-import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -148,10 +147,6 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
         return DigitalOutputFactory.builder();
     }
 
-    static DigitalOutputBuilder builder(Properties properties) throws ProviderException {
-        return DigitalOutputFactory.builder(properties);
-    }
-
     // ---------------------------------------------------------------------------
     // FRIENDLY HELPER CREATOR STATIC METHODS
     // ---------------------------------------------------------------------------
@@ -171,11 +166,6 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
     static <T extends DigitalOutput> T create(Integer address, String id, String name) throws ProviderException, NotInitializedException, RegistryException {
         DigitalOutputBuilder builder = DigitalOutput.builder();
         builder.id(id).address(address).id(id).name(name);
-        return (T)DigitalOutput.create(builder.build());
-    }
-
-    static <T extends DigitalOutput> T create(Properties properties) throws ProviderException, NotInitializedException, RegistryException {
-        DigitalOutputBuilder builder = DigitalOutput.builder(properties);
         return (T)DigitalOutput.create(builder.build());
     }
 
@@ -221,10 +211,6 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
 
     static <T extends DigitalOutput> T create(Integer address, String id, String name, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return (T)DigitalOutput.create(address, id, name);
-    }
-
-    static <T extends DigitalOutput> T create(Properties properties, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalOutput.create(properties);
     }
 
     static <T extends DigitalOutput> T create(String providerId, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {

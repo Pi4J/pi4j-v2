@@ -32,7 +32,7 @@ import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.util.StringUtil;
 
-import java.util.Properties;
+import java.util.Map;
 
 public class DefaultDigitalOutputConfig
         extends AddressConfigBase<DigitalOutputConfig>
@@ -53,7 +53,7 @@ public class DefaultDigitalOutputConfig
      * PRIVATE CONSTRUCTOR
      * @param properties
      */
-    protected DefaultDigitalOutputConfig(Properties properties){
+    protected DefaultDigitalOutputConfig(Map<String,String> properties){
         super(properties);
 
         // define default property values if any are missing (based on the required address value)
@@ -63,12 +63,12 @@ public class DefaultDigitalOutputConfig
 
         // load initial value property
         if(properties.containsKey(INITIAL_STATE_KEY)){
-            this.initialState = DigitalState.parse(properties.getProperty(INITIAL_STATE_KEY));
+            this.initialState = DigitalState.parse(properties.get(INITIAL_STATE_KEY));
         }
 
         // load shutdown value property
         if(properties.containsKey(SHUTDOWN_STATE_KEY)){
-            this.shutdownState = DigitalState.parse(properties.getProperty(SHUTDOWN_STATE_KEY));
+            this.shutdownState = DigitalState.parse(properties.get(SHUTDOWN_STATE_KEY));
         }
     }
 

@@ -36,8 +36,6 @@ import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.exception.RegistryException;
 
-import java.util.Properties;
-
 /**
  * AnalogInput factory - it returns instances of {@link AnalogInput} interface.
  *
@@ -61,10 +59,6 @@ public class AnalogInputFactory {
 
     public static AnalogInputBuilder builder() throws ProviderException {
         return new DefaultAnalogInputBuilder();
-    }
-
-    public static AnalogInputBuilder builder(Properties properties) {
-        return new DefaultAnalogInputBuilder(properties);
     }
 
     public static <T extends AnalogInput> T  create(AnalogInputConfig config) throws NotInitializedException, ProviderException, RegistryException {

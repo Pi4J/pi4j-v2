@@ -30,7 +30,7 @@ package com.pi4j.config;
 import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
 import com.pi4j.util.StringUtil;
 
-import java.util.Properties;
+import java.util.Map;
 
 public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYPE> {
 
@@ -49,19 +49,19 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
      * PRIVATE CONSTRUCTOR
      * @param properties
      */
-    protected ConfigBase(Properties properties){
+    protected ConfigBase(Map<String,String> properties){
 
         // load required 'id' property
         if(properties.containsKey(ID_KEY))
-            this.id = properties.getProperty(ID_KEY);
+            this.id = properties.get(ID_KEY);
 
         // load optional 'name' property
         if(properties.containsKey(NAME_KEY))
-            this.name = properties.getProperty(NAME_KEY, null);
+            this.name = properties.get(NAME_KEY);
 
         // load optional 'description' property
         if(properties.containsKey(DESCRIPTION_KEY))
-            this.description = properties.getProperty(DESCRIPTION_KEY, null);
+            this.description = properties.get(DESCRIPTION_KEY);
     }
 
     @Override

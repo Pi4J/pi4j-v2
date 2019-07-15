@@ -30,8 +30,6 @@ package com.pi4j.io.gpio.analog.impl;
 import com.pi4j.io.gpio.analog.AnalogInputBuilder;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 
-import java.util.Properties;
-
 public class DefaultAnalogInputBuilder
         extends AnalogConfigBuilderBase<AnalogInputBuilder, AnalogInputConfig>
         implements AnalogInputBuilder {
@@ -41,10 +39,6 @@ public class DefaultAnalogInputBuilder
      */
     protected DefaultAnalogInputBuilder(){
         super();
-    }
-
-    protected DefaultAnalogInputBuilder(Properties properties){
-        super(properties);
     }
 
     @Override

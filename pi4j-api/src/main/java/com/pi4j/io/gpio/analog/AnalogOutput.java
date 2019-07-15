@@ -35,8 +35,6 @@ import com.pi4j.io.gpio.analog.impl.AnalogOutputFactory;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.exception.RegistryException;
 
-import java.util.Properties;
-
 public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, Output {
     AnalogOutput value(Integer value) throws IOIllegalValueException, IOBoundsException;
 
@@ -66,10 +64,6 @@ public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, 
         return AnalogOutputFactory.builder();
     }
 
-    static AnalogOutputBuilder builder(Properties properties) throws ProviderException {
-        return AnalogOutputFactory.builder(properties);
-    }
-
     // ---------------------------------------------------------------------------
     // FRIENDLY HELPER CREATOR STATIC METHODS
     // ---------------------------------------------------------------------------
@@ -89,11 +83,6 @@ public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, 
     static <T extends AnalogOutput> T create(Integer address, String id, String name) throws ProviderException, NotInitializedException, RegistryException {
         AnalogOutputBuilder builder = AnalogOutput.builder();
         builder.id(id).address(address).id(id).name(name);
-        return (T)AnalogOutput.create(builder.build());
-    }
-
-    static <T extends AnalogOutput> T create(Properties properties) throws ProviderException, NotInitializedException, RegistryException {
-        AnalogOutputBuilder builder = AnalogOutput.builder(properties);
         return (T)AnalogOutput.create(builder.build());
     }
 
@@ -139,10 +128,6 @@ public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, 
 
     static <T extends AnalogOutput> T create(Integer address, String id, String name, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
         return (T)AnalogOutput.create(address, id, name);
-    }
-
-    static <T extends AnalogOutput> T create(Properties properties, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)AnalogOutput.create(properties);
     }
 
     static <T extends AnalogOutput> T create(String providerId, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {

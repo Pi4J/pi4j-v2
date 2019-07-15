@@ -27,8 +27,26 @@ package com.pi4j.config;
  * #L%
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.Map;
+import java.util.Properties;
+
 public interface ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends Builder<CONFIG_TYPE> {
     BUILDER_TYPE id(String id);
     BUILDER_TYPE name(String name);
     BUILDER_TYPE description(String description);
+
+    BUILDER_TYPE load(Map<String, String> properties);
+    BUILDER_TYPE load(Properties properties);
+    BUILDER_TYPE load(Map<String, String> properties, String prefixFilter);
+    BUILDER_TYPE load(Properties properties, String prefixFilter);
+    BUILDER_TYPE load(InputStream stream) throws IOException;
+    BUILDER_TYPE load(InputStream stream, String prefixFilter) throws IOException;
+    BUILDER_TYPE load(Reader reader) throws IOException;
+    BUILDER_TYPE load(Reader reader, String prefixFilter) throws IOException;
+    BUILDER_TYPE load(File file) throws IOException;
+    BUILDER_TYPE load(File file, String prefixFilter) throws IOException;
 }

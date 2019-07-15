@@ -32,8 +32,6 @@ import com.pi4j.io.gpio.digital.DigitalOutputBuilder;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalState;
 
-import java.util.Properties;
-
 public class DefaultDigitalOutputBuilder
         extends AddressConfigBuilderBase<DigitalOutputBuilder, DigitalOutputConfig>
         implements DigitalOutputBuilder {
@@ -45,19 +43,15 @@ public class DefaultDigitalOutputBuilder
         super();
     }
 
-    protected DefaultDigitalOutputBuilder(Properties properties){
-        super(properties);
-    }
-
     @Override
     public DigitalOutputBuilder shutdown(DigitalState state) {
-        this.properties.setProperty(DigitalOutputConfig.SHUTDOWN_STATE_KEY, state.toString());
+        this.properties.put(DigitalOutputConfig.SHUTDOWN_STATE_KEY, state.toString());
         return this;
     }
 
     @Override
     public DigitalOutputBuilder initial(DigitalState state) {
-        this.properties.setProperty(DigitalOutputConfig.INITIAL_STATE_KEY, state.toString());
+        this.properties.put(DigitalOutputConfig.INITIAL_STATE_KEY, state.toString());
         return this;
     }
 

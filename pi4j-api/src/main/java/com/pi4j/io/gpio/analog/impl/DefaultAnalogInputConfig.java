@@ -30,7 +30,7 @@ package com.pi4j.io.gpio.analog.impl;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.util.StringUtil;
 
-import java.util.Properties;
+import java.util.Map;
 
 public class DefaultAnalogInputConfig
         extends AnalogConfigBase<AnalogInputConfig>
@@ -47,7 +47,7 @@ public class DefaultAnalogInputConfig
      * PRIVATE CONSTRUCTOR
      * @param properties
      */
-    protected DefaultAnalogInputConfig(Properties properties){
+    protected DefaultAnalogInputConfig(Map<String,String> properties){
         super(properties);
 
         // define default property values if any are missing (based on the required address value)

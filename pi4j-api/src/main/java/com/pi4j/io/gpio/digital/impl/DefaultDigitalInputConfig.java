@@ -32,7 +32,7 @@ import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.PullResistance;
 import com.pi4j.util.StringUtil;
 
-import java.util.Properties;
+import java.util.Map;
 
 public class DefaultDigitalInputConfig
         extends AddressConfigBase<DigitalInputConfig>
@@ -52,7 +52,7 @@ public class DefaultDigitalInputConfig
      * PRIVATE CONSTRUCTOR
      * @param properties
      */
-    protected DefaultDigitalInputConfig(Properties properties){
+    protected DefaultDigitalInputConfig(Map<String,String> properties){
         super(properties);
 
         // define default property values if any are missing (based on the required address value)
@@ -62,7 +62,7 @@ public class DefaultDigitalInputConfig
 
         // load optional pull resistance from properties
         if(properties.containsKey(PULL_RESISTANCE_KEY)){
-            this.pullResistance = PullResistance.parse(properties.getProperty(PULL_RESISTANCE_KEY));
+            this.pullResistance = PullResistance.parse(properties.get(PULL_RESISTANCE_KEY));
         }
     }
 

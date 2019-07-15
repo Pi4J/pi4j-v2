@@ -30,7 +30,7 @@ package com.pi4j.config.impl;
 import com.pi4j.config.DeviceConfig;
 import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
 
-import java.util.Properties;
+import java.util.Map;
 
 public abstract class DeviceConfigBase<CONFIG_TYPE extends DeviceConfig<CONFIG_TYPE>>
         extends AddressConfigBase<CONFIG_TYPE>
@@ -49,12 +49,12 @@ public abstract class DeviceConfigBase<CONFIG_TYPE extends DeviceConfig<CONFIG_T
      * PRIVATE CONSTRUCTOR
      * @param properties
      */
-    protected DeviceConfigBase(Properties properties){
+    protected DeviceConfigBase(Map<String,String> properties){
         super(properties);
 
         // load address property
         if(properties.containsKey(DEVICE_KEY)){
-            this.device = properties.getProperty(DEVICE_KEY);
+            this.device = properties.get(DEVICE_KEY);
         } else {
             throw new ConfigMissingRequiredKeyException(DEVICE_KEY);
         }

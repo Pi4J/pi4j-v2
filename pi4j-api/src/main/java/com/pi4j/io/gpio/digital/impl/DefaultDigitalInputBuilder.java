@@ -32,8 +32,6 @@ import com.pi4j.io.gpio.digital.DigitalInputBuilder;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.PullResistance;
 
-import java.util.Properties;
-
 public class DefaultDigitalInputBuilder
         extends AddressConfigBuilderBase<DigitalInputBuilder, DigitalInputConfig>
         implements DigitalInputBuilder {
@@ -45,10 +43,6 @@ public class DefaultDigitalInputBuilder
         super();
     }
 
-    protected DefaultDigitalInputBuilder(Properties properties){
-        super(properties);
-    }
-
     @Override
     public DigitalInputConfig build() {
         DigitalInputConfig config = new DefaultDigitalInputConfig(properties);
@@ -57,7 +51,7 @@ public class DefaultDigitalInputBuilder
 
     @Override
     public DigitalInputBuilder pull(PullResistance value) {
-        this.properties.setProperty(DigitalInputConfig.PULL_RESISTANCE_KEY, value.toString());
+        this.properties.put(DigitalInputConfig.PULL_RESISTANCE_KEY, value.toString());
         return this;
     }
 }

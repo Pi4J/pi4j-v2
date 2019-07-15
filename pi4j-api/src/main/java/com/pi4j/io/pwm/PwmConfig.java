@@ -30,15 +30,9 @@ package com.pi4j.io.pwm;
 import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.IOConfig;
 
-import java.util.Properties;
-
 public class PwmConfig extends AddressConfigBase<PwmConfig> implements IOConfig<PwmConfig> {
 
     public PwmConfig(Number address) {
         super();
-        Properties properties = new Properties();
-        properties.setProperty(PwmConfig.ADDRESS_KEY, address.toString());
-        //super(properties);
-
     }
 }

@@ -32,7 +32,7 @@ import com.pi4j.config.Config;
 import com.pi4j.config.ConfigBase;
 import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
 
-import java.util.Properties;
+import java.util.Map;
 
 public abstract class AddressConfigBase<CONFIG_TYPE extends Config>
         extends ConfigBase<CONFIG_TYPE>
@@ -52,12 +52,12 @@ public abstract class AddressConfigBase<CONFIG_TYPE extends Config>
      * PRIVATE CONSTRUCTOR
      * @param properties
      */
-    protected AddressConfigBase(Properties properties){
+    protected AddressConfigBase(Map<String,String> properties){
         super(properties);
 
         // load address property
         if(properties.containsKey(ADDRESS_KEY)){
-            this.address = Integer.parseInt(properties.get(ADDRESS_KEY).toString());
+            this.address = Integer.parseInt(properties.get(ADDRESS_KEY));
         } else {
             throw new ConfigMissingRequiredKeyException(ADDRESS_KEY);
         }
