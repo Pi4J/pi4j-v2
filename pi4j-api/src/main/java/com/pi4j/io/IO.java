@@ -53,22 +53,4 @@ public interface IO<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig>
 
     Provider provider();
     IO_TYPE provider(Provider provider);
-
-    // MARKER INTERFACE
-
-    static Serial instance(SerialConfig config) throws ProviderException, NotInitializedException {
-        return Serial.instance(config);
-    }
-
-    static Pwm instance(PwmConfig config) throws ProviderException, NotInitializedException {
-        return Pwm.instance(config);
-    }
-
-    static Spi instance(SpiConfig config) throws ProviderException, NotInitializedException {
-        return Spi.instance(config);
-    }
-
-    static I2C instance(I2CConfig config) throws ProviderException, NotInitializedException {
-        return I2C.instance(config);
-    }
 }
