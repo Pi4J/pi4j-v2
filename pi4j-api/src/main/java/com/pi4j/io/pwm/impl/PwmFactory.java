@@ -83,7 +83,7 @@ public class PwmFactory {
                 provider = Pi4J.providers().pwm().getDefault();
             }
             // create a PWM instance using the io
-            return provider.instance(config);
+            return provider.register(Pi4J.context(), config);
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {

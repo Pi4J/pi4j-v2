@@ -27,6 +27,7 @@ package com.pi4j.io.i2c.impl;
  * #L%
  */
 
+import com.pi4j.Pi4J;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
@@ -84,7 +85,7 @@ public class I2CFactory {
                 provider = providers().i2c().getDefault();
             }
             // create a I2C instance using the io
-            return provider.instance(config);
+            return provider.register(Pi4J.context(), config);
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {

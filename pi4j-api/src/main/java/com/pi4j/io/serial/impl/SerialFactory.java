@@ -99,7 +99,7 @@ public class SerialFactory {
                 provider = Pi4J.providers().serial().getDefault();
             }
             // create a SPI instance using the io
-            return provider.instance(config);
+            return provider.register(Pi4J.context(), config);
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {

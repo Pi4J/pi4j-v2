@@ -1,13 +1,11 @@
-package com.pi4j.io.gpio.analog;
+package com.pi4j.test.provider;
 
-import com.pi4j.context.Context;
-
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogOutputProviderBase.java
+ * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
+ * FILENAME      :  TestAnalogInputProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,23 +26,24 @@ import com.pi4j.context.Context;
  * limitations under the License.
  * #L%
  */
-public abstract class AnalogOutputProviderBase
-        extends AnalogProviderBase<AnalogOutputProvider, AnalogOutput, AnalogOutputConfig>
-        implements AnalogOutputProvider {
 
-    public AnalogOutputProviderBase(){
+import com.pi4j.context.Context;
+import com.pi4j.io.gpio.analog.*;
+
+public class TestAnalogOutputProvider extends AnalogOutputProviderBase implements AnalogOutputProvider {
+
+    public TestAnalogOutputProvider(){ super(); }
+
+    public TestAnalogOutputProvider(String id){
+        super(id);
     }
 
-    public AnalogOutputProviderBase(String id){
-        this();
-        this.id = id;
-    }
-
-    public AnalogOutputProviderBase(String id, String name){
-        this(id);
-        this.name = name;
+    public TestAnalogOutputProvider(String id, String name){
+        super(id, name);
     }
 
     @Override
-    public abstract AnalogOutput create(Context context, AnalogOutputConfig config) throws Exception;
+    public AnalogOutput create(Context context, AnalogOutputConfig config) throws Exception {
+        return new TestAnalogOutput();
+    }
 }
