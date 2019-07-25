@@ -29,6 +29,7 @@ package com.pi4j.provider.raspberrypi.io.pwm;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
@@ -46,7 +47,7 @@ public class RaspiPwmProvider extends PwmProviderBase implements PwmProvider {
     }
 
     @Override
-    public Pwm create(PwmConfig config) throws Exception {
+    public Pwm create(Context context, PwmConfig config) throws Exception {
         return null;
     }
 }

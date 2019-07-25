@@ -29,6 +29,7 @@ package com.pi4j.provider.mock.io.serial;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
@@ -47,7 +48,7 @@ public class MockSerialProvider extends SerialProviderBase implements SerialProv
     }
 
     @Override
-    public Serial create(SerialConfig config) throws Exception {
+    public Serial create(Context context, SerialConfig config) throws Exception {
         return new MockSerial(config);
     }
 }

@@ -93,6 +93,7 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
     public IO_TYPE register(Context context, CONFIG_TYPE config) throws Exception {
         var newInstance = create(context, config);
         // TODO :: PROXY IMPL, REMOVE PROVIDER SETTER
+        newInstance.provider(this);
         return newInstance;
     }
 

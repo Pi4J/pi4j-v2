@@ -27,6 +27,7 @@ package com.pi4j.test.provider;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
@@ -45,7 +46,7 @@ public class TestDigitalInputProvider extends DigitalInputProviderBase implement
     }
 
     @Override
-    public DigitalInput create(DigitalInputConfig config) throws Exception {
+    public DigitalInput create(Context context, DigitalInputConfig config) throws Exception {
         return new TestDigitalInput(config);
     }
 }

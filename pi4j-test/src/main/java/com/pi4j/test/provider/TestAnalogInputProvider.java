@@ -27,6 +27,7 @@ package com.pi4j.test.provider;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
@@ -45,7 +46,7 @@ public class TestAnalogInputProvider extends AnalogInputProviderBase implements 
     }
 
     @Override
-    public AnalogInput create(AnalogInputConfig config) throws Exception {
+    public AnalogInput create(Context context, AnalogInputConfig config) throws Exception {
         return new TestAnalogInput(config);
     }
 }
