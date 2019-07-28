@@ -39,16 +39,22 @@ public abstract class IdentityBase implements Binding {
     public IdentityBase(){
         this.id = getClass().getName();
         this.name = this.getClass().getSimpleName();
+        this.description = this.getClass().getName();
     }
 
     public IdentityBase(String id){
+        this();
         this.id = id;
-        this.name = this.getClass().getSimpleName();
     }
 
     public IdentityBase(String id, String name){
-        this.id = id;
+        this(id);
         this.name = name;
+    }
+
+    public IdentityBase(String id, String name, String description){
+        this(id, name);
+        this.description = description;
     }
 
     @Override

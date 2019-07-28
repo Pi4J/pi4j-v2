@@ -44,7 +44,8 @@ public interface Provider<IO_TYPE extends IO, CONFIG_TYPE extends Config> extend
     @Override
     default Descriptor describe() {
         Descriptor descriptor = Binding.super.describe();
-        descriptor.category(this.type().name());
+        //descriptor.category(this.type().name());
+        descriptor.category("PROVIDER");
         return descriptor;
     }
 }

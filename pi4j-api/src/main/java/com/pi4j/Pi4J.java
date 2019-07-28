@@ -28,20 +28,24 @@ package com.pi4j;
  */
 
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.binding.exception.BindingException;
+import com.pi4j.annotation.impl.DefaultAnnotationEngine;
+import com.pi4j.binding.Binding;
 import com.pi4j.common.Descriptor;
 import com.pi4j.context.Context;
 import com.pi4j.context.impl.DefaultContext;
 import com.pi4j.exception.AlreadyInitializedException;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.exception.Pi4JException;
+import com.pi4j.platform.Platform;
+import com.pi4j.platform.Platforms;
+import com.pi4j.platform.exception.PlatformException;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.Providers;
-import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.Registry;
-import com.pi4j.registry.exception.RegistryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 public class Pi4J {
 
@@ -72,44 +76,116 @@ public class Pi4J {
         return context.providers();
     }
 
+    public static Platforms platforms() throws NotInitializedException, PlatformException {
+        // throw exception if Pi4J has not been initialized
+        if(context == null) throw new NotInitializedException();
+
+        // return platforms manager
+        return context.platforms();
+    }
+
+    public static Platform platform() throws NotInitializedException, PlatformException {
+        // throw exception if Pi4J has not been initialized
+        if(context == null) throw new NotInitializedException();
+
+        // return initialized platform
+        return context.platform();
+    }
+
     public static Context initialize() throws Pi4JException {
         return initialize(true);
     }
 
     public static Context initialize(boolean autoDetect) throws Pi4JException {
-        return initialize(autoDetect, (Provider) null);
+        return initialize(autoDetect, Collections.emptyList(), Collections.emptyList());
     }
 
     public static Context initialize(Provider... provider) throws Pi4JException {
-        return initialize(false, provider);
+        return initialize(false, null,
+                (provider == null || provider.length ==0) ? Collections.emptyList() : Arrays.asList(provider));
     }
 
-    public static Context initialize(boolean autoDetect, Provider... provider) throws Pi4JException {
+    public static Context initialize(Platform... platform) throws Pi4JException {
+        return initialize(false,
+                (platform == null || platform.length == 0) ?
+                        Collections.emptyList() : Arrays.asList(platform), Collections.emptyList());
+    }
+
+    public static Context initialize(Binding ... binding) throws Pi4JException {
+        return initialize(false, binding);
+    }
+
+    public static Context initialize(Collection<Binding> binding) throws Pi4JException {
+        return initialize(false, binding);
+    }
+
+    public static Context initialize(boolean autoDetect, Binding... binding) throws Pi4JException {
+        return initialize(autoDetect,
+                (binding == null || binding.length == 0) ? Collections.emptyList() : Arrays.asList(binding));
+    }
+
+    public static Context initialize(boolean autoDetect, Collection<Binding> binding) throws Pi4JException {
+        List<Platform> platforms = new ArrayList<>();
+        List<Provider> providers = new ArrayList<>();
+
+        // iterate and filter for the 'Platform' bindings and add each platform binding to collection
+        binding.stream().filter(Platform.class::isInstance).forEach(p -> {
+            platforms.add((Platform) p);
+        });
+
+        // iterate and filter for the 'Provider' bindings and add each provider binding to collection
+        binding.stream().filter(Provider.class::isInstance).forEach(p -> {
+            providers.add((Provider) p);
+        });
+
+        return initialize(autoDetect, platforms, providers);
+    }
+
+    public static Context initialize(boolean autoDetect, Platform platform, Provider... provider) throws Pi4JException {
+        return initialize(autoDetect,
+                (platform == null) ? Collections.emptyList() : Collections.singletonList(platform),
+                (provider == null || provider.length == 0) ? Collections.emptyList() : Arrays.asList(provider));
+    }
+
+    public static Context initialize(Platform platform, Provider... provider) throws Pi4JException {
+        return initialize(false, platform, provider);
+    }
+
+    public static Context initialize(Collection<Platform> platform, Collection<Provider> provider) throws Pi4JException {
+        return initialize(false, platform, provider);
+    }
+
+    public static Context initialize(boolean autoDetect, Collection<Platform> platform, Collection<Provider> provider) throws Pi4JException {
         logger.trace("invoked 'initialize()' [auto-detect={}]", autoDetect);
 
         // throw exception if Pi4J has not been initialized
         if(context != null) throw new AlreadyInitializedException();
 
         // create context singleton
-        if(context == null) {
-            context = DefaultContext.singleton();
-        }
+        context = DefaultContext.singleton();
 
         // initialize bindings
         context().bindings().initialize(context, true);
 
-        // initialize providers
-        providers().initialize(context, autoDetect);
-        if(provider != null) {
-            logger.trace("adding explicit providers: [count={}]", provider.length);
+        // initialize providers, then add the provided I/O providers to the managed collection
+        context.providers().initialize(context, autoDetect);
+        if(provider != null && !provider.isEmpty()) {
+            logger.trace("adding explicit providers: [count={}]", provider.size());
             providers().add(provider);
+        }
+
+        // initialize platforms, then add the provided I/O platforms to the managed collection
+        context.platforms().initialize(context, autoDetect);
+        if(platform != null && !platform.isEmpty()) {
+            logger.trace("adding explicit platforms: [count={}]", platform.size());
+            platforms().add(platform);
         }
 
         logger.debug("Pi4J successfully initialized.'");
         return context;
     }
 
-    public static Context terminate() throws NotInitializedException, ProviderException, BindingException, RegistryException {
+    public static Context terminate() throws Pi4JException {
         logger.trace("invoked 'terminate();'");
 
         // throw exception if Pi4J has not been initialized
@@ -119,7 +195,10 @@ public class Pi4J {
         registry().terminate(context);
 
         // terminate all providers
-        providers().terminate(context);
+        context.providers().terminate(context);
+
+        // terminate platforms
+        context.platforms().terminate(context);
 
         // terminate all bindings
         context.bindings().terminate(context);
@@ -132,10 +211,21 @@ public class Pi4J {
     }
 
     public static Context inject(Object... objects) throws NotInitializedException, AnnotationException {
+
+        // if Pi4J has not been initialized, then use the 'preinject' static method
+        // of the DefaultAnnotationEngine to look for @Initialize annotations to perform
+        // initialization
+        if(context == null && objects != null && objects.length > 0) {
+            DefaultAnnotationEngine.processInitialize(objects);
+        }
+
         // throw exception if Pi4J has not been initialized
         if(context == null) throw new NotInitializedException();
 
-        context.inject(objects);
+        // inject remaining (if objects exist)
+        if(objects != null && objects.length > 0) {
+            context.inject(objects);
+        }
         return context;
     }
 

@@ -65,13 +65,13 @@ public class ProviderGroup<T extends Provider> implements Describable {
         return providers.exists(providerId, providerType);
     }
 
-    public T getDefault() throws ProviderException {
-        return providers.getDefault(providerType);
-    }
-
-    public boolean hasDefault() throws ProviderException {
-        return providers.hasDefault(providerType);
-    }
+//    public T getDefault() throws ProviderException {
+//        return providers.getDefault(providerType);
+//    }
+//
+//    public boolean hasDefault() throws ProviderException {
+//        return providers.hasDefault(providerType);
+//    }
 
     @Override
     public Descriptor describe() {

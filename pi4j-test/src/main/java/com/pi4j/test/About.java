@@ -28,6 +28,7 @@ package com.pi4j.test;/*-
 import com.pi4j.Pi4J;
 import com.pi4j.binding.Binding;
 import com.pi4j.exception.Pi4JException;
+import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderType;
 
@@ -45,7 +46,7 @@ public class About {
         System.out.println(title);
         System.out.println("=====================================================");
         for (Binding binding : Pi4J.context().bindings().all().values()) {
-            System.out.println("  " + binding.name() + "[" + binding.id() + "]; ");
+            System.out.println("  " + binding.name() + " [" + binding.id() + "]; ");
         }
     }
 
@@ -57,7 +58,7 @@ public class About {
         System.out.println(title);
         System.out.println("=====================================================");
         for (Provider provider : Pi4J.providers().all().values()) {
-            System.out.println("  " + provider.name() + "[" + provider.id() + "]; " + provider.type());
+            System.out.println("  " + provider.name() + " [" + provider.id() + "]; " + provider.type());
         }
     }
 
@@ -66,16 +67,33 @@ public class About {
         System.out.println(providerType + " PROVIDERS");
         System.out.println("=====================================================");
         for(var provider : Pi4J.providers().all(providerType).values()){
-            System.out.println("  " + provider.name() + "[" + provider.id() + "]; " + provider.type());
+            System.out.println("  " + provider.name() + " [" + provider.id() + "]; " + provider.type());
         }
     }
 
-    public void enumerateDefaultProviders() throws Pi4JException {
+    public void enumeratePlatforms() throws Pi4JException {
         System.out.println("=====================================================");
-        System.out.println("DEFAULT PROVIDERS");
+        System.out.println("PLATFORMS");
         System.out.println("=====================================================");
-        for(var provider : Pi4J.providers().defaults().values()){
-            System.out.println("  " + provider.name() + "[" + provider.id() + "]; " + provider.type());
+        for (Platform platform : Pi4J.platforms().all().values()) {
+            System.out.println("  " + platform.name() + " [" + platform.id() + "]; " + platform.getDescription());
         }
     }
+
+    public void describeDeafultPlatform() throws Pi4JException {
+        System.out.println("=====================================================");
+        System.out.println("DEFAULT (RUNTIME) PLATFORM ");
+        System.out.println("=====================================================");
+        System.out.println("  " + Pi4J.platform().name() + " [" + Pi4J.platform().id() + "]");
+        Pi4J.platform().describe().print(System.out);
+    }
+
+//    public void enumeratePlatformProviders() throws Pi4JException {
+//        System.out.println("=====================================================");
+//        System.out.println("PLATFORM PROVIDERS");
+//        System.out.println("=====================================================");
+//        for(var provider : Pi4J.platform().providers().values()){
+//            System.out.println("  " + provider.name() + "[" + provider.id() + "]; " + provider.type());
+//        }
+//    }
 }

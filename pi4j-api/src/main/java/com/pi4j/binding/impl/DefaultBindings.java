@@ -324,8 +324,8 @@ public class DefaultBindings implements Bindings {
     @Override
     public void terminate(Context context) throws BindingException {
 
-        // ensure bindings have not been initialized
-        if(!initialized) throw new BindingsAlreadyInitialized();
+        // ensure bindings have been initialized
+        if(!initialized) throw new BindingsNotInitialized();
 
         logger.trace("invoked 'terminate();'");
 

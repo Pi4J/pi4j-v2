@@ -140,10 +140,10 @@ public class DefaultRegistry implements Registry {
         // validate a default provider exists for the requested IO type
         Provider provider = null;
         try {
-            provider = Pi4J.providers().getDefault(ProviderType.getProviderTypeByIOClass(type));
+            provider = context.platform().provider(ProviderType.getProviderTypeByIOClass(type));
             if(provider == null)
                 throw new ProviderNotFoundException();
-        } catch (NotInitializedException e) {
+        } catch (ProviderException e) {
             throw new ProviderNotFoundException();
         }
 

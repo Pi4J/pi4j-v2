@@ -27,6 +27,8 @@ package com.pi4j.common.exception;
  * #L%
  */
 
+import com.pi4j.exception.Pi4JException;
+
 /**
  * <p>
  * This exception is thrown if a platform assignment is attempted when a
@@ -37,7 +39,7 @@ package com.pi4j.common.exception;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public class LifecycleException extends Exception {
+public class LifecycleException extends Pi4JException {
 
     /**
      * Default Constructor

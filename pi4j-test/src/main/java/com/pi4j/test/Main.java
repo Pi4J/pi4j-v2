@@ -43,6 +43,9 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        // set logging
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+
         // initialize Pi4J
         Context pi4j = Pi4J.initialize();
 
@@ -53,7 +56,8 @@ public class Main {
         About about = new About();
         about.enumerateBindings();
         about.enumerateProviders();
-        about.enumerateDefaultProviders();
+        about.enumeratePlatforms();
+        about.describeDeafultPlatform();
         for(var providerType : ProviderType.values()){
             about.enumerateProviders(providerType);
         }

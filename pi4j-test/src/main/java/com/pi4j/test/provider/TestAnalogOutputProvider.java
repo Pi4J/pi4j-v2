@@ -28,7 +28,10 @@ package com.pi4j.test.provider;
  */
 
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.analog.*;
+import com.pi4j.io.gpio.analog.AnalogOutput;
+import com.pi4j.io.gpio.analog.AnalogOutputConfig;
+import com.pi4j.io.gpio.analog.AnalogOutputProvider;
+import com.pi4j.io.gpio.analog.AnalogOutputProviderBase;
 
 public class TestAnalogOutputProvider extends AnalogOutputProviderBase implements AnalogOutputProvider {
 

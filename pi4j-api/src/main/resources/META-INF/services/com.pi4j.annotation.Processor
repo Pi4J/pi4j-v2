@@ -4,6 +4,8 @@ com.pi4j.annotation.processor.injector.ContextInjector
 com.pi4j.annotation.processor.injector.DigitalInputInjector
 com.pi4j.annotation.processor.injector.DigitalOutputInjector
 com.pi4j.annotation.processor.injector.I2CInjector
+com.pi4j.annotation.processor.injector.PlatformInjector
+com.pi4j.annotation.processor.injector.PlatformsInjector
 com.pi4j.annotation.processor.injector.ProviderGroupInjector
 com.pi4j.annotation.processor.injector.ProviderInjector
 com.pi4j.annotation.processor.injector.ProvidersInjector
@@ -18,6 +20,7 @@ com.pi4j.annotation.processor.register.AnalogOutputRegistrationProcessor
 com.pi4j.annotation.processor.register.DigitalChangeListenerRegistrationProcessor
 com.pi4j.annotation.processor.register.DigitalInputRegistrationProcessor
 com.pi4j.annotation.processor.register.DigitalOutputRegistrationProcessor
+com.pi4j.annotation.processor.register.PlatformRegistrationProcessor
 com.pi4j.annotation.processor.register.ProviderRegistrationProcessor
 com.pi4j.annotation.processor.event.AnalogChangeEventProcessor
 com.pi4j.annotation.processor.event.DigitalChangeEventProcessor

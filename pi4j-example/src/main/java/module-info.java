@@ -1,8 +1,9 @@
+
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: EXAMPLE :: Sample Code
+ * PROJECT       :  Pi4J :: EXAMPLE  :: Sample Code
  * FILENAME      :  module-info.java
  *
  * This file is part of the Pi4J project. More information about
@@ -31,18 +32,28 @@ module pi4j.example {
     uses com.pi4j.binding.Binding;
     uses com.pi4j.provider.Provider;
 
-    // Pi4J Mock Module
-    requires pi4j.provider.mock;
-    uses com.pi4j.provider.mock.io.gpio.analog.MockAnalogInput;
-    uses com.pi4j.provider.mock.io.gpio.analog.MockAnalogInputProvider;
-    uses com.pi4j.provider.mock.io.gpio.analog.MockAnalogOutput;
-    uses com.pi4j.provider.mock.io.gpio.analog.MockAnalogOutputProvider;
-    uses com.pi4j.provider.mock.io.gpio.digital.MockDigitalInput;
-    uses com.pi4j.provider.mock.io.gpio.digital.MockDigitalInputProvider;
-    uses com.pi4j.provider.mock.io.gpio.digital.MockDigitalOutput;
-    uses com.pi4j.provider.mock.io.gpio.digital.MockDigitalOutputProvider;
+    // Pi4J Mock Platform and Providers
+    requires pi4j.mock;
+    uses com.pi4j.mock.platform.MockPlatform;
+    uses com.pi4j.mock.provider.gpio.analog.MockAnalogInput;
+    uses com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
+    uses com.pi4j.mock.provider.gpio.analog.MockAnalogOutput;
+    uses com.pi4j.mock.provider.gpio.analog.MockAnalogOutputProvider;
+    uses com.pi4j.mock.provider.gpio.digital.MockDigitalInput;
+    uses com.pi4j.mock.provider.gpio.digital.MockDigitalInputProvider;
+    uses com.pi4j.mock.provider.gpio.digital.MockDigitalOutput;
+    uses com.pi4j.mock.provider.gpio.digital.MockDigitalOutputProvider;
+    uses com.pi4j.mock.provider.pwm.MockPwm;
+    uses com.pi4j.mock.provider.pwm.MockPwmProvider;
+    uses com.pi4j.mock.provider.i2c.MockI2C;
+    uses com.pi4j.mock.provider.i2c.MockI2CProvider;
+    uses com.pi4j.mock.provider.spi.MockSpi;
+    uses com.pi4j.mock.provider.spi.MockSpiProvider;
+    uses com.pi4j.mock.provider.serial.MockSerial;
+    uses com.pi4j.mock.provider.serial.MockSerialProvider;
 
     // allow access to classes in the following namespaces for Pi4J annotation processing
     opens com.pi4j.example.gpio.analog;
     opens com.pi4j.example.gpio.digital;
+    opens com.pi4j.example;
 }

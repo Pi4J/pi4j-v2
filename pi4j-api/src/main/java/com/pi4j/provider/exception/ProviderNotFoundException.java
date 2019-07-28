@@ -47,28 +47,28 @@ public class ProviderNotFoundException extends ProviderException {
      * Default Constructor
      */
     public ProviderNotFoundException(){
-        super("Pi4J io provider could not be detected.  Please include the 'io' JAR in the classpath for your io.");
+        super("Pi4J provider could not be detected.  Please include a 'provider' JAR in the classpath.");
     }
 
     /**
      * Alternate Constructor
      */
     public ProviderNotFoundException(String providerId){
-        super("Pi4J io [" + providerId + "] could not be found.  Please include the 'io' JAR in the classpath for your io.");
+        super("Pi4J provider [" + providerId + "] could not be found.  Please include this 'provider' JAR in the classpath.");
     }
 
     /**
      * Alternate Constructor
      */
     public ProviderNotFoundException(ProviderType providerType){
-        super("Pi4J io for [" + providerType + "] could not be found.  Please include a 'io' JAR in the classpath for your io for this binding type.");
+        super("Pi4J provider type [" + providerType + "] could not be found.  Please include this 'provider' JAR in the classpath for this provider type.");
     }
 
     /**
      * Alternate Constructor
      */
     public ProviderNotFoundException(Class<? extends Provider> providerClass){
-        super("Pi4J io for [" + providerClass + "] could not be found.  Please include a 'io' JAR in the classpath for your io for this binding type.");
+        super("Pi4J provider class [" + providerClass + "] could not be found.  Please include this 'provider' JAR in the classpath for this provider class.");
     }
 
 }

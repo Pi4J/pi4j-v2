@@ -31,7 +31,7 @@ import com.pi4j.common.Descriptor;
 import com.pi4j.common.Identity;
 import com.pi4j.common.Lifecycle;
 
-public interface Binding extends Identity, Lifecycle {
+public interface Binding<T> extends Identity, Lifecycle<T> {
 
     default Descriptor describe() {
         return Descriptor.create()

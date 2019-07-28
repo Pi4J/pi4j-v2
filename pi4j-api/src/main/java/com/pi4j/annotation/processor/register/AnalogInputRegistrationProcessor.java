@@ -98,14 +98,12 @@ public class AnalogInputRegistrationProcessor implements RegisterProcessor<Analo
             if (range != null) builder.max(range.max());
         }
 
-        AnalogInputProvider provider = null;
-        if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
-            provider = ProviderAnnotationProcessor.instance(field, AnalogInputProvider.class);
-        } else {
-            provider = context.providers().getDefault(AnalogInputProvider.class);
-        }
-
         // create and return I/O instance from registry
-        return AnalogInput.create(provider, builder.build());
+        if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
+            var provider = ProviderAnnotationProcessor.instance(context, field, AnalogInputProvider.class);
+            return AnalogInput.create(provider, builder.build());
+        } else {
+            return AnalogInput.create(builder.build());
+        }
     }
 }

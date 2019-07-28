@@ -116,14 +116,12 @@ public class AnalogOutputRegistrationProcessor implements RegisterProcessor<Anal
             if (stepValue != null) builder.step(stepValue.value());
         }
 
-        AnalogOutputProvider provider = null;
-        if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
-            provider = ProviderAnnotationProcessor.instance(field, AnalogOutputProvider.class);
-        } else {
-            provider = context.providers().getDefault(AnalogOutputProvider.class);
-        }
-
         // create and return I/O instance from registry
-        return AnalogOutput.create(provider, builder.build());
+        if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
+            var provider = ProviderAnnotationProcessor.instance(context, field, AnalogOutputProvider.class);
+            return AnalogOutput.create(provider, builder.build());
+        } else {
+            return AnalogOutput.create(builder.build());
+        }
     }
 }

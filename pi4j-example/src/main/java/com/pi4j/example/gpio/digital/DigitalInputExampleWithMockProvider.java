@@ -4,7 +4,7 @@ package com.pi4j.example.gpio.digital;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: EXAMPLE :: Sample Code
+ * PROJECT       :  Pi4J :: EXAMPLE  :: Sample Code
  * FILENAME      :  DigitalInputExampleWithMockProvider.java
  *
  * This file is part of the Pi4J project. More information about
@@ -31,8 +31,8 @@ import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalState;
-import com.pi4j.provider.mock.io.gpio.digital.MockDigitalInput;
-import com.pi4j.provider.mock.io.gpio.digital.MockDigitalInputProvider;
+import com.pi4j.mock.provider.gpio.digital.MockDigitalInput;
+import com.pi4j.mock.provider.gpio.digital.MockDigitalInputProvider;
 import com.pi4j.util.Console;
 
 

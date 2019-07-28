@@ -25,7 +25,31 @@
  * #L%
  */
 module pi4j.test {
+    requires slf4j.simple;
+
+    // Pi4J API
     requires pi4j.api;
+
     uses com.pi4j.binding.Binding;
     uses com.pi4j.provider.Provider;
+
+    // Pi4J Mock Platform and Providers
+    requires pi4j.mock;
+    uses com.pi4j.mock.platform.MockPlatform;
+    uses com.pi4j.mock.provider.gpio.analog.MockAnalogInput;
+    uses com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
+    uses com.pi4j.mock.provider.gpio.analog.MockAnalogOutput;
+    uses com.pi4j.mock.provider.gpio.analog.MockAnalogOutputProvider;
+    uses com.pi4j.mock.provider.gpio.digital.MockDigitalInput;
+    uses com.pi4j.mock.provider.gpio.digital.MockDigitalInputProvider;
+    uses com.pi4j.mock.provider.gpio.digital.MockDigitalOutput;
+    uses com.pi4j.mock.provider.gpio.digital.MockDigitalOutputProvider;
+    uses com.pi4j.mock.provider.pwm.MockPwm;
+    uses com.pi4j.mock.provider.pwm.MockPwmProvider;
+    uses com.pi4j.mock.provider.i2c.MockI2C;
+    uses com.pi4j.mock.provider.i2c.MockI2CProvider;
+    uses com.pi4j.mock.provider.spi.MockSpi;
+    uses com.pi4j.mock.provider.spi.MockSpiProvider;
+    uses com.pi4j.mock.provider.serial.MockSerial;
+    uses com.pi4j.mock.provider.serial.MockSerialProvider;
 }

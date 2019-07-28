@@ -97,14 +97,12 @@ public class DigitalInputRegistrationProcessor implements RegisterProcessor<Digi
             if (pull != null) builder.pull(pull.value());
         }
 
-        DigitalInputProvider provider = null;
-        if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
-            provider = ProviderAnnotationProcessor.instance(field, DigitalInputProvider.class);
-        } else {
-            provider = context.providers().getDefault(DigitalInputProvider.class);
-        }
-
         // create and return I/O instance from registry
-        return DigitalInput.create(provider, builder.build());
+        if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
+            var provider = ProviderAnnotationProcessor.instance(context, field, DigitalInputProvider.class);
+            return DigitalInput.create(provider, builder.build());
+        } else {
+            return DigitalInput.create(builder.build());
+        }
     }
 }

@@ -103,14 +103,12 @@ public class DigitalOutputRegistrationProcessor implements RegisterProcessor<Dig
             if (initialState != null) builder.initial(initialState.value());
         }
 
-        DigitalOutputProvider provider = null;
-        if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
-            provider = ProviderAnnotationProcessor.instance(field, DigitalOutputProvider.class);
-        } else {
-            provider = context.providers().getDefault(DigitalOutputProvider.class);
-        }
-
         // create and return I/O instance from registry
-        return DigitalOutput.create(provider, builder.build());
+        if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
+            var provider = ProviderAnnotationProcessor.instance(context, field, DigitalOutputProvider.class);
+            return DigitalOutput.create(provider, builder.build());
+        } else {
+            return DigitalOutput.create(builder.build());
+        }
     }
 }

@@ -58,11 +58,8 @@ public class SerialFactory {
     }
 
     public static Serial instance(SerialConfig config) throws ProviderException, NotInitializedException {
-        // get default SPI io
-        var provider = Pi4J.providers().serial().getDefault();
-
-        // get SPI instance using default io
-        return instance(provider, config);
+        // get SPI instance using default platform provider
+        return instance((SerialProvider)null, config);
     }
 
     public static Serial instance(String providerId, String device) throws ProviderException, NotInitializedException {
@@ -96,7 +93,7 @@ public class SerialFactory {
         try {
             // get default SPI io if io is null
             if(provider == null){
-                provider = Pi4J.providers().serial().getDefault();
+                provider = Pi4J.platform().serial();
             }
             // create a SPI instance using the io
             return provider.register(Pi4J.context(), config);

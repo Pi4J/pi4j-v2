@@ -29,7 +29,6 @@ package com.pi4j.test.binding;
 
 import com.pi4j.Pi4J;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.test.About;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,14 +58,12 @@ public class AutoBindingsTest {
     }
 
     @Test
-    public void testBindingsEmpty() throws Exception {
-        About about = new About();
-
+    public void testBindingsNotEmpty() throws Exception {
         // ensure that 1 or more bindings were detected/loaded into the Pi4J context
         //assertFalse(Pi4J.context().bindings().all().isEmpty());
 
         // print out the detected Pi4J binding libraries found on the class path
-        about.enumerateBindings();
+        Pi4J.context().bindings().describe().print(System.out);
     }
 
 }

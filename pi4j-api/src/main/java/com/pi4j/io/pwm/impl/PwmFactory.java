@@ -46,11 +46,8 @@ public class PwmFactory {
     }
 
     public static Pwm instance(PwmConfig config) throws ProviderException, NotInitializedException {
-        // get default PWM io
-        var provider = Pi4J.providers().pwm().getDefault();
-
         // get I2C instance using default io
-        return instance(provider, config);
+        return instance((PwmProvider)null, config);
     }
 
     public static Pwm instance(int address) throws ProviderException, NotInitializedException {
@@ -64,7 +61,7 @@ public class PwmFactory {
     public static Pwm instance(String providerId, PwmConfig config) throws ProviderException, NotInitializedException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
-            return instance(config);
+            return instance((PwmProvider)null, config);
         }
         else{
             PwmProvider provider = Pi4J.providers().pwm().get(providerId);
@@ -80,7 +77,7 @@ public class PwmFactory {
         try {
             // get default PWM io if io is null
             if(provider == null){
-                provider = Pi4J.providers().pwm().getDefault();
+                provider = Pi4J.platform().pwm();
             }
             // create a PWM instance using the io
             return provider.register(Pi4J.context(), config);

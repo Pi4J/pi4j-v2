@@ -47,10 +47,8 @@ public class NoBindingsTest {
     }
 
     @After
-    public void afterTest() {
-        try {
-            Pi4J.terminate();
-        } catch (Pi4JException e) { /* do nothing */ }
+    public void afterTest() throws Pi4JException {
+        Pi4J.terminate();
     }
 
     @Test

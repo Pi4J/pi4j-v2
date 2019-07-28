@@ -31,6 +31,8 @@ import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.binding.Bindings;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
+import com.pi4j.platform.Platform;
+import com.pi4j.platform.Platforms;
 import com.pi4j.provider.Providers;
 import com.pi4j.registry.Registry;
 
@@ -38,17 +40,24 @@ public interface Context extends Describable {
     Bindings bindings();
     Providers providers();
     Registry registry();
+    Platforms platforms();
 
     Context inject(Object... objects) throws AnnotationException;
+
+    default Platform platform(){
+        return platforms().getDefault();
+    }
 
     default Descriptor describe() {
         Descriptor descriptor = Descriptor.create()
                 .category("CONTEXT")
                 .name("Runtime Context")
                 .type(this.getClass());
-        descriptor.add(registry().describe());
-        descriptor.add(providers().describe());
+
         descriptor.add(bindings().describe());
+        descriptor.add(registry().describe());
+        descriptor.add(platforms().describe());
+        descriptor.add(providers().describe());
         return descriptor;
     }
 }

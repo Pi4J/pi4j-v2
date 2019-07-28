@@ -29,6 +29,7 @@ import com.pi4j.annotation.processor.register.*;
 module pi4j.api {
     exports com.pi4j;
     exports com.pi4j.annotation;
+    exports com.pi4j.annotation.exception;
     exports com.pi4j.binding;
     exports com.pi4j.binding.exception;
     exports com.pi4j.common;
@@ -48,6 +49,8 @@ module pi4j.api {
     exports com.pi4j.io.pwm;
     exports com.pi4j.io.serial;
     exports com.pi4j.io.spi;
+    exports com.pi4j.platform;
+    exports com.pi4j.platform.exception;
     exports com.pi4j.provider;
     exports com.pi4j.provider.exception;
     exports com.pi4j.registry;
@@ -55,6 +58,7 @@ module pi4j.api {
     exports com.pi4j.util;
 
     uses com.pi4j.binding.Binding;
+    uses com.pi4j.platform.Platform;
     uses com.pi4j.provider.Provider;
     uses com.pi4j.annotation.Processor;
 
@@ -65,6 +69,8 @@ module pi4j.api {
                     com.pi4j.annotation.processor.injector.DigitalInputInjector,
                     com.pi4j.annotation.processor.injector.DigitalOutputInjector,
                     com.pi4j.annotation.processor.injector.I2CInjector,
+                    com.pi4j.annotation.processor.injector.PlatformInjector,
+                    com.pi4j.annotation.processor.injector.PlatformsInjector,
                     com.pi4j.annotation.processor.injector.ProviderGroupInjector,
                     com.pi4j.annotation.processor.injector.ProviderInjector,
                     com.pi4j.annotation.processor.injector.ProvidersInjector,
@@ -78,6 +84,7 @@ module pi4j.api {
                     DigitalChangeListenerRegistrationProcessor,
                     DigitalInputRegistrationProcessor,
                     DigitalOutputRegistrationProcessor,
+                    PlatformRegistrationProcessor,
                     ProviderRegistrationProcessor,
                     com.pi4j.annotation.processor.event.AnalogChangeEventProcessor,
                     com.pi4j.annotation.processor.event.DigitalChangeEventProcessor;
