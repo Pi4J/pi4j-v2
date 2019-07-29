@@ -1,5 +1,6 @@
 package com.pi4j.io.spi;
 
+import com.pi4j.context.Context;
 import com.pi4j.provider.ProviderBase;
 
 /*
@@ -45,5 +46,5 @@ public abstract class SpiProviderBase
     }
 
     @Override
-    public abstract Spi create(SpiConfig config) throws Exception;
+    public abstract Spi create(Context context, SpiConfig config) throws Exception;
 }

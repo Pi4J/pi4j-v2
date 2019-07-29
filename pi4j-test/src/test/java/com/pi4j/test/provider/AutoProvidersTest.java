@@ -29,7 +29,6 @@ package com.pi4j.test.provider;
 
 import com.pi4j.Pi4J;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.test.About;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,12 +63,10 @@ public class AutoProvidersTest {
 
     @Test
     public void testProvidersNotEmpty() throws Exception {
-        About about = new About();
-
         // ensure that 1 or more providers were detected/loaded into the Pi4J context
         assertFalse(Pi4J.context().providers().all().isEmpty());
 
         // print out the detected Pi4J io libraries found on the class path
-        about.enumerateProviders("AUTO DETECTED PROVIDERS (discovered via classpath)");
+        Pi4J.context().providers().describe().print(System.out);
     }
 }

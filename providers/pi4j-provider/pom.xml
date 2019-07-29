@@ -31,7 +31,6 @@
 
     <!-- PROJECT MODULES <Pi4J BINDINGS> -->
     <modules>
-        <module>../pi4j-provider-mock</module>
         <module>../pi4j-provider-raspberrypi</module>
     </modules>
 

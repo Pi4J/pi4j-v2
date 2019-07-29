@@ -71,14 +71,16 @@ public class ManualProvidersCtorTest {
     }
 
     @Test
-    public void testProvidersCount() throws Exception {
+    public void testProviderCount() throws Exception {
 
-        // ensure that no io were detected/loaded into the Pi4J context
-        assertEquals(Pi4J.context().providers().all().size(), 4);
+        // ensure that only 4 providers were detected/loaded into the Pi4J context
+        assertEquals(4 , Pi4J.context().providers().all().size());
 
-        // print out the detected Pi4J io libraries found on the class path
-        About about = new About();
-        about.enumerateProviders("4 CUSTOM PROVIDERS (added via constructor)");
+        // print out the detected Pi4J platforms
+        Pi4J.platforms().describe().print(System.out);
+
+        // print out the detected Pi4J providers
+        Pi4J.providers().describe().print(System.out);
     }
 
     @Test
@@ -88,7 +90,7 @@ public class ManualProvidersCtorTest {
         Pi4J.context().providers().remove("test-serial-provider-2");
 
         // ensure the correct provider count
-        assertEquals(Pi4J.context().providers().all().size(), 3);
+        assertEquals(3, Pi4J.context().providers().all().size());
 
         // print out the detected Pi4J provider libraries found on the class path
         About about = new About();

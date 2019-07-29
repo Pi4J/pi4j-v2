@@ -43,4 +43,8 @@ public abstract class BindingBase extends IdentityBase implements Binding {
         super(id, name);
     }
 
+    public BindingBase(String id, String name, String description){
+        super(id, name, description);
+    }
+
 }

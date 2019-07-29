@@ -44,6 +44,7 @@ import com.pi4j.provider.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -295,14 +296,30 @@ public class DefaultProviders implements Providers {
     }
 
     @Override
-    public <T extends Provider> Providers add(T ... provider) throws ProviderException {
+    public <T extends Provider> T get(Class<T> providerClass) throws ProviderException {
 
         // ensure providers have been initialized
         if(!initialized) throw new ProvidersNotInitializedException();
 
-        logger.trace("invoked 'add()' io [count={}]", provider.length);
+        // return the provider instance from the managed provider map that contains the given provider-class
+        var subset = all(providerClass);
+        if(subset.isEmpty()){
+            throw new ProviderNotFoundException(providerClass);
+        }
+        // return first instance found
+        return (T)subset.values().iterator().next();
+    }
 
-        // iterate the given io array
+
+    @Override
+    public <T extends Provider> Providers add(Collection<T> provider) throws ProviderException {
+
+        // ensure providers have been initialized
+        if(!initialized) throw new ProvidersNotInitializedException();
+
+        logger.trace("invoked 'add()' io [count={}]", provider.size());
+
+        // iterate the given provider collection
         for(var providerInstance : provider) {
 
             if(providerInstance != null) {
@@ -321,11 +338,11 @@ public class DefaultProviders implements Providers {
                 providers.put(providerInstance.id(), providerInstance);
                 logger.debug("added io to managed io map [id={}; name={}; class={}]",
                         providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
-
-                // add a default io based on io ranking score
-                if (!hasDefault(providerInstance.getClass())) {
-                    setDefault(providerInstance.id());
-                }
+// TODO :: Remove Default Provider impl from Providers
+//                // add a default io based on io ranking score
+//                if (!hasDefault(providerInstance.getClass())) {
+//                    setDefault(providerInstance.id());
+//                }
             }
         }
 
@@ -388,166 +405,167 @@ public class DefaultProviders implements Providers {
                     removedProvider.id(), removedProvider.name(), removedProvider.getClass().getName());
         }
 
+// TODO :: Remove Default Provider impl from Providers
         // also remove from default set if exists
-        try {
-            removeDefault(providerId);
-        }
-        catch (Exception ex){}
-    }
-
-    @Override
-    public <T extends Provider> Map<ProviderType, T> defaults() throws ProviderException {
-        var defaults = new ConcurrentHashMap<ProviderType, T>();
-        for(var providerId : defaultProviders.values()){
-            Provider provider = get(providerId);
-            defaults.put(provider.type(), (T) provider);
-        }
-        return defaults;
-    }
-
-    @Override
-    public <T extends Provider> T getDefault(Class<T> providerClass) throws ProviderException {
-
-        // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitializedException();
-
-        // iterate the managed default set of providers looking for a default io with a matching io-class
-        for(var instance : defaults().values()){
-            if(providerClass.isAssignableFrom(instance.getClass())){
-                return (T) instance;
-            }
-        }
-
-        throw new ProviderNotFoundException(providerClass);
-    }
-
-    @Override
-    public <T extends Provider> T getDefault(ProviderType providerType) throws ProviderException {
-
-        // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitializedException();
-
-        // iterate the managed default set of providers looking for a default io with a matching io-type
-        if(defaultProviders.containsKey(providerType)){
-            var providerId = defaultProviders.get(providerType);
-            return get(providerId, providerType);
-        }
-
-        throw new ProviderNotFoundException(providerType);
-    }
-
-    @Override
-    public <T extends Provider> boolean hasDefault(Class<T> providerClass) throws ProviderException {
-
-        // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitializedException();
-
-        try {
-            return getDefault(providerClass) != null;
-        }
-        catch (ProviderNotFoundException e){
-            return false;
-        }
-    }
-
-    @Override
-    public <T extends Provider> boolean hasDefault(ProviderType providerType) throws ProviderException {
-
-        // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitializedException();
-
-        try {
-            return getDefault(providerType) != null;
-        }
-        catch (ProviderNotFoundException e){
-            return false;
-        }
-    }
-
-    @Override
-    public void setDefault(String providerId) throws ProviderException {
-
-        // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitializedException();
-
-        // ensure requested io id is detected
-        if(!providers.containsKey(providerId)){
-            throw new ProviderNotFoundException();
-        }
-
-        logger.trace("invoked 'setDefault()' for io [id={}]", providerId);
-
-        // get io instance and check to see if the default has already been assigned
-        var provider = providers.get(providerId);
-//        if(defaultProviders.containsKey(io.type())){
-//            throw new ProviderAlreadyAssignedException(defaultProviders.get(io.type()));
+//        try {
+//            removeDefault(providerId);
 //        }
-
-        // assign new io instance by io class
-        defaultProviders.put(provider.type(), providerId);
-
-        logger.debug("set default io for io type [{}] to [id={}; name={}; class={}]",
-                provider.type(), provider.id(), provider.name(), provider.getClass().getName());
+//        catch (Exception ex){}
     }
 
-    @Override
-    public void removeDefault(String providerId) throws ProviderException {
-
-        // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitializedException();
-
-        logger.trace("invoked 'removeDefault()' for io [id={}]", providerId);
-
-        // ensure requested io id is detected
-        var it = defaultProviders.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<ProviderType, String> instance = (Map.Entry<ProviderType, String>) it.next();
-            ProviderType instanceType = instance.getKey();
-            String instanceId = instance.getValue();
-            if(instanceId.equals(providerId)){
-                defaultProviders.remove(instanceType);
-                logger.debug("removed default io for [type={}; id={}]", instanceType, instanceId);
-                return;
-            }
-        }
-        throw new ProviderNotFoundException();
-    }
-
-    @Override
-    public void removeDefault(ProviderType providerType) throws ProviderException {
-
-        // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitializedException();
-
-        logger.trace("invoked 'removeDefault()' for io [type={}]", providerType);
-
-        // ensure requested io id is detected
-        if(!defaultProviders.containsKey(providerType))
-            throw new ProviderNotFoundException();
-
-        // remove default io type
-        var providerId = defaultProviders.remove(providerType.toString());
-        logger.debug("removed default io for [type={}; id={}]", providerType, providerId);
-    }
-
-    @Override
-    public <T extends Provider> void removeDefault(Class<T> providerClass) throws ProviderException {
-
-        // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitializedException();
-
-        logger.trace("invoked 'removeDefault()' for io [class={}]", providerClass.getName());
-
-        // ensure requested io id is detected
-        for(var provider : defaults().values()){
-            if(providerClass.isAssignableFrom(provider.getClass())){
-                removeDefault(provider.id());
-                return;
-            }
-        }
-
-        throw new ProviderNotFoundException();
-    }
+//    @Override
+//    public <T extends Provider> Map<ProviderType, T> defaults() throws ProviderException {
+//        var defaults = new ConcurrentHashMap<ProviderType, T>();
+//        for(var providerId : defaultProviders.values()){
+//            Provider provider = get(providerId);
+//            defaults.put(provider.type(), (T) provider);
+//        }
+//        return defaults;
+//    }
+//
+//    @Override
+//    public <T extends Provider> T getDefault(Class<T> providerClass) throws ProviderException {
+//
+//        // ensure providers have been initialized
+//        if(!initialized) throw new ProvidersNotInitializedException();
+//
+//        // iterate the managed default set of providers looking for a default io with a matching io-class
+//        for(var instance : defaults().values()){
+//            if(providerClass.isAssignableFrom(instance.getClass())){
+//                return (T) instance;
+//            }
+//        }
+//
+//        throw new ProviderNotFoundException(providerClass);
+//    }
+//
+//    @Override
+//    public <T extends Provider> T getDefault(ProviderType providerType) throws ProviderException {
+//
+//        // ensure providers have been initialized
+//        if(!initialized) throw new ProvidersNotInitializedException();
+//
+//        // iterate the managed default set of providers looking for a default io with a matching io-type
+//        if(defaultProviders.containsKey(providerType)){
+//            var providerId = defaultProviders.get(providerType);
+//            return get(providerId, providerType);
+//        }
+//
+//        throw new ProviderNotFoundException(providerType);
+//    }
+//
+//    @Override
+//    public <T extends Provider> boolean hasDefault(Class<T> providerClass) throws ProviderException {
+//
+//        // ensure providers have been initialized
+//        if(!initialized) throw new ProvidersNotInitializedException();
+//
+//        try {
+//            return getDefault(providerClass) != null;
+//        }
+//        catch (ProviderNotFoundException e){
+//            return false;
+//        }
+//    }
+//
+//    @Override
+//    public <T extends Provider> boolean hasDefault(ProviderType providerType) throws ProviderException {
+//
+//        // ensure providers have been initialized
+//        if(!initialized) throw new ProvidersNotInitializedException();
+//
+//        try {
+//            return getDefault(providerType) != null;
+//        }
+//        catch (ProviderNotFoundException e){
+//            return false;
+//        }
+//    }
+//
+//    @Override
+//    public void setDefault(String providerId) throws ProviderException {
+//
+//        // ensure providers have been initialized
+//        if(!initialized) throw new ProvidersNotInitializedException();
+//
+//        // ensure requested io id is detected
+//        if(!providers.containsKey(providerId)){
+//            throw new ProviderNotFoundException();
+//        }
+//
+//        logger.trace("invoked 'setDefault()' for io [id={}]", providerId);
+//
+//        // get io instance and check to see if the default has already been assigned
+//        var provider = providers.get(providerId);
+////        if(defaultProviders.containsKey(io.type())){
+////            throw new ProviderAlreadyAssignedException(defaultProviders.get(io.type()));
+////        }
+//
+//        // assign new io instance by io class
+//        defaultProviders.put(provider.type(), providerId);
+//
+//        logger.debug("set default io for io type [{}] to [id={}; name={}; class={}]",
+//                provider.type(), provider.id(), provider.name(), provider.getClass().getName());
+//    }
+//
+//    @Override
+//    public void removeDefault(String providerId) throws ProviderException {
+//
+//        // ensure providers have been initialized
+//        if(!initialized) throw new ProvidersNotInitializedException();
+//
+//        logger.trace("invoked 'removeDefault()' for io [id={}]", providerId);
+//
+//        // ensure requested io id is detected
+//        var it = defaultProviders.entrySet().iterator();
+//        while (it.hasNext()) {
+//            Map.Entry<ProviderType, String> instance = (Map.Entry<ProviderType, String>) it.next();
+//            ProviderType instanceType = instance.getKey();
+//            String instanceId = instance.getValue();
+//            if(instanceId.equals(providerId)){
+//                defaultProviders.remove(instanceType);
+//                logger.debug("removed default io for [type={}; id={}]", instanceType, instanceId);
+//                return;
+//            }
+//        }
+//        throw new ProviderNotFoundException();
+//    }
+//
+//    @Override
+//    public void removeDefault(ProviderType providerType) throws ProviderException {
+//
+//        // ensure providers have been initialized
+//        if(!initialized) throw new ProvidersNotInitializedException();
+//
+//        logger.trace("invoked 'removeDefault()' for io [type={}]", providerType);
+//
+//        // ensure requested io id is detected
+//        if(!defaultProviders.containsKey(providerType))
+//            throw new ProviderNotFoundException();
+//
+//        // remove default io type
+//        var providerId = defaultProviders.remove(providerType.toString());
+//        logger.debug("removed default io for [type={}; id={}]", providerType, providerId);
+//    }
+//
+//    @Override
+//    public <T extends Provider> void removeDefault(Class<T> providerClass) throws ProviderException {
+//
+//        // ensure providers have been initialized
+//        if(!initialized) throw new ProvidersNotInitializedException();
+//
+//        logger.trace("invoked 'removeDefault()' for io [class={}]", providerClass.getName());
+//
+//        // ensure requested io id is detected
+//        for(var provider : defaults().values()){
+//            if(providerClass.isAssignableFrom(provider.getClass())){
+//                removeDefault(provider.id());
+//                return;
+//            }
+//        }
+//
+//        throw new ProviderNotFoundException();
+//    }
 
     @Override
     public void initialize(Context context, boolean autoDetect) throws ProviderException {

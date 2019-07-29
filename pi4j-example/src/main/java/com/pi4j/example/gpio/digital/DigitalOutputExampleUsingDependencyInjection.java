@@ -4,7 +4,7 @@ package com.pi4j.example.gpio.digital;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: EXAMPLE :: Sample Code
+ * PROJECT       :  Pi4J :: EXAMPLE  :: Sample Code
  * FILENAME      :  DigitalOutputExampleUsingDependencyInjection.java
  *
  * This file is part of the Pi4J project. More information about

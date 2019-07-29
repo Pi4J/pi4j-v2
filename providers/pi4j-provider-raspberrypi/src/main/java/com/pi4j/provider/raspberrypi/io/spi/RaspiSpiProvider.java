@@ -29,6 +29,7 @@ package com.pi4j.provider.raspberrypi.io.spi;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
@@ -46,7 +47,7 @@ public class RaspiSpiProvider extends SpiProviderBase implements SpiProvider {
     }
 
     @Override
-    public Spi create(SpiConfig config) throws Exception {
+    public Spi create(Context context, SpiConfig config) throws Exception {
         return null;
     }
 }

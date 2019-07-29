@@ -27,6 +27,7 @@ package com.pi4j.io.i2c.impl;
  * #L%
  */
 
+import com.pi4j.Pi4J;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
@@ -34,6 +35,7 @@ import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderInstantiateException;
 
+import static com.pi4j.Pi4J.platform;
 import static com.pi4j.Pi4J.providers;
 
 /**
@@ -47,11 +49,8 @@ public class I2CFactory {
     }
 
     public static I2C instance(I2CConfig config) throws ProviderException, NotInitializedException {
-        // get default I2C io
-        var provider = providers().i2c().getDefault();
-
         // get I2C instance using default io
-        return instance(provider, config);
+        return instance((I2CProvider) null, config);
     }
 
     public static I2C instance(String device, int address) throws ProviderException, NotInitializedException {
@@ -65,7 +64,7 @@ public class I2CFactory {
     public static I2C instance(String providerId, I2CConfig config) throws ProviderException, NotInitializedException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
-            return instance(config);
+            return instance((I2CProvider) null, config);
         }
         else{
             var provider = providers().i2c().get(providerId);
@@ -81,10 +80,10 @@ public class I2CFactory {
         try {
             // get default I2C io if io is null
             if(provider == null){
-                provider = providers().i2c().getDefault();
+                provider = platform().i2c();
             }
             // create a I2C instance using the io
-            return provider.instance(config);
+            return provider.register(Pi4J.context(), config);
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {

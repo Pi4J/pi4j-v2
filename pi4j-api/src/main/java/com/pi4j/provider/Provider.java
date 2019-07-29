@@ -30,11 +30,12 @@ package com.pi4j.provider;
 import com.pi4j.binding.Binding;
 import com.pi4j.common.Descriptor;
 import com.pi4j.config.Config;
+import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 
 public interface Provider<IO_TYPE extends IO, CONFIG_TYPE extends Config> extends Binding {
 
-    IO_TYPE instance(CONFIG_TYPE config) throws Exception;
+    IO_TYPE register(Context context, CONFIG_TYPE config) throws Exception;
 
     default ProviderType type() { return ProviderType.getProviderType(this.getClass()); };
     default ProviderType getType() { return type(); }
@@ -43,7 +44,8 @@ public interface Provider<IO_TYPE extends IO, CONFIG_TYPE extends Config> extend
     @Override
     default Descriptor describe() {
         Descriptor descriptor = Binding.super.describe();
-        descriptor.category(this.type().name());
+        //descriptor.category(this.type().name());
+        descriptor.category("PROVIDER");
         return descriptor;
     }
 }

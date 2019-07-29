@@ -33,6 +33,8 @@ import com.pi4j.annotation.impl.DefaultAnnotationEngine;
 import com.pi4j.binding.Bindings;
 import com.pi4j.binding.impl.DefaultBindings;
 import com.pi4j.context.Context;
+import com.pi4j.platform.Platforms;
+import com.pi4j.platform.impl.DefaultPlatforms;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.impl.DefaultProviders;
 import com.pi4j.registry.Registry;
@@ -43,6 +45,7 @@ public class DefaultContext implements Context {
     private Bindings bindings = DefaultBindings.singleton(this);
     private Providers providers = DefaultProviders.singleton(this);
     private Registry registry = DefaultRegistry.singleton(this);
+    private Platforms platforms = DefaultPlatforms.singleton(this);
     private AnnotationEngine annotationEngine = DefaultAnnotationEngine.singleton(this);
 
     private static Context singleton = null;
@@ -65,6 +68,9 @@ public class DefaultContext implements Context {
 
     @Override
     public Registry registry() { return this.registry; }
+
+    @Override
+    public Platforms platforms() { return this.platforms; }
 
     @Override
     public Bindings bindings() {

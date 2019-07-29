@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 
 public class DescriptorImpl implements Descriptor {
 
-    private Set<Descriptor> children = Collections.synchronizedSet(new LinkedHashSet<>());
+    private Set<Descriptor> children = Collections.synchronizedSet(new LinkedHashSet());
     private Descriptor parent;
 
     private String id;

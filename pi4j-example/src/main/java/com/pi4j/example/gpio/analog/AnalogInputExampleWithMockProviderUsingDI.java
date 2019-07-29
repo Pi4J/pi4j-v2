@@ -4,7 +4,7 @@ package com.pi4j.example.gpio.analog;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: EXAMPLE :: Sample Code
+ * PROJECT       :  Pi4J :: EXAMPLE  :: Sample Code
  * FILENAME      :  AnalogInputExampleWithMockProviderUsingDI.java
  *
  * This file is part of the Pi4J project. More information about
@@ -31,8 +31,8 @@ import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.provider.mock.io.gpio.analog.MockAnalogInput;
-import com.pi4j.provider.mock.io.gpio.analog.MockAnalogInputProvider;
+import com.pi4j.mock.provider.gpio.analog.MockAnalogInput;
+import com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
 import com.pi4j.util.Console;
 
 import java.util.concurrent.Callable;

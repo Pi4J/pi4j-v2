@@ -3,7 +3,7 @@ package com.pi4j.example;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: EXAMPLE :: Sample Code
+ * PROJECT       :  Pi4J :: EXAMPLE  :: Sample Code
  * FILENAME      :  Main.java
  *
  * This file is part of the Pi4J project. More information about

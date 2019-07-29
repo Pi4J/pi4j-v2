@@ -90,11 +90,12 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
     }
 
     @Override
-    public IO_TYPE instance(CONFIG_TYPE config) throws Exception {
-        var newInstance = create(config);
-        newInstance.provider(this); // TODO :: PROXY IMPL, REMOVE PROVIDER SETTER
+    public IO_TYPE register(Context context, CONFIG_TYPE config) throws Exception {
+        var newInstance = create(context, config);
+        // TODO :: PROXY IMPL, REMOVE PROVIDER SETTER
+        newInstance.provider(this);
         return newInstance;
     }
 
-    public abstract IO_TYPE create(CONFIG_TYPE config) throws Exception;
+    public abstract IO_TYPE create(Context context, CONFIG_TYPE config) throws Exception;
 }

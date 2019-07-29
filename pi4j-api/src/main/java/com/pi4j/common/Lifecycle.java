@@ -29,8 +29,9 @@ package com.pi4j.common;
 
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
+import com.pi4j.platform.exception.PlatformException;
 
 public interface Lifecycle<T> {
-    T initialize(Context context) throws LifecycleException;
+    T initialize(Context context) throws LifecycleException, PlatformException;
     T terminate(Context context) throws LifecycleException;
 }

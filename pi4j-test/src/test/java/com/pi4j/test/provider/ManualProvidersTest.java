@@ -73,7 +73,7 @@ public class ManualProvidersTest {
         Pi4J.providers().add(pwmProvider, i2CProvider);
 
         // ensure that no io were detected/loaded into the Pi4J context
-        assertEquals(Pi4J.context().providers().all().size(), 2);
+        assertEquals(2, Pi4J.context().providers().all().size());
 
         // print out the detected Pi4J io libraries found on the class path
         About about = new About();

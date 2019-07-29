@@ -1,5 +1,6 @@
 package com.pi4j.io.serial;
 
+import com.pi4j.context.Context;
 import com.pi4j.provider.ProviderBase;
 
 /*
@@ -45,5 +46,5 @@ public abstract class SerialProviderBase
     }
 
     @Override
-    public abstract Serial create(SerialConfig config) throws Exception;
+    public abstract Serial create(Context context, SerialConfig config) throws Exception;
 }

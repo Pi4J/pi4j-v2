@@ -53,11 +53,8 @@ public class SpiFactory {
     }
 
     public static Spi instance(SpiConfig config) throws ProviderException, NotInitializedException {
-        // get default SPI io
-        var provider = Pi4J.providers().spi().getDefault();
-
-        // get SPI instance using default io
-        return instance(provider, config);
+        // get SPI instance using default platform IO provider
+        return instance((SpiProvider) null, config);
     }
 
     public static Spi instance(String providerId, String device) throws ProviderException, NotInitializedException {
@@ -83,10 +80,10 @@ public class SpiFactory {
         try {
             // get default SPI io if io is null
             if(provider == null){
-                provider = Pi4J.providers().spi().getDefault();
+                provider = Pi4J.platform().spi();
             }
             // create a SPI instance using the io
-            return provider.instance(config);
+            return provider.register(Pi4J.context(), config);
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {
