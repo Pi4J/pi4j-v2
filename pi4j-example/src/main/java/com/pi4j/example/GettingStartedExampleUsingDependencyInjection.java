@@ -5,7 +5,7 @@ package com.pi4j.example;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: EXAMPLE  :: Sample Code
- * FILENAME      :  GettingStartedWithAnnotationsExample.java
+ * FILENAME      :  GettingStartedExampleUsingDependencyInjection.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -40,7 +40,7 @@ import com.pi4j.util.Console;
 
 import java.util.concurrent.Callable;
 
-public class GettingStartedWithAnnotationsExample {
+public class GettingStartedExampleUsingDependencyInjection {
 
     // ************************************************************
     //
@@ -61,14 +61,43 @@ public class GettingStartedWithAnnotationsExample {
 
         // Pi4J cannot perform dependency injection on static classes
         // we will create a container instance to run our example
-        RuntimeContainer container = new GettingStartedWithAnnotationsExample.RuntimeContainer();
+        RuntimeContainer container = new GettingStartedExampleUsingDependencyInjection.RuntimeContainer();
 
+        // ------------------------------------------------------------
+        // Pi4J Dependnecy Injection
+        // ------------------------------------------------------------
         // perform dependnecy injection on the container
+        //
+        // !! ATTENTION !!
+        // ------------------
+        // To allow Pi4J to perform dependency injection on your class/objects, you must include
+        // an 'opens' directive for each namespace you want Pi4J to inspect in the project's
+        // 'module-info.java' file.  (Example:  'opens com.pi4j.example;')
+        //
         Pi4J.inject(container);
 
         // invoke the container to start the application
         container.call();
     }
+
+    // ------------------------------------------------------------
+    // Pi4J ANNOTATIONS
+    // ------------------------------------------------------------
+    //
+    // To perform dependency injection, Pi4J supports the following
+    // primary annotations:
+    //
+    // @Initialize  -  This annotation is used to initialize Pi4J.
+    //
+    // @Inject  -  This annotation decorates a class member/field
+    //             to perform a runtime injection of a Pi4J
+    //             object such as Context, Provider, Platform,
+    //             I/O Instance and more.
+    //
+    // @Register  -  This annotation is used to register I/O
+    //               Providers, Platforms, I/O Instances, etc.
+    //               with the Pi4J runtime.
+    // ------------------------------------------------------------
 
 
     // ------------------------------------------------------------
@@ -97,7 +126,7 @@ public class GettingStartedWithAnnotationsExample {
     // on a class constructor or on a class member (field) of type
     // 'com.pi4j.context.Context'.
     // ------------------------------------------------------------
-    @Initialize
+    @Initialize  // <-- This performs the required 'Pi4J.initialize()' call.
     public static class RuntimeContainer implements Callable<Void> {
 
         // ------------------------------------------------------------
@@ -284,6 +313,11 @@ public class GettingStartedWithAnnotationsExample {
         private DigitalOutput output;
 
 
+        /**
+         * This method invokes the Pi4J example application runtime .
+         * @return nothing
+         * @throws Exception
+         */
         @Override
         public Void call() throws Exception {
 
@@ -292,7 +326,7 @@ public class GettingStartedWithAnnotationsExample {
             final var console = new Console();
 
             // print program title/header
-            console.title("<-- The Pi4J Project -->", "Getting Started Example");
+            console.title("<-- The Pi4J Project -->", "Getting Started Example Using Dependency Injections");
 
             // let's print out to the console the detected and loaded
             // platforms that Pi4J detected when it was initialized.
