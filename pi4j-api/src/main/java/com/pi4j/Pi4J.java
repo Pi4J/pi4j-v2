@@ -118,11 +118,11 @@ public class Pi4J {
         return context;
     }
 
-    static Pi4JConfig newConfig(){
+    public static Pi4JConfig newConfig(){
         return Pi4JConfig.create();
     }
 
-    static Pi4JBuilder newBuilder(){
+    public static Pi4JBuilder newBuilder(){
         return Pi4JBuilder.create();
     }
 }

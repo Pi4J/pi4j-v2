@@ -39,7 +39,6 @@ import com.pi4j.mock.provider.i2c.MockI2CProvider;
 import com.pi4j.mock.provider.pwm.MockPwmProvider;
 import com.pi4j.mock.provider.serial.MockSerialProvider;
 import com.pi4j.mock.provider.spi.MockSpiProvider;
-import com.pi4j.test.About;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,10 +52,28 @@ public class ManualPlatformsTest {
 
     @Before
     public void beforeTest() throws Pi4JException {
+
         // Initialize Pi4J with AUTO-DETECT disabled
         // we don't want to load any detected Pi4J binding/io libraries
         // in the class path for this test case
-        pi4j = Pi4J.initialize(false);
+        pi4j = Pi4J.initialize(
+                Pi4J.newBuilder()
+                        // do not auto detect platforms, providers from the classpath
+                        .noAutoDetect()
+
+                        // add any platforms that we want to work with
+                        .add(new MockPlatform())
+
+                        // add any providers that we want to work with
+                        .add(new MockAnalogInputProvider(),
+                             new MockAnalogOutputProvider(),
+                             new MockDigitalInputProvider(),
+                             new MockDigitalOutputProvider(),
+                             new MockPwmProvider(),
+                             new MockI2CProvider(),
+                             new MockSpiProvider(),
+                             new MockSerialProvider())
+                        .build());
     }
 
     @After
@@ -75,30 +92,11 @@ public class ManualPlatformsTest {
     @Test
     public void testProvidersCount() throws Exception {
 
-        // create our own custom provider implementation classes
-        // add the custom providers to the Pi4J context
-        pi4j.providers().add(
-                new MockAnalogInputProvider(),
-                new MockAnalogOutputProvider(),
-                new MockDigitalInputProvider(),
-                new MockDigitalOutputProvider(),
-                new MockPwmProvider(),
-                new MockI2CProvider(),
-                new MockSpiProvider(),
-                new MockSerialProvider()
-        );
-
-        // create our own custom platform implementation classes
-        MockPlatform mockPlatform = new MockPlatform();
-
-        // add the custom providers to the Pi4J context
-        pi4j.platforms().add(mockPlatform);
-
         // ensure that no io were detected/loaded into the Pi4J context
         assertEquals(1, pi4j.platforms().all().size());
 
         // print out the detected Pi4J io libraries found on the class path
         System.out.println("1 'MOCK' PLATFORM (added via API)");
-        pi4j.providers().describe().print(System.out);;
+        pi4j.providers().describe().print(System.out);
     }
 }
