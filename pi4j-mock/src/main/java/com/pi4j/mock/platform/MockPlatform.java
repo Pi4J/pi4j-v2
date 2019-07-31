@@ -40,9 +40,7 @@ import com.pi4j.mock.provider.spi.MockSpiProvider;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.PlatformBase;
 
-public class MockPlatform
-        extends PlatformBase<MockPlatform>
-        implements Platform<MockPlatform> {
+public class MockPlatform extends PlatformBase<MockPlatform> implements Platform {
 
 
     public MockPlatform(){

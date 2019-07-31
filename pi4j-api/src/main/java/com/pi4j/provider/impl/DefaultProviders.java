@@ -310,6 +310,20 @@ public class DefaultProviders implements Providers {
         return (T)subset.values().iterator().next();
     }
 
+    @Override
+    public <T extends Provider> T get(ProviderType providerType) throws ProviderException{
+        // ensure providers have been initialized
+        if(!initialized) throw new ProvidersNotInitializedException();
+
+        // return the provider instance from the managed provider map that contains the given provider-class
+        var subset = all(providerType);
+        if(subset.isEmpty()){
+            throw new ProviderNotFoundException(providerType);
+        }
+        // return first instance found
+        return (T)subset.values().iterator().next();
+    }
+
 
     @Override
     public <T extends Provider> Providers add(Collection<T> provider) throws ProviderException {

@@ -36,9 +36,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TestPlatform
-        extends PlatformBase<TestPlatform>
-        implements Platform<TestPlatform> {
+public class TestPlatform extends PlatformBase<TestPlatform> implements Platform {
 
     protected Set<String> supportedProviderIds = new HashSet<String>();
 

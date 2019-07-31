@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class PlatformBase<PLATFORM extends Platform>
         extends BindingBase
-        implements Platform<PLATFORM> {
+        implements Platform {
 
     protected Context context = null;
     protected Map<ProviderType, Provider> providers = new ConcurrentHashMap<>();
@@ -64,7 +64,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     }
 
     @Override
-    public Map<ProviderType, ? extends Provider> providers() {
+    public Map<ProviderType, Provider> providers() {
         return Collections.unmodifiableMap(this.providers);
     }
 

@@ -99,6 +99,7 @@ public interface Providers extends Describable {
     <T extends Provider> T get(String providerId, Class<T> providerClass) throws ProviderException;
     <T extends Provider> T get(String providerId, ProviderType providerType) throws ProviderException;
     <T extends Provider> T get(Class<T> providerClass) throws ProviderException;
+    <T extends Provider> T get(ProviderType providerType) throws ProviderException;
     <T extends Provider> Providers add(Collection<T> provider) throws ProviderException;
     <T extends Provider> void replace(T provider) throws ProviderException;
     <T extends Provider> void remove(String providerId) throws ProviderException;
