@@ -27,11 +27,14 @@ package com.pi4j.context.impl;
  * #L%
  */
 
+import com.pi4j.Pi4JConfig;
 import com.pi4j.annotation.AnnotationEngine;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.DefaultAnnotationEngine;
+import com.pi4j.binding.Binding;
 import com.pi4j.binding.Bindings;
 import com.pi4j.binding.impl.DefaultBindings;
+import com.pi4j.common.Lifecycle;
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
@@ -130,26 +133,44 @@ public class DefaultContext implements Context {
     }
 
     @Override
-    public Context initialize(boolean autoDetect, Collection<Platform> platform, Collection<Provider> provider) throws LifecycleException {
-        logger.trace("invoked 'initialize()' [auto-detect={}]", autoDetect);
+    public Context initialize(Pi4JConfig config) throws LifecycleException {
+
+        logger.trace("invoked 'initialize()' [config={}]", config);
+
+        if(config == null){
+            throw new LifecycleException("Unable to 'initialize()' Pi4J Context; missing (Pi4JConfig) config object.");
+        }
 
         // initialize bindings
         try {
-            bindings().initialize(this, true);
+            // initialize providers, then add the provided I/O providers to the managed collection
+            bindings.initialize(this, config.getAutoDetectBindings());
+            Collection<Binding> additionalBindings = config.getBindings();
+            if(additionalBindings != null && !additionalBindings.isEmpty()) {
+                logger.trace("adding explicit bindings: [count={}]", additionalBindings.size());
+                //providers().add(additionalBindings);
+                // TODO :: HANDLE EXPLICIT BINDINGS
+            }
 
             // initialize providers, then add the provided I/O providers to the managed collection
-            providers().initialize(this, autoDetect);
-            if(provider != null && !provider.isEmpty()) {
-                logger.trace("adding explicit providers: [count={}]", provider.size());
-                providers().add(provider);
+            providers.initialize(this, config.getAutoDetectProviders());
+            Collection<Provider> additionalProviders = config.getProviders();
+            if(additionalProviders != null && !additionalProviders.isEmpty()) {
+                logger.trace("adding explicit providers: [count={}]", additionalProviders.size());
+                providers().add(additionalProviders);
             }
 
             // initialize platforms, then add the provided I/O platforms to the managed collection
-            platforms().initialize(this, autoDetect);
-            if(platform != null && !platform.isEmpty()) {
-                logger.trace("adding explicit platforms: [count={}]", platform.size());
-                platforms().add(platform);
+            platforms.initialize(this, config.getAutoDetectProviders());
+            Collection<Platform> additionalPlatforms = config.getPlatforms();
+            if(additionalPlatforms != null && !additionalPlatforms.isEmpty()) {
+                logger.trace("adding explicit platforms: [count={}]", additionalPlatforms.size());
+                platforms().add(additionalPlatforms);
             }
+
+            // set default platform
+            if(config.hasDefaultPlatform())
+                this.platforms().setDefault(config.getDefaultPlatform());
 
         } catch (Pi4JException e) {
             logger.error(e.getMessage(), e);
