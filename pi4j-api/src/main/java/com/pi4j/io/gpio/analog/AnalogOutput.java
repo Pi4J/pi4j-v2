@@ -27,6 +27,7 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.Output;
 import com.pi4j.io.exception.IOBoundsException;
@@ -48,12 +49,12 @@ public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, 
     // INSTANCE ACCESSOR STATIC METHODS
     // ---------------------------------------------------------------------------
 
-    static boolean exists(String id) throws ProviderException, NotInitializedException {
-        return AnalogOutputFactory.exists(id);
+    static boolean exists(Context context, String id) throws ProviderException, NotInitializedException {
+        return AnalogOutputFactory.exists(context, id);
     }
 
-    static <T extends AnalogOutput> T get(String id) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)AnalogOutputFactory.get(id);
+    static <T extends AnalogOutput> T get(Context context, String id) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)AnalogOutputFactory.get(context, id);
     }
 
     // ---------------------------------------------------------------------------
@@ -68,85 +69,85 @@ public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, 
     // FRIENDLY HELPER CREATOR STATIC METHODS
     // ---------------------------------------------------------------------------
 
-    static <T extends AnalogOutput> T create(Integer address) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, Integer address) throws ProviderException, NotInitializedException, RegistryException {
         AnalogOutputBuilder builder = AnalogOutput.builder();
         builder.address(address);
-        return (T)AnalogOutput.create(builder.build());
+        return (T)AnalogOutput.create(context, builder.build());
     }
 
-    static <T extends AnalogOutput> T create(Integer address, String id) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, Integer address, String id) throws ProviderException, NotInitializedException, RegistryException {
         AnalogOutputBuilder builder = AnalogOutput.builder();
         builder.id(id).address(address).id(id);
-        return (T)AnalogOutput.create(builder.build());
+        return (T)AnalogOutput.create(context, builder.build());
     }
 
-    static <T extends AnalogOutput> T create(Integer address, String id, String name) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, Integer address, String id, String name) throws ProviderException, NotInitializedException, RegistryException {
         AnalogOutputBuilder builder = AnalogOutput.builder();
         builder.id(id).address(address).id(id).name(name);
-        return (T)AnalogOutput.create(builder.build());
+        return (T)AnalogOutput.create(context, builder.build());
     }
 
-    static <T extends AnalogOutput> T create(String providerId, Integer address) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, String providerId, Integer address) throws ProviderException, NotInitializedException, RegistryException {
         AnalogOutputBuilder builder = AnalogOutput.builder();
         builder.address(address);
-        return (T)AnalogOutput.create(providerId, builder.build());
+        return (T)AnalogOutput.create(context, providerId, builder.build());
     }
 
-    static <T extends AnalogOutput> T create(AnalogOutputProvider provider, Integer address) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, AnalogOutputProvider provider, Integer address) throws ProviderException, NotInitializedException, RegistryException {
         AnalogOutputBuilder builder = AnalogOutput.builder();
         builder.address(address);
-        return (T)AnalogOutput.create(provider, builder.build());
+        return (T)AnalogOutput.create(context, provider, builder.build());
     }
 
     // ---------------------------------------------------------------------------
     // RAW FACTORY CREATOR STATIC METHODS
     // ---------------------------------------------------------------------------
 
-    static <T extends AnalogOutput> T create(AnalogOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)AnalogOutputFactory.create(config);
+    static <T extends AnalogOutput> T create(Context context, AnalogOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
+        return (T)AnalogOutputFactory.create(context, config);
     }
 
-    static <T extends AnalogOutput> T create(String providerId, AnalogOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)AnalogOutputFactory.create(providerId, config);
+    static <T extends AnalogOutput> T create(Context context, String providerId, AnalogOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
+        return (T)AnalogOutputFactory.create(context, providerId, config);
     }
 
-    static <T extends AnalogOutput> T create(AnalogOutputProvider provider, AnalogOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)AnalogOutputFactory.create(provider, config);
+    static <T extends AnalogOutput> T create(Context context, AnalogOutputProvider provider, AnalogOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
+        return (T)AnalogOutputFactory.create(context, provider, config);
     }
 
     // ---------------------------------------------------------------------------
     // SPECIFIED RETURN CLASS HELPER METHODS
     // ---------------------------------------------------------------------------
 
-    static <T extends AnalogOutput> T create(Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)AnalogOutput.create(address);
+    static <T extends AnalogOutput> T create(Context context, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)AnalogOutput.create(context, address);
     }
 
-    static <T extends AnalogOutput> T create(Integer address, String id, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)AnalogOutput.create(address, id);
+    static <T extends AnalogOutput> T create(Context context, Integer address, String id, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)AnalogOutput.create(context, address, id);
     }
 
-    static <T extends AnalogOutput> T create(Integer address, String id, String name, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)AnalogOutput.create(address, id, name);
+    static <T extends AnalogOutput> T create(Context context, Integer address, String id, String name, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)AnalogOutput.create(context, address, id, name);
     }
 
-    static <T extends AnalogOutput> T create(String providerId, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)AnalogOutput.create(providerId, address);
+    static <T extends AnalogOutput> T create(Context context, String providerId, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)AnalogOutput.create(context, providerId, address);
     }
 
-    static <T extends AnalogOutput> T create(AnalogOutputProvider provider, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)AnalogOutput.create(provider, address);
+    static <T extends AnalogOutput> T create(Context context, AnalogOutputProvider provider, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)AnalogOutput.create(context, provider, address);
     }
 
-    static <T extends AnalogOutput> T create(AnalogOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)AnalogOutput.create(config);
+    static <T extends AnalogOutput> T create(Context context, AnalogOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)AnalogOutput.create(context, config);
     }
 
-    static <T extends AnalogOutput> T create(String providerId, AnalogOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)AnalogOutput.create(providerId, config);
+    static <T extends AnalogOutput> T create(Context context, String providerId, AnalogOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)AnalogOutput.create(context, providerId, config);
     }
 
-    static <T extends AnalogOutput> T create(AnalogOutputProvider provider, AnalogOutputConfig config, Class<T> clazz) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)AnalogOutput.create(provider, config);
+    static <T extends AnalogOutput> T create(Context context, AnalogOutputProvider provider, AnalogOutputConfig config, Class<T> clazz) throws NotInitializedException, ProviderException, RegistryException {
+        return (T)AnalogOutput.create(context, provider, config);
     }
 }

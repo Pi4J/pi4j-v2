@@ -28,7 +28,11 @@ package com.pi4j.example.gpio.digital;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.annotation.*;
+import com.pi4j.annotation.Address;
+import com.pi4j.annotation.InitialState;
+import com.pi4j.annotation.Register;
+import com.pi4j.annotation.ShutdownState;
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 
@@ -57,13 +61,13 @@ public class DigitalOutputBlinkExampleUsingDependencyInjection {
         public Void call() throws Exception {
 
             // initialize the Pi4J library then inject this class for dependency injection on annotations
-            Pi4J.initialize().inject(this);
+            Context pi4j = Pi4J.initialize().inject(this);
 
             // blink the output for 10 seconds
             output.blink(1, 10, TimeUnit.SECONDS);
 
             // shutdown Pi4J
-            Pi4J.shutdown();
+            pi4j.shutdown();
 
             // we are done
             return null;

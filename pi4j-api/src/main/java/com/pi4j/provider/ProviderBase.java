@@ -27,12 +27,10 @@ package com.pi4j.provider;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.binding.BindingBase;
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.config.Config;
 import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
 import com.pi4j.registry.exception.RegistryException;
 import org.slf4j.Logger;
@@ -71,7 +69,7 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
         // perform a shutdown on each digital I/O instance that is tracked in the internal cache
         Map<String, IO> instances = null;
         try {
-            instances = Pi4J.registry().allByProvider(this.id(), IO.class);
+            instances = context.registry().allByProvider(this.id(), IO.class);
             instances.forEach((address, instance)->{
                 try {
                     instance.shutdown(context);
@@ -80,9 +78,6 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
                 }
             });
         } catch (RegistryException e) {
-            logger.error(e.getMessage(), e);
-            throw new LifecycleException(e);
-        } catch (NotInitializedException e) {
             logger.error(e.getMessage(), e);
             throw new LifecycleException(e);
         }

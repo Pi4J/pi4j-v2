@@ -28,10 +28,8 @@ package com.pi4j.test.annotations;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.annotation.Address;
-import com.pi4j.annotation.Name;
-import com.pi4j.annotation.Provider;
-import com.pi4j.annotation.Register;
+import com.pi4j.annotation.*;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.test.provider.TestDigitalInputProvider;
@@ -45,6 +43,9 @@ public class DependencyInjectionDigitalInputTest {
 
     public static final int PIN_ADDRESS1 = 1;
     public static final int PIN_ADDRESS2 = 2;
+
+    @Inject
+    Context pi4j;
 
     @Register("my.digital.input-default")
     @Address(PIN_ADDRESS1)
@@ -73,7 +74,7 @@ public class DependencyInjectionDigitalInputTest {
     @After
     public void afterTest() {
         try {
-            Pi4J.shutdown();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 

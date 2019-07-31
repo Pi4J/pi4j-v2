@@ -27,7 +27,6 @@ package com.pi4j.registry.impl;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.config.Config;
 import com.pi4j.context.Context;
@@ -89,7 +88,7 @@ public class DefaultRegistry implements Registry {
 
         try {
             // validate named provider exists
-            if(!Pi4J.providers().exists(providerId))
+            if(!context.providers().exists(providerId))
                 throw new ProviderNotFoundException(providerId);
 
             // create target I/O instance

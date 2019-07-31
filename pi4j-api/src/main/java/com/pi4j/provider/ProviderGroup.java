@@ -27,10 +27,8 @@ package com.pi4j.provider;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
-import com.pi4j.exception.NotInitializedException;
 import com.pi4j.provider.exception.ProviderException;
 
 import java.util.Map;
@@ -49,9 +47,10 @@ public class ProviderGroup<T extends Provider> implements Describable {
         this.providerType = providerType;
     }
 
-    public ProviderGroup(ProviderType providerType) throws ProviderException, NotInitializedException {
-        this(Pi4J.providers(),providerType);
-    }
+    // TODO :: REMOVE ME
+//    public ProviderGroup(ProviderType providerType) throws ProviderException, NotInitializedException {
+//        this(Pi4J.providers(),providerType);
+//    }
 
     private Map<String, T> all() throws ProviderException {
         return providers.all(providerType);

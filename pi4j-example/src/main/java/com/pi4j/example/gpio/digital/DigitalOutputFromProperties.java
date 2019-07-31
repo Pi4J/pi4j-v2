@@ -67,7 +67,7 @@ public class DigitalOutputFromProperties {
 
         // create a digital output instance using the default digital output provider
         var builder = DigitalOutput.builder().load(properties);
-        var output = DigitalOutput.create(builder.build());
+        var output = DigitalOutput.create(pi4j, builder.build());
 
         // setup a digital output listener to listen for any state changes on the digital output
         output.addListener((DigitalChangeListener) event -> {
@@ -100,6 +100,6 @@ public class DigitalOutputFromProperties {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 }

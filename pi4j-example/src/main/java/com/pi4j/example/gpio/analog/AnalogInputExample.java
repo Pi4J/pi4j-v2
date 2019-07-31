@@ -52,10 +52,10 @@ public class AnalogInputExample {
         console.promptForExit();
 
         // initialize the Pi4J library
-        Pi4J.initialize();
+        var pi4j = Pi4J.initialize();
 
         // create an analog input instance using the default analog input provider
-        var input = AnalogInput.create(ANALOG_INPUT_PIN);
+        var input = AnalogInput.create(pi4j, ANALOG_INPUT_PIN);
 
         // setup an analog input listener to listen for any value changes on the analog input
         input.addListener((AnalogChangeListener) event -> {
@@ -73,6 +73,6 @@ public class AnalogInputExample {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 }

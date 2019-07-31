@@ -121,7 +121,7 @@ public class DigitalOutputExampleUsingDependencyInjection {
 
             // shutdown Pi4J
             console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-            Pi4J.shutdown();
+            pi4j.shutdown();
 
             // we are done
             return null;

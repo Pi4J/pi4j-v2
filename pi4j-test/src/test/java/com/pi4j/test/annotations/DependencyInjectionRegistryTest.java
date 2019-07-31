@@ -29,6 +29,7 @@ package com.pi4j.test.annotations;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.registry.Registry;
 import org.junit.After;
@@ -41,6 +42,9 @@ public class DependencyInjectionRegistryTest {
 
     @Inject
     Registry registry;
+
+    @Inject
+    Context pi4j;
 
     @Before
     public void beforeTest() throws Pi4JException {
@@ -58,7 +62,7 @@ public class DependencyInjectionRegistryTest {
     @After
     public void afterTest() {
         try {
-            Pi4J.shutdown();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 

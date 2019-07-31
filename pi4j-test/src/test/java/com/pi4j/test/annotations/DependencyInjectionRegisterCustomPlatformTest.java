@@ -40,10 +40,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
 public class DependencyInjectionRegisterCustomPlatformTest {
 
@@ -70,12 +67,13 @@ public class DependencyInjectionRegisterCustomPlatformTest {
 
     @After
     public void afterTest() throws Pi4JException {
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 
     @Test
     public void testDIRegisterCustomPlatformsNotNull() throws Pi4JException {
-        assertNotNull(Pi4J.context().platforms());
+        assertNotNull(pi4j);
+        assertNotNull(pi4j.platforms());
     }
 
     @Test
@@ -83,7 +81,7 @@ public class DependencyInjectionRegisterCustomPlatformTest {
         About about = new About();
 
         // ensure that 1 or more providers were detected/loaded into the Pi4J context
-        assertFalse(Pi4J.context().platforms().all().isEmpty());
+        assertFalse(pi4j.platforms().all().isEmpty());
 
         System.out.println("-------------------------------------------------");
         System.out.println(this.getClass().getSimpleName());
@@ -96,25 +94,25 @@ public class DependencyInjectionRegisterCustomPlatformTest {
     public void testDIRegisterCustomPlatformExists() throws Exception {
         // ensure that out specific Test platform exists
         assertTrue("A platform with id 'test-platform' could not be found.",
-                Pi4J.platforms().exists("test-platform"));
+                pi4j.platforms().exists("test-platform"));
     }
 
     @Test
     public void testDIRegisterFakePlatformNotExists() throws Exception {
         // ensure that a named fake platform does not exist
         assertFalse("A platform with id 'fake-platform' could not be found.",
-                Pi4J.platforms().exists("fake-platform"));
+                pi4j.platforms().exists("fake-platform"));
     }
 
     @Test(expected = PlatformNotFoundException.class)
     public void testDIRegisterFakePlatformNotExists2() throws Exception {
         // ensure that a named fake platform does not exist
-        Platform p = Pi4J.platforms().get("fake-platform");
+        Platform p = pi4j.platforms().get("fake-platform");
     }
 
     @Test
     public void testDIRegisterCustomPlatformDefault() throws Exception {
         // ensure that out specific Test platform exists as the default platform
-        assertSame(platform, Pi4J.platform());
+        assertSame(platform, pi4j.platform());
     }
 }

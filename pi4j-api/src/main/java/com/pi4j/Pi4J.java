@@ -27,21 +27,12 @@ package com.pi4j;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.impl.DefaultAnnotationEngine;
 import com.pi4j.binding.Binding;
-import com.pi4j.common.Descriptor;
 import com.pi4j.context.Context;
 import com.pi4j.context.impl.DefaultContext;
-import com.pi4j.exception.AlreadyInitializedException;
-import com.pi4j.exception.NotInitializedException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.platform.Platform;
-import com.pi4j.platform.Platforms;
-import com.pi4j.platform.exception.PlatformException;
 import com.pi4j.provider.Provider;
-import com.pi4j.provider.Providers;
-import com.pi4j.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,48 +40,7 @@ import java.util.*;
 
 public class Pi4J {
 
-    private static Context context = null;
     private static Logger logger = LoggerFactory.getLogger(Pi4J.class);
-
-    public static final Context context() throws NotInitializedException {
-        // throw exception if Pi4J has not been initialized
-        if(context == null) throw new NotInitializedException();
-
-        // return initialized context
-        return context;
-    }
-
-    public static final Registry registry() throws NotInitializedException {
-        // throw exception if Pi4J has not been initialized
-        if(context == null) throw new NotInitializedException();
-
-        // return registry
-        return context.registry();
-    }
-
-    public static Providers providers() throws NotInitializedException {
-        // throw exception if Pi4J has not been initialized
-        if(context == null) throw new NotInitializedException();
-
-        // return initialized providers
-        return context.providers();
-    }
-
-    public static Platforms platforms() throws NotInitializedException, PlatformException {
-        // throw exception if Pi4J has not been initialized
-        if(context == null) throw new NotInitializedException();
-
-        // return platforms manager
-        return context.platforms();
-    }
-
-    public static Platform platform() throws NotInitializedException, PlatformException {
-        // throw exception if Pi4J has not been initialized
-        if(context == null) throw new NotInitializedException();
-
-        // return initialized platform
-        return context.platform();
-    }
 
     public static Context initialize() throws Pi4JException {
         return initialize(true);
@@ -158,82 +108,17 @@ public class Pi4J {
     public static Context initialize(boolean autoDetect, Collection<Platform> platform, Collection<Provider> provider) throws Pi4JException {
         logger.trace("invoked 'initialize()' [auto-detect={}]", autoDetect);
 
+        // TODO :: REMOVE ME
         // throw exception if Pi4J has not been initialized
-        if(context != null) throw new AlreadyInitializedException();
+        //if(context != null) throw new AlreadyInitializedException();
 
-        // create context singleton
-        context = DefaultContext.singleton();
+        // create new context
+        Context context = DefaultContext.instance();
 
-        // initialize bindings
-        context().bindings().initialize(context, true);
-
-        // initialize providers, then add the provided I/O providers to the managed collection
-        context.providers().initialize(context, autoDetect);
-        if(provider != null && !provider.isEmpty()) {
-            logger.trace("adding explicit providers: [count={}]", provider.size());
-            providers().add(provider);
-        }
-
-        // initialize platforms, then add the provided I/O platforms to the managed collection
-        context.platforms().initialize(context, autoDetect);
-        if(platform != null && !platform.isEmpty()) {
-            logger.trace("adding explicit platforms: [count={}]", platform.size());
-            platforms().add(platform);
-        }
+        // initialize context
+        context.initialize(autoDetect, platform, provider);
 
         logger.debug("Pi4J successfully initialized.'");
         return context;
-    }
-
-    public static Context shutdown() throws Pi4JException {
-        logger.trace("invoked 'shutdown();'");
-
-        // throw exception if Pi4J has not been initialized
-        if(context == null) throw new NotInitializedException();
-
-        // shutdown all I/O instances
-        registry().shutdown(context);
-
-        // shutdown all providers
-        context.providers().shutdown(context);
-
-        // shutdown platforms
-        context.platforms().shutdown(context);
-
-        // shutdown all bindings
-        context.bindings().shutdown(context);
-
-        // destroy/reset context singleton
-        context = null;
-
-        logger.debug("Pi4J successfully shutdown.'");
-        return context;
-    }
-
-    public static Context inject(Object... objects) throws NotInitializedException, AnnotationException {
-
-        // if Pi4J has not been initialized, then use the 'preinject' static method
-        // of the DefaultAnnotationEngine to look for @Initialize annotations to perform
-        // initialization
-        if(context == null && objects != null && objects.length > 0) {
-            DefaultAnnotationEngine.processInitialize(objects);
-        }
-
-        // throw exception if Pi4J has not been initialized
-        if(context == null) throw new NotInitializedException();
-
-        // inject remaining (if objects exist)
-        if(objects != null && objects.length > 0) {
-            context.inject(objects);
-        }
-        return context;
-    }
-
-    public static Descriptor describe() throws NotInitializedException {
-
-        // throw exception if Pi4J has not been initialized
-        if(context == null) throw new NotInitializedException();
-
-        return context().describe();
     }
 }

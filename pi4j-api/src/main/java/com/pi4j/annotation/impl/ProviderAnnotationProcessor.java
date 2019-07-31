@@ -27,7 +27,6 @@ package com.pi4j.annotation.impl;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.provider.Provider;
@@ -68,7 +67,7 @@ public class ProviderAnnotationProcessor {
         // get provider instance
         if(id != null && !id.isEmpty()) {
             // get provider instance using ID and Provider Class
-            return Pi4J.providers().get(id, providerClass);
+            return context.providers().get(id, providerClass);
         }
         else if(providerClass != null){
             // get default provider instance using only Provider Class

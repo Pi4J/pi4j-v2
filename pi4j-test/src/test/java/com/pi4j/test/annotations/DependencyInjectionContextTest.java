@@ -40,7 +40,7 @@ import static junit.framework.TestCase.assertNotNull;
 public class DependencyInjectionContextTest {
 
     @Inject
-    Context context;
+    Context pi4j;
 
     @Before
     public void beforeTest() throws Pi4JException {
@@ -58,17 +58,17 @@ public class DependencyInjectionContextTest {
     @After
     public void afterTest() {
         try {
-            Pi4J.shutdown();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
     public void testDIContextAcquisition() throws Pi4JException {
-        assertNotNull(context);
+        assertNotNull(pi4j);
         System.out.println("-------------------------------------------------");
         System.out.println("Pi4J CONTEXT <acquired via dependency injection>");
         System.out.println("-------------------------------------------------");
-        context.describe().print(System.out);
+        pi4j.describe().print(System.out);
     }
 
 }

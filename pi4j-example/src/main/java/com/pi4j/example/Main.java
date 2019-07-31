@@ -51,14 +51,14 @@ public class Main {
 
 
 
-        var din1 = DigitalInput.create(11);
-        var ain1 = AnalogInput.create(21);
+        var din1 = DigitalInput.create(pi4j,11);
+        var ain1 = AnalogInput.create(pi4j,21);
 
 
 
-        var input = AnalogInput.create(98);
-        var output1 = AnalogOutput.create(99);
-        var output2 = AnalogOutput.create(100);
+        var input = AnalogInput.create(pi4j,98);
+        var output1 = AnalogOutput.create(pi4j,99);
+        var output2 = AnalogOutput.create(pi4j,100);
 
         input.addListener((AnalogChangeListener) event -> {
             System.out.print(event);
@@ -87,6 +87,6 @@ public class Main {
 //        DigitalOutput dout1 = DigitalOutput;
 
         // shutdown Pi4J
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 }

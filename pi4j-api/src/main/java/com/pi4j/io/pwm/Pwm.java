@@ -27,6 +27,7 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
 import com.pi4j.io.pwm.impl.PwmFactory;
@@ -36,27 +37,27 @@ public interface Pwm extends IO<Pwm, PwmConfig> {
 
     static final String ID = "PWM";
 
-    static Pwm instance(PwmConfig config) throws ProviderException, NotInitializedException {
-        return PwmFactory.instance(config);
+    static Pwm instance(Context context, PwmConfig config) throws ProviderException, NotInitializedException {
+        return PwmFactory.instance(context, config);
     }
 
-    static Pwm instance(int address) throws ProviderException, NotInitializedException {
-        return PwmFactory.instance(address);
+    static Pwm instance(Context context, int address) throws ProviderException, NotInitializedException {
+        return PwmFactory.instance(context, address);
     }
 
-    static Pwm instance(String providerId, int address) throws ProviderException, NotInitializedException {
-        return PwmFactory.instance(providerId, address);
+    static Pwm instance(Context context, String providerId, int address) throws ProviderException, NotInitializedException {
+        return PwmFactory.instance(context, providerId, address);
     }
 
-    static Pwm instance(String providerId, PwmConfig config) throws ProviderException, NotInitializedException {
-        return PwmFactory.instance(providerId, config);
+    static Pwm instance(Context context, String providerId, PwmConfig config) throws ProviderException, NotInitializedException {
+        return PwmFactory.instance(context, providerId, config);
     }
 
-    static Pwm instance(PwmProvider provider, int address) throws ProviderException {
-        return PwmFactory.instance(provider, address);
+    static Pwm instance(Context context, PwmProvider provider, int address) throws ProviderException {
+        return PwmFactory.instance(context, provider, address);
     }
 
-    static Pwm instance(PwmProvider provider, PwmConfig config) throws ProviderException {
-        return PwmFactory.instance(provider, config);
+    static Pwm instance(Context context, PwmProvider provider, PwmConfig config) throws ProviderException {
+        return PwmFactory.instance(context, provider, config);
     }
 }

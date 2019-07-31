@@ -31,10 +31,14 @@ import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.binding.Bindings;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
+import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
+import com.pi4j.provider.Provider;
 import com.pi4j.provider.Providers;
 import com.pi4j.registry.Registry;
+
+import java.util.Collection;
 
 public interface Context extends Describable {
     Bindings bindings();
@@ -42,6 +46,8 @@ public interface Context extends Describable {
     Registry registry();
     Platforms platforms();
 
+    Context initialize(boolean autoDetect, Collection<Platform> platform, Collection<Provider> provider) throws LifecycleException;
+    Context shutdown() throws LifecycleException;
     Context inject(Object... objects) throws AnnotationException;
 
     default Platform platform(){

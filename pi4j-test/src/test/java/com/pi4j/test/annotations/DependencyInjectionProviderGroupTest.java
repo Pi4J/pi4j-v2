@@ -29,6 +29,7 @@ package com.pi4j.test.annotations;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
 import com.pi4j.provider.ProviderGroup;
@@ -42,6 +43,8 @@ import static org.junit.Assert.assertFalse;
 
 public class DependencyInjectionProviderGroupTest {
 
+    @Inject
+    Context pi4j;
 
     @Inject
     ProviderGroup<DigitalInputProvider> providers;
@@ -61,7 +64,7 @@ public class DependencyInjectionProviderGroupTest {
     @After
     public void afterTest() {
         try {
-            Pi4J.shutdown();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
@@ -75,7 +78,7 @@ public class DependencyInjectionProviderGroupTest {
         About about = new About();
 
         // ensure that 1 or more providers were detected/loaded into the Pi4J context
-        assertFalse(Pi4J.context().providers().all().isEmpty());
+        assertFalse(pi4j.providers().all().isEmpty());
 
         System.out.println("-------------------------------------------------");
         System.out.println(this.getClass().getSimpleName());

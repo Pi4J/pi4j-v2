@@ -28,7 +28,6 @@ package com.pi4j.example;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
@@ -75,33 +74,15 @@ public class GettingStartedExample {
         // to disable this automatic detection and loading if you
         // need/prefer to manually configure which 'Platforms' and
         // 'I/O Providers' should be used with Pi4J.
-        var context = Pi4J.initialize();
+        var pi4j = Pi4J.initialize();
 
         // After we initialize Pi4J, we can access the following
         // core parts of the system:
         //
-        //  - Context
         //  - Platforms
         //  - Platform (Default Runtime Platform)
         //  - Providers (I/O Providers)
         //  - Registry (I/O Registry)
-
-
-        // ------------------------------------------------------------
-        // Pi4J Context
-        // ------------------------------------------------------------
-        // When you initialize Pi4J, a 'Context' is returned.  You can
-        // also directly obtain the context from the Pi4J static helper
-        // class.
-        //
-        // The 'Context' is a shared container for all Pi4J runtime
-        // information, state, extensions and lifecycle.  From the
-        // `Context` object you can access just about any part of
-        // the Pi4J infrastructure and system.
-        //
-        // The 'Context' is a static singleton in the lifecycle of
-        // your application.
-        Context ctx = Pi4J.context();  // <-- Also available via the Pi4J static helper
 
 
         // ------------------------------------------------------------
@@ -122,7 +103,7 @@ public class GettingStartedExample {
         //
         // Platforms also provide validation for the I/O pins and
         // their capabilities for the target hardware.
-        Platforms platforms = context.platforms();
+        Platforms platforms = pi4j.platforms();
         //Platforms platforms = Pi4J.platforms(); // <-- Also available via the Pi4J static helper
 
         // let's print out to the console the detected and loaded
@@ -145,7 +126,7 @@ public class GettingStartedExample {
         // managed platforms collection that will serve to define the
         // default I/O providers that Pi4J will use for each given I/O
         // interface when creating and registering I/O instances.
-        Platform platform = context.platform();
+        Platform platform = pi4j.platform();
         //Platform platform = Pi4J.platform(); // <-- Also available via the Pi4J static helper
 
         // let's print out to the console the detected and loaded
@@ -189,7 +170,7 @@ public class GettingStartedExample {
         // infrastructure enabling third-parties to build and extend
         // the capabilities of Pi4J by writing your/their own
         // Provider implementation libraries.
-        Providers providers = context.providers();
+        Providers providers = pi4j.providers();
         //Providers providers = Pi4J.providers(); // <-- Also available via the Pi4J static helper
 
         // let's print out to the console the detected and loaded
@@ -233,7 +214,7 @@ public class GettingStartedExample {
         // infrastructure enabling third-parties to build and extend
         // the capabilities of Pi4J by writing your/their own
         // Provider implementation libraries.
-        Registry registry = context.registry();
+        Registry registry = pi4j.registry();
         //Registry registry = Pi4J.registry(); // <-- Also available via the Pi4J static helper
 
         // Here we will create an I/O interface for a (GPIO) digital output pin.
@@ -241,7 +222,7 @@ public class GettingStartedExample {
         // we just want to include a single I/O instance here as a simple example for
         // this demonstration.  Since no specific 'provider' is defined, Pi4J will
         // use the default `DigitalOutputProvider` for the current default platform.
-        DigitalOutput output = DigitalOutput.create(1,"my-digital-output-1");
+        DigitalOutput output = DigitalOutput.create(pi4j, 1,"my-digital-output-1");
 
         // let's print out to the console the detected and loaded
         // I/O interfaces registered with Pi4J and included in the 'Registry'.
@@ -261,6 +242,6 @@ public class GettingStartedExample {
         // is returned to the system.
 
         // shutdown Pi4J
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 }

@@ -70,7 +70,7 @@ public class DigitalInputExampleWithMockProvider {
 
         // create a digital input instance using the default digital input provider
         console.println("ATTEMPTING TO CREATE A MOCK DIGITAL INPUT INSTANCE");
-        var input = DigitalInput.create(provider, DIGITAL_INPUT_PIN, MockDigitalInput.class);
+        var input = DigitalInput.create(pi4j, provider, DIGITAL_INPUT_PIN, MockDigitalInput.class);
 
         // display created instance
         console.print("--> CREATED IO INSTANCE: ");
@@ -97,6 +97,6 @@ public class DigitalInputExampleWithMockProvider {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 }

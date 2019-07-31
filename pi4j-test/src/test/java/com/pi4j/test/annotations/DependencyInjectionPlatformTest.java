@@ -30,6 +30,7 @@ package com.pi4j.test.annotations;
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
 import com.pi4j.annotation.Register;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.mock.platform.MockPlatform;
 import com.pi4j.test.platform.TestPlatform;
@@ -40,6 +41,9 @@ import org.junit.Test;
 import static junit.framework.TestCase.assertNotNull;
 
 public class DependencyInjectionPlatformTest {
+
+    @Inject
+    Context pi4j;
 
     @Register
     TestPlatform testPlatform = new TestPlatform();
@@ -64,7 +68,7 @@ public class DependencyInjectionPlatformTest {
 
     @After
     public void afterTest() throws Pi4JException {
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 
     @Test

@@ -58,10 +58,10 @@ public class AnalogInputSyncToOutputExample {
         var pi4j = Pi4J.initialize();
 
         // create a analog input instance using the default analog input provider
-        var input = AnalogInput.create(ANALOG_INPUT_PIN);
+        var input = AnalogInput.create(pi4j, ANALOG_INPUT_PIN);
 
         // create a analog output instance using the default analog output provider
-        var output = AnalogOutput.create(ANALOG_OUTPUT_PIN);
+        var output = AnalogOutput.create(pi4j, ANALOG_OUTPUT_PIN);
 
         // setup a analog output listener to listen for any state changes on the analog output
         // we will just print out the detected state changes
@@ -79,6 +79,6 @@ public class AnalogInputSyncToOutputExample {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 }

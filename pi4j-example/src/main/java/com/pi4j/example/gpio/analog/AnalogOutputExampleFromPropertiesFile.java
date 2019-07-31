@@ -73,7 +73,7 @@ public class AnalogOutputExampleFromPropertiesFile {
 
         // build the analog output config using the loaded properties, but include a prefix filter
         var builder = AnalogOutput.builder().load(prop, "my-analog-example");
-        var output = AnalogOutput.create(builder.build());
+        var output = AnalogOutput.create(pi4j, builder.build());
 
         // setup a analog output listener to listen for any state changes on the analog output
         output.addListener((AnalogChangeListener) event -> {
@@ -92,6 +92,6 @@ public class AnalogOutputExampleFromPropertiesFile {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 }

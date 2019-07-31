@@ -64,70 +64,64 @@ public class GettingStartedExampleUsingDependencyInjection {
         RuntimeContainer container = new GettingStartedExampleUsingDependencyInjection.RuntimeContainer();
 
         // ------------------------------------------------------------
+        // Initialize the Pi4J library
+        // ------------------------------------------------------------
+        // Before you can use Pi4J you must initialize it first.
+        // Initialization will automatically load all available Pi4J
+        // extensions found in the application's classpath which
+        // may include 'Platforms' and 'I/O Providers'
+        //
+        // There are optional arguments to the `initialize()` method
+        // to disable this automatic detection and loading if you
+        // need/prefer to manually configure which 'Platforms' and
+        // 'I/O Providers' should be used with Pi4J.
+        //
+        // After we initialize Pi4J, we can access the following
+        // core parts of the system:
+        //
+        //  - Context
+        //  - Platforms
+        //  - Platform (Default Runtime Platform)
+        //  - Providers (I/O Providers)
+        //  - Registry (I/O Registry)
+        //
+        // ------------------------------------------------------------
+
+        // ------------------------------------------------------------
         // Pi4J Dependnecy Injection
         // ------------------------------------------------------------
-        // perform dependnecy injection on the container
+        // perform dependnecy injection on the container using the
+        // (Context)::inject(Object ...) method.
         //
         // !! ATTENTION !!
-        // ------------------
         // To allow Pi4J to perform dependency injection on your class/objects, you must include
         // an 'opens' directive for each namespace you want Pi4J to inspect in the project's
         // 'module-info.java' file.  (Example:  'opens com.pi4j.example;')
-        //
-        Pi4J.inject(container);
+
+        Pi4J.initialize().inject(container);
 
         // invoke the container to start the application
         container.call();
     }
 
-    // ------------------------------------------------------------
-    // Pi4J ANNOTATIONS
-    // ------------------------------------------------------------
-    //
-    // To perform dependency injection, Pi4J supports the following
-    // primary annotations:
-    //
-    // @Initialize  -  This annotation is used to initialize Pi4J.
-    //
-    // @Inject  -  This annotation decorates a class member/field
-    //             to perform a runtime injection of a Pi4J
-    //             object such as Context, Provider, Platform,
-    //             I/O Instance and more.
-    //
-    // @Register  -  This annotation is used to register I/O
-    //               Providers, Platforms, I/O Instances, etc.
-    //               with the Pi4J runtime.
-    // ------------------------------------------------------------
-
-
-    // ------------------------------------------------------------
-    // @Initialize -- Initialize the Pi4J library
-    // ------------------------------------------------------------
-    // Before you can use Pi4J you must initialize it first.
-    // Initialization will automatically load all available Pi4J
-    // extensions found in the application's classpath which
-    // may include 'Platforms' and 'I/O Providers'
-    //
-    // There are optional arguments to the `@Initialize` annotation
-    // to disable this automatic detection and loading if you
-    // need/prefer to manually configure which 'Platforms' and
-    // 'I/O Providers' should be used with Pi4J.
-    //
-    // After we initialize Pi4J, we can access the following
-    // core parts of the system:
-    //
-    //  - Context
-    //  - Platforms
-    //  - Platform (Default Runtime Platform)
-    //  - Providers (I/O Providers)
-    //  - Registry (I/O Registry)
-    //
-    // NOTE: You can use the '@Initialize' annotation on the class,
-    // on a class constructor or on a class member (field) of type
-    // 'com.pi4j.context.Context'.
-    // ------------------------------------------------------------
-    @Initialize  // <-- This performs the required 'Pi4J.initialize()' call.
     public static class RuntimeContainer implements Callable<Void> {
+
+        // ------------------------------------------------------------
+        // Pi4J ANNOTATIONS
+        // ------------------------------------------------------------
+        //
+        // To perform dependency injection, Pi4J supports the following
+        // primary annotations:
+        //
+        // @Inject  -  This annotation decorates a class member/field
+        //             to perform a runtime injection of a Pi4J
+        //             object such as Context, Provider, Platform,
+        //             I/O Instance and more.
+        //
+        // @Register  -  This annotation is used to register I/O
+        //               Providers, Platforms, I/O Instances, etc.
+        //               with the Pi4J runtime.
+        // ------------------------------------------------------------
 
         // ------------------------------------------------------------
         // @Inject
@@ -161,7 +155,7 @@ public class GettingStartedExampleUsingDependencyInjection {
         // your application.
         // ------------------------------------------------------------
         @Inject
-        Context context;
+        Context pi4j;
 
         // ------------------------------------------------------------
         // Pi4J Platforms           (INJECTED VIA DEPENDENCY INJECTION)
@@ -364,7 +358,7 @@ public class GettingStartedExampleUsingDependencyInjection {
             // is returned to the system.
 
             // shutdown Pi4J
-            Pi4J.shutdown();
+            pi4j.shutdown();
 
             // dont return anything
             return null;

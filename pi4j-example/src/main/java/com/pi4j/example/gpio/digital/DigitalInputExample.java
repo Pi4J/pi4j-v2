@@ -62,7 +62,7 @@ public class DigitalInputExample {
         builder.id("my-digital-input")
                 .address(DIGITAL_INPUT_PIN)
                 .pull(PullResistance.PULL_DOWN);
-        var input = DigitalInput.create(builder.build());
+        var input = DigitalInput.create(pi4j, builder.build());
 
         // setup a digital output listener to listen for any state changes on the digital input
         input.addListener((DigitalChangeListener) event -> {
@@ -80,6 +80,6 @@ public class DigitalInputExample {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 }

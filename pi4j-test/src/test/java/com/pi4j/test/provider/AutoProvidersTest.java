@@ -28,15 +28,18 @@ package com.pi4j.test.provider;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 public class AutoProvidersTest {
+
+    private Context pi4j;
 
     @Before
     public void beforeTest() throws Pi4JException {
@@ -46,27 +49,27 @@ public class AutoProvidersTest {
         // Initialize Pi4J with AUTO-DETECT enabled
         // we want to load any detected Pi4J binding/io libraries
         // in the class path for this test case
-        Pi4J.initialize(true);
+        pi4j = Pi4J.initialize(true);
     }
 
     @After
     public void afterTest() {
         try {
-            Pi4J.shutdown();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
     public void testProvidersNotNull() throws Pi4JException {
-        assertNotNull(Pi4J.context().providers());
+        assertNotNull(pi4j.providers());
     }
 
     @Test
     public void testProvidersNotEmpty() throws Exception {
         // ensure that 1 or more providers were detected/loaded into the Pi4J context
-        assertFalse(Pi4J.context().providers().all().isEmpty());
+        assertFalse(pi4j.providers().all().isEmpty());
 
         // print out the detected Pi4J io libraries found on the class path
-        Pi4J.context().providers().describe().print(System.out);
+        pi4j.providers().describe().print(System.out);
     }
 }

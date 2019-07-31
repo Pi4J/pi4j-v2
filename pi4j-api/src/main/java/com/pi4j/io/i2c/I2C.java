@@ -27,6 +27,7 @@ package com.pi4j.io.i2c;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
 import com.pi4j.io.i2c.impl.I2CFactory;
@@ -45,28 +46,28 @@ public interface I2C extends IO<I2C, I2CConfig> {
 
     static final String ID = "I2C";
 
-    static I2C instance(String device, int address) throws ProviderException, NotInitializedException {
-        return I2CFactory.instance(device, address);
+    static I2C instance(Context context, String device, int address) throws ProviderException, NotInitializedException {
+        return I2CFactory.instance(context, device, address);
     }
 
-    static I2C instance(I2CConfig config) throws ProviderException, NotInitializedException {
-        return I2CFactory.instance(config);
+    static I2C instance(Context context, I2CConfig config) throws ProviderException, NotInitializedException {
+        return I2CFactory.instance(context, config);
     }
 
-    static I2C instance(String providerId, String device, int address) throws ProviderException, NotInitializedException {
-        return I2CFactory.instance(providerId, device, address);
+    static I2C instance(Context context, String providerId, String device, int address) throws ProviderException, NotInitializedException {
+        return I2CFactory.instance(context, providerId, device, address);
     }
 
-    static I2C instance(String providerId, I2CConfig config) throws ProviderException, NotInitializedException {
-        return I2CFactory.instance(providerId, config);
+    static I2C instance(Context context, String providerId, I2CConfig config) throws ProviderException, NotInitializedException {
+        return I2CFactory.instance(context, providerId, config);
     }
 
-    static I2C instance(I2CProvider provider, String device, int address) throws ProviderException {
-        return I2CFactory.instance(provider, device ,address);
+    static I2C instance(Context context, I2CProvider provider, String device, int address) throws ProviderException {
+        return I2CFactory.instance(context, provider, device ,address);
     }
 
-    static I2C instance(I2CProvider provider, I2CConfig config) throws ProviderException {
-        return I2CFactory.instance(provider, config);
+    static I2C instance(Context context, I2CProvider provider, I2CConfig config) throws ProviderException {
+        return I2CFactory.instance(context, provider, config);
     }
 
     /**

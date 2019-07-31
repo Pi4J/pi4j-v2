@@ -28,6 +28,7 @@ package com.pi4j.test.platform;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.mock.platform.MockPlatform;
 import com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
@@ -43,30 +44,32 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ManualPlatformsTest {
+
+    private Context pi4j;
 
     @Before
     public void beforeTest() throws Pi4JException {
         // Initialize Pi4J with AUTO-DETECT disabled
         // we don't want to load any detected Pi4J binding/io libraries
         // in the class path for this test case
-        Pi4J.initialize(false);
+        pi4j = Pi4J.initialize(false);
     }
 
     @After
     public void afterTest()  {
         try {
-            Pi4J.shutdown();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
     public void testProvidersNotNull() throws Pi4JException {
         // ensure that the io collection in the Pi4J context is not NULL
-        assertNotNull(Pi4J.context().providers());
+        assertNotNull(pi4j.providers());
     }
 
     @Test
@@ -74,7 +77,7 @@ public class ManualPlatformsTest {
 
         // create our own custom provider implementation classes
         // add the custom providers to the Pi4J context
-        Pi4J.providers().add(
+        pi4j.providers().add(
                 new MockAnalogInputProvider(),
                 new MockAnalogOutputProvider(),
                 new MockDigitalInputProvider(),
@@ -89,13 +92,14 @@ public class ManualPlatformsTest {
         MockPlatform mockPlatform = new MockPlatform();
 
         // add the custom providers to the Pi4J context
-        Pi4J.platforms().add(mockPlatform);
+        pi4j.platforms().add(mockPlatform);
 
         // ensure that no io were detected/loaded into the Pi4J context
-        assertEquals(1, Pi4J.context().platforms().all().size());
+        assertEquals(1, pi4j.platforms().all().size());
 
         // print out the detected Pi4J io libraries found on the class path
         About about = new About();
-        about.enumerateProviders("2 CUSTOM PLATFORMS (added via API)");
+        System.out.println("2 CUSTOM PLATFORMS (added via API)");
+        pi4j.providers().describe().print(System.out);;
     }
 }

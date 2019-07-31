@@ -41,8 +41,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 public class DependencyInjectionRegisterCustomProviderTest {
 
@@ -73,13 +73,14 @@ public class DependencyInjectionRegisterCustomProviderTest {
     @After
     public void afterTest() {
         try {
-            Pi4J.shutdown();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
     public void testDIRegisterCustomProviderNotNull() throws Pi4JException {
-        assertNotNull(Pi4J.context().providers());
+        assertNotNull(pi4j);
+        assertNotNull(pi4j.providers());
     }
 
     @Test
@@ -87,7 +88,7 @@ public class DependencyInjectionRegisterCustomProviderTest {
         About about = new About();
 
         // ensure that 1 or more providers were detected/loaded into the Pi4J context
-        assertFalse(Pi4J.context().providers().all().isEmpty());
+        assertFalse(pi4j.providers().all().isEmpty());
 
         System.out.println("-------------------------------------------------");
         System.out.println(this.getClass().getSimpleName());

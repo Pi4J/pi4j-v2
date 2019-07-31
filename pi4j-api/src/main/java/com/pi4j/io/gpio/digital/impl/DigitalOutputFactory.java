@@ -27,7 +27,7 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputBuilder;
@@ -49,39 +49,39 @@ public class DigitalOutputFactory {
         // forbid object construction
     }
 
-    public static boolean exists(String id) throws ProviderException, NotInitializedException {
-        return Pi4J.context().registry().exists(id, DigitalOutput.class);
+    public static boolean exists(Context context, String id) throws ProviderException, NotInitializedException {
+        return context.registry().exists(id, DigitalOutput.class);
     }
 
-    public static <T extends DigitalOutput> T get(String id) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)Pi4J.context().registry().get(id, DigitalOutput.class);
+    public static <T extends DigitalOutput> T get(Context context, String id) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)context.registry().get(id, DigitalOutput.class);
     }
 
     public static DigitalOutputBuilder builder() throws ProviderException {
         return new DefaultDigitalOutputBuilder();
     }
 
-    public static <T extends DigitalOutput> T  create(DigitalOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)Pi4J.context().registry().create(config, DigitalOutput.class);
+    public static <T extends DigitalOutput> T  create(Context context, DigitalOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
+        return (T)context.registry().create(config, DigitalOutput.class);
     }
 
-    public static <T extends DigitalOutput> T  create(DigitalOutputProvider provider, DigitalOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)Pi4J.context().registry().create(provider, config, DigitalOutput.class);
+    public static <T extends DigitalOutput> T  create(Context context, DigitalOutputProvider provider, DigitalOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
+        return (T)context.registry().create(provider, config, DigitalOutput.class);
     }
 
-    public static  <T extends DigitalOutput> T create(String providerId, DigitalOutputConfig config) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)Pi4J.context().registry().create(providerId, config, DigitalOutput.class);
+    public static  <T extends DigitalOutput> T create(Context context, String providerId, DigitalOutputConfig config) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)context.registry().create(providerId, config, DigitalOutput.class);
     }
 
-    public static <T extends DigitalOutput> T create(DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)Pi4J.context().registry().create(config, clazz);
+    public static <T extends DigitalOutput> T create(Context context, DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)context.registry().create(config, clazz);
     }
 
-    public static <T extends DigitalOutput> T create(String providerId, DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)Pi4J.context().registry().create(providerId, config, clazz);
+    public static <T extends DigitalOutput> T create(Context context, String providerId, DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)context.registry().create(providerId, config, clazz);
     }
 
-    public static <T extends DigitalOutput> T create(DigitalOutputProvider provider, DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)Pi4J.context().registry().create(provider, config, clazz);
+    public static <T extends DigitalOutput> T create(Context context, DigitalOutputProvider provider, DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+        return (T)context.registry().create(provider, config, clazz);
     }
 }

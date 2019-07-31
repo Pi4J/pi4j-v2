@@ -28,41 +28,44 @@ package com.pi4j.test.provider;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class NoProvidersTest {
+
+    private Context pi4j;
 
     @Before
     public void beforeTest() throws Pi4JException {
         // Initialize Pi4J with AUTO-DETECT disabled
         // we don't want to load any detected Pi4J binding/io libraries
         // in the class path for this test case
-        Pi4J.initialize(false);
+        pi4j = Pi4J.initialize(false);
     }
 
     @After
     public void afterTest() {
         try {
-            Pi4J.shutdown();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
     public void testProvidersNotNull() throws Pi4JException {
         // ensure that the io collection in the Pi4J context is not NULL
-        assertNotNull(Pi4J.context().providers());
+        assertNotNull(pi4j.providers());
     }
 
     @Test
     public void testProvidersEmpty() throws Pi4JException {
         // ensure that no io were detected/loaded into the Pi4J context
-        assertTrue(Pi4J.context().providers().all().isEmpty());
+        assertTrue(pi4j.providers().all().isEmpty());
     }
 
 }

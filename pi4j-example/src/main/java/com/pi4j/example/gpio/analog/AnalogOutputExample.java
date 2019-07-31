@@ -63,7 +63,7 @@ public class AnalogOutputExample {
         builder.id(ANALOG_OUTPUT_PIN_ID)
                .name(ANALOG_OUTPUT_PIN_NAME)
                .address(ANALOG_OUTPUT_PIN);
-        var output = AnalogOutput.create(builder.build());
+        var output = AnalogOutput.create(pi4j, builder.build());
 
         // create an analog output instance using the default analog output provider
         //var output = AnalogOutput.create(ANALOG_OUTPUT_PIN_ID, ANALOG_OUTPUT_PIN);
@@ -86,6 +86,6 @@ public class AnalogOutputExample {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 }

@@ -66,7 +66,7 @@ public class DigitalInputExampleFromProperties {
         // create a digital input instance using the default digital input provider
         // we will use the PULL_DOWN argument to set the pin pull-down resistance on this GPIO pin
         var builder = DigitalInput.builder().load(properties);
-        var input = DigitalInput.create(builder.build());
+        var input = DigitalInput.create(pi4j, builder.build());
 
         // setup a digital output listener to listen for any state changes on the digital input
         input.addListener((DigitalChangeListener) event -> {
@@ -92,6 +92,6 @@ public class DigitalInputExampleFromProperties {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 }

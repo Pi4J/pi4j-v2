@@ -54,7 +54,7 @@ public class DigitalOutputBlinkExample {
         //var output = DigitalOutput.create(DIGITAL_OUTPUT_PIN);
 
         // get default runtime platform
-        Platform platform = Pi4J.platforms().getDefault();
+        Platform platform = pi4j.platforms().getDefault();
 
         // get default digital output provide for this platform
         DigitalOutputProvider provider = platform.provider(ProviderType.DIGITAL_OUTPUT);
@@ -63,7 +63,7 @@ public class DigitalOutputBlinkExample {
         DigitalOutputConfig config = DigitalOutput.builder().address(3).build();
 
         // use factory to create/register  I/O instance
-        DigitalOutput output = provider.register(Pi4J.context(), config);
+        DigitalOutput output = provider.register(pi4j, config);
 
         // setup a digital output listener to listen for any state changes on the digital output
         output.addListener((DigitalChangeListener) event -> {
@@ -84,7 +84,7 @@ public class DigitalOutputBlinkExample {
         output.blink(1, 10, TimeUnit.SECONDS);
 
         // shutdown Pi4J
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 }
 

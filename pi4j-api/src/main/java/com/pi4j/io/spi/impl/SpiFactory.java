@@ -27,7 +27,7 @@ package com.pi4j.io.spi.impl;
  * #L%
  */
 
-import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
@@ -48,42 +48,42 @@ public class SpiFactory {
         // forbid object construction
     }
 
-    public static Spi instance(String device) throws ProviderException, NotInitializedException {
-        return instance(new SpiConfig(device));
+    public static Spi instance(Context context, String device) throws ProviderException, NotInitializedException {
+        return instance(context, new SpiConfig(device));
     }
 
-    public static Spi instance(SpiConfig config) throws ProviderException, NotInitializedException {
+    public static Spi instance(Context context, SpiConfig config) throws ProviderException, NotInitializedException {
         // get SPI instance using default platform IO provider
-        return instance((SpiProvider) null, config);
+        return instance(context, (SpiProvider) null, config);
     }
 
-    public static Spi instance(String providerId, String device) throws ProviderException, NotInitializedException {
-        return instance(providerId, new SpiConfig(device));
+    public static Spi instance(Context context, String providerId, String device) throws ProviderException, NotInitializedException {
+        return instance(context, providerId, new SpiConfig(device));
     }
 
-    public static Spi instance(String providerId, SpiConfig config) throws ProviderException, NotInitializedException {
+    public static Spi instance(Context context, String providerId, SpiConfig config) throws ProviderException, NotInitializedException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
-            return instance(config);
+            return instance(context, config);
         }
         else{
-            var provider = Pi4J.providers().spi().get(providerId);
-            return instance(provider, config);
+            var provider = context.providers().spi().get(providerId);
+            return instance(context, provider, config);
         }
     }
 
-    public static Spi instance(SpiProvider provider, String device) throws ProviderException {
-        return instance(provider, new SpiConfig(device));
+    public static Spi instance(Context context, SpiProvider provider, String device) throws ProviderException {
+        return instance(context, provider, new SpiConfig(device));
     }
 
-    public static Spi instance(SpiProvider provider, SpiConfig config) throws ProviderException {
+    public static Spi instance(Context context, SpiProvider provider, SpiConfig config) throws ProviderException {
         try {
             // get default SPI io if io is null
             if(provider == null){
-                provider = Pi4J.platform().spi();
+                provider = context.platform().spi();
             }
             // create a SPI instance using the io
-            return provider.register(Pi4J.context(), config);
+            return provider.register(context, config);
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {

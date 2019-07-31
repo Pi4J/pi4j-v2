@@ -59,7 +59,7 @@ public class DigitalOutputExample {
 
 
         // create a digital output instance using the default digital output provider
-        var output = DigitalOutput.create(DIGITAL_OUTPUT_PIN);
+        var output = DigitalOutput.create(pi4j, DIGITAL_OUTPUT_PIN);
         output.config().shutdownState(DigitalState.HIGH);
 
         // setup a digital output listener to listen for any state changes on the digital output
@@ -94,6 +94,6 @@ public class DigitalOutputExample {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.shutdown();
+        pi4j.shutdown();
     }
 }

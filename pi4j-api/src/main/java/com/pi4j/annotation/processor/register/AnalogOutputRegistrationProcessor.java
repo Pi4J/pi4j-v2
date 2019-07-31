@@ -119,9 +119,9 @@ public class AnalogOutputRegistrationProcessor implements RegisterProcessor<Anal
         // create and return I/O instance from registry
         if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
             var provider = ProviderAnnotationProcessor.instance(context, field, AnalogOutputProvider.class);
-            return AnalogOutput.create(provider, builder.build());
+            return AnalogOutput.create(context, provider, builder.build());
         } else {
-            return AnalogOutput.create(builder.build());
+            return AnalogOutput.create(context, builder.build());
         }
     }
 }

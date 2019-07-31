@@ -32,13 +32,21 @@ import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.DefaultAnnotationEngine;
 import com.pi4j.binding.Bindings;
 import com.pi4j.binding.impl.DefaultBindings;
+import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
+import com.pi4j.exception.Pi4JException;
+import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
 import com.pi4j.platform.impl.DefaultPlatforms;
+import com.pi4j.provider.Provider;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.impl.DefaultProviders;
 import com.pi4j.registry.Registry;
 import com.pi4j.registry.impl.DefaultRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
 
 public class DefaultContext implements Context {
 
@@ -47,13 +55,19 @@ public class DefaultContext implements Context {
     private Registry registry = DefaultRegistry.singleton(this);
     private Platforms platforms = DefaultPlatforms.singleton(this);
     private AnnotationEngine annotationEngine = DefaultAnnotationEngine.singleton(this);
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static Context singleton = null;
-    public static Context singleton(){
-        if(singleton == null){
-            singleton = new DefaultContext();
-        }
-        return singleton;
+    // TODO :: REMOVE ME
+//    private static Context singleton = null;
+//    public static Context singleton(){
+//        if(singleton == null){
+//            singleton = new DefaultContext();
+//        }
+//        return singleton;
+//    }
+
+    public static Context instance(){
+        return new DefaultContext();
     }
 
     // private constructor
@@ -79,7 +93,72 @@ public class DefaultContext implements Context {
 
     @Override
     public Context inject(Object... objects) throws AnnotationException {
+
+        // if Pi4J has not been initialized, then use the 'preinject' static method
+        // of the DefaultAnnotationEngine to look for @Initialize annotations to perform
+        // initialization
+        //DefaultAnnotationEngine.processInitialize(objects);
+
+        // inject remaining (if objects exist)
         annotationEngine.inject(objects);
+
+        return this;
+    }
+
+    @Override
+    public Context shutdown() throws LifecycleException {
+        logger.trace("invoked 'shutdown();'");
+        try {
+            // shutdown all I/O instances
+            registry().shutdown(this);
+
+            // shutdown all providers
+            providers().shutdown(this);
+
+            // shutdown platforms
+            platforms().shutdown(this);
+
+            // shutdown all bindings
+            bindings().shutdown(this);
+        } catch (Exception e) {
+            logger.error("failed to 'shutdown(); '", e);
+            throw new LifecycleException(e);
+        }
+
+        logger.debug("Pi4J context/runtime successfully shutdown.'");
+        return this;
+    }
+
+    @Override
+    public Context initialize(boolean autoDetect, Collection<Platform> platform, Collection<Provider> provider) throws LifecycleException {
+        logger.trace("invoked 'initialize()' [auto-detect={}]", autoDetect);
+
+        // initialize bindings
+        try {
+            bindings().initialize(this, true);
+
+            // initialize providers, then add the provided I/O providers to the managed collection
+            providers().initialize(this, autoDetect);
+            if(provider != null && !provider.isEmpty()) {
+                logger.trace("adding explicit providers: [count={}]", provider.size());
+                providers().add(provider);
+            }
+
+            // initialize platforms, then add the provided I/O platforms to the managed collection
+            platforms().initialize(this, autoDetect);
+            if(platform != null && !platform.isEmpty()) {
+                logger.trace("adding explicit platforms: [count={}]", platform.size());
+                platforms().add(platform);
+            }
+
+        } catch (Pi4JException e) {
+            logger.error(e.getMessage(), e);
+            throw new LifecycleException(e);
+        }
+
+
+        logger.debug("Pi4J successfully initialized.'");
+
         return this;
     }
 }

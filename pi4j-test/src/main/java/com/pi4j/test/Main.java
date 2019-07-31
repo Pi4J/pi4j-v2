@@ -50,16 +50,16 @@ public class Main {
         Context pi4j = Pi4J.initialize();
 
 
-        Pi4J.providers().add(new TestAnalogInputProvider("test-analog-input-provider", "TestAnalogInputProvider"));
+        pi4j.providers().add(new TestAnalogInputProvider("test-analog-input-provider", "TestAnalogInputProvider"));
 
         // create About class instance
         About about = new About();
-        about.enumerateBindings();
-        about.enumerateProviders();
-        about.enumeratePlatforms();
-        about.describeDeafultPlatform();
+        about.enumerateBindings(pi4j);
+        about.enumerateProviders(pi4j);
+        about.enumeratePlatforms(pi4j);
+        about.describeDeafultPlatform(pi4j);
         for(var providerType : ProviderType.values()){
-            about.enumerateProviders(providerType);
+            about.enumerateProviders(pi4j, providerType);
         }
 
 //        Serial serial = Serial.instance("/dev/ttyUSB1");
@@ -69,15 +69,15 @@ public class Main {
 
 
 
-        var din1 = DigitalInput.create(11);
-        var ain1 = AnalogInput.create("test-analog-input-provider",21, TestAnalogInput.class);
+        var din1 = DigitalInput.create(pi4j, 11);
+        var ain1 = AnalogInput.create(pi4j, "test-analog-input-provider",21, TestAnalogInput.class);
 
-        var input = AnalogInput.create(98);
+        var input = AnalogInput.create(pi4j, 98);
 
         input.name("My Analog Input #1");
 
-        var output1 = AnalogOutput.create(99);
-        var output2 = AnalogOutput.create(100);
+        var output1 = AnalogOutput.create(pi4j, 99);
+        var output2 = AnalogOutput.create(pi4j, 100);
 
         input.addListener((AnalogChangeListener) event -> {
             System.out.print("ANALOG INPUT [");
@@ -143,7 +143,7 @@ public class Main {
         pi4j.describe().print(System.out);
 
         // shutdown Pi4J
-        Pi4J.shutdown();
+        pi4j.shutdown();
 
     }
 }
