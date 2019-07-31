@@ -356,15 +356,15 @@ public class GettingStartedExampleUsingDependencyInjection {
             // Terminate the Pi4J library
             // ------------------------------------------------------------
             // We we are all done and want to exit our application, we must
-            // call the 'terminate()' function on the Pi4J static helper class.
-            // This will ensure that all I/O instances are properly terminated,
+            // call the 'shutdown()' function on the Pi4J static helper class.
+            // This will ensure that all I/O instances are properly shutdown,
             // released by the the system and shutdown in the appropriate
             // manner.  Terminate will also ensure that any background
             // threads/processes are cleanly shutdown and any used memory
             // is returned to the system.
 
             // shutdown Pi4J
-            Pi4J.terminate();
+            Pi4J.shutdown();
 
             // dont return anything
             return null;

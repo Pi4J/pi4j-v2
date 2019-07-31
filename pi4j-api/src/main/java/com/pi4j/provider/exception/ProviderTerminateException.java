@@ -44,6 +44,6 @@ public class ProviderTerminateException extends ProviderException {
      * Default Constructor
      */
     public ProviderTerminateException(String providerId, Throwable ex){
-        super("Pi4J io [" + providerId + "] failed to terminate gracefully; " + ex.getMessage(), ex);
+        super("Pi4J io [" + providerId + "] failed to shutdown gracefully; " + ex.getMessage(), ex);
     }
 }

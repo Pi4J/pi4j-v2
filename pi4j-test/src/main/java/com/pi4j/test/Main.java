@@ -143,7 +143,7 @@ public class Main {
         pi4j.describe().print(System.out);
 
         // shutdown Pi4J
-        Pi4J.terminate();
+        Pi4J.shutdown();
 
     }
 }

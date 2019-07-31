@@ -79,7 +79,7 @@ public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig> e
     }
 
     @Override
-    public IO_TYPE terminate(Context context) throws LifecycleException {
+    public IO_TYPE shutdown(Context context) throws LifecycleException {
         return (IO_TYPE)this;
     }
 

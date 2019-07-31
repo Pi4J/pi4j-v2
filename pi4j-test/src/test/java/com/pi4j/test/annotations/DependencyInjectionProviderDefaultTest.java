@@ -63,7 +63,7 @@ public class DependencyInjectionProviderDefaultTest {
     @After
     public void afterTest() {
         try {
-            Pi4J.terminate();
+            Pi4J.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 

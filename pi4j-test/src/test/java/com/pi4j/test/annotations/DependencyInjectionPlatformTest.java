@@ -64,7 +64,7 @@ public class DependencyInjectionPlatformTest {
 
     @After
     public void afterTest() throws Pi4JException {
-        Pi4J.terminate();
+        Pi4J.shutdown();
     }
 
     @Test

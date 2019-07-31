@@ -91,18 +91,18 @@ public class DefaultBindings implements Bindings {
         }
     }
 
-    protected void terminateBinding(Binding binding) throws BindingTerminateException {
+    protected void shutdownBinding(Binding binding) throws BindingTerminateException {
 
         // ensure the binding object is valid
         if(binding == null) return;
 
-        // attempt to terminate the binding instance
+        // attempt to shutdown the binding instance
         try {
             logger.trace("terminating binding [id={}; name={}; class={}]",
                     binding.id(), binding.name(), binding.getClass().getName());
-            binding.terminate(context);
+            binding.shutdown(context);
         } catch (Exception e) {
-            logger.error("unable to 'terminate()' binding: [id={}; name={}]; {}",
+            logger.error("unable to 'shutdown()' binding: [id={}; name={}]; {}",
                     binding.id(), binding.name(), e.getMessage());
             logger.error(e.getMessage(), e);
             throw new BindingTerminateException(binding.id(), e);
@@ -243,8 +243,8 @@ public class DefaultBindings implements Bindings {
         // get existing binding instance
         Binding oldBinding = bindings.get(binding.id());
 
-        // attempt to terminate old binding instance
-        terminateBinding(oldBinding);
+        // attempt to shutdown old binding instance
+        shutdownBinding(oldBinding);
 
         // attempt to initialize the new binding instance
         initializeBinding(binding);
@@ -273,8 +273,8 @@ public class DefaultBindings implements Bindings {
         // get existing binding instance
         Binding oldBinding = bindings.get(bindingId);
 
-        // attempt to terminate old binding instance
-        terminateBinding(oldBinding);
+        // attempt to shutdown old binding instance
+        shutdownBinding(oldBinding);
 
         // remove from managed set
         var removedBinding = bindings.remove(bindingId);
@@ -322,15 +322,15 @@ public class DefaultBindings implements Bindings {
     }
 
     @Override
-    public void terminate(Context context) throws BindingException {
+    public void shutdown(Context context) throws BindingException {
 
         // ensure bindings have been initialized
         if(!initialized) throw new BindingsNotInitialized();
 
-        logger.trace("invoked 'terminate();'");
+        logger.trace("invoked 'shutdown();'");
 
         BindingException bindingException = null;
-        // iterate over all providers and invoke the terminate method on each
+        // iterate over all providers and invoke the shutdown method on each
         var bindingIds = bindings.keySet();
         for(var bindingId : bindingIds){
             try {

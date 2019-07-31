@@ -136,7 +136,7 @@ public class TestAnalogOutput implements AnalogOutput {
     }
 
     @Override
-    public Object terminate(Context context) throws LifecycleException {
+    public Object shutdown(Context context) throws LifecycleException {
         return null;
     }
 }

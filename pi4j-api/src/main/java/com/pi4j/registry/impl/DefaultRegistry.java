@@ -169,18 +169,18 @@ public class DefaultRegistry implements Registry {
         if(!instances.containsKey(_id))
             throw new RegistryNotFoundException(_id);
 
-        // terminate instance
-        var terminatedInstance = instances.get(_id).terminate(this.context);
+        // shutdown instance
+        var shutdownInstances = instances.get(_id).shutdown(this.context);
 
-        // remove the terminated instance from the registry
+        // remove the shutdown instance from the registry
         this.instances.remove(_id);
 
-        // return the terminated I/O instance
-        return (T)terminatedInstance;
+        // return the shutdown I/O provider instances
+        return (T)shutdownInstances;
     }
 
     @Override
-    public void terminate(Context context) throws ProviderException, RegistryException {
+    public void shutdown(Context context) throws ProviderException, RegistryException {
         all().values().forEach(instance->{
             try {
                 destroy(instance.id());

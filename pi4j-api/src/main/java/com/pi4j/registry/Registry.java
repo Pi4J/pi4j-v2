@@ -58,7 +58,7 @@ public interface Registry extends Describable {
     <T extends IO> T get(String id, Class<T> type) throws RegistryException;
     <T extends IO> T destroy(String id) throws RegistryException, LifecycleException;
 
-    void terminate(Context context) throws ProviderException, RegistryException;
+    void shutdown(Context context) throws ProviderException, RegistryException;
 
     default <T extends IO> Map<String, T> allByType(Class<T> ioClass) throws RegistryException{
         // create a map <io-id, io-instance> of I/O instances that extend of the given IO class

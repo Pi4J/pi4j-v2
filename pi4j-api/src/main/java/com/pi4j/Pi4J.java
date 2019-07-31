@@ -185,28 +185,28 @@ public class Pi4J {
         return context;
     }
 
-    public static Context terminate() throws Pi4JException {
-        logger.trace("invoked 'terminate();'");
+    public static Context shutdown() throws Pi4JException {
+        logger.trace("invoked 'shutdown();'");
 
         // throw exception if Pi4J has not been initialized
         if(context == null) throw new NotInitializedException();
 
-        // terminate all I/O instances
-        registry().terminate(context);
+        // shutdown all I/O instances
+        registry().shutdown(context);
 
-        // terminate all providers
-        context.providers().terminate(context);
+        // shutdown all providers
+        context.providers().shutdown(context);
 
-        // terminate platforms
-        context.platforms().terminate(context);
+        // shutdown platforms
+        context.platforms().shutdown(context);
 
-        // terminate all bindings
-        context.bindings().terminate(context);
+        // shutdown all bindings
+        context.bindings().shutdown(context);
 
         // destroy/reset context singleton
         context = null;
 
-        logger.debug("Pi4J successfully terminated.'");
+        logger.debug("Pi4J successfully shutdown.'");
         return context;
     }
 

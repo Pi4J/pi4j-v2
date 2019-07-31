@@ -84,7 +84,7 @@ public class DigitalOutputBlinkExample {
         output.blink(1, 10, TimeUnit.SECONDS);
 
         // shutdown Pi4J
-        Pi4J.terminate();
+        Pi4J.shutdown();
     }
 }
 

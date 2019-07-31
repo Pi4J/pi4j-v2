@@ -116,7 +116,7 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
     }
 
     @Override
-    public DigitalOutput terminate(Context context){
+    public DigitalOutput shutdown(Context context){
         // set pin state to shutdown state if a shutdown state is configured
         if(config().shutdownState() != DigitalState.UNKNOWN){
             state(config().shutdownState());

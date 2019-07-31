@@ -32,7 +32,7 @@ import com.pi4j.context.Context;
 public interface Lifecycle2 extends Identity {
 
     void initialize(Context context) throws Exception;
-    void terminate(Context context) throws Exception;
+    void shutdown(Context context) throws Exception;
 
     default Descriptor describe() {
         return Descriptor.create()

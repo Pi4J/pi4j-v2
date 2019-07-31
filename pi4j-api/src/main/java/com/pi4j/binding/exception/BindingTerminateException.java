@@ -44,6 +44,6 @@ public class BindingTerminateException extends BindingException {
      * Default Constructor
      */
     public BindingTerminateException(String bindingId, Throwable ex){
-        super("Pi4J binding [" + bindingId + "] failed to terminate gracefully; " + ex.getMessage(), ex);
+        super("Pi4J binding [" + bindingId + "] failed to shutdown gracefully; " + ex.getMessage(), ex);
     }
 }

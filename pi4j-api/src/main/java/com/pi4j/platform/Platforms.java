@@ -74,7 +74,7 @@ public interface Platforms extends Describable {
     <T extends Platform> void remove(String platformId) throws PlatformsNotInitialized, PlatformNotFoundException, PlatformTerminateException;
 
     void initialize(Context context, boolean autoDetect) throws PlatformsAlreadyInitialized, PlatformAlreadyExistsException, PlatformInitializeException, PlatformsNotInitialized;
-    void terminate(Context context) throws PlatformsNotInitialized, PlatformTerminateException;
+    void shutdown(Context context) throws PlatformsNotInitialized, PlatformTerminateException;
 
     Platform defaultPlatform();
     Platform defaultPlatform(String platformId) throws PlatformNotFoundException;

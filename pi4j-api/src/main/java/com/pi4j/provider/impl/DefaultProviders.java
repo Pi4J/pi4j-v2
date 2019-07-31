@@ -127,29 +127,29 @@ public class DefaultProviders implements Providers {
 
         // attempt to initialize the io instance
         try {
-            logger.trace("initializing io [id={}; name={}; class={}]",
+            logger.trace("initializing provider [id={}; name={}; class={}]",
                     provider.id(), provider.name(), provider.getClass().getName());
             provider.initialize(context);
         } catch (Exception e) {
-            logger.error("unable to 'initialize()' io: [id={}; name={}]; {}",
+            logger.error("unable to 'initialize()' provider: [id={}; name={}]; {}",
                     provider.id(), provider.name(), e.getMessage());
             logger.error(e.getMessage(), e);
             throw new ProviderInitializeException(provider.id(), e);
         }
     }
 
-    protected void terminateProvider(Provider provider) throws ProviderTerminateException {
+    protected void shutdownProvider(Provider provider) throws ProviderTerminateException {
 
         // ensure the io object is valid
         if(provider == null) return;
 
-        // attempt to terminate the io instance
+        // attempt to shutdown the io instance
         try {
-            logger.trace("terminating io [id={}; name={}; class={}]",
+            logger.trace("calling 'shutdown()' provider [id={}; name={}; class={}]",
                     provider.id(), provider.name(), provider.getClass().getName());
-            provider.terminate(context);
+            provider.shutdown(context);
         } catch (Exception e) {
-            logger.error("unable to 'terminate()' io: [id={}; name={}]; {}",
+            logger.error("unable to 'shutdown()' provider: [id={}; name={}]; {}",
                     provider.id(), provider.name(), e.getMessage());
             logger.error(e.getMessage(), e);
             throw new ProviderTerminateException(provider.id(), e);
@@ -379,10 +379,10 @@ public class DefaultProviders implements Providers {
         // get existing io instance
         var oldProvider = providers.get(provider.id());
 
-        // attempt to terminate old io instance
-        terminateProvider(oldProvider);
+        // attempt to shutdown old provider instance
+        shutdownProvider(oldProvider);
 
-        // attempt to initialize the new io instance
+        // attempt to initialize the new provider instance
         initializeProvider(provider);
 
         // add new io to managed set
@@ -409,8 +409,8 @@ public class DefaultProviders implements Providers {
         // get existing io instance
         var oldProvider = providers.get(providerId);
 
-        // attempt to terminate old io instance
-        terminateProvider(oldProvider);
+        // attempt to shutdown old io instance
+        shutdownProvider(oldProvider);
 
         // remove from managed set
         var removedProvider = providers.remove(providerId);
@@ -625,15 +625,15 @@ public class DefaultProviders implements Providers {
     }
 
     @Override
-    public void terminate(Context context) throws ProviderException {
+    public void shutdown(Context context) throws ProviderException {
 
         // ensure providers have been initialized
         if(!initialized) throw new ProvidersNotInitializedException();
 
-        logger.trace("invoked 'terminate();'");
+        logger.trace("invoked 'shutdown();'");
 
         ProviderException providerException = null;
-        // iterate over all providers and invoke the terminate method on each
+        // iterate over all providers and invoke the shutdown method on each
         var providerIds = providers.keySet();
         for(var providerId : providerIds){
             try {

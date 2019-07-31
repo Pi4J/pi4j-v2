@@ -39,7 +39,7 @@ public abstract class TestProvider<PROVIDER_TYPE extends Provider, IO_TYPE exten
         implements Provider<IO_TYPE, CONFIG_TYPE> {
 
     public boolean initializeFail = false;
-    public boolean terminateFail = false;
+    public boolean shutdownFail = false;
     protected String name = null;
     protected String id = null;
 
@@ -78,8 +78,8 @@ public abstract class TestProvider<PROVIDER_TYPE extends Provider, IO_TYPE exten
     }
 
     @Override
-    public PROVIDER_TYPE terminate(Context context) throws LifecycleException {
-        if(terminateFail) throw new LifecycleException("");
+    public PROVIDER_TYPE shutdown(Context context) throws LifecycleException {
+        if(shutdownFail) throw new LifecycleException("");
         return (PROVIDER_TYPE) this;
     }
 }

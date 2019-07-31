@@ -64,7 +64,7 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
     }
 
     @Override
-    public PROVIDER_TYPE terminate(Context context) throws LifecycleException {
+    public PROVIDER_TYPE shutdown(Context context) throws LifecycleException {
 
         // TODO :: ABSTRACT VIA PROXY IMPL
 
@@ -74,7 +74,7 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
             instances = Pi4J.registry().allByProvider(this.id(), IO.class);
             instances.forEach((address, instance)->{
                 try {
-                    instance.terminate(context);
+                    instance.shutdown(context);
                 } catch (LifecycleException e) {
                     logger.error(e.getMessage(), e);
                 }

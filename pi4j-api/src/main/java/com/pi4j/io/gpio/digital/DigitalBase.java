@@ -89,7 +89,7 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
     }
 
     @Override
-    public DIGITAL_TYPE terminate(Context context){
+    public DIGITAL_TYPE shutdown(Context context){
         // remove all listeners
         listeners.clear();
 

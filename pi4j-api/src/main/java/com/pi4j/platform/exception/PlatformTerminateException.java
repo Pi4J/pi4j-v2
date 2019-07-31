@@ -44,6 +44,6 @@ public class PlatformTerminateException extends PlatformException {
      * Default Constructor
      */
     public PlatformTerminateException(String platformId, Throwable ex){
-        super("Pi4J platform [" + platformId + "] failed to terminate gracefully; " + ex.getMessage(), ex);
+        super("Pi4J platform [" + platformId + "] failed to shutdown gracefully; " + ex.getMessage(), ex);
     }
 }

@@ -101,7 +101,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     }
 
     @Override
-    public PLATFORM terminate(Context context) throws LifecycleException {
+    public PLATFORM shutdown(Context context) throws LifecycleException {
         return (PLATFORM)this;
     }
 

@@ -88,7 +88,7 @@ public abstract class AnalogBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_
     }
 
     @Override
-    public ANALOG_TYPE terminate(Context context){
+    public ANALOG_TYPE shutdown(Context context){
         // remove all listeners
         listeners.clear();
 

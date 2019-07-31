@@ -92,6 +92,6 @@ public class AnalogOutputExampleFromPropertiesFile {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.terminate();
+        Pi4J.shutdown();
     }
 }

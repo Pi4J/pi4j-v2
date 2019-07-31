@@ -29,12 +29,8 @@ package com.pi4j.example.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
-import com.pi4j.context.Context;
-import com.pi4j.io.gpio.digital.DigitalChangeEvent;
-import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
-import com.pi4j.util.Console;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -67,7 +63,7 @@ public class DigitalOutputBlinkExampleUsingDependencyInjection {
             output.blink(1, 10, TimeUnit.SECONDS);
 
             // shutdown Pi4J
-            Pi4J.terminate();
+            Pi4J.shutdown();
 
             // we are done
             return null;

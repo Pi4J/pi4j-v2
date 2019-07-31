@@ -116,7 +116,7 @@ public interface Providers extends Describable {
 //    <T extends Provider> void removeDefault(Class<T> providerClass) throws ProviderException;
 
     void initialize(Context context, boolean autoDetect) throws ProviderException;
-    void terminate(Context context) throws ProviderException;
+    void shutdown(Context context) throws ProviderException;
 
     // DEFAULT METHODS
     default <T extends Provider> Providers add(T ... provider) throws ProviderException {

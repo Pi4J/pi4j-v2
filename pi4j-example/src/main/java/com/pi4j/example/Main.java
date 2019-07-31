@@ -87,6 +87,6 @@ public class Main {
 //        DigitalOutput dout1 = DigitalOutput;
 
         // shutdown Pi4J
-        Pi4J.terminate();
+        Pi4J.shutdown();
     }
 }

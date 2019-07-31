@@ -94,18 +94,18 @@ public class DefaultPlatforms implements Platforms {
         }
     }
 
-    protected void terminatePlatform(Platform platform) throws PlatformTerminateException {
+    protected void shutdownPlatform(Platform platform) throws PlatformTerminateException {
 
         // ensure the platform object is valid
         if(platform == null) return;
 
-        // attempt to terminate the platform instance
+        // attempt to shutdown the platform instance
         try {
             logger.trace("terminating platform [id={}; name={}; class={}]",
                     platform.id(), platform.name(), platform.getClass().getName());
-            platform.terminate(context);
+            platform.shutdown(context);
         } catch (Exception e) {
-            logger.error("unable to 'terminate()' platform: [id={}; name={}]; {}",
+            logger.error("unable to 'shutdown()' platform: [id={}; name={}]; {}",
                     platform.id(), platform.name(), e.getMessage());
             logger.error(e.getMessage(), e);
             throw new PlatformTerminateException(platform.id(), e);
@@ -284,8 +284,8 @@ public class DefaultPlatforms implements Platforms {
         // get existing platform instance
         Platform oldPlatform = platforms.get(platform.id());
 
-        // attempt to terminate old platform instance
-        terminatePlatform(oldPlatform);
+        // attempt to shutdown old platform instance
+        shutdownPlatform(oldPlatform);
 
         // attempt to initialize the new platform instance
         initializePlatform(platform);
@@ -314,8 +314,8 @@ public class DefaultPlatforms implements Platforms {
         // get existing platform instance
         Platform oldPlatform = platforms.get(platformId);
 
-        // attempt to terminate old platform instance
-        terminatePlatform(oldPlatform);
+        // attempt to shutdown old platform instance
+        shutdownPlatform(oldPlatform);
 
         // remove platform from managed set
         var removedPlatform = platforms.remove(platformId);
@@ -363,15 +363,15 @@ public class DefaultPlatforms implements Platforms {
     }
 
     @Override
-    public void terminate(Context context) throws PlatformsNotInitialized, PlatformTerminateException {
+    public void shutdown(Context context) throws PlatformsNotInitialized, PlatformTerminateException {
 
         // ensure platforms have been initialized
         if(!initialized) throw new PlatformsNotInitialized();
 
-        logger.trace("invoked 'terminate();'");
+        logger.trace("invoked 'shutdown();'");
 
         PlatformTerminateException platformException = null;
-        // iterate over all providers and invoke the terminate method on each
+        // iterate over all providers and invoke the shutdown method on each
         var platformIds = platforms.keySet();
         for(var platformId : platformIds){
             try {
