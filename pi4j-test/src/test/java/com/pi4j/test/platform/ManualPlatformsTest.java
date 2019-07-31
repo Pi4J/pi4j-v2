@@ -98,7 +98,7 @@ public class ManualPlatformsTest {
         assertEquals(1, pi4j.platforms().all().size());
 
         // print out the detected Pi4J io libraries found on the class path
-        System.out.println("2 CUSTOM PLATFORMS (added via API)");
+        System.out.println("1 'MOCK' PLATFORM (added via API)");
         pi4j.providers().describe().print(System.out);;
     }
 }
