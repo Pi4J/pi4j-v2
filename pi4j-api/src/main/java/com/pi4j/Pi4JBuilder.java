@@ -5,7 +5,7 @@ package com.pi4j;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Pi4J.java
+ * FILENAME      :  Pi4JBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -36,7 +36,7 @@ import com.pi4j.provider.Provider;
 public interface Pi4JBuilder extends Builder<Pi4JConfig> {
 
     static Pi4JBuilder create(){
-        return new DefaultPi4JBuilder();
+        return DefaultPi4JBuilder.instance();
     }
 
     Pi4JBuilder add(Binding ... binding);

@@ -5,7 +5,7 @@ package com.pi4j.impl;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Pi4J.java
+ * FILENAME      :  DefaultPi4JConfig.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,6 +27,7 @@ package com.pi4j.impl;
  * #L%
  */
 
+import com.pi4j.Pi4JBuilder;
 import com.pi4j.Pi4JConfig;
 import com.pi4j.binding.Binding;
 import com.pi4j.platform.Platform;
@@ -57,9 +58,14 @@ public class DefaultPi4JConfig implements Pi4JConfig {
     protected Collection<Provider> providers = Collections.synchronizedList(new ArrayList<>());
 
     /**
-     * Default Constructor
+     * Private Constructor
      */
-    public DefaultPi4JConfig(){
+    private DefaultPi4JConfig(){
+        // forbid object construction
+    }
+
+    public static Pi4JConfig instance(){
+        return new DefaultPi4JConfig();
     }
 
     @Override

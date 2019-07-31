@@ -31,6 +31,7 @@ import com.pi4j.binding.Binding;
 import com.pi4j.context.Context;
 import com.pi4j.context.impl.DefaultContext;
 import com.pi4j.exception.Pi4JException;
+import com.pi4j.impl.DefaultPi4JConfig;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 import org.slf4j.Logger;
@@ -86,5 +87,13 @@ public class Pi4J {
 
         logger.debug("Pi4J successfully initialized.'");
         return context;
+    }
+
+    static Pi4JConfig newConfig(){
+        return Pi4JConfig.create();
+    }
+
+    static Pi4JBuilder newBuilder(){
+        return Pi4JBuilder.create();
     }
 }

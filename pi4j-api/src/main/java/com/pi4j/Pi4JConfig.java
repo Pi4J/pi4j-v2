@@ -5,7 +5,7 @@ package com.pi4j;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Pi4J.java
+ * FILENAME      :  Pi4JConfig.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,13 +28,17 @@ package com.pi4j;
  */
 
 import com.pi4j.binding.Binding;
-import com.pi4j.config.Config;
+import com.pi4j.impl.DefaultPi4JConfig;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 
 import java.util.Collection;
 
 public interface Pi4JConfig {
+
+    static Pi4JConfig create(){
+        return DefaultPi4JConfig.instance();
+    }
 
     Pi4JConfig add(Binding... binding);
     Pi4JConfig add(Platform... platform);

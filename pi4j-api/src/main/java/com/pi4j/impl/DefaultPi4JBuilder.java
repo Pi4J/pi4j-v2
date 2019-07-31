@@ -5,7 +5,7 @@ package com.pi4j.impl;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Pi4J.java
+ * FILENAME      :  DefaultPi4JBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -38,12 +38,17 @@ import org.slf4j.LoggerFactory;
 public class DefaultPi4JBuilder implements Pi4JBuilder {
 
     protected Logger logger = LoggerFactory.getLogger(DefaultPi4JBuilder.class);
-    protected Pi4JConfig config = new DefaultPi4JConfig();
+    protected Pi4JConfig config = Pi4JConfig.create();
 
     /**
-     * Default Constructor
+     * Private Constructor
      */
-    public DefaultPi4JBuilder(){
+    private DefaultPi4JBuilder(){
+        // forbid object construction
+    }
+
+    public static Pi4JBuilder instance(){
+        return new DefaultPi4JBuilder();
     }
 
     @Override
