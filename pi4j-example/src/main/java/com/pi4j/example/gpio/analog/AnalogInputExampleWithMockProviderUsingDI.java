@@ -82,8 +82,9 @@ public class AnalogInputExampleWithMockProviderUsingDI {
             // allow for user to exit program using CTRL-C
             console.promptForExit();
 
-            // initialize the Pi4J library then inject this class for dependency injection on annotations
-            var pi4j = Pi4J.initialize().inject(this);
+            // initialize the Pi4J runtime context then inject
+            // this class for dependency injection on annotations
+            Pi4J.newDefaultContext().inject(this);
 
             // display acquired provider
             console.print("--> ACQUIRED PROVIDER: ");

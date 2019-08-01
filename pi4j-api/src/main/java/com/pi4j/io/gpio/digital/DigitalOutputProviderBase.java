@@ -46,5 +46,5 @@ public abstract class DigitalOutputProviderBase
     }
 
     @Override
-    public abstract DigitalOutput create(Context context, DigitalOutputConfig config) throws Exception;
+    public abstract DigitalOutput newInstance(Context context, DigitalOutputConfig config) throws Exception;
 }

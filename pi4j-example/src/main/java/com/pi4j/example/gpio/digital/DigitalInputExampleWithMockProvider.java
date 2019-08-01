@@ -55,8 +55,8 @@ public class DigitalInputExampleWithMockProvider {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J library
-        var pi4j = Pi4J.initialize();
+        // initialize the Pi4J runtime context
+        var pi4j = Pi4J.newDefaultContext();
 
         // get the Mock Digital Input provider by ID
         console.println("ATTEMPTING TO GET MOCK DIGITAL INPUT PROVIDER FROM Pi4J");

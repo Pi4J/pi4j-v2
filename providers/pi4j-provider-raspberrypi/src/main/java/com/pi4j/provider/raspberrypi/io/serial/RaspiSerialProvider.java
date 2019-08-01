@@ -48,7 +48,7 @@ public class RaspiSerialProvider extends SerialProviderBase implements SerialPro
     }
 
     @Override
-    public Serial create(Context context, SerialConfig config) throws Exception {
+    public Serial newInstance(Context context, SerialConfig config) throws Exception {
         return null;
     }
 }

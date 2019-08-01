@@ -55,8 +55,8 @@ public class DigitalOutputFromProperties {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J library
-        var pi4j = Pi4J.initialize();
+        // initialize the Pi4J runtime context
+        var pi4j = Pi4J.newDefaultContext();
 
         // create a properties map with ".address" and ".shutdown" properties for the digital output configuration
         Properties properties = new Properties();

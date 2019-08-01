@@ -92,8 +92,9 @@ public class AnalogOutputExampleUsingDependencyInjection {
             // allow for user to exit program using CTRL-C
             console.promptForExit();
 
-            // initialize the Pi4J library then inject this class for dependency injection on annotations
-            Pi4J.initialize().inject(this);
+            // initialize the Pi4J runtime context then inject
+            // this class for dependency injection on annotations
+            Pi4J.newDefaultContext().inject(this);
 
             // lets invoke some changes on the analog output
             output.value(1)

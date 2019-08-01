@@ -43,10 +43,11 @@ public class NoProvidersTest {
 
     @Before
     public void beforeTest() throws Pi4JException {
-        // Initialize Pi4J with AUTO-DETECT disabled
-        // we don't want to load any detected Pi4J binding/io libraries
+        // Initialize Pi4J with an empty context
+        // An empty context disables AUTO-DETECT loading
+        // which will not load any detected Pi4J binding libraries
         // in the class path for this test case
-        pi4j = Pi4J.initialize(false);
+        pi4j = Pi4J.newEmptyContext();
     }
 
     @After

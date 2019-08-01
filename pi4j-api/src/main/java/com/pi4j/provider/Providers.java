@@ -38,8 +38,7 @@ import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.provider.exception.ProviderNotFoundException;
+import com.pi4j.provider.exception.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -78,9 +77,8 @@ public interface Providers extends Describable {
      * @param providerClass
      * @param <T>
      * @return
-     * @throws ProviderException
      */
-    <T extends Provider> Map<String, T> all(Class<T> providerClass) throws ProviderException;
+    <T extends Provider> Map<String, T> all(Class<T> providerClass) throws ProviderNotFoundException;
 
     /**
      * Get all providers of a specified io type.
@@ -88,38 +86,30 @@ public interface Providers extends Describable {
      * @param providerType
      * @param <T>
      * @return
-     * @throws ProviderException
      */
-    <T extends Provider> Map<String, T> all(ProviderType providerType) throws ProviderException;
+    <T extends Provider> Map<String, T> all(ProviderType providerType) throws ProviderNotFoundException;
 
-    boolean exists(String providerId) throws ProviderException;
-    <T extends Provider> boolean exists(String providerId, Class<T> providerClass) throws ProviderException;
-    <T extends Provider> boolean exists(String providerId, ProviderType providerType) throws ProviderException;
-    Provider get(String providerId) throws ProviderException;
-    <T extends Provider> T get(String providerId, Class<T> providerClass) throws ProviderException;
-    <T extends Provider> T get(String providerId, ProviderType providerType) throws ProviderException;
-    <T extends Provider> T get(Class<T> providerClass) throws ProviderException;
-    <T extends Provider> T get(ProviderType providerType) throws ProviderException;
-    <T extends Provider> Providers add(Collection<T> provider) throws ProviderException;
-    <T extends Provider> void replace(T provider) throws ProviderException;
-    <T extends Provider> void remove(String providerId) throws ProviderException;
+    boolean exists(String providerId);
+    <T extends Provider> boolean exists(String providerId, Class<T> providerClass);
+    <T extends Provider> boolean exists(String providerId, ProviderType providerType);
+    <T extends Provider> boolean exists(ProviderType providerType);
+    <T extends Provider> boolean exists(Class<T> providerClass);
 
-// TODO :: Remove Default Provider APIs from Providers
-//    <T extends Provider> Map<ProviderType, T> defaults() throws ProviderException;
-//    <T extends Provider> T getDefault(Class<T> providerClass) throws ProviderException;
-//    <T extends Provider> T getDefault(ProviderType providerType) throws ProviderException;
-//    <T extends Provider> boolean hasDefault(Class<T> providerClass) throws ProviderException;
-//    <T extends Provider> boolean hasDefault(ProviderType providerType) throws ProviderException;
-//    void setDefault(String providerId) throws ProviderException;
-//    void removeDefault(String providerId) throws ProviderException;
-//    void removeDefault(ProviderType providerType) throws ProviderException;
-//    <T extends Provider> void removeDefault(Class<T> providerClass) throws ProviderException;
+    <T extends Provider> T get(String providerId) throws ProviderNotFoundException;
+    <T extends Provider> T get(String providerId, Class<T> providerClass) throws ProviderNotFoundException;
+    <T extends Provider> T get(String providerId, ProviderType providerType) throws ProviderNotFoundException;
+    <T extends Provider> T get(Class<T> providerClass) throws ProviderNotFoundException;
+    <T extends Provider> T get(ProviderType providerType) throws ProviderNotFoundException;
 
-    void initialize(Context context, boolean autoDetect) throws ProviderException;
-    void shutdown(Context context) throws ProviderException;
+    <T extends Provider> Providers add(Collection<T> provider) throws ProviderAlreadyExistsException, ProviderInitializeException;
+    <T extends Provider> void replace(T provider) throws ProviderNotFoundException, ProviderInitializeException, ProviderTerminateException;
+    <T extends Provider> void remove(String providerId) throws ProviderNotFoundException, ProviderTerminateException;
+
+    void initialize(Context context, boolean autoDetect) throws ProvidersAlreadyInitializedException, ProvidersNotFoundException;
+    void shutdown(Context context) throws ProvidersNotInitializedException, ProviderTerminateException;
 
     // DEFAULT METHODS
-    default <T extends Provider> Providers add(T ... provider) throws ProviderException {
+    default <T extends Provider> Providers add(T ... provider) throws ProviderInitializeException, ProviderAlreadyExistsException {
         return add(Arrays.asList(provider));
     }
     default ProviderGroup<AnalogInputProvider> getAnalogInput() { return analogInput(); }
@@ -131,10 +121,10 @@ public interface Providers extends Describable {
     default ProviderGroup<I2CProvider> getI2C() { return i2c(); }
     default ProviderGroup<SerialProvider> getSerial() { return serial(); }
     default Map<String, Provider> getAll() { return all(); }
-    default <T extends Provider> Map<String, T> getAll(Class<T> providerClass) throws ProviderException {
+    default <T extends Provider> Map<String, T> getAll(Class<T> providerClass) throws ProviderNotFoundException {
         return all(providerClass);
     }
-    default <T extends Provider> Map<String, T> getAll(ProviderType providerType) throws ProviderException {
+    default <T extends Provider> Map<String, T> getAll(ProviderType providerType) throws ProviderNotFoundException {
         return all(providerType);
     }
 
@@ -147,17 +137,10 @@ public interface Providers extends Describable {
                 .quantity((providers == null) ? 0 : providers.size())
                 .type(this.getClass());
 
-//        if(providers != null && !providers.isEmpty()) {
-//            providers.forEach((id, provider) -> {
-//                descriptor.add(provider.describe());
-//            });
-//        }
-
         for(ProviderType providerType : ProviderType.values()){
 
             try {
-                var providersByType = getAll(providerType);
-
+                Map<String, Provider> providersByType = getAll(providerType);
                 Descriptor providerTypeDescriptor = Descriptor.create()
                         .category(providerType.name())
                         .quantity((providers == null) ? 0 : providersByType.size())
@@ -168,11 +151,9 @@ public interface Providers extends Describable {
                         providerTypeDescriptor.add(provider.describe());
                     });
                 }
-
                 descriptor.add(providerTypeDescriptor);
-            } catch (ProviderNotFoundException e){
-                // ignore this error, nothing to describe
-            } catch (ProviderException e) {
+
+            } catch (ProviderNotFoundException e) {
                 e.printStackTrace();
             }
         }

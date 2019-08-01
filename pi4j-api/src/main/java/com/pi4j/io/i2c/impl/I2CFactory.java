@@ -47,7 +47,8 @@ public class I2CFactory {
 
     public static I2C instance(Context context, I2CConfig config) throws ProviderException, NotInitializedException {
         // get I2C instance using default io
-        return instance(context, (I2CProvider) null, config);
+        var provider = context.platform().i2c();
+        return instance(provider, config);
     }
 
     public static I2C instance(Context context, String device, int address) throws ProviderException, NotInitializedException {
@@ -61,26 +62,22 @@ public class I2CFactory {
     public static I2C instance(Context context, String providerId, I2CConfig config) throws ProviderException, NotInitializedException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
-            return instance(context, (I2CProvider) null, config);
+            return instance(context, config);
         }
         else{
             var provider = context.providers().i2c().get(providerId);
-            return instance(context, provider, config);
+            return instance(provider, config);
         }
     }
 
-    public static I2C instance(Context context, I2CProvider provider, String device, int address) throws ProviderException {
-        return instance(context, provider, new I2CConfig(device, address));
+    public static I2C instance(I2CProvider provider, String device, int address) throws ProviderException {
+        return instance(provider, new I2CConfig(device, address));
     }
 
-    public static I2C instance(Context context, I2CProvider provider, I2CConfig config) throws ProviderException {
+    public static I2C instance(I2CProvider provider, I2CConfig config) throws ProviderException {
         try {
-            // get default I2C io if io is null
-            if(provider == null){
-                provider = context.platform().i2c();
-            }
             // create a I2C instance using the io
-            return provider.register(context, config);
+            return provider.create(config);
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {

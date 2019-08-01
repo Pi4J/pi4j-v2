@@ -62,12 +62,12 @@ public interface I2C extends IO<I2C, I2CConfig> {
         return I2CFactory.instance(context, providerId, config);
     }
 
-    static I2C instance(Context context, I2CProvider provider, String device, int address) throws ProviderException {
-        return I2CFactory.instance(context, provider, device ,address);
+    static I2C instance(I2CProvider provider, String device, int address) throws ProviderException {
+        return I2CFactory.instance(provider, device ,address);
     }
 
-    static I2C instance(Context context, I2CProvider provider, I2CConfig config) throws ProviderException {
-        return I2CFactory.instance(context, provider, config);
+    static I2C instance(I2CProvider provider, I2CConfig config) throws ProviderException {
+        return I2CFactory.instance(provider, config);
     }
 
     /**

@@ -64,12 +64,12 @@ public interface Spi extends IO<Spi, SpiConfig> {
         return SpiFactory.instance(context, providerId, config);
     }
 
-    static Spi instance(Context context, SpiProvider provider, String device) throws ProviderException {
-        return SpiFactory.instance(context, provider, device);
+    static Spi instance(SpiProvider provider, String device) throws ProviderException {
+        return SpiFactory.instance(provider, device);
     }
 
-    static Spi instance(Context context, SpiProvider provider, SpiConfig config) throws ProviderException {
-        return SpiFactory.instance(context, provider, config);
+    static Spi instance(SpiProvider provider, SpiConfig config) throws ProviderException {
+        return SpiFactory.instance(provider, config);
     }
 
     /**

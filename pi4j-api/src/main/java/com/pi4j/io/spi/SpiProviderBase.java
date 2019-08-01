@@ -46,5 +46,5 @@ public abstract class SpiProviderBase
     }
 
     @Override
-    public abstract Spi create(Context context, SpiConfig config) throws Exception;
+    public abstract Spi newInstance(Context context, SpiConfig config) throws Exception;
 }

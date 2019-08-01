@@ -46,9 +46,8 @@ public class DigitalOutputBlinkExample {
 
     public static void main(String[] args) throws Exception {
 
-        // initialize the Pi4J library
-        var pi4j = Pi4J.initialize();
-
+        // initialize the Pi4J runtime context
+        var pi4j = Pi4J.newDefaultContext();
 
         // create a digital output instance using the default digital output provider
         //var output = DigitalOutput.create(DIGITAL_OUTPUT_PIN);
@@ -63,7 +62,7 @@ public class DigitalOutputBlinkExample {
         DigitalOutputConfig config = DigitalOutput.builder().address(3).build();
 
         // use factory to create/register  I/O instance
-        DigitalOutput output = provider.register(pi4j, config);
+        DigitalOutput output = provider.create(config);
 
         // setup a digital output listener to listen for any state changes on the digital output
         output.addListener((DigitalChangeListener) event -> {

@@ -47,7 +47,8 @@ public class PwmFactory {
 
     public static Pwm instance(Context context, PwmConfig config) throws ProviderException, NotInitializedException {
         // get I2C instance using default io
-        return instance(context, (PwmProvider)null, config);
+        var provider = context.platform().pwm();
+        return instance(provider, config);
     }
 
     public static Pwm instance(Context context, int address) throws ProviderException, NotInitializedException {
@@ -61,26 +62,22 @@ public class PwmFactory {
     public static Pwm instance(Context context, String providerId, PwmConfig config) throws ProviderException, NotInitializedException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
-            return instance(context, (PwmProvider)null, config);
+            return instance(context, config);
         }
         else{
             PwmProvider provider = context.providers().pwm().get(providerId);
-            return instance(context, provider, config);
+            return instance(provider, config);
         }
     }
 
-    public static Pwm instance(Context context, PwmProvider provider, int address) throws ProviderException {
-        return instance(context, provider, new PwmConfig(address));
+    public static Pwm instance(PwmProvider provider, int address) throws ProviderException {
+        return instance(provider, new PwmConfig(address));
     }
 
-    public static Pwm instance(Context context, PwmProvider provider, PwmConfig config) throws ProviderException {
+    public static Pwm instance(PwmProvider provider, PwmConfig config) throws ProviderException {
         try {
-            // get default PWM io if io is null
-            if(provider == null){
-                provider = context.platform().pwm();
-            }
             // create a PWM instance using the io
-            return provider.register(context, config);
+            return provider.create(config);
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {

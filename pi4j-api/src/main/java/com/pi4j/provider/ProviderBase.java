@@ -42,7 +42,9 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
         extends BindingBase
         implements Provider<IO_TYPE, CONFIG_TYPE> {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected Context context;
 
     public ProviderBase(){
         super();
@@ -58,6 +60,7 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
 
     @Override
     public PROVIDER_TYPE initialize(Context context) throws LifecycleException {
+        this.context = context;
         return (PROVIDER_TYPE)this;
     }
 
@@ -85,12 +88,14 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
     }
 
     @Override
-    public IO_TYPE register(Context context, CONFIG_TYPE config) throws Exception {
-        var newInstance = create(context, config);
+    public IO_TYPE create(CONFIG_TYPE config) throws Exception {
+        var newInstance = newInstance(context, config);
+
         // TODO :: PROXY IMPL, REMOVE PROVIDER SETTER
+
         newInstance.provider(this);
         return newInstance;
     }
 
-    public abstract IO_TYPE create(Context context, CONFIG_TYPE config) throws Exception;
+    protected abstract IO_TYPE newInstance(Context context, CONFIG_TYPE config) throws Exception;
 }

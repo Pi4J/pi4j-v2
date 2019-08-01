@@ -34,7 +34,6 @@ import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.pwm.PwmProvider;
-import com.pi4j.test.About;
 import com.pi4j.test.provider.TestAnalogInputProvider;
 import com.pi4j.test.provider.TestPwmProvider;
 import org.junit.After;
@@ -62,12 +61,14 @@ public class DependencyInjectionRegisterCustomProviderTest {
     public void beforeTest() throws Pi4JException {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
-        // Initialize Pi4J with AUTO-DETECT disabled
-        // we don't want to load any detected Pi4J binding/io libraries
+        // Initialize Pi4J with an empty context
+        // An empty context disables AUTO-DETECT loading
+        // which will not load any detected Pi4J binding libraries
         // in the class path for this test case
+        // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
-        Pi4J.initialize(false).inject(this);
+        Pi4J.newEmptyContext().inject(this);
     }
 
     @After
@@ -85,8 +86,6 @@ public class DependencyInjectionRegisterCustomProviderTest {
 
     @Test
     public void testDIRegisterCustomProviderNotEmpty() throws Exception {
-        About about = new About();
-
         // ensure that 1 or more providers were detected/loaded into the Pi4J context
         assertFalse(pi4j.providers().all().isEmpty());
 

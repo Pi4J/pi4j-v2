@@ -56,10 +56,22 @@ public class ManualPlatformsCtorTest {
         var testPlatform = new TestPlatform("test-platform", "My Test Platform");
         testPlatform.setProviders(pwmProvider, i2CProvider);
 
-        // Initialize Pi4J with the custom platform and providers
-        // we don't want to load any detected Pi4J binding/provider/platform libraries
+        // Initialize Pi4J with a manually configured context
+        // Disable AUTO-DETECT loading to prevent automatic
+        // loading of any detected Pi4J binding libraries
         // in the class path for this test case
-        pi4j = Pi4J.initialize(testPlatform, pwmProvider, i2CProvider, serialProvider);
+        // ...
+        // Explicitly add the default platforms into this
+        // context for testing
+        // ...
+        // Explicitly add the test providers into the
+        // context for testing
+        pi4j = Pi4J.newContext()
+                .noAutoDetect()
+                .addDefaultPlatform(testPlatform)
+                .add(pwmProvider, i2CProvider, serialProvider)
+                .build();
+
     }
 
     @After

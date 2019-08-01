@@ -57,12 +57,14 @@ public class DependencyInjectionRegisterCustomPlatformTest {
     public void beforeTest() throws Pi4JException {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
-        // Initialize Pi4J with AUTO-DETECT disabled
-        // we don't want to load any detected Pi4J binding/io libraries
+        // Initialize Pi4J with an empty context
+        // An empty context disables AUTO-DETECT loading
+        // which will not load any detected Pi4J binding libraries
         // in the class path for this test case
+        // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
-        Pi4J.initialize(false).inject(this);
+        Pi4J.newEmptyContext().inject(this);
     }
 
     @After

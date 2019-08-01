@@ -56,8 +56,7 @@ public class ManualPlatformsTest {
         // Initialize Pi4J with AUTO-DETECT disabled
         // we don't want to load any detected Pi4J binding/io libraries
         // in the class path for this test case
-        pi4j = Pi4J.initialize(
-                Pi4J.newBuilder()
+        pi4j = Pi4J.newContext()
                         // do not auto detect platforms, providers from the classpath
                         .noAutoDetect()
 
@@ -73,7 +72,7 @@ public class ManualPlatformsTest {
                              new MockI2CProvider(),
                              new MockSpiProvider(),
                              new MockSerialProvider())
-                        .build());
+                        .build();
     }
 
     @After

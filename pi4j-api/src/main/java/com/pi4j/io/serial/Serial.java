@@ -66,16 +66,16 @@ public interface Serial extends IO<Serial, SerialConfig>, AutoCloseable {
         return SerialFactory.instance(context, providerId, config);
     }
 
-    static Serial instance(Context context, SerialProvider provider, String device) throws ProviderException {
-        return SerialFactory.instance(context, provider, device);
+    static Serial instance(SerialProvider provider, String device) throws ProviderException {
+        return SerialFactory.instance(provider, device);
     }
 
-    static Serial instance(Context context, SerialProvider provider, String device, int baud) throws ProviderException {
-        return SerialFactory.instance(context, provider, device);
+    static Serial instance(SerialProvider provider, String device, int baud) throws ProviderException {
+        return SerialFactory.instance(provider, device);
     }
 
-    static Serial instance(Context context, SerialProvider provider, SerialConfig config) throws ProviderException {
-        return SerialFactory.instance(context, provider, config);
+    static Serial instance(SerialProvider provider, SerialConfig config) throws ProviderException {
+        return SerialFactory.instance(provider, config);
     }
 
 

@@ -46,5 +46,5 @@ public abstract class I2CProviderBase
     }
 
     @Override
-    public abstract I2C create(Context context, I2CConfig config) throws Exception;
+    public abstract I2C newInstance(Context context, I2CConfig config) throws Exception;
 }

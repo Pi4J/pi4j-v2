@@ -46,7 +46,7 @@ public class TestSerialProvider extends SerialProviderBase implements SerialProv
     }
 
     @Override
-    public Serial create(Context context, SerialConfig config) throws Exception {
+    public Serial newInstance(Context context, SerialConfig config) throws Exception {
         return null;
     }
 }

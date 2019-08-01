@@ -53,10 +53,17 @@ public class ManualProvidersCtorTest {
         SerialProvider serialProvider = new TestSerialProvider();
         SerialProvider serialProvider2 = new TestSerialProvider("test-serial-provider-2");
 
-        // Initialize Pi4J with the custom providers
-        // we don't want to load any detected Pi4J binding/io libraries
+        // Initialize Pi4J with a manually configured context
+        // Disable AUTO-DETECT loading to prevent automatic
+        // loading of any detected Pi4J binding libraries
         // in the class path for this test case
-        pi4j = Pi4J.initialize(pwmProvider, i2CProvider, serialProvider, serialProvider2);
+        // ...
+        // Explicitly add the test providers into the
+        // context for testing
+        pi4j = Pi4J.newContext()
+                .noAutoDetect()
+                .add(pwmProvider, i2CProvider, serialProvider, serialProvider2)
+                .build();
     }
 
     @After

@@ -45,7 +45,7 @@ public class MockI2CProvider extends I2CProviderBase implements I2CProvider {
     }
 
     @Override
-    public I2C create(Context context, I2CConfig config) throws Exception {
+    public I2C newInstance(Context context, I2CConfig config) throws Exception {
         return new MockI2C(config);
     }
 

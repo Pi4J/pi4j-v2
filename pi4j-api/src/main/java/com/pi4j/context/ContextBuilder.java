@@ -1,11 +1,11 @@
-package com.pi4j;
+package com.pi4j.context;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Pi4JBuilder.java
+ * FILENAME      :  ContextBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,74 +29,75 @@ package com.pi4j;
 
 import com.pi4j.binding.Binding;
 import com.pi4j.config.Builder;
-import com.pi4j.impl.DefaultPi4JBuilder;
+import com.pi4j.context.impl.DefaultContextBuilder;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 
-public interface Pi4JBuilder extends Builder<Pi4JConfig> {
+public interface ContextBuilder extends Builder<Context> {
 
-    static Pi4JBuilder create(){
-        return DefaultPi4JBuilder.instance();
+    static ContextBuilder create(){
+        return DefaultContextBuilder.instance();
     }
 
-    Pi4JBuilder add(Binding ... binding);
-    Pi4JBuilder add(Platform ... platform);
-    Pi4JBuilder add(Provider ... provider);
-
-    Pi4JBuilder addDefaultPlatform(Platform platform);
+    ContextBuilder add(Binding ... binding);
+    ContextBuilder add(Platform ... platform);
+    ContextBuilder add(Provider ... provider);
 
     String defaultPlatform();
-    Pi4JBuilder defaultPlatform(String platformId);
-    default Pi4JBuilder defaultPlatform(Platform platform){
-        return defaultPlatform(platform.id());
-    }
+    ContextBuilder defaultPlatform(String platformId);
 
-    default Pi4JBuilder setDefaultPlatform(String platformId){
-        return defaultPlatform(platformId);
-    }
-    default Pi4JBuilder setDefaultPlatform(Platform platform){
-        return defaultPlatform(platform);
-    }
+    ContextBuilder autoDetectPlatforms();
+    ContextBuilder noAutoDetectPlatforms();
 
-    Pi4JBuilder autoDetectPlatforms();
-    Pi4JBuilder noAutoDetectPlatforms();
+    ContextBuilder autoDetectProviders();
+    ContextBuilder noAutoDetectProviders();
 
-    Pi4JBuilder autoDetectProviders();
-    Pi4JBuilder noAutoDetectProviders();
+    ContextBuilder autoDetectBindings();
+    ContextBuilder noAutoDetectBindings();
+    ContextConfig toConfig();
 
-    Pi4JBuilder autoDetectBindings();
-    Pi4JBuilder noAutoDetectBindings();
-
-    default Pi4JBuilder setAutoDetect(boolean autoDetect){
+    default ContextBuilder setAutoDetect(boolean autoDetect){
         if(autoDetect)
             return autoDetect();
         else
             return noAutoDetect();
     }
 
-    default Pi4JBuilder autoDetect(){
+    default ContextBuilder autoDetect(){
         // auto detect all extensibility modules in the classpath
         return  autoDetectBindings().
                 autoDetectPlatforms().
                 autoDetectProviders();
     }
 
-    default Pi4JBuilder noAutoDetect(){
+    default ContextBuilder noAutoDetect(){
         // do not auto detect all extensibility modules in the classpath
         return  noAutoDetectBindings().
                 noAutoDetectPlatforms().
                 noAutoDetectProviders();
     }
 
-    default Pi4JBuilder addPlatform(Platform ... platform){
+    default ContextBuilder addPlatform(Platform ... platform){
         return add(platform);
     }
-    default Pi4JBuilder addPlatform(Provider ... provider){
+    default ContextBuilder addPlatform(Provider ... provider){
         return add(provider);
     }
-    default Pi4JBuilder addBinding(Binding ... binding){
+    default ContextBuilder addBinding(Binding ... binding){
         return add(binding);
     }
 
-    Pi4JConfig build();
+    default ContextBuilder addDefaultPlatform(Platform platform){
+        return this.add(platform).defaultPlatform(platform.id());
+    }
+
+    default ContextBuilder defaultPlatform(Platform platform){
+        return defaultPlatform(platform.id());
+    }
+    default ContextBuilder setDefaultPlatform(String platformId){
+        return defaultPlatform(platformId);
+    }
+    default ContextBuilder setDefaultPlatform(Platform platform){
+        return defaultPlatform(platform);
+    }
 }

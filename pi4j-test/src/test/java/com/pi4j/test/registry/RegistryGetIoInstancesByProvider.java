@@ -55,9 +55,20 @@ public class RegistryGetIoInstancesByProvider {
 
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
 
-        // Initialize Pi4J with AUTO-DETECT disabled
-        // we explicitly only provide a single provider implementation for testing
-        pi4j = Pi4J.initialize(false, new MockDigitalInputProvider());
+        // Initialize Pi4J with a manually configured context
+        // Disable AUTO-DETECT loading to prevent automatic
+        // loading of any detected Pi4J binding libraries
+        // in the class path for this test case
+        // ...
+        // Explicitly add single provider implementation
+        // into the context for testing
+        // ...
+        // Also, inject this class instance into the Pi4J context
+        // for annotation processing and dependency injection
+        pi4j = Pi4J.newContext()
+                .noAutoDetect()
+                .add(new MockDigitalInputProvider())
+                .build().inject(this);
 
         // create simple I/O instances
         DigitalInput input1 = DigitalInput.create(pi4j, PIN_ADDRESS_1, PIN_ID_1);

@@ -53,11 +53,11 @@ public interface Pwm extends IO<Pwm, PwmConfig> {
         return PwmFactory.instance(context, providerId, config);
     }
 
-    static Pwm instance(Context context, PwmProvider provider, int address) throws ProviderException {
-        return PwmFactory.instance(context, provider, address);
+    static Pwm instance(PwmProvider provider, int address) throws ProviderException {
+        return PwmFactory.instance(provider, address);
     }
 
-    static Pwm instance(Context context, PwmProvider provider, PwmConfig config) throws ProviderException {
-        return PwmFactory.instance(context, provider, config);
+    static Pwm instance(PwmProvider provider, PwmConfig config) throws ProviderException {
+        return PwmFactory.instance(provider, config);
     }
 }

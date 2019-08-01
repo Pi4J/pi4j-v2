@@ -54,7 +54,8 @@ public class SpiFactory {
 
     public static Spi instance(Context context, SpiConfig config) throws ProviderException, NotInitializedException {
         // get SPI instance using default platform IO provider
-        return instance(context, (SpiProvider) null, config);
+        var provider = context.platform().spi();
+        return instance(provider, config);
     }
 
     public static Spi instance(Context context, String providerId, String device) throws ProviderException, NotInitializedException {
@@ -68,22 +69,18 @@ public class SpiFactory {
         }
         else{
             var provider = context.providers().spi().get(providerId);
-            return instance(context, provider, config);
+            return instance(provider, config);
         }
     }
 
-    public static Spi instance(Context context, SpiProvider provider, String device) throws ProviderException {
-        return instance(context, provider, new SpiConfig(device));
+    public static Spi instance(SpiProvider provider, String device) throws ProviderException {
+        return instance(provider, new SpiConfig(device));
     }
 
-    public static Spi instance(Context context, SpiProvider provider, SpiConfig config) throws ProviderException {
+    public static Spi instance(SpiProvider provider, SpiConfig config) throws ProviderException {
         try {
-            // get default SPI io if io is null
-            if(provider == null){
-                provider = context.platform().spi();
-            }
             // create a SPI instance using the io
-            return provider.register(context, config);
+            return provider.create(config);
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {

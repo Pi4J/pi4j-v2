@@ -46,5 +46,5 @@ public abstract class AnalogInputProviderBase
     }
 
     @Override
-    public abstract AnalogInput create(Context context, AnalogInputConfig config) throws Exception;
+    public abstract AnalogInput newInstance(Context context, AnalogInputConfig config) throws Exception;
 }

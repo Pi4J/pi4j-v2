@@ -45,5 +45,5 @@ public abstract class DigitalInputProviderBase
     }
 
     @Override
-    public abstract DigitalInput create(Context context, DigitalInputConfig config) throws Exception;
+    public abstract DigitalInput newInstance(Context context, DigitalInputConfig config) throws Exception;
 }

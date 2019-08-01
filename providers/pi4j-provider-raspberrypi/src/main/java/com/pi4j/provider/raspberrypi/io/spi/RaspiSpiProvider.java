@@ -47,7 +47,7 @@ public class RaspiSpiProvider extends SpiProviderBase implements SpiProvider {
     }
 
     @Override
-    public Spi create(Context context, SpiConfig config) throws Exception {
+    public Spi newInstance(Context context, SpiConfig config) throws Exception {
         return null;
     }
 }

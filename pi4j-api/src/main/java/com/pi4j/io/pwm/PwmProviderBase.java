@@ -46,5 +46,5 @@ public abstract class PwmProviderBase
     }
 
     @Override
-    public abstract Pwm create(Context context, PwmConfig config) throws Exception;
+    public abstract Pwm newInstance(Context context, PwmConfig config) throws Exception;
 }

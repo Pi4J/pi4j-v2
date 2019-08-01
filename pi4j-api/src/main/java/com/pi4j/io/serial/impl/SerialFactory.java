@@ -58,8 +58,9 @@ public class SerialFactory {
     }
 
     public static Serial instance(Context context, SerialConfig config) throws ProviderException, NotInitializedException {
-        // get SPI instance using default platform provider
-        return instance(context, (SerialProvider)null, config);
+        // get SPI instance using default provider
+        SerialProvider provider = context.serial();
+        return instance(provider, config);
     }
 
     public static Serial instance(Context context, String providerId, String device) throws ProviderException, NotInitializedException {
@@ -77,26 +78,22 @@ public class SerialFactory {
         }
         else{
             SerialProvider provider = context.providers().serial().get(providerId);
-            return instance(context, provider, config);
+            return instance(provider, config);
         }
     }
 
-    public static Serial instance(Context context, SerialProvider provider, String device) throws ProviderException {
-        return instance(context, provider, new SerialConfig(device));
+    public static Serial instance(SerialProvider provider, String device) throws ProviderException {
+        return instance(provider, new SerialConfig(device));
     }
 
-    public static Serial instance(Context context, SerialProvider provider, String device, int baud) throws ProviderException {
-        return instance(context, provider, new SerialConfig(device, baud));
+    public static Serial instance(SerialProvider provider, String device, int baud) throws ProviderException {
+        return instance(provider, new SerialConfig(device, baud));
     }
 
-    public static Serial instance(Context context, SerialProvider provider, SerialConfig config) throws ProviderException {
+    public static Serial instance(SerialProvider provider, SerialConfig config) throws ProviderException {
         try {
-            // get default SPI io if io is null
-            if(provider == null){
-                provider = context.platform().serial();
-            }
             // create a SPI instance using the io
-            return provider.register(context, config);
+            return provider.create(config);
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {

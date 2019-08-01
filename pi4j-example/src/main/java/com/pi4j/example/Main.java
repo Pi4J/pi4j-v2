@@ -41,7 +41,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         // initialize Pi4J
-        var pi4j = Pi4J.initialize();
+        var pi4j = Pi4J.newDefaultContext();
 
 
 //        Serial serial = Serial.instance("/dev/ttyUSB1");

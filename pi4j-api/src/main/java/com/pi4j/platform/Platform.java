@@ -47,26 +47,13 @@ import java.util.Map;
 
 public interface Platform extends Binding {
 
-    Map<ProviderType, Provider> providers();
-
-
-    default <T extends Provider> T callFriend(Class<T> providerClass) {
-        return null;
-    }
-
-
-    <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException;
-
-    //<T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException;
-    <T extends Provider> T provider(ProviderType providerType) throws ProviderNotFoundException;
-    //Provider provider(ProviderType providerType, Class<? extends Provider> providerClass) throws ProviderNotFoundException;
-
-    default <T extends Provider> Provider get(Class<T> providerClass) throws ProviderException{
-        return null;
-    }
-
     int weight();
     boolean enabled(Context context);
+
+    Map<ProviderType, Provider> providers();
+
+    <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException;
+    <T extends Provider> T provider(ProviderType providerType) throws ProviderNotFoundException;
 
     default <T extends Provider> boolean hasProvider(Class<T> providerClass) {
         try {

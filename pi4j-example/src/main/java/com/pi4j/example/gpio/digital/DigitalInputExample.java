@@ -53,8 +53,8 @@ public class DigitalInputExample {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J library
-        var pi4j = Pi4J.initialize();
+        // initialize the Pi4J runtime context
+        var pi4j = Pi4J.newDefaultContext();
 
         // create a digital input instance using the default digital input provider
         // we will use the PULL_DOWN argument to set the pin pull-down resistance on this GPIO pin

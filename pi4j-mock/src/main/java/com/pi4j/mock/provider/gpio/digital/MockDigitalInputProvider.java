@@ -47,7 +47,7 @@ public class MockDigitalInputProvider extends DigitalInputProviderBase implement
     }
 
     @Override
-    public DigitalInput create(Context context, DigitalInputConfig config) throws IOException {
+    public DigitalInput newInstance(Context context, DigitalInputConfig config) throws IOException {
         return new MockDigitalInput(config);
     }
 }

@@ -46,8 +46,8 @@ public class Main {
         // set logging
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
-        // initialize Pi4J
-        Context pi4j = Pi4J.initialize();
+        // initialize Pi4J with a default context
+        Context pi4j = Pi4J.newDefaultContext();
 
 
         pi4j.providers().add(new TestAnalogInputProvider("test-analog-input-provider", "TestAnalogInputProvider"));

@@ -47,7 +47,7 @@ public class MockAnalogInputProvider extends AnalogInputProviderBase implements 
     }
 
     @Override
-    public AnalogInput create(Context context, AnalogInputConfig config) throws IOException {
+    public AnalogInput newInstance(Context context, AnalogInputConfig config) throws IOException {
         return new MockAnalogInput(config);
     }
 }

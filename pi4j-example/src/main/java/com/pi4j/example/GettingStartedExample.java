@@ -63,18 +63,19 @@ public class GettingStartedExample {
 
 
         // ------------------------------------------------------------
-        // Initialize the Pi4J library
+        // Initialize the Pi4J Runtime Context
         // ------------------------------------------------------------
-        // Before you can use Pi4J you must initialize it first.
-        // Initialization will automatically load all available Pi4J
+        // Before you can use Pi4J you must initialize a new runtime
+        // context. This will automatically load all available Pi4J
         // extensions found in the application's classpath which
         // may include 'Platforms' and 'I/O Providers'
         //
-        // There are optional arguments to the `initialize()` method
-        // to disable this automatic detection and loading if you
+        // There is optionally a 'ContextBuilder' you can use to
+        // build a custom context which may include disabling automatic
+        // detection and loading of providers and platform if you
         // need/prefer to manually configure which 'Platforms' and
         // 'I/O Providers' should be used with Pi4J.
-        var pi4j = Pi4J.initialize();
+        var pi4j = Pi4J.newDefaultContext();
 
         // After we initialize Pi4J, we can access the following
         // core parts of the system:
@@ -83,7 +84,6 @@ public class GettingStartedExample {
         //  - Platform (Default Runtime Platform)
         //  - Providers (I/O Providers)
         //  - Registry (I/O Registry)
-
 
         // ------------------------------------------------------------
         // Pi4J Platforms

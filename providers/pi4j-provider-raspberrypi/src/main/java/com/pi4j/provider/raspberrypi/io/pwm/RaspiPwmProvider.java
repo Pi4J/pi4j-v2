@@ -47,7 +47,7 @@ public class RaspiPwmProvider extends PwmProviderBase implements PwmProvider {
     }
 
     @Override
-    public Pwm create(Context context, PwmConfig config) throws Exception {
+    public Pwm newInstance(Context context, PwmConfig config) throws Exception {
         return null;
     }
 }

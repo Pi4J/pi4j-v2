@@ -27,102 +27,101 @@ package com.pi4j;
  * #L%
  */
 
-import com.pi4j.binding.Binding;
 import com.pi4j.context.Context;
-import com.pi4j.context.impl.DefaultContext;
+import com.pi4j.context.ContextBuilder;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.impl.DefaultPi4JConfig;
-import com.pi4j.platform.Platform;
-import com.pi4j.provider.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Pi4J {
     private static Logger logger = LoggerFactory.getLogger(Pi4J.class);
 
-    public static Context initialize() throws Pi4JException {
-        return initialize(Pi4JBuilder.create());
+    // private constructor
+    private Pi4J() {
+        // forbid object construction
     }
 
-    public static Context initialize(boolean autoDetect) throws Pi4JException {
-        return initialize(Pi4JBuilder.create().
-                setAutoDetect(autoDetect));
+//    public static Context initialize() throws Pi4JException {
+//        return initialize(ContextBuilder.create());
+//    }
+//
+//    public static Context initialize(boolean autoDetect) throws Pi4JException {
+//        return initialize(ContextBuilder.create().
+//                setAutoDetect(autoDetect));
+//    }
+//
+//    public static Context initialize(Provider... provider) throws Pi4JException {
+//        return initialize(ContextBuilder.create().
+//                noAutoDetectProviders().
+//                add(provider));
+//    }
+//
+//    public static Context initialize(Binding ... binding) throws Pi4JException {
+//        return initialize(ContextBuilder.create().
+//                noAutoDetectBindings().
+//                add(binding));
+//    }
+//
+//    public static Context initialize(boolean autoDetect, Binding... binding) throws Pi4JException {
+//        return initialize(ContextBuilder.create().
+//                setAutoDetect(autoDetect).
+//                add(binding));
+//    }
+//
+//    public static Context initialize(boolean autoDetect, Platform... platform) throws Pi4JException {
+//        return initialize(ContextBuilder.create().
+//                setAutoDetect(autoDetect).
+//                add(platform));
+//    }
+//
+//    public static Context initialize(boolean autoDetect, Provider... provider) throws Pi4JException {
+//        return initialize(ContextBuilder.create().
+//                setAutoDetect(autoDetect).
+//                add(provider));
+//    }
+//
+//    public static Context initialize(Platform platform, Provider... provider) throws Pi4JException {
+//        return initialize(ContextBuilder.create().
+//                noAutoDetectPlatforms().
+//                noAutoDetectProviders().
+//                addDefaultPlatform(platform).add(provider));
+//    }
+//
+//    public static Context initialize(boolean autoDetect, Platform platform, Provider... provider) throws Pi4JException {
+//        return initialize(ContextBuilder.create().
+//                setAutoDetect(autoDetect).
+//                addDefaultPlatform(platform).
+//                add(provider));
+//    }
+//
+//    public static Context initialize(ContextBuilder builder) throws Pi4JException {
+//        return builder.build();
+//    }
+//
+//    public static Context initialize(ContextConfig config) throws Pi4JException {
+//        logger.trace("invoked 'initialize()'");
+//
+//        System.out.println(config.getProviders());
+//
+//        // create new context
+//        Context context = DefaultContext.instance();
+//
+//        // initialize new Pi4J runtime context with a Pi4J configuration object
+//        context.initialize(config);
+//
+//        logger.debug("Pi4J successfully initialized.'");
+//        return context;
+//    }
+
+    public static ContextBuilder newContext(){
+        return ContextBuilder.create();
     }
 
-    public static Context initialize(Provider... provider) throws Pi4JException {
-        return initialize(Pi4JBuilder.create().
-                noAutoDetectProviders().
-                add(provider));
+    public static Context newDefaultContext() throws Pi4JException {
+        return newContext().build();
     }
 
-    public static Context initialize(Platform... platform) throws Pi4JException {
-        return initialize(Pi4JBuilder.create().
-                noAutoDetectPlatforms().
-                add(platform));
-    }
-
-    public static Context initialize(Binding ... binding) throws Pi4JException {
-        return initialize(Pi4JBuilder.create().
-                noAutoDetectBindings().
-                add(binding));
-    }
-
-    public static Context initialize(boolean autoDetect, Binding... binding) throws Pi4JException {
-        return initialize(Pi4JBuilder.create().
-                setAutoDetect(autoDetect).
-                add(binding));
-    }
-
-    public static Context initialize(boolean autoDetect, Platform... platform) throws Pi4JException {
-        return initialize(Pi4JBuilder.create().
-                setAutoDetect(autoDetect).
-                add(platform));
-    }
-
-    public static Context initialize(boolean autoDetect, Provider... provider) throws Pi4JException {
-        return initialize(Pi4JBuilder.create().
-                setAutoDetect(autoDetect).
-                add(provider));
-    }
-
-    public static Context initialize(Platform platform, Provider... provider) throws Pi4JException {
-        return initialize(Pi4JBuilder.create().
-                noAutoDetectPlatforms().
-                noAutoDetectProviders().
-                addDefaultPlatform(platform).add(provider));
-    }
-
-    public static Context initialize(boolean autoDetect, Platform platform, Provider... provider) throws Pi4JException {
-        return initialize(Pi4JBuilder.create().
-                setAutoDetect(autoDetect).
-                addDefaultPlatform(platform).
-                add(provider));
-    }
-
-    public static Context initialize(Pi4JBuilder builder) throws Pi4JException {
-        return initialize(builder.build());
-    }
-
-    public static Context initialize(Pi4JConfig config) throws Pi4JException {
-        logger.trace("invoked 'initialize()'");
-
-        System.out.println(config.getProviders());
-
-        // create new context
-        Context context = DefaultContext.instance();
-
-        // initialize new Pi4J runtime context with a Pi4J configuration object
-        context.initialize(config);
-
-        logger.debug("Pi4J successfully initialized.'");
-        return context;
-    }
-
-    public static Pi4JConfig newConfig(){
-        return Pi4JConfig.create();
-    }
-
-    public static Pi4JBuilder newBuilder(){
-        return Pi4JBuilder.create();
+    public static Context newEmptyContext() throws Pi4JException {
+        return newContext().noAutoDetect().build();
     }
 }

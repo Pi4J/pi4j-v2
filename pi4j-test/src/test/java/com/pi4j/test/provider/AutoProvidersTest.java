@@ -46,10 +46,11 @@ public class AutoProvidersTest {
 
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
-        // Initialize Pi4J with AUTO-DETECT enabled
-        // we want to load any detected Pi4J binding/io libraries
+        // initialize Pi4J with a default context
+        // A default context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J binding libraries
         // in the class path for this test case
-        pi4j = Pi4J.initialize(true);
+        pi4j = Pi4J.newDefaultContext();
     }
 
     @After

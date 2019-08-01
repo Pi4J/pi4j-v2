@@ -46,5 +46,5 @@ public abstract class AnalogOutputProviderBase
     }
 
     @Override
-    public abstract AnalogOutput create(Context context, AnalogOutputConfig config) throws Exception;
+    public abstract AnalogOutput newInstance(Context context, AnalogOutputConfig config) throws Exception;
 }

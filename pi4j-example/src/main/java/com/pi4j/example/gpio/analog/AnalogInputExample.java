@@ -51,8 +51,8 @@ public class AnalogInputExample {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J library
-        var pi4j = Pi4J.initialize();
+        // initialize the Pi4J runtime context
+        var pi4j = Pi4J.newDefaultContext();
 
         // create an analog input instance using the default analog input provider
         var input = AnalogInput.create(pi4j, ANALOG_INPUT_PIN);

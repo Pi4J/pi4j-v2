@@ -27,16 +27,15 @@ package com.pi4j.context.impl;
  * #L%
  */
 
-import com.pi4j.Pi4JConfig;
 import com.pi4j.annotation.AnnotationEngine;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.DefaultAnnotationEngine;
 import com.pi4j.binding.Binding;
 import com.pi4j.binding.Bindings;
 import com.pi4j.binding.impl.DefaultBindings;
-import com.pi4j.common.Lifecycle;
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
+import com.pi4j.context.ContextConfig;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
@@ -69,7 +68,7 @@ public class DefaultContext implements Context {
 //        return singleton;
 //    }
 
-    public static Context instance(){
+    public static Context newInstance(){
         return new DefaultContext();
     }
 
@@ -133,7 +132,7 @@ public class DefaultContext implements Context {
     }
 
     @Override
-    public Context initialize(Pi4JConfig config) throws LifecycleException {
+    public Context initialize(ContextConfig config) throws LifecycleException {
 
         logger.trace("invoked 'initialize()' [config={}]", config);
 

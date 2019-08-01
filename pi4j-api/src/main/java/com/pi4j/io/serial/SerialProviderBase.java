@@ -46,5 +46,5 @@ public abstract class SerialProviderBase
     }
 
     @Override
-    public abstract Serial create(Context context, SerialConfig config) throws Exception;
+    public abstract Serial newInstance(Context context, SerialConfig config) throws Exception;
 }

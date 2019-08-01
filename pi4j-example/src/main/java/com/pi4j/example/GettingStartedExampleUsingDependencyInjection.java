@@ -64,15 +64,16 @@ public class GettingStartedExampleUsingDependencyInjection {
         RuntimeContainer container = new GettingStartedExampleUsingDependencyInjection.RuntimeContainer();
 
         // ------------------------------------------------------------
-        // Initialize the Pi4J library
+        // Initialize the Pi4J Runtime Context
         // ------------------------------------------------------------
-        // Before you can use Pi4J you must initialize it first.
-        // Initialization will automatically load all available Pi4J
+        // Before you can use Pi4J you must initialize a new runtime
+        // context. This will automatically load all available Pi4J
         // extensions found in the application's classpath which
         // may include 'Platforms' and 'I/O Providers'
         //
-        // There are optional arguments to the `initialize()` method
-        // to disable this automatic detection and loading if you
+        // There is optionally a 'ContextBuilder' you can use to
+        // build a custom context which may include disabling automatic
+        // detection and loading of providers and platform if you
         // need/prefer to manually configure which 'Platforms' and
         // 'I/O Providers' should be used with Pi4J.
         //
@@ -97,8 +98,7 @@ public class GettingStartedExampleUsingDependencyInjection {
         // To allow Pi4J to perform dependency injection on your class/objects, you must include
         // an 'opens' directive for each namespace you want Pi4J to inspect in the project's
         // 'module-info.java' file.  (Example:  'opens com.pi4j.example;')
-
-        Pi4J.initialize().inject(container);
+        Pi4J.newDefaultContext().inject(container);
 
         // invoke the container to start the application
         container.call();

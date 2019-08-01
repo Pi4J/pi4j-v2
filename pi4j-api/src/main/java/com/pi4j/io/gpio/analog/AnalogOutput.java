@@ -29,6 +29,7 @@ package com.pi4j.io.gpio.analog;
 
 import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
+import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.Output;
 import com.pi4j.io.exception.IOBoundsException;
 import com.pi4j.io.exception.IOIllegalValueException;
@@ -69,31 +70,31 @@ public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, 
     // FRIENDLY HELPER CREATOR STATIC METHODS
     // ---------------------------------------------------------------------------
 
-    static <T extends AnalogOutput> T create(Context context, Integer address) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, Integer address) throws Pi4JException {
         AnalogOutputBuilder builder = AnalogOutput.builder();
         builder.address(address);
         return (T)AnalogOutput.create(context, builder.build());
     }
 
-    static <T extends AnalogOutput> T create(Context context, Integer address, String id) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, Integer address, String id) throws Pi4JException {
         AnalogOutputBuilder builder = AnalogOutput.builder();
         builder.id(id).address(address).id(id);
         return (T)AnalogOutput.create(context, builder.build());
     }
 
-    static <T extends AnalogOutput> T create(Context context, Integer address, String id, String name) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, Integer address, String id, String name) throws Pi4JException {
         AnalogOutputBuilder builder = AnalogOutput.builder();
         builder.id(id).address(address).id(id).name(name);
         return (T)AnalogOutput.create(context, builder.build());
     }
 
-    static <T extends AnalogOutput> T create(Context context, String providerId, Integer address) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, String providerId, Integer address) throws Pi4JException {
         AnalogOutputBuilder builder = AnalogOutput.builder();
         builder.address(address);
         return (T)AnalogOutput.create(context, providerId, builder.build());
     }
 
-    static <T extends AnalogOutput> T create(Context context, AnalogOutputProvider provider, Integer address) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, AnalogOutputProvider provider, Integer address) throws Pi4JException {
         AnalogOutputBuilder builder = AnalogOutput.builder();
         builder.address(address);
         return (T)AnalogOutput.create(context, provider, builder.build());
@@ -119,23 +120,23 @@ public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, 
     // SPECIFIED RETURN CLASS HELPER METHODS
     // ---------------------------------------------------------------------------
 
-    static <T extends AnalogOutput> T create(Context context, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, Integer address, Class<T> clazz) throws Pi4JException {
         return (T)AnalogOutput.create(context, address);
     }
 
-    static <T extends AnalogOutput> T create(Context context, Integer address, String id, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, Integer address, String id, Class<T> clazz) throws Pi4JException {
         return (T)AnalogOutput.create(context, address, id);
     }
 
-    static <T extends AnalogOutput> T create(Context context, Integer address, String id, String name, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, Integer address, String id, String name, Class<T> clazz) throws Pi4JException {
         return (T)AnalogOutput.create(context, address, id, name);
     }
 
-    static <T extends AnalogOutput> T create(Context context, String providerId, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, String providerId, Integer address, Class<T> clazz) throws Pi4JException {
         return (T)AnalogOutput.create(context, providerId, address);
     }
 
-    static <T extends AnalogOutput> T create(Context context, AnalogOutputProvider provider, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
+    static <T extends AnalogOutput> T create(Context context, AnalogOutputProvider provider, Integer address, Class<T> clazz) throws Pi4JException {
         return (T)AnalogOutput.create(context, provider, address);
     }
 

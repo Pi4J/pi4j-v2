@@ -92,7 +92,7 @@ public class DefaultRegistry implements Registry {
                 throw new ProviderNotFoundException(providerId);
 
             // create target I/O instance
-            IO instance = this.context.providers().get(providerId).register(this.context, config);
+            IO instance = this.context.provider(providerId).create(config);
 
             // add instance to collection
             return (T)instances.put(_id, instance);
@@ -118,7 +118,7 @@ public class DefaultRegistry implements Registry {
 
         try {
             // create target I/O instance
-            IO instance = provider.register(this.context, config);
+            IO instance = provider.create(config);
 
             // add target I/O instance to collection
             instances.put(_id, instance);
