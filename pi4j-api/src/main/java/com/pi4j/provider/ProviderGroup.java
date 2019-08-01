@@ -29,20 +29,21 @@ package com.pi4j.provider;
 
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
+import com.pi4j.io.IOType;
 import com.pi4j.provider.exception.ProviderException;
 
 import java.util.Map;
 
 public class ProviderGroup<T extends Provider> implements Describable {
 
-    private ProviderType providerType = null;
+    private IOType providerType = null;
     private Providers providers;
 
     /**
      * Default Constructor
      * @param providerType
      */
-    public ProviderGroup(Providers providers, ProviderType providerType){
+    public ProviderGroup(Providers providers, IOType providerType){
         this.providers = providers;
         this.providerType = providerType;
     }

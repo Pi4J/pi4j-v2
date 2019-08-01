@@ -76,6 +76,7 @@ public class GettingStartedExample2 {
                 .build();
 
 
+        AnalogInput ain = AnalogInput.create(pi4j, 2);
 
         //AnalogInput.create()
 //

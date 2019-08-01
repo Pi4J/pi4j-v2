@@ -31,6 +31,7 @@ package com.pi4j.io.spi;
 import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
+import com.pi4j.io.IOType;
 import com.pi4j.io.spi.impl.SpiFactory;
 import com.pi4j.provider.exception.ProviderException;
 
@@ -43,7 +44,6 @@ import java.nio.charset.Charset;
 public interface Spi extends IO<Spi, SpiConfig> {
 
     static final String ID = "SPI";
-
     static final SpiMode DEFAULT_SPI_MODE = SpiMode.MODE_0;
     static final int DEFAULT_SPI_SPEED = 1000000; // 1MHz (range is 500kHz - 32MHz)
     static final int MAX_SUPPORTED_BYTES = 2048;

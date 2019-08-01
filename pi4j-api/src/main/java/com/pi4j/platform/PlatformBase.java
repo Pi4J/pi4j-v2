@@ -32,7 +32,7 @@ import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
 import com.pi4j.platform.exception.PlatformException;
 import com.pi4j.provider.Provider;
-import com.pi4j.provider.ProviderType;
+import com.pi4j.io.IOType;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 
@@ -45,7 +45,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
         implements Platform {
 
     protected Context context = null;
-    protected Map<ProviderType, Provider> providers = new ConcurrentHashMap<>();
+    protected Map<IOType, Provider> providers = new ConcurrentHashMap<>();
 
     public PlatformBase(){
         super();
@@ -64,17 +64,17 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     }
 
     @Override
-    public Map<ProviderType, Provider> providers() {
+    public Map<IOType, Provider> providers() {
         return Collections.unmodifiableMap(this.providers);
     }
 
     @Override
     public <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException {
-        return (T)this.provider(ProviderType.getProviderType(providerClass));
+        return (T)this.provider(IOType.getByProviderClass(providerClass));
     }
 
     @Override
-    public <T extends Provider> T provider(ProviderType providerType) throws ProviderNotFoundException {
+    public <T extends Provider> T provider(IOType providerType) throws ProviderNotFoundException {
         if(providers.containsKey(providerType))
             return (T)providers.get(providerType);
         throw new ProviderNotFoundException(providerType);
@@ -109,6 +109,6 @@ public abstract class PlatformBase<PLATFORM extends Platform>
 
     protected void addProvider(Context context, String providerId) throws ProviderException {
         var provider = context.providers().get(providerId);
-        this.providers.put(ProviderType.getProviderType(provider.getClass()), provider);
+        this.providers.put(IOType.getByProviderClass(provider.getClass()), provider);
     }
 }

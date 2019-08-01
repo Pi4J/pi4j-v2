@@ -30,7 +30,7 @@ import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
-import com.pi4j.provider.ProviderType;
+import com.pi4j.io.IOType;
 
 public class About {
 
@@ -62,7 +62,7 @@ public class About {
         }
     }
 
-    public void enumerateProviders(Context context, ProviderType providerType) throws Pi4JException {
+    public void enumerateProviders(Context context, IOType providerType) throws Pi4JException {
         System.out.println("=====================================================");
         System.out.println(providerType + " PROVIDERS");
         System.out.println("=====================================================");

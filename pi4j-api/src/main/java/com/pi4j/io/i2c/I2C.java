@@ -30,6 +30,7 @@ package com.pi4j.io.i2c;
 import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
+import com.pi4j.io.IOType;
 import com.pi4j.io.i2c.impl.I2CFactory;
 import com.pi4j.provider.exception.ProviderException;
 

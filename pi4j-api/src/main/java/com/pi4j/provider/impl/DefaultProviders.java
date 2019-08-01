@@ -38,7 +38,7 @@ import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderGroup;
-import com.pi4j.provider.ProviderType;
+import com.pi4j.io.IOType;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.*;
 import org.slf4j.Logger;
@@ -68,16 +68,16 @@ public class DefaultProviders implements Providers {
     private Map<String, Provider> providers = new ConcurrentHashMap<>();
 
     // default providers by Provider class type
-    private Map<ProviderType, String> defaultProviders = new ConcurrentHashMap<>();
+    private Map<IOType, String> defaultProviders = new ConcurrentHashMap<>();
 
-    private ProviderGroup<AnalogInputProvider> _analogInput = new ProviderGroup<>(this, ProviderType.ANALOG_INPUT);
-    private ProviderGroup<AnalogOutputProvider> _analogOutput = new ProviderGroup<>(this, ProviderType.ANALOG_OUTPUT);
-    private ProviderGroup<DigitalInputProvider> _digitalInput = new ProviderGroup<>(this, ProviderType.DIGITAL_INPUT);
-    private ProviderGroup<DigitalOutputProvider> _digitalOutput = new ProviderGroup<>(this, ProviderType.DIGITAL_OUTPUT);
-    private ProviderGroup<PwmProvider> _pwm = new ProviderGroup<>(this, ProviderType.PWM);
-    private ProviderGroup<SpiProvider> _spi = new ProviderGroup<>(this, ProviderType.SPI);
-    private ProviderGroup<I2CProvider> _i2c = new ProviderGroup<>(this, ProviderType.I2C);
-    private ProviderGroup<SerialProvider> _serial = new ProviderGroup<>(this, ProviderType.SERIAL);
+    private ProviderGroup<AnalogInputProvider> _analogInput = new ProviderGroup<>(this, IOType.ANALOG_INPUT);
+    private ProviderGroup<AnalogOutputProvider> _analogOutput = new ProviderGroup<>(this, IOType.ANALOG_OUTPUT);
+    private ProviderGroup<DigitalInputProvider> _digitalInput = new ProviderGroup<>(this, IOType.DIGITAL_INPUT);
+    private ProviderGroup<DigitalOutputProvider> _digitalOutput = new ProviderGroup<>(this, IOType.DIGITAL_OUTPUT);
+    private ProviderGroup<PwmProvider> _pwm = new ProviderGroup<>(this, IOType.PWM);
+    private ProviderGroup<SpiProvider> _spi = new ProviderGroup<>(this, IOType.SPI);
+    private ProviderGroup<I2CProvider> _i2c = new ProviderGroup<>(this, IOType.I2C);
+    private ProviderGroup<SerialProvider> _serial = new ProviderGroup<>(this, IOType.SERIAL);
 
     @Override
     public ProviderGroup<AnalogInputProvider> analogInput() { return _analogInput; }
@@ -193,7 +193,7 @@ public class DefaultProviders implements Providers {
      * @throws ProviderException
      */
     @Override
-    public <T extends Provider> Map<String, T> all(ProviderType providerType) {
+    public <T extends Provider> Map<String, T> all(IOType providerType) {
 
         // create a map <io-id, io-instance> of providers that match the given ProviderType
         var result = new ConcurrentHashMap<String, T>();
@@ -225,7 +225,7 @@ public class DefaultProviders implements Providers {
     }
 
     @Override
-    public <T extends Provider> boolean exists(String providerId, ProviderType providerType) {
+    public <T extends Provider> boolean exists(String providerId, IOType providerType) {
 
         // return true if the managed io map contains the given io-id and io-type
         var subset = all(providerType);
@@ -255,7 +255,7 @@ public class DefaultProviders implements Providers {
     }
 
     @Override
-    public <T extends Provider> T get(String providerId, ProviderType providerType) throws ProviderNotFoundException {
+    public <T extends Provider> T get(String providerId, IOType providerType) throws ProviderNotFoundException {
         // return the io instance from the managed io map that contains the given io-id and io-type
         var subset = all(providerType);
         if(subset.containsKey(providerId)){
@@ -282,7 +282,7 @@ public class DefaultProviders implements Providers {
     }
 
     @Override
-    public <T extends Provider> T get(ProviderType providerType) throws ProviderNotFoundException {
+    public <T extends Provider> T get(IOType providerType) throws ProviderNotFoundException {
         // return the provider instance from the managed provider map that contains the given provider-class
         var subset = all(providerType);
         if(subset.isEmpty()){
@@ -293,7 +293,7 @@ public class DefaultProviders implements Providers {
     }
 
     @Override
-    public <T extends Provider> boolean exists(ProviderType providerType){
+    public <T extends Provider> boolean exists(IOType providerType){
         // return the provider instance from the managed provider map that contains the given provider-class
         return !(all(providerType).isEmpty());
     }

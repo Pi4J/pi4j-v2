@@ -1,4 +1,4 @@
-package com.pi4j.provider;
+package com.pi4j.io;
 
 /*
  * #%L
@@ -28,7 +28,6 @@ package com.pi4j.provider;
  */
 
 import com.pi4j.config.Config;
-import com.pi4j.io.IO;
 import com.pi4j.io.gpio.analog.*;
 import com.pi4j.io.gpio.digital.*;
 import com.pi4j.io.i2c.I2CConfig;
@@ -41,8 +40,9 @@ import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiProvider;
+import com.pi4j.provider.Provider;
 
-public enum ProviderType {
+public enum IOType {
 
     ANALOG_INPUT(AnalogInputProvider.class, AnalogInput.class, AnalogInputConfig.class),
     ANALOG_OUTPUT(AnalogOutputProvider.class, AnalogOutput.class, AnalogOutputConfig.class),
@@ -57,7 +57,7 @@ public enum ProviderType {
     private Class<? extends IO> ioClass;
     private Class<? extends Config> configClass;
 
-    ProviderType(Class<? extends Provider> providerClass, Class<? extends IO> ioClass, Class<? extends Config> configClass) {
+    IOType(Class<? extends Provider> providerClass, Class<? extends IO> ioClass, Class<? extends Config> configClass) {
         this.providerClass = providerClass;
         this.ioClass = ioClass;
         this.configClass = configClass;
@@ -73,12 +73,12 @@ public enum ProviderType {
         return configClass;
     }
 
-    public boolean isType(ProviderType type){
+    public boolean isType(IOType type){
         return type == this;
     }
 
-    public static Class<? extends IO> getIOClass(ProviderType type){
-        for(var typeInstance : ProviderType.values()){
+    public static Class<? extends IO> getIOClass(IOType type){
+        for(var typeInstance : IOType.values()){
             if(typeInstance.equals(type)){
                 return typeInstance.getIOClass();
             }
@@ -86,8 +86,8 @@ public enum ProviderType {
         return null;
     }
 
-    public static Class<? extends Provider> getProviderClass(ProviderType type){
-        for(var typeInstance : ProviderType.values()){
+    public static Class<? extends Provider> getProviderClass(IOType type){
+        for(var typeInstance : IOType.values()){
             if(typeInstance.equals(type)){
                 return typeInstance.getProviderClass();
             }
@@ -95,8 +95,8 @@ public enum ProviderType {
         return null;
     }
 
-    public static Class<? extends Config> getConfigClass(ProviderType type){
-        for(var typeInstance : ProviderType.values()){
+    public static Class<? extends Config> getConfigClass(IOType type){
+        for(var typeInstance : IOType.values()){
             if(typeInstance.equals(type)){
                 return typeInstance.getConfigClass();
             }
@@ -104,8 +104,8 @@ public enum ProviderType {
         return null;
     }
 
-    public static ProviderType getProviderType(String name){
-        for(var type : ProviderType.values()){
+    public static IOType getByProviderClass(String name){
+        for(var type : IOType.values()){
             if(type.name().equalsIgnoreCase(name)){
                 return type;
             }
@@ -113,8 +113,12 @@ public enum ProviderType {
         return null;
     }
 
-    public static ProviderType getProviderType(Class<? extends Provider> providerClass){
-        for(var type : ProviderType.values()){
+    public static IOType getByIO(Provider provider){
+        return provider.type();
+    }
+
+    public static IOType getByProviderClass(Class<? extends Provider> providerClass){
+        for(var type : IOType.values()){
             if(type.getProviderClass().isAssignableFrom(providerClass)){
                 return type;
             }
@@ -122,8 +126,12 @@ public enum ProviderType {
         return null;
     }
 
-    public static ProviderType getProviderTypeByIOClass(Class<? extends IO> ioClass){
-        for(var type : ProviderType.values()){
+    public static IOType getByIO(IO io){
+        return io.type();
+    }
+
+    public static IOType getByIOClass(Class<? extends IO> ioClass){
+        for(var type : IOType.values()){
             if(type.getIOClass().isAssignableFrom(ioClass)){
                 return type;
             }
@@ -131,8 +139,8 @@ public enum ProviderType {
         return null;
     }
 
-    public static ProviderType getProviderTypeByConfigClass(Class<? extends Config> configClass){
-        for(var type : ProviderType.values()){
+    public static IOType getByConfigClass(Class<? extends Config> configClass){
+        for(var type : IOType.values()){
             if(type.getConfigClass().isAssignableFrom(configClass)){
                 return type;
             }

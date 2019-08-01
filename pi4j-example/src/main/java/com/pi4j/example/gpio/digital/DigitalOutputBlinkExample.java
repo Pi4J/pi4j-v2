@@ -33,7 +33,7 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.platform.Platform;
-import com.pi4j.provider.ProviderType;
+import com.pi4j.io.IOType;
 
 import java.util.concurrent.TimeUnit;
 
@@ -56,7 +56,7 @@ public class DigitalOutputBlinkExample {
         Platform platform = pi4j.platforms().getDefault();
 
         // get default digital output provide for this platform
-        DigitalOutputProvider provider = platform.provider(ProviderType.DIGITAL_OUTPUT);
+        DigitalOutputProvider provider = platform.provider(IOType.DIGITAL_OUTPUT);
 
         // create I/O instance configuration using the config builder
         DigitalOutputConfig config = DigitalOutput.builder().address(3).build();

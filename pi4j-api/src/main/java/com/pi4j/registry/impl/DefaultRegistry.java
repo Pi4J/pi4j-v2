@@ -33,7 +33,7 @@ import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
 import com.pi4j.provider.Provider;
-import com.pi4j.provider.ProviderType;
+import com.pi4j.io.IOType;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderInvalidException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
@@ -139,7 +139,7 @@ public class DefaultRegistry implements Registry {
         // validate a default provider exists for the requested IO type
         Provider provider = null;
         try {
-            provider = context.platform().provider(ProviderType.getProviderTypeByIOClass(type));
+            provider = context.platform().provider(IOType.getByIOClass(type));
             if(provider == null)
                 throw new ProviderNotFoundException();
         } catch (ProviderException e) {

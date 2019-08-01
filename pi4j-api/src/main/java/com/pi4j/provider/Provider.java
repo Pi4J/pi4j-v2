@@ -31,14 +31,15 @@ import com.pi4j.binding.Binding;
 import com.pi4j.common.Descriptor;
 import com.pi4j.config.Config;
 import com.pi4j.io.IO;
+import com.pi4j.io.IOType;
 
 public interface Provider<IO_TYPE extends IO, CONFIG_TYPE extends Config> extends Binding {
 
     IO_TYPE create(CONFIG_TYPE config) throws Exception;
 
-    default ProviderType type() { return ProviderType.getProviderType(this.getClass()); };
-    default ProviderType getType() { return type(); }
-    default boolean isType(ProviderType type) { return this.type().isType(type); }
+    default IOType type() { return IOType.getByProviderClass(this.getClass()); };
+    default IOType getType() { return type(); }
+    default boolean isType(IOType type) { return this.type().isType(type); }
 
     @Override
     default Descriptor describe() {

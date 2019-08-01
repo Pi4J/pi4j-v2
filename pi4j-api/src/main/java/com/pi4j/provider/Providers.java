@@ -30,6 +30,7 @@ package com.pi4j.provider;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
 import com.pi4j.context.Context;
+import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
@@ -87,19 +88,19 @@ public interface Providers extends Describable {
      * @param <T>
      * @return
      */
-    <T extends Provider> Map<String, T> all(ProviderType providerType) throws ProviderNotFoundException;
+    <T extends Provider> Map<String, T> all(IOType providerType) throws ProviderNotFoundException;
 
     boolean exists(String providerId);
     <T extends Provider> boolean exists(String providerId, Class<T> providerClass);
-    <T extends Provider> boolean exists(String providerId, ProviderType providerType);
-    <T extends Provider> boolean exists(ProviderType providerType);
+    <T extends Provider> boolean exists(String providerId, IOType providerType);
+    <T extends Provider> boolean exists(IOType providerType);
     <T extends Provider> boolean exists(Class<T> providerClass);
 
     <T extends Provider> T get(String providerId) throws ProviderNotFoundException;
     <T extends Provider> T get(String providerId, Class<T> providerClass) throws ProviderNotFoundException;
-    <T extends Provider> T get(String providerId, ProviderType providerType) throws ProviderNotFoundException;
+    <T extends Provider> T get(String providerId, IOType providerType) throws ProviderNotFoundException;
     <T extends Provider> T get(Class<T> providerClass) throws ProviderNotFoundException;
-    <T extends Provider> T get(ProviderType providerType) throws ProviderNotFoundException;
+    <T extends Provider> T get(IOType providerType) throws ProviderNotFoundException;
 
     <T extends Provider> Providers add(Collection<T> provider) throws ProviderAlreadyExistsException, ProviderInitializeException;
     <T extends Provider> void replace(T provider) throws ProviderNotFoundException, ProviderInitializeException, ProviderTerminateException;
@@ -124,7 +125,7 @@ public interface Providers extends Describable {
     default <T extends Provider> Map<String, T> getAll(Class<T> providerClass) throws ProviderNotFoundException {
         return all(providerClass);
     }
-    default <T extends Provider> Map<String, T> getAll(ProviderType providerType) throws ProviderNotFoundException {
+    default <T extends Provider> Map<String, T> getAll(IOType providerType) throws ProviderNotFoundException {
         return all(providerType);
     }
 
@@ -137,7 +138,7 @@ public interface Providers extends Describable {
                 .quantity((providers == null) ? 0 : providers.size())
                 .type(this.getClass());
 
-        for(ProviderType providerType : ProviderType.values()){
+        for(IOType providerType : IOType.values()){
 
             try {
                 Map<String, Provider> providersByType = getAll(providerType);

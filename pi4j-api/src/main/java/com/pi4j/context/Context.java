@@ -43,7 +43,7 @@ import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
 import com.pi4j.provider.Provider;
-import com.pi4j.provider.ProviderType;
+import com.pi4j.io.IOType;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
@@ -77,7 +77,7 @@ public interface Context extends Describable {
         throw new ProviderNotFoundException(providerClass);
     }
 
-    default <T extends Provider> T provider(ProviderType providerType) throws ProviderNotFoundException {
+    default <T extends Provider> T provider(IOType providerType) throws ProviderNotFoundException {
         // return the default provider for this type from the default platform
         if(platform().hasProvider(providerType))
             return platform().provider(providerType);
@@ -109,7 +109,7 @@ public interface Context extends Describable {
         }
     }
 
-    default <T extends Provider> boolean hasProvider(ProviderType providerType) {
+    default <T extends Provider> boolean hasProvider(IOType providerType) {
         try {
             return provider(providerType) != null;
         }
@@ -119,35 +119,35 @@ public interface Context extends Describable {
     }
 
     default <T extends AnalogInputProvider> T analogInput() throws ProviderException {
-        return this.provider(ProviderType.ANALOG_INPUT);
+        return this.provider(IOType.ANALOG_INPUT);
     }
 
     default <T extends AnalogOutputProvider> T analogOutput() throws ProviderException{
-        return this.provider(ProviderType.ANALOG_OUTPUT);
+        return this.provider(IOType.ANALOG_OUTPUT);
     }
 
     default <T extends DigitalInputProvider> T digitalInput() throws ProviderException{
-        return this.provider(ProviderType.DIGITAL_INPUT);
+        return this.provider(IOType.DIGITAL_INPUT);
     }
 
     default <T extends DigitalOutputProvider> T digitalOutput() throws ProviderException{
-        return this.provider(ProviderType.DIGITAL_OUTPUT);
+        return this.provider(IOType.DIGITAL_OUTPUT);
     }
 
     default <T extends PwmProvider> T pwm() throws ProviderException{
-        return this.provider(ProviderType.PWM);
+        return this.provider(IOType.PWM);
     }
 
     default <T extends SpiProvider> T spi() throws ProviderException{
-        return this.provider(ProviderType.SPI);
+        return this.provider(IOType.SPI);
     }
 
     default <T extends I2CProvider> T i2c() throws ProviderException{
-        return this.provider(ProviderType.I2C);
+        return this.provider(IOType.I2C);
     }
 
     default <T extends SerialProvider> T serial() throws ProviderException{
-        return this.provider(ProviderType.SERIAL);
+        return this.provider(IOType.SERIAL);
     }
 
     default Platform platform(){

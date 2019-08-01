@@ -32,7 +32,7 @@ import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.binding.AnalogBindingSync;
 import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.provider.ProviderType;
+import com.pi4j.io.IOType;
 import com.pi4j.test.provider.TestAnalogInput;
 import com.pi4j.test.provider.TestAnalogInputProvider;
 
@@ -58,7 +58,7 @@ public class Main {
         about.enumerateProviders(pi4j);
         about.enumeratePlatforms(pi4j);
         about.describeDeafultPlatform(pi4j);
-        for(var providerType : ProviderType.values()){
+        for(var providerType : IOType.values()){
             about.enumerateProviders(pi4j, providerType);
         }
 
