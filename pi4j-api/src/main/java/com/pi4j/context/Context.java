@@ -32,6 +32,7 @@ import com.pi4j.binding.Bindings;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
 import com.pi4j.common.exception.LifecycleException;
+import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
@@ -43,7 +44,6 @@ import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
 import com.pi4j.provider.Provider;
-import com.pi4j.io.IOType;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
@@ -77,17 +77,17 @@ public interface Context extends Describable {
         throw new ProviderNotFoundException(providerClass);
     }
 
-    default <T extends Provider> T provider(IOType providerType) throws ProviderNotFoundException {
+    default <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException {
         // return the default provider for this type from the default platform
-        if(platform().hasProvider(providerType))
-            return platform().provider(providerType);
+        if(platform().hasProvider(ioType))
+            return platform().provider(ioType);
 
         // return the default provider for this type (outside of default platform)
-        if(providers().exists(providerType))
-            return (T)providers().get(providerType);
+        if(providers().exists(ioType))
+            return (T)providers().get(ioType);
 
         // provider not found
-        throw new ProviderNotFoundException(providerType);
+        throw new ProviderNotFoundException(ioType);
     }
 
 
@@ -109,9 +109,9 @@ public interface Context extends Describable {
         }
     }
 
-    default <T extends Provider> boolean hasProvider(IOType providerType) {
+    default <T extends Provider> boolean hasProvider(IOType ioType) {
         try {
-            return provider(providerType) != null;
+            return provider(ioType) != null;
         }
         catch (Exception e){
             return false;

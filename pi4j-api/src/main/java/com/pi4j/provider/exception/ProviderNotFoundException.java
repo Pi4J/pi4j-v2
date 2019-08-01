@@ -28,8 +28,8 @@ package com.pi4j.provider.exception;
  */
 
 
-import com.pi4j.provider.Provider;
 import com.pi4j.io.IOType;
+import com.pi4j.provider.Provider;
 
 /**
  * <p>
@@ -60,8 +60,8 @@ public class ProviderNotFoundException extends ProviderException {
     /**
      * Alternate Constructor
      */
-    public ProviderNotFoundException(IOType providerType){
-        super("Pi4J provider type [" + providerType + "] could not be found.  Please include this 'provider' JAR in the classpath for this provider type.");
+    public ProviderNotFoundException(IOType ioType){
+        super("Pi4J provider IO type [" + ioType + "] could not be found.  Please include this 'provider' JAR in the classpath for this provider type.");
     }
 
     /**

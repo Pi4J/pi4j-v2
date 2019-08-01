@@ -29,9 +29,9 @@ package com.pi4j.annotation.processor.injector;
 
 import com.pi4j.annotation.Inject;
 import com.pi4j.context.Context;
+import com.pi4j.io.IOType;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderGroup;
-import com.pi4j.io.IOType;
 import com.pi4j.util.StringUtil;
 
 import java.lang.reflect.Field;
@@ -49,9 +49,9 @@ public class ProviderGroupInjector implements InjectorProcessor<ProviderGroup> {
         // <<1>> inject instance by user defined ID property
         if(StringUtil.isNotNullOrEmpty(annotation.value())){
             String id = annotation.value().trim();
-            for(IOType providerType : IOType.values()){
-                if(id.equalsIgnoreCase(providerType.name())){
-                    return new ProviderGroup<Provider>(context.providers(), providerType);
+            for(IOType ioType : IOType.values()){
+                if(id.equalsIgnoreCase(ioType.name())){
+                    return new ProviderGroup<Provider>(context.providers(), ioType);
                 }
             }
             return null;

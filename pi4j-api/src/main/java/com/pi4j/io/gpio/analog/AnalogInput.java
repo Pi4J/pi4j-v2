@@ -30,7 +30,6 @@ package com.pi4j.io.gpio.analog;
 import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.io.IOType;
 import com.pi4j.io.Input;
 import com.pi4j.io.gpio.analog.impl.AnalogInputFactory;
 import com.pi4j.provider.exception.ProviderException;

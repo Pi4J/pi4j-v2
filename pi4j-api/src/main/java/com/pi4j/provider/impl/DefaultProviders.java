@@ -28,6 +28,7 @@ package com.pi4j.provider.impl;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
@@ -38,7 +39,6 @@ import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderGroup;
-import com.pi4j.io.IOType;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.*;
 import org.slf4j.Logger;
@@ -187,17 +187,17 @@ public class DefaultProviders implements Providers {
     /**
      * Get all providers of a specified io class type.
      *
-     * @param providerType
+     * @param ioType
      * @param <T>
      * @return
      * @throws ProviderException
      */
     @Override
-    public <T extends Provider> Map<String, T> all(IOType providerType) {
+    public <T extends Provider> Map<String, T> all(IOType ioType) {
 
         // create a map <io-id, io-instance> of providers that match the given ProviderType
         var result = new ConcurrentHashMap<String, T>();
-        providers.values().stream().filter(provider -> provider.isType(providerType)).forEach(provider -> {
+        providers.values().stream().filter(provider -> provider.isType(ioType)).forEach(provider -> {
             result.put(provider.id(), (T) provider);
         });
         return Collections.unmodifiableMap(result);
@@ -225,10 +225,10 @@ public class DefaultProviders implements Providers {
     }
 
     @Override
-    public <T extends Provider> boolean exists(String providerId, IOType providerType) {
+    public <T extends Provider> boolean exists(String providerId, IOType ioType) {
 
         // return true if the managed io map contains the given io-id and io-type
-        var subset = all(providerType);
+        var subset = all(ioType);
         if(subset.containsKey(providerId)){
             return true;
         }
@@ -255,9 +255,9 @@ public class DefaultProviders implements Providers {
     }
 
     @Override
-    public <T extends Provider> T get(String providerId, IOType providerType) throws ProviderNotFoundException {
+    public <T extends Provider> T get(String providerId, IOType ioType) throws ProviderNotFoundException {
         // return the io instance from the managed io map that contains the given io-id and io-type
-        var subset = all(providerType);
+        var subset = all(ioType);
         if(subset.containsKey(providerId)){
             return (T)subset.get(providerId);
         }
@@ -282,20 +282,20 @@ public class DefaultProviders implements Providers {
     }
 
     @Override
-    public <T extends Provider> T get(IOType providerType) throws ProviderNotFoundException {
+    public <T extends Provider> T get(IOType ioType) throws ProviderNotFoundException {
         // return the provider instance from the managed provider map that contains the given provider-class
-        var subset = all(providerType);
+        var subset = all(ioType);
         if(subset.isEmpty()){
-            throw new ProviderNotFoundException(providerType);
+            throw new ProviderNotFoundException(ioType);
         }
         // return first instance found
         return (T)subset.values().iterator().next();
     }
 
     @Override
-    public <T extends Provider> boolean exists(IOType providerType){
+    public <T extends Provider> boolean exists(IOType ioType){
         // return the provider instance from the managed provider map that contains the given provider-class
-        return !(all(providerType).isEmpty());
+        return !(all(ioType).isEmpty());
     }
 
     @Override

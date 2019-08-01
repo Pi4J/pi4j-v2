@@ -30,9 +30,9 @@ package com.pi4j.platform;
 import com.pi4j.binding.BindingBase;
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
+import com.pi4j.io.IOType;
 import com.pi4j.platform.exception.PlatformException;
 import com.pi4j.provider.Provider;
-import com.pi4j.io.IOType;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 
@@ -74,10 +74,10 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     }
 
     @Override
-    public <T extends Provider> T provider(IOType providerType) throws ProviderNotFoundException {
-        if(providers.containsKey(providerType))
-            return (T)providers.get(providerType);
-        throw new ProviderNotFoundException(providerType);
+    public <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException {
+        if(providers.containsKey(ioType))
+            return (T)providers.get(ioType);
+        throw new ProviderNotFoundException(ioType);
     }
 
     @Override

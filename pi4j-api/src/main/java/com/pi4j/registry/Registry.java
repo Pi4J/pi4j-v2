@@ -34,8 +34,8 @@ import com.pi4j.config.Config;
 import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
-import com.pi4j.provider.Provider;
 import com.pi4j.io.IOType;
+import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.exception.RegistryException;
 
@@ -69,12 +69,12 @@ public interface Registry extends Describable {
         return Collections.unmodifiableMap(result);
     }
 
-    default <P extends Provider> Map<String, ? extends IO> allByProvider(IOType providerType) throws RegistryException{
-        return allByType(providerType.getIOClass());
+    default <P extends Provider> Map<String, ? extends IO> allByIoType(IOType ioType) throws RegistryException{
+        return allByType(ioType.getIOClass());
     }
 
     default <P extends Provider> Map<String, ? extends IO> allByProvider(Class<P> providerClass) throws RegistryException{
-        return allByProvider(IOType.getByProviderClass(providerClass));
+        return allByIoType(IOType.getByProviderClass(providerClass));
     }
 
     default <P extends Provider> Map<String, ? extends IO> allByProvider(String providerId) throws RegistryException{

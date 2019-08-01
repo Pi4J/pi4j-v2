@@ -28,9 +28,9 @@ package com.pi4j.test;/*-
 import com.pi4j.binding.Binding;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
+import com.pi4j.io.IOType;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
-import com.pi4j.io.IOType;
 
 public class About {
 
@@ -62,11 +62,11 @@ public class About {
         }
     }
 
-    public void enumerateProviders(Context context, IOType providerType) throws Pi4JException {
+    public void enumerateProviders(Context context, IOType ioType) throws Pi4JException {
         System.out.println("=====================================================");
-        System.out.println(providerType + " PROVIDERS");
+        System.out.println(ioType + " PROVIDERS");
         System.out.println("=====================================================");
-        for(var provider : context.providers().all(providerType).values()){
+        for(var provider : context.providers().all(ioType).values()){
             System.out.println("  " + provider.name() + " [" + provider.id() + "]; " + provider.type());
         }
     }

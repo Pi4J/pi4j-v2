@@ -41,7 +41,7 @@ public class ProviderAnnotationProcessor {
         String id = null;
 
         // if the '@Provider' annotation is missing, then just return
-        // the default provider based on the requested provider type
+        // the default provider based on the requested provider class
         if(!field.isAnnotationPresent(com.pi4j.annotation.Provider.class)){
             return null;
         }

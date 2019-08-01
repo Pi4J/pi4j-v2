@@ -30,10 +30,10 @@ package com.pi4j.test.registry;
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
+import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
 import com.pi4j.mock.provider.gpio.digital.MockDigitalInputProvider;
-import com.pi4j.io.IOType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,7 +96,7 @@ public class RegistryGetIoInstancesByProvider {
     public void testGetIoInstancesByProviderType() throws Pi4JException {
 
         // attempt to get I/O instance from registry
-        var retrieved = pi4j.registry().allByProvider(IOType.DIGITAL_INPUT);
+        var retrieved = pi4j.registry().allByIoType(IOType.DIGITAL_INPUT);
 
         // verify the retrieved I/O instance is the same count we registered
         assertEquals("The I/O instances retrieved from registry is not a match.", 2, retrieved.size());
@@ -116,10 +116,10 @@ public class RegistryGetIoInstancesByProvider {
     public void testGetIoInstancesFromInvalidProvider() throws Pi4JException {
 
         // attempt to get I/O instance from registry
-        var retrieved = pi4j.registry().allByProvider(IOType.ANALOG_INPUT);
+        var retrieved = pi4j.registry().allByIoType(IOType.ANALOG_INPUT);
 
         // verify the retrieved I/O instance is ZERO
-        assertEquals("No I/O instances should have retrieved from registry using this provider type.", 0, retrieved.size());
+        assertEquals("No I/O instances should have retrieved from registry using this IO type.", 0, retrieved.size());
     }
 
 }

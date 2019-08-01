@@ -84,23 +84,23 @@ public interface Providers extends Describable {
     /**
      * Get all providers of a specified io type.
      *
-     * @param providerType
+     * @param ioType
      * @param <T>
      * @return
      */
-    <T extends Provider> Map<String, T> all(IOType providerType) throws ProviderNotFoundException;
+    <T extends Provider> Map<String, T> all(IOType ioType) throws ProviderNotFoundException;
 
     boolean exists(String providerId);
     <T extends Provider> boolean exists(String providerId, Class<T> providerClass);
-    <T extends Provider> boolean exists(String providerId, IOType providerType);
-    <T extends Provider> boolean exists(IOType providerType);
+    <T extends Provider> boolean exists(String providerId, IOType ioType);
+    <T extends Provider> boolean exists(IOType ioType);
     <T extends Provider> boolean exists(Class<T> providerClass);
 
     <T extends Provider> T get(String providerId) throws ProviderNotFoundException;
     <T extends Provider> T get(String providerId, Class<T> providerClass) throws ProviderNotFoundException;
-    <T extends Provider> T get(String providerId, IOType providerType) throws ProviderNotFoundException;
+    <T extends Provider> T get(String providerId, IOType ioType) throws ProviderNotFoundException;
     <T extends Provider> T get(Class<T> providerClass) throws ProviderNotFoundException;
-    <T extends Provider> T get(IOType providerType) throws ProviderNotFoundException;
+    <T extends Provider> T get(IOType ioType) throws ProviderNotFoundException;
 
     <T extends Provider> Providers add(Collection<T> provider) throws ProviderAlreadyExistsException, ProviderInitializeException;
     <T extends Provider> void replace(T provider) throws ProviderNotFoundException, ProviderInitializeException, ProviderTerminateException;
@@ -125,8 +125,8 @@ public interface Providers extends Describable {
     default <T extends Provider> Map<String, T> getAll(Class<T> providerClass) throws ProviderNotFoundException {
         return all(providerClass);
     }
-    default <T extends Provider> Map<String, T> getAll(IOType providerType) throws ProviderNotFoundException {
-        return all(providerType);
+    default <T extends Provider> Map<String, T> getAll(IOType ioType) throws ProviderNotFoundException {
+        return all(ioType);
     }
 
     default Descriptor describe() {
@@ -138,21 +138,21 @@ public interface Providers extends Describable {
                 .quantity((providers == null) ? 0 : providers.size())
                 .type(this.getClass());
 
-        for(IOType providerType : IOType.values()){
+        for(IOType ioType : IOType.values()){
 
             try {
-                Map<String, Provider> providersByType = getAll(providerType);
-                Descriptor providerTypeDescriptor = Descriptor.create()
-                        .category(providerType.name())
+                Map<String, Provider> providersByType = getAll(ioType);
+                Descriptor ioTypeDescriptor = Descriptor.create()
+                        .category(ioType.name())
                         .quantity((providers == null) ? 0 : providersByType.size())
-                        .type(providerType.getProviderClass());
+                        .type(ioType.getProviderClass());
 
                 if(providersByType != null && !providersByType.isEmpty()) {
                     providersByType.forEach((id, provider) -> {
-                        providerTypeDescriptor.add(provider.describe());
+                        ioTypeDescriptor.add(provider.describe());
                     });
                 }
-                descriptor.add(providerTypeDescriptor);
+                descriptor.add(ioTypeDescriptor);
 
             } catch (ProviderNotFoundException e) {
                 e.printStackTrace();

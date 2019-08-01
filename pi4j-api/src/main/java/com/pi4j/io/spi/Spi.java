@@ -31,7 +31,6 @@ package com.pi4j.io.spi;
 import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
-import com.pi4j.io.IOType;
 import com.pi4j.io.spi.impl.SpiFactory;
 import com.pi4j.provider.exception.ProviderException;
 

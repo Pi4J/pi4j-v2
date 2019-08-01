@@ -30,6 +30,7 @@ package com.pi4j.platform;
 import com.pi4j.binding.Binding;
 import com.pi4j.common.Descriptor;
 import com.pi4j.context.Context;
+import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
@@ -39,7 +40,6 @@ import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.Provider;
-import com.pi4j.io.IOType;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 
@@ -53,7 +53,7 @@ public interface Platform extends Binding {
     Map<IOType, Provider> providers();
 
     <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException;
-    <T extends Provider> T provider(IOType providerType) throws ProviderNotFoundException;
+    <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException;
 
     default <T extends Provider> boolean hasProvider(Class<T> providerClass) {
         try {
@@ -64,9 +64,9 @@ public interface Platform extends Binding {
         }
     }
 
-    default <T extends Provider> boolean hasProvider(IOType providerType) {
+    default <T extends Provider> boolean hasProvider(IOType ioType) {
         try {
-            return provider(providerType) != null;
+            return provider(ioType) != null;
         }
         catch (Exception e){
             return false;
