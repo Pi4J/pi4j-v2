@@ -41,87 +41,41 @@ public class Pi4J {
         // forbid object construction
     }
 
-//    public static Context initialize() throws Pi4JException {
-//        return initialize(ContextBuilder.create());
-//    }
-//
-//    public static Context initialize(boolean autoDetect) throws Pi4JException {
-//        return initialize(ContextBuilder.create().
-//                setAutoDetect(autoDetect));
-//    }
-//
-//    public static Context initialize(Provider... provider) throws Pi4JException {
-//        return initialize(ContextBuilder.create().
-//                noAutoDetectProviders().
-//                add(provider));
-//    }
-//
-//    public static Context initialize(Binding ... binding) throws Pi4JException {
-//        return initialize(ContextBuilder.create().
-//                noAutoDetectBindings().
-//                add(binding));
-//    }
-//
-//    public static Context initialize(boolean autoDetect, Binding... binding) throws Pi4JException {
-//        return initialize(ContextBuilder.create().
-//                setAutoDetect(autoDetect).
-//                add(binding));
-//    }
-//
-//    public static Context initialize(boolean autoDetect, Platform... platform) throws Pi4JException {
-//        return initialize(ContextBuilder.create().
-//                setAutoDetect(autoDetect).
-//                add(platform));
-//    }
-//
-//    public static Context initialize(boolean autoDetect, Provider... provider) throws Pi4JException {
-//        return initialize(ContextBuilder.create().
-//                setAutoDetect(autoDetect).
-//                add(provider));
-//    }
-//
-//    public static Context initialize(Platform platform, Provider... provider) throws Pi4JException {
-//        return initialize(ContextBuilder.create().
-//                noAutoDetectPlatforms().
-//                noAutoDetectProviders().
-//                addDefaultPlatform(platform).add(provider));
-//    }
-//
-//    public static Context initialize(boolean autoDetect, Platform platform, Provider... provider) throws Pi4JException {
-//        return initialize(ContextBuilder.create().
-//                setAutoDetect(autoDetect).
-//                addDefaultPlatform(platform).
-//                add(provider));
-//    }
-//
-//    public static Context initialize(ContextBuilder builder) throws Pi4JException {
-//        return builder.build();
-//    }
-//
-//    public static Context initialize(ContextConfig config) throws Pi4JException {
-//        logger.trace("invoked 'initialize()'");
-//
-//        System.out.println(config.getProviders());
-//
-//        // create new context
-//        Context context = DefaultContext.instance();
-//
-//        // initialize new Pi4J runtime context with a Pi4J configuration object
-//        context.initialize(config);
-//
-//        logger.debug("Pi4J successfully initialized.'");
-//        return context;
-//    }
-
+    /**
+     * Returns a new 'ContextBuilder' instance to help create
+     * a custom 'Context' which represents the Pi4J runtime
+     * state and lifecycle.  The 'ContextBuilder' will allow
+     * you to add custom 'Platforms' and 'Providers'.
+     *
+     * @return ContextBuilder
+     */
     public static ContextBuilder newContext(){
         return ContextBuilder.create();
     }
 
-    public static Context newDefaultContext() throws Pi4JException {
-        return newContext().build();
+    /**
+     * Returns a new 'Context' instance which represents the Pi4J runtime
+     * state and lifecycle.   This 'Context' instance will automatically
+     * load all detected 'Platforms' and 'Providers' that are detected
+     * in the application's class-path.
+     *
+     * @return Context
+     */
+    public static Context newAutoContext() throws Pi4JException {
+        return newContext().autoDetect().build();
     }
 
+    /**
+     * Returns a new empty 'Context' instance which represents the Pi4J runtime
+     * state and lifecycle.  This empty 'Context' will not contain
+     * any 'Platforms' or 'Providers' by default.  The empty context
+     * is most commonly used in conjunction with dependency injection
+     * where 'Platforms' and 'Providers' are injected into the runtime
+     * context via the use of '@Register' annotations.
+     *
+     * @return Context
+     */
     public static Context newEmptyContext() throws Pi4JException {
-        return newContext().noAutoDetect().build();
+        return newContext().build();
     }
 }

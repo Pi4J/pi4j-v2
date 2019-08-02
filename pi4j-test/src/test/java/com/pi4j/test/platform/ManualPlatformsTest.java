@@ -57,8 +57,6 @@ public class ManualPlatformsTest {
         // we don't want to load any detected Pi4J binding/io libraries
         // in the class path for this test case
         pi4j = Pi4J.newContext()
-                        // do not auto detect platforms, providers from the classpath
-                        .noAutoDetect()
 
                         // add any platforms that we want to work with
                         .add(new MockPlatform())

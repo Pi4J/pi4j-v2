@@ -60,9 +60,14 @@ public class DigitalOutputBlinkExampleUsingDependencyInjection {
         @Override
         public Void call() throws Exception {
 
-            // initialize the Pi4J runtime context then inject
-            // this class for dependency injection on annotations
-            Context pi4j = Pi4J.newDefaultContext().inject(this);
+            // Initialize Pi4J with an auto context
+            // An auto context includes AUTO-DETECT BINDINGS enabled
+            // which will load all detected Pi4J binding libraries
+            // in the class path
+            // ...
+            // Also, inject this class instance into the Pi4J context
+            // for annotation processing and dependency injection
+            Context pi4j = Pi4J.newAutoContext().inject(this);
 
             // blink the output for 10 seconds
             output.blink(1, 10, TimeUnit.SECONDS);

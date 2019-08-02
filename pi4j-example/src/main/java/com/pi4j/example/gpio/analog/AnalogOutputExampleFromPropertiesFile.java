@@ -68,8 +68,11 @@ public class AnalogOutputExampleFromPropertiesFile {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J runtime context
-        var pi4j = Pi4J.newDefaultContext();
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J binding libraries
+        // in the class path
+        var pi4j = Pi4J.newAutoContext();
 
         // build the analog output config using the loaded properties, but include a prefix filter
         var builder = AnalogOutput.builder().load(prop, "my-analog-example");

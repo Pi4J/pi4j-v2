@@ -62,14 +62,12 @@ public class GettingStartedExample2 {
 
 
         Context pi4jCtx1 = ContextBuilder.create()
-                          .noAutoDetect()
                           .add(new MockPlatform())
                           .add(new MyCustomADCProvider(/* implements AnalogInputProvider, id="my-adc-prov" */))
                           .add(new MyCustomSPIProvider(/* implements SpiProvider, id="my-spi-prov" */))
                           .build();
 
         Context pi4j = Pi4J.newContext()
-                .noAutoDetect()
                 .add(new MockPlatform())
                 .add(new MyCustomADCProvider(/* implements AnalogInputProvider, id="my-adc-prov" */))
                 .add(new MyCustomSPIProvider(/* implements SpiProvider, id="my-spi-prov" */))

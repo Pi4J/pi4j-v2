@@ -71,13 +71,14 @@ public class DependencyInjectionDigitalInputTest {
         platform.setProviders(new TestDigitalInputProvider());
 
         // Initialize Pi4J with a default context
-        // A default context includes AUTO-DETECT BINDINGS enabled
+        // enable the AUTO-DETECT (Platforms & Providers) flag
         // which will load all detected Pi4J binding libraries
         // in the class path for this test case
         // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
         Pi4J.newContext()
+                .autoDetect()
                 .add(platform)
                 .add(new TestDigitalInputProvider())
                 .build().inject(this);

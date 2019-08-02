@@ -56,14 +56,14 @@ public class DependencyInjectionProviderTest {
     public void beforeTest() throws Pi4JException {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
-        // Initialize Pi4J with a default context
-        // A default context includes AUTO-DETECT BINDINGS enabled
+        // initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
         // which will load all detected Pi4J binding libraries
         // in the class path for this test case
         // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
-        Pi4J.newDefaultContext().inject(this);
+        Pi4J.newAutoContext().inject(this);
     }
 
     @After

@@ -47,9 +47,9 @@ public class DefaultContextBuilder implements ContextBuilder {
     protected Logger logger = LoggerFactory.getLogger(DefaultContextBuilder.class);
 
     // auto detection flags
-    protected boolean autoDetectBindings = true;
-    protected boolean autoDetectPlatforms = true;
-    protected boolean autoDetectProviders = true;
+    protected boolean autoDetectBindings = false;
+    protected boolean autoDetectPlatforms = false;
+    protected boolean autoDetectProviders = false;
 
     // default platform identifier
     protected String defaultPlatformId = null;
@@ -66,7 +66,7 @@ public class DefaultContextBuilder implements ContextBuilder {
         // forbid object construction
     }
 
-    public static ContextBuilder instance(){
+    public static ContextBuilder newInstance(){
         return new DefaultContextBuilder();
     }
 

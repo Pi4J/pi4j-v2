@@ -66,7 +66,11 @@ public class GettingStartedExample {
         // Initialize the Pi4J Runtime Context
         // ------------------------------------------------------------
         // Before you can use Pi4J you must initialize a new runtime
-        // context. This will automatically load all available Pi4J
+        // context.
+        //
+        // The 'Pi4J' static class includes a few helper context
+        // creators for the most common use cases.  The 'newAutoContext()'
+        // method will automatically load all available Pi4J
         // extensions found in the application's classpath which
         // may include 'Platforms' and 'I/O Providers'
         //
@@ -75,7 +79,7 @@ public class GettingStartedExample {
         // detection and loading of providers and platform if you
         // need/prefer to manually configure which 'Platforms' and
         // 'I/O Providers' should be used with Pi4J.
-        var pi4j = Pi4J.newDefaultContext();
+        var pi4j = Pi4J.newAutoContext();
 
         // After we initialize Pi4J, we can access the following
         // core parts of the system:

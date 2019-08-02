@@ -48,11 +48,11 @@ public class RegistryGetIoInstance {
     public void beforeTest() throws Pi4JException {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
-        // Initialize Pi4J with a default context
-        // A default context includes AUTO-DETECT BINDINGS enabled
+        // initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
         // which will load all detected Pi4J binding libraries
         // in the class path for this test case
-        pi4j = Pi4J.newDefaultContext();
+        pi4j = Pi4J.newAutoContext();
     }
 
     @After

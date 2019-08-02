@@ -54,8 +54,11 @@ public class DigitalInputSyncToOutputExample {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J runtime context
-        var pi4j = Pi4J.newDefaultContext();
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J binding libraries
+        // in the class path
+        var pi4j = Pi4J.newAutoContext();
 
         // create a digital input instance using the default digital input provider
         var input = DigitalInput.create(pi4j, DIGITAL_INPUT_PIN);

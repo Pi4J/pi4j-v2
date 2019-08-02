@@ -66,7 +66,6 @@ public class RegistryGetIoInstancesByProvider {
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
         pi4j = Pi4J.newContext()
-                .noAutoDetect()
                 .add(new MockDigitalInputProvider())
                 .build().inject(this);
 

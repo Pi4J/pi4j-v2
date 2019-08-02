@@ -55,8 +55,11 @@ public class DigitalInputExampleWithMockProvider {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J runtime context
-        var pi4j = Pi4J.newDefaultContext();
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J binding libraries
+        // in the class path
+        var pi4j = Pi4J.newAutoContext();
 
         // get the Mock Digital Input provider by ID
         console.println("ATTEMPTING TO GET MOCK DIGITAL INPUT PROVIDER FROM Pi4J");

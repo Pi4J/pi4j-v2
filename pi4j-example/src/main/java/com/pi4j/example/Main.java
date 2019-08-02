@@ -40,16 +40,17 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        // initialize Pi4J
-        var pi4j = Pi4J.newDefaultContext();
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J binding libraries
+        // in the class path
+        var pi4j = Pi4J.newAutoContext();
 
 
 //        Serial serial = Serial.instance("/dev/ttyUSB1");
 //        serial.open();
 //        serial.send("TEST DATA");
 //        serial.close();
-
-
 
         var din1 = DigitalInput.create(pi4j,11);
         var ain1 = AnalogInput.create(pi4j,21);

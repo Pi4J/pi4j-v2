@@ -42,11 +42,11 @@ public class ContextTest {
 
     @Before
     public void beforeTest() throws Pi4JException {
-        // initialize Pi4J with a default context
-        // A default context includes AUTO-DETECT BINDINGS enabled
+        // initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
         // which will load all detected Pi4J binding libraries
         // in the class path for this test case
-        pi4j = Pi4J.newDefaultContext();
+        pi4j = Pi4J.newAutoContext();
     }
 
     @After

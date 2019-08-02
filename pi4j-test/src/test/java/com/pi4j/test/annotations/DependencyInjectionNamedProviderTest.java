@@ -60,13 +60,16 @@ public class DependencyInjectionNamedProviderTest {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
         // Initialize Pi4J with a default context
-        // A default context includes AUTO-DETECT BINDINGS enabled
+        // enable the AUTO-DETECT (Platforms & Providers) flag
         // which will load all detected Pi4J binding libraries
         // in the class path for this test case
         // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
-        Pi4J.newContext().add(new TestPwmProvider()).build().inject(this);
+        Pi4J.newContext()
+                .autoDetect()
+                .add(new TestPwmProvider())
+                .build().inject(this);
     }
 
     @After

@@ -84,9 +84,14 @@ public class AnalogInputExampleWithMockProviderUsingDI {
             // allow for user to exit program using CTRL-C
             console.promptForExit();
 
-            // initialize the Pi4J runtime context then inject
-            // this class for dependency injection on annotations
-            Pi4J.newDefaultContext().inject(this);
+            // Initialize Pi4J with an auto context
+            // An auto context includes AUTO-DETECT BINDINGS enabled
+            // which will load all detected Pi4J binding libraries
+            // in the class path
+            // ...
+            // Also, inject this class instance into the Pi4J context
+            // for annotation processing and dependency injection
+            Pi4J.newAutoContext().inject(this);
 
             // display acquired provider
             console.print("--> ACQUIRED PROVIDER: ");
