@@ -68,7 +68,7 @@ public class DependencyInjectionRegisterCustomProviderTest {
         // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
-        Pi4J.newEmptyContext().inject(this);
+        Pi4J.newContext().inject(this);
     }
 
     @After

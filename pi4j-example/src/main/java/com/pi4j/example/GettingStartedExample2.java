@@ -67,7 +67,7 @@ public class GettingStartedExample2 {
                           .add(new MyCustomSPIProvider(/* implements SpiProvider, id="my-spi-prov" */))
                           .build();
 
-        Context pi4j = Pi4J.newContext()
+        Context pi4j = Pi4J.newContextBuilder()
                 .add(new MockPlatform())
                 .add(new MyCustomADCProvider(/* implements AnalogInputProvider, id="my-adc-prov" */))
                 .add(new MyCustomSPIProvider(/* implements SpiProvider, id="my-spi-prov" */))

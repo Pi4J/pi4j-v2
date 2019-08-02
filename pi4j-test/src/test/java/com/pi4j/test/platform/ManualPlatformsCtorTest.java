@@ -63,7 +63,7 @@ public class ManualPlatformsCtorTest {
         // ...
         // Explicitly add the test providers into the
         // context for testing
-        pi4j = Pi4J.newContext()
+        pi4j = Pi4J.newContextBuilder()
                 .addDefaultPlatform(testPlatform)
                 .add(pwmProvider, i2CProvider, serialProvider)
                 .build();

@@ -77,7 +77,7 @@ public class DependencyInjectionDigitalInputTest {
         // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
-        Pi4J.newContext()
+        Pi4J.newContextBuilder()
                 .autoDetect()
                 .add(platform)
                 .add(new TestDigitalInputProvider())

@@ -49,7 +49,7 @@ public class Pi4J {
      *
      * @return ContextBuilder
      */
-    public static ContextBuilder newContext(){
+    public static ContextBuilder newContextBuilder(){
         return ContextBuilder.create();
     }
 
@@ -62,7 +62,7 @@ public class Pi4J {
      * @return Context
      */
     public static Context newAutoContext() throws Pi4JException {
-        return newContext().autoDetect().build();
+        return newContextBuilder().autoDetect().build();
     }
 
     /**
@@ -75,7 +75,7 @@ public class Pi4J {
      *
      * @return Context
      */
-    public static Context newEmptyContext() throws Pi4JException {
-        return newContext().build();
+    public static Context newContext() throws Pi4JException {
+        return newContextBuilder().build();
     }
 }

@@ -46,7 +46,7 @@ public class ManualPlatformsTest2 {
         // An empty context disables AUTO-DETECT loading
         // which will not load any detected Pi4J binding libraries
         // in the class path for this test case
-        pi4j = Pi4J.newEmptyContext();
+        pi4j = Pi4J.newContext();
     }
 
     @After
