@@ -32,6 +32,7 @@ import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.mock.platform.MockPlatform;
 import com.pi4j.test.platform.TestPlatform;
 import com.pi4j.test.provider.TestDigitalInputProvider;
 import org.junit.After;
@@ -39,6 +40,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertFalse;
 
 public class DependencyInjectionDigitalInputTest {
 
@@ -48,10 +50,11 @@ public class DependencyInjectionDigitalInputTest {
     @Inject
     Context pi4j;
 
-    @Register("my.digital.input-default")
+    @Register("my.digital.input-mock")
     @Address(PIN_ADDRESS1)
     @Name("My Digital Input #1")
-    DigitalInput inputUsingDefaultProvider;
+    @WithPlatform(type = MockPlatform.class)
+    DigitalInput inputUsingMockProvider;
 
     @Register("my.digital.input-custom")
     @Address(PIN_ADDRESS2)
@@ -75,7 +78,7 @@ public class DependencyInjectionDigitalInputTest {
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
         Pi4J.newContext()
-                .addDefaultPlatform(platform)
+                .add(platform)
                 .add(new TestDigitalInputProvider())
                 .build().inject(this);
     }
@@ -92,14 +95,14 @@ public class DependencyInjectionDigitalInputTest {
         System.out.println("-----------------------------------------------------");
         System.out.println("Pi4J DIGITAL INPUT <acquired via dependency injection>");
         System.out.println("-----------------------------------------------------");
-        assertNotNull(inputUsingDefaultProvider);
+        assertNotNull(inputUsingMockProvider);
         System.out.println("INPUT FROM DEFAULT PROVIDER:");
         System.out.print("  INPUT --> ");
-        inputUsingDefaultProvider.describe().print(System.out);
+        inputUsingMockProvider.describe().print(System.out);
         System.out.print("  PROVIDER --> ");
-        inputUsingDefaultProvider.provider().describe().print(System.out);
+        inputUsingMockProvider.provider().describe().print(System.out);
 
-        assertNotNull(inputUsingDefaultProvider);
+        assertNotNull(inputUsingMockProvider);
         System.out.println("INPUT FROM CUSTOM PROVIDER:");
         System.out.print("  INPUT --> ");
         inputUsingCustomProvider.describe().print(System.out);
@@ -107,6 +110,6 @@ public class DependencyInjectionDigitalInputTest {
         inputUsingCustomProvider.provider().describe().print(System.out);
 
         // make sure we get get two unique I/O instances from different providers
-        //assertFalse(inputUsingDefaultProvider.provider().id().equalsIgnoreCase(inputUsingDefaultProvider.provider().id()));
+        assertFalse(inputUsingMockProvider.provider().id().equalsIgnoreCase(inputUsingCustomProvider.provider().id()));
     }
 }

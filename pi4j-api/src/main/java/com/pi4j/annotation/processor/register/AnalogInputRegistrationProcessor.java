@@ -118,7 +118,10 @@ public class AnalogInputRegistrationProcessor implements RegisterProcessor<Analo
 
         // if no provider was found, then create analog input IO instance using defaults
         else {
-            return AnalogInput.create(context, builder.build());
+            if(platform != null)
+                return AnalogInput.create(context, platform.provider(AnalogInputProvider.class), builder.build());
+            else
+                return AnalogInput.create(context, builder.build());
         }
     }
 }

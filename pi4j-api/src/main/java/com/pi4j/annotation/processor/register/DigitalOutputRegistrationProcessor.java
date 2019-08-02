@@ -123,8 +123,10 @@ public class DigitalOutputRegistrationProcessor implements RegisterProcessor<Dig
 
         // if no provider was found, then create digital input IO instance using defaults
         else {
-            return DigitalOutput.create(context, builder.build());
+            if(platform != null)
+                return DigitalOutput.create(context, platform.provider(DigitalOutputProvider.class), builder.build());
+            else
+                return DigitalOutput.create(context, builder.build());
         }
-
     }
 }
