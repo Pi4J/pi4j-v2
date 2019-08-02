@@ -70,7 +70,12 @@ public abstract class PlatformBase<PLATFORM extends Platform>
 
     @Override
     public <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException {
-        return (T)this.provider(IOType.getByProviderClass(providerClass));
+        for(Provider p : providers.values()){
+            if(p.getClass().isAssignableFrom(providerClass)){
+                return (T)p;
+            }
+        }
+        throw new ProviderNotFoundException(providerClass);
     }
 
     @Override

@@ -65,7 +65,7 @@ public interface Platforms extends Describable {
     boolean exists(String platformId) throws PlatformsNotInitialized;
     <T extends Platform> boolean exists(String platformId, Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
 
-    Platform get(String platformId) throws PlatformException;
+    Platform get(String platformId) throws PlatformsNotInitialized, PlatformNotFoundException;
     <T extends Platform> T get(String platformId, Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
     <T extends Platform> T get(Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
 

@@ -32,6 +32,7 @@ import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.test.platform.TestPlatform;
 import com.pi4j.test.provider.TestDigitalInputProvider;
 import org.junit.After;
 import org.junit.Before;
@@ -55,12 +56,16 @@ public class DependencyInjectionDigitalInputTest {
     @Register("my.digital.input-custom")
     @Address(PIN_ADDRESS2)
     @Name("My Digital Input #2")
-    @Provider(type = TestDigitalInputProvider.class)
+    @WithProvider(type = TestDigitalInputProvider.class)
+    @WithPlatform(type = TestPlatform.class)
     DigitalInput inputUsingCustomProvider;
 
     @Before
     public void beforeTest() throws Pi4JException {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+
+        TestPlatform platform = new TestPlatform();
+        platform.setProviders(new TestDigitalInputProvider());
 
         // Initialize Pi4J with a default context
         // A default context includes AUTO-DETECT BINDINGS enabled
@@ -69,7 +74,10 @@ public class DependencyInjectionDigitalInputTest {
         // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
-        Pi4J.newContext().add(new TestDigitalInputProvider()).build().inject(this);
+        Pi4J.newContext()
+                .addDefaultPlatform(platform)
+                .add(new TestDigitalInputProvider())
+                .build().inject(this);
     }
 
     @After

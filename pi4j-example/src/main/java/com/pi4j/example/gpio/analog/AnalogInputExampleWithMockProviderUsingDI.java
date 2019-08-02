@@ -31,6 +31,7 @@ import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
+import com.pi4j.mock.platform.MockPlatform;
 import com.pi4j.mock.provider.gpio.analog.MockAnalogInput;
 import com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
 import com.pi4j.util.Console;
@@ -59,7 +60,8 @@ public class AnalogInputExampleWithMockProviderUsingDI {
         @Register(ANALOG_INPUT_PIN_ID)
         @Address(ANALOG_INPUT_PIN_ID_ADDRESS)
         @Name("My Analog Input Pin")
-        @Provider(type = MockAnalogInputProvider.class)
+        @WithProvider(type = MockAnalogInputProvider.class)
+        @WithPlatform(type = MockPlatform.class)
         private MockAnalogInput input;
 
         @Inject
