@@ -46,10 +46,9 @@ public class Main {
         // An auto context includes AUTO-DETECT BINDINGS enabled
         // which will load all detected Pi4J binding libraries
         // in the class path
-        Context pi4j = Pi4J.newAutoContext();
-
-
-        pi4j.providers().add(new TestAnalogInputProvider("test-analog-input-provider", "TestAnalogInputProvider"));
+        Context pi4j = Pi4J.newContextBuilder()
+                .add(new TestAnalogInputProvider("test-analog-input-provider", "TestAnalogInputProvider"))
+                .build();
 
         // create About class instance
         About about = new About();

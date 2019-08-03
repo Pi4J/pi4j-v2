@@ -35,10 +35,7 @@ import com.pi4j.platform.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -51,7 +48,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultPlatforms implements Platforms {
 
-    protected boolean initialized = false;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     protected Context context = null;
     protected Platform defaultPlatform = null;
@@ -59,16 +55,65 @@ public class DefaultPlatforms implements Platforms {
     // all detected/available providers
     private Map<String, Platform> platforms = new ConcurrentHashMap<>();
 
-    public static Platforms newInstance(Context context){
+    public static Platforms newInstance(Context context) throws PlatformNotFoundException {
         return new DefaultPlatforms(context);
     }
 
     // private constructor
-    private DefaultPlatforms(Context context) {
-        // forbid object construction
-
+    private DefaultPlatforms(Context context) throws PlatformNotFoundException {
         // set local context reference
         this.context = context;
+
+        // process auto-detect?
+        if(context.config().autoDetectPlatforms()) {
+            logger.trace("auto-detecting platforms from the classpath.");
+
+            // detect available platforms by scanning the classpath looking for service io instances
+            ServiceLoader<Platform> detectedPlatforms = ServiceLoader.load(Platform.class);
+            for (Platform platformInstance : detectedPlatforms) {
+                if (platformInstance != null) {
+                    logger.trace("auto-detected platform: [id={}; name={}; class={}]",
+                            platformInstance.id(), platformInstance.name(), platformInstance.getClass().getName());
+                    try {
+                        // add platform instance
+                        add(platformInstance);
+                    } catch (PlatformException ex) {
+                        // unable to initialize this platform instance
+                        logger.error("unable to 'initialize()' auto-detected platform: [id={}; name={}]; {}",
+                                platformInstance.id(), platformInstance.name(), ex.getMessage());
+                        continue;
+                    }
+                }
+            }
+        }
+
+        // process any additional configured platforms
+        Collection<Platform> additionalPlatforms = context.config().getPlatforms();
+        if(additionalPlatforms != null && !additionalPlatforms.isEmpty()) {
+            logger.trace("adding explicit platforms: [count={}]", additionalPlatforms.size());
+            for (Platform platformInstance : additionalPlatforms) {
+                if (platformInstance != null) {
+                    logger.trace("explicit platform: [id={}; name={}; class={}]",
+                            platformInstance.id(), platformInstance.name(), platformInstance.getClass().getName());
+                    try {
+                        // add platform instance
+                        add(platformInstance);
+                    } catch (Exception ex) {
+                        // unable to initialize this platform instance
+                        logger.error("unable to 'initialize()' explicit platform: [id={}; name={}]; {}",
+                                platformInstance.id(), platformInstance.name(), ex.getMessage());
+                        continue;
+                    }
+                }
+            }
+        }
+        logger.debug("platforms loaded [{}]", platforms.size());
+
+        // set default platform
+        if(context.config().hasDefaultPlatform() &&
+                this.platforms.containsKey(context.config().getDefaultPlatform())) {
+            this.defaultPlatform = this.platforms.get(context.config().getDefaultPlatform());
+        }
     }
 
     protected void initializePlatform(Platform platform) throws PlatformInitializeException {
@@ -126,10 +171,6 @@ public class DefaultPlatforms implements Platforms {
      */
     @Override
     public <T extends Platform> Map<String, T> all(Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException {
-
-        // ensure platforms have been initialized
-        if(!initialized) throw new PlatformsNotInitialized();
-
         // create a map <platform-id, platform-instance> of platforms that extend of the given platform class/interface
         var result = new ConcurrentHashMap<String, T>();
         platforms.values().stream().filter(platformClass::isInstance).forEach(p -> {
@@ -142,10 +183,6 @@ public class DefaultPlatforms implements Platforms {
 
     @Override
     public boolean exists(String platformId) throws PlatformsNotInitialized {
-
-        // ensure platforms have been initialized
-        if(!initialized) throw new PlatformsNotInitialized();
-
         // return true if the managed platform map contains the given platform-id
         if(platforms.containsKey(platformId)){
             return true;
@@ -155,10 +192,6 @@ public class DefaultPlatforms implements Platforms {
 
     @Override
     public <T extends Platform> boolean exists(String platformId, Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException {
-
-        // ensure platforms have been initialized
-        if(!initialized) throw new PlatformsNotInitialized();
-
         // return true if the managed platform map contains the given platform-id and platform-class
         var subset = all(platformClass);
         if(subset.containsKey(platformId)){
@@ -169,10 +202,6 @@ public class DefaultPlatforms implements Platforms {
 
     @Override
     public Platform get(String platformId) throws PlatformsNotInitialized, PlatformNotFoundException {
-
-        // ensure platforms have been initialized
-        if(!initialized) throw new PlatformsNotInitialized();
-
         // return the platform instance from the managed platform map that contains the given platform-id
         if(platforms.containsKey(platformId)){
             return platforms.get(platformId);
@@ -182,10 +211,6 @@ public class DefaultPlatforms implements Platforms {
 
     @Override
     public <T extends Platform> T get(String platformId, Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException {
-
-        // ensure platforms have been initialized
-        if(!initialized) throw new PlatformsNotInitialized();
-
         // return the platform instance from the managed platform map that contains the given platform-id and platform-class
         var subset = all(platformClass);
         if(subset.containsKey(platformId)){
@@ -196,10 +221,6 @@ public class DefaultPlatforms implements Platforms {
 
     @Override
     public <T extends Platform> T get(Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException{
-
-        // ensure platforms have been initialized
-        if(!initialized) throw new PlatformsNotInitialized();
-
         // return the platform instance from the managed platform map that contains the given platform-id and platform-class
         var subset = all(platformClass);
         if(subset.isEmpty()){
@@ -209,12 +230,11 @@ public class DefaultPlatforms implements Platforms {
         return (T)subset.values().iterator().next();
     }
 
-    @Override
-    public <T extends Platform > Platforms add(Collection<T> platform) throws PlatformsNotInitialized, PlatformAlreadyExistsException, PlatformInitializeException {
+    private <T extends Platform> Platforms add(T ... platform) throws PlatformAlreadyExistsException, PlatformInitializeException, PlatformsNotInitialized {
+        return add(Arrays.asList(platform));
+    }
 
-        // ensure platforms have been initialized
-        if(!initialized) throw new PlatformsNotInitialized();
-
+    private <T extends Platform > Platforms add(Collection<T> platform) throws PlatformsNotInitialized, PlatformAlreadyExistsException, PlatformInitializeException {
         logger.trace("invoked 'add()' platform [count={}]", platform.size());
 
         // iterate the given platform array
@@ -263,41 +283,7 @@ public class DefaultPlatforms implements Platforms {
         return this;
     }
 
-    @Override
-    public <T extends Platform> void replace(T platform) throws PlatformsNotInitialized, PlatformNotFoundException, PlatformTerminateException, PlatformInitializeException {
-
-        // ensure platforms have been initialized
-        if(!initialized) throw new PlatformsNotInitialized();
-
-        logger.trace("invoked 'replace()' platform [id={}] with [{}]", platform.id(), platform);
-
-        // ensure requested platform id does exist in the managed set
-        if(exists(platform.id())){
-            throw new PlatformNotFoundException(platform.id());
-        }
-
-        // get existing platform instance
-        Platform oldPlatform = platforms.get(platform.id());
-
-        // attempt to shutdown old platform instance
-        shutdownPlatform(oldPlatform);
-
-        // attempt to initialize the new platform instance
-        initializePlatform(platform);
-
-        // add new platform to managed set
-        platforms.put(platform.id(), platform);
-
-        logger.debug("replaced platform in managed platform map [id={}; name={}; class={}]",
-                platform.id(), platform.name(), platform.getClass().getName());
-    }
-
-    @Override
-    public <T extends Platform> void remove(String platformId) throws PlatformsNotInitialized, PlatformNotFoundException, PlatformTerminateException {
-
-        // ensure platforms have been initialized
-        if(!initialized) throw new PlatformsNotInitialized();
-
+    private <T extends Platform> void remove(String platformId) throws PlatformsNotInitialized, PlatformNotFoundException, PlatformTerminateException {
         logger.trace("invoked 'remove() platform' [id={}]", platformId);
 
         // ensure requested platform id does exist in the managed set
@@ -321,48 +307,7 @@ public class DefaultPlatforms implements Platforms {
     }
 
     @Override
-    public void initialize(Context context, boolean autoDetect) throws PlatformsAlreadyInitialized, PlatformAlreadyExistsException, PlatformInitializeException, PlatformsNotInitialized {
-
-        // ensure bindings have not been initialized
-        if(initialized) throw new PlatformsAlreadyInitialized();
-
-        // set initialized flag
-        initialized = true;
-        logger.trace("invoked 'initialize()' [autoDetect={}]", autoDetect);
-
-        // process auto-detect?
-        if(autoDetect) {
-            logger.trace("auto-detecting Pi4J platforms from the classpath.");
-
-            // detect available platforms by scanning the classpath looking for service io instances
-            ServiceLoader<Platform> detectedPlatforms = ServiceLoader.load(Platform.class);
-            for (Platform platformInstance : detectedPlatforms) {
-                if (platformInstance != null) {
-                    logger.trace("auto-detected platform: [id={}; name={}; class={}]",
-                            platformInstance.id(), platformInstance.name(), platformInstance.getClass().getName());
-//                    try {
-                        // add platform instance
-                        add(platformInstance);
-//                    } catch (PlatformException ex) {
-//                        // unable to initialize this platform instance
-//                        logger.error("unable to 'initialize()' auto-detected platform: [id={}; name={}]; {}",
-//                                platformInstance.id(), platformInstance.name(), ex.getMessage());
-//                        continue;
-//                    }
-                }
-            }
-
-            // if no platforms found, throw exception
-            logger.debug("auto-detected and loaded [{}] platforms", platforms.size());
-        }
-    }
-
-    @Override
     public void shutdown(Context context) throws PlatformsNotInitialized, PlatformTerminateException {
-
-        // ensure platforms have been initialized
-        if(!initialized) throw new PlatformsNotInitialized();
-
         logger.trace("invoked 'shutdown();'");
 
         PlatformTerminateException platformException = null;
@@ -379,9 +324,6 @@ public class DefaultPlatforms implements Platforms {
         // clear all platforms
         platforms.clear();
 
-        // set initialized flag
-        initialized = false;
-
         // throw exception if
         if(platformException != null) throw platformException;
     }
@@ -391,12 +333,12 @@ public class DefaultPlatforms implements Platforms {
         return this.defaultPlatform;
     }
 
-    @Override
-    public Platform defaultPlatform(String platformId) throws PlatformNotFoundException {
-        if(platforms.containsKey(platformId)){
-            this.defaultPlatform = platforms.get(platformId);
-            return this.defaultPlatform;
-        }
-        throw new PlatformNotFoundException(platformId);
-    }
+//    @Override
+//    public Platform defaultPlatform(String platformId) throws PlatformNotFoundException {
+//        if(platforms.containsKey(platformId)){
+//            this.defaultPlatform = platforms.get(platformId);
+//            return this.defaultPlatform;
+//        }
+//        throw new PlatformNotFoundException(platformId);
+//    }
 }

@@ -112,17 +112,4 @@ public class ManualPlatformsCtorTest {
         // print out the detected Pi4J platforms
         pi4j.platform().describe().print(System.out);
     }
-
-    @Test
-    public void testPlatformsRemove() throws Exception {
-
-        // remove the second custom serial provider
-        pi4j.platforms().remove("test-platform");
-
-        // ensure the correct provider count
-        assertEquals(0, pi4j.platforms().all().size());
-
-        // print out the detected Pi4J platforms
-        pi4j.platforms().describe().print(System.out);
-    }
 }

@@ -104,7 +104,7 @@ public class DefaultContextBuilder implements ContextBuilder {
 
     @Override
     public ContextBuilder autoDetectPlatforms() {
-        this.autoDetectBindings = true;
+        this.autoDetectPlatforms = true;
         return this;
     }
 
@@ -184,13 +184,10 @@ public class DefaultContextBuilder implements ContextBuilder {
 
     @Override
     public Context build() throws Pi4JException {
-        // create new context
-        Context context = DefaultContext.newInstance();
         logger.trace("invoked 'build()'");
 
-        // initialize new Pi4J runtime context with the
-        // context configuration from this builder instance
-        context.initialize(this.toConfig());
+        // create new context
+        Context context = DefaultContext.newInstance(this.toConfig());
 
         // return the newly created context
         logger.debug("Pi4J successfully created and initialized a new runtime 'Context'.'");

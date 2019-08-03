@@ -87,18 +87,4 @@ public class ManualProvidersCtorTest {
         // print out the detected Pi4J providers
         pi4j.providers().describe().print(System.out);
     }
-
-    @Test
-    public void testProvidersRemove() throws Exception {
-
-        // remove the second custom serial provider
-        pi4j.providers().remove("test-serial-provider-2");
-
-        // ensure the correct provider count
-        assertEquals(3, pi4j.providers().all().size());
-
-        // print out the detected Pi4J provider libraries found on the class path
-        System.out.println("REMOVED A CUSTOM PROVIDER (3 remain)");
-        pi4j.providers().describe().print(System.out);
-    }
 }

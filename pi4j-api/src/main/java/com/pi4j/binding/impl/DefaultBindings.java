@@ -34,6 +34,7 @@ import com.pi4j.context.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -49,7 +50,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultBindings implements Bindings {
 
-    private boolean initialized = false;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private Context context = null;
 
@@ -62,10 +62,57 @@ public class DefaultBindings implements Bindings {
 
     // private constructor
     private DefaultBindings(Context context) {
-        // forbid object construction
 
         // set local context reference
         this.context = context;
+
+        // process auto-detect?
+        if(context.config().autoDetectBindings()) {
+            logger.trace("auto-detecting bindings from the classpath.");
+
+            // detect available bindings by scanning the classpath looking for service io instances
+            ServiceLoader<Binding> detectedBindings = ServiceLoader.load(Binding.class);
+            logger.trace("adding auto-detected bindings: [count={}]", detectedBindings.stream().count());
+            for (Binding bindingInstance : detectedBindings) {
+                if (bindingInstance != null) {
+                    logger.trace("auto-detected binding: [id={}; name={}; class={}]",
+                            bindingInstance.id(), bindingInstance.name(), bindingInstance.getClass().getName());
+                    try {
+                        // add binding instance
+                        add(bindingInstance);
+                    } catch (Exception ex) {
+                        // unable to initialize this binding instance
+                        logger.error("unable to 'initialize()' auto-detected binding: [id={}; name={}]; {}",
+                                bindingInstance.id(), bindingInstance.name(), ex.getMessage());
+                        continue;
+                    }
+                }
+            }
+        }
+
+        // process any additional configured bindings
+        Collection<Binding> additionalBindings = context.config().getBindings();
+        if(additionalBindings != null && !additionalBindings.isEmpty()) {
+            logger.trace("adding explicit bindings: [count={}]", additionalBindings.size());
+            for (Binding bindingInstance : additionalBindings) {
+                if (bindingInstance != null) {
+                    logger.trace("explicit binding: [id={}; name={}; class={}]",
+                            bindingInstance.id(), bindingInstance.name(), bindingInstance.getClass().getName());
+                    try {
+                        // add binding instance
+                        add(bindingInstance);
+                    } catch (Exception ex) {
+                        // unable to initialize this binding instance
+                        logger.error("unable to 'initialize()' explicit binding: [id={}; name={}]; {}",
+                                bindingInstance.id(), bindingInstance.name(), ex.getMessage());
+                        continue;
+                    }
+                }
+            }
+        }
+
+        // if no bindings found, throw exception
+        logger.debug("bindings loaded [{}]", bindings.size());
     }
 
     protected void initializeBinding(Binding binding) throws BindingInitializeException {
@@ -124,9 +171,6 @@ public class DefaultBindings implements Bindings {
     @Override
     public <T extends Binding> Map<String, T> all(Class<T> bindingClass) throws BindingException {
 
-        // ensure bindings have been initialized
-        if(!initialized) throw new BindingsNotInitialized();
-
         // create a map <binding-id, binding-instance> of bindings that extend of the given binding class/interface
         var result = new ConcurrentHashMap<String, T>();
         bindings.values().stream().filter(bindingClass::isInstance).forEach(p -> {
@@ -139,10 +183,6 @@ public class DefaultBindings implements Bindings {
 
     @Override
     public boolean exists(String bindingId) throws BindingException {
-
-        // ensure bindings have been initialized
-        if(!initialized) throw new BindingsNotInitialized();
-
         // return true if the managed io map contains the given io-id
         if(bindings.containsKey(bindingId)){
             return true;
@@ -152,10 +192,6 @@ public class DefaultBindings implements Bindings {
 
     @Override
     public <T extends Binding> boolean exists(String bindingId, Class<T> bindingClass) throws BindingException {
-
-        // ensure bindings have been initialized
-        if(!initialized) throw new BindingsNotInitialized();
-
         // return true if the managed binding map contains the given binding-id and binding-class
         var subset = all(bindingClass);
         if(subset.containsKey(bindingId)){
@@ -166,10 +202,6 @@ public class DefaultBindings implements Bindings {
 
     @Override
     public Binding get(String bindingId) throws BindingException {
-
-        // ensure bindings have been initialized
-        if(!initialized) throw new BindingsNotInitialized();
-
         // return the binding instance from the managed binding map that contains the given binding-id
         if(bindings.containsKey(bindingId)){
             return bindings.get(bindingId);
@@ -179,10 +211,6 @@ public class DefaultBindings implements Bindings {
 
     @Override
     public <T extends Binding> T get(String bindingId, Class<T> bindingClass) throws BindingException {
-
-        // ensure bindings have been initialized
-        if(!initialized) throw new BindingsNotInitialized();
-
         // return the binding instance from the managed binding map that contains the given binding-id and binding-class
         var subset = all(bindingClass);
         if(subset.containsKey(bindingId)){
@@ -193,10 +221,6 @@ public class DefaultBindings implements Bindings {
 
     @Override
     public <T extends Binding> Bindings add(T ... binding) throws BindingException {
-
-        // ensure bindings have been initialized
-        if(!initialized) throw new BindingsNotInitialized();
-
         logger.trace("invoked 'add()' binding [count={}]", binding.length);
 
         // iterate the given binding array
@@ -224,10 +248,6 @@ public class DefaultBindings implements Bindings {
 
     @Override
     public <T extends Binding> void replace(T binding) throws BindingException {
-
-        // ensure bindings have been initialized
-        if(!initialized) throw new BindingsNotInitialized();
-
         logger.trace("invoked 'replace()' binding [id={}] with [{}]", binding.id(), binding);
 
         // ensure requested binding id does exist in the managed set
@@ -253,10 +273,6 @@ public class DefaultBindings implements Bindings {
 
     @Override
     public <T extends Binding> void remove(String bindingId) throws BindingException {
-
-        // ensure bindings have been initialized
-        if(!initialized) throw new BindingsNotInitialized();
-
         logger.trace("invoked 'remove() binding' [id={}]", bindingId);
 
         // ensure requested binding id does exist in the managed set
@@ -280,48 +296,7 @@ public class DefaultBindings implements Bindings {
     }
 
     @Override
-    public void initialize(Context context, boolean autoDetect) throws BindingException {
-
-        // ensure bindings have not been initialized
-        if(initialized) throw new BindingsAlreadyInitialized();
-
-        // set initialized flag
-        initialized = true;
-        logger.trace("invoked 'initialize()' [autoDetect={}]", autoDetect);
-
-        // process auto-detect?
-        if(autoDetect) {
-            logger.trace("auto-detecting Pi4J bindings from the classpath.");
-
-            // detect available bindings by scanning the classpath looking for service io instances
-            ServiceLoader<Binding> detectedBindings = ServiceLoader.load(Binding.class);
-            for (Binding bindingInstance : detectedBindings) {
-                if (bindingInstance != null) {
-                    logger.trace("auto-detected binding: [id={}; name={}; class={}]",
-                            bindingInstance.id(), bindingInstance.name(), bindingInstance.getClass().getName());
-                    try {
-                        // add binding instance
-                        add(bindingInstance);
-                    } catch (Exception ex) {
-                        // unable to initialize this binding instance
-                        logger.error("unable to 'initialize()' auto-detected binding: [id={}; name={}]; {}",
-                                bindingInstance.id(), bindingInstance.name(), ex.getMessage());
-                        continue;
-                    }
-                }
-            }
-
-            // if no bindings found, throw exception
-            logger.debug("auto-detected and loaded [{}] bindings", bindings.size());
-        }
-    }
-
-    @Override
     public void shutdown(Context context) throws BindingException {
-
-        // ensure bindings have been initialized
-        if(!initialized) throw new BindingsNotInitialized();
-
         logger.trace("invoked 'shutdown();'");
 
         BindingException bindingException = null;
@@ -337,9 +312,6 @@ public class DefaultBindings implements Bindings {
 
         // clear all bindings
         bindings.clear();
-
-        // set initialized flag
-        initialized = false;
 
         // throw exception if
         if(bindingException != null) throw bindingException;

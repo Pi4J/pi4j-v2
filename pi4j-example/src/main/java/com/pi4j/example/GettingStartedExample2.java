@@ -30,14 +30,10 @@ package com.pi4j.example;
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextBuilder;
-import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.io.gpio.analog.AnalogInputConfigBuilder;
 import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
-import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalOutputBuilder;
-import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProviderBase;
@@ -129,8 +125,6 @@ public class GettingStartedExample2 {
         ain2.describe().print(System.out);
 
         //AnalogInput ain = AnalogInput.create(pi4j, 2);
-
-
         //AnalogInput.create()
 //
 //        AnalogInput ain0  = pi4j.provider(ANALOG_INPUT).create(0);

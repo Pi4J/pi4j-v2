@@ -108,7 +108,6 @@ public class GettingStartedExample {
         // Platforms also provide validation for the I/O pins and
         // their capabilities for the target hardware.
         Platforms platforms = pi4j.platforms();
-        //Platforms platforms = Pi4J.platforms(); // <-- Also available via the Pi4J static helper
 
         // let's print out to the console the detected and loaded
         // platforms that Pi4J detected when it was initialized.
@@ -131,7 +130,6 @@ public class GettingStartedExample {
         // default I/O providers that Pi4J will use for each given I/O
         // interface when creating and registering I/O instances.
         Platform platform = pi4j.platform();
-        //Platform platform = Pi4J.platform(); // <-- Also available via the Pi4J static helper
 
         // let's print out to the console the detected and loaded
         // platforms that Pi4J detected when it was initialized.

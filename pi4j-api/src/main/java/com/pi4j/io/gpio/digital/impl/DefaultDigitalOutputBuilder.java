@@ -27,7 +27,9 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.io.gpio.digital.*;
+import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalOutputBuilder;
+import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.platform.Platform;
 
 import java.security.Provider;

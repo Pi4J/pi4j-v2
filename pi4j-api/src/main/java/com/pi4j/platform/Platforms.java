@@ -30,10 +30,10 @@ package com.pi4j.platform;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
 import com.pi4j.context.Context;
-import com.pi4j.platform.exception.*;
+import com.pi4j.platform.exception.PlatformNotFoundException;
+import com.pi4j.platform.exception.PlatformTerminateException;
+import com.pi4j.platform.exception.PlatformsNotInitialized;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -69,30 +69,12 @@ public interface Platforms extends Describable {
     <T extends Platform> T get(String platformId, Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
     <T extends Platform> T get(Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
 
-    <T extends Platform> Platforms add(Collection<T> platform) throws PlatformsNotInitialized, PlatformAlreadyExistsException, PlatformInitializeException;
-    <T extends Platform> void replace(T platform) throws PlatformsNotInitialized, PlatformNotFoundException, PlatformTerminateException, PlatformInitializeException;
-    <T extends Platform> void remove(String platformId) throws PlatformsNotInitialized, PlatformNotFoundException, PlatformTerminateException;
-
-    void initialize(Context context, boolean autoDetect) throws PlatformsAlreadyInitialized, PlatformAlreadyExistsException, PlatformInitializeException, PlatformsNotInitialized;
     void shutdown(Context context) throws PlatformsNotInitialized, PlatformTerminateException;
 
     Platform defaultPlatform();
-    Platform defaultPlatform(String platformId) throws PlatformNotFoundException;
-
-    default <T extends Platform> Platforms add(T ... platform) throws PlatformAlreadyExistsException, PlatformInitializeException, PlatformsNotInitialized {
-        return add(Arrays.asList(platform));
-    }
-
-
     default boolean hasDefault(){
         return defaultPlatform() != null;
     }
-
-
-    default Platform setDefault(String platformId) throws PlatformNotFoundException {
-        return defaultPlatform(platformId);
-    }
-
     default Platform getDefault(){
         return defaultPlatform();
     }

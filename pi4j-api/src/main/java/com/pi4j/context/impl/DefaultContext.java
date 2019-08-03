@@ -30,17 +30,14 @@ package com.pi4j.context.impl;
 import com.pi4j.annotation.AnnotationEngine;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.DefaultAnnotationEngine;
-import com.pi4j.binding.Binding;
 import com.pi4j.binding.Bindings;
 import com.pi4j.binding.impl.DefaultBindings;
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
 import com.pi4j.platform.impl.DefaultPlatforms;
-import com.pi4j.provider.Provider;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.impl.DefaultProviders;
 import com.pi4j.registry.Registry;
@@ -48,30 +45,45 @@ import com.pi4j.registry.impl.DefaultRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-
 public class DefaultContext implements Context {
 
-    private Bindings bindings = DefaultBindings.newInstance(this);
-    private Providers providers = DefaultProviders.newInstance(this);
+    private ContextConfig config = null;
+    private Bindings bindings = null;
+    private Providers providers = null;
+    private Platforms platforms = null;
     private Registry registry = DefaultRegistry.newInstance(this);
-    private Platforms platforms = DefaultPlatforms.newInstance(this);
     private AnnotationEngine annotationEngine = DefaultAnnotationEngine.newInstance(this);
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public static Context newInstance(){
-        return new DefaultContext();
+    public static Context newInstance(ContextConfig config) throws Pi4JException {
+        return new DefaultContext(config);
     }
 
     // private constructor
-    private DefaultContext() {
-        // forbid object construction
+    private DefaultContext(ContextConfig config) throws Pi4JException {
+        logger.trace("new Pi4J runtime context initialized [config={}]", config);
+
+        // validate config object exists
+        if(config == null){
+            throw new LifecycleException("Unable to create new Pi4J runtime context; missing (ContextConfig) config object.");
+        }
+
+        // set context config member reference
+        this.config = config;
+
+        // create providers and platforms (manager) objects
+        this.bindings = DefaultBindings.newInstance(this);
+        this.providers = DefaultProviders.newInstance(this);
+        this.platforms = DefaultPlatforms.newInstance(this);
+
+        logger.debug("Pi4J runtime context successfully created & initialized.'");
     }
 
     @Override
-    public Providers providers() {
-        return providers;
-    }
+    public ContextConfig config() { return this.config; }
+
+    @Override
+    public Providers providers() { return providers; }
 
     @Override
     public Registry registry() { return this.registry; }
@@ -119,57 +131,6 @@ public class DefaultContext implements Context {
         }
 
         logger.debug("Pi4J context/runtime successfully shutdown.'");
-        return this;
-    }
-
-    @Override
-    public Context initialize(ContextConfig config) throws LifecycleException {
-
-        logger.trace("invoked 'initialize()' [config={}]", config);
-
-        if(config == null){
-            throw new LifecycleException("Unable to 'initialize()' Pi4J Context; missing (Pi4JConfig) config object.");
-        }
-
-        // initialize bindings
-        try {
-            // initialize providers, then add the provided I/O providers to the managed collection
-            bindings.initialize(this, config.getAutoDetectBindings());
-            Collection<Binding> additionalBindings = config.getBindings();
-            if(additionalBindings != null && !additionalBindings.isEmpty()) {
-                logger.trace("adding explicit bindings: [count={}]", additionalBindings.size());
-                //providers().add(additionalBindings);
-                // TODO :: HANDLE EXPLICIT BINDINGS
-            }
-
-            // initialize providers, then add the provided I/O providers to the managed collection
-            providers.initialize(this, config.getAutoDetectProviders());
-            Collection<Provider> additionalProviders = config.getProviders();
-            if(additionalProviders != null && !additionalProviders.isEmpty()) {
-                logger.trace("adding explicit providers: [count={}]", additionalProviders.size());
-                providers().add(additionalProviders);
-            }
-
-            // initialize platforms, then add the provided I/O platforms to the managed collection
-            platforms.initialize(this, config.getAutoDetectProviders());
-            Collection<Platform> additionalPlatforms = config.getPlatforms();
-            if(additionalPlatforms != null && !additionalPlatforms.isEmpty()) {
-                logger.trace("adding explicit platforms: [count={}]", additionalPlatforms.size());
-                platforms().add(additionalPlatforms);
-            }
-
-            // set default platform
-            if(config.hasDefaultPlatform())
-                this.platforms().setDefault(config.getDefaultPlatform());
-
-        } catch (Pi4JException e) {
-            logger.error(e.getMessage(), e);
-            throw new LifecycleException(e);
-        }
-
-
-        logger.debug("Pi4J successfully initialized.'");
-
         return this;
     }
 }

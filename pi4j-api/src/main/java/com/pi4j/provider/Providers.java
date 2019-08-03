@@ -39,10 +39,10 @@ import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.provider.exception.*;
+import com.pi4j.provider.exception.ProviderNotFoundException;
+import com.pi4j.provider.exception.ProviderTerminateException;
+import com.pi4j.provider.exception.ProvidersNotInitializedException;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -102,17 +102,9 @@ public interface Providers extends Describable {
     <T extends Provider> T get(Class<T> providerClass) throws ProviderNotFoundException;
     <T extends Provider> T get(IOType ioType) throws ProviderNotFoundException;
 
-    <T extends Provider> Providers add(Collection<T> provider) throws ProviderAlreadyExistsException, ProviderInitializeException;
-    <T extends Provider> void replace(T provider) throws ProviderNotFoundException, ProviderInitializeException, ProviderTerminateException;
-    <T extends Provider> void remove(String providerId) throws ProviderNotFoundException, ProviderTerminateException;
-
-    void initialize(Context context, boolean autoDetect) throws ProvidersAlreadyInitializedException, ProvidersNotFoundException;
     void shutdown(Context context) throws ProvidersNotInitializedException, ProviderTerminateException;
 
     // DEFAULT METHODS
-    default <T extends Provider> Providers add(T ... provider) throws ProviderInitializeException, ProviderAlreadyExistsException {
-        return add(Arrays.asList(provider));
-    }
     default ProviderGroup<AnalogInputProvider> getAnalogInput() { return analogInput(); }
     default ProviderGroup<AnalogOutputProvider> getAnalogOutput() { return analogOutput(); }
     default ProviderGroup<DigitalInputProvider> getDigitalInput() { return digitalInput(); }

@@ -44,10 +44,7 @@ import com.pi4j.provider.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -60,15 +57,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultProviders implements Providers {
 
-    private boolean initialized = false;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private Context context = null;
 
     // all detected/available providers
     private Map<String, Provider> providers = new ConcurrentHashMap<>();
-
-    // default providers by Provider class type
-    private Map<IOType, String> defaultProviders = new ConcurrentHashMap<>();
 
     private ProviderGroup<AnalogInputProvider> _analogInput = new ProviderGroup<>(this, IOType.ANALOG_INPUT);
     private ProviderGroup<AnalogOutputProvider> _analogOutput = new ProviderGroup<>(this, IOType.ANALOG_OUTPUT);
@@ -110,10 +103,55 @@ public class DefaultProviders implements Providers {
 
     // private constructor
     private DefaultProviders(Context context) {
-        // forbid object construction
 
         // set local context reference
         this.context = context;
+
+        // process auto-detect?
+        if(context.config().autoDetectProviders()) {
+            logger.trace("auto-detecting providers from the classpath.");
+
+            // detect available providers by scanning the classpath looking for service io instances
+            var detectedProviders = ServiceLoader.load(Provider.class);
+            for (var providerInstance : detectedProviders) {
+                if (providerInstance != null) {
+                    logger.trace("auto-detected provider: [id={}; name={}; class={}]",
+                            providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
+                    try {
+                        // add provider instance
+                        add(providerInstance);
+                    } catch (Exception ex) {
+                        // unable to initialize this provider instance
+                        logger.error("unable to 'initialize()' auto-detected provider: [id={}; name={}]; {}",
+                                providerInstance.id(), providerInstance.name(), ex.getMessage());
+                        continue;
+                    }
+                }
+            }
+
+        }
+
+        // process any additional configured providers
+        Collection<Provider> additionalProviders = context.config().getProviders();
+        if(additionalProviders != null && !additionalProviders.isEmpty()) {
+            logger.trace("adding explicit provider: [count={}]", additionalProviders.size());
+            for (Provider providerInstance : additionalProviders) {
+                if (providerInstance != null) {
+                    logger.trace("explicit provider: [id={}; name={}; class={}]",
+                            providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
+                    try {
+                        // add provider instance
+                        add(providerInstance);
+                    } catch (Exception ex) {
+                        // unable to initialize this provider instance
+                        logger.error("unable to 'initialize()' explicit provider: [id={}; name={}]; {}",
+                                providerInstance.id(), providerInstance.name(), ex.getMessage());
+                        continue;
+                    }
+                }
+            }
+        }
+        logger.debug("providers loaded [{}]", providers.size());
     }
 
     protected void initializeProvider(Provider provider) throws ProviderInitializeException {
@@ -294,8 +332,11 @@ public class DefaultProviders implements Providers {
         return !(all(ioType).isEmpty());
     }
 
-    @Override
-    public <T extends Provider> Providers add(Collection<T> provider) throws ProviderAlreadyExistsException, ProviderInitializeException {
+    private <T extends Provider> Providers add(T ... provider) throws ProviderInitializeException, ProviderAlreadyExistsException {
+        return add(Arrays.asList(provider));
+    }
+
+    private <T extends Provider> Providers add(Collection<T> provider) throws ProviderAlreadyExistsException, ProviderInitializeException {
         logger.trace("invoked 'add()' io [count={}]", provider.size());
 
         // iterate the given provider collection
@@ -328,34 +369,7 @@ public class DefaultProviders implements Providers {
         return this;
     }
 
-    @Override
-    public <T extends Provider> void replace(T provider) throws ProviderNotFoundException, ProviderInitializeException, ProviderTerminateException {
-
-        logger.trace("invoked 'replace()' io [id={}] with [{}]", provider.id(), provider);
-
-        // ensure requested io id does exist in the managed set
-        if(exists(provider.id())){
-            throw new ProviderNotFoundException(provider.id());
-        }
-
-        // get existing io instance
-        var oldProvider = providers.get(provider.id());
-
-        // attempt to shutdown old provider instance
-        shutdownProvider(oldProvider);
-
-        // attempt to initialize the new provider instance
-        initializeProvider(provider);
-
-        // add new io to managed set
-        providers.put(provider.id(), provider);
-
-        logger.debug("replaced io in managed io map [id={}; name={}; class={}]",
-                provider.id(), provider.name(), provider.getClass().getName());
-    }
-
-    @Override
-    public <T extends Provider> void remove(String providerId) throws ProviderNotFoundException, ProviderTerminateException {
+    private <T extends Provider> void remove(String providerId) throws ProviderNotFoundException, ProviderTerminateException {
 
         logger.trace("invoked 'remove() io' [id={}]", providerId);
 
@@ -541,54 +555,7 @@ public class DefaultProviders implements Providers {
 //    }
 
     @Override
-    public void initialize(Context context, boolean autoDetect) throws ProvidersAlreadyInitializedException, ProvidersNotFoundException {
-
-        // ensure providers have not been initialized
-        if(initialized) throw new ProvidersAlreadyInitializedException();
-
-        // set initialized flag
-        initialized = true;
-        logger.trace("invoked 'initialize()' [autoDetect={}]", autoDetect);
-
-        // process auto-detect?
-        if(autoDetect) {
-            logger.trace("auto-detecting Pi4J io from the classpath.");
-
-            // detect available providers by scanning the classpath looking for service io instances
-            var detectedProviders = ServiceLoader.load(Provider.class);
-            for (var providerInstance : detectedProviders) {
-                if (providerInstance != null) {
-                    logger.trace("auto-detected io: [id={}; name={}; class={}]",
-                            providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
-                    try {
-                        // add io instance
-                        add(providerInstance);
-                    } catch (Exception ex) {
-                        // unable to initialize this io instance
-                        logger.error("unable to 'initialize()' auto-detected io: [id={}; name={}]; {}",
-                                providerInstance.id(), providerInstance.name(), ex.getMessage());
-                        continue;
-                    }
-                }
-            }
-
-            // if no providers found, throw exception
-            if (providers.size() <= 0) {
-                logger.warn("unable to auto-detect any Pi4J io.");
-                throw new ProvidersNotFoundException();
-            }
-            else{
-                logger.debug("auto-detected and loaded [{}] io", providers.size());
-            }
-        }
-    }
-
-    @Override
     public void shutdown(Context context) throws ProvidersNotInitializedException, ProviderTerminateException {
-
-        // ensure providers have been initialized
-        if(!initialized) throw new ProvidersNotInitializedException();
-
         logger.trace("invoked 'shutdown();'");
 
         ProviderTerminateException providerException = null;
@@ -604,9 +571,6 @@ public class DefaultProviders implements Providers {
 
         // clear all providers
         providers.clear();
-
-        // set initialized flag
-        initialized = false;
 
         // throw exception if
         if(providerException != null) throw providerException;

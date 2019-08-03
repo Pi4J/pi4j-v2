@@ -51,12 +51,12 @@ import com.pi4j.registry.Registry;
 
 public interface Context extends Describable {
 
+    ContextConfig config();
     Bindings bindings();
     Providers providers();
     Registry registry();
     Platforms platforms();
 
-    Context initialize(ContextConfig config) throws LifecycleException;
     Context shutdown() throws LifecycleException;
     Context inject(Object... objects) throws AnnotationException;
 

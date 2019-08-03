@@ -68,7 +68,6 @@ public interface Bindings extends Describable {
     <T extends Binding> Bindings add(T... binding) throws BindingException;
     <T extends Binding> void replace(T binding) throws BindingException;
     <T extends Binding> void remove(String bindingId) throws BindingException;
-    void initialize(Context context, boolean autoDetect) throws BindingException;
     void shutdown(Context context) throws BindingException;
 
     // DEFAULT METHODS
