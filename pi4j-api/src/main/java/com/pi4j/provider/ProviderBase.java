@@ -93,7 +93,7 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
 
         // TODO :: PROXY IMPL, REMOVE PROVIDER SETTER
 
-        newInstance.provider(this);
+        //newInstance.provider(this);
         return newInstance;
     }
 

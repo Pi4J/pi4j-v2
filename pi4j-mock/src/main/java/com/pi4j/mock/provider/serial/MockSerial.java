@@ -30,10 +30,12 @@ package com.pi4j.mock.provider.serial;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialBase;
 import com.pi4j.io.serial.SerialConfig;
+import com.pi4j.io.serial.SerialProvider;
+import com.pi4j.provider.Provider;
 
 public class MockSerial extends SerialBase implements Serial {
 
-    public MockSerial(SerialConfig config){
-        super(config);
+    public MockSerial(SerialProvider provider, SerialConfig config){
+        super(provider, config);
     }
 }

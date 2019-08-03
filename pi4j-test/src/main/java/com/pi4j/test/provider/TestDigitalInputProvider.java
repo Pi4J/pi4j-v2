@@ -47,6 +47,6 @@ public class TestDigitalInputProvider extends DigitalInputProviderBase implement
 
     @Override
     public DigitalInput newInstance(Context context, DigitalInputConfig config) throws Exception {
-        return new TestDigitalInput(config);
+        return new TestDigitalInput(this, config);
     }
 }

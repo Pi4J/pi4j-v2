@@ -47,6 +47,6 @@ public class TestAnalogInputProvider extends AnalogInputProviderBase implements 
 
     @Override
     public AnalogInput newInstance(Context context, AnalogInputConfig config) throws Exception {
-        return new TestAnalogInput(config);
+        return new TestAnalogInput(this, config);
     }
 }

@@ -28,6 +28,7 @@ package com.pi4j.test.provider;
  */
 
 import com.pi4j.io.gpio.digital.*;
+import com.pi4j.provider.Provider;
 
 public class TestDigitalInput extends DigitalInputBase implements DigitalInput {
 
@@ -38,8 +39,8 @@ public class TestDigitalInput extends DigitalInputBase implements DigitalInput {
         return this.state;
     }
 
-    public TestDigitalInput(DigitalInputConfig config){
-        super(config);
+    public TestDigitalInput(DigitalInputProvider provider, DigitalInputConfig config){
+        super(provider, config);
     }
 
     public TestDigitalInput test(DigitalState state){

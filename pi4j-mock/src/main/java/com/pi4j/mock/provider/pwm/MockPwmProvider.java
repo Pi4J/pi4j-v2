@@ -46,6 +46,6 @@ public class MockPwmProvider extends PwmProviderBase implements PwmProvider {
 
     @Override
     public Pwm newInstance(Context context, PwmConfig config) throws Exception {
-        return new MockPwm(config);
+        return new MockPwm(this, config);
     }
 }

@@ -30,10 +30,11 @@ package com.pi4j.mock.provider.pwm;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmBase;
 import com.pi4j.io.pwm.PwmConfig;
+import com.pi4j.io.pwm.PwmProvider;
 
 public class MockPwm extends PwmBase implements Pwm {
 
-    public MockPwm(PwmConfig config){
-        super(config);
+    public MockPwm(PwmProvider provider, PwmConfig config){
+        super(provider, config);
     }
 }

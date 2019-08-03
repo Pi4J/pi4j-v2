@@ -47,7 +47,7 @@ public class MockAnalogOutputProvider extends AnalogOutputProviderBase implement
 
     @Override
     public AnalogOutput newInstance(Context context, AnalogOutputConfig config) throws Exception {
-        return new MockAnalogOutput(config);
+        return new MockAnalogOutput(this, config);
     }
 
 }

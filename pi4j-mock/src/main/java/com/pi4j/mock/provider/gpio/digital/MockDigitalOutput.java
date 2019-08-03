@@ -28,15 +28,13 @@ package com.pi4j.mock.provider.gpio.digital;
  */
 
 
-import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalOutputBase;
-import com.pi4j.io.gpio.digital.DigitalOutputConfig;
-import com.pi4j.io.gpio.digital.DigitalState;
+import com.pi4j.io.gpio.digital.*;
+import com.pi4j.provider.Provider;
 
 
 public class MockDigitalOutput extends DigitalOutputBase implements DigitalOutput {
-    public MockDigitalOutput(DigitalOutputConfig config){
-        super(config);
+    public MockDigitalOutput(DigitalOutputProvider provider, DigitalOutputConfig config){
+        super(provider, config);
     }
 
     public MockDigitalOutput mockState(DigitalState state){

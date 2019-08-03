@@ -46,6 +46,6 @@ public class MockSpiProvider extends SpiProviderBase implements SpiProvider{
 
     @Override
     public Spi newInstance(Context context, SpiConfig config) throws Exception {
-        return new MockSpi(config);
+        return new MockSpi(this, config);
     }
 }

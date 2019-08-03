@@ -46,8 +46,8 @@ public abstract class AnalogBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_
     // internal bindings collection
     protected List<AnalogBinding> bindings = Collections.synchronizedList(new ArrayList<>());
 
-    public AnalogBase(CONFIG_TYPE config){
-        super(config);
+    public AnalogBase(AnalogProvider provider, CONFIG_TYPE config){
+        super(provider, config);
     }
 
     @Override

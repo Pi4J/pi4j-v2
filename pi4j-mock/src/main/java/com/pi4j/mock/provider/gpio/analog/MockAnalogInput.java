@@ -28,17 +28,15 @@ package com.pi4j.mock.provider.gpio.analog;
  */
 
 
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
-import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogInputBase;
-import com.pi4j.io.gpio.analog.AnalogInputConfig;
+import com.pi4j.io.gpio.analog.*;
+import com.pi4j.provider.Provider;
 
 public class MockAnalogInput extends AnalogInputBase implements AnalogInput {
 
     private Integer value = 0;
 
-    public MockAnalogInput(AnalogInputConfig config){
-        super(config);
+    public MockAnalogInput(AnalogInputProvider provider, AnalogInputConfig config){
+        super(provider, config);
     }
 
     @Override

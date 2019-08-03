@@ -47,8 +47,8 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
     // internal bindings collection
     protected List<DigitalBinding> bindings = Collections.synchronizedList(new ArrayList<>());
 
-    public DigitalBase(CONFIG_TYPE config){
-        super(config);
+    public DigitalBase(DigitalProvider provider, CONFIG_TYPE config){
+        super(provider,config);
     }
 
     @Override

@@ -47,6 +47,6 @@ public class MockSerialProvider extends SerialProviderBase implements SerialProv
 
     @Override
     public Serial newInstance(Context context, SerialConfig config) throws Exception {
-        return new MockSerial(config);
+        return new MockSerial(this, config);
     }
 }

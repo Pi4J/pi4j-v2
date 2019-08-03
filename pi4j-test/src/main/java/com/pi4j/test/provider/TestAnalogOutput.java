@@ -106,11 +106,6 @@ public class TestAnalogOutput implements AnalogOutput {
     }
 
     @Override
-    public AnalogOutput provider(Provider provider) {
-        return null;
-    }
-
-    @Override
     public String id() {
         return null;
     }

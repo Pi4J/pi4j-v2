@@ -40,18 +40,19 @@ public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig> e
     protected Provider provider = null;
 
     @Override
-    public Provider provider(){
-        return this.provider;
+    public <P extends Provider> P provider(){
+        return (P)this.provider;
     }
 
-    @Override
-    public IO_TYPE provider(Provider provider){
-        this.provider = provider;
-        return (IO_TYPE)this;
-    }
+//    @Override
+//    public IO_TYPE provider(Provider provider){
+//        this.provider = provider;
+//        return (IO_TYPE)this;
+//    }
 
-    public IOBase(CONFIG_TYPE config){
+    public IOBase(Provider provider, CONFIG_TYPE config){
         super();
+        this.provider = provider;
         this.config = config;
     }
 

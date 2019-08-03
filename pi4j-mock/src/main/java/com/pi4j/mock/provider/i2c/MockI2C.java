@@ -31,13 +31,15 @@ package com.pi4j.mock.provider.i2c;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CBase;
 import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.provider.Provider;
 
 import java.io.IOException;
 
 public class MockI2C extends I2CBase implements I2C {
 
-    public MockI2C(I2CConfig config){
-        super(config);
+    public MockI2C(I2CProvider provider, I2CConfig config){
+        super(provider, config);
     }
 
     @Override

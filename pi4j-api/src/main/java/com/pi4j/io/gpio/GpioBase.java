@@ -33,8 +33,8 @@ public abstract class GpioBase<IO_TYPE extends Gpio<IO_TYPE, CONFIG_TYPE>, CONFI
         extends IOBase<IO_TYPE, CONFIG_TYPE>
         implements Gpio<IO_TYPE, CONFIG_TYPE> {
 
-    public GpioBase(CONFIG_TYPE config){
-        super(config);
+    public GpioBase(GpioProvider provider, CONFIG_TYPE config){
+        super(provider, config);
         this.name = config.name();
         this.id = config.id();
         this.description = config.description();

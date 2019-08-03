@@ -40,8 +40,8 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     protected Integer value = 0;
 
-    public AnalogOutputBase(AnalogOutputConfig config){
-        super(config);
+    public AnalogOutputBase(AnalogOutputProvider provider, AnalogOutputConfig config){
+        super(provider, config);
         if(this.id == null) this.id = "AOUT-" + config.address();
         if(this.name == null) this.name = "AOUT-" + config.address();
 

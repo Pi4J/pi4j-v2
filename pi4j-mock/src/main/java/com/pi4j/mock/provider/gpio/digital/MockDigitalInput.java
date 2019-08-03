@@ -29,13 +29,14 @@ package com.pi4j.mock.provider.gpio.digital;
 
 
 import com.pi4j.io.gpio.digital.*;
+import com.pi4j.provider.Provider;
 
 public class MockDigitalInput extends DigitalInputBase implements DigitalInput {
 
     private DigitalState state = DigitalState.LOW;
 
-    public MockDigitalInput(DigitalInputConfig config){
-        super(config);
+    public MockDigitalInput(DigitalInputProvider provider, DigitalInputConfig config){
+        super(provider, config);
     }
 
     @Override

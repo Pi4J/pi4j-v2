@@ -27,10 +27,8 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
-import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogInputBase;
-import com.pi4j.io.gpio.analog.AnalogInputConfig;
+import com.pi4j.io.gpio.analog.*;
+import com.pi4j.provider.Provider;
 
 public class TestAnalogInput extends AnalogInputBase implements AnalogInput {
 
@@ -41,8 +39,8 @@ public class TestAnalogInput extends AnalogInputBase implements AnalogInput {
         return this.value;
     }
 
-    public TestAnalogInput(AnalogInputConfig config){
-        super(config);
+    public TestAnalogInput(AnalogInputProvider provider, AnalogInputConfig config){
+        super(provider, config);
     }
 
     public TestAnalogInput test(Integer value){

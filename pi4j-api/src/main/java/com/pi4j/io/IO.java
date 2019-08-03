@@ -43,6 +43,5 @@ public interface IO<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig>
     IO_TYPE name(String name);
     IO_TYPE description(String description);
 
-    Provider provider();
-    IO_TYPE provider(Provider provider);
+    <P extends Provider> P provider();
 }

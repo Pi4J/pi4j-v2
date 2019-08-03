@@ -33,11 +33,13 @@ import com.pi4j.io.exception.IOIllegalValueException;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.AnalogOutputBase;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
+import com.pi4j.io.gpio.analog.AnalogOutputProvider;
+import com.pi4j.provider.Provider;
 
 public class MockAnalogOutput extends AnalogOutputBase implements AnalogOutput {
 
-    public MockAnalogOutput(AnalogOutputConfig config){
-        super(config);
+    public MockAnalogOutput(AnalogOutputProvider provider, AnalogOutputConfig config){
+        super(provider, config);
     }
 
     public MockAnalogOutput mockValue(Number number){

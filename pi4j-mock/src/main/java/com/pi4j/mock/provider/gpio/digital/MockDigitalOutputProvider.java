@@ -46,6 +46,6 @@ public class MockDigitalOutputProvider extends DigitalOutputProviderBase impleme
 
     @Override
     public DigitalOutput newInstance(Context context, DigitalOutputConfig config) throws Exception {
-        return new MockDigitalOutput(config);
+        return new MockDigitalOutput(this, config);
     }
 }

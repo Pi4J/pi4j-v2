@@ -37,8 +37,8 @@ public abstract class SerialBase extends IOBase<Serial, SerialConfig> implements
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public SerialBase(SerialConfig config){
-        super(config);
+    public SerialBase(SerialProvider provider, SerialConfig config){
+        super(provider, config);
         logger.trace("created instance with config: {}", config);
     }
 

@@ -30,6 +30,8 @@ package com.pi4j.mock.provider.spi;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiBase;
 import com.pi4j.io.spi.SpiConfig;
+import com.pi4j.io.spi.SpiProvider;
+import com.pi4j.provider.Provider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,8 +41,8 @@ import java.nio.charset.Charset;
 
 public class MockSpi extends SpiBase implements Spi {
 
-    public MockSpi(SpiConfig config){
-        super(config);
+    public MockSpi(SpiProvider provider, SpiConfig config){
+        super(provider, config);
     }
 
     @Override

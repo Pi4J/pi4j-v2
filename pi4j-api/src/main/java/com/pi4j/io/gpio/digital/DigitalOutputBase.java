@@ -37,8 +37,8 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
 
     protected DigitalState state = DigitalState.UNKNOWN;
 
-    public DigitalOutputBase(DigitalOutputConfig config){
-        super(config);
+    public DigitalOutputBase(DigitalOutputProvider provider, DigitalOutputConfig config){
+        super(provider, config);
         this.name = (config.name() != null) ? config.name() : "DOUT-" + config.address();
 
         // update the analog value to the initial value if an initial value was configured
