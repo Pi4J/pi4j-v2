@@ -101,23 +101,12 @@ public interface Context extends Describable {
     }
 
     default <T extends Provider> boolean hasProvider(Class<T> providerClass) {
-        try {
-            return provider(providerClass) != null;
-        }
-        catch (Exception e){
-            return false;
-        }
+        return providers().exists(providerClass);
     }
 
     default <T extends Provider> boolean hasProvider(IOType ioType) {
-        try {
-            return provider(ioType) != null;
-        }
-        catch (Exception e){
-            return false;
-        }
+        return providers().exists(ioType);
     }
-
 
     default <T extends AnalogInputProvider> T ain() throws ProviderException {
         return analogInput();
