@@ -30,20 +30,23 @@ package com.pi4j.io.gpio.analog.binding;
 
 import com.pi4j.io.gpio.analog.Analog;
 import com.pi4j.io.gpio.analog.AnalogConfig;
+import com.pi4j.io.gpio.analog.AnalogProvider;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AnalogBindingBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE>, CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>> {
+public abstract class AnalogBindingBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+        CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>,
+        PROVIDER_TYPE extends AnalogProvider> {
 
-    protected List<Analog<ANALOG_TYPE, CONFIG_TYPE>> outputs;
+    protected List<Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>> outputs;
 
     /**
      * Default Constructor
      * @param output Variable argument list of analog outputs
      */
-    public AnalogBindingBase(Analog<ANALOG_TYPE, CONFIG_TYPE>... output){
+    public AnalogBindingBase(Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>... output){
         outputs  = Collections.synchronizedList(Arrays.asList(output));
     }
 }

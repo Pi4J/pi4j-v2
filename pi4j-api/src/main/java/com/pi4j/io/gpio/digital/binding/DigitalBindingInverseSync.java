@@ -27,12 +27,9 @@ package com.pi4j.io.gpio.digital.binding;
  * #L%
  */
 
-import com.pi4j.io.gpio.digital.DigitalChangeEvent;
-import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalOutputConfig;
-import com.pi4j.io.gpio.digital.DigitalState;
+import com.pi4j.io.gpio.digital.*;
 
-public class DigitalBindingInverseSync extends DigitalBindingBase<DigitalOutput, DigitalOutputConfig> implements DigitalBinding<DigitalOutput> {
+public class DigitalBindingInverseSync extends DigitalBindingBase<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider> implements DigitalBinding<DigitalOutput> {
 
     /**
      * Default Constructor

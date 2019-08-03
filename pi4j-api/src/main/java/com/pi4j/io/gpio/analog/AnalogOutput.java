@@ -31,7 +31,7 @@ import com.pi4j.io.Output;
 import com.pi4j.io.exception.IOBoundsException;
 import com.pi4j.io.exception.IOIllegalValueException;
 
-public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig>, Output {
+public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig, AnalogOutputProvider>, Output {
     AnalogOutput value(Integer value) throws IOIllegalValueException, IOBoundsException;
 
     AnalogOutput stepUp();

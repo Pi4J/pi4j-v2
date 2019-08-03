@@ -28,12 +28,14 @@ package com.pi4j.io.gpio;
  */
 
 import com.pi4j.io.IOBase;
+import com.pi4j.provider.Provider;
 
-public abstract class GpioBase<IO_TYPE extends Gpio<IO_TYPE, CONFIG_TYPE>, CONFIG_TYPE extends GpioConfig<CONFIG_TYPE>>
-        extends IOBase<IO_TYPE, CONFIG_TYPE>
-        implements Gpio<IO_TYPE, CONFIG_TYPE> {
+public abstract class GpioBase<IO_TYPE extends Gpio<IO_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+        CONFIG_TYPE extends GpioConfig<CONFIG_TYPE>, PROVIDER_TYPE extends Provider>
+        extends IOBase<IO_TYPE, CONFIG_TYPE, PROVIDER_TYPE>
+        implements Gpio<IO_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
 
-    public GpioBase(GpioProvider provider, CONFIG_TYPE config){
+    public GpioBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
         super(provider, config);
         this.name = config.name();
         this.id = config.id();

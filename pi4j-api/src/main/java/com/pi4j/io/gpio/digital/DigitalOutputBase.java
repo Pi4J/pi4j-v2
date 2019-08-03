@@ -33,7 +33,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, DigitalOutputConfig> implements DigitalOutput {
+public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider> implements DigitalOutput {
 
     protected DigitalState state = DigitalState.UNKNOWN;
 

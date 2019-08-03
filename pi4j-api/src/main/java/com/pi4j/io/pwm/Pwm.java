@@ -33,7 +33,7 @@ import com.pi4j.io.IO;
 import com.pi4j.io.pwm.impl.PwmFactory;
 import com.pi4j.provider.exception.ProviderException;
 
-public interface Pwm extends IO<Pwm, PwmConfig> {
+public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
 
     static final String ID = "PWM";
 

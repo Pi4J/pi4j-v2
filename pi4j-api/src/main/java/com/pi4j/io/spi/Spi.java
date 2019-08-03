@@ -40,7 +40,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-public interface Spi extends IO<Spi, SpiConfig> {
+public interface Spi extends IO<Spi, SpiConfig, SpiProvider> {
 
     static final String ID = "SPI";
     static final SpiMode DEFAULT_SPI_MODE = SpiMode.MODE_0;

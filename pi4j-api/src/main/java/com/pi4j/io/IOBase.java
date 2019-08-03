@@ -34,14 +34,15 @@ import com.pi4j.context.Context;
 import com.pi4j.provider.Provider;
 
 
-public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig> extends IdentityBase implements IO<IO_TYPE,CONFIG_TYPE> {
+public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig, PROVIDER_TYPE extends Provider>
+        extends IdentityBase implements IO<IO_TYPE,CONFIG_TYPE, PROVIDER_TYPE> {
 
     protected CONFIG_TYPE config = null;
-    protected Provider provider = null;
+    protected PROVIDER_TYPE provider = null;
 
     @Override
-    public <P extends Provider> P provider(){
-        return (P)this.provider;
+    public PROVIDER_TYPE provider(){
+        return this.provider;
     }
 
 //    @Override
@@ -50,7 +51,7 @@ public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig> e
 //        return (IO_TYPE)this;
 //    }
 
-    public IOBase(Provider provider, CONFIG_TYPE config){
+    public IOBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
         super();
         this.provider = provider;
         this.config = config;

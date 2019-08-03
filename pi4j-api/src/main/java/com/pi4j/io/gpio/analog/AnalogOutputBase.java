@@ -35,7 +35,7 @@ import com.pi4j.io.exception.IOIllegalValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOutputConfig> implements AnalogOutput {
+public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOutputConfig, AnalogOutputProvider> implements AnalogOutput {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     protected Integer value = 0;

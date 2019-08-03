@@ -27,7 +27,7 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-public abstract class DigitalInputBase extends DigitalBase<DigitalInput, DigitalInputConfig> implements DigitalInput {
+public abstract class DigitalInputBase extends DigitalBase<DigitalInput, DigitalInputConfig, DigitalInputProvider> implements DigitalInput {
     public DigitalInputBase(DigitalInputProvider provider, DigitalInputConfig config){
         super(provider, config);
         this.name = (config.name() != null) ? config.name() : "DIN-" + config.address();

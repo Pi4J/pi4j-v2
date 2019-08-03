@@ -30,20 +30,23 @@ package com.pi4j.io.gpio.digital.binding;
 
 import com.pi4j.io.gpio.digital.Digital;
 import com.pi4j.io.gpio.digital.DigitalConfig;
+import com.pi4j.io.gpio.digital.DigitalProvider;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class DigitalBindingBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE>, CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>> {
+public abstract class DigitalBindingBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+        CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>,
+        PROVIDER_TYPE extends DigitalProvider> {
 
-    protected List<Digital<DIGITAL_TYPE, CONFIG_TYPE>> targets;
+    protected List<Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>> targets;
 
     /**
      * Default Constructor
-     * @param targets Variable argument list of digital outputs
+     * @param target Variable argument list of digital outputs
      */
-    public DigitalBindingBase(Digital<DIGITAL_TYPE, CONFIG_TYPE> ... target){
+    public DigitalBindingBase(Digital<DIGITAL_TYPE, CONFIG_TYPE,PROVIDER_TYPE> ... target){
         targets  = Collections.synchronizedList(Arrays.asList(target));
     }
 }

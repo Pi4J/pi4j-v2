@@ -36,9 +36,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE>, CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>>
-        extends GpioBase<DIGITAL_TYPE, CONFIG_TYPE>
-        implements Digital<DIGITAL_TYPE, CONFIG_TYPE> {
+public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+        CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>,
+        PROVIDER_TYPE extends DigitalProvider>
+        extends GpioBase<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>
+        implements Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
 
 
     // internal listeners collection
@@ -47,7 +49,7 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
     // internal bindings collection
     protected List<DigitalBinding> bindings = Collections.synchronizedList(new ArrayList<>());
 
-    public DigitalBase(DigitalProvider provider, CONFIG_TYPE config){
+    public DigitalBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
         super(provider,config);
     }
 

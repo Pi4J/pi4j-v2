@@ -30,6 +30,6 @@ package com.pi4j.io.gpio.digital;
 
 import com.pi4j.io.Input;
 
-public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig>, Input {
+public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig, DigitalInputProvider>, Input {
     default PullResistance pull() { return config().pull(); }
 }

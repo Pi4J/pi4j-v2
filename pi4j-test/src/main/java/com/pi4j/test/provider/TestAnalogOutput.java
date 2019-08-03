@@ -35,6 +35,7 @@ import com.pi4j.io.exception.IOIllegalValueException;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
+import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.io.gpio.analog.binding.AnalogBinding;
 import com.pi4j.provider.Provider;
 
@@ -101,7 +102,7 @@ public class TestAnalogOutput implements AnalogOutput {
     }
 
     @Override
-    public Provider provider() {
+    public AnalogOutputProvider provider() {
         return null;
     }
 

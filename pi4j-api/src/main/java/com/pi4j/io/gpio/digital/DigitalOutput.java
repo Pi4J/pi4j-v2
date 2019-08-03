@@ -33,7 +33,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfig>, Output {
+public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider>, Output {
 
     DigitalOutput state(DigitalState state);
     DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback);

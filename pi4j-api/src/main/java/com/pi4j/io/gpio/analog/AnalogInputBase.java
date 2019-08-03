@@ -27,7 +27,7 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
-public abstract class AnalogInputBase extends AnalogBase<AnalogInput, AnalogInputConfig> implements AnalogInput {
+public abstract class AnalogInputBase extends AnalogBase<AnalogInput, AnalogInputConfig, AnalogInputProvider> implements AnalogInput {
     public AnalogInputBase(AnalogInputProvider provider, AnalogInputConfig config){
         super(provider, config);
         if(this.id == null) this.id = "AIN-" + config.address();

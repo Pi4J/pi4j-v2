@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public abstract class SerialBase extends IOBase<Serial, SerialConfig> implements Serial {
+public abstract class SerialBase extends IOBase<Serial, SerialConfig, SerialProvider> implements Serial {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
