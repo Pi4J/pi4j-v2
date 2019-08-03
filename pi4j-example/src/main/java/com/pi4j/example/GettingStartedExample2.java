@@ -29,6 +29,7 @@ package com.pi4j.example;
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
+import com.pi4j.context.ContextBuilder;
 import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
@@ -71,10 +72,10 @@ public class GettingStartedExample2 {
             }
         }
 
-//        Context pi4jCtx1 = ContextBuilder.create()
-//                          .add(new MyCustomADCProvider())
-//                          .add(new MyCustomSPIProvider())
-//                          .build();
+        Context pi4jCtx1 = ContextBuilder.newInstance()
+                          .add(new MyCustomADCProvider())
+                          .add(new MyCustomSPIProvider())
+                          .build();
 
         Context pi4j = Pi4J.newContextBuilder()
                 .add(new MockPlatform())
@@ -104,11 +105,11 @@ public class GettingStartedExample2 {
         AnalogInput ain2 = pi4j.ain().create(config);
 
         // create I/O using an I/O builder
-        DigitalOutput dout = DigitalOutputBuilder.newInstance(pi4j)
-                .provider("my-custom-digital-output-provider")
-                .address(1)
-                .name("my-digital-output")
-                .build();
+//        DigitalOutput dout = DigitalOutputBuilder.newInstance(pi4j)
+//                .provider("my-custom-digital-output-provider")
+//                .address(1)
+//                .name("my-digital-output")
+//                .build();
 
 
         //pi4j.provider(IOType.DIGITAL_OUTPUT).create({...})

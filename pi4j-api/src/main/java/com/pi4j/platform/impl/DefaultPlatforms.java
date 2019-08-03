@@ -59,13 +59,8 @@ public class DefaultPlatforms implements Platforms {
     // all detected/available providers
     private Map<String, Platform> platforms = new ConcurrentHashMap<>();
 
-    // static singleton instance
-    private static Platforms singleton = null;
-    public static Platforms singleton(Context context){
-        if(singleton == null){
-            singleton = new DefaultPlatforms(context);
-        }
-        return singleton;
+    public static Platforms newInstance(Context context){
+        return new DefaultPlatforms(context);
     }
 
     // private constructor

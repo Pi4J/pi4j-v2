@@ -35,7 +35,7 @@ import com.pi4j.provider.Provider;
 
 public interface ContextBuilder extends Builder<Context> {
 
-    static ContextBuilder create(){
+    static ContextBuilder newInstance(){
         return DefaultContextBuilder.newInstance();
     }
 

@@ -52,11 +52,11 @@ import java.util.Collection;
 
 public class DefaultContext implements Context {
 
-    private Bindings bindings = DefaultBindings.singleton(this);
-    private Providers providers = DefaultProviders.singleton(this);
-    private Registry registry = DefaultRegistry.singleton(this);
-    private Platforms platforms = DefaultPlatforms.singleton(this);
-    private AnnotationEngine annotationEngine = DefaultAnnotationEngine.singleton(this);
+    private Bindings bindings = DefaultBindings.newInstance(this);
+    private Providers providers = DefaultProviders.newInstance(this);
+    private Registry registry = DefaultRegistry.newInstance(this);
+    private Platforms platforms = DefaultPlatforms.newInstance(this);
+    private AnnotationEngine annotationEngine = DefaultAnnotationEngine.newInstance(this);
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public static Context newInstance(){

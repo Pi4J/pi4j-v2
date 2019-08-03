@@ -56,12 +56,8 @@ public class DefaultRegistry implements Registry {
     private Map<String, IO> instances = new ConcurrentHashMap<>();
 
     // static singleton instance
-    private static Registry singleton = null;
-    public static Registry singleton(Context context){
-        if(singleton == null){
-            singleton = new DefaultRegistry(context);
-        }
-        return singleton;
+    public static Registry newInstance(Context context){
+        return new DefaultRegistry(context);
     }
 
     // private constructor

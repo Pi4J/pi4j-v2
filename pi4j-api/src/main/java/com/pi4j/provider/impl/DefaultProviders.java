@@ -104,12 +104,8 @@ public class DefaultProviders implements Providers {
     public ProviderGroup<SerialProvider> serial() { return _serial; }
 
     // static singleton instance
-    private static Providers singleton = null;
-    public static Providers singleton(Context context){
-        if(singleton == null){
-            singleton = new DefaultProviders(context);
-        }
-        return singleton;
+    public static Providers newInstance(Context context){
+        return new DefaultProviders(context);
     }
 
     // private constructor

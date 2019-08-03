@@ -58,12 +58,8 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
     private Context context = null;
 
     // static singleton instance
-    private static AnnotationEngine singleton = null;
-    public static AnnotationEngine singleton(Context context){
-        if(singleton == null){
-            singleton = new DefaultAnnotationEngine(context);
-        }
-        return singleton;
+    public static AnnotationEngine newInstance(Context context){
+        return new DefaultAnnotationEngine(context);
     }
 
     // private constructor

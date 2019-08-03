@@ -56,13 +56,8 @@ public class DefaultBindings implements Bindings {
     // all detected/available providers
     private Map<String, Binding> bindings = new ConcurrentHashMap<>();
 
-    // static singleton instance
-    private static Bindings singleton = null;
-    public static Bindings singleton(Context context){
-        if(singleton == null){
-            singleton = new DefaultBindings(context);
-        }
-        return singleton;
+    public static Bindings newInstance(Context context){
+        return new DefaultBindings(context);
     }
 
     // private constructor

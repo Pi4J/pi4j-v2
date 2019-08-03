@@ -50,7 +50,7 @@ public class Pi4J {
      * @return ContextBuilder
      */
     public static ContextBuilder newContextBuilder(){
-        return ContextBuilder.create();
+        return ContextBuilder.newInstance();
     }
 
     /**
