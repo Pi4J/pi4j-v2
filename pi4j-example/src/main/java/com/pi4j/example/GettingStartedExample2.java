@@ -55,7 +55,7 @@ public class GettingStartedExample2 {
         class MyCustomADCProvider extends AnalogInputProviderBase{
 
             @Override
-            public AnalogInput newInstance(Context context, AnalogInputConfig config) throws Exception {
+            public AnalogInput newInstance(AnalogInputConfig config) throws Exception {
                 return null;
             }
         }
@@ -63,7 +63,7 @@ public class GettingStartedExample2 {
         class MyCustomSPIProvider extends SpiProviderBase {
 
             @Override
-            public Spi newInstance(Context context, SpiConfig config) throws Exception {
+            public Spi newInstance(SpiConfig config) throws Exception {
                 return null;
             }
         }

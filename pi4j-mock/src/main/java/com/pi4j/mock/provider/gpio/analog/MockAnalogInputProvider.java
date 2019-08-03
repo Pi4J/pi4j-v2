@@ -27,7 +27,6 @@ package com.pi4j.mock.provider.gpio.analog;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
@@ -47,7 +46,7 @@ public class MockAnalogInputProvider extends AnalogInputProviderBase implements 
     }
 
     @Override
-    public AnalogInput newInstance(Context context, AnalogInputConfig config) throws IOException {
+    public AnalogInput newInstance(AnalogInputConfig config) throws IOException {
         return new MockAnalogInput(this, config);
     }
 }

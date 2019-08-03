@@ -27,7 +27,6 @@ package com.pi4j.mock.provider.gpio.digital;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
@@ -45,7 +44,7 @@ public class MockDigitalOutputProvider extends DigitalOutputProviderBase impleme
     }
 
     @Override
-    public DigitalOutput newInstance(Context context, DigitalOutputConfig config) throws Exception {
+    public DigitalOutput newInstance(DigitalOutputConfig config) throws Exception {
         return new MockDigitalOutput(this, config);
     }
 }

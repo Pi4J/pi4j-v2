@@ -1,7 +1,5 @@
 package com.pi4j.io.gpio.analog;
 
-import com.pi4j.context.Context;
-
 /*
  * #%L
  * **********************************************************************
@@ -46,5 +44,5 @@ public abstract class AnalogInputProviderBase
     }
 
     @Override
-    public abstract AnalogInput newInstance(Context context, AnalogInputConfig config) throws Exception;
+    public abstract AnalogInput newInstance(AnalogInputConfig config) throws Exception;
 }

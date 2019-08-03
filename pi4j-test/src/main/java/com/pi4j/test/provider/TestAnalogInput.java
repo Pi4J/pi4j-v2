@@ -28,7 +28,6 @@ package com.pi4j.test.provider;
  */
 
 import com.pi4j.io.gpio.analog.*;
-import com.pi4j.provider.Provider;
 
 public class TestAnalogInput extends AnalogInputBase implements AnalogInput {
 

@@ -27,7 +27,6 @@ package com.pi4j.mock.provider.gpio.digital;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
@@ -47,7 +46,7 @@ public class MockDigitalInputProvider extends DigitalInputProviderBase implement
     }
 
     @Override
-    public DigitalInput newInstance(Context context, DigitalInputConfig config) throws IOException {
+    public DigitalInput newInstance(DigitalInputConfig config) throws IOException {
         return new MockDigitalInput(this, config);
     }
 }

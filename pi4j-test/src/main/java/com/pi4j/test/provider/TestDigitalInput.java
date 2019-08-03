@@ -28,7 +28,6 @@ package com.pi4j.test.provider;
  */
 
 import com.pi4j.io.gpio.digital.*;
-import com.pi4j.provider.Provider;
 
 public class TestDigitalInput extends DigitalInputBase implements DigitalInput {
 

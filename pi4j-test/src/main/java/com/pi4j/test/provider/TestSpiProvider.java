@@ -27,7 +27,6 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
@@ -46,7 +45,7 @@ public class TestSpiProvider extends SpiProviderBase implements SpiProvider {
     }
 
     @Override
-    public Spi newInstance(Context context, SpiConfig config) throws Exception {
+    public Spi newInstance(SpiConfig config) throws Exception {
         return null;
     }
 }

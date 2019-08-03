@@ -32,7 +32,6 @@ import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CBase;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
-import com.pi4j.provider.Provider;
 
 import java.io.IOException;
 

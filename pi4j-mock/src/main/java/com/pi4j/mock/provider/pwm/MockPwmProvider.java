@@ -27,7 +27,6 @@ package com.pi4j.mock.provider.pwm;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
@@ -45,7 +44,7 @@ public class MockPwmProvider extends PwmProviderBase implements PwmProvider {
     }
 
     @Override
-    public Pwm newInstance(Context context, PwmConfig config) throws Exception {
+    public Pwm newInstance(PwmConfig config) throws Exception {
         return new MockPwm(this, config);
     }
 }

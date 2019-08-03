@@ -31,7 +31,6 @@ import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialBase;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
-import com.pi4j.provider.Provider;
 
 public class MockSerial extends SerialBase implements Serial {
 

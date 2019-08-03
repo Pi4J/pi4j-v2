@@ -29,7 +29,6 @@ package com.pi4j.mock.provider.gpio.digital;
 
 
 import com.pi4j.io.gpio.digital.*;
-import com.pi4j.provider.Provider;
 
 
 public class MockDigitalOutput extends DigitalOutputBase implements DigitalOutput {

@@ -31,7 +31,6 @@ import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiBase;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.provider.Provider;
 
 import java.io.IOException;
 import java.io.InputStream;

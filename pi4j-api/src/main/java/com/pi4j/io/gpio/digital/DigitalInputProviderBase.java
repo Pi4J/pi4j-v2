@@ -1,7 +1,5 @@
 package com.pi4j.io.gpio.digital;
 
-import com.pi4j.context.Context;
-
 /*
  * #%L
  * **********************************************************************
@@ -45,5 +43,5 @@ public abstract class DigitalInputProviderBase
     }
 
     @Override
-    public abstract DigitalInput newInstance(Context context, DigitalInputConfig config) throws Exception;
+    public abstract DigitalInput newInstance(DigitalInputConfig config) throws Exception;
 }

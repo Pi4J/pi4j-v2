@@ -27,7 +27,6 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
@@ -46,7 +45,7 @@ public class TestSerialProvider extends SerialProviderBase implements SerialProv
     }
 
     @Override
-    public Serial newInstance(Context context, SerialConfig config) throws Exception {
+    public Serial newInstance(SerialConfig config) throws Exception {
         return null;
     }
 }

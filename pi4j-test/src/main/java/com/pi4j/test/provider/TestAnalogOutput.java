@@ -37,7 +37,6 @@ import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.io.gpio.analog.binding.AnalogBinding;
-import com.pi4j.provider.Provider;
 
 public class TestAnalogOutput implements AnalogOutput {
 

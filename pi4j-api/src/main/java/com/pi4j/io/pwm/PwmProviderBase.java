@@ -1,6 +1,5 @@
 package com.pi4j.io.pwm;
 
-import com.pi4j.context.Context;
 import com.pi4j.provider.ProviderBase;
 
 /*
@@ -46,5 +45,5 @@ public abstract class PwmProviderBase
     }
 
     @Override
-    public abstract Pwm newInstance(Context context, PwmConfig config) throws Exception;
+    public abstract Pwm newInstance(PwmConfig config) throws Exception;
 }
