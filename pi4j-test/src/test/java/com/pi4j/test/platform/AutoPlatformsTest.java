@@ -45,8 +45,8 @@ public class AutoPlatformsTest {
     public void beforeTest() throws Pi4JException {
         // initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled
-        // which will load all detected Pi4J binding libraries
-        // in the class path for this test case
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
         pi4j = Pi4J.newAutoContext();
     }
 
@@ -67,7 +67,7 @@ public class AutoPlatformsTest {
         // ensure that 1 or more platforms were detected/loaded into the Pi4J context
         assertFalse(pi4j.platforms().all().isEmpty());
 
-        // print out the detected Pi4J binding libraries found on the class path
+        // print out the detected Pi4J platforms found on the class path
         pi4j.platforms().describe().print(System.out);
     }
 

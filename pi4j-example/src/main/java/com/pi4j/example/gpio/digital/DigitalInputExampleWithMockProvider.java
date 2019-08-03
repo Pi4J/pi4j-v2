@@ -56,8 +56,8 @@ public class DigitalInputExampleWithMockProvider {
 
         // Initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled
-        // which will load all detected Pi4J binding libraries
-        // in the class path
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
         var pi4j = Pi4J.newAutoContext();
 
         // get the Mock Digital Input provider by ID

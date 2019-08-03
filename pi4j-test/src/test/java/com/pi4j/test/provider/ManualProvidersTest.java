@@ -47,8 +47,8 @@ public class ManualProvidersTest {
 
         // Initialize Pi4J with an empty context
         // An empty context disables AUTO-DETECT loading
-        // which will not load any detected Pi4J binding libraries
-        // in the class path for this test case
+        // which will not load any detected Pi4J extension
+        // libraries (Platforms and Providers) from the class path
         // ...
         // add the custom providers to the Pi4J context
         Context pi4j = Pi4J.newContextBuilder().add(pwmProvider, i2CProvider).build();

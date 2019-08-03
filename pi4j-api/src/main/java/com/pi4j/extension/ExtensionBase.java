@@ -1,11 +1,11 @@
-package com.pi4j.binding.exception;
+package com.pi4j.extension;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  BindingException.java
+ * FILENAME      :  ExtensionBase.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,34 +27,24 @@ package com.pi4j.binding.exception;
  * #L%
  */
 
-import com.pi4j.exception.Pi4JException;
+import com.pi4j.common.IdentityBase;
 
-/**
- * <p>
- * This exception is thrown if a platform assignment is attempted when a
- * platform instance has already been assigned.
- * </p>
- *
- * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
- * @author Robert Savage (<a
- *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- */
-public class BindingException extends Pi4JException {
+public abstract class ExtensionBase extends IdentityBase implements Extension {
 
-    /**
-     * Default Constructor
-     *
-     * @param message error message
-     */
-    public BindingException(String message){
-        super(message);
+    public ExtensionBase(){
+        super();
     }
 
-    public BindingException(Throwable cause){
-        super(cause);
+    public ExtensionBase(String id){
+        super(id);
     }
 
-    public BindingException(String message, Throwable cause){
-        super(message,cause);
+    public ExtensionBase(String id, String name){
+        super(id, name);
     }
+
+    public ExtensionBase(String id, String name, String description){
+        super(id, name, description);
+    }
+
 }

@@ -27,7 +27,7 @@ package com.pi4j.platform.exception;
  * #L%
  */
 
-import com.pi4j.binding.exception.BindingException;
+import com.pi4j.extension.exception.ExtensionException;
 
 /**
  * <p>
@@ -39,7 +39,7 @@ import com.pi4j.binding.exception.BindingException;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public class PlatformException extends BindingException {
+public class PlatformException extends ExtensionException {
 
     /**
      * Default Constructor

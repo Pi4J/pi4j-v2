@@ -1,3 +1,4 @@
+import com.pi4j.extension.Extension;
 
 /*-
  * #%L
@@ -29,7 +30,7 @@ module pi4j.example {
 
     // Pi4J API Module
     requires pi4j.api;
-    uses com.pi4j.binding.Binding;
+    uses Extension;
     uses com.pi4j.provider.Provider;
 
     // Pi4J Mock Platform and Providers

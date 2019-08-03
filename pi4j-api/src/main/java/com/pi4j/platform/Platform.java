@@ -27,9 +27,9 @@ package com.pi4j.platform;
  * #L%
  */
 
-import com.pi4j.binding.Binding;
 import com.pi4j.common.Descriptor;
 import com.pi4j.context.Context;
+import com.pi4j.extension.Extension;
 import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
@@ -45,7 +45,7 @@ import com.pi4j.provider.exception.ProviderNotFoundException;
 
 import java.util.Map;
 
-public interface Platform extends Binding {
+public interface Platform extends Extension {
 
     int weight();
     boolean enabled(Context context);

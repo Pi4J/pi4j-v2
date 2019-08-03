@@ -60,7 +60,7 @@ public class PlatformNotFoundException extends PlatformException {
      * Alternate Constructor
      */
     public PlatformNotFoundException(Class<? extends Platform> platformClass){
-        super("Pi4J platform for [" + platformClass + "] could not be found.  Please include a 'platform' JAR in the classpath for your io for this binding type.");
+        super("Pi4J platform for [" + platformClass + "] could not be found.  Please include a 'platform' JAR in the classpath for this class type.");
     }
 
 }

@@ -27,10 +27,10 @@ package com.pi4j.provider;
  * #L%
  */
 
-import com.pi4j.binding.BindingBase;
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.config.Config;
 import com.pi4j.context.Context;
+import com.pi4j.extension.ExtensionBase;
 import com.pi4j.io.IO;
 import com.pi4j.registry.exception.RegistryException;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CONFIG_TYPE extends Config>
-        extends BindingBase
+        extends ExtensionBase
         implements Provider<IO_TYPE, CONFIG_TYPE> {
 
 

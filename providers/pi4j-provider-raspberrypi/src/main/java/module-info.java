@@ -31,7 +31,7 @@ import com.pi4j.provider.raspberrypi.io.spi.RaspiSpiProvider;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.binding.raspberrypi {
+module pi4j.provider.raspberrypi {
     requires pi4j.api;
 
     provides com.pi4j.provider.Provider

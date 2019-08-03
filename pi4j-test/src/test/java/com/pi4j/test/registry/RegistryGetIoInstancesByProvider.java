@@ -57,8 +57,8 @@ public class RegistryGetIoInstancesByProvider {
 
         // Initialize Pi4J with a manually configured context
         // Disable AUTO-DETECT loading to prevent automatic
-        // loading of any detected Pi4J binding libraries
-        // in the class path for this test case
+        // loading of any detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
         // ...
         // Explicitly add single provider implementation
         // into the context for testing

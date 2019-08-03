@@ -61,8 +61,8 @@ public class DependencyInjectionNamedProviderTest {
 
         // Initialize Pi4J with a default context
         // enable the AUTO-DETECT (Platforms & Providers) flag
-        // which will load all detected Pi4J binding libraries
-        // in the class path for this test case
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
         // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection

@@ -101,7 +101,6 @@
         <!-- THE FOLLOWING MODULES ARE V2 -->
         <module>pi4j-api</module>
         <module>pi4j-mock</module>
-        <module>bindings/pi4j-binding</module>
         <module>providers/pi4j-provider</module>
         <module>platforms/pi4j-platform</module>
         <module>pi4j-test</module>

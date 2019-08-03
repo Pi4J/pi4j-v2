@@ -120,7 +120,7 @@ public class DefaultPlatforms implements Platforms {
         // ensure the platform object is valid
         if(platform == null) return;
 
-        // attempt to initialize the binding instance
+        // attempt to initialize the platform instance
         try {
             logger.trace("initializing platform [id={}; name={}; class={}]",
                     platform.id(), platform.name(), platform.getClass().getName());
@@ -152,7 +152,7 @@ public class DefaultPlatforms implements Platforms {
     }
 
     /**
-     * Get all bindings
+     * Get all platforms
      * @return
      */
     @Override
@@ -161,7 +161,7 @@ public class DefaultPlatforms implements Platforms {
     }
 
     /**
-     * Get all bindings of a specified binding class type.
+     * Get all platforms of a specified platforms class type.
      */
     @Override
     public <T extends Platform> Map<String, T> all(Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException {
@@ -244,7 +244,7 @@ public class DefaultPlatforms implements Platforms {
                 continue;
             }
 
-            // ensure requested binding id does not already exist in the managed set
+            // ensure requested platform id does not already exist in the managed set
             if (exists(platformInstance.id())) {
                 throw new PlatformAlreadyExistsException(platformInstance.id());
             }

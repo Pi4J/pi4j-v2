@@ -54,8 +54,8 @@ public class ManualPlatformsTest {
     public void beforeTest() throws Pi4JException {
 
         // Initialize Pi4J with AUTO-DETECT disabled
-        // we don't want to load any detected Pi4J binding/io libraries
-        // in the class path for this test case
+        // we don't want to load any detected Pi4J extension
+        // libraries (Platforms and Providers) from the class path
         pi4j = Pi4J.newContextBuilder()
 
                         // add any platforms that we want to work with

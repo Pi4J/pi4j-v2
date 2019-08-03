@@ -27,9 +27,9 @@ package com.pi4j.common;
  * #L%
  */
 
-import com.pi4j.binding.Binding;
+import com.pi4j.extension.Extension;
 
-public abstract class IdentityBase implements Binding {
+public abstract class IdentityBase implements Extension {
 
     protected String id;
     protected String name;

@@ -1,11 +1,11 @@
-package com.pi4j.binding;
+package com.pi4j.extension.exception;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Binding.java
+ * FILENAME      :  ExtensionException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,34 @@ package com.pi4j.binding;
  * #L%
  */
 
-import com.pi4j.common.Descriptor;
-import com.pi4j.common.Identity;
-import com.pi4j.common.Lifecycle;
+import com.pi4j.exception.Pi4JException;
 
-public interface Binding<T> extends Identity, Lifecycle<T> {
+/**
+ * <p>
+ * This exception is thrown if a platform assignment is attempted when a
+ * platform instance has already been assigned.
+ * </p>
+ *
+ * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
+ * @author Robert Savage (<a
+ *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ */
+public class ExtensionException extends Pi4JException {
 
-    default Descriptor describe() {
-        return Descriptor.create()
-                .id(this.id())
-                .name(this.name())
-                .category("BINDING")
-                .description(this.description()).type(this.getClass());
+    /**
+     * Default Constructor
+     *
+     * @param message error message
+     */
+    public ExtensionException(String message){
+        super(message);
+    }
+
+    public ExtensionException(Throwable cause){
+        super(cause);
+    }
+
+    public ExtensionException(String message, Throwable cause){
+        super(message,cause);
     }
 }

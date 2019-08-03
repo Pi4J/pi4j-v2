@@ -47,7 +47,7 @@ import java.util.Map;
 public interface Platforms extends Describable {
 
     /**
-     * Get all bindings
+     * Get all platforms
      * @return
      */
     Map<String, Platform> all();
@@ -86,17 +86,17 @@ public interface Platforms extends Describable {
     }
 
     default Descriptor describe() {
-        var bindings = all();
+        var platforms = all();
 
         Descriptor descriptor = Descriptor.create()
                 .category("PLATFORMS")
                 .name("Pi4J Runtime Platforms")
-                .quantity((bindings == null) ? 0 : bindings.size())
+                .quantity((platforms == null) ? 0 : platforms.size())
                 .type(this.getClass());
 
-        if(bindings != null && !bindings.isEmpty()) {
-            bindings.forEach((id, binding) -> {
-                descriptor.add(binding.describe());
+        if(platforms != null && !platforms.isEmpty()) {
+            platforms.forEach((id, platform) -> {
+                descriptor.add(platform.describe());
             });
 
         }

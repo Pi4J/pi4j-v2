@@ -1,11 +1,11 @@
-package com.pi4j.binding;
+package com.pi4j.extension;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  BindingBase.java
+ * FILENAME      :  Extension.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,24 +27,17 @@ package com.pi4j.binding;
  * #L%
  */
 
-import com.pi4j.common.IdentityBase;
+import com.pi4j.common.Descriptor;
+import com.pi4j.common.Identity;
+import com.pi4j.common.Lifecycle;
 
-public abstract class BindingBase extends IdentityBase implements Binding {
+public interface Extension<T> extends Identity, Lifecycle<T> {
 
-    public BindingBase(){
-        super();
+    default Descriptor describe() {
+        return Descriptor.create()
+                .id(this.id())
+                .name(this.name())
+                .category("BINDING")
+                .description(this.description()).type(this.getClass());
     }
-
-    public BindingBase(String id){
-        super(id);
-    }
-
-    public BindingBase(String id, String name){
-        super(id, name);
-    }
-
-    public BindingBase(String id, String name, String description){
-        super(id, name, description);
-    }
-
 }

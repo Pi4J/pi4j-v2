@@ -27,9 +27,9 @@ package com.pi4j.platform;
  * #L%
  */
 
-import com.pi4j.binding.BindingBase;
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
+import com.pi4j.extension.ExtensionBase;
 import com.pi4j.io.IOType;
 import com.pi4j.platform.exception.PlatformException;
 import com.pi4j.provider.Provider;
@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class PlatformBase<PLATFORM extends Platform>
-        extends BindingBase
+        extends ExtensionBase
         implements Platform {
 
     protected Context context = null;

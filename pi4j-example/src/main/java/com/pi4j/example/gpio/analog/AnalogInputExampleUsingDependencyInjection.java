@@ -86,8 +86,8 @@ public class AnalogInputExampleUsingDependencyInjection {
 
             // Initialize Pi4J with an auto context
             // An auto context includes AUTO-DETECT BINDINGS enabled
-            // which will load all detected Pi4J binding libraries
-            // in the class path
+            // which will load all detected Pi4J extension libraries
+            // (Platforms and Providers) in the class path
             // ...
             // Also, inject this class instance into the Pi4J context
             // for annotation processing and dependency injection

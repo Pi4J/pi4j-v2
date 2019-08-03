@@ -27,13 +27,13 @@ package com.pi4j.provider;
  * #L%
  */
 
-import com.pi4j.binding.Binding;
 import com.pi4j.common.Descriptor;
 import com.pi4j.config.Config;
+import com.pi4j.extension.Extension;
 import com.pi4j.io.IO;
 import com.pi4j.io.IOType;
 
-public interface Provider<IO_TYPE extends IO, CONFIG_TYPE extends Config> extends Binding {
+public interface Provider<IO_TYPE extends IO, CONFIG_TYPE extends Config> extends Extension {
 
     IO_TYPE create(CONFIG_TYPE config) throws Exception;
 
@@ -43,7 +43,7 @@ public interface Provider<IO_TYPE extends IO, CONFIG_TYPE extends Config> extend
 
     @Override
     default Descriptor describe() {
-        Descriptor descriptor = Binding.super.describe();
+        Descriptor descriptor = Extension.super.describe();
         //descriptor.category(this.type().name());
         descriptor.category("PROVIDER");
         return descriptor;
