@@ -29,8 +29,6 @@ package com.pi4j.example.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.binding.DigitalBindingSync;
 import com.pi4j.util.Console;
 
@@ -61,10 +59,10 @@ public class DigitalInputSyncToOutputExample {
         var pi4j = Pi4J.newAutoContext();
 
         // create a digital input instance using the default digital input provider
-        var input = DigitalInput.create(pi4j, DIGITAL_INPUT_PIN);
+        var input = pi4j.din().create(DIGITAL_INPUT_PIN);
 
         // create a digital output instance using the default digital output provider
-        var output = DigitalOutput.create(pi4j, DIGITAL_OUTPUT_PIN);
+        var output = pi4j.dout().create(DIGITAL_OUTPUT_PIN);
 
         // setup a digital output listener to listen for any state changes on the digital output
         // we will just print out the detected state changes

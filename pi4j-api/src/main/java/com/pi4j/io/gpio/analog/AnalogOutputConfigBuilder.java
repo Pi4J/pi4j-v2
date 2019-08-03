@@ -5,7 +5,7 @@ package com.pi4j.io.gpio.analog;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogInputConfig.java
+ * FILENAME      :  AnalogOutputConfigBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,10 +27,14 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
-public interface AnalogInputConfig
-        extends AnalogConfig<AnalogInputConfig> {
+import com.pi4j.io.gpio.analog.impl.DefaultAnalogOutputConfigBuilder;
 
-    static AnalogInputConfigBuilder newBuilder()  {
-        return AnalogInputConfigBuilder.newInstance();
+public interface AnalogOutputConfigBuilder extends AnalogConfigBuilder<AnalogOutputConfigBuilder, AnalogOutputConfig> {
+    AnalogOutputConfigBuilder shutdown(Integer value);
+    AnalogOutputConfigBuilder initial(Integer value);
+    AnalogOutputConfigBuilder step(Integer value);
+
+    static AnalogOutputConfigBuilder newInstance()  {
+        return DefaultAnalogOutputConfigBuilder.newInstance();
     }
 }

@@ -118,6 +118,23 @@ public interface Context extends Describable {
         }
     }
 
+
+    default <T extends AnalogInputProvider> T ain() throws ProviderException {
+        return analogInput();
+    }
+
+    default <T extends AnalogOutputProvider> T aout() throws ProviderException{
+        return analogOutput();
+    }
+
+    default <T extends DigitalInputProvider> T din() throws ProviderException{
+        return digitalInput();
+    }
+
+    default <T extends DigitalOutputProvider> T dout() throws ProviderException{
+        return digitalOutput();
+    }
+
     default <T extends AnalogInputProvider> T analogInput() throws ProviderException {
         return this.provider(IOType.ANALOG_INPUT);
     }

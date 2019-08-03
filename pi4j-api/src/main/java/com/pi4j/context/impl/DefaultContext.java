@@ -59,15 +59,6 @@ public class DefaultContext implements Context {
     private AnnotationEngine annotationEngine = DefaultAnnotationEngine.singleton(this);
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    // TODO :: REMOVE ME
-//    private static Context singleton = null;
-//    public static Context singleton(){
-//        if(singleton == null){
-//            singleton = new DefaultContext();
-//        }
-//        return singleton;
-//    }
-
     public static Context newInstance(){
         return new DefaultContext();
     }

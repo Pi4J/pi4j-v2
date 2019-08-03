@@ -29,7 +29,6 @@ package com.pi4j.example.gpio.analog;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.mock.provider.gpio.analog.MockAnalogInput;
 import com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
 import com.pi4j.util.Console;
@@ -71,7 +70,7 @@ public class AnalogInputExampleWithMockProvider {
 
         // create an analog input instance using the mock analog input provider
         console.println("ATTEMPTING TO CREATE A MOCK ANALOG INPUT INSTANCE");
-        var input = AnalogInput.create(pi4j, provider, ANALOG_INPUT_PIN, MockAnalogInput.class);
+        MockAnalogInput input = provider.create(ANALOG_INPUT_PIN);
 
         // display created instance
         console.print("--> CREATED IO INSTANCE: [");

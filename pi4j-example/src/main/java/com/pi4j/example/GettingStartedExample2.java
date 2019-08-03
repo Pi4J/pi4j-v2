@@ -29,14 +29,26 @@ package com.pi4j.example;
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
-import com.pi4j.context.ContextBuilder;
+import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
+import com.pi4j.io.gpio.analog.AnalogInputConfigBuilder;
 import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
+import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalOutputBuilder;
+import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProviderBase;
 import com.pi4j.mock.platform.MockPlatform;
+import com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
+import com.pi4j.mock.provider.gpio.analog.MockAnalogOutputProvider;
+import com.pi4j.mock.provider.gpio.digital.MockDigitalInputProvider;
+import com.pi4j.mock.provider.gpio.digital.MockDigitalOutputProvider;
+import com.pi4j.mock.provider.i2c.MockI2CProvider;
+import com.pi4j.mock.provider.pwm.MockPwmProvider;
+import com.pi4j.mock.provider.serial.MockSerialProvider;
+import com.pi4j.mock.provider.spi.MockSpiProvider;
 
 public class GettingStartedExample2 {
 
@@ -59,25 +71,63 @@ public class GettingStartedExample2 {
             }
         }
 
-
-
-        Context pi4jCtx1 = ContextBuilder.create()
-                          .add(new MockPlatform())
-                          .add(new MyCustomADCProvider(/* implements AnalogInputProvider, id="my-adc-prov" */))
-                          .add(new MyCustomSPIProvider(/* implements SpiProvider, id="my-spi-prov" */))
-                          .build();
+//        Context pi4jCtx1 = ContextBuilder.create()
+//                          .add(new MyCustomADCProvider())
+//                          .add(new MyCustomSPIProvider())
+//                          .build();
 
         Context pi4j = Pi4J.newContextBuilder()
                 .add(new MockPlatform())
+                .add(new MockAnalogInputProvider(),
+                        new MockAnalogOutputProvider(),
+                        new MockSpiProvider(),
+                        new MockPwmProvider(),
+                        new MockSerialProvider(),
+                        new MockI2CProvider(),
+                        new MockDigitalInputProvider(),
+                        new MockDigitalOutputProvider())
                 .add(new MyCustomADCProvider(/* implements AnalogInputProvider, id="my-adc-prov" */))
                 .add(new MyCustomSPIProvider(/* implements SpiProvider, id="my-spi-prov" */))
                 .build();
 
 
-        AnalogInput ain = AnalogInput.create(pi4j, 2);
+        // create I/O using using simple static helper/convenience method
+        AnalogInput ain1 = pi4j.ain().create(1, "my-custom-name-1");
+
+        // create I/O config
+        AnalogInputConfig config = AnalogInputConfigBuilder.newInstance()
+                .address(2)
+                .name("my-custom-name-2")
+                .build();
+
+        // create I/O using config object
+        AnalogInput ain2 = pi4j.ain().create(config);
+
+        // create I/O using an I/O builder
+        DigitalOutput dout = DigitalOutputBuilder.newInstance(pi4j)
+                .provider("my-custom-digital-output-provider")
+                .address(1)
+                .name("my-digital-output")
+                .build();
 
 
+        //pi4j.provider(IOType.DIGITAL_OUTPUT).create({...})
+        //pi4j.provider(MockDigitalOutputProvider.class).create({...})
 
+
+//        AnalogInput ain = AnalogInputBuilder.newInstance(pi4j)
+//                .address(2)
+//                .name("my-custom-name").build();
+//
+//                pi4j.ain().create(2, "my-cjustom-name");
+
+
+        pi4j.describe().print(System.out);
+
+        ain1.describe().print(System.out);
+        ain2.describe().print(System.out);
+
+        //AnalogInput ain = AnalogInput.create(pi4j, 2);
 
 
         //AnalogInput.create()

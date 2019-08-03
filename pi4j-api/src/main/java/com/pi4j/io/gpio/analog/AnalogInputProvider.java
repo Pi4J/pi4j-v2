@@ -29,4 +29,32 @@ package com.pi4j.io.gpio.analog;
 
 public interface AnalogInputProvider extends AnalogProvider<AnalogInput, AnalogInputConfig> {
 
+    // ---------------------------------------------------------------------------
+    // FRIENDLY HELPER CREATOR STATIC METHODS
+    // ---------------------------------------------------------------------------
+
+    default <T extends AnalogInput> T create(Integer address) throws Exception {
+        var builder = AnalogInputConfigBuilder.newInstance();
+        builder.address(address);
+        return (T)create(builder.build());
+    }
+
+    default <T extends AnalogInput> T create(Integer address, String id) throws Exception {
+        var builder = AnalogInputConfigBuilder.newInstance();
+        builder.id(id).address(address).id(id);
+        return (T)create(builder.build());
+    }
+
+    default <T extends AnalogInput> T create(Integer address, String id, String name) throws Exception {
+        var builder = AnalogInputConfigBuilder.newInstance();
+        builder.id(id).address(address).id(id).name(name);
+        return (T)create(builder.build());
+    }
+
+    default <T extends AnalogInput> T create(Integer address, String id, String name, String description) throws Exception {
+        var builder = AnalogInputConfigBuilder.newInstance();
+        builder.id(id).address(address).id(id).name(name).description(description);
+        return (T)create(builder.build());
+    }
+
 }

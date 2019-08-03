@@ -32,6 +32,7 @@ import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.WithAnnotationProcessor;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogOutput;
+import com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.platform.Platform;
 import com.pi4j.util.StringUtil;
@@ -69,7 +70,7 @@ public class AnalogOutputRegistrationProcessor implements RegisterProcessor<Anal
                     "use the '@Inject(id)' annotation instead.");
 
         // create I/O config builder
-        var builder = AnalogOutput.builder();
+        var builder = AnalogOutputConfigBuilder.newInstance();
         if (annotation.value() != null) builder.id((annotation).value());
 
         // test for required additional annotations
@@ -131,15 +132,15 @@ public class AnalogOutputRegistrationProcessor implements RegisterProcessor<Anal
 
         // if a provider was found, then create analog output IO instance using that provider
         if(provider != null){
-            return AnalogOutput.create(context, provider, builder.build());
+            return provider.create(builder.build());
         }
 
         // if no provider was found, then create analog output IO instance using defaults
         else {
             if(platform != null)
-                return AnalogOutput.create(context, platform.provider(AnalogOutputProvider.class), builder.build());
+                return platform.provider(AnalogOutputProvider.class).create(builder.build());
             else
-                return AnalogOutput.create(context, builder.build());
+                return context.provider(AnalogOutputProvider.class).create(builder.build());
         }
     }
 }

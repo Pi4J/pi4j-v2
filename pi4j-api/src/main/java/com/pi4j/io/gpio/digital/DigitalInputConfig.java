@@ -36,4 +36,8 @@ public interface DigitalInputConfig extends DigitalConfig<DigitalInputConfig> {
     default PullResistance getPull(){
         return pull();
     }
+
+    static DigitalInputConfigBuilder newBuilder()  {
+        return DigitalInputConfigBuilder.newInstance();
+    }
 }

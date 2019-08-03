@@ -27,14 +27,12 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBuilderBase;
-import com.pi4j.io.gpio.digital.DigitalOutputBuilder;
-import com.pi4j.io.gpio.digital.DigitalOutputConfig;
-import com.pi4j.io.gpio.digital.DigitalState;
+import com.pi4j.io.gpio.digital.*;
+import com.pi4j.platform.Platform;
 
-public class DefaultDigitalOutputBuilder
-        extends AddressConfigBuilderBase<DigitalOutputBuilder, DigitalOutputConfig>
-        implements DigitalOutputBuilder {
+import java.security.Provider;
+
+public class DefaultDigitalOutputBuilder implements DigitalOutputBuilder {
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -44,20 +42,63 @@ public class DefaultDigitalOutputBuilder
     }
 
     @Override
+    public DigitalOutputBuilder id(String id) {
+        return null;
+    }
+
+    @Override
+    public DigitalOutputBuilder name(String name) {
+        return null;
+    }
+
+    @Override
+    public DigitalOutputBuilder description(String description) {
+        return null;
+    }
+
+    @Override
+    public DigitalOutputBuilder address(Integer address) {
+        return null;
+    }
+
+    @Override
     public DigitalOutputBuilder shutdown(DigitalState state) {
-        this.properties.put(DigitalOutputConfig.SHUTDOWN_STATE_KEY, state.toString());
-        return this;
+        return null;
     }
 
     @Override
     public DigitalOutputBuilder initial(DigitalState state) {
-        this.properties.put(DigitalOutputConfig.INITIAL_STATE_KEY, state.toString());
-        return this;
+        return null;
     }
 
     @Override
-    public DigitalOutputConfig build() {
-        DigitalOutputConfig config = new DefaultDigitalOutputConfig(properties);
-        return config;
+    public DigitalOutputBuilder platform(String platformId) {
+        return null;
     }
+
+    @Override
+    public DigitalOutputBuilder platform(Class<? extends Platform> platformClass) {
+        return null;
+    }
+
+    @Override
+    public DigitalOutputBuilder provider(String providerId) {
+        return null;
+    }
+
+    @Override
+    public DigitalOutputBuilder provider(Class<? extends Provider> providerClass) {
+        return null;
+    }
+
+    public static DigitalOutputBuilder newInstance() {
+        return new DefaultDigitalOutputBuilder();
+    }
+
+    @Override
+    public DigitalOutput build() {
+        return null;
+    }
+
+
 }

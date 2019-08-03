@@ -29,7 +29,7 @@ package com.pi4j.example.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.util.Console;
 
@@ -69,8 +69,8 @@ public class DigitalOutputFromProperties {
         properties.put("name", "DIGI4");
 
         // create a digital output instance using the default digital output provider
-        var builder = DigitalOutput.builder().load(properties);
-        var output = DigitalOutput.create(pi4j, builder.build());
+        var builder = DigitalOutputConfigBuilder.newInstance().load(properties);
+        var output = pi4j.dout().create(builder.build());
 
         // setup a digital output listener to listen for any state changes on the digital output
         output.addListener((DigitalChangeListener) event -> {

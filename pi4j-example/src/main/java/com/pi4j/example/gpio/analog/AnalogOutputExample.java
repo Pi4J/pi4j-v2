@@ -29,8 +29,7 @@ package com.pi4j.example.gpio.analog;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.AnalogOutput;
-import com.pi4j.io.gpio.analog.AnalogOutputBuilder;
+import com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder;
 import com.pi4j.util.Console;
 
 public class AnalogOutputExample {
@@ -62,11 +61,11 @@ public class AnalogOutputExample {
         // in the class path
         var pi4j = Pi4J.newAutoContext();
 
-        AnalogOutputBuilder builder = AnalogOutput.builder();
+        AnalogOutputConfigBuilder builder = AnalogOutputConfigBuilder.newInstance();
         builder.id(ANALOG_OUTPUT_PIN_ID)
                .name(ANALOG_OUTPUT_PIN_NAME)
                .address(ANALOG_OUTPUT_PIN);
-        var output = AnalogOutput.create(pi4j, builder.build());
+        var output = pi4j.aout().create(builder.build());
 
         // create an analog output instance using the default analog output provider
         //var output = AnalogOutput.create(ANALOG_OUTPUT_PIN_ID, ANALOG_OUTPUT_PIN);

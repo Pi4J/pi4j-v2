@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.analog;
+package com.pi4j.io.gpio.digital;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogOutputBuilder.java
+ * FILENAME      :  DigitalOutputConfigBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,8 +27,14 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
-public interface AnalogOutputBuilder extends AnalogConfigBuilder<AnalogOutputBuilder, AnalogOutputConfig> {
-    AnalogOutputBuilder shutdown(Integer value);
-    AnalogOutputBuilder initial(Integer value);
-    AnalogOutputBuilder step(Integer value);
+import com.pi4j.io.gpio.digital.impl.DefaultDigitalOutputConfigBuilder;
+
+public interface DigitalOutputConfigBuilder extends DigitalConfigBuilder<DigitalOutputConfigBuilder, DigitalOutputConfig> {
+    DigitalOutputConfigBuilder shutdown(DigitalState state);
+    DigitalOutputConfigBuilder initial(DigitalState state);
+
+    static DigitalOutputConfigBuilder newInstance()  {
+        return DefaultDigitalOutputConfigBuilder.newInstance();
+    }
+
 }

@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.digital.impl;
+package com.pi4j.io.gpio.analog.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DefaultDigitalInputBuilder.java
+ * FILENAME      :  DefaultAnalogInputConfigBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,31 +27,27 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBuilderBase;
-import com.pi4j.io.gpio.digital.DigitalInputBuilder;
-import com.pi4j.io.gpio.digital.DigitalInputConfig;
-import com.pi4j.io.gpio.digital.PullResistance;
+import com.pi4j.io.gpio.analog.AnalogInputConfig;
+import com.pi4j.io.gpio.analog.AnalogInputConfigBuilder;
 
-public class DefaultDigitalInputBuilder
-        extends AddressConfigBuilderBase<DigitalInputBuilder, DigitalInputConfig>
-        implements DigitalInputBuilder {
+public class DefaultAnalogInputConfigBuilder
+        extends AnalogConfigBuilderBase<AnalogInputConfigBuilder, AnalogInputConfig>
+        implements AnalogInputConfigBuilder {
 
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected DefaultDigitalInputBuilder(){
+    private DefaultAnalogInputConfigBuilder(){
         super();
     }
 
-    @Override
-    public DigitalInputConfig build() {
-        DigitalInputConfig config = new DefaultDigitalInputConfig(properties);
-        return config;
+    public static AnalogInputConfigBuilder newInstance() {
+        return new DefaultAnalogInputConfigBuilder();
     }
 
     @Override
-    public DigitalInputBuilder pull(PullResistance value) {
-        this.properties.put(DigitalInputConfig.PULL_RESISTANCE_KEY, value.toString());
-        return this;
+    public AnalogInputConfig build() {
+        AnalogInputConfig config = new DefaultAnalogInputConfig(properties);
+        return config;
     }
 }

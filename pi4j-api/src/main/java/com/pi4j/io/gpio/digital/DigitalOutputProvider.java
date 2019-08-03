@@ -28,4 +28,28 @@ package com.pi4j.io.gpio.digital;
  */
 public interface DigitalOutputProvider extends DigitalProvider<DigitalOutput, DigitalOutputConfig> {
 
+    default <T extends DigitalOutput> T create(Integer address) throws Exception {
+        var builder = DigitalOutputConfigBuilder.newInstance();
+        builder.address(address);
+        return (T)create(builder.build());
+    }
+
+    default <T extends DigitalOutput> T create(Integer address, String id) throws Exception {
+        var builder = DigitalOutputConfigBuilder.newInstance();
+        builder.id(id).address(address).id(id);
+        return (T)create(builder.build());
+    }
+
+    default <T extends DigitalOutput> T create(Integer address, String id, String name) throws Exception {
+        var builder = DigitalOutputConfigBuilder.newInstance();
+        builder.id(id).address(address).id(id).name(name);
+        return (T)create(builder.build());
+    }
+
+    default <T extends DigitalOutput> T create(Integer address, String id, String name, String description) throws Exception {
+        var builder = DigitalOutputConfigBuilder.newInstance();
+        builder.id(id).address(address).id(id).name(name).description(description);
+        return (T)create(builder.build());
+    }
+
 }

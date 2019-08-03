@@ -29,7 +29,6 @@ package com.pi4j.example.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.mock.provider.gpio.digital.MockDigitalInput;
 import com.pi4j.mock.provider.gpio.digital.MockDigitalInputProvider;
@@ -73,7 +72,7 @@ public class DigitalInputExampleWithMockProvider {
 
         // create a digital input instance using the default digital input provider
         console.println("ATTEMPTING TO CREATE A MOCK DIGITAL INPUT INSTANCE");
-        var input = DigitalInput.create(pi4j, provider, DIGITAL_INPUT_PIN, MockDigitalInput.class);
+        MockDigitalInput input = provider.create(DIGITAL_INPUT_PIN);
 
         // display created instance
         console.print("--> CREATED IO INSTANCE: ");

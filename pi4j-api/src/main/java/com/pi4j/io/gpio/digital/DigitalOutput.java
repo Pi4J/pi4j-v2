@@ -27,13 +27,7 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
-import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.Output;
-import com.pi4j.io.gpio.digital.impl.DigitalOutputFactory;
-import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.registry.exception.RegistryException;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -127,112 +121,4 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
     default Future<?> blinkAsync(int delay, int duration, TimeUnit unit, DigitalState state){
         return this.blinkAsync(delay, duration, unit, state, null);
     }
-
-
-    // ---------------------------------------------------------------------------
-    // INSTANCE ACCESSOR STATIC METHODS
-    // ---------------------------------------------------------------------------
-
-    static boolean exists(Context context, String id) throws ProviderException, NotInitializedException {
-        return DigitalOutputFactory.exists(context, id);
-    }
-
-    static <T extends DigitalOutput> T get(Context context, String id) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalOutputFactory.get(context, id);
-    }
-
-    // ---------------------------------------------------------------------------
-    // BUILDER CREATOR STATIC METHODS
-    // ---------------------------------------------------------------------------
-
-    static DigitalOutputBuilder builder() throws ProviderException {
-        return DigitalOutputFactory.builder();
-    }
-
-    // ---------------------------------------------------------------------------
-    // FRIENDLY HELPER CREATOR STATIC METHODS
-    // ---------------------------------------------------------------------------
-
-    static <T extends DigitalOutput> T create(Context context, Integer address) throws Pi4JException {
-        DigitalOutputBuilder builder = DigitalOutput.builder();
-        builder.address(address);
-        return (T)DigitalOutput.create(context, builder.build());
-    }
-
-    static <T extends DigitalOutput> T create(Context context, Integer address, String id) throws Pi4JException {
-        DigitalOutputBuilder builder = DigitalOutput.builder();
-        builder.id(id).address(address).id(id);
-        return (T)DigitalOutput.create(context, builder.build());
-    }
-
-    static <T extends DigitalOutput> T create(Context context, Integer address, String id, String name) throws Pi4JException {
-        DigitalOutputBuilder builder = DigitalOutput.builder();
-        builder.id(id).address(address).id(id).name(name);
-        return (T)DigitalOutput.create(context, builder.build());
-    }
-
-    static <T extends DigitalOutput> T create(Context context, String providerId, Integer address) throws Pi4JException {
-        DigitalOutputBuilder builder = DigitalOutput.builder();
-        builder.address(address);
-        return (T)DigitalOutput.create(context, providerId, builder.build());
-    }
-
-    static <T extends DigitalOutput> T create(Context context, DigitalOutputProvider provider, Integer address) throws Pi4JException {
-        DigitalOutputBuilder builder = DigitalOutput.builder();
-        builder.address(address);
-        return (T)DigitalOutput.create(context, provider, builder.build());
-    }
-
-    // ---------------------------------------------------------------------------
-    // RAW FACTORY CREATOR STATIC METHODS
-    // ---------------------------------------------------------------------------
-
-    static <T extends DigitalOutput> T create(Context context, DigitalOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)DigitalOutputFactory.create(context, config);
-    }
-
-    static <T extends DigitalOutput> T create(Context context, String providerId, DigitalOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)DigitalOutputFactory.create(context, providerId, config);
-    }
-
-    static <T extends DigitalOutput> T create(Context context, DigitalOutputProvider provider, DigitalOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)DigitalOutputFactory.create(context, provider, config);
-    }
-
-    // ---------------------------------------------------------------------------
-    // SPECIFIED RETURN CLASS HELPER METHODS
-    // ---------------------------------------------------------------------------
-
-    static <T extends DigitalOutput> T create(Context context, Integer address, Class<T> clazz) throws Pi4JException {
-        return (T)DigitalOutput.create(context, address);
-    }
-
-    static <T extends DigitalOutput> T create(Context context, Integer address, String id, Class<T> clazz) throws Pi4JException {
-        return (T)DigitalOutput.create(context, address, id);
-    }
-
-    static <T extends DigitalOutput> T create(Context context, Integer address, String id, String name, Class<T> clazz) throws Pi4JException {
-        return (T)DigitalOutput.create(context, address, id, name);
-    }
-
-    static <T extends DigitalOutput> T create(Context context, String providerId, Integer address, Class<T> clazz) throws Pi4JException {
-        return (T)DigitalOutput.create(context, providerId, address);
-    }
-
-    static <T extends DigitalOutput> T create(Context context, DigitalOutputProvider provider, Integer address, Class<T> clazz) throws Pi4JException {
-        return (T)DigitalOutput.create(context, provider, address);
-    }
-
-    static <T extends DigitalOutput> T create(Context context, DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalOutput.create(context, config);
-    }
-
-    static <T extends DigitalOutput> T create(Context context, String providerId, DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalOutput.create(context, providerId, config);
-    }
-
-    static <T extends DigitalOutput> T create(Context context, DigitalOutputProvider provider, DigitalOutputConfig config, Class<T> clazz) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)DigitalOutput.create(context, provider, config);
-    }
-
 }

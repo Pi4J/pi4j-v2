@@ -219,14 +219,13 @@ public class GettingStartedExample {
         // the capabilities of Pi4J by writing your/their own
         // Provider implementation libraries.
         Registry registry = pi4j.registry();
-        //Registry registry = Pi4J.registry(); // <-- Also available via the Pi4J static helper
 
         // Here we will create an I/O interface for a (GPIO) digital output pin.
         // More comprehensive examples and descriptions are provided in other examples;
         // we just want to include a single I/O instance here as a simple example for
         // this demonstration.  Since no specific 'provider' is defined, Pi4J will
         // use the default `DigitalOutputProvider` for the current default platform.
-        DigitalOutput output = DigitalOutput.create(pi4j, 1,"my-digital-output-1");
+        DigitalOutput output = pi4j.dout().create(1,"my-digital-output-1");
 
         // let's print out to the console the detected and loaded
         // I/O interfaces registered with Pi4J and included in the 'Registry'.

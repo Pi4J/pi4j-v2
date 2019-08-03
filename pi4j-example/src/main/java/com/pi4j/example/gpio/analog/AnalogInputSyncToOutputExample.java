@@ -29,8 +29,6 @@ package com.pi4j.example.gpio.analog;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.binding.AnalogBindingSync;
 import com.pi4j.util.Console;
 
@@ -61,10 +59,10 @@ public class AnalogInputSyncToOutputExample {
         var pi4j = Pi4J.newAutoContext();
 
         // create a analog input instance using the default analog input provider
-        var input = AnalogInput.create(pi4j, ANALOG_INPUT_PIN);
+        var input = pi4j.analogInput().create(ANALOG_INPUT_PIN);
 
         // create a analog output instance using the default analog output provider
-        var output = AnalogOutput.create(pi4j, ANALOG_OUTPUT_PIN);
+        var output = pi4j.aout().create(ANALOG_OUTPUT_PIN);
 
         // setup a analog output listener to listen for any state changes on the analog output
         // we will just print out the detected state changes

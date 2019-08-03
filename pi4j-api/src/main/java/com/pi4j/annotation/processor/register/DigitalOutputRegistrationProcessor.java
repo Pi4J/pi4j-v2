@@ -32,6 +32,7 @@ import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.WithAnnotationProcessor;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.platform.Platform;
 import com.pi4j.util.StringUtil;
@@ -69,7 +70,7 @@ public class DigitalOutputRegistrationProcessor implements RegisterProcessor<Dig
                     "use the '@Inject(id)' annotation instead.");
 
         // create I/O config builder
-        var builder = DigitalOutput.builder();
+        var builder = DigitalOutputConfigBuilder.newInstance();
         if (annotation.value() != null) builder.id((annotation).value());
 
         // test for required additional annotations
@@ -118,15 +119,15 @@ public class DigitalOutputRegistrationProcessor implements RegisterProcessor<Dig
 
         // if a provider was found, then create digital input IO instance using that provider
         if(provider != null){
-            return DigitalOutput.create(context, provider, builder.build());
+            return provider.create(builder.build());
         }
 
         // if no provider was found, then create digital input IO instance using defaults
         else {
             if(platform != null)
-                return DigitalOutput.create(context, platform.provider(DigitalOutputProvider.class), builder.build());
+                return platform.provider(DigitalOutputProvider.class).create(builder.build());
             else
-                return DigitalOutput.create(context, builder.build());
+                return context.provider(DigitalOutputProvider.class).create(builder.build());
         }
     }
 }

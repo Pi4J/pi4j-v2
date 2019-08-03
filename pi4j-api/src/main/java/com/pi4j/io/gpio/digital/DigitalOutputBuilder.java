@@ -27,7 +27,29 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-public interface DigitalOutputBuilder extends DigitalConfigBuilder<DigitalOutputBuilder, DigitalOutputConfig> {
+import com.pi4j.context.Context;
+import com.pi4j.io.gpio.digital.impl.DefaultDigitalOutputBuilder;
+import com.pi4j.platform.Platform;
+
+import java.security.Provider;
+
+public interface DigitalOutputBuilder {
+
+    DigitalOutputBuilder id(String id);
+    DigitalOutputBuilder name(String name);
+    DigitalOutputBuilder description(String description);
+    DigitalOutputBuilder address(Integer address);
     DigitalOutputBuilder shutdown(DigitalState state);
     DigitalOutputBuilder initial(DigitalState state);
+
+    DigitalOutputBuilder platform(String platformId);
+    DigitalOutputBuilder platform(Class<? extends Platform> platformClass);
+    DigitalOutputBuilder provider(String providerId);
+    DigitalOutputBuilder provider(Class<? extends Provider> providerClass);
+
+    static DigitalOutputBuilder newInstance(Context context)  {
+        return DefaultDigitalOutputBuilder.newInstance();
+    }
+
+    DigitalOutput build();
 }

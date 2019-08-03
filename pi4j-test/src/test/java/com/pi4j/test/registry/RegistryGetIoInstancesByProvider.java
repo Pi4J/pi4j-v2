@@ -51,7 +51,7 @@ public class RegistryGetIoInstancesByProvider {
     private Context pi4j;
 
     @Before
-    public void beforeTest() throws Pi4JException {
+    public void beforeTest() throws Exception {
 
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
 
@@ -70,8 +70,8 @@ public class RegistryGetIoInstancesByProvider {
                 .build().inject(this);
 
         // create simple I/O instances
-        DigitalInput input1 = DigitalInput.create(pi4j, PIN_ADDRESS_1, PIN_ID_1);
-        DigitalInput input2 = DigitalInput.create(pi4j, PIN_ADDRESS_2, PIN_ID_2);
+        DigitalInput input1 = pi4j.din().create(PIN_ADDRESS_1, PIN_ID_1);
+        DigitalInput input2 = pi4j.din().create(PIN_ADDRESS_2, PIN_ID_2);
     }
 
     @After

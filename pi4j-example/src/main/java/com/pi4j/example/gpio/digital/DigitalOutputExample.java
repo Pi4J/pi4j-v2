@@ -29,7 +29,6 @@ package com.pi4j.example.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.util.Console;
 
@@ -61,7 +60,7 @@ public class DigitalOutputExample {
         var pi4j = Pi4J.newAutoContext();
 
         // create a digital output instance using the default digital output provider
-        var output = DigitalOutput.create(pi4j, DIGITAL_OUTPUT_PIN);
+        var output = pi4j.dout().create(DIGITAL_OUTPUT_PIN);
         output.config().shutdownState(DigitalState.HIGH);
 
         // setup a digital output listener to listen for any state changes on the digital output

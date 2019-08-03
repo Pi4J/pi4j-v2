@@ -44,4 +44,8 @@ public interface DigitalOutputConfig extends DigitalConfig<DigitalOutputConfig> 
     default DigitalState getInitialState(){
         return initialState();
     }
+
+    static DigitalOutputConfigBuilder newBuilder()  {
+        return DigitalOutputConfigBuilder.newInstance();
+    }
 }

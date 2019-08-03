@@ -63,10 +63,10 @@ public class RegistryGetIoInstance {
     }
 
     @Test
-    public void testGetIoInstanceFromRegistry() throws Pi4JException {
+    public void testGetIoInstanceFromRegistry() throws Exception {
 
         // create a simple I/O instance
-        DigitalInput input = DigitalInput.create(pi4j, PIN_ADDRESS, PIN_ID);
+        DigitalInput input = pi4j.din().create(PIN_ADDRESS, PIN_ID);
 
         // attempt to get I/O instance from registry
         DigitalInput retrieved = pi4j.registry().get(PIN_ID, DigitalInput.class);

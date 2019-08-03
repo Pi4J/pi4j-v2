@@ -29,11 +29,7 @@ import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.binding.AnalogBindingSync;
-import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.test.provider.TestAnalogInput;
 import com.pi4j.test.provider.TestAnalogInputProvider;
 
 public class Main {
@@ -72,15 +68,15 @@ public class Main {
 
 
 
-        var din1 = DigitalInput.create(pi4j, 11);
-        var ain1 = AnalogInput.create(pi4j, "test-analog-input-provider",21, TestAnalogInput.class);
+        var din1 = pi4j.dout().create(11);
+        var ain1 = pi4j.ain().create(21, "test-analog-input-provider");
 
-        var input = AnalogInput.create(pi4j, 98);
+        var input = pi4j.ain().create(98);
 
         input.name("My Analog Input #1");
 
-        var output1 = AnalogOutput.create(pi4j, 99);
-        var output2 = AnalogOutput.create(pi4j, 100);
+        var output1 = pi4j.aout().create(99);
+        var output2 = pi4j.aout().create(100);
 
         input.addListener((AnalogChangeListener) event -> {
             System.out.print("ANALOG INPUT [");

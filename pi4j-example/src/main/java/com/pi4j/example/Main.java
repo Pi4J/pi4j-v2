@@ -28,10 +28,7 @@ package com.pi4j.example;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.binding.AnalogBindingSync;
-import com.pi4j.io.gpio.digital.DigitalInput;
 
 public class Main {
 
@@ -52,14 +49,12 @@ public class Main {
 //        serial.send("TEST DATA");
 //        serial.close();
 
-        var din1 = DigitalInput.create(pi4j,11);
-        var ain1 = AnalogInput.create(pi4j,21);
+        var din1 = pi4j.din().create(11);
+        var ain1 = pi4j.ain().create(21);
 
-
-
-        var input = AnalogInput.create(pi4j,98);
-        var output1 = AnalogOutput.create(pi4j,99);
-        var output2 = AnalogOutput.create(pi4j,100);
+        var input = pi4j.ain().create(98);
+        var output1 = pi4j.aout().create(99);
+        var output2 = pi4j.aout().create(100);
 
         input.addListener((AnalogChangeListener) event -> {
             System.out.print(event);

@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.analog.impl;
+package com.pi4j.io.gpio.digital.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DefaultAnalogOutputBuilder.java
+ * FILENAME      :  DefaultDigitalOutputConfigBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,41 +27,41 @@ package com.pi4j.io.gpio.analog.impl;
  * #L%
  */
 
-import com.pi4j.io.gpio.analog.AnalogOutputBuilder;
-import com.pi4j.io.gpio.analog.AnalogOutputConfig;
+import com.pi4j.config.impl.AddressConfigBuilderBase;
+import com.pi4j.io.gpio.digital.DigitalOutputConfig;
+import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
+import com.pi4j.io.gpio.digital.DigitalState;
 
-public class DefaultAnalogOutputBuilder
-        extends AnalogConfigBuilderBase<AnalogOutputBuilder, AnalogOutputConfig>
-        implements AnalogOutputBuilder {
+public class DefaultDigitalOutputConfigBuilder
+        extends AddressConfigBuilderBase<DigitalOutputConfigBuilder, DigitalOutputConfig>
+        implements DigitalOutputConfigBuilder {
 
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected DefaultAnalogOutputBuilder(){
+    protected DefaultDigitalOutputConfigBuilder(){
         super();
     }
 
+    public static DigitalOutputConfigBuilder newInstance() {
+        return new DefaultDigitalOutputConfigBuilder();
+    }
+
     @Override
-    public AnalogOutputBuilder shutdown(Integer value) {
-        this.properties.put(AnalogOutputConfig.SHUTDOWN_VALUE_KEY, value.toString());
+    public DigitalOutputConfigBuilder shutdown(DigitalState state) {
+        this.properties.put(DigitalOutputConfig.SHUTDOWN_STATE_KEY, state.toString());
         return this;
     }
 
     @Override
-    public AnalogOutputBuilder initial(Integer value) {
-        this.properties.put(AnalogOutputConfig.INITIAL_VALUE_KEY, value.toString());
+    public DigitalOutputConfigBuilder initial(DigitalState state) {
+        this.properties.put(DigitalOutputConfig.INITIAL_STATE_KEY, state.toString());
         return this;
     }
 
     @Override
-    public AnalogOutputConfig build() {
-        AnalogOutputConfig config = new DefaultAnalogOutputConfig(properties);
+    public DigitalOutputConfig build() {
+        DigitalOutputConfig config = new DefaultDigitalOutputConfig(properties);
         return config;
-    }
-
-    @Override
-    public AnalogOutputBuilder step(Integer value) {
-        this.properties.put(AnalogOutputConfig.STEP_VALUE_KEY, value.toString());
-        return this;
     }
 }
