@@ -27,7 +27,6 @@ package com.pi4j.context.impl;
  * #L%
  */
 
-import com.pi4j.binding.Binding;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextBuilder;
 import com.pi4j.context.ContextConfig;
@@ -47,7 +46,6 @@ public class DefaultContextBuilder implements ContextBuilder {
     protected Logger logger = LoggerFactory.getLogger(DefaultContextBuilder.class);
 
     // auto detection flags
-    protected boolean autoDetectBindings = false;
     protected boolean autoDetectPlatforms = false;
     protected boolean autoDetectProviders = false;
 
@@ -55,7 +53,6 @@ public class DefaultContextBuilder implements ContextBuilder {
     protected String defaultPlatformId = null;
 
     // extensibility modules
-    protected Collection<Binding> bindings = Collections.synchronizedList(new ArrayList<>());
     protected Collection<Platform> platforms = Collections.synchronizedList(new ArrayList<>());
     protected Collection<Provider> providers = Collections.synchronizedList(new ArrayList<>());
 
@@ -68,13 +65,6 @@ public class DefaultContextBuilder implements ContextBuilder {
 
     public static ContextBuilder newInstance(){
         return new DefaultContextBuilder();
-    }
-
-    @Override
-    public ContextBuilder add(Binding... binding) {
-        if(binding != null && binding.length > 0)
-            this.bindings.addAll(Arrays.asList(binding));
-        return this;
     }
 
     @Override
@@ -110,7 +100,7 @@ public class DefaultContextBuilder implements ContextBuilder {
 
     @Override
     public ContextBuilder noAutoDetectPlatforms() {
-        this.autoDetectBindings = false;
+        this.autoDetectPlatforms = false;
         return this;
     }
 
@@ -127,29 +117,12 @@ public class DefaultContextBuilder implements ContextBuilder {
     }
 
     @Override
-    public ContextBuilder autoDetectBindings() {
-        this.autoDetectBindings = true;
-        return this;
-    }
-
-    @Override
-    public ContextBuilder noAutoDetectBindings() {
-        this.autoDetectBindings = false;
-        return this;
-    }
-
-    @Override
     public ContextConfig toConfig() {
         // set instance reference
         var builder = this;
 
         // create a new context configuration object
         return new ContextConfig() {
-            @Override
-            public Collection<Binding> bindings() {
-                return Collections.unmodifiableCollection(builder.bindings);
-            }
-
             @Override
             public Collection<Platform> platforms() {
                 return Collections.unmodifiableCollection(builder.platforms);
@@ -173,11 +146,6 @@ public class DefaultContextBuilder implements ContextBuilder {
             @Override
             public boolean autoDetectProviders() {
                 return builder.autoDetectProviders;
-            }
-
-            @Override
-            public boolean autoDetectBindings() {
-                return builder.autoDetectBindings;
             }
         };
     }

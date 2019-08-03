@@ -30,8 +30,6 @@ package com.pi4j.context.impl;
 import com.pi4j.annotation.AnnotationEngine;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.DefaultAnnotationEngine;
-import com.pi4j.binding.Bindings;
-import com.pi4j.binding.impl.DefaultBindings;
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
@@ -48,7 +46,6 @@ import org.slf4j.LoggerFactory;
 public class DefaultContext implements Context {
 
     private ContextConfig config = null;
-    private Bindings bindings = null;
     private Providers providers = null;
     private Platforms platforms = null;
     private Registry registry = DefaultRegistry.newInstance(this);
@@ -72,7 +69,6 @@ public class DefaultContext implements Context {
         this.config = config;
 
         // create providers and platforms (manager) objects
-        this.bindings = DefaultBindings.newInstance(this);
         this.providers = DefaultProviders.newInstance(this);
         this.platforms = DefaultPlatforms.newInstance(this);
 
@@ -90,11 +86,6 @@ public class DefaultContext implements Context {
 
     @Override
     public Platforms platforms() { return this.platforms; }
-
-    @Override
-    public Bindings bindings() {
-        return bindings;
-    }
 
     @Override
     public Context inject(Object... objects) throws AnnotationException {
@@ -122,9 +113,6 @@ public class DefaultContext implements Context {
 
             // shutdown platforms
             platforms().shutdown(this);
-
-            // shutdown all bindings
-            bindings().shutdown(this);
         } catch (Exception e) {
             logger.error("failed to 'shutdown(); '", e);
             throw new LifecycleException(e);

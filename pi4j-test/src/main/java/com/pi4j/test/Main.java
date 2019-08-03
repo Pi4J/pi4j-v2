@@ -52,7 +52,6 @@ public class Main {
 
         // create About class instance
         About about = new About();
-        about.enumerateBindings(pi4j);
         about.enumerateProviders(pi4j);
         about.enumeratePlatforms(pi4j);
         about.describeDeafultPlatform(pi4j);

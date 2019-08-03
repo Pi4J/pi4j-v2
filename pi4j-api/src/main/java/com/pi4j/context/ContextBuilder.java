@@ -27,7 +27,6 @@ package com.pi4j.context;
  * #L%
  */
 
-import com.pi4j.binding.Binding;
 import com.pi4j.config.Builder;
 import com.pi4j.context.impl.DefaultContextBuilder;
 import com.pi4j.platform.Platform;
@@ -39,7 +38,6 @@ public interface ContextBuilder extends Builder<Context> {
         return DefaultContextBuilder.newInstance();
     }
 
-    ContextBuilder add(Binding ... binding);
     ContextBuilder add(Platform ... platform);
     ContextBuilder add(Provider ... provider);
 
@@ -52,8 +50,6 @@ public interface ContextBuilder extends Builder<Context> {
     ContextBuilder autoDetectProviders();
     ContextBuilder noAutoDetectProviders();
 
-    ContextBuilder autoDetectBindings();
-    ContextBuilder noAutoDetectBindings();
     ContextConfig toConfig();
 
     default ContextBuilder setAutoDetect(boolean autoDetect){
@@ -65,15 +61,13 @@ public interface ContextBuilder extends Builder<Context> {
 
     default ContextBuilder autoDetect(){
         // auto detect all extensibility modules in the classpath
-        return  autoDetectBindings().
-                autoDetectPlatforms().
+        return  autoDetectPlatforms().
                 autoDetectProviders();
     }
 
     default ContextBuilder noAutoDetect(){
         // do not auto detect all extensibility modules in the classpath
-        return  noAutoDetectBindings().
-                noAutoDetectPlatforms().
+        return  noAutoDetectPlatforms().
                 noAutoDetectProviders();
     }
 
@@ -82,9 +76,6 @@ public interface ContextBuilder extends Builder<Context> {
     }
     default ContextBuilder addPlatform(Provider ... provider){
         return add(provider);
-    }
-    default ContextBuilder addBinding(Binding ... binding){
-        return add(binding);
     }
 
     default ContextBuilder addDefaultPlatform(Platform platform){

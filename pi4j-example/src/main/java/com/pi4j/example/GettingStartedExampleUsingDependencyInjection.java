@@ -136,10 +136,8 @@ public class GettingStartedExampleUsingDependencyInjection {
         // We will use the '@Inject' annotation to perform
         // dependnecy injection on the class members/fields.
         //
-        // The '@Inject' annotation will only work if Pi4J has been
-        // initialized either via a call to 'Pi4J.initialize()' or via
-        // the '@Initialize' annotation on the class, constructor or
-        // field of type 'com.pi4j.context.Context'.
+        // The '@Inject' annotation will only work if Pi4J runtime
+        // context has been created.
         //
         // NOTE: Dependency injection will only work when the
         //       class has been passed into the 'Pi4J.inject()'
@@ -286,10 +284,8 @@ public class GettingStartedExampleUsingDependencyInjection {
         // the registration of an I/O instance using dependnecy
         // injection.
         //
-        // The '@Register' annotation will only work if Pi4J has been
-        // initialized either via a call to 'Pi4J.initialize()' or via
-        // the '@Initialize' annotation on the class, constructor or
-        // field of type 'com.pi4j.context.Context'.
+        // The '@Register' annotation will only work if a Pi4J runtime
+        // context has been created.
         //
         // NOTE: '@Register' can be used to register the following
         //       with Pi4J:

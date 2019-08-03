@@ -27,7 +27,6 @@ package com.pi4j.platform.impl;
  * #L%
  */
 
-import com.pi4j.binding.exception.BindingException;
 import com.pi4j.context.Context;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
@@ -163,11 +162,6 @@ public class DefaultPlatforms implements Platforms {
 
     /**
      * Get all bindings of a specified binding class type.
-     *
-     * @param platformClass
-     * @param <T>
-     * @return
-     * @throws BindingException
      */
     @Override
     public <T extends Platform> Map<String, T> all(Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException {

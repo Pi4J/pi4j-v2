@@ -25,7 +25,6 @@ package com.pi4j.test;/*-
  * #L%
  */
 
-import com.pi4j.binding.Binding;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.IOType;
@@ -36,18 +35,6 @@ public class About {
 
 
     public About() throws Exception {
-    }
-
-    public void enumerateBindings(Context context) throws Pi4JException {
-        enumerateBindings(context,"BINDINGS");
-    }
-    public void enumerateBindings(Context context, String title) throws Pi4JException {
-        System.out.println("=====================================================");
-        System.out.println(title);
-        System.out.println("=====================================================");
-        for (Binding binding : context.bindings().all().values()) {
-            System.out.println("  " + binding.name() + " [" + binding.id() + "]; ");
-        }
     }
 
     public void enumerateProviders(Context context) throws Pi4JException {

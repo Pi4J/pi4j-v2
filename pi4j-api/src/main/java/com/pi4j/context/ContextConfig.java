@@ -27,43 +27,37 @@ package com.pi4j.context;
  * #L%
  */
 
-import com.pi4j.binding.Binding;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 
 import java.util.Collection;
 
 public interface ContextConfig {
-    Collection<Binding> bindings();
-    default Collection<Binding> getBindings(){
-        return bindings();
-    }
 
+    // **************************************************
+    // PLATFORMS
+    // **************************************************
     Collection<Platform> platforms();
     default Collection<Platform> getPlatforms(){
         return platforms();
     }
-
-    Collection<Provider> providers();
-    default Collection<Provider> getProviders(){
-        return providers();
-    }
-
+    boolean autoDetectPlatforms();
+    default boolean getAutoDetectPlatforms() { return autoDetectPlatforms(); };
+    default boolean isAutoDetectPlatforms() { return autoDetectPlatforms(); };
     String defaultPlatform();
     default String getDefaultPlatform(){
         return defaultPlatform();
     }
     default boolean hasDefaultPlatform(){ return getDefaultPlatform() != null;};
 
-    boolean autoDetectPlatforms();
-    default boolean getAutoDetectPlatforms() { return autoDetectPlatforms(); };
-    default boolean isAutoDetectPlatforms() { return autoDetectPlatforms(); };
-
+    // **************************************************
+    // PROVIDERS
+    // **************************************************
+    Collection<Provider> providers();
+    default Collection<Provider> getProviders(){
+        return providers();
+    }
     boolean autoDetectProviders();
     default boolean getAutoDetectProviders() { return autoDetectProviders(); };
     default boolean isAutoDetectProviders() { return autoDetectProviders(); };
-
-    boolean autoDetectBindings();
-    default boolean getAutoDetectBindings() { return autoDetectBindings(); };
-    default boolean isAutoDetectBindings() { return autoDetectProviders(); };
 }

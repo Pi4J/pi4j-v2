@@ -28,7 +28,6 @@ package com.pi4j.context;
  */
 
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.binding.Bindings;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
 import com.pi4j.common.exception.LifecycleException;
@@ -52,7 +51,6 @@ import com.pi4j.registry.Registry;
 public interface Context extends Describable {
 
     ContextConfig config();
-    Bindings bindings();
     Providers providers();
     Registry registry();
     Platforms platforms();
@@ -166,7 +164,6 @@ public interface Context extends Describable {
                 .name("Runtime Context")
                 .type(this.getClass());
 
-        descriptor.add(bindings().describe());
         descriptor.add(registry().describe());
         descriptor.add(platforms().describe());
         descriptor.add(providers().describe());
