@@ -326,13 +326,4 @@ public class DefaultPlatforms implements Platforms {
     public Platform defaultPlatform() {
         return this.defaultPlatform;
     }
-
-//    @Override
-//    public Platform defaultPlatform(String platformId) throws PlatformNotFoundException {
-//        if(platforms.containsKey(platformId)){
-//            this.defaultPlatform = platforms.get(platformId);
-//            return this.defaultPlatform;
-//        }
-//        throw new PlatformNotFoundException(platformId);
-//    }
 }
