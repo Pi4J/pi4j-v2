@@ -1,11 +1,11 @@
-package com.pi4j.test.provider;
+package com.pi4j.provider.exception;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
- * FILENAME      :  TestSpiProvider.java
+ * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
+ * FILENAME      :  ProviderTypeException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,26 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.test.provider.impl.TestSpiProviderImpl;
 
-public interface TestSpiProvider extends SpiProvider {
-    static TestSpiProvider newInstance(){
-        return new TestSpiProviderImpl();
+import com.pi4j.provider.Provider;
+
+/**
+ * <p>
+ * This exception is thrown if a platform assignment is attempted when a
+ * platform instance has already been assigned.
+ * </p>
+ *
+ * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
+ * @author Robert Savage (<a
+ *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ */
+public class ProviderTypeException extends ProviderException {
+
+    /**
+     * Default Constructor
+     */
+    public ProviderTypeException(Class<? extends Provider> providerClass){
+        super("Pi4J provider class [" + providerClass + "] is not an Interface but rather a concerete class. Please specify an Interface when requesting a provider by type.");
     }
-    static TestSpiProvider newInstance(String id){
-        return new TestSpiProviderImpl(id);
-    }
-    static TestSpiProvider newInstance(String id, String name){
-        return new TestSpiProviderImpl(id, name);
-    }
+
 }

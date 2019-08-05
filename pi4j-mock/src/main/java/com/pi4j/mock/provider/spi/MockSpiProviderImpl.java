@@ -1,11 +1,11 @@
-package com.pi4j.test.provider;
+package com.pi4j.mock.provider.spi;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
- * FILENAME      :  TestSpiProvider.java
+ * PROJECT       :  Pi4J :: MOCK     :: Mock Platform & Mock I/O Providers
+ * FILENAME      :  MockSpiProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,19 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.test.provider.impl.TestSpiProviderImpl;
+import com.pi4j.io.spi.Spi;
+import com.pi4j.io.spi.SpiConfig;
+import com.pi4j.io.spi.SpiProviderBase;
 
-public interface TestSpiProvider extends SpiProvider {
-    static TestSpiProvider newInstance(){
-        return new TestSpiProviderImpl();
+public class MockSpiProviderImpl extends SpiProviderBase implements MockSpiProvider{
+
+    public MockSpiProviderImpl(){
+        this.id = ID;
+        this.name = NAME;
     }
-    static TestSpiProvider newInstance(String id){
-        return new TestSpiProviderImpl(id);
-    }
-    static TestSpiProvider newInstance(String id, String name){
-        return new TestSpiProviderImpl(id, name);
+
+    @Override
+    public Spi create(SpiConfig config) throws Exception {
+        return new MockSpi(this, config);
     }
 }

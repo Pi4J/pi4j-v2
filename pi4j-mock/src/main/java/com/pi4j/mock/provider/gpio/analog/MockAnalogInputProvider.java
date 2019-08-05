@@ -27,26 +27,14 @@ package com.pi4j.mock.provider.gpio.analog;
  * #L%
  */
 
-import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
-import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
 import com.pi4j.mock.Mock;
 
-import java.io.IOException;
+public interface MockAnalogInputProvider extends AnalogInputProvider {
+    String NAME = Mock.ANALOG_INPUT_PROVIDER_NAME;
+    String ID = Mock.ANALOG_INPUT_PROVIDER_ID;
 
-public class MockAnalogInputProvider extends AnalogInputProviderBase implements AnalogInputProvider {
-
-    public static final String NAME = Mock.ANALOG_INPUT_PROVIDER_NAME;
-    public static final String ID = Mock.ANALOG_INPUT_PROVIDER_ID;
-
-    public MockAnalogInputProvider(){
-        this.id = ID;
-        this.name = NAME;
-    }
-
-    @Override
-    public AnalogInput newInstance(AnalogInputConfig config) throws IOException {
-        return new MockAnalogInput(this, config);
+    static MockAnalogInputProvider newInstance() {
+        return new MockAnalogInputProviderImpl();
     }
 }

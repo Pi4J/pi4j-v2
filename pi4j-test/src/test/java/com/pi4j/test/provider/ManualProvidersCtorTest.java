@@ -48,10 +48,10 @@ public class ManualProvidersCtorTest {
     public void beforeTest() throws Pi4JException {
 
         // create our own custom provider implementation classes
-        PwmProvider pwmProvider = new TestPwmProvider();
-        I2CProvider i2CProvider = new TestI2CProvider();
-        SerialProvider serialProvider = new TestSerialProvider();
-        SerialProvider serialProvider2 = new TestSerialProvider("test-serial-provider-2");
+        PwmProvider pwmProvider = TestPwmProvider.newInstance();
+        I2CProvider i2CProvider = TestI2CProvider.newInstance();
+        SerialProvider serialProvider = TestSerialProvider.newInstance();
+        SerialProvider serialProvider2 = TestSerialProvider.newInstance("test-serial-provider-2");
 
         // Initialize Pi4J with a manually configured context
         // ...

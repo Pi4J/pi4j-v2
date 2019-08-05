@@ -1,11 +1,11 @@
-package com.pi4j.test.provider;
+package com.pi4j.test.provider.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
- * FILENAME      :  TestSpiProvider.java
+ * FILENAME      :  TestAnalogOutputProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,26 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.test.provider.impl.TestSpiProviderImpl;
+import com.pi4j.io.gpio.analog.AnalogOutput;
+import com.pi4j.io.gpio.analog.AnalogOutputConfig;
+import com.pi4j.io.gpio.analog.AnalogOutputProviderBase;
+import com.pi4j.test.provider.TestAnalogOutput;
+import com.pi4j.test.provider.TestAnalogOutputProvider;
 
-public interface TestSpiProvider extends SpiProvider {
-    static TestSpiProvider newInstance(){
-        return new TestSpiProviderImpl();
+public class TestAnalogOutputProviderImpl extends AnalogOutputProviderBase implements TestAnalogOutputProvider {
+
+    public TestAnalogOutputProviderImpl(){ super(); }
+
+    public TestAnalogOutputProviderImpl(String id){
+        super(id);
     }
-    static TestSpiProvider newInstance(String id){
-        return new TestSpiProviderImpl(id);
+
+    public TestAnalogOutputProviderImpl(String id, String name){
+        super(id, name);
     }
-    static TestSpiProvider newInstance(String id, String name){
-        return new TestSpiProviderImpl(id, name);
+
+    @Override
+    public AnalogOutput create(AnalogOutputConfig config) throws Exception {
+        return new TestAnalogOutput();
     }
 }

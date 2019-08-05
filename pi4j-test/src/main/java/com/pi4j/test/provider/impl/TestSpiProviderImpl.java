@@ -1,11 +1,11 @@
-package com.pi4j.test.provider;
+package com.pi4j.test.provider.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
- * FILENAME      :  TestSpiProvider.java
+ * FILENAME      :  TestSpiProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,25 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.test.provider.impl.TestSpiProviderImpl;
+import com.pi4j.io.spi.Spi;
+import com.pi4j.io.spi.SpiConfig;
+import com.pi4j.io.spi.SpiProviderBase;
+import com.pi4j.test.provider.TestSpiProvider;
 
-public interface TestSpiProvider extends SpiProvider {
-    static TestSpiProvider newInstance(){
-        return new TestSpiProviderImpl();
+public class TestSpiProviderImpl extends SpiProviderBase implements TestSpiProvider {
+
+    public TestSpiProviderImpl(){ super(); }
+
+    public TestSpiProviderImpl(String id){
+        super(id);
     }
-    static TestSpiProvider newInstance(String id){
-        return new TestSpiProviderImpl(id);
+
+    public TestSpiProviderImpl(String id, String name){
+        super(id, name);
     }
-    static TestSpiProvider newInstance(String id, String name){
-        return new TestSpiProviderImpl(id, name);
+
+    @Override
+    public Spi create(SpiConfig config) throws Exception {
+        return null;
     }
 }

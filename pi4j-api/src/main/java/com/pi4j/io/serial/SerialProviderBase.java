@@ -43,7 +43,4 @@ public abstract class SerialProviderBase
     public SerialProviderBase(String id, String name){
         super(id, name);
     }
-
-    @Override
-    public abstract Serial newInstance(SerialConfig config) throws Exception;
 }

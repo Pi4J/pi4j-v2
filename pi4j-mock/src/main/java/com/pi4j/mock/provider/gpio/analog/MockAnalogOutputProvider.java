@@ -27,26 +27,13 @@ package com.pi4j.mock.provider.gpio.analog;
  * #L%
  */
 
-import com.pi4j.io.gpio.analog.AnalogOutput;
-import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
-import com.pi4j.io.gpio.analog.AnalogOutputProviderBase;
 import com.pi4j.mock.Mock;
 
-
-public class MockAnalogOutputProvider extends AnalogOutputProviderBase implements AnalogOutputProvider {
-
-    public static final String NAME = Mock.ANALOG_OUTPUT_PROVIDER_NAME;
-    public static final String ID = Mock.ANALOG_OUTPUT_PROVIDER_ID;
-
-    public MockAnalogOutputProvider(){
-        this.id = ID;
-        this.name = NAME;
+public interface MockAnalogOutputProvider extends AnalogOutputProvider {
+    String NAME = Mock.ANALOG_OUTPUT_PROVIDER_NAME;
+    String ID = Mock.ANALOG_OUTPUT_PROVIDER_ID;
+    static MockAnalogOutputProvider newInstance() {
+        return new MockAnalogOutputProviderImpl();
     }
-
-    @Override
-    public AnalogOutput newInstance(AnalogOutputConfig config) throws Exception {
-        return new MockAnalogOutput(this, config);
-    }
-
 }

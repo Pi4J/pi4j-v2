@@ -68,7 +68,7 @@ public class DependencyInjectionNamedProviderTest {
         // for annotation processing and dependency injection
         Pi4J.newContextBuilder()
                 .autoDetect()
-                .add(new TestPwmProvider())
+                .add(TestPwmProvider.newInstance())
                 .build().inject(this);
     }
 

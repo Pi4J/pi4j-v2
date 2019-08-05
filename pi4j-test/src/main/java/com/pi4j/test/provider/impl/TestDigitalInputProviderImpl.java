@@ -1,11 +1,11 @@
-package com.pi4j.test.provider;
+package com.pi4j.test.provider.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
- * FILENAME      :  TestSpiProvider.java
+ * FILENAME      :  TestDigitalInputProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,26 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.test.provider.impl.TestSpiProviderImpl;
+import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalInputConfig;
+import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
+import com.pi4j.test.provider.TestDigitalInput;
+import com.pi4j.test.provider.TestDigitalInputProvider;
 
-public interface TestSpiProvider extends SpiProvider {
-    static TestSpiProvider newInstance(){
-        return new TestSpiProviderImpl();
+public class TestDigitalInputProviderImpl extends DigitalInputProviderBase implements TestDigitalInputProvider {
+
+    public TestDigitalInputProviderImpl(){ super(); }
+
+    public TestDigitalInputProviderImpl(String id){
+        super(id);
     }
-    static TestSpiProvider newInstance(String id){
-        return new TestSpiProviderImpl(id);
+
+    public TestDigitalInputProviderImpl(String id, String name){
+        super(id, name);
     }
-    static TestSpiProvider newInstance(String id, String name){
-        return new TestSpiProviderImpl(id, name);
+
+    @Override
+    public DigitalInput create(DigitalInputConfig config) throws Exception {
+        return new TestDigitalInput(this, config);
     }
 }

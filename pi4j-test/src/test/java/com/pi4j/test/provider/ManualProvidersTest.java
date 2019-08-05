@@ -42,8 +42,8 @@ public class ManualProvidersTest {
     public void testProviders() throws Exception {
 
         // create our own custom provider implementation classes
-        PwmProvider pwmProvider = new TestPwmProvider();
-        I2CProvider i2CProvider = new TestI2CProvider();
+        PwmProvider pwmProvider = TestPwmProvider.newInstance();
+        I2CProvider i2CProvider = TestI2CProvider.newInstance();
 
         // Initialize Pi4J with an empty context
         // An empty context disables AUTO-DETECT loading

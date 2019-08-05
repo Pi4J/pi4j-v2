@@ -27,6 +27,8 @@ package com.pi4j.io;
  * #L%
  */
 
-public interface IOConfig<CONFIG_TYPE> {
+import com.pi4j.config.Config;
+
+public interface IOConfig<CONFIG_TYPE> extends Config<CONFIG_TYPE> {
     // MARKER INTERFACE
 }

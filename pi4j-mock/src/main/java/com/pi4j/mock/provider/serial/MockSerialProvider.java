@@ -27,25 +27,13 @@ package com.pi4j.mock.provider.serial;
  * #L%
  */
 
-import com.pi4j.io.serial.Serial;
-import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
-import com.pi4j.io.serial.SerialProviderBase;
 import com.pi4j.mock.Mock;
 
-
-public class MockSerialProvider extends SerialProviderBase implements SerialProvider {
-
-    public static final String NAME = Mock.SERIAL_PROVIDER_NAME;
-    public static final String ID = Mock.SERIAL_PROVIDER_ID;
-
-    public MockSerialProvider(){
-        this.id = ID;
-        this.name = NAME;
-    }
-
-    @Override
-    public Serial newInstance(SerialConfig config) throws Exception {
-        return new MockSerial(this, config);
+public interface MockSerialProvider extends SerialProvider {
+    String NAME = Mock.SERIAL_PROVIDER_NAME;
+    String ID = Mock.SERIAL_PROVIDER_ID;
+    static MockSerialProvider newInstance() {
+        return new MockSerialProviderImpl();
     }
 }

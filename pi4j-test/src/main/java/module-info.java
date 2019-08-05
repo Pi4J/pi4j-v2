@@ -54,4 +54,8 @@ module pi4j.test {
     uses com.pi4j.mock.provider.spi.MockSpiProvider;
     uses com.pi4j.mock.provider.serial.MockSerial;
     uses com.pi4j.mock.provider.serial.MockSerialProvider;
+
+
+    exports com.pi4j.test.platform;
+    exports com.pi4j.test.provider;
 }

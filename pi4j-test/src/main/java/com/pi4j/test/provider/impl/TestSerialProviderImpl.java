@@ -1,11 +1,11 @@
-package com.pi4j.test.provider;
+package com.pi4j.test.provider.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
- * FILENAME      :  TestSpiProvider.java
+ * FILENAME      :  TestSerialProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,25 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.test.provider.impl.TestSpiProviderImpl;
+import com.pi4j.io.serial.Serial;
+import com.pi4j.io.serial.SerialConfig;
+import com.pi4j.io.serial.SerialProviderBase;
+import com.pi4j.test.provider.TestSerialProvider;
 
-public interface TestSpiProvider extends SpiProvider {
-    static TestSpiProvider newInstance(){
-        return new TestSpiProviderImpl();
+public class TestSerialProviderImpl extends SerialProviderBase implements TestSerialProvider {
+
+    public TestSerialProviderImpl(){ super(); }
+
+    public TestSerialProviderImpl(String id){
+        super(id);
     }
-    static TestSpiProvider newInstance(String id){
-        return new TestSpiProviderImpl(id);
+
+    public TestSerialProviderImpl(String id, String name){
+        super(id, name);
     }
-    static TestSpiProvider newInstance(String id, String name){
-        return new TestSpiProviderImpl(id, name);
+
+    @Override
+    public Serial create(SerialConfig config) throws Exception {
+        return null;
     }
 }

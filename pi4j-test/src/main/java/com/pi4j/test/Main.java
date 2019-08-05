@@ -47,7 +47,8 @@ public class Main {
         // which will load all detected Pi4J extension libraries
         // (Platforms and Providers) in the class path
         Context pi4j = Pi4J.newContextBuilder()
-                .add(new TestAnalogInputProvider("test-analog-input-provider", "TestAnalogInputProvider"))
+                .add(TestAnalogInputProvider.newInstance("test-analog-input-provider", "TestAnalogInputProvider"))
+                .autoDetect()
                 .build();
 
         // create About class instance

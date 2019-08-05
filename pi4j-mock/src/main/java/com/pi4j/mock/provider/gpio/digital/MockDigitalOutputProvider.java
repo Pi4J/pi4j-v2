@@ -27,24 +27,13 @@ package com.pi4j.mock.provider.gpio.digital;
  * #L%
  */
 
-import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
-import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
 import com.pi4j.mock.Mock;
 
-public class MockDigitalOutputProvider extends DigitalOutputProviderBase implements DigitalOutputProvider {
-
-    public static final String NAME = Mock.DIGITAL_OUTPUT_PROVIDER_NAME;
-    public static final String ID = Mock.DIGITAL_OUTPUT_PROVIDER_ID;
-
-    public MockDigitalOutputProvider(){
-        this.id = ID;
-        this.name = NAME;
-    }
-
-    @Override
-    public DigitalOutput newInstance(DigitalOutputConfig config) throws Exception {
-        return new MockDigitalOutput(this, config);
+public interface MockDigitalOutputProvider extends DigitalOutputProvider {
+    String NAME = Mock.DIGITAL_OUTPUT_PROVIDER_NAME;
+    String ID = Mock.DIGITAL_OUTPUT_PROVIDER_ID;
+    static MockDigitalOutputProvider newInstance() {
+        return new MockDigitalOutputProviderImpl();
     }
 }

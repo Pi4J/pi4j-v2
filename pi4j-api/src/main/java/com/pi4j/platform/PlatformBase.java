@@ -35,7 +35,12 @@ import com.pi4j.platform.exception.PlatformException;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
+import com.pi4j.provider.exception.ProviderTypeException;
+import com.pi4j.provider.impl.ProviderProxyHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,6 +51,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
 
     protected Context context = null;
     protected Map<IOType, Provider> providers = new ConcurrentHashMap<>();
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public PlatformBase(){
         super();
@@ -69,13 +75,34 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     }
 
     @Override
-    public <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException {
+    public <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderTypeException {
+
+        if(!providerClass.isInterface()){
+            logger.warn("Provider type [" + providerClass.getName() + "] requested; this is not an 'Interface'" +
+                    " and make not return a valid provider or may not be able to cast to the concrete class.");
+        }
+
         for(Provider p : providers.values()){
             if(providerClass.isAssignableFrom(p.getClass())){
                 return (T)p;
             }
+
+            // check for Proxied provider instances, if a Proxy, then also check the underlying handlers source class
+            if (Proxy.isProxyClass(p.getClass())) {
+                if(Proxy.getInvocationHandler(p).getClass().isAssignableFrom(ProviderProxyHandler.class)){
+                    ProviderProxyHandler pp = (ProviderProxyHandler) Proxy.getInvocationHandler(p);
+                    if(providerClass.isAssignableFrom(pp.provider().getClass())){
+                        return (T) p;
+                    }
+                }
+            }
         }
-        throw new ProviderNotFoundException(providerClass);
+
+        if(providerClass.isInterface()){
+            throw new ProviderNotFoundException(providerClass);
+        } else {
+            throw new ProviderTypeException(providerClass);
+        }
     }
 
     @Override

@@ -42,7 +42,4 @@ public abstract class AnalogInputProviderBase
         this(id);
         this.name = name;
     }
-
-    @Override
-    public abstract AnalogInput newInstance(AnalogInputConfig config) throws Exception;
 }

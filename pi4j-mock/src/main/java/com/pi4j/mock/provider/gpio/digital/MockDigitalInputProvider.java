@@ -27,26 +27,13 @@ package com.pi4j.mock.provider.gpio.digital;
  * #L%
  */
 
-import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
-import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
 import com.pi4j.mock.Mock;
 
-import java.io.IOException;
-
-public class MockDigitalInputProvider extends DigitalInputProviderBase implements DigitalInputProvider {
-
-    public static final String NAME = Mock.DIGITAL_INPUT_PROVIDER_NAME;
-    public static final String ID = Mock.DIGITAL_INPUT_PROVIDER_ID;
-
-    public MockDigitalInputProvider(){
-        this.id = ID;
-        this.name = NAME;
-    }
-
-    @Override
-    public DigitalInput newInstance(DigitalInputConfig config) throws IOException {
-        return new MockDigitalInput(this, config);
+public interface MockDigitalInputProvider extends DigitalInputProvider {
+    String NAME = Mock.DIGITAL_INPUT_PROVIDER_NAME;
+    String ID = Mock.DIGITAL_INPUT_PROVIDER_ID;
+    static MockDigitalInputProvider newInstance() {
+        return new MockDigitalInputProviderImpl();
     }
 }

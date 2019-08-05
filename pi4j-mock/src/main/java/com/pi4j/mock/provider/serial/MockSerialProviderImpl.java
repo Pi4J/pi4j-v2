@@ -1,11 +1,11 @@
-package com.pi4j.test.provider;
+package com.pi4j.mock.provider.serial;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
- * FILENAME      :  TestSpiProvider.java
+ * PROJECT       :  Pi4J :: MOCK     :: Mock Platform & Mock I/O Providers
+ * FILENAME      :  MockSerialProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,20 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.test.provider.impl.TestSpiProviderImpl;
+import com.pi4j.io.serial.Serial;
+import com.pi4j.io.serial.SerialConfig;
+import com.pi4j.io.serial.SerialProviderBase;
 
-public interface TestSpiProvider extends SpiProvider {
-    static TestSpiProvider newInstance(){
-        return new TestSpiProviderImpl();
+
+public class MockSerialProviderImpl extends SerialProviderBase implements MockSerialProvider {
+
+    public MockSerialProviderImpl(){
+        this.id = ID;
+        this.name = NAME;
     }
-    static TestSpiProvider newInstance(String id){
-        return new TestSpiProviderImpl(id);
-    }
-    static TestSpiProvider newInstance(String id, String name){
-        return new TestSpiProviderImpl(id, name);
+
+    @Override
+    public Serial create(SerialConfig config) throws Exception {
+        return new MockSerial(this, config);
     }
 }

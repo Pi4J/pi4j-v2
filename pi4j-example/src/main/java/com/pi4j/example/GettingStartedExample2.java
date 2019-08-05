@@ -55,7 +55,7 @@ public class GettingStartedExample2 {
         class MyCustomADCProvider extends AnalogInputProviderBase{
 
             @Override
-            public AnalogInput newInstance(AnalogInputConfig config) throws Exception {
+            public AnalogInput create(AnalogInputConfig config) throws Exception {
                 return null;
             }
         }
@@ -63,7 +63,7 @@ public class GettingStartedExample2 {
         class MyCustomSPIProvider extends SpiProviderBase {
 
             @Override
-            public Spi newInstance(SpiConfig config) throws Exception {
+            public Spi create(SpiConfig config) throws Exception {
                 return null;
             }
         }
@@ -75,14 +75,14 @@ public class GettingStartedExample2 {
 
         Context pi4j = Pi4J.newContextBuilder()
                 .add(new MockPlatform())
-                .add(new MockAnalogInputProvider(),
-                        new MockAnalogOutputProvider(),
-                        new MockSpiProvider(),
-                        new MockPwmProvider(),
-                        new MockSerialProvider(),
-                        new MockI2CProvider(),
-                        new MockDigitalInputProvider(),
-                        new MockDigitalOutputProvider())
+                .add(MockAnalogInputProvider.newInstance(),
+                        MockAnalogOutputProvider.newInstance(),
+                        MockSpiProvider.newInstance(),
+                        MockPwmProvider.newInstance(),
+                        MockSerialProvider.newInstance(),
+                        MockI2CProvider.newInstance(),
+                        MockDigitalInputProvider.newInstance(),
+                        MockDigitalOutputProvider.newInstance())
                 .add(new MyCustomADCProvider(/* implements AnalogInputProvider, id="my-adc-prov" */))
                 .add(new MyCustomSPIProvider(/* implements SpiProvider, id="my-spi-prov" */))
                 .build();

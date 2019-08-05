@@ -1,11 +1,11 @@
-package com.pi4j.test.provider;
+package com.pi4j.mock.provider.gpio.digital;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
- * FILENAME      :  TestSpiProvider.java
+ * PROJECT       :  Pi4J :: MOCK     :: Mock Platform & Mock I/O Providers
+ * FILENAME      :  MockDigitalOutputProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,19 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.test.provider.impl.TestSpiProviderImpl;
+import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalOutputConfig;
+import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
 
-public interface TestSpiProvider extends SpiProvider {
-    static TestSpiProvider newInstance(){
-        return new TestSpiProviderImpl();
+public class MockDigitalOutputProviderImpl extends DigitalOutputProviderBase implements MockDigitalOutputProvider {
+
+    public MockDigitalOutputProviderImpl(){
+        this.id = ID;
+        this.name = NAME;
     }
-    static TestSpiProvider newInstance(String id){
-        return new TestSpiProviderImpl(id);
-    }
-    static TestSpiProvider newInstance(String id, String name){
-        return new TestSpiProviderImpl(id, name);
+
+    @Override
+    public DigitalOutput create(DigitalOutputConfig config) throws Exception {
+        return new MockDigitalOutput(this, config);
     }
 }

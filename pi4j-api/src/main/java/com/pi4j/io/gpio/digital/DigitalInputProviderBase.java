@@ -41,7 +41,4 @@ public abstract class DigitalInputProviderBase
     public DigitalInputProviderBase(String id, String name){
         super(id, name);
     }
-
-    @Override
-    public abstract DigitalInput newInstance(DigitalInputConfig config) throws Exception;
 }

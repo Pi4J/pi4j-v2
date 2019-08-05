@@ -43,7 +43,4 @@ public abstract class SpiProviderBase
     public SpiProviderBase(String id, String name){
         super(id, name);
     }
-
-    @Override
-    public abstract Spi newInstance(SpiConfig config) throws Exception;
 }

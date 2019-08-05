@@ -43,7 +43,4 @@ public abstract class PwmProviderBase
     public PwmProviderBase(String id, String name){
         super(id, name);
     }
-
-    @Override
-    public abstract Pwm newInstance(PwmConfig config) throws Exception;
 }

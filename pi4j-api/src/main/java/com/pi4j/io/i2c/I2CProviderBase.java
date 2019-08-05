@@ -43,7 +43,4 @@ public abstract class I2CProviderBase
     public I2CProviderBase(String id, String name){
         super(id, name);
     }
-
-    @Override
-    public abstract I2C newInstance(I2CConfig config) throws Exception;
 }

@@ -62,14 +62,14 @@ public class ManualPlatformsTest {
                         .add(new MockPlatform())
 
                         // add any providers that we want to work with
-                        .add(new MockAnalogInputProvider(),
-                             new MockAnalogOutputProvider(),
-                             new MockDigitalInputProvider(),
-                             new MockDigitalOutputProvider(),
-                             new MockPwmProvider(),
-                             new MockI2CProvider(),
-                             new MockSpiProvider(),
-                             new MockSerialProvider())
+                        .add(MockAnalogInputProvider.newInstance(),
+                             MockAnalogOutputProvider.newInstance(),
+                             MockDigitalInputProvider.newInstance(),
+                             MockDigitalOutputProvider.newInstance(),
+                             MockPwmProvider.newInstance(),
+                             MockI2CProvider.newInstance(),
+                             MockSpiProvider.newInstance(),
+                             MockSerialProvider.newInstance())
                         .build();
     }
 

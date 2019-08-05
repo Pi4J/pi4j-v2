@@ -44,6 +44,7 @@ import com.pi4j.provider.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Proxy;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -210,10 +211,26 @@ public class DefaultProviders implements Providers {
     @Override
     public <T extends Provider> Map<String, T> all(Class<T> providerClass) {
 
+        if(!providerClass.isInterface()){
+            logger.warn("Provider type [" + providerClass.getName() + "] requested; this is not an 'Interface'" +
+                    " and make not return a valid provider or may not be able to cast to the concrete class.");
+        }
+
         // create a map <io-id, io-instance> of providers that extend of the given io class
         var result = new ConcurrentHashMap<String, T>();
-        providers.values().stream().filter(providerClass::isInstance).forEach(p -> {
-            result.put(p.id(), providerClass.cast(p));
+        providers.values().stream().forEach(p -> {
+            // check for Proxied provider instances, if a Proxy, then also check the underlying handlers source class
+            if (Proxy.isProxyClass(p.getClass())) {
+                if(Proxy.getInvocationHandler(p).getClass().isAssignableFrom(ProviderProxyHandler.class)){
+                    ProviderProxyHandler pp = (ProviderProxyHandler) Proxy.getInvocationHandler(p);
+                    if(providerClass.isAssignableFrom(pp.provider().getClass())){
+                        result.put(p.id(), (T)p);
+                    }
+                }
+            }
+            else if(providerClass.isInstance(p)) {
+                result.put(p.id(), (T)p);
+            }
         });
         return Collections.unmodifiableMap(result);
     }
@@ -337,13 +354,13 @@ public class DefaultProviders implements Providers {
     }
 
     private <T extends Provider> Providers add(Collection<T> provider) throws ProviderAlreadyExistsException, ProviderInitializeException {
-        logger.trace("invoked 'add()' io [count={}]", provider.size());
+        logger.trace("invoked 'add()' provider [count={}]", provider.size());
 
         // iterate the given provider collection
         for(var providerInstance : provider) {
 
             if(providerInstance != null) {
-                logger.trace("adding io to managed io map [id={}; name={}; class={}]",
+                logger.trace("adding provider to managed io map [id={}; name={}; class={}]",
                         providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
 
                 // ensure requested io id does not already exist in the managed set
@@ -354,9 +371,20 @@ public class DefaultProviders implements Providers {
                 // attempt to initialize the new io instance
                 initializeProvider(providerInstance);
 
+
+                ProviderProxyHandler handler = new ProviderProxyHandler(providerInstance);
+                var providerProxy = Proxy.newProxyInstance(
+                        Provider.class.getClassLoader(),
+                        providerInstance.getClass().getInterfaces(),
+                        handler);
+//
+//                ((Provider)providerProxy).describe().print(System.out);
                 // add new io to managed set
-                providers.put(providerInstance.id(), providerInstance);
-                logger.debug("added io to managed io map [id={}; name={}; class={}]",
+                //providers.put(providerInstance.id(), providerInstance);
+
+                providers.put(providerInstance.id(), (T)providerProxy);
+
+                logger.debug("added io to managed provider map [id={}; name={}; class={}]",
                         providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
 // TODO :: Remove Default Provider impl from Providers
 //                // add a default io based on io ranking score
@@ -371,11 +399,11 @@ public class DefaultProviders implements Providers {
 
     private <T extends Provider> void remove(String providerId) throws ProviderNotFoundException, ProviderTerminateException {
 
-        logger.trace("invoked 'remove() io' [id={}]", providerId);
+        logger.trace("invoked 'remove() provider' [id={}]", providerId);
 
         // ensure requested io id does exist in the managed set
         if(!providers.containsKey(providerId)){
-            logger.warn("unable to remove io [id={}]; id not found in managed providers map.", providerId);
+            logger.warn("unable to remove provider [id={}]; id not found in managed providers map.", providerId);
             throw new ProviderNotFoundException(providerId);
         }
 
@@ -388,7 +416,7 @@ public class DefaultProviders implements Providers {
         // remove from managed set
         var removedProvider = providers.remove(providerId);
         if(removedProvider != null) {
-            logger.debug("removed io from managed io map [id={}; name={}; class={}]",
+            logger.debug("removed provider from managed provider map [id={}; name={}; class={}]",
                     removedProvider.id(), removedProvider.name(), removedProvider.getClass().getName());
         }
 
@@ -556,7 +584,7 @@ public class DefaultProviders implements Providers {
 
     @Override
     public void shutdown(Context context) throws ProvidersNotInitializedException, ProviderTerminateException {
-        logger.trace("invoked 'shutdown();'");
+        logger.trace("invoked provider 'shutdown();'");
 
         ProviderTerminateException providerException = null;
         // iterate over all providers and invoke the shutdown method on each

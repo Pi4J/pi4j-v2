@@ -42,7 +42,4 @@ public abstract class DigitalOutputProviderBase
     public DigitalOutputProviderBase(String id, String name){
         super(id, name);
     }
-
-    @Override
-    public abstract DigitalOutput newInstance(DigitalOutputConfig config) throws Exception;
 }

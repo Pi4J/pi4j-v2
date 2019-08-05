@@ -42,7 +42,4 @@ public abstract class AnalogOutputProviderBase
         this(id);
         this.name = name;
     }
-
-    @Override
-    public abstract AnalogOutput newInstance(AnalogOutputConfig config) throws Exception;
 }

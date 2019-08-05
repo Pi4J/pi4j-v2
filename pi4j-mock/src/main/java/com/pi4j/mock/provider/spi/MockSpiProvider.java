@@ -27,24 +27,13 @@ package com.pi4j.mock.provider.spi;
  * #L%
  */
 
-import com.pi4j.io.spi.Spi;
-import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.io.spi.SpiProviderBase;
 import com.pi4j.mock.Mock;
 
-public class MockSpiProvider extends SpiProviderBase implements SpiProvider{
-
-    public static final String NAME = Mock.SPI_PROVIDER_NAME;
-    public static final String ID = Mock.SPI_PROVIDER_ID;
-
-    public MockSpiProvider(){
-        this.id = ID;
-        this.name = NAME;
-    }
-
-    @Override
-    public Spi newInstance(SpiConfig config) throws Exception {
-        return new MockSpi(this, config);
+public interface MockSpiProvider extends SpiProvider{
+    String NAME = Mock.SPI_PROVIDER_NAME;
+    String ID = Mock.SPI_PROVIDER_ID;
+    static MockSpiProvider newInstance() {
+        return new MockSpiProviderImpl();
     }
 }

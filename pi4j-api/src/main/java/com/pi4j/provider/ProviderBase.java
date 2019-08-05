@@ -86,16 +86,4 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
         }
         return (PROVIDER_TYPE)this;
     }
-
-    @Override
-    public IO_TYPE create(CONFIG_TYPE config) throws Exception {
-        var newInstance = newInstance(config);
-
-        // TODO :: PROXY IMPL, REMOVE PROVIDER SETTER
-
-        //newInstance.provider(this);
-        return newInstance;
-    }
-
-    protected abstract IO_TYPE newInstance(CONFIG_TYPE config) throws Exception;
 }

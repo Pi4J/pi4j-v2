@@ -67,8 +67,9 @@ public class DependencyInjectionDigitalInputTest {
     public void beforeTest() throws Pi4JException {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
+        TestDigitalInputProvider provider = TestDigitalInputProvider.newInstance("test-digital-input-provider");
         TestPlatform platform = new TestPlatform();
-        platform.setProviders(new TestDigitalInputProvider());
+        platform.setProviders(provider);
 
         // Initialize Pi4J with a default context
         // enable the AUTO-DETECT (Platforms & Providers) flag
@@ -80,7 +81,7 @@ public class DependencyInjectionDigitalInputTest {
         Pi4J.newContextBuilder()
                 .autoDetect()
                 .add(platform)
-                .add(new TestDigitalInputProvider())
+                .add(provider)
                 .build().inject(this);
     }
 
@@ -92,10 +93,13 @@ public class DependencyInjectionDigitalInputTest {
     }
 
     @Test
-    public void testDIContextAcquisition() throws Pi4JException {
+    public void testDIContextAcquisition() throws Exception {
         System.out.println("-----------------------------------------------------");
         System.out.println("Pi4J DIGITAL INPUT <acquired via dependency injection>");
         System.out.println("-----------------------------------------------------");
+
+        pi4j.describe().print(System.out);
+
         assertNotNull(inputUsingMockProvider);
         System.out.println("INPUT FROM DEFAULT PROVIDER:");
         System.out.print("  INPUT --> ");

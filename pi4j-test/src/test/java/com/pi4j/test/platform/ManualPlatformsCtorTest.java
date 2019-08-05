@@ -48,9 +48,9 @@ public class ManualPlatformsCtorTest {
     public void beforeTest() throws Pi4JException {
 
         // create our own custom provider implementation classes
-        var pwmProvider = new TestPwmProvider();
-        var i2CProvider = new TestI2CProvider();
-        var serialProvider = new TestSerialProvider();
+        var pwmProvider = TestPwmProvider.newInstance();
+        var i2CProvider = TestI2CProvider.newInstance();
+        var serialProvider = TestSerialProvider.newInstance();
 
         // create our own custom platform implementation classes
         var testPlatform = new TestPlatform("test-platform", "My Test Platform");
