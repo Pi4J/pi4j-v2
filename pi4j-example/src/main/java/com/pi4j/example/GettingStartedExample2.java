@@ -29,11 +29,7 @@ package com.pi4j.example;
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
-import com.pi4j.context.ContextBuilder;
-import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogInputConfig;
-import com.pi4j.io.gpio.analog.AnalogInputConfigBuilder;
-import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
+import com.pi4j.io.gpio.analog.*;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProviderBase;
@@ -52,7 +48,7 @@ public class GettingStartedExample2 {
     public static void main(String[] args) throws Exception {
 
 
-        class MyCustomADCProvider extends AnalogInputProviderBase{
+        class MyCustomADCProvider extends AnalogInputProviderBase implements AnalogInputProvider {
 
             @Override
             public AnalogInput create(AnalogInputConfig config) throws Exception {
@@ -60,18 +56,14 @@ public class GettingStartedExample2 {
             }
         }
 
-        class MyCustomSPIProvider extends SpiProviderBase {
+        class MyCustomSPIProvider extends SpiProviderBase
+        {
 
             @Override
             public Spi create(SpiConfig config) throws Exception {
                 return null;
             }
         }
-
-        Context pi4jCtx1 = ContextBuilder.newInstance()
-                          .add(new MyCustomADCProvider())
-                          .add(new MyCustomSPIProvider())
-                          .build();
 
         Context pi4j = Pi4J.newContextBuilder()
                 .add(new MockPlatform())
@@ -121,8 +113,8 @@ public class GettingStartedExample2 {
 
         pi4j.describe().print(System.out);
 
-        ain1.describe().print(System.out);
-        ain2.describe().print(System.out);
+//        ain1.describe().print(System.out);
+//        ain2.describe().print(System.out);
 
         //AnalogInput ain = AnalogInput.create(pi4j, 2);
         //AnalogInput.create()

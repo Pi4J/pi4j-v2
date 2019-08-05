@@ -27,8 +27,12 @@ package com.pi4j.provider.impl;
  * #L%
  */
 
+import com.pi4j.io.IO;
 import com.pi4j.io.IOConfig;
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.provider.Provider;
+import com.pi4j.runtime.Runtime;
+import com.pi4j.util.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,10 +46,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ProviderProxyHandler implements InvocationHandler {
+    private Runtime runtime = null;
     private Provider provider = null;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public ProviderProxyHandler(Provider provider){
+    public ProviderProxyHandler(Runtime runtime, Provider provider){
+        this.runtime = runtime;
         this.provider = provider;
     }
 
@@ -63,15 +69,28 @@ public class ProviderProxyHandler implements InvocationHandler {
             return method.invoke(provider, args);
         }
 
+        logger.trace("provider [{}({})] invoked '{}({})'", provider.getId(), provider.getClass().getName(), method.getName(), Arrays.toString(method.getParameterTypes()));
+
         // we need to intercept the "create(IOConfig config)" method with the single IOConfig type argument
         if(args != null && args.length == 1 && args[0] instanceof IOConfig) {
             IOConfig config = (IOConfig) args[0];
-            System.out.println("-->> PROVIDER [" +  provider.id() + "] CREATE IO INSTANCE: " + config.id());
+            //System.out.println("-->> PROVIDER [" +  provider.id() + "] CREATE IO INSTANCE: " + config.id());
 
-            // DO Pi4J MAGIC HERE
+            // check to see if this IO instance is already registered in the IO Registry
+            if(runtime.registry().exists(config.id()))
+                throw new IOAlreadyExistsException(config.id());
 
-            // delegate method invocation to real provider instance
-            return method.invoke(provider, args);
+            // delegate method invocation to real provider instance to create real IO instance
+            IO instance = (IO)method.invoke(provider, args);
+
+            // initialize the IO instance
+            instance.initialize(runtime.context());
+
+            // now that the instance has been created, make sure to add it ot the IO Registry
+            runtime.registry().add(instance);
+
+            // return newly created instance to the method caller
+            return instance;
         }
         // handle overloaded default methods defined by the interface
         if (method.isDefault()) {
@@ -95,7 +114,8 @@ public class ProviderProxyHandler implements InvocationHandler {
             Set<Class> interfaces = new HashSet<>();
             interfaces.add(provider.getType().getProviderClass());
             if(provider.getClass().isInterface()) interfaces.add(provider.getClass());
-            interfaces.addAll(Arrays.asList(provider.getClass().getInterfaces()));
+            interfaces.addAll(ReflectionUtil.getAllInterfaces(provider.getClass()));
+            //interfaces.addAll(Arrays.asList(provider.getClass().getInterfaces()));
 
             // invoke the default method against the set of defined interfaces
             return invokeDefaultMethod(interfaces, proxy, method, args);

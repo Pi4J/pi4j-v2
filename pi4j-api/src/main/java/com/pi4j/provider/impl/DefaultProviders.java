@@ -41,6 +41,8 @@ import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderGroup;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.*;
+import com.pi4j.runtime.Runtime;
+import com.pi4j.util.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +61,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultProviders implements Providers {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private Context context = null;
+    private Runtime runtime = null;
 
     // all detected/available providers
     private Map<String, Provider> providers = new ConcurrentHashMap<>();
@@ -98,15 +100,17 @@ public class DefaultProviders implements Providers {
     public ProviderGroup<SerialProvider> serial() { return _serial; }
 
     // static singleton instance
-    public static Providers newInstance(Context context){
-        return new DefaultProviders(context);
+    public static Providers newInstance(Runtime runtime){
+        return new DefaultProviders(runtime);
     }
 
     // private constructor
-    private DefaultProviders(Context context) {
+    private DefaultProviders(Runtime runtime) {
 
         // set local context reference
-        this.context = context;
+        this.runtime = runtime;
+
+        var context = runtime.context();
 
         // process auto-detect?
         if(context.config().autoDetectProviders()) {
@@ -164,7 +168,7 @@ public class DefaultProviders implements Providers {
         try {
             logger.trace("initializing provider [id={}; name={}; class={}]",
                     provider.id(), provider.name(), provider.getClass().getName());
-            provider.initialize(context);
+            provider.initialize(runtime.context());
         } catch (Exception e) {
             logger.error("unable to 'initialize()' provider: [id={}; name={}]; {}",
                     provider.id(), provider.name(), e.getMessage());
@@ -182,7 +186,7 @@ public class DefaultProviders implements Providers {
         try {
             logger.trace("calling 'shutdown()' provider [id={}; name={}; class={}]",
                     provider.id(), provider.name(), provider.getClass().getName());
-            provider.shutdown(context);
+            provider.shutdown(runtime.context());
         } catch (Exception e) {
             logger.error("unable to 'shutdown()' provider: [id={}; name={}]; {}",
                     provider.id(), provider.name(), e.getMessage());
@@ -371,17 +375,16 @@ public class DefaultProviders implements Providers {
                 // attempt to initialize the new io instance
                 initializeProvider(providerInstance);
 
+//                System.out.println("INTERFACES :: " + ReflectionUtil.getAllInterfaces(providerInstance));
+//                System.out.println("CLASSES :: " + ReflectionUtil.getAllClasses(providerInstance));
 
-                ProviderProxyHandler handler = new ProviderProxyHandler(providerInstance);
+                ProviderProxyHandler handler = new ProviderProxyHandler(runtime, providerInstance);
                 var providerProxy = Proxy.newProxyInstance(
                         Provider.class.getClassLoader(),
-                        providerInstance.getClass().getInterfaces(),
+                        ReflectionUtil.getAllInterfaces(providerInstance).toArray(new Class[]{}),
                         handler);
-//
-//                ((Provider)providerProxy).describe().print(System.out);
-                // add new io to managed set
-                //providers.put(providerInstance.id(), providerInstance);
 
+                // add new io to managed set
                 providers.put(providerInstance.id(), (T)providerProxy);
 
                 logger.debug("added io to managed provider map [id={}; name={}; class={}]",

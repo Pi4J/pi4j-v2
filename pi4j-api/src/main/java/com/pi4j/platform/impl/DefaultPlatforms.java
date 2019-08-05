@@ -31,6 +31,7 @@ import com.pi4j.context.Context;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
 import com.pi4j.platform.exception.*;
+import com.pi4j.runtime.Runtime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,23 +49,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultPlatforms implements Platforms {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    protected Context context = null;
+    protected Runtime runtime = null;
     protected Platform defaultPlatform = null;
 
     // all detected/available providers
     private Map<String, Platform> platforms = new ConcurrentHashMap<>();
 
-    public static Platforms newInstance(Context context) throws PlatformNotFoundException {
-        return new DefaultPlatforms(context);
+    public static Platforms newInstance(Runtime runtime) throws PlatformNotFoundException {
+        return new DefaultPlatforms(runtime);
     }
 
     // private constructor
-    private DefaultPlatforms(Context context) throws PlatformNotFoundException {
+    private DefaultPlatforms(Runtime runtime) throws PlatformNotFoundException {
         // set local context reference
-        this.context = context;
+        this.runtime = runtime;
 
         // process auto-detect?
-        if(context.config().autoDetectPlatforms()) {
+        if(runtime.context().config().autoDetectPlatforms()) {
             logger.trace("auto-detecting platforms from the classpath.");
 
             // detect available platforms by scanning the classpath looking for service io instances
@@ -87,7 +88,7 @@ public class DefaultPlatforms implements Platforms {
         }
 
         // process any additional configured platforms
-        Collection<Platform> additionalPlatforms = context.config().getPlatforms();
+        Collection<Platform> additionalPlatforms = runtime.context().config().getPlatforms();
         if(additionalPlatforms != null && !additionalPlatforms.isEmpty()) {
             logger.trace("adding explicit platforms: [count={}]", additionalPlatforms.size());
             for (Platform platformInstance : additionalPlatforms) {
@@ -109,9 +110,9 @@ public class DefaultPlatforms implements Platforms {
         logger.debug("platforms loaded [{}]", platforms.size());
 
         // set default platform
-        if(context.config().hasDefaultPlatform() &&
-                this.platforms.containsKey(context.config().getDefaultPlatform())) {
-            this.defaultPlatform = this.platforms.get(context.config().getDefaultPlatform());
+        if(runtime.context().config().hasDefaultPlatform() &&
+                this.platforms.containsKey(runtime.context().config().getDefaultPlatform())) {
+            this.defaultPlatform = this.platforms.get(runtime.context().config().getDefaultPlatform());
         }
     }
 
@@ -124,7 +125,7 @@ public class DefaultPlatforms implements Platforms {
         try {
             logger.trace("initializing platform [id={}; name={}; class={}]",
                     platform.id(), platform.name(), platform.getClass().getName());
-            platform.initialize(context);
+            platform.initialize(runtime.context());
         } catch (Exception e) {
             logger.error("unable to 'initialize()' platform: [id={}; name={}]; {}",
                     platform.id(), platform.name(), e.getMessage());
@@ -142,7 +143,7 @@ public class DefaultPlatforms implements Platforms {
         try {
             logger.trace("terminating platform [id={}; name={}; class={}]",
                     platform.id(), platform.name(), platform.getClass().getName());
-            platform.shutdown(context);
+            platform.shutdown(runtime.context());
         } catch (Exception e) {
             logger.error("unable to 'shutdown()' platform: [id={}; name={}]; {}",
                     platform.id(), platform.name(), e.getMessage());
@@ -238,7 +239,7 @@ public class DefaultPlatforms implements Platforms {
                     platformInstance.id(), platformInstance.name(), platformInstance.getClass().getName());
 
             // perform check to see if this platform reports as enabled/supported
-            if(!platformInstance.enabled(this.context)){
+            if(!platformInstance.enabled(this.runtime.context())){
                 logger.trace("not adding platform [id={}; name={}; class={}] as it reports as [DISABLED] on this system;",
                         platformInstance.id(), platformInstance.name(), platformInstance.getClass().getName());
                 continue;

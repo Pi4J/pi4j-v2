@@ -65,7 +65,7 @@ public interface Context extends Describable {
 
     default <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderTypeException {
         // return the default provider for this type from the default platform
-        if(platform().hasProvider(providerClass))
+        if(platform() != null && platform().hasProvider(providerClass))
             return platform().provider(providerClass);
 
         // return the default provider for this type (outside of default platform)
@@ -78,7 +78,7 @@ public interface Context extends Describable {
 
     default <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException {
         // return the default provider for this type from the default platform
-        if(platform().hasProvider(ioType))
+        if(platform() != null && platform().hasProvider(ioType))
             return platform().provider(ioType);
 
         // return the default provider for this type (outside of default platform)

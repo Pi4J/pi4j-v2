@@ -29,14 +29,9 @@ package com.pi4j.registry;
 
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
-import com.pi4j.common.exception.LifecycleException;
-import com.pi4j.config.Config;
-import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
 import com.pi4j.io.IOType;
 import com.pi4j.provider.Provider;
-import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.registry.exception.RegistryException;
 
 import java.util.Collections;
@@ -46,19 +41,13 @@ import java.util.stream.Collectors;
 
 public interface Registry extends Describable {
 
-    <T extends IO> T create(String providerId, Config config, Class<T> type) throws RegistryException, ProviderException, NotInitializedException;
-    <T extends IO> T create(Provider provider, Config config, Class<T> type) throws RegistryException, ProviderException;
-    <T extends IO> T create(Config config, Class<T> type) throws RegistryException, ProviderException;
-
     boolean exists(String id, Class<? extends IO> type);
     boolean exists(String id);
 
     Map<String, ? extends IO> all() throws RegistryException;
 
+    <T extends IO> T get(String id) throws RegistryException;
     <T extends IO> T get(String id, Class<T> type) throws RegistryException;
-    <T extends IO> T destroy(String id) throws RegistryException, LifecycleException;
-
-    void shutdown(Context context) throws ProviderException, RegistryException;
 
     default <T extends IO> Map<String, T> allByType(Class<T> ioClass) throws RegistryException{
         // create a map <io-id, io-instance> of I/O instances that extend of the given IO class

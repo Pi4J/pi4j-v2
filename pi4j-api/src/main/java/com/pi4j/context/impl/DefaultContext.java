@@ -27,9 +27,7 @@ package com.pi4j.context.impl;
  * #L%
  */
 
-import com.pi4j.annotation.AnnotationEngine;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.impl.DefaultAnnotationEngine;
 import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
@@ -40,17 +38,20 @@ import com.pi4j.provider.Providers;
 import com.pi4j.provider.impl.DefaultProviders;
 import com.pi4j.registry.Registry;
 import com.pi4j.registry.impl.DefaultRegistry;
+import com.pi4j.runtime.Runtime;
+import com.pi4j.runtime.impl.DefaultRuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DefaultContext implements Context {
 
-    private ContextConfig config = null;
-    private Providers providers = null;
-    private Platforms platforms = null;
-    private Registry registry = DefaultRegistry.newInstance(this);
-    private AnnotationEngine annotationEngine = DefaultAnnotationEngine.newInstance(this);
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Runtime runtime = null;
+
+    protected ContextConfig config = null;
+    protected Providers providers = null;
+    protected Platforms platforms = null;
+    protected Registry registry = null;
 
     public static Context newInstance(ContextConfig config) throws Pi4JException {
         return new DefaultContext(config);
@@ -68,9 +69,12 @@ public class DefaultContext implements Context {
         // set context config member reference
         this.config = config;
 
+        this.runtime = DefaultRuntime.newInstance(this);
+        this.registry = DefaultRegistry.newInstance(this.runtime.registry());
+
         // create providers and platforms (manager) objects
-        this.providers = DefaultProviders.newInstance(this);
-        this.platforms = DefaultPlatforms.newInstance(this);
+        this.providers = DefaultProviders.newInstance(this.runtime);
+        this.platforms = DefaultPlatforms.newInstance(this.runtime);
 
         logger.debug("Pi4J runtime context successfully created & initialized.'");
     }
@@ -89,15 +93,7 @@ public class DefaultContext implements Context {
 
     @Override
     public Context inject(Object... objects) throws AnnotationException {
-
-        // if Pi4J has not been initialized, then use the 'preinject' static method
-        // of the DefaultAnnotationEngine to look for @Initialize annotations to perform
-        // initialization
-        //DefaultAnnotationEngine.processInitialize(objects);
-
-        // inject remaining (if objects exist)
-        annotationEngine.inject(objects);
-
+        this.runtime.inject(objects);
         return this;
     }
 
@@ -105,14 +101,15 @@ public class DefaultContext implements Context {
     public Context shutdown() throws LifecycleException {
         logger.trace("invoked 'shutdown();'");
         try {
-            // shutdown all I/O instances
-            registry().shutdown(this);
-
             // shutdown all providers
             providers().shutdown(this);
 
             // shutdown platforms
             platforms().shutdown(this);
+
+            // shutdown the runtime
+            this.runtime.shutdown();
+
         } catch (Exception e) {
             logger.error("failed to 'shutdown(); '", e);
             throw new LifecycleException(e);
