@@ -4,7 +4,7 @@ package com.pi4j.raspberrypi.provider.i2c;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: Raspberry Pi Plugin
+ * PROJECT       :  Pi4J :: PLUGIN   :: RaspberryPi Platform & Providers
  * FILENAME      :  RpiI2CProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about

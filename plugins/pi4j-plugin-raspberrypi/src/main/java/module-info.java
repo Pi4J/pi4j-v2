@@ -4,7 +4,7 @@ import com.pi4j.raspberrypi.RaspberryPiPlugin;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: Raspberry Pi Plugin
+ * PROJECT       :  Pi4J :: PLUGIN   :: RaspberryPi Platform & Providers
  * FILENAME      :  module-info.java
  *
  * This file is part of the Pi4J project. More information about
@@ -28,7 +28,7 @@ import com.pi4j.raspberrypi.RaspberryPiPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.provider.raspberrypi {
+module pi4j.plugin.raspberrypi {
     requires pi4j.api;
 
     provides com.pi4j.extension.Plugin

@@ -12,8 +12,8 @@
 
     <!-- MAVEN ARTIFACT INFORMATION -->
     <artifactId>pi4j-plugin-raspberrypi</artifactId>
-    <name>Pi4J :: PLUGIN   :: Raspberry Pi Plugin</name>
-    <description>Pi4J Library Plugin for the Raspberry Pi Platform</description>
+    <name>Pi4J :: PLUGIN   :: RaspberryPi Platform &amp; Providers</name>
+    <description>Pi4J Library Plugin for the RaspberryPi Platform &amp; I/O Providers</description>
     <dependencies>
         <dependency>
             <groupId>com.pi4j</groupId>

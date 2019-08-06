@@ -36,7 +36,7 @@ module pi4j.test {
     uses com.pi4j.provider.Provider;
 
     // Pi4J Mock Platform and Providers
-    requires pi4j.mock;
+    requires pi4j.plugin.mock;
     uses com.pi4j.mock.platform.MockPlatform;
     uses com.pi4j.mock.provider.gpio.analog.MockAnalogInput;
     uses com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
