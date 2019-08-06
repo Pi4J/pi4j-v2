@@ -71,11 +71,11 @@ public interface Platforms extends Describable {
 
     void shutdown(Context context) throws PlatformsNotInitialized, PlatformTerminateException;
 
-    Platform defaultPlatform();
+    <T extends Platform> T defaultPlatform();
     default boolean hasDefault(){
         return defaultPlatform() != null;
     }
-    default Platform getDefault(){
+    default <T extends Platform> T  getDefault(){
         return defaultPlatform();
     }
 

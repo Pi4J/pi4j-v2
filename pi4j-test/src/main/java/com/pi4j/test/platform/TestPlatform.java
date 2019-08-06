@@ -64,7 +64,7 @@ public class TestPlatform extends PlatformBase<TestPlatform> implements Platform
 
     @Override
     public boolean enabled(Context context) {
-        // the Tet Platform is always available when detected
+        // the Test Platform is always available when detected
         // there are no logic checked required to determine when
         // and if the test platform should be enabled
         return true;

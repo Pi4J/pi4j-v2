@@ -70,7 +70,7 @@ public interface Context extends Describable {
 
         // return the default provider for this type (outside of default platform)
         if(providers().exists(providerClass))
-            return (T)providers().get(providerClass);
+            return providers().get(providerClass);
 
         // provider not found
         throw new ProviderNotFoundException(providerClass);
@@ -83,7 +83,7 @@ public interface Context extends Describable {
 
         // return the default provider for this type (outside of default platform)
         if(providers().exists(ioType))
-            return (T)providers().get(ioType);
+            return providers().get(ioType);
 
         // provider not found
         throw new ProviderNotFoundException(ioType);
@@ -155,7 +155,7 @@ public interface Context extends Describable {
         return this.provider(IOType.SERIAL);
     }
 
-    default Platform platform(){
+    default <P extends Platform> P platform(){
         return platforms().getDefault();
     }
 
