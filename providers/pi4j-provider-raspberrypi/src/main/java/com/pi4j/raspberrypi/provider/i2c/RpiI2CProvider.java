@@ -1,11 +1,11 @@
-import com.pi4j.raspberrypi.RaspberryPiPlugin;
+package com.pi4j.raspberrypi.provider.i2c;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PROVIDER :: Raspberry Pi Provider
- * FILENAME      :  module-info.java
+ * FILENAME      :  RpiI2CProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,9 +28,14 @@ import com.pi4j.raspberrypi.RaspberryPiPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.provider.raspberrypi {
-    requires pi4j.api;
 
-    provides com.pi4j.extension.Plugin
-            with RaspberryPiPlugin;
+import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.raspberrypi.RaspberryPi;
+
+public interface RpiI2CProvider extends I2CProvider {
+    String NAME = RaspberryPi.I2C_PROVIDER_NAME;
+    String ID = RaspberryPi.I2C_PROVIDER_ID;
+    static RpiI2CProvider newInstance() {
+        return new RpiI2CProviderImpl();
+    }
 }

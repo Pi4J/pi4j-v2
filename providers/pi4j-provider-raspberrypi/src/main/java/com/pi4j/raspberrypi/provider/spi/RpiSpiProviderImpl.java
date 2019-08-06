@@ -1,11 +1,11 @@
-import com.pi4j.raspberrypi.RaspberryPiPlugin;
+package com.pi4j.raspberrypi.provider.spi;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PROVIDER :: Raspberry Pi Provider
- * FILENAME      :  module-info.java
+ * FILENAME      :  RpiSpiProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,9 +28,20 @@ import com.pi4j.raspberrypi.RaspberryPiPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.provider.raspberrypi {
-    requires pi4j.api;
 
-    provides com.pi4j.extension.Plugin
-            with RaspberryPiPlugin;
+import com.pi4j.io.spi.Spi;
+import com.pi4j.io.spi.SpiConfig;
+import com.pi4j.io.spi.SpiProviderBase;
+
+public class RpiSpiProviderImpl extends SpiProviderBase implements RpiSpiProvider {
+
+    public RpiSpiProviderImpl(){
+        this.id = ID;
+        this.name = NAME;
+    }
+
+    @Override
+    public Spi create(SpiConfig config) throws Exception {
+        return new RpiSpi(this, config);
+    }
 }

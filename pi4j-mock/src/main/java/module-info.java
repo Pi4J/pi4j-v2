@@ -1,12 +1,4 @@
-import com.pi4j.mock.platform.MockPlatform;
-import com.pi4j.mock.provider.gpio.analog.MockAnalogInputProviderImpl;
-import com.pi4j.mock.provider.gpio.analog.MockAnalogOutputProviderImpl;
-import com.pi4j.mock.provider.gpio.digital.MockDigitalInputProviderImpl;
-import com.pi4j.mock.provider.gpio.digital.MockDigitalOutputProviderImpl;
-import com.pi4j.mock.provider.i2c.MockI2CProviderImpl;
-import com.pi4j.mock.provider.pwm.MockPwmProviderImpl;
-import com.pi4j.mock.provider.serial.MockSerialProviderImpl;
-import com.pi4j.mock.provider.spi.MockSpiProviderImpl;
+import com.pi4j.mock.MockPlugin;
 
 /*-
  * #%L
@@ -45,16 +37,6 @@ module pi4j.mock {
     exports com.pi4j.mock.provider.spi;
     exports com.pi4j.mock.provider.i2c;
 
-    provides com.pi4j.provider.Provider
-            with MockAnalogInputProviderImpl,
-                    MockAnalogOutputProviderImpl,
-                    MockDigitalInputProviderImpl,
-                    MockDigitalOutputProviderImpl,
-                    MockPwmProviderImpl,
-                    MockSpiProviderImpl,
-                    MockI2CProviderImpl,
-                    MockSerialProviderImpl;
-
-    provides com.pi4j.platform.Platform
-            with MockPlatform;
+    provides com.pi4j.extension.Plugin
+            with MockPlugin;
 }

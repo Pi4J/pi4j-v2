@@ -1,11 +1,11 @@
-package com.pi4j.provider.raspberrypi.io.i2c;
+package com.pi4j.raspberrypi.provider.gpio.digital;
 
 /*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PROVIDER :: Raspberry Pi Provider
- * FILENAME      :  RaspiI2CProvider.java
+ * FILENAME      :  RpiDigitalInputProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,24 +29,13 @@ package com.pi4j.provider.raspberrypi.io.i2c;
  * #L%
  */
 
-import com.pi4j.io.i2c.I2C;
-import com.pi4j.io.i2c.I2CConfig;
-import com.pi4j.io.i2c.I2CProvider;
-import com.pi4j.io.i2c.I2CProviderBase;
-import com.pi4j.provider.raspberrypi.RaspberryPi;
+import com.pi4j.io.gpio.digital.DigitalInputProvider;
+import com.pi4j.raspberrypi.RaspberryPi;
 
-public class RaspiI2CProvider extends I2CProviderBase implements I2CProvider {
-
-    public static final String NAME = RaspberryPi.I2C_PROVIDER_NAME;
-    public static final String ID = RaspberryPi.I2C_PROVIDER_ID;
-
-    public RaspiI2CProvider(){
-        this.id = ID;
-        this.name = NAME;
-    }
-
-    @Override
-    public I2C create(I2CConfig config) throws Exception {
-        return null;
+public interface RpiDigitalInputProvider extends DigitalInputProvider {
+    String NAME = RaspberryPi.DIGITAL_INPUT_PROVIDER_NAME;
+    String ID = RaspberryPi.DIGITAL_INPUT_PROVIDER_ID;
+    static RpiDigitalInputProvider newInstance() {
+        return new RpiDigitalInputProviderImpl();
     }
 }

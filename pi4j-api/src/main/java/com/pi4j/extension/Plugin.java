@@ -1,11 +1,11 @@
-package com.pi4j.platform.impl;
+package com.pi4j.extension;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  RuntimePlatforms.java
+ * FILENAME      :  Plugin.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,22 +27,6 @@ package com.pi4j.platform.impl;
  * #L%
  */
 
-import com.pi4j.exception.InitializeException;
-import com.pi4j.exception.ShutdownException;
-import com.pi4j.platform.Platform;
-import com.pi4j.platform.Platforms;
-
-import java.util.Collection;
-
-/**
- * <p>
- * </p>
- *
- * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
- * @author Robert Savage (<a
- *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- */
-public interface RuntimePlatforms extends Platforms {
-    RuntimePlatforms shutdown() throws ShutdownException;
-    RuntimePlatforms initialize(Collection<Platform> platforms) throws InitializeException;
+public interface Plugin  {
+    void initialize(PluginService service);
 }

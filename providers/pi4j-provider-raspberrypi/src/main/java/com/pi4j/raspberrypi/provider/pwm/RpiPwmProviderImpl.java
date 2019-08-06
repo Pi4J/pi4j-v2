@@ -1,11 +1,11 @@
-import com.pi4j.raspberrypi.RaspberryPiPlugin;
+package com.pi4j.raspberrypi.provider.pwm;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PROVIDER :: Raspberry Pi Provider
- * FILENAME      :  module-info.java
+ * FILENAME      :  RpiPwmProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,9 +28,20 @@ import com.pi4j.raspberrypi.RaspberryPiPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.provider.raspberrypi {
-    requires pi4j.api;
 
-    provides com.pi4j.extension.Plugin
-            with RaspberryPiPlugin;
+import com.pi4j.io.pwm.Pwm;
+import com.pi4j.io.pwm.PwmConfig;
+import com.pi4j.io.pwm.PwmProviderBase;
+
+public class RpiPwmProviderImpl extends PwmProviderBase implements RpiPwmProvider {
+
+    public RpiPwmProviderImpl(){
+        this.id = ID;
+        this.name = NAME;
+    }
+
+    @Override
+    public Pwm create(PwmConfig config) throws Exception {
+        return new RpiPwm(this, config);
+    }
 }

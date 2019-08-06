@@ -29,7 +29,10 @@ package com.pi4j.provider.impl;
 
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.provider.Provider;
 import com.pi4j.provider.Providers;
+
+import java.util.Collection;
 
 /**
  * <p>
@@ -43,5 +46,5 @@ import com.pi4j.provider.Providers;
  */
 public interface RuntimeProviders extends Providers {
     RuntimeProviders shutdown() throws ShutdownException;
-    RuntimeProviders initialize() throws InitializeException;
+    RuntimeProviders initialize(Collection<Provider> providers) throws InitializeException;
 }

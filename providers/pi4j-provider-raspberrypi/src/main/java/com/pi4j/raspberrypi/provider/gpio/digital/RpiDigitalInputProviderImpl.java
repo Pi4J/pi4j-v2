@@ -1,11 +1,11 @@
-import com.pi4j.raspberrypi.RaspberryPiPlugin;
+package com.pi4j.raspberrypi.provider.gpio.digital;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PROVIDER :: Raspberry Pi Provider
- * FILENAME      :  module-info.java
+ * FILENAME      :  RpiDigitalInputProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,9 +28,22 @@ import com.pi4j.raspberrypi.RaspberryPiPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.provider.raspberrypi {
-    requires pi4j.api;
 
-    provides com.pi4j.extension.Plugin
-            with RaspberryPiPlugin;
+import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalInputConfig;
+import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
+
+import java.io.IOException;
+
+public class RpiDigitalInputProviderImpl extends DigitalInputProviderBase implements RpiDigitalInputProvider {
+
+    public RpiDigitalInputProviderImpl(){
+        this.id = ID;
+        this.name = NAME;
+    }
+
+    @Override
+    public DigitalInput create(DigitalInputConfig config) throws IOException {
+        return new RpiDigitalInput(this, config);
+    }
 }

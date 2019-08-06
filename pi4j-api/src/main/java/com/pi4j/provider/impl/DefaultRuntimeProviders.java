@@ -52,7 +52,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Proxy;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -475,54 +478,29 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
     }
 
     @Override
-    public RuntimeProviders initialize() throws InitializeException {
-        var context = runtime.context();
+    public RuntimeProviders initialize(Collection<Provider> providers) throws InitializeException {
 
-        // process auto-detect?
-        if(context.config().autoDetectProviders()) {
-            logger.trace("auto-detecting providers from the classpath.");
-
-            // detect available providers by scanning the classpath looking for service io instances
-            var detectedProviders = ServiceLoader.load(Provider.class);
-            for (var providerInstance : detectedProviders) {
-                if (providerInstance != null) {
-                    logger.trace("auto-detected provider: [id={}; name={}; class={}]",
-                            providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
+        // iterate over all defined platforms and initialize each
+        if(providers != null && !providers.isEmpty()) {
+            logger.trace("adding providers: [count={}]", providers.size());
+            for (Provider provider : providers) {
+                if (provider != null) {
+                    logger.trace("adding provider: [id={}; name={}; class={}]",
+                            provider.id(), provider.name(), provider.getClass().getName());
                     try {
                         // add provider instance
-                        add(providerInstance);
+                        add(provider);
                     } catch (Exception ex) {
                         // unable to initialize this provider instance
-                        logger.error("unable to 'initialize()' auto-detected provider: [id={}; name={}]; {}",
-                                providerInstance.id(), providerInstance.name(), ex.getMessage());
-                        continue;
-                    }
-                }
-            }
-
-        }
-
-        // process any additional configured providers
-        Collection<Provider> additionalProviders = context.config().getProviders();
-        if(additionalProviders != null && !additionalProviders.isEmpty()) {
-            logger.trace("adding explicit provider: [count={}]", additionalProviders.size());
-            for (Provider providerInstance : additionalProviders) {
-                if (providerInstance != null) {
-                    logger.trace("explicit provider: [id={}; name={}; class={}]",
-                            providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
-                    try {
-                        // add provider instance
-                        add(providerInstance);
-                    } catch (Exception ex) {
-                        // unable to initialize this provider instance
-                        logger.error("unable to 'initialize()' explicit provider: [id={}; name={}]; {}",
-                                providerInstance.id(), providerInstance.name(), ex.getMessage());
+                        logger.error("unable to 'initialize()' provider: [id={}; name={}]; {}",
+                                provider.id(), provider.name(), ex.getMessage());
                         continue;
                     }
                 }
             }
         }
-        logger.debug("providers loaded [{}]", providers.size());
+
+        logger.debug("providers loaded [{}]", this.providers.size());
         return this;
     }
 }

@@ -1,4 +1,4 @@
-package com.pi4j.provider.raspberrypi;
+package com.pi4j.raspberrypi;
 
 /*-
  * #%L
@@ -36,10 +36,23 @@ public class RaspberryPi {
     // Platform name and unique ID
     public static final String PLATFORM_NAME = NAME + " Platform";
     public static final String PLATFORM_ID = ID;
+    public static final String PLATFORM_DESCRIPTION = "Pi4J Platform for the RaspberryPi series of products.";
 
-    // GPIO Provider name and unique ID
-    public static final String GPIO_PROVIDER_NAME = NAME + " GPIO Provider";
-    public static final String GPIO_PROVIDER_ID = ID + "-gpio";
+    // Analog Input (GPIO) Provider name and unique ID
+    public static final String ANALOG_INPUT_PROVIDER_NAME = NAME + " Analog Input (GPIO) Provider";
+    public static final String ANALOG_INPUT_PROVIDER_ID = ID + "-analog-input";
+
+    // Analog Output (GPIO) Provider name and unique ID
+    public static final String ANALOG_OUTPUT_PROVIDER_NAME = NAME + " Analog Output (GPIO) Provider";
+    public static final String ANALOG_OUTPUT_PROVIDER_ID = ID + "-analog-output";
+
+    // Digital Input (GPIO) Provider name and unique ID
+    public static final String DIGITAL_INPUT_PROVIDER_NAME = NAME +  " Digital Input (GPIO) Provider";
+    public static final String DIGITAL_INPUT_PROVIDER_ID = ID + "-digital-input";
+
+    // Digital Output (GPIO) Provider name and unique ID
+    public static final String DIGITAL_OUTPUT_PROVIDER_NAME = NAME +  " Digital Output (GPIO) Provider";
+    public static final String DIGITAL_OUTPUT_PROVIDER_ID = ID + "-digital-output";
 
     // PWM Provider name and unique ID
     public static final String PWM_PROVIDER_NAME = NAME + " PWM Provider";

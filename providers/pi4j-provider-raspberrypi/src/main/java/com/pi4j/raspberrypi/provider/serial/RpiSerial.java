@@ -1,11 +1,11 @@
-package com.pi4j.provider.raspberrypi.io.spi;
+package com.pi4j.raspberrypi.provider.serial;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PROVIDER :: Raspberry Pi Provider
- * FILENAME      :  RaspiSpiProvider.java
+ * FILENAME      :  RpiSerial.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,24 +29,14 @@ package com.pi4j.provider.raspberrypi.io.spi;
  * #L%
  */
 
-import com.pi4j.io.spi.Spi;
-import com.pi4j.io.spi.SpiConfig;
-import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.io.spi.SpiProviderBase;
-import com.pi4j.provider.raspberrypi.RaspberryPi;
+import com.pi4j.io.serial.Serial;
+import com.pi4j.io.serial.SerialBase;
+import com.pi4j.io.serial.SerialConfig;
+import com.pi4j.io.serial.SerialProvider;
 
-public class RaspiSpiProvider extends SpiProviderBase implements SpiProvider {
+public class RpiSerial extends SerialBase implements Serial {
 
-    public static final String NAME = RaspberryPi.SPI_PROVIDER_NAME;
-    public static final String ID = RaspberryPi.SPI_PROVIDER_ID;
-
-    public RaspiSpiProvider(){
-        this.id = ID;
-        this.name = NAME;
-    }
-
-    @Override
-    public Spi create(SpiConfig config) throws Exception {
-        return null;
+    public RpiSerial(SerialProvider provider, SerialConfig config){
+        super(provider, config);
     }
 }

@@ -1,11 +1,11 @@
-package com.pi4j.provider.raspberrypi.io.serial;
+package com.pi4j.raspberrypi.provider.pwm;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PROVIDER :: Raspberry Pi Provider
- * FILENAME      :  RaspiSerialProvider.java
+ * FILENAME      :  RpiPwmProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,25 +29,13 @@ package com.pi4j.provider.raspberrypi.io.serial;
  * #L%
  */
 
-import com.pi4j.io.serial.Serial;
-import com.pi4j.io.serial.SerialConfig;
-import com.pi4j.io.serial.SerialProvider;
-import com.pi4j.io.serial.SerialProviderBase;
-import com.pi4j.provider.raspberrypi.RaspberryPi;
+import com.pi4j.io.pwm.PwmProvider;
+import com.pi4j.raspberrypi.RaspberryPi;
 
-
-public class RaspiSerialProvider extends SerialProviderBase implements SerialProvider {
-
-    public static final String NAME = RaspberryPi.SERIAL_PROVIDER_NAME;
-    public static final String ID = RaspberryPi.SERIAL_PROVIDER_ID;
-
-    public RaspiSerialProvider(){
-        this.id = ID;
-        this.name = NAME;
-    }
-
-    @Override
-    public Serial create(SerialConfig config) throws Exception {
-        return null;
+public interface RpiPwmProvider extends PwmProvider {
+    String NAME = RaspberryPi.PWM_PROVIDER_NAME;
+    String ID = RaspberryPi.PWM_PROVIDER_ID;
+    static RpiPwmProvider newInstance() {
+        return new RpiPwmProviderImpl();
     }
 }

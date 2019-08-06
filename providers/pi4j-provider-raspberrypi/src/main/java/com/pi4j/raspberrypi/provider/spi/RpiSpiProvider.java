@@ -1,11 +1,11 @@
-package com.pi4j.provider.raspberrypi.io.serial;
+package com.pi4j.raspberrypi.provider.spi;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PROVIDER :: Raspberry Pi Provider
- * FILENAME      :  RaspberryPiSerial.java
+ * FILENAME      :  RpiSpiProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,15 +29,13 @@ package com.pi4j.provider.raspberrypi.io.serial;
  * #L%
  */
 
-/**
- * This class simply exposed the available UART/serial port
- * address (device file paths) that are exposed on the RaspberryPi.
- */
-public class RaspberryPiSerial {
+import com.pi4j.io.spi.SpiProvider;
+import com.pi4j.raspberrypi.RaspberryPi;
 
-    public static final String AMA0_COM_PORT = "/dev/ttyAMA0";
-    public static final String DEFAULT_COM_PORT = AMA0_COM_PORT;
-
-    // The "S0" com port was added with the introduction of the Raspberry Pi 3B model.
-    public static final String S0_COM_PORT = "/dev/ttyS0";
+public interface RpiSpiProvider extends SpiProvider{
+    String NAME = RaspberryPi.SPI_PROVIDER_NAME;
+    String ID = RaspberryPi.SPI_PROVIDER_ID;
+    static RpiSpiProvider newInstance() {
+        return new RpiSpiProviderImpl();
+    }
 }

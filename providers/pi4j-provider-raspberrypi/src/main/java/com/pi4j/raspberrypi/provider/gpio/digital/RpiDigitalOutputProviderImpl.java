@@ -1,11 +1,11 @@
-package com.pi4j.provider.raspberrypi.io.pwm;
+package com.pi4j.raspberrypi.provider.gpio.digital;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PROVIDER :: Raspberry Pi Provider
- * FILENAME      :  RaspiPwmProvider.java
+ * FILENAME      :  RpiDigitalOutputProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,24 +29,19 @@ package com.pi4j.provider.raspberrypi.io.pwm;
  * #L%
  */
 
-import com.pi4j.io.pwm.Pwm;
-import com.pi4j.io.pwm.PwmConfig;
-import com.pi4j.io.pwm.PwmProvider;
-import com.pi4j.io.pwm.PwmProviderBase;
-import com.pi4j.provider.raspberrypi.RaspberryPi;
+import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalOutputConfig;
+import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
 
-public class RaspiPwmProvider extends PwmProviderBase implements PwmProvider {
+public class RpiDigitalOutputProviderImpl extends DigitalOutputProviderBase implements RpiDigitalOutputProvider {
 
-    public static final String NAME = RaspberryPi.PWM_PROVIDER_NAME;
-    public static final String ID = RaspberryPi.PWM_PROVIDER_ID;
-
-    public RaspiPwmProvider(){
+    public RpiDigitalOutputProviderImpl(){
         this.id = ID;
         this.name = NAME;
     }
 
     @Override
-    public Pwm create(PwmConfig config) throws Exception {
-        return null;
+    public DigitalOutput create(DigitalOutputConfig config) throws Exception {
+        return new RpiDigitalOutput(this, config);
     }
 }

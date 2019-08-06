@@ -1,11 +1,11 @@
-package com.pi4j.platform.impl;
+package com.pi4j.extension.impl;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  RuntimePlatforms.java
+ * FILENAME      :  PluginStore.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,22 +27,14 @@ package com.pi4j.platform.impl;
  * #L%
  */
 
-import com.pi4j.exception.InitializeException;
-import com.pi4j.exception.ShutdownException;
 import com.pi4j.platform.Platform;
-import com.pi4j.platform.Platforms;
+import com.pi4j.provider.Provider;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * <p>
- * </p>
- *
- * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
- * @author Robert Savage (<a
- *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- */
-public interface RuntimePlatforms extends Platforms {
-    RuntimePlatforms shutdown() throws ShutdownException;
-    RuntimePlatforms initialize(Collection<Platform> platforms) throws InitializeException;
+public class PluginStore {
+    public Set<Provider> providers = Collections.synchronizedSet(new HashSet<>());
+    public Set<Platform> platforms = Collections.synchronizedSet(new HashSet<>());
 }

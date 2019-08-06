@@ -1,5 +1,4 @@
 import com.pi4j.annotation.processor.register.*;
-import com.pi4j.extension.Extension;
 
 /*-
  * #%L
@@ -56,9 +55,7 @@ module pi4j.api {
     exports com.pi4j.registry;
     exports com.pi4j.util;
 
-    uses Extension;
-    uses com.pi4j.platform.Platform;
-    uses com.pi4j.provider.Provider;
+    uses com.pi4j.extension.Plugin;
     uses com.pi4j.annotation.Processor;
 
     provides com.pi4j.annotation.Processor

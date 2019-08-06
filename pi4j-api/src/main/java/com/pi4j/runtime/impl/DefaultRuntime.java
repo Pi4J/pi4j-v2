@@ -34,8 +34,13 @@ import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.extension.Plugin;
+import com.pi4j.extension.impl.DefaultPluginService;
+import com.pi4j.extension.impl.PluginStore;
+import com.pi4j.platform.Platform;
 import com.pi4j.platform.impl.DefaultRuntimePlatforms;
 import com.pi4j.platform.impl.RuntimePlatforms;
+import com.pi4j.provider.Provider;
 import com.pi4j.provider.impl.DefaultRuntimeProviders;
 import com.pi4j.provider.impl.RuntimeProviders;
 import com.pi4j.registry.impl.DefaultRuntimeRegistry;
@@ -43,6 +48,11 @@ import com.pi4j.registry.impl.RuntimeRegistry;
 import com.pi4j.runtime.Runtime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.ServiceLoader;
+import java.util.Set;
 
 public class DefaultRuntime implements Runtime {
 
@@ -119,14 +129,55 @@ public class DefaultRuntime implements Runtime {
     public Runtime initialize() throws InitializeException {
         logger.trace("invoked 'initialize();'");
         try {
+            // container sets for providers and platforms to load
+            Set<Provider> providers = Collections.synchronizedSet(new HashSet<>());
+            Set<Platform> platforms = Collections.synchronizedSet(new HashSet<>());
+
+            // copy all configured platforms and providers defined in the context configuration
+            providers.addAll(context().config().getProviders());
+            platforms.addAll(context().config().getPlatforms());
+
+            // only attempt to load platforms and providers from the classpath if an auto detect option is enabled
+            if(context.config().autoDetectPlatforms() || context.config().autoDetectProviders()) {
+
+                // detect available Pi4J Plugins by scanning the classpath looking for plugin instances
+                var plugins = ServiceLoader.load(Plugin.class);
+                for (var plugin : plugins) {
+                    if (plugin != null) {
+                        logger.trace("detected plugin: [{}] in classpath; calling 'initialize()'",
+                                plugin.getClass().getName());
+                        try {
+                            PluginStore store = new PluginStore();
+                            plugin.initialize(DefaultPluginService.newInstance(this.context(), store));
+
+                            // if auto-detect providers is enabled,
+                            // then add any detected providers to the collection to load
+                            if(context.config().autoDetectProviders())
+                                providers.addAll(store.providers);
+
+                            // if auto-detect platforms is enabled,
+                            // then add any detected platforms to the collection to load
+                            if(context.config().autoDetectPlatforms())
+                                platforms.addAll(store.platforms);
+
+                        } catch (Exception ex) {
+                            // unable to initialize this provider instance
+                            logger.error("unable to 'initialize()' plugin: [{}]; {}",
+                                    plugin.getClass().getName(), ex.getMessage());
+                            continue;
+                        }
+                    }
+                }
+            }
+
             // initialize I/O registry
             this.registry.initialize();
 
             // initialize all providers
-            this.providers.initialize();
+            this.providers.initialize(providers);
 
             // initialize all platforms
-            this.platforms.initialize();
+            this.platforms.initialize(platforms);
 
         } catch (Exception e) {
             logger.error("failed to 'initialize(); '", e);

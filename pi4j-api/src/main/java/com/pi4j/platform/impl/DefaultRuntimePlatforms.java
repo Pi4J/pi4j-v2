@@ -39,7 +39,10 @@ import com.pi4j.runtime.Runtime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -129,51 +132,29 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
     }
 
     @Override
-    public RuntimePlatforms initialize() throws InitializeException {
-        // process auto-detect?
-        if(runtime.context().config().autoDetectPlatforms()) {
-            logger.trace("auto-detecting platforms from the classpath.");
+    public RuntimePlatforms initialize(Collection<Platform> platforms) throws InitializeException {
 
-            // detect available platforms by scanning the classpath looking for service io instances
-            ServiceLoader<Platform> detectedPlatforms = ServiceLoader.load(Platform.class);
-            for (Platform platformInstance : detectedPlatforms) {
-                if (platformInstance != null) {
-                    logger.trace("auto-detected platform: [id={}; name={}; class={}]",
-                            platformInstance.id(), platformInstance.name(), platformInstance.getClass().getName());
+        // iterate over all defined platforms and initialize each
+        if(platforms != null && !platforms.isEmpty()) {
+            logger.trace("adding platforms: [count={}]", platforms.size());
+            for (Platform platform : platforms) {
+                if (platform != null) {
+                    logger.trace("platform: [id={}; name={}; class={}]",
+                            platform.id(), platform.name(), platform.getClass().getName());
                     try {
                         // add platform instance
-                        add(platformInstance);
-                    } catch (PlatformException ex) {
-                        // unable to initialize this platform instance
-                        logger.error("unable to 'initialize()' auto-detected platform: [id={}; name={}]; {}",
-                                platformInstance.id(), platformInstance.name(), ex.getMessage());
-                        continue;
-                    }
-                }
-            }
-        }
-
-        // process any additional configured platforms
-        Collection<Platform> additionalPlatforms = runtime.context().config().getPlatforms();
-        if(additionalPlatforms != null && !additionalPlatforms.isEmpty()) {
-            logger.trace("adding explicit platforms: [count={}]", additionalPlatforms.size());
-            for (Platform platformInstance : additionalPlatforms) {
-                if (platformInstance != null) {
-                    logger.trace("explicit platform: [id={}; name={}; class={}]",
-                            platformInstance.id(), platformInstance.name(), platformInstance.getClass().getName());
-                    try {
-                        // add platform instance
-                        add(platformInstance);
+                        add(platform);
                     } catch (Exception ex) {
                         // unable to initialize this platform instance
-                        logger.error("unable to 'initialize()' explicit platform: [id={}; name={}]; {}",
-                                platformInstance.id(), platformInstance.name(), ex.getMessage());
+                        logger.error("unable to 'initialize()' platform: [id={}; name={}]; {}",
+                                platform.id(), platform.name(), ex.getMessage());
                         continue;
                     }
                 }
             }
         }
-        logger.debug("platforms loaded [{}]", platforms.size());
+
+        logger.debug("platforms loaded [{}]", this.platforms.size());
 
         // set default platform
         if(runtime.context().config().hasDefaultPlatform() &&
@@ -222,14 +203,14 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
                 this.defaultPlatform = platformInstance;
 
                 logger.debug("default platform is now [id={}; name={}; class={}]",
-                        platformInstance.id(), platformInstance.name(), platformInstance.getClass().getName());
+                        defaultPlatform.id(), defaultPlatform.name(), defaultPlatform.getClass().getName());
 
             }
             else{
-                this.defaultPlatform = platformInstance;
                 if(platformInstance.weight() > this.defaultPlatform.weight()){
+                    this.defaultPlatform = platformInstance;
                     logger.debug("default platform is now [id={}; name={}; class={}; weight={}]",
-                            platformInstance.id(), platformInstance.name(), platformInstance.getClass().getName(), platformInstance.weight());
+                            defaultPlatform.id(), defaultPlatform.name(), defaultPlatform.getClass().getName(), defaultPlatform.weight());
                 }
             }
         }

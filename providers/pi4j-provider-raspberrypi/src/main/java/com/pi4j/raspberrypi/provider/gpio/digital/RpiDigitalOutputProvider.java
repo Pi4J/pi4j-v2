@@ -1,11 +1,11 @@
-import com.pi4j.raspberrypi.RaspberryPiPlugin;
+package com.pi4j.raspberrypi.provider.gpio.digital;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PROVIDER :: Raspberry Pi Provider
- * FILENAME      :  module-info.java
+ * FILENAME      :  RpiDigitalOutputProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,9 +28,14 @@ import com.pi4j.raspberrypi.RaspberryPiPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.provider.raspberrypi {
-    requires pi4j.api;
 
-    provides com.pi4j.extension.Plugin
-            with RaspberryPiPlugin;
+import com.pi4j.io.gpio.digital.DigitalOutputProvider;
+import com.pi4j.raspberrypi.RaspberryPi;
+
+public interface RpiDigitalOutputProvider extends DigitalOutputProvider {
+    String NAME = RaspberryPi.DIGITAL_OUTPUT_PROVIDER_NAME;
+    String ID = RaspberryPi.DIGITAL_OUTPUT_PROVIDER_ID;
+    static RpiDigitalOutputProvider newInstance() {
+        return new RpiDigitalOutputProviderImpl();
+    }
 }

@@ -1,11 +1,11 @@
-import com.pi4j.raspberrypi.RaspberryPiPlugin;
+package com.pi4j.raspberrypi.provider.serial;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PROVIDER :: Raspberry Pi Provider
- * FILENAME      :  module-info.java
+ * FILENAME      :  RpiSerialProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,9 +28,14 @@ import com.pi4j.raspberrypi.RaspberryPiPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.provider.raspberrypi {
-    requires pi4j.api;
 
-    provides com.pi4j.extension.Plugin
-            with RaspberryPiPlugin;
+import com.pi4j.io.serial.SerialProvider;
+import com.pi4j.raspberrypi.RaspberryPi;
+
+public interface RpiSerialProvider extends SerialProvider {
+    String NAME = RaspberryPi.SERIAL_PROVIDER_NAME;
+    String ID = RaspberryPi.SERIAL_PROVIDER_ID;
+    static RpiSerialProvider newInstance() {
+        return new RpiSerialProviderImpl();
+    }
 }
