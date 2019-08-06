@@ -29,7 +29,6 @@ package com.pi4j.io.spi;
 
 
 import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
 import com.pi4j.io.spi.impl.SpiFactory;
 import com.pi4j.provider.exception.ProviderException;
@@ -47,19 +46,19 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider> {
     static final int DEFAULT_SPI_SPEED = 1000000; // 1MHz (range is 500kHz - 32MHz)
     static final int MAX_SUPPORTED_BYTES = 2048;
 
-    static Spi instance(Context context, SpiConfig config) throws ProviderException, NotInitializedException {
+    static Spi instance(Context context, SpiConfig config) throws ProviderException {
         return SpiFactory.instance(context, config);
     }
 
-    static Spi instance(Context context, String device) throws ProviderException, NotInitializedException {
+    static Spi instance(Context context, String device) throws ProviderException {
         return SpiFactory.instance(context, device);
     }
 
-    static Spi instance(Context context, String providerId, String device) throws ProviderException, NotInitializedException {
+    static Spi instance(Context context, String providerId, String device) throws ProviderException {
         return SpiFactory.instance(context, providerId, device);
     }
 
-    static Spi instance(Context context, String providerId, SpiConfig config) throws ProviderException, NotInitializedException {
+    static Spi instance(Context context, String providerId, SpiConfig config) throws ProviderException {
         return SpiFactory.instance(context, providerId, config);
     }
 

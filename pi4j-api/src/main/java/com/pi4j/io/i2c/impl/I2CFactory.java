@@ -28,12 +28,10 @@ package com.pi4j.io.i2c.impl;
  */
 
 import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.provider.exception.ProviderInstantiateException;
 
 /**
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www .savagehomeautomation.com</a>)
@@ -45,21 +43,21 @@ public class I2CFactory {
         // forbid object construction
     }
 
-    public static I2C instance(Context context, I2CConfig config) throws ProviderException, NotInitializedException {
+    public static I2C instance(Context context, I2CConfig config) throws ProviderException {
         // get I2C instance using default io
         var provider = context.platform().i2c();
         return instance(provider, config);
     }
 
-    public static I2C instance(Context context, String device, int address) throws ProviderException, NotInitializedException {
+    public static I2C instance(Context context, String device, int address) throws ProviderException {
         return instance(context, new I2CConfig(device, address));
     }
 
-    public static I2C instance(Context context, String providerId, String device, int address) throws ProviderException, NotInitializedException {
+    public static I2C instance(Context context, String providerId, String device, int address) throws ProviderException {
         return instance(context, providerId, new I2CConfig(device, address));
     }
 
-    public static I2C instance(Context context, String providerId, I2CConfig config) throws ProviderException, NotInitializedException {
+    public static I2C instance(Context context, String providerId, I2CConfig config) throws ProviderException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
             return instance(context, config);
@@ -81,7 +79,7 @@ public class I2CFactory {
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {
-            throw new ProviderInstantiateException(provider, e);
+            throw new ProviderException(provider, e);
         }
     }
 }

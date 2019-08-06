@@ -28,12 +28,10 @@ package com.pi4j.io.spi.impl;
  */
 
 import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.provider.exception.ProviderInstantiateException;
 
 /**
  * SPI factory - it returns instances of {@link Spi} interface.
@@ -48,21 +46,21 @@ public class SpiFactory {
         // forbid object construction
     }
 
-    public static Spi instance(Context context, String device) throws ProviderException, NotInitializedException {
+    public static Spi instance(Context context, String device) throws ProviderException {
         return instance(context, new SpiConfig(device));
     }
 
-    public static Spi instance(Context context, SpiConfig config) throws ProviderException, NotInitializedException {
+    public static Spi instance(Context context, SpiConfig config) throws ProviderException {
         // get SPI instance using default platform IO provider
         var provider = context.platform().spi();
         return instance(provider, config);
     }
 
-    public static Spi instance(Context context, String providerId, String device) throws ProviderException, NotInitializedException {
+    public static Spi instance(Context context, String providerId, String device) throws ProviderException {
         return instance(context, providerId, new SpiConfig(device));
     }
 
-    public static Spi instance(Context context, String providerId, SpiConfig config) throws ProviderException, NotInitializedException {
+    public static Spi instance(Context context, String providerId, SpiConfig config) throws ProviderException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
             return instance(context, config);
@@ -85,7 +83,7 @@ public class SpiFactory {
             throw pe;
         } catch (Exception e) {
             //e.printStackTrace();
-            throw new ProviderInstantiateException(provider, e);
+            throw new ProviderException(provider, e);
         }
     }
 }

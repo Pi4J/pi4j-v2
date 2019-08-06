@@ -28,7 +28,6 @@ package com.pi4j.io.serial;
  */
 
 import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
 import com.pi4j.io.serial.impl.SerialFactory;
 import com.pi4j.provider.exception.ProviderException;
@@ -42,27 +41,27 @@ public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCl
     static final int DEFAULT_BAUD = 9600;
     static final String DEFAULT_DEVICE = "{DEFAULT}";
 
-    static Serial instance(Context context, SerialConfig config) throws ProviderException, NotInitializedException {
+    static Serial instance(Context context, SerialConfig config) throws ProviderException {
         return SerialFactory.instance(context, config);
     }
 
-    static Serial instance(Context context, String device) throws ProviderException, NotInitializedException {
+    static Serial instance(Context context, String device) throws ProviderException {
         return SerialFactory.instance(context, device);
     }
 
-    static Serial instance(Context context, String device, int baud) throws ProviderException, NotInitializedException {
+    static Serial instance(Context context, String device, int baud) throws ProviderException {
         return SerialFactory.instance(context, device, baud);
     }
 
-    static Serial instance(Context context, String providerId, String device) throws ProviderException, NotInitializedException {
+    static Serial instance(Context context, String providerId, String device) throws ProviderException {
         return SerialFactory.instance(context, providerId, device);
     }
 
-    static Serial instance(Context context, String providerId, String device, int baud) throws ProviderException, NotInitializedException {
+    static Serial instance(Context context, String providerId, String device, int baud) throws ProviderException {
         return SerialFactory.instance(context, providerId, device);
     }
 
-    static Serial instance(Context context, String providerId, SerialConfig config) throws ProviderException, NotInitializedException {
+    static Serial instance(Context context, String providerId, SerialConfig config) throws ProviderException {
         return SerialFactory.instance(context, providerId, config);
     }
 

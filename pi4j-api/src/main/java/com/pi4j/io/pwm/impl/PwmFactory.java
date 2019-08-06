@@ -28,12 +28,10 @@ package com.pi4j.io.pwm.impl;
  */
 
 import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.provider.exception.ProviderInstantiateException;
 
 /**
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www .savagehomeautomation.com</a>)
@@ -45,21 +43,21 @@ public class PwmFactory {
         // forbid object construction
     }
 
-    public static Pwm instance(Context context, PwmConfig config) throws ProviderException, NotInitializedException {
+    public static Pwm instance(Context context, PwmConfig config) throws ProviderException {
         // get I2C instance using default io
         var provider = context.platform().pwm();
         return instance(provider, config);
     }
 
-    public static Pwm instance(Context context, int address) throws ProviderException, NotInitializedException {
+    public static Pwm instance(Context context, int address) throws ProviderException {
         return instance(context, new PwmConfig(address));
     }
 
-    public static Pwm instance(Context context, String providerId, int address) throws ProviderException, NotInitializedException {
+    public static Pwm instance(Context context, String providerId, int address) throws ProviderException {
         return instance(context, providerId, new PwmConfig(address));
     }
 
-    public static Pwm instance(Context context, String providerId, PwmConfig config) throws ProviderException, NotInitializedException {
+    public static Pwm instance(Context context, String providerId, PwmConfig config) throws ProviderException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
             return instance(context, config);
@@ -81,7 +79,7 @@ public class PwmFactory {
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {
-            throw new ProviderInstantiateException(provider, e);
+            throw new ProviderException(provider, e);
         }
     }
 }

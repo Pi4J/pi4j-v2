@@ -30,7 +30,6 @@ package com.pi4j.annotation.impl;
 import com.pi4j.annotation.WithPlatform;
 import com.pi4j.annotation.WithProvider;
 import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.exception.PlatformNotFoundException;
 import com.pi4j.platform.exception.PlatformTypeException;
@@ -95,7 +94,7 @@ public class WithAnnotationProcessor {
         throw new PlatformNotFoundException("ID=" + platformId + "; CLASS=" + platformClass);
     }
 
-    public static <T extends Provider> T getProvider(Context context, Platform platform, Field field, Class<T> providerClass) throws ProviderException, NotInitializedException {
+    public static <T extends Provider> T getProvider(Context context, Platform platform, Field field, Class<T> providerClass) throws ProviderException {
         String id = null;
 
         // if the '@WithProvider' annotation is missing, then just return

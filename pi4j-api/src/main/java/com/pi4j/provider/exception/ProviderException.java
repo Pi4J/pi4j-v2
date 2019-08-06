@@ -28,6 +28,7 @@ package com.pi4j.provider.exception;
  */
 
 import com.pi4j.extension.exception.ExtensionException;
+import com.pi4j.provider.Provider;
 
 /**
  * <p>
@@ -57,4 +58,9 @@ public class ProviderException extends ExtensionException {
     public ProviderException(String message, Throwable cause){
         super(message,cause);
     }
+
+    public ProviderException(Provider provider, Throwable cause){
+        super("Provider exception: " + provider.id() + "(" + provider.getClass().getName() + ")",cause);
+    }
+
 }

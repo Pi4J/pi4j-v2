@@ -28,7 +28,6 @@ package com.pi4j.io.i2c;
  */
 
 import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.IO;
 import com.pi4j.io.i2c.impl.I2CFactory;
 import com.pi4j.provider.exception.ProviderException;
@@ -46,19 +45,19 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider> {
 
     static final String ID = "I2C";
 
-    static I2C instance(Context context, String device, int address) throws ProviderException, NotInitializedException {
+    static I2C instance(Context context, String device, int address) throws ProviderException {
         return I2CFactory.instance(context, device, address);
     }
 
-    static I2C instance(Context context, I2CConfig config) throws ProviderException, NotInitializedException {
+    static I2C instance(Context context, I2CConfig config) throws ProviderException {
         return I2CFactory.instance(context, config);
     }
 
-    static I2C instance(Context context, String providerId, String device, int address) throws ProviderException, NotInitializedException {
+    static I2C instance(Context context, String providerId, String device, int address) throws ProviderException {
         return I2CFactory.instance(context, providerId, device, address);
     }
 
-    static I2C instance(Context context, String providerId, I2CConfig config) throws ProviderException, NotInitializedException {
+    static I2C instance(Context context, String providerId, I2CConfig config) throws ProviderException {
         return I2CFactory.instance(context, providerId, config);
     }
 
