@@ -41,8 +41,8 @@ import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.provider.exception.ProviderInterfaceException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
-import com.pi4j.provider.exception.ProviderTypeException;
 
 import java.util.Map;
 
@@ -53,7 +53,7 @@ public interface Platform extends Extension<Platform> {
 
     Map<IOType, Provider> providers();
 
-    <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderTypeException;
+    <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderInterfaceException;
     <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException;
 
     default <T extends Provider> boolean hasProvider(Class<T> providerClass) {

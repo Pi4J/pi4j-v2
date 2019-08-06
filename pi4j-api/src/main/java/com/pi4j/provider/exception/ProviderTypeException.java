@@ -45,8 +45,8 @@ public class ProviderTypeException extends ProviderException {
     /**
      * Default Constructor
      */
-    public ProviderTypeException(Class<? extends Provider> providerClass){
-        super("Pi4J provider class [" + providerClass + "] is not an Interface but rather a concerete class. Please specify an Interface when requesting a provider by type.");
+    public ProviderTypeException(Provider provider, Class<? extends Provider> providerClass){
+        super("Pi4J provider type mismatch for [" + provider.id() + "(" + provider.getClass().getName() + ")]; provider instance is not of type [" + providerClass.getName() + "]");
     }
 
 }

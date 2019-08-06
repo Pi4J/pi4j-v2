@@ -27,6 +27,7 @@ package com.pi4j.registry.impl;
  * #L%
  */
 
+import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.IO;
@@ -39,5 +40,7 @@ import com.pi4j.registry.Registry;
 public interface RuntimeRegistry extends Registry {
     RuntimeRegistry add(IO instance) throws NotInitializedException, IOAlreadyExistsException, IOInvalidIDException;
     <T extends IO> T remove(String id) throws IONotFoundException, IOInvalidIDException, IOShutdownException;
+
     RuntimeRegistry shutdown() throws ShutdownException;
+    RuntimeRegistry initialize() throws InitializeException;
 }

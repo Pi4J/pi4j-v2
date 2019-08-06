@@ -29,12 +29,13 @@ package com.pi4j.platform;
 
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
-import com.pi4j.context.Context;
+import com.pi4j.platform.exception.PlatformException;
 import com.pi4j.platform.exception.PlatformNotFoundException;
-import com.pi4j.platform.exception.PlatformTerminateException;
-import com.pi4j.platform.exception.PlatformsNotInitialized;
+import com.pi4j.platform.exception.PlatformTypeException;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -46,11 +47,48 @@ import java.util.Map;
  */
 public interface Platforms extends Describable {
 
-    /**
-     * Get all platforms
-     * @return
-     */
     Map<String, Platform> all();
+    boolean exists(String platformId);
+    Platform get(String platformId) throws PlatformNotFoundException;
+    <T extends Platform> T defaultPlatform();
+
+    // DEFAULT METHODS
+
+    default <T extends Platform> boolean exists(String platformId, Class<T> platformClass) throws PlatformNotFoundException {
+        // determine if the requested platform exists by ID and CLASS TYPE
+        try {
+            return get(platformId, platformClass) != null;
+        } catch (PlatformException e) {
+            return false;
+        }
+    }
+
+    default boolean hasDefault(){
+        return defaultPlatform() != null;
+    }
+
+    default <T extends Platform> T  getDefault(){
+        return defaultPlatform();
+    }
+
+    default <T extends Platform> T get(String platformId, Class<T> platformClass) throws PlatformNotFoundException, PlatformTypeException {
+        // return the platform instance from the managed platform map that contains the given platform-id and platform-class
+        var platform = get(platformId);
+        if(platformClass.isAssignableFrom(platform.getClass())){
+            return (T)platform;
+        }
+        throw new PlatformTypeException(platformId, platformClass);
+    }
+
+    default <T extends Platform> T get(Class<T> platformClass) throws PlatformNotFoundException{
+        // return the platform instance from the managed platform map that contains the given platform-id and platform-class
+        var subset = all(platformClass);
+        if(subset.isEmpty()){
+            throw new PlatformNotFoundException(platformClass);
+        }
+        // return first instance found
+        return (T)subset.values().iterator().next();
+    }
 
     /**
      * Get all platforms of a specified io class/interface.
@@ -58,30 +96,22 @@ public interface Platforms extends Describable {
      * @param platformClass
      * @param <T>
      * @return
-     * @throws com.pi4j.platform.exception.PlatformException
+     * @throws com.pi4j.platform.exception.PlatformNotFoundException
      */
-    <T extends Platform> Map<String, T> all(Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
+    default <T extends Platform> Map<String, T> all(Class<T> platformClass) throws PlatformNotFoundException {
+        // create a map <platform-id, platform-instance> of platforms that extend of the given platform class/interface
+        var result = new ConcurrentHashMap<String, T>();
+        all().values().stream().filter(platformClass::isInstance).forEach(p -> {
+            result.put(p.id(), platformClass.cast(p));
+        });
 
-    boolean exists(String platformId) throws PlatformsNotInitialized;
-    <T extends Platform> boolean exists(String platformId, Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
-
-    Platform get(String platformId) throws PlatformsNotInitialized, PlatformNotFoundException;
-    <T extends Platform> T get(String platformId, Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
-    <T extends Platform> T get(Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
-
-    void shutdown(Context context) throws PlatformsNotInitialized, PlatformTerminateException;
-
-    <T extends Platform> T defaultPlatform();
-    default boolean hasDefault(){
-        return defaultPlatform() != null;
-    }
-    default <T extends Platform> T  getDefault(){
-        return defaultPlatform();
+        if(result.size() <= 0) throw new PlatformNotFoundException(platformClass);
+        return Collections.unmodifiableMap(result);
     }
 
-    // DEFAULT METHODS
+
     default Map<String, Platform> getAll() { return all(); }
-    default <T extends Platform> Map<String, T> getAll(Class<T> platformClass) throws PlatformNotFoundException, PlatformsNotInitialized {
+    default <T extends Platform> Map<String, T> getAll(Class<T> platformClass) throws PlatformNotFoundException {
         return all(platformClass);
     }
 

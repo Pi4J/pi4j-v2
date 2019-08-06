@@ -48,11 +48,10 @@ public class DefaultContext implements Context {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private Runtime runtime = null;
-
-    protected ContextConfig config = null;
-    protected Providers providers = null;
-    protected Platforms platforms = null;
-    protected Registry registry = null;
+    private ContextConfig config = null;
+    private Providers providers = null;
+    private Platforms platforms = null;
+    private Registry registry = null;
 
     public static Context newInstance(ContextConfig config) throws Pi4JException {
         return new DefaultContext(config);
@@ -70,17 +69,20 @@ public class DefaultContext implements Context {
         // set context config member reference
         this.config = config;
 
-        // create internal runtime state instance
+        // create internal runtime state instance  (READ-ONLY ACCESS OBJECT)
         this.runtime = DefaultRuntime.newInstance(this);
 
-        // create API accessible registry instance
+        // create API accessible registry instance  (READ-ONLY ACCESS OBJECT)
         this.registry = DefaultRegistry.newInstance(this.runtime.registry());
 
-        // create API accessible providers instance
+        // create API accessible providers instance  (READ-ONLY ACCESS OBJECT)
         this.providers = DefaultProviders.newInstance(this.runtime.providers());
 
-        // create API accessible platforms instance
-        this.platforms = DefaultPlatforms.newInstance(this.runtime);
+        // create API accessible platforms instance  (READ-ONLY ACCESS OBJECT)
+        this.platforms = DefaultPlatforms.newInstance(this.runtime.platforms());
+
+        // initialize runtime now
+        this.runtime.initialize();
 
         logger.debug("Pi4J runtime context successfully created & initialized.'");
     }
@@ -105,20 +107,8 @@ public class DefaultContext implements Context {
 
     @Override
     public Context shutdown() throws ShutdownException {
-        logger.trace("invoked 'shutdown();'");
-        try {
-            // shutdown platforms
-            platforms().shutdown(this);
-
-            // shutdown the runtime
-            this.runtime.shutdown();
-
-        } catch (Exception e) {
-            logger.error("failed to 'shutdown(); '", e);
-            throw new ShutdownException(e);
-        }
-
-        logger.debug("Pi4J context/runtime successfully shutdown.'");
+        // shutdown the runtime
+        this.runtime.shutdown();
         return this;
     }
 }

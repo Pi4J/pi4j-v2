@@ -38,7 +38,10 @@ import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.SpiProvider;
+import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.provider.exception.ProviderIOTypeException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
+import com.pi4j.provider.exception.ProviderTypeException;
 
 import java.util.Map;
 
@@ -93,7 +96,7 @@ public interface Providers extends Describable {
         // determine if the requested provider exists by ID and PROVIDER CLASS/TYPE
         try {
             return get(providerId, providerClass) != null;
-        } catch (ProviderNotFoundException e) {
+        } catch (ProviderException e) {
             return false;
         }
     }
@@ -102,7 +105,7 @@ public interface Providers extends Describable {
         // determine if the requested provider exists by ID and IO TYPE
         try {
             return get(providerId, ioType) != null;
-        } catch (ProviderNotFoundException e) {
+        } catch (ProviderException e) {
             return false;
         }
     }
@@ -129,22 +132,22 @@ public interface Providers extends Describable {
 
     <T extends Provider> T get(String providerId) throws ProviderNotFoundException;
 
-    default <T extends Provider> T get(String providerId, Class<T> providerClass) throws ProviderNotFoundException {
+    default <T extends Provider> T get(String providerId, Class<T> providerClass) throws ProviderNotFoundException, ProviderTypeException {
         // object the IO instance by unique instance identifier and validate the IO instance class/interface
         var provider = get(providerId);
         if(providerClass.isAssignableFrom(provider.getClass())){
             return (T)provider;
         }
-        throw new ProviderNotFoundException(providerClass);
+        throw new ProviderTypeException(provider, providerClass);
     }
 
-    default <T extends Provider> T get(String providerId, IOType ioType) throws ProviderNotFoundException {
+    default <T extends Provider> T get(String providerId, IOType ioType) throws ProviderNotFoundException, ProviderIOTypeException {
         // object the IO instance by unique instance identifier and validate the IO instance IO type
         var provider = get(providerId);
         if(provider.getType().isType(ioType)){
             return (T)provider;
         }
-        throw new ProviderNotFoundException(providerId);
+        throw new ProviderIOTypeException(provider, ioType);
     }
 
     default <T extends Provider> T get(Class<T> providerClass) throws ProviderNotFoundException {

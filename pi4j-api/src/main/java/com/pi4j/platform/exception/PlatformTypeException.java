@@ -5,7 +5,7 @@ package com.pi4j.platform.exception;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  PlatformsAlreadyInitialized.java
+ * FILENAME      :  PlatformTypeException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,6 +27,9 @@ package com.pi4j.platform.exception;
  * #L%
  */
 
+
+import com.pi4j.platform.Platform;
+
 /**
  * <p>
  * This exception is thrown if a platform assignment is attempted when a
@@ -37,12 +40,13 @@ package com.pi4j.platform.exception;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public class PlatformsAlreadyInitialized extends PlatformException {
+public class PlatformTypeException extends PlatformException {
 
     /**
      * Default Constructor
      */
-    public PlatformsAlreadyInitialized(){
-        super("The Pi4J platforms have already been initialized. Make sure you only have one call to 'Pi4J.initialize()'; This method is not reentrant..");
+    public PlatformTypeException(String platformId, Class<? extends Platform> platformClass){
+        super("Pi4J platform type mismatch for [" + platformId + "]; platform instance is not of type [" + platformClass.getName() + "]");
     }
+
 }

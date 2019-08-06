@@ -33,7 +33,7 @@ import com.pi4j.context.Context;
 import com.pi4j.exception.NotInitializedException;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.exception.PlatformNotFoundException;
-import com.pi4j.platform.exception.PlatformsNotInitialized;
+import com.pi4j.platform.exception.PlatformTypeException;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
@@ -43,7 +43,7 @@ import java.lang.reflect.Field;
 
 public class WithAnnotationProcessor {
 
-    public static <T extends Platform> T getPlatform(Context context, Field field) throws PlatformNotFoundException, PlatformsNotInitialized {
+    public static <T extends Platform> T getPlatform(Context context, Field field) throws PlatformNotFoundException, PlatformTypeException {
         String platformId = null;
         Class<? extends Platform> platformClass = null;
         Platform platform;

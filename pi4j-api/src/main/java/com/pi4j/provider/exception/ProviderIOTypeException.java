@@ -1,11 +1,11 @@
-package com.pi4j.platform.exception;
+package com.pi4j.provider.exception;
 
 /*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  PlatformsNotInitialized.java
+ * FILENAME      :  ProviderIOTypeException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,6 +28,9 @@ package com.pi4j.platform.exception;
  */
 
 
+import com.pi4j.io.IOType;
+import com.pi4j.provider.Provider;
+
 /**
  * <p>
  * This exception is thrown if a platform assignment is attempted when a
@@ -38,12 +41,13 @@ package com.pi4j.platform.exception;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public class PlatformsNotInitialized extends PlatformException {
+public class ProviderIOTypeException extends ProviderException {
 
     /**
      * Default Constructor
      */
-    public PlatformsNotInitialized(){
-        super("The Pi4J platforms have not been initialized.  Make sure to call 'Pi4J.initialize()' before attempting to use any Pi4J platforms.");
+    public ProviderIOTypeException(Provider provider, IOType ioType){
+        super("Pi4J provider IO type mismatch for [" + provider.id() + "(" + provider.type().name() + ")]; provider instance is not of IO type [" + ioType.name() + "]");
     }
+
 }

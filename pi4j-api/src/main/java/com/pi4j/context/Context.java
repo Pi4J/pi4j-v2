@@ -45,8 +45,8 @@ import com.pi4j.platform.Platforms;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.provider.exception.ProviderInterfaceException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
-import com.pi4j.provider.exception.ProviderTypeException;
 import com.pi4j.registry.Registry;
 
 public interface Context extends Describable {
@@ -63,7 +63,7 @@ public interface Context extends Describable {
         return (T)providers().get(providerId);
     }
 
-    default <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderTypeException {
+    default <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderInterfaceException {
         // return the default provider for this type from the default platform
         if(platform() != null && platform().hasProvider(providerClass))
             return platform().provider(providerClass);

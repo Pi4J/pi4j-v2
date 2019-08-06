@@ -29,15 +29,19 @@ package com.pi4j.runtime;
 
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.platform.impl.RuntimePlatforms;
 import com.pi4j.provider.impl.RuntimeProviders;
 import com.pi4j.registry.impl.RuntimeRegistry;
 
 public interface Runtime {
     RuntimeRegistry registry();
     RuntimeProviders providers();
+    RuntimePlatforms platforms();
     Context context();
 
-    void inject(Object... objects) throws AnnotationException;
-    void shutdown() throws ShutdownException;
+    Runtime inject(Object... objects) throws AnnotationException;
+    Runtime shutdown() throws ShutdownException;
+    Runtime initialize() throws InitializeException;
 }

@@ -34,8 +34,8 @@ import com.pi4j.extension.ExtensionBase;
 import com.pi4j.io.IOType;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.provider.exception.ProviderInterfaceException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
-import com.pi4j.provider.exception.ProviderTypeException;
 import com.pi4j.provider.impl.ProviderProxyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +75,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     }
 
     @Override
-    public <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderTypeException {
+    public <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderInterfaceException {
 
         if(!providerClass.isInterface()){
             logger.warn("Provider type [" + providerClass.getName() + "] requested; this is not an 'Interface'" +
@@ -101,7 +101,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
         if(providerClass.isInterface()){
             throw new ProviderNotFoundException(providerClass);
         } else {
-            throw new ProviderTypeException(providerClass);
+            throw new ProviderInterfaceException(providerClass);
         }
     }
 

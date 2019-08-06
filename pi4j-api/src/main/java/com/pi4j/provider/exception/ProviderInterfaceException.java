@@ -1,11 +1,11 @@
-package com.pi4j.provider.impl;
+package com.pi4j.provider.exception;
 
 /*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  RuntimeProviders.java
+ * FILENAME      :  ProviderInterfaceException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,21 +27,26 @@ package com.pi4j.provider.impl;
  * #L%
  */
 
-import com.pi4j.exception.InitializeException;
-import com.pi4j.exception.ShutdownException;
-import com.pi4j.provider.Providers;
+
+import com.pi4j.provider.Provider;
 
 /**
  * <p>
- * This class provides static methods to configure the Pi4J library's default
- * platform.  Pi4J supports the following platforms:  RaspberryPi, BananaPi, BananaPro, Odroid.
+ * This exception is thrown if a platform assignment is attempted when a
+ * platform instance has already been assigned.
  * </p>
  *
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public interface RuntimeProviders extends Providers {
-    RuntimeProviders shutdown() throws ShutdownException;
-    RuntimeProviders initialize() throws InitializeException;
+public class ProviderInterfaceException extends ProviderException {
+
+    /**
+     * Default Constructor
+     */
+    public ProviderInterfaceException(Class<? extends Provider> providerClass){
+        super("Pi4J provider class [" + providerClass + "] is not an Interface but rather a concrete class. Please specify an Interface when requesting a provider by type.");
+    }
+
 }

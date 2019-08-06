@@ -31,8 +31,11 @@ import com.pi4j.annotation.AnnotationEngine;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.DefaultAnnotationEngine;
 import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.platform.impl.DefaultRuntimePlatforms;
+import com.pi4j.platform.impl.RuntimePlatforms;
 import com.pi4j.provider.impl.DefaultRuntimeProviders;
 import com.pi4j.provider.impl.RuntimeProviders;
 import com.pi4j.registry.impl.DefaultRuntimeRegistry;
@@ -48,6 +51,7 @@ public class DefaultRuntime implements Runtime {
     private AnnotationEngine annotationEngine = null;
     private RuntimeRegistry registry = null;
     private RuntimeProviders providers = null;
+    private RuntimePlatforms platforms = null;
 
     public static Runtime newInstance(Context context) throws Pi4JException {
         return new DefaultRuntime(context);
@@ -59,8 +63,9 @@ public class DefaultRuntime implements Runtime {
         // set local references
         this.context = context;
         this.annotationEngine = DefaultAnnotationEngine.newInstance(context);
-        this.registry = DefaultRuntimeRegistry.newInstance(context);
+        this.registry = DefaultRuntimeRegistry.newInstance(this);
         this.providers = DefaultRuntimeProviders.newInstance(this);
+        this.platforms = DefaultRuntimePlatforms.newInstance(this);
 
         logger.debug("Pi4J runtime context successfully created & initialized.'");
     }
@@ -77,16 +82,25 @@ public class DefaultRuntime implements Runtime {
     }
 
     @Override
-    public void inject(Object... objects) throws AnnotationException {
-        annotationEngine.inject(objects);
+    public RuntimePlatforms platforms() {
+        return this.platforms;
     }
 
     @Override
-    public void shutdown() throws ShutdownException {
+    public Runtime inject(Object... objects) throws AnnotationException {
+        annotationEngine.inject(objects);
+        return this;
+    }
+
+    @Override
+    public Runtime shutdown() throws ShutdownException {
         logger.trace("invoked 'shutdown();'");
         try {
              // shutdown all providers
             this.providers.shutdown();
+
+            // shutdown platforms
+            this.platforms.shutdown();
 
             // remove all I/O instances
             this.registry.shutdown();
@@ -97,5 +111,30 @@ public class DefaultRuntime implements Runtime {
         }
 
         logger.debug("Pi4J context/runtime successfully shutdown.'");
+
+        return this;
+    }
+
+    @Override
+    public Runtime initialize() throws InitializeException {
+        logger.trace("invoked 'initialize();'");
+        try {
+            // initialize I/O registry
+            this.registry.initialize();
+
+            // initialize all providers
+            this.providers.initialize();
+
+            // initialize all platforms
+            this.platforms.initialize();
+
+        } catch (Exception e) {
+            logger.error("failed to 'initialize(); '", e);
+            throw new InitializeException(e);
+        }
+
+        logger.debug("Pi4J context/runtime successfully initialized.'");
+
+        return this;
     }
 }

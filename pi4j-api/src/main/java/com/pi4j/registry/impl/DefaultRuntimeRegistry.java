@@ -27,10 +27,11 @@ package com.pi4j.registry.impl;
  * #L%
  */
 
-import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.io.IO;
 import com.pi4j.io.exception.*;
+import com.pi4j.runtime.Runtime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,20 +42,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultRuntimeRegistry implements RuntimeRegistry {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private Context context = null;
+    private Runtime runtime = null;
     private Map<String, IO> instances = new ConcurrentHashMap<>();
 
     // static singleton instance
-    public static RuntimeRegistry newInstance(Context context){
-        return new DefaultRuntimeRegistry(context);
+    public static RuntimeRegistry newInstance(Runtime runtime){
+        return new DefaultRuntimeRegistry(runtime);
     }
 
     // private constructor
-    private DefaultRuntimeRegistry(Context context) {
+    private DefaultRuntimeRegistry(Runtime runtime) {
         // forbid object construction
 
-        // set local context reference
-        this.context = context;
+        // set local runtime reference
+        this.runtime = runtime;
     }
 
     @Override
@@ -106,7 +107,7 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         // shutdown instance
         try {
             shutdownInstance = instances.get(_id);
-            shutdownInstance.shutdown(this.context);
+            shutdownInstance.shutdown(runtime.context());
         }
         catch (LifecycleException e){
             logger.error(e.getMessage(), e);
@@ -177,6 +178,12 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
                 logger.error(e.getMessage(), e);
             }
         });
+        return this;
+    }
+
+    @Override
+    public RuntimeRegistry initialize() throws InitializeException {
+        // NOTHING TO INITIALIZE
         return this;
     }
 

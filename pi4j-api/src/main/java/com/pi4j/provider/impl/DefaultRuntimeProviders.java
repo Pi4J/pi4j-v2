@@ -27,6 +27,7 @@ package com.pi4j.provider.impl;
  * #L%
  */
 
+import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.IOType;
@@ -110,77 +111,9 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
 
     // private constructor
     private DefaultRuntimeProviders(Runtime runtime) {
-
-        // set local context reference
+        // set local runtime reference
         this.runtime = runtime;
-
-        var context = runtime.context();
-
-        // process auto-detect?
-        if(context.config().autoDetectProviders()) {
-            logger.trace("auto-detecting providers from the classpath.");
-
-            // detect available providers by scanning the classpath looking for service io instances
-            var detectedProviders = ServiceLoader.load(Provider.class);
-            for (var providerInstance : detectedProviders) {
-                if (providerInstance != null) {
-                    logger.trace("auto-detected provider: [id={}; name={}; class={}]",
-                            providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
-                    try {
-                        // add provider instance
-                        add(providerInstance);
-                    } catch (Exception ex) {
-                        // unable to initialize this provider instance
-                        logger.error("unable to 'initialize()' auto-detected provider: [id={}; name={}]; {}",
-                                providerInstance.id(), providerInstance.name(), ex.getMessage());
-                        continue;
-                    }
-                }
-            }
-
-        }
-
-        // process any additional configured providers
-        Collection<Provider> additionalProviders = context.config().getProviders();
-        if(additionalProviders != null && !additionalProviders.isEmpty()) {
-            logger.trace("adding explicit provider: [count={}]", additionalProviders.size());
-            for (Provider providerInstance : additionalProviders) {
-                if (providerInstance != null) {
-                    logger.trace("explicit provider: [id={}; name={}; class={}]",
-                            providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
-                    try {
-                        // add provider instance
-                        add(providerInstance);
-                    } catch (Exception ex) {
-                        // unable to initialize this provider instance
-                        logger.error("unable to 'initialize()' explicit provider: [id={}; name={}]; {}",
-                                providerInstance.id(), providerInstance.name(), ex.getMessage());
-                        continue;
-                    }
-                }
-            }
-        }
-        logger.debug("providers loaded [{}]", providers.size());
     }
-
-    protected void initializeProvider(Provider provider) throws ProviderInitializeException {
-
-        // ensure the io object is valid
-        if(provider == null) return;
-
-        // attempt to initialize the io instance
-        try {
-            logger.trace("initializing provider [id={}; name={}; class={}]",
-                    provider.id(), provider.name(), provider.getClass().getName());
-            provider.initialize(runtime.context());
-        } catch (Exception e) {
-            logger.error("unable to 'initialize()' provider: [id={}; name={}]; {}",
-                    provider.id(), provider.name(), e.getMessage());
-            logger.error(e.getMessage(), e);
-            throw new ProviderInitializeException(provider.id(), e);
-        }
-    }
-
 
     /**
      * Get all providers
@@ -309,6 +242,24 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
         }
 
         return this;
+    }
+
+    private void initializeProvider(Provider provider) throws ProviderInitializeException {
+
+        // ensure the io object is valid
+        if(provider == null) return;
+
+        // attempt to initialize the io instance
+        try {
+            logger.trace("initializing provider [id={}; name={}; class={}]",
+                    provider.id(), provider.name(), provider.getClass().getName());
+            provider.initialize(runtime.context());
+        } catch (Exception e) {
+            logger.error("unable to 'initialize()' provider: [id={}; name={}]; {}",
+                    provider.id(), provider.name(), e.getMessage());
+            logger.error(e.getMessage(), e);
+            throw new ProviderInitializeException(provider.id(), e);
+        }
     }
 
     private void shutdownProvider(Provider provider) throws ShutdownException {
@@ -501,9 +452,9 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
 //    }
 
     @Override
-    public void shutdown() throws ShutdownException {
-        logger.trace("invoked provider 'shutdown();'");
-        ShutdownException providerException = null;
+    public RuntimeProviders shutdown() throws ShutdownException {
+        logger.trace("invoked providers 'shutdown();'");
+        ShutdownException shutdownException = null;
 
         // iterate over all providers and invoke the shutdown method on each
         var providerIds = providers.keySet();
@@ -511,7 +462,7 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
             try {
                 remove(providerId);
             } catch (Pi4JException e) {
-                providerException = new ShutdownException(e);
+                shutdownException = new ShutdownException(e);
             }
         }
 
@@ -519,6 +470,59 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
         providers.clear();
 
         // throw exception if
-        if(providerException != null) throw providerException;
+        if(shutdownException != null) throw shutdownException;
+        return this;
+    }
+
+    @Override
+    public RuntimeProviders initialize() throws InitializeException {
+        var context = runtime.context();
+
+        // process auto-detect?
+        if(context.config().autoDetectProviders()) {
+            logger.trace("auto-detecting providers from the classpath.");
+
+            // detect available providers by scanning the classpath looking for service io instances
+            var detectedProviders = ServiceLoader.load(Provider.class);
+            for (var providerInstance : detectedProviders) {
+                if (providerInstance != null) {
+                    logger.trace("auto-detected provider: [id={}; name={}; class={}]",
+                            providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
+                    try {
+                        // add provider instance
+                        add(providerInstance);
+                    } catch (Exception ex) {
+                        // unable to initialize this provider instance
+                        logger.error("unable to 'initialize()' auto-detected provider: [id={}; name={}]; {}",
+                                providerInstance.id(), providerInstance.name(), ex.getMessage());
+                        continue;
+                    }
+                }
+            }
+
+        }
+
+        // process any additional configured providers
+        Collection<Provider> additionalProviders = context.config().getProviders();
+        if(additionalProviders != null && !additionalProviders.isEmpty()) {
+            logger.trace("adding explicit provider: [count={}]", additionalProviders.size());
+            for (Provider providerInstance : additionalProviders) {
+                if (providerInstance != null) {
+                    logger.trace("explicit provider: [id={}; name={}; class={}]",
+                            providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
+                    try {
+                        // add provider instance
+                        add(providerInstance);
+                    } catch (Exception ex) {
+                        // unable to initialize this provider instance
+                        logger.error("unable to 'initialize()' explicit provider: [id={}; name={}]; {}",
+                                providerInstance.id(), providerInstance.name(), ex.getMessage());
+                        continue;
+                    }
+                }
+            }
+        }
+        logger.debug("providers loaded [{}]", providers.size());
+        return this;
     }
 }
