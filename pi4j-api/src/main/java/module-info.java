@@ -32,7 +32,6 @@ module pi4j.api {
     exports com.pi4j.annotation;
     exports com.pi4j.annotation.exception;
     exports com.pi4j.common;
-    exports com.pi4j.common.exception;
     exports com.pi4j.config;
     exports com.pi4j.config.exception;
     exports com.pi4j.context;
@@ -55,7 +54,6 @@ module pi4j.api {
     exports com.pi4j.provider;
     exports com.pi4j.provider.exception;
     exports com.pi4j.registry;
-    exports com.pi4j.registry.exception;
     exports com.pi4j.util;
 
     uses Extension;

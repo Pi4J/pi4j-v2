@@ -30,7 +30,7 @@ package com.pi4j.context;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
-import com.pi4j.common.exception.LifecycleException;
+import com.pi4j.exception.LifecycleException;
 import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;

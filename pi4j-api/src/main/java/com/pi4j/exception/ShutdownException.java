@@ -1,11 +1,11 @@
-package com.pi4j.common;
+package com.pi4j.exception;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Lifecycle2.java
+ * FILENAME      :  ShutdownException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,32 @@ package com.pi4j.common;
  * #L%
  */
 
-import com.pi4j.context.Context;
+/**
+ * <p>
+ * This exception is thrown if a platform assignment is attempted when a
+ * platform instance has already been assigned.
+ * </p>
+ *
+ * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
+ * @author Robert Savage (<a
+ *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ */
+public class ShutdownException extends LifecycleException {
 
-public interface Lifecycle2 extends Identity {
+    /**
+     * Default Constructor
+     *
+     * @param message error message
+     */
+    public ShutdownException(String message){
+        super(message);
+    }
 
-    void initialize(Context context) throws Exception;
-    void shutdown(Context context) throws Exception;
+    public ShutdownException(Throwable cause){
+        super(cause);
+    }
 
-    default Descriptor describe() {
-        return Descriptor.create()
-                .id(this.id())
-                .name(this.name())
-                .description(this.description()).type(this.getClass());
+    public ShutdownException(String message, Throwable cause){
+        super(message,cause);
     }
 }

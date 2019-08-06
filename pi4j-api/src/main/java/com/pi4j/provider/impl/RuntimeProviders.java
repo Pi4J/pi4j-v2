@@ -1,11 +1,11 @@
-package com.pi4j.common.exception;
+package com.pi4j.provider.impl;
 
 /*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  LifecycleException.java
+ * FILENAME      :  RuntimeProviders.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,34 +27,19 @@ package com.pi4j.common.exception;
  * #L%
  */
 
-import com.pi4j.exception.Pi4JException;
+import com.pi4j.exception.ShutdownException;
+import com.pi4j.provider.Providers;
 
 /**
  * <p>
- * This exception is thrown if a platform assignment is attempted when a
- * platform instance has already been assigned.
+ * This class provides static methods to configure the Pi4J library's default
+ * platform.  Pi4J supports the following platforms:  RaspberryPi, BananaPi, BananaPro, Odroid.
  * </p>
  *
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public class LifecycleException extends Pi4JException {
-
-    /**
-     * Default Constructor
-     *
-     * @param message error message
-     */
-    public LifecycleException(String message){
-        super(message);
-    }
-
-    public LifecycleException(Throwable cause){
-        super(cause);
-    }
-
-    public LifecycleException(String message, Throwable cause){
-        super(message,cause);
-    }
+public interface RuntimeProviders extends Providers {
+    void shutdown() throws ShutdownException;
 }

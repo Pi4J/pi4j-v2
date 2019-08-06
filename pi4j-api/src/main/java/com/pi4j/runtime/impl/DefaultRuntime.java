@@ -30,11 +30,13 @@ package com.pi4j.runtime.impl;
 import com.pi4j.annotation.AnnotationEngine;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.DefaultAnnotationEngine;
-import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.registry.impl.DefaultRegistryManager;
-import com.pi4j.registry.impl.RegistryManager;
+import com.pi4j.exception.ShutdownException;
+import com.pi4j.provider.impl.DefaultRuntimeProviders;
+import com.pi4j.provider.impl.RuntimeProviders;
+import com.pi4j.registry.impl.DefaultRuntimeRegistry;
+import com.pi4j.registry.impl.RuntimeRegistry;
 import com.pi4j.runtime.Runtime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +46,8 @@ public class DefaultRuntime implements Runtime {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private Context context = null;
     private AnnotationEngine annotationEngine = null;
-    private RegistryManager registry = null;
+    private RuntimeRegistry registry = null;
+    private RuntimeProviders providers = null;
 
     public static Runtime newInstance(Context context) throws Pi4JException {
         return new DefaultRuntime(context);
@@ -56,7 +59,8 @@ public class DefaultRuntime implements Runtime {
         // set local references
         this.context = context;
         this.annotationEngine = DefaultAnnotationEngine.newInstance(context);
-        this.registry = DefaultRegistryManager.newInstance(context);
+        this.registry = DefaultRuntimeRegistry.newInstance(context);
+        this.providers = DefaultRuntimeProviders.newInstance(this);
 
         logger.debug("Pi4J runtime context successfully created & initialized.'");
     }
@@ -65,7 +69,12 @@ public class DefaultRuntime implements Runtime {
     public Context context() { return this.context; }
 
     @Override
-    public RegistryManager registry() { return this.registry; }
+    public RuntimeRegistry registry() { return this.registry; }
+
+    @Override
+    public RuntimeProviders providers() {
+        return this.providers;
+    }
 
     @Override
     public void inject(Object... objects) throws AnnotationException {
@@ -73,15 +82,18 @@ public class DefaultRuntime implements Runtime {
     }
 
     @Override
-    public void shutdown() throws LifecycleException {
+    public void shutdown() throws ShutdownException {
         logger.trace("invoked 'shutdown();'");
         try {
+             // shutdown all providers
+            this.providers.shutdown();
+
             // remove all I/O instances
-            this.registry.shutdown(context);
+            this.registry.shutdown();
 
         } catch (Exception e) {
             logger.error("failed to 'shutdown(); '", e);
-            throw new LifecycleException(e);
+            throw new ShutdownException(e);
         }
 
         logger.debug("Pi4J context/runtime successfully shutdown.'");

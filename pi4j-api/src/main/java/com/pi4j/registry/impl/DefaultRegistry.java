@@ -28,8 +28,9 @@ package com.pi4j.registry.impl;
  */
 
 import com.pi4j.io.IO;
+import com.pi4j.io.exception.IOInvalidIDException;
+import com.pi4j.io.exception.IONotFoundException;
 import com.pi4j.registry.Registry;
-import com.pi4j.registry.exception.RegistryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,15 +39,14 @@ import java.util.Map;
 public class DefaultRegistry implements Registry {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private RegistryManager registry = null;
+    private RuntimeRegistry registry = null;
 
-    // static singleton instance
-    public static Registry newInstance(RegistryManager registry){
+    public static Registry newInstance(RuntimeRegistry registry){
         return new DefaultRegistry(registry);
     }
 
     // private constructor
-    private DefaultRegistry(RegistryManager registry) {
+    private DefaultRegistry(RuntimeRegistry registry) {
         // set local registry reference
         this.registry = registry;
     }
@@ -62,17 +62,17 @@ public class DefaultRegistry implements Registry {
     }
 
     @Override
-    public Map<String, ? extends IO> all() throws RegistryException {
+    public Map<String, ? extends IO> all() {
         return registry.all();
     }
 
     @Override
-    public <T extends IO> T get(String id) throws RegistryException {
+    public <T extends IO> T get(String id) throws IOInvalidIDException, IONotFoundException {
         return registry.get(id);
     }
 
     @Override
-    public <T extends IO> T get(String id, Class<T> type) throws RegistryException {
+    public <T extends IO> T get(String id, Class<T> type) throws IOInvalidIDException, IONotFoundException {
         return registry.get(id, type);
     }
 }

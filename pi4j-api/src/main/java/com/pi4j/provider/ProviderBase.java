@@ -27,12 +27,13 @@ package com.pi4j.provider;
  * #L%
  */
 
-import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.config.Config;
 import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.LifecycleException;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.extension.ExtensionBase;
 import com.pi4j.io.IO;
-import com.pi4j.registry.exception.RegistryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,31 +60,25 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
     }
 
     @Override
-    public PROVIDER_TYPE initialize(Context context) throws LifecycleException {
+    public PROVIDER_TYPE initialize(Context context) throws InitializeException {
         this.context = context;
         return (PROVIDER_TYPE)this;
     }
 
     @Override
-    public PROVIDER_TYPE shutdown(Context context) throws LifecycleException {
+    public PROVIDER_TYPE shutdown(Context context) throws ShutdownException {
 
-        // TODO :: ABSTRACT VIA PROXY IMPL
+        // TODO :: ABSTRACT PROVIDER IO INSTANCE SHUTDOWN VIA PROXY IMPL
 
         // perform a shutdown on each digital I/O instance that is tracked in the internal cache
-        Map<String, IO> instances = null;
-        try {
-            instances = context.registry().allByProvider(this.id(), IO.class);
-            instances.forEach((address, instance)->{
-                try {
-                    instance.shutdown(context);
-                } catch (LifecycleException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            });
-        } catch (RegistryException e) {
-            logger.error(e.getMessage(), e);
-            throw new LifecycleException(e);
-        }
+        Map<String, IO> instances = context.registry().allByProvider(this.id(), IO.class);
+        instances.forEach((address, instance)->{
+            try {
+                instance.shutdown(context);
+            } catch (LifecycleException e) {
+                logger.error(e.getMessage(), e);
+            }
+        });
         return (PROVIDER_TYPE)this;
     }
 }

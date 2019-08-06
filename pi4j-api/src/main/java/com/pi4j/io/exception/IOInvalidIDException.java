@@ -1,11 +1,11 @@
-package com.pi4j.registry.exception;
+package com.pi4j.io.exception;
 
 /*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  RegistryNotFoundException.java
+ * FILENAME      :  IOInvalidIDException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -38,12 +38,12 @@ package com.pi4j.registry.exception;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public class RegistryNotFoundException extends RegistryException {
+public class IOInvalidIDException extends IOException {
 
     /**
      * Default Constructor
      */
-    public RegistryNotFoundException(String id){
-        super("IO instance [" + id + "] not found in Pi4J Registry.");
+    public IOInvalidIDException(){
+        super("The requested operation is missing the ID attribute.  Unable to complete request.");
     }
 }

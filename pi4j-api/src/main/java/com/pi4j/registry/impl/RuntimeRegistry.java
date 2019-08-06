@@ -1,11 +1,11 @@
-package com.pi4j.registry.exception;
+package com.pi4j.registry.impl;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  RegistryException.java
+ * FILENAME      :  RuntimeRegistry.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,34 +27,17 @@ package com.pi4j.registry.exception;
  * #L%
  */
 
-import com.pi4j.exception.Pi4JException;
+import com.pi4j.exception.NotInitializedException;
+import com.pi4j.exception.ShutdownException;
+import com.pi4j.io.IO;
+import com.pi4j.io.exception.IOAlreadyExistsException;
+import com.pi4j.io.exception.IOInvalidIDException;
+import com.pi4j.io.exception.IONotFoundException;
+import com.pi4j.io.exception.IOShutdownException;
+import com.pi4j.registry.Registry;
 
-/**
- * <p>
- * This exception is thrown if a platform assignment is attempted when a
- * platform instance has already been assigned.
- * </p>
- *
- * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
- * @author Robert Savage (<a
- *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- */
-public class RegistryException extends Pi4JException {
-
-    /**
-     * Default Constructor
-     *
-     * @param message error message
-     */
-    public RegistryException(String message){
-        super(message);
-    }
-
-    public RegistryException(Throwable cause){
-        super(cause);
-    }
-
-    public RegistryException(String message, Throwable cause){
-        super(message,cause);
-    }
+public interface RuntimeRegistry extends Registry {
+    RuntimeRegistry add(IO instance) throws NotInitializedException, IOAlreadyExistsException, IOInvalidIDException;
+    <T extends IO> T remove(String id) throws IONotFoundException, IOInvalidIDException, IOShutdownException;
+    RuntimeRegistry shutdown() throws ShutdownException;
 }

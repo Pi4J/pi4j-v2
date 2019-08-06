@@ -27,11 +27,11 @@ package com.pi4j.platform;
  * #L%
  */
 
-import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.extension.ExtensionBase;
 import com.pi4j.io.IOType;
-import com.pi4j.platform.exception.PlatformException;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
@@ -119,21 +119,21 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     public abstract boolean enabled(Context context);
 
     @Override
-    public PLATFORM initialize(Context context) throws LifecycleException, PlatformException {
+    public PLATFORM initialize(Context context) throws InitializeException {
         this.context = context;
         String[] provIds = getProviders();
         for (String provId : provIds) {
             try {
                 addProvider(context, provId);
             } catch (ProviderException e) {
-                throw new PlatformException(e.getMessage());
+                throw new InitializeException(e.getMessage());
             }
         }
         return (PLATFORM) this;
     }
 
     @Override
-    public PLATFORM shutdown(Context context) throws LifecycleException {
+    public PLATFORM shutdown(Context context) throws ShutdownException {
         return (PLATFORM)this;
     }
 

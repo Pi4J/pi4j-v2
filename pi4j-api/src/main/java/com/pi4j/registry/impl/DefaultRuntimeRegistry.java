@@ -5,7 +5,7 @@ package com.pi4j.registry.impl;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DefaultRegistryManager.java
+ * FILENAME      :  DefaultRuntimeRegistry.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,16 +27,10 @@ package com.pi4j.registry.impl;
  * #L%
  */
 
-import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
+import com.pi4j.exception.LifecycleException;
 import com.pi4j.io.IO;
-import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.provider.exception.ProviderNotFoundException;
-import com.pi4j.registry.exception.RegistryAlreadyExistsException;
-import com.pi4j.registry.exception.RegistryException;
-import com.pi4j.registry.exception.RegistryInvalidIDException;
-import com.pi4j.registry.exception.RegistryNotFoundException;
+import com.pi4j.io.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,19 +38,19 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DefaultRegistryManager implements RegistryManager {
+public class DefaultRuntimeRegistry implements RuntimeRegistry {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private Context context = null;
     private Map<String, IO> instances = new ConcurrentHashMap<>();
 
     // static singleton instance
-    public static RegistryManager newInstance(Context context){
-        return new DefaultRegistryManager(context);
+    public static RuntimeRegistry newInstance(Context context){
+        return new DefaultRuntimeRegistry(context);
     }
 
     // private constructor
-    private DefaultRegistryManager(Context context) {
+    private DefaultRuntimeRegistry(Context context) {
         // forbid object construction
 
         // set local context reference
@@ -64,81 +58,66 @@ public class DefaultRegistryManager implements RegistryManager {
     }
 
     @Override
-    public RegistryManager add(IO instance) throws RegistryException, ProviderException, NotInitializedException {
+    public RuntimeRegistry add(IO instance) throws IOInvalidIDException, IOAlreadyExistsException {
 
         // validate target I/O instance id
         String _id = validateId(instance.id());
 
         // first test to make sure this id does not already exist in the registry
         if(instances.containsKey(_id))
-            throw new RegistryAlreadyExistsException(_id);
+            throw new IOAlreadyExistsException(_id);
 
-        try {
-            // validate named provider exists
-            if(!context.providers().exists(instance.provider().id()))
-                throw new ProviderNotFoundException(instance.provider().id());
-
-            // add instance to collection
-            instances.put(_id, instance);
-            return this;
-
-        } catch (Exception e) {
-            throw new ProviderException(e);
-        }
+        // add instance to collection
+        instances.put(_id, instance);
+        return this;
     }
 
     @Override
-    public <T extends IO> T get(String id, Class<T> type) throws RegistryException {
+    public <T extends IO> T get(String id, Class<T> type) throws IOInvalidIDException, IONotFoundException {
         String _id = validateId(id);
 
         // first test to make sure this id is included in the registry
         if(!instances.containsKey(_id))
-            throw new RegistryNotFoundException(_id);
+            throw new IONotFoundException(_id);
 
         return (T)instances.get(_id);
     }
 
     @Override
-    public <T extends IO> T get(String id) throws RegistryException {
+    public <T extends IO> T get(String id) throws IOInvalidIDException, IONotFoundException {
         String _id = validateId(id);
 
         // first test to make sure this id is included in the registry
         if(!instances.containsKey(_id))
-            throw new RegistryNotFoundException(_id);
+            throw new IONotFoundException(_id);
 
         return (T)instances.get(_id);
     }
 
     @Override
-    public <T extends IO> T remove(String id) throws RegistryException, LifecycleException {
+    public <T extends IO> T remove(String id) throws IONotFoundException, IOInvalidIDException, IOShutdownException {
         String _id = validateId(id);
+        IO shutdownInstance = null;
 
         // first test to make sure this id is included in the registry
-        if(!instances.containsKey(_id))
-            throw new RegistryNotFoundException(_id);
+        if(!exists(_id))
+            throw new IONotFoundException(_id);
 
         // shutdown instance
-        var shutdownInstances = instances.get(_id).shutdown(this.context);
+        try {
+            shutdownInstance = instances.get(_id);
+            shutdownInstance.shutdown(this.context);
+        }
+        catch (LifecycleException e){
+            logger.error(e.getMessage(), e);
+            throw new IOShutdownException(shutdownInstance, e);
+        }
 
         // remove the shutdown instance from the registry
         this.instances.remove(_id);
 
         // return the shutdown I/O provider instances
-        return (T)shutdownInstances;
-    }
-
-    @Override
-    public RegistryManager shutdown(Context context) throws ProviderException, RegistryException {
-        all().values().forEach(instance->{
-            try {
-                remove(instance.id());
-            } catch (RegistryException e) {
-                logger.error(e.getMessage(), e);
-            } catch (LifecycleException e) {
-                logger.error(e.getMessage(), e);
-            }
-        });
-        return this;
+        return (T)shutdownInstance;
     }
 
     @Override
@@ -149,13 +128,13 @@ public class DefaultRegistryManager implements RegistryManager {
             // return 'false' if the requested ID is not found
             // return 'true' if the requested ID is found
             return instances.containsKey(_id);
-        } catch (RegistryException e) {
+        } catch (IOInvalidIDException e) {
             return false;
         }
     }
 
     @Override
-    public Map<String, ? extends IO> all() throws RegistryException {
+    public Map<String, ? extends IO> all() {
         return Collections.unmodifiableMap(this.instances);
     }
 
@@ -174,18 +153,31 @@ public class DefaultRegistryManager implements RegistryManager {
 
             // return true if the I/O instance matches the requested I/O type
             return type.isAssignableFrom(instance.getClass());
-        } catch (RegistryException e) {
+        } catch (IOInvalidIDException e) {
             return false;
         }
     }
 
 
-    private String validateId(String id) throws RegistryException{
+    private String validateId(String id) throws IOInvalidIDException {
         if(id == null)
-             throw new RegistryInvalidIDException();
+             throw new IOInvalidIDException();
         String validatedId = id.trim();
         if(validatedId.isEmpty())
-            throw new RegistryInvalidIDException();
+            throw new IOInvalidIDException();
         return validatedId;
     }
+
+    @Override
+    public RuntimeRegistry shutdown() {
+        all().values().forEach(instance->{
+            try {
+                remove(instance.id());
+            } catch (IOException e) {
+                logger.error(e.getMessage(), e);
+            }
+        });
+        return this;
+    }
+
 }

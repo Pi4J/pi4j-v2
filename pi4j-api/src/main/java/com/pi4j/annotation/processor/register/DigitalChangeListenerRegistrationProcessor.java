@@ -29,9 +29,9 @@ package com.pi4j.annotation.processor.register;
 
 import com.pi4j.annotation.Register;
 import com.pi4j.context.Context;
+import com.pi4j.io.exception.IONotFoundException;
 import com.pi4j.io.gpio.digital.Digital;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.registry.exception.RegistryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +65,7 @@ public class DigitalChangeListenerRegistrationProcessor implements RegisterProce
 
             // test to determine if the I/O instance exists in the registry by 'ID'
             if(!context.registry().exists(annotation.value(), Digital.class))
-                throw new RegistryNotFoundException(annotation.value());
+                throw new IONotFoundException(annotation.value());
 
             // get I/O instance from registry
             Digital io = context.registry().get(annotation.value(), Digital.class);

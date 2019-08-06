@@ -28,14 +28,16 @@ package com.pi4j.runtime;
  */
 
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
-import com.pi4j.registry.impl.RegistryManager;
+import com.pi4j.exception.ShutdownException;
+import com.pi4j.provider.impl.RuntimeProviders;
+import com.pi4j.registry.impl.RuntimeRegistry;
 
 public interface Runtime {
-    RegistryManager registry();
+    RuntimeRegistry registry();
+    RuntimeProviders providers();
     Context context();
 
     void inject(Object... objects) throws AnnotationException;
-    void shutdown() throws LifecycleException;
+    void shutdown() throws ShutdownException;
 }

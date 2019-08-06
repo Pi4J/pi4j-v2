@@ -29,8 +29,9 @@ package com.pi4j.io;
 
 import com.pi4j.common.Descriptor;
 import com.pi4j.common.IdentityBase;
-import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.provider.Provider;
 
 
@@ -76,12 +77,12 @@ public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig, P
 
 
     @Override
-    public IO_TYPE initialize(Context context) throws LifecycleException {
+    public IO_TYPE initialize(Context context) throws InitializeException {
         return (IO_TYPE)this;
     }
 
     @Override
-    public IO_TYPE shutdown(Context context) throws LifecycleException {
+    public IO_TYPE shutdown(Context context) throws ShutdownException {
         return (IO_TYPE)this;
     }
 

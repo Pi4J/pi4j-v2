@@ -27,11 +27,11 @@ package com.pi4j.common;
  * #L%
  */
 
-import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
-import com.pi4j.platform.exception.PlatformException;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
 
 public interface Lifecycle<T> {
-    T initialize(Context context) throws LifecycleException, PlatformException;
-    T shutdown(Context context) throws LifecycleException;
+    T initialize(Context context) throws InitializeException;
+    T shutdown(Context context) throws ShutdownException;
 }

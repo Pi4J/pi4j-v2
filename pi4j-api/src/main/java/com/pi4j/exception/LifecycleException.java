@@ -1,11 +1,11 @@
-package com.pi4j.registry.exception;
+package com.pi4j.exception;
 
 /*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  RegistryInvalidIDException.java
+ * FILENAME      :  LifecycleException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,7 +27,6 @@ package com.pi4j.registry.exception;
  * #L%
  */
 
-
 /**
  * <p>
  * This exception is thrown if a platform assignment is attempted when a
@@ -38,12 +37,22 @@ package com.pi4j.registry.exception;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public class RegistryInvalidIDException extends RegistryException {
+public class LifecycleException extends Pi4JException {
 
     /**
      * Default Constructor
+     *
+     * @param message error message
      */
-    public RegistryInvalidIDException(){
-        super("The requested operation is missing the ID attribute.  Unable to complete request.");
+    public LifecycleException(String message){
+        super(message);
+    }
+
+    public LifecycleException(Throwable cause){
+        super(cause);
+    }
+
+    public LifecycleException(String message, Throwable cause){
+        super(message,cause);
     }
 }

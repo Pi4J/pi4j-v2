@@ -28,10 +28,11 @@ package com.pi4j.context.impl;
  */
 
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
+import com.pi4j.exception.LifecycleException;
 import com.pi4j.exception.Pi4JException;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.platform.Platforms;
 import com.pi4j.platform.impl.DefaultPlatforms;
 import com.pi4j.provider.Providers;
@@ -69,11 +70,16 @@ public class DefaultContext implements Context {
         // set context config member reference
         this.config = config;
 
+        // create internal runtime state instance
         this.runtime = DefaultRuntime.newInstance(this);
+
+        // create API accessible registry instance
         this.registry = DefaultRegistry.newInstance(this.runtime.registry());
 
-        // create providers and platforms (manager) objects
-        this.providers = DefaultProviders.newInstance(this.runtime);
+        // create API accessible providers instance
+        this.providers = DefaultProviders.newInstance(this.runtime.providers());
+
+        // create API accessible platforms instance
         this.platforms = DefaultPlatforms.newInstance(this.runtime);
 
         logger.debug("Pi4J runtime context successfully created & initialized.'");
@@ -98,12 +104,9 @@ public class DefaultContext implements Context {
     }
 
     @Override
-    public Context shutdown() throws LifecycleException {
+    public Context shutdown() throws ShutdownException {
         logger.trace("invoked 'shutdown();'");
         try {
-            // shutdown all providers
-            providers().shutdown(this);
-
             // shutdown platforms
             platforms().shutdown(this);
 
@@ -112,7 +115,7 @@ public class DefaultContext implements Context {
 
         } catch (Exception e) {
             logger.error("failed to 'shutdown(); '", e);
-            throw new LifecycleException(e);
+            throw new ShutdownException(e);
         }
 
         logger.debug("Pi4J context/runtime successfully shutdown.'");

@@ -1,11 +1,11 @@
-package com.pi4j.registry.impl;
+package com.pi4j.io.exception;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  RegistryManager.java
+ * FILENAME      :  IOShutdownException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,16 +27,25 @@ package com.pi4j.registry.impl;
  * #L%
  */
 
-import com.pi4j.common.exception.LifecycleException;
-import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
-import com.pi4j.io.IO;
-import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.registry.Registry;
-import com.pi4j.registry.exception.RegistryException;
 
-public interface RegistryManager extends Registry {
-    RegistryManager add(IO instance) throws RegistryException, ProviderException, NotInitializedException;
-    <T extends IO> T remove(String id) throws RegistryException, LifecycleException;
-    RegistryManager shutdown(Context context) throws ProviderException, RegistryException;
+import com.pi4j.io.IO;
+
+/**
+ * <p>
+ * This exception is thrown if a platform assignment is attempted when a
+ * platform instance has already been assigned.
+ * </p>
+ *
+ * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
+ * @author Robert Savage (<a
+ *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ */
+public class IOShutdownException extends IOException {
+
+    /**
+     * Default Constructor
+     */
+    public IOShutdownException(IO instance, Exception e){
+        super("IO instance [" + instance.getId() + "] failed to properly shutdown: " + e.getMessage(), e);
+    }
 }
