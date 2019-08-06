@@ -93,16 +93,10 @@
 
 	<!-- PROJECT MODULES -->
 	<modules>
-        <!-- THE FOLLOWING MODULES ARE LEGACY AND WILL NEED TO BE ADAPTED/REMOVED AT SOME POINT -->
-        <!--<module>pi4j-core</module>-->
-		<!--<module>pi4j-example</module>-->
-		<!--<module>pi4j-distribution</module>-->
-
         <!-- THE FOLLOWING MODULES ARE V2 -->
         <module>pi4j-api</module>
         <module>pi4j-mock</module>
-        <module>providers/pi4j-provider</module>
-        <module>platforms/pi4j-platform</module>
+        <module>plugins/pi4j-plugin</module>
         <module>pi4j-test</module>
         <module>pi4j-example</module>
     </modules>

@@ -30,20 +30,12 @@
             <!--<scope>test</scope>-->
         </dependency>
 
-        <!-- include Pi4J providers to test with -->
+        <!-- include Pi4J Plugins -->
         <dependency>
             <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-provider-raspberrypi</artifactId>
+            <artifactId>pi4j-plugin-raspberrypi</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>com.pi4j</groupId>-->
-            <!--<artifactId>pi4j-provider-mock</artifactId>-->
-            <!--<version>${project.version}</version>-->
-        <!--</dependency>-->
-
-        <!-- include Pi4J platforms to test with -->
         <dependency>
             <groupId>com.pi4j</groupId>
             <artifactId>pi4j-mock</artifactId>
