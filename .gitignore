@@ -32,4 +32,3 @@ Thumbs.db
 *.zip
 *.deb
 /nbactions.xml
-/pi4j-api/src/main/java/com/pi4j/context/impl/DefaultContextBuilder.java
