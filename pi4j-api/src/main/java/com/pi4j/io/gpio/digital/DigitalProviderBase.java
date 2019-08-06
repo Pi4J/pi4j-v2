@@ -33,7 +33,7 @@ public abstract class DigitalProviderBase<
             DIGITAL_TYPE extends Digital,
             CONFIG_TYPE extends DigitalConfig>
         extends GpioProviderBase<PROVIDER_TYPE, DIGITAL_TYPE, CONFIG_TYPE>
-        implements DigitalProvider<DIGITAL_TYPE, CONFIG_TYPE> {
+        implements DigitalProvider<PROVIDER_TYPE, DIGITAL_TYPE, CONFIG_TYPE> {
 
     public DigitalProviderBase(){
         super();

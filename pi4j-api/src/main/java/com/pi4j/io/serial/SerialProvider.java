@@ -30,6 +30,6 @@ package com.pi4j.io.serial;
 import com.pi4j.provider.Provider;
 
 
-public interface SerialProvider extends Provider<Serial, SerialConfig> {
+public interface SerialProvider extends Provider<SerialProvider, Serial, SerialConfig> {
     //Serial instance(SerialConfig config) throws Exception;
 }

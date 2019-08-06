@@ -46,7 +46,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class PlatformBase<PLATFORM extends Platform>
-        extends ExtensionBase
+        extends ExtensionBase<Platform>
         implements Platform {
 
     protected Context context = null;

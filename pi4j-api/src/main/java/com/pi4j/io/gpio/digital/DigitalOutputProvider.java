@@ -26,7 +26,7 @@ package com.pi4j.io.gpio.digital;
  * limitations under the License.
  * #L%
  */
-public interface DigitalOutputProvider extends DigitalProvider<DigitalOutput, DigitalOutputConfig> {
+public interface DigitalOutputProvider extends DigitalProvider<DigitalOutputProvider, DigitalOutput, DigitalOutputConfig> {
 
     default <T extends DigitalOutput> T create(Integer address) throws Exception {
         var builder = DigitalOutputConfigBuilder.newInstance();

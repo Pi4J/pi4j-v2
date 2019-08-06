@@ -30,6 +30,6 @@ package com.pi4j.io.spi;
 
 import com.pi4j.provider.Provider;
 
-public interface SpiProvider extends Provider<Spi, SpiConfig> {
+public interface SpiProvider extends Provider<SpiProvider, Spi, SpiConfig> {
     //Spi instance(SpiConfig config) throws Exception;
 }

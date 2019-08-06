@@ -33,7 +33,7 @@ import com.pi4j.extension.Extension;
 import com.pi4j.io.IO;
 import com.pi4j.io.IOType;
 
-public interface Provider<IO_TYPE extends IO, CONFIG_TYPE extends Config> extends Extension {
+public interface Provider<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CONFIG_TYPE extends Config> extends Extension<PROVIDER_TYPE> {
 
     IO_TYPE create(CONFIG_TYPE config) throws Exception;
 

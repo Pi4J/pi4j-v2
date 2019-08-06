@@ -33,7 +33,7 @@ public abstract class AnalogProviderBase<
             ANALOG_TYPE extends Analog,
             CONFIG_TYPE extends AnalogConfig>
         extends GpioProviderBase<PROVIDER_TYPE, ANALOG_TYPE, CONFIG_TYPE>
-        implements AnalogProvider<ANALOG_TYPE, CONFIG_TYPE> {
+        implements AnalogProvider<PROVIDER_TYPE, ANALOG_TYPE, CONFIG_TYPE> {
 
     public AnalogProviderBase(){
     }

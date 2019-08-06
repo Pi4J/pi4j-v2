@@ -29,5 +29,6 @@ package com.pi4j.io.gpio.analog;
 
 import com.pi4j.io.gpio.GpioProvider;
 
-public interface AnalogProvider<ANALOG_TYPE extends Analog, CONFIG_TYPE extends AnalogConfig> extends GpioProvider<ANALOG_TYPE, CONFIG_TYPE> {
+public interface AnalogProvider<PROVIDER_TYPE extends AnalogProvider, ANALOG_TYPE extends Analog, CONFIG_TYPE
+        extends AnalogConfig> extends GpioProvider<PROVIDER_TYPE, ANALOG_TYPE, CONFIG_TYPE> {
 }

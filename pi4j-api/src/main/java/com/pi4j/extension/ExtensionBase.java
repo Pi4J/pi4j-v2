@@ -29,7 +29,7 @@ package com.pi4j.extension;
 
 import com.pi4j.common.IdentityBase;
 
-public abstract class ExtensionBase extends IdentityBase implements Extension {
+public abstract class ExtensionBase<T> extends IdentityBase<T> implements Extension<T> {
 
     public ExtensionBase(){
         super();

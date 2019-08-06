@@ -46,7 +46,7 @@ import com.pi4j.provider.exception.ProviderTypeException;
 
 import java.util.Map;
 
-public interface Platform extends Extension {
+public interface Platform extends Extension<Platform> {
 
     int weight();
     boolean enabled(Context context);

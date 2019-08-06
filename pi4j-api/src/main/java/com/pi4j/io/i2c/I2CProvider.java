@@ -29,6 +29,6 @@ package com.pi4j.io.i2c;
 
 import com.pi4j.provider.Provider;
 
-public interface I2CProvider extends Provider<I2C, I2CConfig> {
+public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
     //I2C instance(I2CConfig config) throws Exception;
 }

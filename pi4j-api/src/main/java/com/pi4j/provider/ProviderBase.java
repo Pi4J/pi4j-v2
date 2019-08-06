@@ -40,8 +40,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CONFIG_TYPE extends Config>
-        extends ExtensionBase
-        implements Provider<IO_TYPE, CONFIG_TYPE> {
+        extends ExtensionBase<PROVIDER_TYPE>
+        implements Provider<PROVIDER_TYPE, IO_TYPE, CONFIG_TYPE> {
 
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());

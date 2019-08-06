@@ -34,7 +34,7 @@ public abstract class GpioProviderBase<
             IO_TYPE extends IO,
             CONFIG_TYPE extends GpioConfig>
         extends ProviderBase<PROVIDER_TYPE, IO_TYPE, CONFIG_TYPE>
-        implements GpioProvider<IO_TYPE, CONFIG_TYPE> {
+        implements GpioProvider<PROVIDER_TYPE, IO_TYPE, CONFIG_TYPE> {
 
     public GpioProviderBase(){
         super();

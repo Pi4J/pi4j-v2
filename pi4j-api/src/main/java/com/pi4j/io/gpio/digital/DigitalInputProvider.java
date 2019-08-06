@@ -27,7 +27,7 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-public interface DigitalInputProvider extends DigitalProvider<DigitalInput, DigitalInputConfig> {
+public interface DigitalInputProvider extends DigitalProvider<DigitalInputProvider, DigitalInput, DigitalInputConfig> {
 
     default <T extends DigitalInput> T create(Integer address) throws Exception {
         var builder = DigitalInputConfigBuilder.newInstance();

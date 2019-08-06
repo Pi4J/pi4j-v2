@@ -27,7 +27,7 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
-public interface AnalogInputProvider extends AnalogProvider<AnalogInput, AnalogInputConfig> {
+public interface AnalogInputProvider extends AnalogProvider<AnalogInputProvider, AnalogInput, AnalogInputConfig> {
 
     // ---------------------------------------------------------------------------
     // FRIENDLY HELPER CREATOR STATIC METHODS

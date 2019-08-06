@@ -29,6 +29,6 @@ package com.pi4j.io.pwm;
 
 import com.pi4j.provider.Provider;
 
-public interface PwmProvider extends Provider<Pwm, PwmConfig> {
+public interface PwmProvider extends Provider<PwmProvider, Pwm, PwmConfig> {
     //Pwm instance(PwmConfig config) throws Exception;
 }
