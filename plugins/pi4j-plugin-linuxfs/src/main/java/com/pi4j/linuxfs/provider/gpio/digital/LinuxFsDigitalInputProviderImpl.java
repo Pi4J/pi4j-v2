@@ -1,11 +1,11 @@
-import com.pi4j.mock.MockPlugin;
+package com.pi4j.linuxfs.provider.gpio.digital;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: Mock Platform & Providers
- * FILENAME      :  module-info.java
+ * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
+ * FILENAME      :  LinuxFsDigitalInputProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,18 +28,22 @@ import com.pi4j.mock.MockPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.plugin.mock {
-    requires pi4j.api;
 
-    exports com.pi4j.mock;
-    exports com.pi4j.mock.platform;
-    exports com.pi4j.mock.provider.gpio.digital;
-    exports com.pi4j.mock.provider.gpio.analog;
-    exports com.pi4j.mock.provider.pwm;
-    exports com.pi4j.mock.provider.serial;
-    exports com.pi4j.mock.provider.spi;
-    exports com.pi4j.mock.provider.i2c;
+import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalInputConfig;
+import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
 
-    provides com.pi4j.extension.Plugin
-            with com.pi4j.mock.MockPlugin;
+import java.io.IOException;
+
+public class LinuxFsDigitalInputProviderImpl extends DigitalInputProviderBase implements LinuxFsDigitalInputProvider {
+
+    public LinuxFsDigitalInputProviderImpl(){
+        this.id = ID;
+        this.name = NAME;
+    }
+
+    @Override
+    public DigitalInput create(DigitalInputConfig config) throws IOException {
+        return new LinuxFsDigitalInput(this, config);
+    }
 }

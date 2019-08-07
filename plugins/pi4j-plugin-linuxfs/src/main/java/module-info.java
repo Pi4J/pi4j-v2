@@ -1,10 +1,10 @@
-import com.pi4j.mock.MockPlugin;
+import com.pi4j.linuxfs.LinuxFsPlugin;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: Mock Platform & Providers
+ * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
  * FILENAME      :  module-info.java
  *
  * This file is part of the Pi4J project. More information about
@@ -28,18 +28,12 @@ import com.pi4j.mock.MockPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.plugin.mock {
+module pi4j.plugin.linuxfs {
     requires pi4j.api;
 
-    exports com.pi4j.mock;
-    exports com.pi4j.mock.platform;
-    exports com.pi4j.mock.provider.gpio.digital;
-    exports com.pi4j.mock.provider.gpio.analog;
-    exports com.pi4j.mock.provider.pwm;
-    exports com.pi4j.mock.provider.serial;
-    exports com.pi4j.mock.provider.spi;
-    exports com.pi4j.mock.provider.i2c;
+    exports com.pi4j.linuxfs;
+    exports com.pi4j.linuxfs.provider.gpio.digital;
 
     provides com.pi4j.extension.Plugin
-            with com.pi4j.mock.MockPlugin;
+            with LinuxFsPlugin;
 }

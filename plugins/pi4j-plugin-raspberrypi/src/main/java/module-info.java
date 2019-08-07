@@ -31,6 +31,14 @@ import com.pi4j.raspberrypi.RaspberryPiPlugin;
 module pi4j.plugin.raspberrypi {
     requires pi4j.api;
 
+    exports com.pi4j.raspberrypi;
+    exports com.pi4j.raspberrypi.platform;
+    exports com.pi4j.raspberrypi.provider.gpio.digital;
+    exports com.pi4j.raspberrypi.provider.pwm;
+    exports com.pi4j.raspberrypi.provider.serial;
+    exports com.pi4j.raspberrypi.provider.spi;
+    exports com.pi4j.raspberrypi.provider.i2c;
+
     provides com.pi4j.extension.Plugin
             with RaspberryPiPlugin;
 }

@@ -1,11 +1,11 @@
-import com.pi4j.mock.MockPlugin;
+package com.pi4j.linuxfs;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: Mock Platform & Providers
- * FILENAME      :  module-info.java
+ * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
+ * FILENAME      :  LinuxFsPlugin.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,18 +28,25 @@ import com.pi4j.mock.MockPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.plugin.mock {
-    requires pi4j.api;
 
-    exports com.pi4j.mock;
-    exports com.pi4j.mock.platform;
-    exports com.pi4j.mock.provider.gpio.digital;
-    exports com.pi4j.mock.provider.gpio.analog;
-    exports com.pi4j.mock.provider.pwm;
-    exports com.pi4j.mock.provider.serial;
-    exports com.pi4j.mock.provider.spi;
-    exports com.pi4j.mock.provider.i2c;
+import com.pi4j.extension.Plugin;
+import com.pi4j.extension.PluginService;
+import com.pi4j.linuxfs.provider.gpio.digital.LinuxFsDigitalInputProvider;
+import com.pi4j.linuxfs.provider.gpio.digital.LinuxFsDigitalOutputProvider;
+import com.pi4j.provider.Provider;
 
-    provides com.pi4j.extension.Plugin
-            with com.pi4j.mock.MockPlugin;
+public class LinuxFsPlugin implements Plugin {
+
+    private Provider providers[] = {
+            LinuxFsDigitalInputProvider.newInstance(),
+            LinuxFsDigitalOutputProvider.newInstance()
+    };
+
+    @Override
+    public void initialize(PluginService service) {
+
+        // register the LinuxFS I/O Providers with the plugin service
+        service.register(providers);
+
+    }
 }
