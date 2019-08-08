@@ -35,13 +35,13 @@ import com.pi4j.io.exception.IOIllegalValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOutputConfig> implements AnalogOutput {
+public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOutputConfig, AnalogOutputProvider> implements AnalogOutput {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     protected Integer value = 0;
 
-    public AnalogOutputBase(AnalogOutputConfig config){
-        super(config);
+    public AnalogOutputBase(AnalogOutputProvider provider, AnalogOutputConfig config){
+        super(provider, config);
         if(this.id == null) this.id = "AOUT-" + config.address();
         if(this.name == null) this.name = "AOUT-" + config.address();
 
@@ -123,7 +123,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
     }
 
     @Override
-    public AnalogOutput terminate(Context context){
+    public AnalogOutput shutdown(Context context){
         // update the analog value to the shutdown value if a shutdown value is configured
         if(config().shutdownValue() != null){
             try {

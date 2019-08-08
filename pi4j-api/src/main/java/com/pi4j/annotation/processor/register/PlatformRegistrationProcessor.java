@@ -28,7 +28,6 @@ package com.pi4j.annotation.processor.register;
  */
 
 import com.pi4j.annotation.Register;
-import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.context.Context;
 import com.pi4j.platform.Platform;
 import org.slf4j.Logger;
@@ -43,28 +42,32 @@ public class PlatformRegistrationProcessor implements RegisterProcessor<Platform
     @Override
     public boolean isEligible(Context context, Object instance, Register annotation, Field field) throws Exception {
 
-        // make sure this field is of type 'Platform'
-        if(!Platform.class.isAssignableFrom(field.getType()))
-            return false;
+        // TODO :: REVISIT THE IMPLEMENTATION ON @Register OF <Platform> INSTANCES FOR IMMUTABLE CONTEXT
+        return false;
 
-        // this processor can process this annotated instance
-        return true;
+//        // make sure this field is of type 'Platform'
+//        if(!Platform.class.isAssignableFrom(field.getType()))
+//            return false;
+//
+//        // this processor can process this annotated instance
+//        return true;
     }
 
     @Override
     public Platform process(Context context, Object instance, Register annotation, Field field) throws Exception {
 
-        // make sure the field instance is NOT null; we can only register instantiated custom providers
-        if(field.get(instance) == null)
-            throw new AnnotationException("This @Register annotated instance is null; it must NOT be NULL " +
-                    "to register a this platform instance.  If you just want to access an existing platform instance, " +
-                    "use the '@Inject(id)' annotation instead.");
-
-        // get platform instance
-        var platform = (Platform) field.get(instance);
-
-        // add platform instance to Pi4J runtime
-        if(platform != null) context.platforms().add(platform);
+        // TODO :: REVISIT THE IMPLEMENTATION ON @Register OF <Platform> INSTANCES FOR IMMUTABLE CONTEXT
+//        // make sure the field instance is NOT null; we can only register instantiated custom providers
+//        if(field.get(instance) == null)
+//            throw new AnnotationException("This @Register annotated instance is null; it must NOT be NULL " +
+//                    "to register a this platform instance.  If you just want to access an existing platform instance, " +
+//                    "use the '@Inject(id)' annotation instead.");
+//
+//        // get platform instance
+//        var platform = (Platform) field.get(instance);
+//
+//        // add platform instance to Pi4J runtime
+//        if(platform != null) context.platforms().add(platform);
 
         // in this case we don't want to assign the annotated instance value, so we return null
         return null;

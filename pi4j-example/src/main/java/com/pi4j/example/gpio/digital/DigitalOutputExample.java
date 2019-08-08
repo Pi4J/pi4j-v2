@@ -29,7 +29,6 @@ package com.pi4j.example.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.util.Console;
 
@@ -54,12 +53,14 @@ public class DigitalOutputExample {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J library
-        var pi4j = Pi4J.initialize();
-
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        var pi4j = Pi4J.newAutoContext();
 
         // create a digital output instance using the default digital output provider
-        var output = DigitalOutput.create(DIGITAL_OUTPUT_PIN);
+        var output = pi4j.dout().create(DIGITAL_OUTPUT_PIN);
         output.config().shutdownState(DigitalState.HIGH);
 
         // setup a digital output listener to listen for any state changes on the digital output
@@ -94,6 +95,6 @@ public class DigitalOutputExample {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.terminate();
+        pi4j.shutdown();
     }
 }

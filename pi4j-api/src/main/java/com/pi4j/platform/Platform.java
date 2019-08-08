@@ -27,9 +27,10 @@ package com.pi4j.platform;
  * #L%
  */
 
-import com.pi4j.binding.Binding;
 import com.pi4j.common.Descriptor;
 import com.pi4j.context.Context;
+import com.pi4j.extension.Extension;
+import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
@@ -39,20 +40,21 @@ import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.Provider;
-import com.pi4j.provider.ProviderType;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.provider.exception.ProviderInterfaceException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 
 import java.util.Map;
 
-public interface Platform<PLATFORM> extends Binding {
-
-    Map<ProviderType, ? extends Provider> providers();
-    <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException;
-    <T extends Provider> T provider(ProviderType providerType) throws ProviderNotFoundException;
+public interface Platform extends Extension<Platform> {
 
     int weight();
     boolean enabled(Context context);
+
+    Map<IOType, Provider> providers();
+
+    <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderInterfaceException;
+    <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException;
 
     default <T extends Provider> boolean hasProvider(Class<T> providerClass) {
         try {
@@ -63,9 +65,9 @@ public interface Platform<PLATFORM> extends Binding {
         }
     }
 
-    default <T extends Provider> boolean hasProvider(ProviderType providerType) {
+    default <T extends Provider> boolean hasProvider(IOType ioType) {
         try {
-            return provider(providerType) != null;
+            return provider(ioType) != null;
         }
         catch (Exception e){
             return false;
@@ -73,35 +75,35 @@ public interface Platform<PLATFORM> extends Binding {
     }
 
     default <T extends AnalogInputProvider> T analogInput() throws ProviderException{
-        return this.provider(ProviderType.ANALOG_INPUT);
+        return this.provider(IOType.ANALOG_INPUT);
     }
 
     default <T extends AnalogOutputProvider> T analogOutput() throws ProviderException{
-        return this.provider(ProviderType.ANALOG_OUTPUT);
+        return this.provider(IOType.ANALOG_OUTPUT);
     }
 
     default <T extends DigitalInputProvider> T digitalInput() throws ProviderException{
-        return this.provider(ProviderType.DIGITAL_INPUT);
+        return this.provider(IOType.DIGITAL_INPUT);
     }
 
     default <T extends DigitalOutputProvider> T digitalOutput() throws ProviderException{
-        return this.provider(ProviderType.DIGITAL_OUTPUT);
+        return this.provider(IOType.DIGITAL_OUTPUT);
     }
 
     default <T extends PwmProvider> T pwm() throws ProviderException{
-        return this.provider(ProviderType.PWM);
+        return this.provider(IOType.PWM);
     }
 
     default <T extends SpiProvider> T spi() throws ProviderException{
-        return this.provider(ProviderType.SPI);
+        return this.provider(IOType.SPI);
     }
 
     default <T extends I2CProvider> T i2c() throws ProviderException{
-        return this.provider(ProviderType.I2C);
+        return this.provider(IOType.I2C);
     }
 
     default <T extends SerialProvider> T serial() throws ProviderException{
-        return this.provider(ProviderType.SERIAL);
+        return this.provider(IOType.SERIAL);
     }
 
     default Descriptor describe() {

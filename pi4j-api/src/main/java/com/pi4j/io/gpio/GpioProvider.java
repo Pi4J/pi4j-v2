@@ -30,6 +30,9 @@ package com.pi4j.io.gpio;
 import com.pi4j.io.IO;
 import com.pi4j.provider.Provider;
 
-public interface GpioProvider<IO_TYPE extends IO, CONFIG_TYPE extends GpioConfig> extends Provider<IO_TYPE, CONFIG_TYPE> {
+public interface GpioProvider<PROVIDER_TYPE extends GpioProvider,
+        IO_TYPE extends IO,
+        CONFIG_TYPE extends GpioConfig>
+        extends Provider<PROVIDER_TYPE, IO_TYPE, CONFIG_TYPE> {
     // MARKER INTERFACE
 }

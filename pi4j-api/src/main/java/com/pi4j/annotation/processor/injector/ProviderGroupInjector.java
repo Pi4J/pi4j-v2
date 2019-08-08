@@ -27,12 +27,11 @@ package com.pi4j.annotation.processor.injector;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
 import com.pi4j.context.Context;
+import com.pi4j.io.IOType;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderGroup;
-import com.pi4j.provider.ProviderType;
 import com.pi4j.util.StringUtil;
 
 import java.lang.reflect.Field;
@@ -50,9 +49,9 @@ public class ProviderGroupInjector implements InjectorProcessor<ProviderGroup> {
         // <<1>> inject instance by user defined ID property
         if(StringUtil.isNotNullOrEmpty(annotation.value())){
             String id = annotation.value().trim();
-            for(ProviderType providerType : ProviderType.values()){
-                if(id.equalsIgnoreCase(providerType.name())){
-                    return new ProviderGroup<Provider>(Pi4J.context().providers(), providerType);
+            for(IOType ioType : IOType.values()){
+                if(id.equalsIgnoreCase(ioType.name())){
+                    return new ProviderGroup<Provider>(context.providers(), ioType);
                 }
             }
             return null;
@@ -60,7 +59,7 @@ public class ProviderGroupInjector implements InjectorProcessor<ProviderGroup> {
 
         // <<2>> alternatively, inject by user defined class type property
         if(annotation.type() != null && annotation.type() != void.class && Provider.class.isAssignableFrom(annotation.type())){
-            return new ProviderGroup<Provider>(Pi4J.context().providers(), ProviderType.getProviderType(annotation.type()));
+            return new ProviderGroup<Provider>(context.providers(), IOType.getByProviderClass(annotation.type()));
         }
 
         // <<3>> alternatively, inject by inferred generic parameter type ... ProviderGroup<~~~PARAMETER-TYPE~~~>
@@ -69,7 +68,7 @@ public class ProviderGroupInjector implements InjectorProcessor<ProviderGroup> {
             if( genericParameterType instanceof ParameterizedType) {
                 Type[] parameters = ((ParameterizedType)genericParameterType).getActualTypeArguments();
                 if(parameters != null && parameters.length > 0) {
-                    return new ProviderGroup<Provider>(Pi4J.context().providers(), ProviderType.getProviderType((Class<? extends Provider>) parameters[0]));
+                    return new ProviderGroup<Provider>(context.providers(), IOType.getByProviderClass((Class<? extends Provider>) parameters[0]));
                 }
             }
         }

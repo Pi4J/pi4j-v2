@@ -27,14 +27,12 @@ package com.pi4j.io.serial.impl;
  * #L%
  */
 
-import com.pi4j.Pi4J;
-import com.pi4j.exception.NotInitializedException;
+import com.pi4j.context.Context;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.provider.exception.ProviderInstantiateException;
 
 /**
  * SPI factory - it returns instances of {@link Spi} interface.
@@ -49,34 +47,35 @@ public class SerialFactory {
         // forbid object construction
     }
 
-    public static Serial instance(String device) throws ProviderException, NotInitializedException {
-        return instance(new SerialConfig(device));
+    public static Serial instance(Context context, String device) throws ProviderException {
+        return instance(context, new SerialConfig(device));
     }
 
-    public static Serial instance(String device, int baud) throws ProviderException, NotInitializedException {
-        return instance(new SerialConfig(device, baud));
+    public static Serial instance(Context context, String device, int baud) throws ProviderException {
+        return instance(context, new SerialConfig(device, baud));
     }
 
-    public static Serial instance(SerialConfig config) throws ProviderException, NotInitializedException {
-        // get SPI instance using default platform provider
-        return instance((SerialProvider)null, config);
+    public static Serial instance(Context context, SerialConfig config) throws ProviderException {
+        // get SPI instance using default provider
+        SerialProvider provider = context.serial();
+        return instance(provider, config);
     }
 
-    public static Serial instance(String providerId, String device) throws ProviderException, NotInitializedException {
-        return instance(providerId, new SerialConfig(device));
+    public static Serial instance(Context context, String providerId, String device) throws ProviderException {
+        return instance(context, providerId, new SerialConfig(device));
     }
 
-    public static Serial instance(String providerId, String device, int baud) throws ProviderException, NotInitializedException {
-        return instance(providerId, new SerialConfig(device, baud));
+    public static Serial instance(Context context, String providerId, String device, int baud) throws ProviderException {
+        return instance(context, providerId, new SerialConfig(device, baud));
     }
 
-    public static Serial instance(String providerId, SerialConfig config) throws ProviderException, NotInitializedException {
+    public static Serial instance(Context context, String providerId, SerialConfig config) throws ProviderException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
-            return instance(config);
+            return instance(context, config);
         }
         else{
-            SerialProvider provider = Pi4J.providers().serial().get(providerId);
+            SerialProvider provider = context.providers().serial().get(providerId);
             return instance(provider, config);
         }
     }
@@ -91,17 +90,13 @@ public class SerialFactory {
 
     public static Serial instance(SerialProvider provider, SerialConfig config) throws ProviderException {
         try {
-            // get default SPI io if io is null
-            if(provider == null){
-                provider = Pi4J.platform().serial();
-            }
             // create a SPI instance using the io
-            return provider.register(Pi4J.context(), config);
+            return provider.create(config);
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {
             //e.printStackTrace();
-            throw new ProviderInstantiateException(provider, e);
+            throw new ProviderException(provider, e);
         }
     }
 }

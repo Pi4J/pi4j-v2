@@ -27,51 +27,37 @@ package com.pi4j.provider;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
-import com.pi4j.exception.NotInitializedException;
+import com.pi4j.io.IOType;
 import com.pi4j.provider.exception.ProviderException;
 
 import java.util.Map;
 
 public class ProviderGroup<T extends Provider> implements Describable {
 
-    private ProviderType providerType = null;
+    private IOType type = null;
     private Providers providers;
 
     /**
      * Default Constructor
-     * @param providerType
+     * @param type
      */
-    public ProviderGroup(Providers providers, ProviderType providerType){
+    public ProviderGroup(Providers providers, IOType type){
         this.providers = providers;
-        this.providerType = providerType;
+        this.type = type;
     }
-
-    public ProviderGroup(ProviderType providerType) throws ProviderException, NotInitializedException {
-        this(Pi4J.providers(),providerType);
-    }
-
     private Map<String, T> all() throws ProviderException {
-        return providers.all(providerType);
+        return providers.all(type);
     }
 
     public T get(String providerId) throws ProviderException {
-        return providers.get(providerId, providerType);
+        return providers.get(providerId, type);
     }
 
     public boolean exists(String providerId) throws ProviderException {
-        return providers.exists(providerId, providerType);
+        return providers.exists(providerId, type);
     }
-
-//    public T getDefault() throws ProviderException {
-//        return providers.getDefault(providerType);
-//    }
-//
-//    public boolean hasDefault() throws ProviderException {
-//        return providers.hasDefault(providerType);
-//    }
 
     @Override
     public Descriptor describe() {

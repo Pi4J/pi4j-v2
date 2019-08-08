@@ -93,17 +93,9 @@
 
 	<!-- PROJECT MODULES -->
 	<modules>
-        <!-- THE FOLLOWING MODULES ARE LEGACY AND WILL NEED TO BE ADAPTED/REMOVED AT SOME POINT -->
-        <!--<module>pi4j-core</module>-->
-		<!--<module>pi4j-example</module>-->
-		<!--<module>pi4j-distribution</module>-->
-
         <!-- THE FOLLOWING MODULES ARE V2 -->
         <module>pi4j-api</module>
-        <module>pi4j-mock</module>
-        <module>bindings/pi4j-binding</module>
-        <module>providers/pi4j-provider</module>
-        <module>platforms/pi4j-platform</module>
+        <module>plugins/pi4j-plugin</module>
         <module>pi4j-test</module>
         <module>pi4j-example</module>
     </modules>
@@ -265,149 +257,6 @@
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
-
-	<!-- BUILD PROFILES -->
-	<profiles>
-		<!-- SPECIAL PROFILE TO INCLUDE JNI NATIVE LIBRARY FOR ALL PLATFORMS -->
-		<profile>
-			<id>all-platforms</id>
-			<activation>
-				<property>
-					<name>release-build</name>
-				</property>
-			</activation>
-			<modules>
-				<module>pi4j-native</module>
-			</modules>
-            <properties>
-                <raspberrypi.build>true</raspberrypi.build>
-            </properties>
-		</profile>
-
-		<!-- SPECIAL PROFILE FOR RELEASE DEPLOYMENT BUILDS -->
-		<profile>
-			<id>release</id>
-			<activation>
-				<property>
-					<name>release-build</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-								<configuration>
-                                    <!-- NOTE:
-                                        The "{pi4j.gpg.key}" property must be configured in your maven settings.xml file.
-                                        The "{pi4j.gpg.passphrase}" property must be configured in your maven settings.xml file.
-                                        (This is intended only for Pi4J public deployment)
-                                    -->
-									<keyname>${pi4j.gpg.key}</keyname>
-                                    <passphrase>${pi4j.gpg.passphrase}</passphrase>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-			<repositories>
-				<repository>
-					<id>sonatype-oss-staging</id>
-					<name>Sonatype Open Source Maven Repository</name>
-					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-				</repository>
-			</repositories>
-		</profile>
-
-        <!-- SPECIAL PROFILE FOR JAVA 8-->
-        <profile>
-            <id>doclint-java8-disable</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>${maven-javadoc-plugin.version}</version>
-                        <configuration>
-                            <doclint>none</doclint>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>${maven-javadoc-plugin.version}</version>
-                        <configuration>
-                            <doclint>none</doclint>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </reporting>
-        </profile>
-
-        <profile>
-            <id>deploy-site</id>
-            <build>
-                <plugins>
-                    <!-- DEPLOY GITHUB SITE DOCUMENTATION -->
-                    <plugin>
-                        <groupId>com.github.github</groupId>
-                        <artifactId>site-maven-plugin</artifactId>
-                        <inherited>false</inherited>
-                        <configuration>
-                            <message>Generating site content for ${project.version}</message>
-                            <repositoryOwner>Pi4J</repositoryOwner>
-                            <repositoryName>pi4j</repositoryName>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>site</goal>
-                                </goals>
-                                <phase>site</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!-- SPECIAL PROFILE TO INCLUDE RASPBERRY PI PLATFORM -->
-        <profile>
-            <id>raspberrypi</id>
-            <activation>
-                <property>
-                    <name>release-build</name>
-                </property>
-            </activation>
-            <properties>
-                <raspberrypi.build>true</raspberrypi.build>
-            </properties>
-            <modules>
-                <module>pi4j-native</module>
-            </modules>
-        </profile>
-    </profiles>
 
 	<!-- BUILD INSTRUCTIONS -->
 	<build>

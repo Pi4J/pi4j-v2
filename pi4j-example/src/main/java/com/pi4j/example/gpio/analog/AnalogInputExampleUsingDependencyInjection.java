@@ -84,8 +84,14 @@ public class AnalogInputExampleUsingDependencyInjection {
             // allow for user to exit program using CTRL-C
             console.promptForExit();
 
-            // initialize the Pi4J library then inject this class for dependency injection on annotations
-            Pi4J.initialize().inject(this);
+            // Initialize Pi4J with an auto context
+            // An auto context includes AUTO-DETECT BINDINGS enabled
+            // which will load all detected Pi4J extension libraries
+            // (Platforms and Providers) in the class path
+            // ...
+            // Also, inject this class instance into the Pi4J context
+            // for annotation processing and dependency injection
+            Pi4J.newAutoContext().inject(this);
 
             // lets read the analog output state
             console.print("THE STARTING ANALOG INPUT [" + input + "] VALUE IS [");

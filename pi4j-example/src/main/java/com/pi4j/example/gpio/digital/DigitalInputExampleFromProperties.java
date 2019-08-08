@@ -29,7 +29,7 @@ package com.pi4j.example.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalInputConfigBuilder;
 import com.pi4j.util.Console;
 
 import java.util.Properties;
@@ -53,8 +53,11 @@ public class DigitalInputExampleFromProperties {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J library
-        var pi4j = Pi4J.initialize();
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        var pi4j = Pi4J.newAutoContext();
 
         // create a properties map with ".address" and ".shutdown" properties for the digital output configuration
         Properties properties = new Properties();
@@ -65,8 +68,8 @@ public class DigitalInputExampleFromProperties {
 
         // create a digital input instance using the default digital input provider
         // we will use the PULL_DOWN argument to set the pin pull-down resistance on this GPIO pin
-        var builder = DigitalInput.builder().load(properties);
-        var input = DigitalInput.create(builder.build());
+        var builder = DigitalInputConfigBuilder.newInstance().load(properties);
+        var input = pi4j.din().create(builder.build());
 
         // setup a digital output listener to listen for any state changes on the digital input
         input.addListener((DigitalChangeListener) event -> {
@@ -92,6 +95,6 @@ public class DigitalInputExampleFromProperties {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.terminate();
+        pi4j.shutdown();
     }
 }

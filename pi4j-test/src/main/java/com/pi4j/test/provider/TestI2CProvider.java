@@ -27,26 +27,17 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.context.Context;
-import com.pi4j.io.i2c.I2C;
-import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
-import com.pi4j.io.i2c.I2CProviderBase;
+import com.pi4j.test.provider.impl.TestI2CProviderImpl;
 
-public class TestI2CProvider extends I2CProviderBase implements I2CProvider {
-
-    public TestI2CProvider(){ super(); }
-
-    public TestI2CProvider(String id){
-        super(id);
+public interface TestI2CProvider extends I2CProvider {
+    static TestI2CProvider newInstance(){
+        return new TestI2CProviderImpl();
     }
-
-    public TestI2CProvider(String id, String name){
-        super(id, name);
+    static TestI2CProvider newInstance(String id){
+        return new TestI2CProviderImpl(id);
     }
-
-    @Override
-    public I2C create(Context context, I2CConfig config) throws Exception {
-        return null;
+    static TestI2CProvider newInstance(String id, String name){
+        return new TestI2CProviderImpl(id, name);
     }
 }

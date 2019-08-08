@@ -29,12 +29,13 @@ package com.pi4j.platform;
 
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
-import com.pi4j.context.Context;
-import com.pi4j.platform.exception.*;
+import com.pi4j.platform.exception.PlatformException;
+import com.pi4j.platform.exception.PlatformNotFoundException;
+import com.pi4j.platform.exception.PlatformTypeException;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -46,11 +47,48 @@ import java.util.Map;
  */
 public interface Platforms extends Describable {
 
-    /**
-     * Get all bindings
-     * @return
-     */
     Map<String, Platform> all();
+    boolean exists(String platformId);
+    Platform get(String platformId) throws PlatformNotFoundException;
+    <T extends Platform> T defaultPlatform();
+
+    // DEFAULT METHODS
+
+    default <T extends Platform> boolean exists(String platformId, Class<T> platformClass) throws PlatformNotFoundException {
+        // determine if the requested platform exists by ID and CLASS TYPE
+        try {
+            return get(platformId, platformClass) != null;
+        } catch (PlatformException e) {
+            return false;
+        }
+    }
+
+    default boolean hasDefault(){
+        return defaultPlatform() != null;
+    }
+
+    default <T extends Platform> T  getDefault(){
+        return defaultPlatform();
+    }
+
+    default <T extends Platform> T get(String platformId, Class<T> platformClass) throws PlatformNotFoundException, PlatformTypeException {
+        // return the platform instance from the managed platform map that contains the given platform-id and platform-class
+        var platform = get(platformId);
+        if(platformClass.isAssignableFrom(platform.getClass())){
+            return (T)platform;
+        }
+        throw new PlatformTypeException(platformId, platformClass);
+    }
+
+    default <T extends Platform> T get(Class<T> platformClass) throws PlatformNotFoundException{
+        // return the platform instance from the managed platform map that contains the given platform-id and platform-class
+        var subset = all(platformClass);
+        if(subset.isEmpty()){
+            throw new PlatformNotFoundException(platformClass);
+        }
+        // return first instance found
+        return (T)subset.values().iterator().next();
+    }
 
     /**
      * Get all platforms of a specified io class/interface.
@@ -58,63 +96,37 @@ public interface Platforms extends Describable {
      * @param platformClass
      * @param <T>
      * @return
-     * @throws com.pi4j.platform.exception.PlatformException
+     * @throws com.pi4j.platform.exception.PlatformNotFoundException
      */
-    <T extends Platform> Map<String, T> all(Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
+    default <T extends Platform> Map<String, T> all(Class<T> platformClass) throws PlatformNotFoundException {
+        // create a map <platform-id, platform-instance> of platforms that extend of the given platform class/interface
+        var result = new ConcurrentHashMap<String, T>();
+        all().values().stream().filter(platformClass::isInstance).forEach(p -> {
+            result.put(p.id(), platformClass.cast(p));
+        });
 
-    boolean exists(String platformId) throws PlatformsNotInitialized;
-    <T extends Platform> boolean exists(String platformId, Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
-
-    Platform get(String platformId) throws PlatformException;
-    <T extends Platform> T get(String platformId, Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
-    <T extends Platform> T get(Class<T> platformClass) throws PlatformsNotInitialized, PlatformNotFoundException;
-
-    <T extends Platform> Platforms add(Collection<T> platform) throws PlatformsNotInitialized, PlatformAlreadyExistsException, PlatformInitializeException;
-    <T extends Platform> void replace(T platform) throws PlatformsNotInitialized, PlatformNotFoundException, PlatformTerminateException, PlatformInitializeException;
-    <T extends Platform> void remove(String platformId) throws PlatformsNotInitialized, PlatformNotFoundException, PlatformTerminateException;
-
-    void initialize(Context context, boolean autoDetect) throws PlatformsAlreadyInitialized, PlatformAlreadyExistsException, PlatformInitializeException, PlatformsNotInitialized;
-    void terminate(Context context) throws PlatformsNotInitialized, PlatformTerminateException;
-
-    Platform defaultPlatform();
-    Platform defaultPlatform(String platformId) throws PlatformNotFoundException;
-
-    default <T extends Platform> Platforms add(T ... platform) throws PlatformAlreadyExistsException, PlatformInitializeException, PlatformsNotInitialized {
-        return add(Arrays.asList(platform));
+        if(result.size() <= 0) throw new PlatformNotFoundException(platformClass);
+        return Collections.unmodifiableMap(result);
     }
 
 
-    default boolean hasDefault(){
-        return defaultPlatform() != null;
-    }
-
-
-    default Platform setDefault(String platformId) throws PlatformNotFoundException {
-        return defaultPlatform(platformId);
-    }
-
-    default Platform getDefault(){
-        return defaultPlatform();
-    }
-
-    // DEFAULT METHODS
     default Map<String, Platform> getAll() { return all(); }
-    default <T extends Platform> Map<String, T> getAll(Class<T> platformClass) throws PlatformNotFoundException, PlatformsNotInitialized {
+    default <T extends Platform> Map<String, T> getAll(Class<T> platformClass) throws PlatformNotFoundException {
         return all(platformClass);
     }
 
     default Descriptor describe() {
-        var bindings = all();
+        var platforms = all();
 
         Descriptor descriptor = Descriptor.create()
                 .category("PLATFORMS")
                 .name("Pi4J Runtime Platforms")
-                .quantity((bindings == null) ? 0 : bindings.size())
+                .quantity((platforms == null) ? 0 : platforms.size())
                 .type(this.getClass());
 
-        if(bindings != null && !bindings.isEmpty()) {
-            bindings.forEach((id, binding) -> {
-                descriptor.add(binding.describe());
+        if(platforms != null && !platforms.isEmpty()) {
+            platforms.forEach((id, platform) -> {
+                descriptor.add(platform.describe());
             });
 
         }

@@ -56,4 +56,9 @@ public interface AnalogOutputConfig
     default Number getInitialValue() {
         return this.initialValue();
     }
+
+
+    static AnalogOutputConfigBuilder newBuilder()  {
+        return AnalogOutputConfigBuilder.newInstance();
+    }
 }

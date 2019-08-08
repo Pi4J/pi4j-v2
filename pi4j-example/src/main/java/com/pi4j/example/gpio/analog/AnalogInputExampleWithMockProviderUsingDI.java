@@ -31,6 +31,7 @@ import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
+import com.pi4j.mock.platform.MockPlatform;
 import com.pi4j.mock.provider.gpio.analog.MockAnalogInput;
 import com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
 import com.pi4j.util.Console;
@@ -59,7 +60,8 @@ public class AnalogInputExampleWithMockProviderUsingDI {
         @Register(ANALOG_INPUT_PIN_ID)
         @Address(ANALOG_INPUT_PIN_ID_ADDRESS)
         @Name("My Analog Input Pin")
-        @Provider(type = MockAnalogInputProvider.class)
+        @WithProvider(type = MockAnalogInputProvider.class)
+        @WithPlatform(type = MockPlatform.class)
         private MockAnalogInput input;
 
         @Inject
@@ -82,8 +84,14 @@ public class AnalogInputExampleWithMockProviderUsingDI {
             // allow for user to exit program using CTRL-C
             console.promptForExit();
 
-            // initialize the Pi4J library then inject this class for dependency injection on annotations
-            var pi4j = Pi4J.initialize().inject(this);
+            // Initialize Pi4J with an auto context
+            // An auto context includes AUTO-DETECT BINDINGS enabled
+            // which will load all detected Pi4J extension libraries
+            // (Platforms and Providers) in the class path
+            // ...
+            // Also, inject this class instance into the Pi4J context
+            // for annotation processing and dependency injection
+            Pi4J.newAutoContext().inject(this);
 
             // display acquired provider
             console.print("--> ACQUIRED PROVIDER: ");
@@ -119,7 +127,7 @@ public class AnalogInputExampleWithMockProviderUsingDI {
 
             // shutdown Pi4J
             console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-            Pi4J.terminate();
+            pi4j.shutdown();
 
             return null;
         }

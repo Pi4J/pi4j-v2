@@ -28,10 +28,7 @@ package com.pi4j.example;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.binding.AnalogBindingSync;
-import com.pi4j.io.gpio.digital.DigitalInput;
 
 public class Main {
 
@@ -40,8 +37,11 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        // initialize Pi4J
-        var pi4j = Pi4J.initialize();
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        var pi4j = Pi4J.newAutoContext();
 
 
 //        Serial serial = Serial.instance("/dev/ttyUSB1");
@@ -49,16 +49,12 @@ public class Main {
 //        serial.send("TEST DATA");
 //        serial.close();
 
+        var din1 = pi4j.din().create(11);
+        var ain1 = pi4j.ain().create(21);
 
-
-        var din1 = DigitalInput.create(11);
-        var ain1 = AnalogInput.create(21);
-
-
-
-        var input = AnalogInput.create(98);
-        var output1 = AnalogOutput.create(99);
-        var output2 = AnalogOutput.create(100);
+        var input = pi4j.ain().create(98);
+        var output1 = pi4j.aout().create(99);
+        var output2 = pi4j.aout().create(100);
 
         input.addListener((AnalogChangeListener) event -> {
             System.out.print(event);
@@ -87,6 +83,6 @@ public class Main {
 //        DigitalOutput dout1 = DigitalOutput;
 
         // shutdown Pi4J
-        Pi4J.terminate();
+        pi4j.shutdown();
     }
 }

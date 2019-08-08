@@ -38,25 +38,30 @@ import static junit.framework.TestCase.assertNotNull;
 
 public class ContextTest {
 
+    private Context pi4j;
+
     @Before
     public void beforeTest() throws Pi4JException {
-        Pi4J.initialize(true);
+        // initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        pi4j = Pi4J.newAutoContext();
     }
 
     @After
     public void afterTest() {
         try {
-            Pi4J.terminate();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
     public void testFactoryContextAcquisition() throws Pi4JException {
-        Context context = Pi4J.context();
-        assertNotNull(context);
+        assertNotNull(pi4j);
         System.out.println("-------------------------------------------------");
         System.out.println("Pi4J CONTEXT <acquired via factory accessor>");
         System.out.println("-------------------------------------------------");
-        context.describe().print(System.out);
+        pi4j.describe().print(System.out);
     }
 }

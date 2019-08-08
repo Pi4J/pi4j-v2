@@ -29,10 +29,12 @@ package com.pi4j.annotation.processor.register;
 
 import com.pi4j.annotation.*;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.impl.ProviderAnnotationProcessor;
+import com.pi4j.annotation.impl.WithAnnotationProcessor;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
+import com.pi4j.platform.Platform;
 import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +70,7 @@ public class DigitalOutputRegistrationProcessor implements RegisterProcessor<Dig
                     "use the '@Inject(id)' annotation instead.");
 
         // create I/O config builder
-        var builder = DigitalOutput.builder();
+        var builder = DigitalOutputConfigBuilder.newInstance();
         if (annotation.value() != null) builder.id((annotation).value());
 
         // test for required additional annotations
@@ -103,12 +105,29 @@ public class DigitalOutputRegistrationProcessor implements RegisterProcessor<Dig
             if (initialState != null) builder.initial(initialState.value());
         }
 
-        // create and return I/O instance from registry
-        if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
-            var provider = ProviderAnnotationProcessor.instance(context, field, DigitalOutputProvider.class);
-            return DigitalOutput.create(provider, builder.build());
-        } else {
-            return DigitalOutput.create(builder.build());
+        // get designated platform to use to register this IO (if provided)
+        Platform platform = null;
+        if (field.isAnnotationPresent(WithPlatform.class)) {
+            platform = WithAnnotationProcessor.getPlatform(context, field);
+        }
+
+        // get designated provider to use to register this IO (if provided)
+        DigitalOutputProvider provider = null;
+        if (field.isAnnotationPresent(WithProvider.class)) {
+            provider = WithAnnotationProcessor.getProvider(context, platform, field, DigitalOutputProvider.class);
+        }
+
+        // if a provider was found, then create digital input IO instance using that provider
+        if(provider != null){
+            return provider.create(builder.build());
+        }
+
+        // if no provider was found, then create digital input IO instance using defaults
+        else {
+            if(platform != null)
+                return platform.provider(DigitalOutputProvider.class).create(builder.build());
+            else
+                return context.provider(DigitalOutputProvider.class).create(builder.build());
         }
     }
 }

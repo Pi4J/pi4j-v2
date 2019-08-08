@@ -27,13 +27,9 @@ package com.pi4j.test;/*-
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
+import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.binding.AnalogBindingSync;
-import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.provider.ProviderType;
-import com.pi4j.test.provider.TestAnalogInput;
 import com.pi4j.test.provider.TestAnalogInputProvider;
 
 public class Main {
@@ -46,20 +42,22 @@ public class Main {
         // set logging
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
-        // initialize Pi4J
-        Context pi4j = Pi4J.initialize();
-
-
-        Pi4J.providers().add(new TestAnalogInputProvider("test-analog-input-provider", "TestAnalogInputProvider"));
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        Context pi4j = Pi4J.newContextBuilder()
+                .add(TestAnalogInputProvider.newInstance("test-analog-input-provider", "TestAnalogInputProvider"))
+                .autoDetect()
+                .build();
 
         // create About class instance
         About about = new About();
-        about.enumerateBindings();
-        about.enumerateProviders();
-        about.enumeratePlatforms();
-        about.describeDeafultPlatform();
-        for(var providerType : ProviderType.values()){
-            about.enumerateProviders(providerType);
+        about.enumerateProviders(pi4j);
+        about.enumeratePlatforms(pi4j);
+        about.describeDeafultPlatform(pi4j);
+        for(var ioType : IOType.values()){
+            about.enumerateProviders(pi4j, ioType);
         }
 
 //        Serial serial = Serial.instance("/dev/ttyUSB1");
@@ -69,15 +67,15 @@ public class Main {
 
 
 
-        var din1 = DigitalInput.create(11);
-        var ain1 = AnalogInput.create("test-analog-input-provider",21, TestAnalogInput.class);
+        var din1 = pi4j.dout().create(11);
+        var ain1 = pi4j.ain().create(21, "test-analog-input-provider");
 
-        var input = AnalogInput.create(98);
+        var input = pi4j.ain().create(98);
 
         input.name("My Analog Input #1");
 
-        var output1 = AnalogOutput.create(99);
-        var output2 = AnalogOutput.create(100);
+        var output1 = pi4j.aout().create(99);
+        var output2 = pi4j.aout().create(100);
 
         input.addListener((AnalogChangeListener) event -> {
             System.out.print("ANALOG INPUT [");
@@ -143,7 +141,7 @@ public class Main {
         pi4j.describe().print(System.out);
 
         // shutdown Pi4J
-        Pi4J.terminate();
+        pi4j.shutdown();
 
     }
 }

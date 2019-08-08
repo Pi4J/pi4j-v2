@@ -1,6 +1,5 @@
 package com.pi4j.io.i2c;
 
-import com.pi4j.context.Context;
 import com.pi4j.provider.ProviderBase;
 
 /*
@@ -44,7 +43,4 @@ public abstract class I2CProviderBase
     public I2CProviderBase(String id, String name){
         super(id, name);
     }
-
-    @Override
-    public abstract I2C create(Context context, I2CConfig config) throws Exception;
 }

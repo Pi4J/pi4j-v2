@@ -28,16 +28,17 @@ package com.pi4j.test.registry;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
+import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
 import com.pi4j.mock.provider.gpio.digital.MockDigitalInputProvider;
-import com.pi4j.provider.ProviderType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class RegistryGetIoInstancesByProvider {
 
@@ -47,24 +48,36 @@ public class RegistryGetIoInstancesByProvider {
     public static final int PIN_ADDRESS_2 = 2;
     public static final String PIN_ID_2 = "my-custom-pin-2";
 
+    private Context pi4j;
+
     @Before
-    public void beforeTest() throws Pi4JException {
+    public void beforeTest() throws Exception {
 
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
 
-        // Initialize Pi4J with AUTO-DETECT disabled
-        // we explicitly only provide a single provider implementation for testing
-        Pi4J.initialize(false, new MockDigitalInputProvider());
+        // Initialize Pi4J with a manually configured context
+        // Disable AUTO-DETECT loading to prevent automatic
+        // loading of any detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        // ...
+        // Explicitly add single provider implementation
+        // into the context for testing
+        // ...
+        // Also, inject this class instance into the Pi4J context
+        // for annotation processing and dependency injection
+        pi4j = Pi4J.newContextBuilder()
+                .add(MockDigitalInputProvider.newInstance())
+                .build().inject(this);
 
         // create simple I/O instances
-        DigitalInput input1 = DigitalInput.create(PIN_ADDRESS_1, PIN_ID_1);
-        DigitalInput input2 = DigitalInput.create(PIN_ADDRESS_2, PIN_ID_2);
+        DigitalInput input1 = pi4j.din().create(PIN_ADDRESS_1, PIN_ID_1);
+        DigitalInput input2 = pi4j.din().create(PIN_ADDRESS_2, PIN_ID_2);
     }
 
     @After
     public void afterTest() {
         try {
-            Pi4J.terminate();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
@@ -72,7 +85,7 @@ public class RegistryGetIoInstancesByProvider {
     public void testGetIoInstancesByProviderClass() throws Pi4JException {
 
         // attempt to get I/O instance from registry
-        var retrieved = Pi4J.registry().allByProvider(DigitalInputProvider.class);
+        var retrieved = pi4j.registry().allByProvider(DigitalInputProvider.class);
 
         // verify the retrieved I/O instance is the same count we registered
         assertEquals("The I/O instances retrieved from registry is not a match.", 2, retrieved.size());
@@ -82,7 +95,7 @@ public class RegistryGetIoInstancesByProvider {
     public void testGetIoInstancesByProviderType() throws Pi4JException {
 
         // attempt to get I/O instance from registry
-        var retrieved = Pi4J.registry().allByProvider(ProviderType.DIGITAL_INPUT);
+        var retrieved = pi4j.registry().allByIoType(IOType.DIGITAL_INPUT);
 
         // verify the retrieved I/O instance is the same count we registered
         assertEquals("The I/O instances retrieved from registry is not a match.", 2, retrieved.size());
@@ -92,7 +105,7 @@ public class RegistryGetIoInstancesByProvider {
     public void testGetIoInstancesByProviderId() throws Pi4JException {
 
         // attempt to get I/O instance from registry
-        var retrieved = Pi4J.registry().allByProvider(MockDigitalInputProvider.ID);
+        var retrieved = pi4j.registry().allByProvider(MockDigitalInputProvider.ID);
 
         // verify the retrieved I/O instance is the same count we registered
         assertEquals("The I/O instances retrieved from registry is not a match.", 2, retrieved.size());
@@ -102,10 +115,10 @@ public class RegistryGetIoInstancesByProvider {
     public void testGetIoInstancesFromInvalidProvider() throws Pi4JException {
 
         // attempt to get I/O instance from registry
-        var retrieved = Pi4J.registry().allByProvider(ProviderType.ANALOG_INPUT);
+        var retrieved = pi4j.registry().allByIoType(IOType.ANALOG_INPUT);
 
         // verify the retrieved I/O instance is ZERO
-        assertEquals("No I/O instances should have retrieved from registry using this provider type.", 0, retrieved.size());
+        assertEquals("No I/O instances should have retrieved from registry using this IO type.", 0, retrieved.size());
     }
 
 }

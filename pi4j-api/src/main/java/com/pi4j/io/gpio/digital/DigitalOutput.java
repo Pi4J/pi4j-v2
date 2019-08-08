@@ -27,17 +27,13 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-import com.pi4j.exception.NotInitializedException;
 import com.pi4j.io.Output;
-import com.pi4j.io.gpio.digital.impl.DigitalOutputFactory;
-import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.registry.exception.RegistryException;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfig>, Output {
+public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider>, Output {
 
     DigitalOutput state(DigitalState state);
     DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback);
@@ -125,112 +121,4 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
     default Future<?> blinkAsync(int delay, int duration, TimeUnit unit, DigitalState state){
         return this.blinkAsync(delay, duration, unit, state, null);
     }
-
-
-    // ---------------------------------------------------------------------------
-    // INSTANCE ACCESSOR STATIC METHODS
-    // ---------------------------------------------------------------------------
-
-    static boolean exists(String id) throws ProviderException, NotInitializedException {
-        return DigitalOutputFactory.exists(id);
-    }
-
-    static <T extends DigitalOutput> T get(String id) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalOutputFactory.get(id);
-    }
-
-    // ---------------------------------------------------------------------------
-    // BUILDER CREATOR STATIC METHODS
-    // ---------------------------------------------------------------------------
-
-    static DigitalOutputBuilder builder() throws ProviderException {
-        return DigitalOutputFactory.builder();
-    }
-
-    // ---------------------------------------------------------------------------
-    // FRIENDLY HELPER CREATOR STATIC METHODS
-    // ---------------------------------------------------------------------------
-
-    static <T extends DigitalOutput> T create(Integer address) throws ProviderException, NotInitializedException, RegistryException {
-        DigitalOutputBuilder builder = DigitalOutput.builder();
-        builder.address(address);
-        return (T)DigitalOutput.create(builder.build());
-    }
-
-    static <T extends DigitalOutput> T create(Integer address, String id) throws ProviderException, NotInitializedException, RegistryException {
-        DigitalOutputBuilder builder = DigitalOutput.builder();
-        builder.id(id).address(address).id(id);
-        return (T)DigitalOutput.create(builder.build());
-    }
-
-    static <T extends DigitalOutput> T create(Integer address, String id, String name) throws ProviderException, NotInitializedException, RegistryException {
-        DigitalOutputBuilder builder = DigitalOutput.builder();
-        builder.id(id).address(address).id(id).name(name);
-        return (T)DigitalOutput.create(builder.build());
-    }
-
-    static <T extends DigitalOutput> T create(String providerId, Integer address) throws ProviderException, NotInitializedException, RegistryException {
-        DigitalOutputBuilder builder = DigitalOutput.builder();
-        builder.address(address);
-        return (T)DigitalOutput.create(providerId, builder.build());
-    }
-
-    static <T extends DigitalOutput> T create(DigitalOutputProvider provider, Integer address) throws ProviderException, NotInitializedException, RegistryException {
-        DigitalOutputBuilder builder = DigitalOutput.builder();
-        builder.address(address);
-        return (T)DigitalOutput.create(provider, builder.build());
-    }
-
-    // ---------------------------------------------------------------------------
-    // RAW FACTORY CREATOR STATIC METHODS
-    // ---------------------------------------------------------------------------
-
-    static <T extends DigitalOutput> T create(DigitalOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)DigitalOutputFactory.create(config);
-    }
-
-    static <T extends DigitalOutput> T create(String providerId, DigitalOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)DigitalOutputFactory.create(providerId, config);
-    }
-
-    static <T extends DigitalOutput> T create(DigitalOutputProvider provider, DigitalOutputConfig config) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)DigitalOutputFactory.create(provider, config);
-    }
-
-    // ---------------------------------------------------------------------------
-    // SPECIFIED RETURN CLASS HELPER METHODS
-    // ---------------------------------------------------------------------------
-
-    static <T extends DigitalOutput> T create(Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalOutput.create(address);
-    }
-
-    static <T extends DigitalOutput> T create(Integer address, String id, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalOutput.create(address, id);
-    }
-
-    static <T extends DigitalOutput> T create(Integer address, String id, String name, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalOutput.create(address, id, name);
-    }
-
-    static <T extends DigitalOutput> T create(String providerId, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalOutput.create(providerId, address);
-    }
-
-    static <T extends DigitalOutput> T create(DigitalOutputProvider provider, Integer address, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalOutput.create(provider, address);
-    }
-
-    static <T extends DigitalOutput> T create(DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalOutput.create(config);
-    }
-
-    static <T extends DigitalOutput> T create(String providerId, DigitalOutputConfig config, Class<T> clazz) throws ProviderException, NotInitializedException, RegistryException {
-        return (T)DigitalOutput.create(providerId, config);
-    }
-
-    static <T extends DigitalOutput> T create(DigitalOutputProvider provider, DigitalOutputConfig config, Class<T> clazz) throws NotInitializedException, ProviderException, RegistryException {
-        return (T)DigitalOutput.create(provider, config);
-    }
-
 }

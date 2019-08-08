@@ -27,25 +27,31 @@ package com.pi4j.platform;
  * #L%
  */
 
-import com.pi4j.binding.BindingBase;
-import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
-import com.pi4j.platform.exception.PlatformException;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
+import com.pi4j.extension.ExtensionBase;
+import com.pi4j.io.IOType;
 import com.pi4j.provider.Provider;
-import com.pi4j.provider.ProviderType;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.provider.exception.ProviderInterfaceException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
+import com.pi4j.provider.impl.ProviderProxyHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class PlatformBase<PLATFORM extends Platform>
-        extends BindingBase
-        implements Platform<PLATFORM> {
+        extends ExtensionBase<Platform>
+        implements Platform {
 
     protected Context context = null;
-    protected Map<ProviderType, Provider> providers = new ConcurrentHashMap<>();
+    protected Map<IOType, Provider> providers = new ConcurrentHashMap<>();
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public PlatformBase(){
         super();
@@ -64,20 +70,46 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     }
 
     @Override
-    public Map<ProviderType, ? extends Provider> providers() {
+    public Map<IOType, Provider> providers() {
         return Collections.unmodifiableMap(this.providers);
     }
 
     @Override
-    public <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException {
-        return (T)this.provider(ProviderType.getProviderType(providerClass));
+    public <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderInterfaceException {
+
+        if(!providerClass.isInterface()){
+            logger.warn("Provider type [" + providerClass.getName() + "] requested; this is not an 'Interface'" +
+                    " and make not return a valid provider or may not be able to cast to the concrete class.");
+        }
+
+        for(Provider p : providers.values()){
+            if(providerClass.isAssignableFrom(p.getClass())){
+                return (T)p;
+            }
+
+            // check for Proxied provider instances, if a Proxy, then also check the underlying handlers source class
+            if (Proxy.isProxyClass(p.getClass())) {
+                if(Proxy.getInvocationHandler(p).getClass().isAssignableFrom(ProviderProxyHandler.class)){
+                    ProviderProxyHandler pp = (ProviderProxyHandler) Proxy.getInvocationHandler(p);
+                    if(providerClass.isAssignableFrom(pp.provider().getClass())){
+                        return (T) p;
+                    }
+                }
+            }
+        }
+
+        if(providerClass.isInterface()){
+            throw new ProviderNotFoundException(providerClass);
+        } else {
+            throw new ProviderInterfaceException(providerClass);
+        }
     }
 
     @Override
-    public <T extends Provider> T provider(ProviderType providerType) throws ProviderNotFoundException {
-        if(providers.containsKey(providerType))
-            return (T)providers.get(providerType);
-        throw new ProviderNotFoundException(providerType);
+    public <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException {
+        if(providers.containsKey(ioType))
+            return (T)providers.get(ioType);
+        throw new ProviderNotFoundException(ioType);
     }
 
     @Override
@@ -87,21 +119,21 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     public abstract boolean enabled(Context context);
 
     @Override
-    public PLATFORM initialize(Context context) throws LifecycleException, PlatformException {
+    public PLATFORM initialize(Context context) throws InitializeException {
         this.context = context;
         String[] provIds = getProviders();
         for (String provId : provIds) {
             try {
                 addProvider(context, provId);
             } catch (ProviderException e) {
-                throw new PlatformException(e.getMessage());
+                throw new InitializeException(e.getMessage());
             }
         }
         return (PLATFORM) this;
     }
 
     @Override
-    public PLATFORM terminate(Context context) throws LifecycleException {
+    public PLATFORM shutdown(Context context) throws ShutdownException {
         return (PLATFORM)this;
     }
 
@@ -109,6 +141,6 @@ public abstract class PlatformBase<PLATFORM extends Platform>
 
     protected void addProvider(Context context, String providerId) throws ProviderException {
         var provider = context.providers().get(providerId);
-        this.providers.put(ProviderType.getProviderType(provider.getClass()), provider);
+        this.providers.put(IOType.getByProviderClass(provider.getClass()), provider);
     }
 }

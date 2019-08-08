@@ -27,26 +27,17 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.context.Context;
-import com.pi4j.io.gpio.analog.AnalogInput;
-import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
-import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
+import com.pi4j.test.provider.impl.TestAnalogInputProviderImpl;
 
-public class TestAnalogInputProvider extends AnalogInputProviderBase implements AnalogInputProvider {
-
-    public TestAnalogInputProvider(){ super(); }
-
-    public TestAnalogInputProvider(String id){
-        super(id);
+public interface TestAnalogInputProvider extends AnalogInputProvider {
+    static TestAnalogInputProvider newInstance(){
+        return new TestAnalogInputProviderImpl();
     }
-
-    public TestAnalogInputProvider(String id, String name){
-        super(id, name);
+    static TestAnalogInputProvider newInstance(String id){
+        return new TestAnalogInputProviderImpl(id);
     }
-
-    @Override
-    public AnalogInput create(Context context, AnalogInputConfig config) throws Exception {
-        return new TestAnalogInput(config);
+    static TestAnalogInputProvider newInstance(String id, String name){
+        return new TestAnalogInputProviderImpl(id, name);
     }
 }

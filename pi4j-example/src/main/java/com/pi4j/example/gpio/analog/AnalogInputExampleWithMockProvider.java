@@ -29,7 +29,6 @@ package com.pi4j.example.gpio.analog;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.mock.provider.gpio.analog.MockAnalogInput;
 import com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
 import com.pi4j.util.Console;
@@ -54,8 +53,11 @@ public class AnalogInputExampleWithMockProvider {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J library
-        var pi4j = Pi4J.initialize();
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        var pi4j = Pi4J.newAutoContext();
 
         // get the Mock Analog Input provider by ID
         console.println("ATTEMPTING TO GET MOCK ANALOG INPUT PROVIDER FROM Pi4J");
@@ -68,7 +70,7 @@ public class AnalogInputExampleWithMockProvider {
 
         // create an analog input instance using the mock analog input provider
         console.println("ATTEMPTING TO CREATE A MOCK ANALOG INPUT INSTANCE");
-        var input = AnalogInput.create(provider, ANALOG_INPUT_PIN, MockAnalogInput.class);
+        MockAnalogInput input = provider.create(ANALOG_INPUT_PIN);
 
         // display created instance
         console.print("--> CREATED IO INSTANCE: [");
@@ -105,6 +107,6 @@ public class AnalogInputExampleWithMockProvider {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.terminate();
+        pi4j.shutdown();
     }
 }

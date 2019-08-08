@@ -1,3 +1,5 @@
+import com.pi4j.extension.Extension;
+
 /*-
  * #%L
  * **********************************************************************
@@ -30,11 +32,11 @@ module pi4j.test {
     // Pi4J API
     requires pi4j.api;
 
-    uses com.pi4j.binding.Binding;
+    uses Extension;
     uses com.pi4j.provider.Provider;
 
     // Pi4J Mock Platform and Providers
-    requires pi4j.mock;
+    requires pi4j.plugin.mock;
     uses com.pi4j.mock.platform.MockPlatform;
     uses com.pi4j.mock.provider.gpio.analog.MockAnalogInput;
     uses com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
@@ -52,4 +54,8 @@ module pi4j.test {
     uses com.pi4j.mock.provider.spi.MockSpiProvider;
     uses com.pi4j.mock.provider.serial.MockSerial;
     uses com.pi4j.mock.provider.serial.MockSerialProvider;
+
+
+    exports com.pi4j.test.platform;
+    exports com.pi4j.test.provider;
 }

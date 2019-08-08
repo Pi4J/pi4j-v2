@@ -25,12 +25,11 @@ package com.pi4j.test;/*-
  * #L%
  */
 
-import com.pi4j.Pi4J;
-import com.pi4j.binding.Binding;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
+import com.pi4j.io.IOType;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
-import com.pi4j.provider.ProviderType;
 
 public class About {
 
@@ -38,54 +37,42 @@ public class About {
     public About() throws Exception {
     }
 
-    public void enumerateBindings() throws Pi4JException {
-        enumerateBindings("BINDINGS");
+    public void enumerateProviders(Context context) throws Pi4JException {
+        enumerateProviders(context,"PROVIDERS");
     }
-    public void enumerateBindings(String title) throws Pi4JException {
+    public void enumerateProviders(Context context, String title) throws Pi4JException {
         System.out.println("=====================================================");
         System.out.println(title);
         System.out.println("=====================================================");
-        for (Binding binding : Pi4J.context().bindings().all().values()) {
-            System.out.println("  " + binding.name() + " [" + binding.id() + "]; ");
-        }
-    }
-
-    public void enumerateProviders() throws Pi4JException {
-        enumerateProviders("PROVIDERS");
-    }
-    public void enumerateProviders(String title) throws Pi4JException {
-        System.out.println("=====================================================");
-        System.out.println(title);
-        System.out.println("=====================================================");
-        for (Provider provider : Pi4J.providers().all().values()) {
+        for (Provider provider : context.providers().all().values()) {
             System.out.println("  " + provider.name() + " [" + provider.id() + "]; " + provider.type());
         }
     }
 
-    public void enumerateProviders(ProviderType providerType) throws Pi4JException {
+    public void enumerateProviders(Context context, IOType ioType) throws Pi4JException {
         System.out.println("=====================================================");
-        System.out.println(providerType + " PROVIDERS");
+        System.out.println(ioType + " PROVIDERS");
         System.out.println("=====================================================");
-        for(var provider : Pi4J.providers().all(providerType).values()){
+        for(var provider : context.providers().all(ioType).values()){
             System.out.println("  " + provider.name() + " [" + provider.id() + "]; " + provider.type());
         }
     }
 
-    public void enumeratePlatforms() throws Pi4JException {
+    public void enumeratePlatforms(Context context) throws Pi4JException {
         System.out.println("=====================================================");
         System.out.println("PLATFORMS");
         System.out.println("=====================================================");
-        for (Platform platform : Pi4J.platforms().all().values()) {
+        for (Platform platform : context.platforms().all().values()) {
             System.out.println("  " + platform.name() + " [" + platform.id() + "]; " + platform.getDescription());
         }
     }
 
-    public void describeDeafultPlatform() throws Pi4JException {
+    public void describeDeafultPlatform(Context context) throws Pi4JException {
         System.out.println("=====================================================");
         System.out.println("DEFAULT (RUNTIME) PLATFORM ");
         System.out.println("=====================================================");
-        System.out.println("  " + Pi4J.platform().name() + " [" + Pi4J.platform().id() + "]");
-        Pi4J.platform().describe().print(System.out);
+        System.out.println("  " + context.platform().name() + " [" + context.platform().id() + "]");
+        context.platform().describe().print(System.out);
     }
 
 //    public void enumeratePlatformProviders() throws Pi4JException {

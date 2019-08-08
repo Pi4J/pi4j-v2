@@ -32,15 +32,16 @@ import com.pi4j.common.Identity;
 import com.pi4j.common.Lifecycle;
 import com.pi4j.provider.Provider;
 
-public interface IO<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig>
+public interface IO<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig, PROVIDER_TYPE extends Provider>
         extends Describable, Lifecycle, Identity {
 
     CONFIG_TYPE config();
+
+    default IOType type() { return IOType.getByIOClass(this.getClass()); }
 
     // TODO :: RECONCILE IDENTITY PROPERTIES BETWEEN IO INSTANCE AND UNDERLYING CONFIG; PROBABLY NEED TO REMOVE THESE SETTERS
     IO_TYPE name(String name);
     IO_TYPE description(String description);
 
-    Provider provider();
-    IO_TYPE provider(Provider provider);
+    PROVIDER_TYPE provider();
 }

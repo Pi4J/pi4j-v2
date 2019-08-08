@@ -36,9 +36,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AnalogBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE>, CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>>
-        extends GpioBase<ANALOG_TYPE, CONFIG_TYPE>
-        implements Analog<ANALOG_TYPE, CONFIG_TYPE> {
+public abstract class AnalogBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+        CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>,
+        PROVIDER_TYPE extends AnalogProvider>
+        extends GpioBase<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>
+        implements Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
 
     // internal listeners collection
     protected List<AnalogChangeListener> listeners = Collections.synchronizedList(new ArrayList<>());
@@ -46,8 +48,8 @@ public abstract class AnalogBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_
     // internal bindings collection
     protected List<AnalogBinding> bindings = Collections.synchronizedList(new ArrayList<>());
 
-    public AnalogBase(CONFIG_TYPE config){
-        super(config);
+    public AnalogBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
+        super(provider, config);
     }
 
     @Override
@@ -88,7 +90,7 @@ public abstract class AnalogBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_
     }
 
     @Override
-    public ANALOG_TYPE terminate(Context context){
+    public ANALOG_TYPE shutdown(Context context){
         // remove all listeners
         listeners.clear();
 

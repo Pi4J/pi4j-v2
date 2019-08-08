@@ -29,6 +29,7 @@ package com.pi4j.test.annotations;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.mock.provider.pwm.MockPwmProvider;
@@ -51,22 +52,30 @@ public class DependencyInjectionNamedProviderTest {
     @Inject(MockPwmProvider.ID)
     PwmProvider pwmProvider;
 
+    @Inject
+    Context pi4j;
+
     @Before
     public void beforeTest() throws Pi4JException {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
-        // Initialize Pi4J with AUTO-DETECT enabled
-        // we want to load all detected Pi4J binding/io libraries
-        // in the class path for this test case
+        // Initialize Pi4J with a default context
+        // enable the AUTO-DETECT (Platforms & Providers) flag
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
-        Pi4J.initialize(true, new TestPwmProvider()).inject(this);
+        Pi4J.newContextBuilder()
+                .autoDetect()
+                .add(TestPwmProvider.newInstance())
+                .build().inject(this);
     }
 
     @After
     public void afterTest() {
         try {
-            Pi4J.terminate();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
@@ -97,7 +106,7 @@ public class DependencyInjectionNamedProviderTest {
         System.out.println("-------------------------------------------------");
         System.out.println("Pi4J I/O PROVIDERS ACQUIRED");
         System.out.println("-------------------------------------------------");
-        Pi4J.providers().pwm().describe().print(System.out);
+        pi4j.providers().pwm().describe().print(System.out);
 
         System.out.println("-------------------------------------------------");
         System.out.println("Pi4J I/O NAMED PROVIDER ACQUIRED");

@@ -33,12 +33,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, DigitalOutputConfig> implements DigitalOutput {
+public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider> implements DigitalOutput {
 
     protected DigitalState state = DigitalState.UNKNOWN;
 
-    public DigitalOutputBase(DigitalOutputConfig config){
-        super(config);
+    public DigitalOutputBase(DigitalOutputProvider provider, DigitalOutputConfig config){
+        super(provider, config);
         this.name = (config.name() != null) ? config.name() : "DOUT-" + config.address();
 
         // update the analog value to the initial value if an initial value was configured
@@ -116,9 +116,9 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
     }
 
     @Override
-    public DigitalOutput terminate(Context context){
+    public DigitalOutput shutdown(Context context){
         // set pin state to shutdown state if a shutdown state is configured
-        if(config().shutdownState() != DigitalState.UNKNOWN){
+        if(config().shutdownState() != null && config().shutdownState() != DigitalState.UNKNOWN){
             state(config().shutdownState());
         }
         return this;

@@ -1,8 +1,0 @@
-com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider
-com.pi4j.mock.provider.gpio.analog.MockAnalogOutputProvider
-com.pi4j.mock.provider.gpio.digital.MockDigitalInputProvider
-com.pi4j.mock.provider.gpio.digital.MockDigitalOutputProvider
-com.pi4j.mock.provider.pwm.MockPwmProvider
-com.pi4j.mock.provider.spi.MockSpiProvider
-com.pi4j.mock.provider.i2c.MockI2CProvider
-com.pi4j.mock.provider.serial.MockSerialProvider

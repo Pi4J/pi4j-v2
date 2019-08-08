@@ -28,68 +28,86 @@ package com.pi4j.test.annotations;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.annotation.Address;
-import com.pi4j.annotation.Name;
-import com.pi4j.annotation.Provider;
-import com.pi4j.annotation.Register;
+import com.pi4j.annotation.*;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.mock.platform.MockPlatform;
+import com.pi4j.test.platform.TestPlatform;
 import com.pi4j.test.provider.TestDigitalInputProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertFalse;
 
 public class DependencyInjectionDigitalInputTest {
 
     public static final int PIN_ADDRESS1 = 1;
     public static final int PIN_ADDRESS2 = 2;
 
-    @Register("my.digital.input-default")
+    @Inject
+    Context pi4j;
+
+    @Register("my.digital.input-mock")
     @Address(PIN_ADDRESS1)
     @Name("My Digital Input #1")
-    DigitalInput inputUsingDefaultProvider;
+    @WithPlatform(type = MockPlatform.class)
+    DigitalInput inputUsingMockProvider;
 
     @Register("my.digital.input-custom")
     @Address(PIN_ADDRESS2)
     @Name("My Digital Input #2")
-    @Provider(type = TestDigitalInputProvider.class)
+    @WithProvider(type = TestDigitalInputProvider.class)
+    @WithPlatform(type = TestPlatform.class)
     DigitalInput inputUsingCustomProvider;
 
     @Before
     public void beforeTest() throws Pi4JException {
-
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
-        // Initialize Pi4J with AUTO-DETECT enabled
-        // we do want to load all detected Pi4J binding/io libraries
-        // in the class path for this test case
+        TestDigitalInputProvider provider = TestDigitalInputProvider.newInstance("test-digital-input-provider");
+        TestPlatform platform = new TestPlatform();
+        platform.setProviders(provider);
+
+        // Initialize Pi4J with a default context
+        // enable the AUTO-DETECT (Platforms & Providers) flag
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
-        Pi4J.initialize(true, new TestDigitalInputProvider()).inject(this);
+        Pi4J.newContextBuilder()
+                .autoDetect()
+                .add(platform)
+                .add(provider)
+                .build().inject(this);
     }
 
     @After
     public void afterTest() {
         try {
-            Pi4J.terminate();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
-    public void testDIContextAcquisition() throws Pi4JException {
+    public void testDIContextAcquisition() throws Exception {
         System.out.println("-----------------------------------------------------");
         System.out.println("Pi4J DIGITAL INPUT <acquired via dependency injection>");
         System.out.println("-----------------------------------------------------");
-        assertNotNull(inputUsingDefaultProvider);
+
+        pi4j.describe().print(System.out);
+
+        assertNotNull(inputUsingMockProvider);
         System.out.println("INPUT FROM DEFAULT PROVIDER:");
         System.out.print("  INPUT --> ");
-        inputUsingDefaultProvider.describe().print(System.out);
+        inputUsingMockProvider.describe().print(System.out);
         System.out.print("  PROVIDER --> ");
-        inputUsingDefaultProvider.provider().describe().print(System.out);
+        inputUsingMockProvider.provider().describe().print(System.out);
 
-        assertNotNull(inputUsingDefaultProvider);
+        assertNotNull(inputUsingMockProvider);
         System.out.println("INPUT FROM CUSTOM PROVIDER:");
         System.out.print("  INPUT --> ");
         inputUsingCustomProvider.describe().print(System.out);
@@ -97,6 +115,6 @@ public class DependencyInjectionDigitalInputTest {
         inputUsingCustomProvider.provider().describe().print(System.out);
 
         // make sure we get get two unique I/O instances from different providers
-        //assertFalse(inputUsingDefaultProvider.provider().id().equalsIgnoreCase(inputUsingDefaultProvider.provider().id()));
+        assertFalse(inputUsingMockProvider.provider().id().equalsIgnoreCase(inputUsingCustomProvider.provider().id()));
     }
 }

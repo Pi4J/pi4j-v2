@@ -27,8 +27,6 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-import com.pi4j.context.Context;
-
 public abstract class DigitalOutputProviderBase
         extends DigitalProviderBase<DigitalOutputProvider, DigitalOutput, DigitalOutputConfig>
         implements DigitalOutputProvider {
@@ -44,7 +42,4 @@ public abstract class DigitalOutputProviderBase
     public DigitalOutputProviderBase(String id, String name){
         super(id, name);
     }
-
-    @Override
-    public abstract DigitalOutput create(Context context, DigitalOutputConfig config) throws Exception;
 }

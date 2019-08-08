@@ -27,19 +27,14 @@ package com.pi4j.annotation.impl;
  * #L%
  */
 
-import com.pi4j.Pi4J;
 import com.pi4j.annotation.AnnotationEngine;
-import com.pi4j.annotation.Initialize;
 import com.pi4j.annotation.Processor;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.context.Context;
-import com.pi4j.exception.AlreadyInitializedException;
-import com.pi4j.exception.Pi4JException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -63,12 +58,8 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
     private Context context = null;
 
     // static singleton instance
-    private static AnnotationEngine singleton = null;
-    public static AnnotationEngine singleton(Context context){
-        if(singleton == null){
-            singleton = new DefaultAnnotationEngine(context);
-        }
-        return singleton;
+    public static AnnotationEngine newInstance(Context context){
+        return new DefaultAnnotationEngine(context);
     }
 
     // private constructor
@@ -82,107 +73,107 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
     private static Map<Class<? extends Annotation>, List<Processor>> processors = null;
 
 
-    public static void processInitialize(Object ... objects) throws AnnotationException{
-
-        // iterate over the collection of class objects and perform reflective introspection
-        // looking for Pi4J eligible annotation processors
-        for(Object instance : objects) {
-            // get object class
-            Class instanceClass = instance.getClass();
-
-            // iterate over the class level annotations looking for Pi4J @Initialize
-            Annotation[] classAnnotations = instanceClass.getDeclaredAnnotations();
-            for (Annotation annotation : classAnnotations) {
-                if(annotation.annotationType().isAssignableFrom(Initialize.class)){
-                    System.out.println("@INITIALIZE (CLASS)" + instanceClass.getName());
-
-                    try {
-                        Pi4J.initialize(((Initialize)annotation).autoDetect());
-                    } catch (AlreadyInitializedException e){
-                      // ignore exception
-                    } catch (Pi4JException e) {
-                        throw new AnnotationException(e);
-                    }
-
-                }
-            }
-
-            // iterate over the annotated constructors looking for Pi4J @Initialize
-            Constructor[] constructors  = instanceClass.getDeclaredConstructors();
-            for(Constructor constructor : constructors) {
-                Annotation[] constructorAnnotations = constructor.getDeclaredAnnotations();
-                for (Annotation annotation : constructorAnnotations) {
-                    if (annotation.annotationType().isAssignableFrom(Initialize.class)) {
-                        System.out.println("@INITIALIZE (CTOR)" + constructor.getName());
-
-                        try {
-                            Pi4J.initialize(((Initialize)annotation).autoDetect());
-                        } catch (AlreadyInitializedException e){
-                            // ignore exception
-                        } catch (Pi4JException e) {
-                            throw new AnnotationException(e);
-                        }
-
-                    }
-                }
-            }
-
-            // iterate over the annotated fields looking for Pi4J @Initialize
-            Field[] fields  = instanceClass.getDeclaredFields();
-            for(Field field : fields) {
-                Annotation[] fieldAnnotations = field.getDeclaredAnnotations();
-                for (Annotation annotation : fieldAnnotations) {
-                    if (annotation.annotationType().isAssignableFrom(Initialize.class)) {
-                        System.out.println("@INITIALIZE (FIELD)" + field.getName() + "::" + field.getType().toString());
-
-                        try {
-                            Pi4J.initialize(((Initialize)annotation).autoDetect());
-                        } catch (AlreadyInitializedException e){
-                            // ignore exception
-                        } catch (Pi4JException e) {
-                            throw new AnnotationException(e);
-                        }
-
-                        // if the field is of type `Context`, then lets also inject the Pi4J Context object into the field.
-                        if(field.getType().isAssignableFrom(Context.class)){
-
-                            try {
-                                // attempt to use this annotation processor on this annotated field instance
-                                boolean accessible = field.canAccess(instance);
-                                if (!accessible) field.trySetAccessible();
-
-                                // set Context field
-                                field.set(instance, Pi4J.context());
-
-                                // restore accessibility settings
-                                if (!accessible) field.setAccessible(false);
-
-                            }
-                            catch (Exception e){
-                                StringBuilder message = new StringBuilder(e.getMessage());
-                                message.append(" <");
-                                message.append("Annotation '@");
-                                message.append(annotation.annotationType().getSimpleName());
-                                message.append("' could not be applied to: ");
-                                message.append(field.getDeclaringClass().getName());
-                                message.append("::(");
-                                message.append(field.getType().getName());
-                                message.append(")");
-                                message.append(field.getName());
-                                message.append("@");
-                                message.append(annotation.annotationType().getName());
-                                message.append(">");
-                                throw new AnnotationException(message.toString(), e);
-                            }
-                        }
-                    }
-                }
-            }
-
-
-
-        }
-    }
+//    public static void processInitialize(Context context, Object ... objects) throws AnnotationException{
+//
+//        // iterate over the collection of class objects and perform reflective introspection
+//        // looking for Pi4J eligible annotation processors
+//        for(Object instance : objects) {
+//            // get object class
+//            Class instanceClass = instance.getClass();
+//
+//            // iterate over the class level annotations looking for Pi4J @Initialize
+//            Annotation[] classAnnotations = instanceClass.getDeclaredAnnotations();
+//            for (Annotation annotation : classAnnotations) {
+//                if(annotation.annotationType().isAssignableFrom(Initialize.class)){
+//                    System.out.println("@INITIALIZE (CLASS)" + instanceClass.getName());
+//
+//                    try {
+//                        Pi4J.initialize(((Initialize)annotation).autoDetect());
+//                    } catch (AlreadyInitializedException e){
+//                      // ignore exception
+//                    } catch (Pi4JException e) {
+//                        throw new AnnotationException(e);
+//                    }
+//
+//                }
+//            }
+//
+//            // iterate over the annotated constructors looking for Pi4J @Initialize
+//            Constructor[] constructors  = instanceClass.getDeclaredConstructors();
+//            for(Constructor constructor : constructors) {
+//                Annotation[] constructorAnnotations = constructor.getDeclaredAnnotations();
+//                for (Annotation annotation : constructorAnnotations) {
+//                    if (annotation.annotationType().isAssignableFrom(Initialize.class)) {
+//                        System.out.println("@INITIALIZE (CTOR)" + constructor.getName());
+//
+//                        try {
+//                            Pi4J.initialize(((Initialize)annotation).autoDetect());
+//                        } catch (AlreadyInitializedException e){
+//                            // ignore exception
+//                        } catch (Pi4JException e) {
+//                            throw new AnnotationException(e);
+//                        }
+//
+//                    }
+//                }
+//            }
+//
+//            // iterate over the annotated fields looking for Pi4J @Initialize
+//            Field[] fields  = instanceClass.getDeclaredFields();
+//            for(Field field : fields) {
+//                Annotation[] fieldAnnotations = field.getDeclaredAnnotations();
+//                for (Annotation annotation : fieldAnnotations) {
+//                    if (annotation.annotationType().isAssignableFrom(Initialize.class)) {
+//                        System.out.println("@INITIALIZE (FIELD)" + field.getName() + "::" + field.getType().toString());
+//
+//                        try {
+//                            Pi4J.initialize(((Initialize)annotation).autoDetect());
+//                        } catch (AlreadyInitializedException e){
+//                            // ignore exception
+//                        } catch (Pi4JException e) {
+//                            throw new AnnotationException(e);
+//                        }
+//
+//                        // if the field is of type `Context`, then lets also inject the Pi4J Context object into the field.
+//                        if(field.getType().isAssignableFrom(Context.class)){
+//
+//                            try {
+//                                // attempt to use this annotation processor on this annotated field instance
+//                                boolean accessible = field.canAccess(instance);
+//                                if (!accessible) field.trySetAccessible();
+//
+//                                // set Context field
+//                                field.set(instance, context);
+//
+//                                // restore accessibility settings
+//                                if (!accessible) field.setAccessible(false);
+//
+//                            }
+//                            catch (Exception e){
+//                                StringBuilder message = new StringBuilder(e.getMessage());
+//                                message.append(" <");
+//                                message.append("Annotation '@");
+//                                message.append(annotation.annotationType().getSimpleName());
+//                                message.append("' could not be applied to: ");
+//                                message.append(field.getDeclaringClass().getName());
+//                                message.append("::(");
+//                                message.append(field.getType().getName());
+//                                message.append(")");
+//                                message.append(field.getName());
+//                                message.append("@");
+//                                message.append(annotation.annotationType().getName());
+//                                message.append(">");
+//                                throw new AnnotationException(message.toString(), e);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//
+//
+//        }
+//    }
 
     @Override
     public void inject(Object... objects) throws AnnotationException {

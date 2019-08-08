@@ -29,6 +29,7 @@ package com.pi4j.test.annotations;
 
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.platform.Platforms;
 import org.junit.After;
@@ -41,24 +42,29 @@ import static org.junit.Assert.assertFalse;
 public class DependencyInjectionPlatformsTest {
 
     @Inject
+    Context pi4j;
+
+    @Inject
     Platforms platforms;
 
     @Before
     public void beforeTest() throws Pi4JException {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
-        // Initialize Pi4J with AUTO-DETECT enabled
-        // we want to load all detected Pi4J binding/io libraries
-        // in the class path for this test case
+        // initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
-        Pi4J.initialize().inject(this);
+        Pi4J.newAutoContext().inject(this);
     }
 
     @After
     public void afterTest() {
         try {
-            Pi4J.terminate();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 

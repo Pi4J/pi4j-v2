@@ -27,26 +27,17 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.context.Context;
-import com.pi4j.io.pwm.Pwm;
-import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
-import com.pi4j.io.pwm.PwmProviderBase;
+import com.pi4j.test.provider.impl.TestPwmProviderImpl;
 
-public class TestPwmProvider extends PwmProviderBase implements PwmProvider {
-
-    public TestPwmProvider(){ super(); }
-
-    public TestPwmProvider(String id){
-        super(id);
+public interface TestPwmProvider extends PwmProvider {
+    static TestPwmProvider newInstance(){
+        return new TestPwmProviderImpl();
     }
-
-    public TestPwmProvider(String id, String name){
-        super(id, name);
+    static TestPwmProvider newInstance(String id){
+        return new TestPwmProviderImpl(id);
     }
-
-    @Override
-    public Pwm create(Context context, PwmConfig config) throws Exception {
-        return null;
+    static TestPwmProvider newInstance(String id, String name){
+        return new TestPwmProviderImpl(id, name);
     }
 }

@@ -29,8 +29,7 @@ package com.pi4j.example.gpio.analog;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.AnalogOutput;
-import com.pi4j.io.gpio.analog.AnalogOutputBuilder;
+import com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder;
 import com.pi4j.util.Console;
 
 public class AnalogOutputExample {
@@ -56,14 +55,17 @@ public class AnalogOutputExample {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J library
-        var pi4j = Pi4J.initialize();
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        var pi4j = Pi4J.newAutoContext();
 
-        AnalogOutputBuilder builder = AnalogOutput.builder();
+        AnalogOutputConfigBuilder builder = AnalogOutputConfigBuilder.newInstance();
         builder.id(ANALOG_OUTPUT_PIN_ID)
                .name(ANALOG_OUTPUT_PIN_NAME)
                .address(ANALOG_OUTPUT_PIN);
-        var output = AnalogOutput.create(builder.build());
+        var output = pi4j.aout().create(builder.build());
 
         // create an analog output instance using the default analog output provider
         //var output = AnalogOutput.create(ANALOG_OUTPUT_PIN_ID, ANALOG_OUTPUT_PIN);
@@ -86,6 +88,6 @@ public class AnalogOutputExample {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.terminate();
+        pi4j.shutdown();
     }
 }

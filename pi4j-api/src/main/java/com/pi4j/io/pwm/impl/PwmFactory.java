@@ -27,13 +27,11 @@ package com.pi4j.io.pwm.impl;
  * #L%
  */
 
-import com.pi4j.Pi4J;
-import com.pi4j.exception.NotInitializedException;
+import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.provider.exception.ProviderException;
-import com.pi4j.provider.exception.ProviderInstantiateException;
 
 /**
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www .savagehomeautomation.com</a>)
@@ -45,26 +43,27 @@ public class PwmFactory {
         // forbid object construction
     }
 
-    public static Pwm instance(PwmConfig config) throws ProviderException, NotInitializedException {
+    public static Pwm instance(Context context, PwmConfig config) throws ProviderException {
         // get I2C instance using default io
-        return instance((PwmProvider)null, config);
+        var provider = context.platform().pwm();
+        return instance(provider, config);
     }
 
-    public static Pwm instance(int address) throws ProviderException, NotInitializedException {
-        return instance(new PwmConfig(address));
+    public static Pwm instance(Context context, int address) throws ProviderException {
+        return instance(context, new PwmConfig(address));
     }
 
-    public static Pwm instance(String providerId, int address) throws ProviderException, NotInitializedException {
-        return instance(providerId, new PwmConfig(address));
+    public static Pwm instance(Context context, String providerId, int address) throws ProviderException {
+        return instance(context, providerId, new PwmConfig(address));
     }
 
-    public static Pwm instance(String providerId, PwmConfig config) throws ProviderException, NotInitializedException {
+    public static Pwm instance(Context context, String providerId, PwmConfig config) throws ProviderException {
         // if provided, lookup the specified io; else use the default io
         if(providerId == null) {
-            return instance((PwmProvider)null, config);
+            return instance(context, config);
         }
         else{
-            PwmProvider provider = Pi4J.providers().pwm().get(providerId);
+            PwmProvider provider = context.providers().pwm().get(providerId);
             return instance(provider, config);
         }
     }
@@ -75,16 +74,12 @@ public class PwmFactory {
 
     public static Pwm instance(PwmProvider provider, PwmConfig config) throws ProviderException {
         try {
-            // get default PWM io if io is null
-            if(provider == null){
-                provider = Pi4J.platform().pwm();
-            }
             // create a PWM instance using the io
-            return provider.register(Pi4J.context(), config);
+            return provider.create(config);
         } catch(ProviderException pe){
             throw pe;
         } catch (Exception e) {
-            throw new ProviderInstantiateException(provider, e);
+            throw new ProviderException(provider, e);
         }
     }
 }

@@ -28,55 +28,42 @@ package com.pi4j.test.provider;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.exception.Pi4JException;
+import com.pi4j.context.Context;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.pwm.PwmProvider;
-import com.pi4j.test.About;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ManualProvidersTest {
 
-    @Before
-    public void beforeTest() throws Pi4JException {
-        // Initialize Pi4J with AUTO-DETECT disabled
-        // we don't want to load any detected Pi4J binding/io libraries
-        // in the class path for this test case
-        Pi4J.initialize(false);
-    }
-
-    @After
-    public void afterTest()  {
-        try {
-            Pi4J.terminate();
-        } catch (Pi4JException e) { /* do nothing */ }
-    }
-
     @Test
-    public void testProvidersNotNull() throws Pi4JException {
-        // ensure that the io collection in the Pi4J context is not NULL
-        assertNotNull(Pi4J.context().providers());
-    }
-
-    @Test
-    public void testProvidersCount() throws Exception {
+    public void testProviders() throws Exception {
 
         // create our own custom provider implementation classes
-        PwmProvider pwmProvider = new TestPwmProvider();
-        I2CProvider i2CProvider = new TestI2CProvider();
+        PwmProvider pwmProvider = TestPwmProvider.newInstance();
+        I2CProvider i2CProvider = TestI2CProvider.newInstance();
 
+        // Initialize Pi4J with an empty context
+        // An empty context disables AUTO-DETECT loading
+        // which will not load any detected Pi4J extension
+        // libraries (Platforms and Providers) from the class path
+        // ...
         // add the custom providers to the Pi4J context
-        Pi4J.providers().add(pwmProvider, i2CProvider);
+        Context pi4j = Pi4J.newContextBuilder().add(pwmProvider, i2CProvider).build();
+
+        // ensure that the io collection in the Pi4J context is not NULL
+        assertNotNull(pi4j.providers());
 
         // ensure that no io were detected/loaded into the Pi4J context
-        assertEquals(2, Pi4J.context().providers().all().size());
+        assertEquals(2, pi4j.providers().all().size());
 
         // print out the detected Pi4J io libraries found on the class path
-        About about = new About();
-        about.enumerateProviders("2 CUSTOM PROVIDERS (added via API)");
+        System.out.println("2 CUSTOM PROVIDERS (added via API)");
+        pi4j.providers().describe().print(System.out);
+
+        // shutdown Pi4J runtime
+        pi4j.shutdown();
     }
 }

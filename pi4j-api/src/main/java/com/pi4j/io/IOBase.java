@@ -29,29 +29,32 @@ package com.pi4j.io;
 
 import com.pi4j.common.Descriptor;
 import com.pi4j.common.IdentityBase;
-import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.provider.Provider;
 
 
-public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig> extends IdentityBase implements IO<IO_TYPE,CONFIG_TYPE> {
+public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig, PROVIDER_TYPE extends Provider>
+        extends IdentityBase implements IO<IO_TYPE,CONFIG_TYPE, PROVIDER_TYPE> {
 
     protected CONFIG_TYPE config = null;
-    protected Provider provider = null;
+    protected PROVIDER_TYPE provider = null;
 
     @Override
-    public Provider provider(){
+    public PROVIDER_TYPE provider(){
         return this.provider;
     }
 
-    @Override
-    public IO_TYPE provider(Provider provider){
-        this.provider = provider;
-        return (IO_TYPE)this;
-    }
+//    @Override
+//    public IO_TYPE provider(Provider provider){
+//        this.provider = provider;
+//        return (IO_TYPE)this;
+//    }
 
-    public IOBase(CONFIG_TYPE config){
+    public IOBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
         super();
+        this.provider = provider;
         this.config = config;
     }
 
@@ -74,12 +77,12 @@ public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig> e
 
 
     @Override
-    public IO_TYPE initialize(Context context) throws LifecycleException {
+    public IO_TYPE initialize(Context context) throws InitializeException {
         return (IO_TYPE)this;
     }
 
     @Override
-    public IO_TYPE terminate(Context context) throws LifecycleException {
+    public IO_TYPE shutdown(Context context) throws ShutdownException {
         return (IO_TYPE)this;
     }
 

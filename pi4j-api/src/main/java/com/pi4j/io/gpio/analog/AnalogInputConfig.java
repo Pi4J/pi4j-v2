@@ -29,4 +29,8 @@ package com.pi4j.io.gpio.analog;
 
 public interface AnalogInputConfig
         extends AnalogConfig<AnalogInputConfig> {
+
+    static AnalogInputConfigBuilder newBuilder()  {
+        return AnalogInputConfigBuilder.newInstance();
+    }
 }

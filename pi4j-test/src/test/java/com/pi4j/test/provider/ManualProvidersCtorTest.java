@@ -28,72 +28,63 @@ package com.pi4j.test.provider;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.serial.SerialProvider;
-import com.pi4j.test.About;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ManualProvidersCtorTest {
+
+    private Context pi4j;
 
     @Before
     public void beforeTest() throws Pi4JException {
 
         // create our own custom provider implementation classes
-        PwmProvider pwmProvider = new TestPwmProvider();
-        I2CProvider i2CProvider = new TestI2CProvider();
-        SerialProvider serialProvider = new TestSerialProvider();
-        SerialProvider serialProvider2 = new TestSerialProvider("test-serial-provider-2");
+        PwmProvider pwmProvider = TestPwmProvider.newInstance();
+        I2CProvider i2CProvider = TestI2CProvider.newInstance();
+        SerialProvider serialProvider = TestSerialProvider.newInstance();
+        SerialProvider serialProvider2 = TestSerialProvider.newInstance("test-serial-provider-2");
 
-        // Initialize Pi4J with the custom providers
-        // we don't want to load any detected Pi4J binding/io libraries
-        // in the class path for this test case
-        Pi4J.initialize(pwmProvider, i2CProvider, serialProvider, serialProvider2);
+        // Initialize Pi4J with a manually configured context
+        // ...
+        // Explicitly add the test providers into the
+        // context for testing
+        pi4j = Pi4J.newContextBuilder()
+                .add(pwmProvider, i2CProvider, serialProvider, serialProvider2)
+                .build();
     }
 
     @After
     public void afterTest() {
         try {
-            Pi4J.terminate();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
     public void testProvidersNotNull() throws Pi4JException {
         // ensure that the io collection in the Pi4J context is not NULL
-        assertNotNull(Pi4J.context().providers());
+        assertNotNull(pi4j.providers());
     }
 
     @Test
     public void testProviderCount() throws Exception {
 
         // ensure that only 4 providers were detected/loaded into the Pi4J context
-        assertEquals(4 , Pi4J.context().providers().all().size());
+        assertEquals(4 , pi4j.providers().all().size());
 
         // print out the detected Pi4J platforms
-        Pi4J.platforms().describe().print(System.out);
+        pi4j.platforms().describe().print(System.out);
 
         // print out the detected Pi4J providers
-        Pi4J.providers().describe().print(System.out);
-    }
-
-    @Test
-    public void testProvidersRemove() throws Exception {
-
-        // remove the second custom serial provider
-        Pi4J.context().providers().remove("test-serial-provider-2");
-
-        // ensure the correct provider count
-        assertEquals(3, Pi4J.context().providers().all().size());
-
-        // print out the detected Pi4J provider libraries found on the class path
-        About about = new About();
-        about.enumerateProviders("REMOVED A CUSTOM PROVIDER (3 remain)");
+        pi4j.providers().describe().print(System.out);
     }
 }

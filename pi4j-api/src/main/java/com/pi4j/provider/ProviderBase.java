@@ -27,24 +27,25 @@ package com.pi4j.provider;
  * #L%
  */
 
-import com.pi4j.Pi4J;
-import com.pi4j.binding.BindingBase;
-import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.config.Config;
 import com.pi4j.context.Context;
-import com.pi4j.exception.NotInitializedException;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.LifecycleException;
+import com.pi4j.exception.ShutdownException;
+import com.pi4j.extension.ExtensionBase;
 import com.pi4j.io.IO;
-import com.pi4j.registry.exception.RegistryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CONFIG_TYPE extends Config>
-        extends BindingBase
-        implements Provider<IO_TYPE, CONFIG_TYPE> {
+        extends ExtensionBase<PROVIDER_TYPE>
+        implements Provider<PROVIDER_TYPE, IO_TYPE, CONFIG_TYPE> {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected Context context;
 
     public ProviderBase(){
         super();
@@ -59,43 +60,25 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
     }
 
     @Override
-    public PROVIDER_TYPE initialize(Context context) throws LifecycleException {
+    public PROVIDER_TYPE initialize(Context context) throws InitializeException {
+        this.context = context;
         return (PROVIDER_TYPE)this;
     }
 
     @Override
-    public PROVIDER_TYPE terminate(Context context) throws LifecycleException {
+    public PROVIDER_TYPE shutdown(Context context) throws ShutdownException {
 
-        // TODO :: ABSTRACT VIA PROXY IMPL
+        // TODO :: ABSTRACT PROVIDER IO INSTANCE SHUTDOWN VIA PROXY IMPL
 
         // perform a shutdown on each digital I/O instance that is tracked in the internal cache
-        Map<String, IO> instances = null;
-        try {
-            instances = Pi4J.registry().allByProvider(this.id(), IO.class);
-            instances.forEach((address, instance)->{
-                try {
-                    instance.terminate(context);
-                } catch (LifecycleException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            });
-        } catch (RegistryException e) {
-            logger.error(e.getMessage(), e);
-            throw new LifecycleException(e);
-        } catch (NotInitializedException e) {
-            logger.error(e.getMessage(), e);
-            throw new LifecycleException(e);
-        }
+        Map<String, IO> instances = context.registry().allByProvider(this.id(), IO.class);
+        instances.forEach((address, instance)->{
+            try {
+                instance.shutdown(context);
+            } catch (LifecycleException e) {
+                logger.error(e.getMessage(), e);
+            }
+        });
         return (PROVIDER_TYPE)this;
     }
-
-    @Override
-    public IO_TYPE register(Context context, CONFIG_TYPE config) throws Exception {
-        var newInstance = create(context, config);
-        // TODO :: PROXY IMPL, REMOVE PROVIDER SETTER
-        newInstance.provider(this);
-        return newInstance;
-    }
-
-    public abstract IO_TYPE create(Context context, CONFIG_TYPE config) throws Exception;
 }

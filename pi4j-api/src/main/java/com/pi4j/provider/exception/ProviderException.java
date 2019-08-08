@@ -27,7 +27,8 @@ package com.pi4j.provider.exception;
  * #L%
  */
 
-import com.pi4j.binding.exception.BindingException;
+import com.pi4j.extension.exception.ExtensionException;
+import com.pi4j.provider.Provider;
 
 /**
  * <p>
@@ -39,7 +40,7 @@ import com.pi4j.binding.exception.BindingException;
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public class ProviderException extends BindingException {
+public class ProviderException extends ExtensionException {
 
     /**
      * Default Constructor
@@ -57,4 +58,9 @@ public class ProviderException extends BindingException {
     public ProviderException(String message, Throwable cause){
         super(message,cause);
     }
+
+    public ProviderException(Provider provider, Throwable cause){
+        super("Provider exception: " + provider.id() + "(" + provider.getClass().getName() + ")",cause);
+    }
+
 }

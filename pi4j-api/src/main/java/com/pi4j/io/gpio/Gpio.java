@@ -28,9 +28,12 @@ package com.pi4j.io.gpio;
  */
 
 import com.pi4j.io.IO;
+import com.pi4j.provider.Provider;
 
-public interface Gpio<IO_TYPE extends Gpio<IO_TYPE,CONFIG_TYPE>, CONFIG_TYPE extends GpioConfig>
-        extends IO<IO_TYPE, CONFIG_TYPE> {
+public interface Gpio<IO_TYPE extends IO<IO_TYPE,CONFIG_TYPE, PROVIDER_TYPE>,
+        CONFIG_TYPE extends GpioConfig,
+        PROVIDER_TYPE extends Provider>
+          extends IO<IO_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
     default Number address() { return config().address(); }
     default Number getAddress() { return address(); };
 }

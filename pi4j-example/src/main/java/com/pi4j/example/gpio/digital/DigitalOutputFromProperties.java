@@ -29,7 +29,7 @@ package com.pi4j.example.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.util.Console;
 
@@ -55,8 +55,11 @@ public class DigitalOutputFromProperties {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J library
-        var pi4j = Pi4J.initialize();
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        var pi4j = Pi4J.newAutoContext();
 
         // create a properties map with ".address" and ".shutdown" properties for the digital output configuration
         Properties properties = new Properties();
@@ -66,8 +69,8 @@ public class DigitalOutputFromProperties {
         properties.put("name", "DIGI4");
 
         // create a digital output instance using the default digital output provider
-        var builder = DigitalOutput.builder().load(properties);
-        var output = DigitalOutput.create(builder.build());
+        var builder = DigitalOutputConfigBuilder.newInstance().load(properties);
+        var output = pi4j.dout().create(builder.build());
 
         // setup a digital output listener to listen for any state changes on the digital output
         output.addListener((DigitalChangeListener) event -> {
@@ -100,6 +103,6 @@ public class DigitalOutputFromProperties {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.terminate();
+        pi4j.shutdown();
     }
 }

@@ -29,7 +29,6 @@ package com.pi4j.example.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.mock.provider.gpio.digital.MockDigitalInput;
 import com.pi4j.mock.provider.gpio.digital.MockDigitalInputProvider;
@@ -55,8 +54,11 @@ public class DigitalInputExampleWithMockProvider {
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
-        // initialize the Pi4J library
-        var pi4j = Pi4J.initialize();
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        var pi4j = Pi4J.newAutoContext();
 
         // get the Mock Digital Input provider by ID
         console.println("ATTEMPTING TO GET MOCK DIGITAL INPUT PROVIDER FROM Pi4J");
@@ -70,7 +72,7 @@ public class DigitalInputExampleWithMockProvider {
 
         // create a digital input instance using the default digital input provider
         console.println("ATTEMPTING TO CREATE A MOCK DIGITAL INPUT INSTANCE");
-        var input = DigitalInput.create(provider, DIGITAL_INPUT_PIN, MockDigitalInput.class);
+        MockDigitalInput input = provider.create(DIGITAL_INPUT_PIN);
 
         // display created instance
         console.print("--> CREATED IO INSTANCE: ");
@@ -97,6 +99,6 @@ public class DigitalInputExampleWithMockProvider {
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
-        Pi4J.terminate();
+        pi4j.shutdown();
     }
 }

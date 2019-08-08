@@ -27,26 +27,17 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.context.Context;
-import com.pi4j.io.serial.Serial;
-import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
-import com.pi4j.io.serial.SerialProviderBase;
+import com.pi4j.test.provider.impl.TestSerialProviderImpl;
 
-public class TestSerialProvider extends SerialProviderBase implements SerialProvider {
-
-    public TestSerialProvider(){ super(); }
-
-    public TestSerialProvider(String id){
-        super(id);
+public interface TestSerialProvider extends SerialProvider {
+    static TestSerialProvider newInstance(){
+        return new TestSerialProviderImpl();
     }
-
-    public TestSerialProvider(String id, String name){
-        super(id, name);
+    static TestSerialProvider newInstance(String id){
+        return new TestSerialProviderImpl(id);
     }
-
-    @Override
-    public Serial create(Context context, SerialConfig config) throws Exception {
-        return null;
+    static TestSerialProvider newInstance(String id, String name){
+        return new TestSerialProviderImpl(id, name);
     }
 }

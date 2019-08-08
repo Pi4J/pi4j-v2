@@ -38,8 +38,8 @@ public class TestDigitalInput extends DigitalInputBase implements DigitalInput {
         return this.state;
     }
 
-    public TestDigitalInput(DigitalInputConfig config){
-        super(config);
+    public TestDigitalInput(DigitalInputProvider provider, DigitalInputConfig config){
+        super(provider, config);
     }
 
     public TestDigitalInput test(DigitalState state){

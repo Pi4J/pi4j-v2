@@ -29,14 +29,12 @@
             <artifactId>slf4j-simple</artifactId>
         </dependency>
 
-        <!-- include Pi4J Mock platform and I/O providers to test with -->
+        <!-- include Pi4J Plugins (Platforms and I/O Providers) -->
         <dependency>
             <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-mock</artifactId>
+            <artifactId>pi4j-plugin-mock</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!-- include Pi4J bindings to test with -->
 
         <!-- include Pi4J providers to test with -->
         <!--<dependency>-->

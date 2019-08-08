@@ -40,35 +40,36 @@ import static junit.framework.TestCase.assertNotNull;
 public class DependencyInjectionContextTest {
 
     @Inject
-    Context context;
+    Context pi4j;
 
     @Before
     public void beforeTest() throws Pi4JException {
-
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
-        // Initialize Pi4J with AUTO-DETECT enabled
-        // we do want to load all detected Pi4J binding/io libraries
-        // in the class path for this test case
+        // Initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        // ...
         // Also, inject this class instance into the Pi4J context
         // for annotation processing and dependency injection
-        Pi4J.initialize(true).inject(this);
+        Pi4J.newAutoContext().inject(this);
     }
 
     @After
     public void afterTest() {
         try {
-            Pi4J.terminate();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
     public void testDIContextAcquisition() throws Pi4JException {
-        assertNotNull(context);
+        assertNotNull(pi4j);
         System.out.println("-------------------------------------------------");
         System.out.println("Pi4J CONTEXT <acquired via dependency injection>");
         System.out.println("-------------------------------------------------");
-        context.describe().print(System.out);
+        pi4j.describe().print(System.out);
     }
 
 }

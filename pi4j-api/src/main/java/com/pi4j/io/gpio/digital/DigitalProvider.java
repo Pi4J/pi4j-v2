@@ -29,6 +29,7 @@ package com.pi4j.io.gpio.digital;
 
 import com.pi4j.io.gpio.GpioProvider;
 
-public interface DigitalProvider<DIGITAL_TYPE extends Digital, CONFIG_TYPE extends DigitalConfig> extends GpioProvider<DIGITAL_TYPE, CONFIG_TYPE> {
+public interface DigitalProvider<PROVIDER_TYPE extends DigitalProvider, DIGITAL_TYPE extends Digital, CONFIG_TYPE extends DigitalConfig>
+        extends GpioProvider<PROVIDER_TYPE, DIGITAL_TYPE, CONFIG_TYPE> {
 
 }

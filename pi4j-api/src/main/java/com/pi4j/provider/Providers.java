@@ -29,7 +29,7 @@ package com.pi4j.provider;
 
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
-import com.pi4j.context.Context;
+import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
@@ -39,10 +39,10 @@ import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.provider.exception.ProviderIOTypeException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
+import com.pi4j.provider.exception.ProviderTypeException;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -78,49 +78,100 @@ public interface Providers extends Describable {
      * @param providerClass
      * @param <T>
      * @return
-     * @throws ProviderException
      */
-    <T extends Provider> Map<String, T> all(Class<T> providerClass) throws ProviderException;
+    <T extends Provider> Map<String, T> all(Class<T> providerClass) throws ProviderNotFoundException;
 
     /**
      * Get all providers of a specified io type.
      *
-     * @param providerType
+     * @param ioType
      * @param <T>
      * @return
-     * @throws ProviderException
      */
-    <T extends Provider> Map<String, T> all(ProviderType providerType) throws ProviderException;
+    <T extends Provider> Map<String, T> all(IOType ioType) throws ProviderNotFoundException;
 
-    boolean exists(String providerId) throws ProviderException;
-    <T extends Provider> boolean exists(String providerId, Class<T> providerClass) throws ProviderException;
-    <T extends Provider> boolean exists(String providerId, ProviderType providerType) throws ProviderException;
-    Provider get(String providerId) throws ProviderException;
-    <T extends Provider> T get(String providerId, Class<T> providerClass) throws ProviderException;
-    <T extends Provider> T get(String providerId, ProviderType providerType) throws ProviderException;
-    <T extends Provider> T get(Class<T> providerClass) throws ProviderException;
-    <T extends Provider> Providers add(Collection<T> provider) throws ProviderException;
-    <T extends Provider> void replace(T provider) throws ProviderException;
-    <T extends Provider> void remove(String providerId) throws ProviderException;
+    boolean exists(String providerId);
 
-// TODO :: Remove Default Provider APIs from Providers
-//    <T extends Provider> Map<ProviderType, T> defaults() throws ProviderException;
-//    <T extends Provider> T getDefault(Class<T> providerClass) throws ProviderException;
-//    <T extends Provider> T getDefault(ProviderType providerType) throws ProviderException;
-//    <T extends Provider> boolean hasDefault(Class<T> providerClass) throws ProviderException;
-//    <T extends Provider> boolean hasDefault(ProviderType providerType) throws ProviderException;
-//    void setDefault(String providerId) throws ProviderException;
-//    void removeDefault(String providerId) throws ProviderException;
-//    void removeDefault(ProviderType providerType) throws ProviderException;
-//    <T extends Provider> void removeDefault(Class<T> providerClass) throws ProviderException;
+    default <T extends Provider> boolean exists(String providerId, Class<T> providerClass) {
+        // determine if the requested provider exists by ID and PROVIDER CLASS/TYPE
+        try {
+            return get(providerId, providerClass) != null;
+        } catch (ProviderException e) {
+            return false;
+        }
+    }
 
-    void initialize(Context context, boolean autoDetect) throws ProviderException;
-    void terminate(Context context) throws ProviderException;
+    default <T extends Provider> boolean exists(String providerId, IOType ioType) {
+        // determine if the requested provider exists by ID and IO TYPE
+        try {
+            return get(providerId, ioType) != null;
+        } catch (ProviderException e) {
+            return false;
+        }
+    }
+
+    default <T extends Provider> boolean exists(IOType ioType){
+        // return the provider instance from the managed provider map that contains the given provider-class
+        try {
+            return !(all(ioType).isEmpty());
+        }
+        catch (ProviderNotFoundException e){
+            return false;
+        }
+    }
+
+    default <T extends Provider> boolean exists(Class<T> providerClass) {
+        // return the provider instance from the managed provider map that contains the given provider-class
+        try {
+            return !(all(providerClass).isEmpty());
+        }
+        catch (ProviderNotFoundException e){
+            return false;
+        }
+    }
+
+    <T extends Provider> T get(String providerId) throws ProviderNotFoundException;
+
+    default <T extends Provider> T get(String providerId, Class<T> providerClass) throws ProviderNotFoundException, ProviderTypeException {
+        // object the IO instance by unique instance identifier and validate the IO instance class/interface
+        var provider = get(providerId);
+        if(providerClass.isAssignableFrom(provider.getClass())){
+            return (T)provider;
+        }
+        throw new ProviderTypeException(provider, providerClass);
+    }
+
+    default <T extends Provider> T get(String providerId, IOType ioType) throws ProviderNotFoundException, ProviderIOTypeException {
+        // object the IO instance by unique instance identifier and validate the IO instance IO type
+        var provider = get(providerId);
+        if(provider.getType().isType(ioType)){
+            return (T)provider;
+        }
+        throw new ProviderIOTypeException(provider, ioType);
+    }
+
+    default <T extends Provider> T get(Class<T> providerClass) throws ProviderNotFoundException {
+        // return the provider instance from the managed provider map that contains the given provider-class
+        var subset = all(providerClass);
+        if(subset.isEmpty()){
+            throw new ProviderNotFoundException(providerClass);
+        }
+        // return first instance found
+        return (T)subset.values().iterator().next();
+    }
+
+    default <T extends Provider> T get(IOType ioType) throws ProviderNotFoundException {
+        // return the provider instance from the managed provider map that contains the given provider-class
+        var subset = all(ioType);
+        if(subset.isEmpty()){
+            throw new ProviderNotFoundException(ioType);
+        }
+        // return first instance found
+        return (T)subset.values().iterator().next();
+    }
+
 
     // DEFAULT METHODS
-    default <T extends Provider> Providers add(T ... provider) throws ProviderException {
-        return add(Arrays.asList(provider));
-    }
     default ProviderGroup<AnalogInputProvider> getAnalogInput() { return analogInput(); }
     default ProviderGroup<AnalogOutputProvider> getAnalogOutput() { return analogOutput(); }
     default ProviderGroup<DigitalInputProvider> getDigitalInput() { return digitalInput(); }
@@ -130,11 +181,11 @@ public interface Providers extends Describable {
     default ProviderGroup<I2CProvider> getI2C() { return i2c(); }
     default ProviderGroup<SerialProvider> getSerial() { return serial(); }
     default Map<String, Provider> getAll() { return all(); }
-    default <T extends Provider> Map<String, T> getAll(Class<T> providerClass) throws ProviderException {
+    default <T extends Provider> Map<String, T> getAll(Class<T> providerClass) throws ProviderNotFoundException {
         return all(providerClass);
     }
-    default <T extends Provider> Map<String, T> getAll(ProviderType providerType) throws ProviderException {
-        return all(providerType);
+    default <T extends Provider> Map<String, T> getAll(IOType ioType) throws ProviderNotFoundException {
+        return all(ioType);
     }
 
     default Descriptor describe() {
@@ -146,32 +197,23 @@ public interface Providers extends Describable {
                 .quantity((providers == null) ? 0 : providers.size())
                 .type(this.getClass());
 
-//        if(providers != null && !providers.isEmpty()) {
-//            providers.forEach((id, provider) -> {
-//                descriptor.add(provider.describe());
-//            });
-//        }
-
-        for(ProviderType providerType : ProviderType.values()){
+        for(IOType ioType : IOType.values()){
 
             try {
-                var providersByType = getAll(providerType);
-
-                Descriptor providerTypeDescriptor = Descriptor.create()
-                        .category(providerType.name())
+                Map<String, Provider> providersByType = getAll(ioType);
+                Descriptor ioTypeDescriptor = Descriptor.create()
+                        .category(ioType.name())
                         .quantity((providers == null) ? 0 : providersByType.size())
-                        .type(providerType.getProviderClass());
+                        .type(ioType.getProviderClass());
 
                 if(providersByType != null && !providersByType.isEmpty()) {
                     providersByType.forEach((id, provider) -> {
-                        providerTypeDescriptor.add(provider.describe());
+                        ioTypeDescriptor.add(provider.describe());
                     });
                 }
+                descriptor.add(ioTypeDescriptor);
 
-                descriptor.add(providerTypeDescriptor);
-            } catch (ProviderNotFoundException e){
-                // ignore this error, nothing to describe
-            } catch (ProviderException e) {
+            } catch (ProviderNotFoundException e) {
                 e.printStackTrace();
             }
         }

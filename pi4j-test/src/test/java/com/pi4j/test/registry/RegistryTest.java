@@ -28,6 +28,7 @@ package com.pi4j.test.registry;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.registry.Registry;
 import org.junit.After;
@@ -38,21 +39,27 @@ import static junit.framework.TestCase.assertNotNull;
 
 public class RegistryTest {
 
+    private Context pi4j;
+
     @Before
     public void beforeTest() throws Pi4JException {
-        Pi4J.initialize(true);
+        // initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        pi4j = Pi4J.newAutoContext();
     }
 
     @After
     public void afterTest() {
         try {
-            Pi4J.terminate();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
     public void testFactoryRegistryAcquisition() throws Pi4JException {
-        Registry registry = Pi4J.registry();
+        Registry registry = pi4j.registry();
         assertNotNull(registry);
         System.out.println("-------------------------------------------------");
         System.out.println("Pi4J I/O REGISTRY <acquired via factory accessor>");

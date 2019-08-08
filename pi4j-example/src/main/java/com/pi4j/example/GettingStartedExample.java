@@ -28,7 +28,6 @@ package com.pi4j.example;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
@@ -64,45 +63,31 @@ public class GettingStartedExample {
 
 
         // ------------------------------------------------------------
-        // Initialize the Pi4J library
+        // Initialize the Pi4J Runtime Context
         // ------------------------------------------------------------
-        // Before you can use Pi4J you must initialize it first.
-        // Initialization will automatically load all available Pi4J
+        // Before you can use Pi4J you must initialize a new runtime
+        // context.
+        //
+        // The 'Pi4J' static class includes a few helper context
+        // creators for the most common use cases.  The 'newAutoContext()'
+        // method will automatically load all available Pi4J
         // extensions found in the application's classpath which
         // may include 'Platforms' and 'I/O Providers'
         //
-        // There are optional arguments to the `initialize()` method
-        // to disable this automatic detection and loading if you
+        // There is optionally a 'ContextBuilder' you can use to
+        // build a custom context which may include disabling automatic
+        // detection and loading of providers and platform if you
         // need/prefer to manually configure which 'Platforms' and
         // 'I/O Providers' should be used with Pi4J.
-        var context = Pi4J.initialize();
+        var pi4j = Pi4J.newAutoContext();
 
         // After we initialize Pi4J, we can access the following
         // core parts of the system:
         //
-        //  - Context
         //  - Platforms
         //  - Platform (Default Runtime Platform)
         //  - Providers (I/O Providers)
         //  - Registry (I/O Registry)
-
-
-        // ------------------------------------------------------------
-        // Pi4J Context
-        // ------------------------------------------------------------
-        // When you initialize Pi4J, a 'Context' is returned.  You can
-        // also directly obtain the context from the Pi4J static helper
-        // class.
-        //
-        // The 'Context' is a shared container for all Pi4J runtime
-        // information, state, extensions and lifecycle.  From the
-        // `Context` object you can access just about any part of
-        // the Pi4J infrastructure and system.
-        //
-        // The 'Context' is a static singleton in the lifecycle of
-        // your application.
-        Context ctx = Pi4J.context();  // <-- Also available via the Pi4J static helper
-
 
         // ------------------------------------------------------------
         // Pi4J Platforms
@@ -122,8 +107,7 @@ public class GettingStartedExample {
         //
         // Platforms also provide validation for the I/O pins and
         // their capabilities for the target hardware.
-        Platforms platforms = context.platforms();
-        //Platforms platforms = Pi4J.platforms(); // <-- Also available via the Pi4J static helper
+        Platforms platforms = pi4j.platforms();
 
         // let's print out to the console the detected and loaded
         // platforms that Pi4J detected when it was initialized.
@@ -145,8 +129,7 @@ public class GettingStartedExample {
         // managed platforms collection that will serve to define the
         // default I/O providers that Pi4J will use for each given I/O
         // interface when creating and registering I/O instances.
-        Platform platform = context.platform();
-        //Platform platform = Pi4J.platform(); // <-- Also available via the Pi4J static helper
+        Platform platform = pi4j.platform();
 
         // let's print out to the console the detected and loaded
         // platforms that Pi4J detected when it was initialized.
@@ -189,7 +172,7 @@ public class GettingStartedExample {
         // infrastructure enabling third-parties to build and extend
         // the capabilities of Pi4J by writing your/their own
         // Provider implementation libraries.
-        Providers providers = context.providers();
+        Providers providers = pi4j.providers();
         //Providers providers = Pi4J.providers(); // <-- Also available via the Pi4J static helper
 
         // let's print out to the console the detected and loaded
@@ -233,15 +216,14 @@ public class GettingStartedExample {
         // infrastructure enabling third-parties to build and extend
         // the capabilities of Pi4J by writing your/their own
         // Provider implementation libraries.
-        Registry registry = context.registry();
-        //Registry registry = Pi4J.registry(); // <-- Also available via the Pi4J static helper
+        Registry registry = pi4j.registry();
 
         // Here we will create an I/O interface for a (GPIO) digital output pin.
         // More comprehensive examples and descriptions are provided in other examples;
         // we just want to include a single I/O instance here as a simple example for
         // this demonstration.  Since no specific 'provider' is defined, Pi4J will
         // use the default `DigitalOutputProvider` for the current default platform.
-        DigitalOutput output = DigitalOutput.create(1,"my-digital-output-1");
+        DigitalOutput output = pi4j.dout().create(1,"my-digital-output-1");
 
         // let's print out to the console the detected and loaded
         // I/O interfaces registered with Pi4J and included in the 'Registry'.
@@ -253,14 +235,14 @@ public class GettingStartedExample {
         // Terminate the Pi4J library
         // ------------------------------------------------------------
         // We we are all done and want to exit our application, we must
-        // call the 'terminate()' function on the Pi4J static helper class.
-        // This will ensure that all I/O instances are properly terminated,
+        // call the 'shutdown()' function on the Pi4J static helper class.
+        // This will ensure that all I/O instances are properly shutdown,
         // released by the the system and shutdown in the appropriate
         // manner.  Terminate will also ensure that any background
         // threads/processes are cleanly shutdown and any used memory
         // is returned to the system.
 
         // shutdown Pi4J
-        Pi4J.terminate();
+        pi4j.shutdown();
     }
 }

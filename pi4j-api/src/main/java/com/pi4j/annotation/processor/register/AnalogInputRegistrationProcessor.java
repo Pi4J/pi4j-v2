@@ -29,10 +29,12 @@ package com.pi4j.annotation.processor.register;
 
 import com.pi4j.annotation.*;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.impl.ProviderAnnotationProcessor;
+import com.pi4j.annotation.impl.WithAnnotationProcessor;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogInput;
+import com.pi4j.io.gpio.analog.AnalogInputConfigBuilder;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
+import com.pi4j.platform.Platform;
 import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +70,7 @@ public class AnalogInputRegistrationProcessor implements RegisterProcessor<Analo
                     "use the '@Inject(id)' annotation instead.");
 
         // create I/O config builder
-        var builder = AnalogInput.builder();
+        var builder = AnalogInputConfigBuilder.newInstance();
         if (annotation.value() != null) builder.id((annotation).value());
 
         // test for required additional annotations
@@ -98,12 +100,29 @@ public class AnalogInputRegistrationProcessor implements RegisterProcessor<Analo
             if (range != null) builder.max(range.max());
         }
 
-        // create and return I/O instance from registry
-        if (field.isAnnotationPresent(com.pi4j.annotation.Provider.class)) {
-            var provider = ProviderAnnotationProcessor.instance(context, field, AnalogInputProvider.class);
-            return AnalogInput.create(provider, builder.build());
-        } else {
-            return AnalogInput.create(builder.build());
+        // get designated platform to use to register this IO (if provided)
+        Platform platform = null;
+        if (field.isAnnotationPresent(WithPlatform.class)) {
+            platform = WithAnnotationProcessor.getPlatform(context, field);
+        }
+
+        // get designated provider to use to register this IO (if provided)
+        AnalogInputProvider provider = null;
+        if (field.isAnnotationPresent(WithProvider.class)) {
+            provider = WithAnnotationProcessor.getProvider(context, platform, field, AnalogInputProvider.class);
+        }
+
+        // if a provider was found, then create analog input IO instance using that provider
+        if(provider != null){
+            return provider.create(builder.build());
+        }
+
+        // if no provider was found, then create analog input IO instance using defaults
+        else {
+            if(platform != null)
+                return platform.provider(AnalogInputProvider.class).create(builder.build());
+            else
+                return context.provider(AnalogInputProvider.class).create(builder.build());
         }
     }
 }

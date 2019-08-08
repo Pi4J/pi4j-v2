@@ -27,26 +27,22 @@ package com.pi4j.test.provider;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
-import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
+import com.pi4j.test.provider.impl.TestDigitalInputProviderImpl;
 
-public class TestDigitalInputProvider extends DigitalInputProviderBase implements DigitalInputProvider {
-
-    public TestDigitalInputProvider(){ super(); }
-
-    public TestDigitalInputProvider(String id){
-        super(id);
+public interface TestDigitalInputProvider extends DigitalInputProvider {
+    static TestDigitalInputProvider newInstance(){
+        return new TestDigitalInputProviderImpl();
+    }
+    static TestDigitalInputProvider newInstance(String id){
+        return new TestDigitalInputProviderImpl(id);
+    }
+    static TestDigitalInputProvider newInstance(String id, String name){
+        return new TestDigitalInputProviderImpl(id, name);
     }
 
-    public TestDigitalInputProvider(String id, String name){
-        super(id, name);
-    }
-
-    @Override
-    public DigitalInput create(Context context, DigitalInputConfig config) throws Exception {
-        return new TestDigitalInput(config);
+    default <T extends DigitalInput> T create() throws Exception {
+        return create(0);
     }
 }

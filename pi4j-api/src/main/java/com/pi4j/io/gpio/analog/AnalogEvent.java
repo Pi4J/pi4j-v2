@@ -29,6 +29,9 @@ package com.pi4j.io.gpio.analog;
 
 import com.pi4j.event.Event;
 
-public interface AnalogEvent<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE>, CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>> extends Event {
+public interface AnalogEvent<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+        CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>,
+        PROVIDER_TYPE extends AnalogProvider>
+        extends Event {
     ANALOG_TYPE source();
 }

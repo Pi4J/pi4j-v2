@@ -28,15 +28,16 @@ package com.pi4j.test.provider;
  */
 
 import com.pi4j.common.Metadata;
-import com.pi4j.common.exception.LifecycleException;
 import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.exception.IOBoundsException;
 import com.pi4j.io.exception.IOIllegalValueException;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
+import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.io.gpio.analog.binding.AnalogBinding;
-import com.pi4j.provider.Provider;
 
 public class TestAnalogOutput implements AnalogOutput {
 
@@ -101,12 +102,7 @@ public class TestAnalogOutput implements AnalogOutput {
     }
 
     @Override
-    public Provider provider() {
-        return null;
-    }
-
-    @Override
-    public AnalogOutput provider(Provider provider) {
+    public AnalogOutputProvider provider() {
         return null;
     }
 
@@ -131,12 +127,12 @@ public class TestAnalogOutput implements AnalogOutput {
     }
 
     @Override
-    public Object initialize(Context context) throws LifecycleException {
+    public Object initialize(Context context) throws InitializeException {
         return null;
     }
 
     @Override
-    public Object terminate(Context context) throws LifecycleException {
+    public Object shutdown(Context context) throws ShutdownException {
         return null;
     }
 }

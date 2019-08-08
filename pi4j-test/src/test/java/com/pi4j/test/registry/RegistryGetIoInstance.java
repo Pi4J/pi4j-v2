@@ -28,6 +28,7 @@ package com.pi4j.test.registry;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import org.junit.After;
@@ -41,32 +42,34 @@ public class RegistryGetIoInstance {
     public static final int PIN_ADDRESS = 1;
     public static final String PIN_ID = "my-custom-pin";
 
+    private Context pi4j;
+
     @Before
     public void beforeTest() throws Pi4JException {
-
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
-        // Initialize Pi4J with AUTO-DETECT enabled
-        // we want to load any detected Pi4J binding/io libraries
-        // in the class path for this test case
-        Pi4J.initialize(true);
+        // initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        pi4j = Pi4J.newAutoContext();
     }
 
     @After
     public void afterTest() {
         try {
-            Pi4J.terminate();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
-    public void testGetIoInstanceFromRegistry() throws Pi4JException {
+    public void testGetIoInstanceFromRegistry() throws Exception {
 
         // create a simple I/O instance
-        DigitalInput input = DigitalInput.create(PIN_ADDRESS, PIN_ID);
+        DigitalInput input = pi4j.din().create(PIN_ADDRESS, PIN_ID);
 
         // attempt to get I/O instance from registry
-        DigitalInput retrieved = Pi4J.registry().get(PIN_ID, DigitalInput.class);
+        DigitalInput retrieved = pi4j.registry().get(PIN_ID, DigitalInput.class);
 
         // verify the retrieved I/O instance is the same as the one we registered
         assertEquals("The I/O instance retrieved from registry is not a match.", input,retrieved);

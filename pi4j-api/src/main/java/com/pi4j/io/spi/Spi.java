@@ -28,7 +28,7 @@ package com.pi4j.io.spi;
  */
 
 
-import com.pi4j.exception.NotInitializedException;
+import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 import com.pi4j.io.spi.impl.SpiFactory;
 import com.pi4j.provider.exception.ProviderException;
@@ -39,28 +39,27 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-public interface Spi extends IO<Spi, SpiConfig> {
+public interface Spi extends IO<Spi, SpiConfig, SpiProvider> {
 
     static final String ID = "SPI";
-
     static final SpiMode DEFAULT_SPI_MODE = SpiMode.MODE_0;
     static final int DEFAULT_SPI_SPEED = 1000000; // 1MHz (range is 500kHz - 32MHz)
     static final int MAX_SUPPORTED_BYTES = 2048;
 
-    static Spi instance(SpiConfig config) throws ProviderException, NotInitializedException {
-        return SpiFactory.instance(config);
+    static Spi instance(Context context, SpiConfig config) throws ProviderException {
+        return SpiFactory.instance(context, config);
     }
 
-    static Spi instance(String device) throws ProviderException, NotInitializedException {
-        return SpiFactory.instance(device);
+    static Spi instance(Context context, String device) throws ProviderException {
+        return SpiFactory.instance(context, device);
     }
 
-    static Spi instance(String providerId, String device) throws ProviderException, NotInitializedException {
-        return SpiFactory.instance(providerId, device);
+    static Spi instance(Context context, String providerId, String device) throws ProviderException {
+        return SpiFactory.instance(context, providerId, device);
     }
 
-    static Spi instance(String providerId, SpiConfig config) throws ProviderException, NotInitializedException {
-        return SpiFactory.instance(providerId, config);
+    static Spi instance(Context context, String providerId, SpiConfig config) throws ProviderException {
+        return SpiFactory.instance(context, providerId, config);
     }
 
     static Spi instance(SpiProvider provider, String device) throws ProviderException {

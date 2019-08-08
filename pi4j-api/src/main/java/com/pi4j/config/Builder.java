@@ -27,6 +27,8 @@ package com.pi4j.config;
  * #L%
  */
 
+import com.pi4j.exception.Pi4JException;
+
 public interface Builder<BUILT_TYPE> {
-    BUILT_TYPE build();
+    BUILT_TYPE build() throws Pi4JException;
 }

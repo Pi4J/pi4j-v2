@@ -28,6 +28,7 @@ package com.pi4j.test.platform;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.test.provider.TestI2CProvider;
 import com.pi4j.test.provider.TestPwmProvider;
@@ -36,82 +37,79 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ManualPlatformsCtorTest {
+
+    private Context pi4j;
 
     @Before
     public void beforeTest() throws Pi4JException {
 
         // create our own custom provider implementation classes
-        var pwmProvider = new TestPwmProvider();
-        var i2CProvider = new TestI2CProvider();
-        var serialProvider = new TestSerialProvider();
+        var pwmProvider = TestPwmProvider.newInstance();
+        var i2CProvider = TestI2CProvider.newInstance();
+        var serialProvider = TestSerialProvider.newInstance();
 
         // create our own custom platform implementation classes
         var testPlatform = new TestPlatform("test-platform", "My Test Platform");
         testPlatform.setProviders(pwmProvider, i2CProvider);
 
-        // Initialize Pi4J with the custom platform and providers
-        // we don't want to load any detected Pi4J binding/provider/platform libraries
-        // in the class path for this test case
-        Pi4J.initialize(testPlatform, pwmProvider, i2CProvider, serialProvider);
+        // Initialize Pi4J with a manually configured context
+        // ...
+        // Explicitly add the default platforms into this
+        // context for testing
+        // ...
+        // Explicitly add the test providers into the
+        // context for testing
+        pi4j = Pi4J.newContextBuilder()
+                .addDefaultPlatform(testPlatform)
+                .add(pwmProvider, i2CProvider, serialProvider)
+                .build();
+
     }
 
     @After
     public void afterTest() throws Pi4JException {
-        Pi4J.terminate();
+        pi4j.shutdown();
     }
 
     @Test
     public void testPlatformsNotNull() throws Pi4JException {
         // ensure that the 'platforms' collection in the Pi4J context is not NULL
-        assertNotNull(Pi4J.context().platforms());
+        assertNotNull(pi4j.platforms());
     }
 
     @Test
     public void testProvidersNotNull() throws Pi4JException {
         // ensure that the 'providers' collection in the Pi4J context is not NULL
-        assertNotNull(Pi4J.context().providers());
+        assertNotNull(pi4j.providers());
     }
 
     @Test
     public void testPlatformCount() throws Exception {
 
         // ensure that only one platform was detected/loaded into the Pi4J context
-        assertEquals(Pi4J.context().platforms().all().size(), 1);
+        assertEquals(pi4j.platforms().all().size(), 1);
 
         // ensure that only 3 providers were detected/loaded into the Pi4J context
-        assertEquals(Pi4J.context().providers().all().size(), 3);
+        assertEquals(pi4j.providers().all().size(), 3);
 
         // print out the detected Pi4J platforms
-        Pi4J.platforms().describe().print(System.out);
+        pi4j.platforms().describe().print(System.out);
 
         // print out the detected Pi4J providers
-        Pi4J.providers().describe().print(System.out);
+        pi4j.providers().describe().print(System.out);
     }
 
     @Test
     public void testPlatformProviderCount() throws Exception {
 
         // ensure that exactly 2 providers are associated with the single default platform in the Pi4J context
-        assertEquals(2, Pi4J.context().platform().providers().size());
+        assertEquals(2, pi4j.platform().providers().size());
 
         // print out the detected Pi4J platforms
-        Pi4J.context().platform().describe().print(System.out);
-    }
-
-    @Test
-    public void testPlatformsRemove() throws Exception {
-
-        // remove the second custom serial provider
-        Pi4J.context().platforms().remove("test-platform");
-
-        // ensure the correct provider count
-        assertEquals(0, Pi4J.context().platforms().all().size());
-
-        // print out the detected Pi4J platforms
-        Pi4J.platforms().describe().print(System.out);
+        pi4j.platform().describe().print(System.out);
     }
 }

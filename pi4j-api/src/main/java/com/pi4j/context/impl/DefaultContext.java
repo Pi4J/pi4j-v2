@@ -27,44 +27,71 @@ package com.pi4j.context.impl;
  * #L%
  */
 
-import com.pi4j.annotation.AnnotationEngine;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.impl.DefaultAnnotationEngine;
-import com.pi4j.binding.Bindings;
-import com.pi4j.binding.impl.DefaultBindings;
 import com.pi4j.context.Context;
+import com.pi4j.context.ContextConfig;
+import com.pi4j.exception.LifecycleException;
+import com.pi4j.exception.Pi4JException;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.platform.Platforms;
 import com.pi4j.platform.impl.DefaultPlatforms;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.impl.DefaultProviders;
 import com.pi4j.registry.Registry;
 import com.pi4j.registry.impl.DefaultRegistry;
+import com.pi4j.runtime.Runtime;
+import com.pi4j.runtime.impl.DefaultRuntime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultContext implements Context {
 
-    private Bindings bindings = DefaultBindings.singleton(this);
-    private Providers providers = DefaultProviders.singleton(this);
-    private Registry registry = DefaultRegistry.singleton(this);
-    private Platforms platforms = DefaultPlatforms.singleton(this);
-    private AnnotationEngine annotationEngine = DefaultAnnotationEngine.singleton(this);
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Runtime runtime = null;
+    private ContextConfig config = null;
+    private Providers providers = null;
+    private Platforms platforms = null;
+    private Registry registry = null;
 
-    private static Context singleton = null;
-    public static Context singleton(){
-        if(singleton == null){
-            singleton = new DefaultContext();
-        }
-        return singleton;
+    public static Context newInstance(ContextConfig config) throws Pi4JException {
+        return new DefaultContext(config);
     }
 
     // private constructor
-    private DefaultContext() {
-        // forbid object construction
+    private DefaultContext(ContextConfig config) throws Pi4JException {
+        logger.trace("new Pi4J runtime context initialized [config={}]", config);
+
+        // validate config object exists
+        if(config == null){
+            throw new LifecycleException("Unable to create new Pi4J runtime context; missing (ContextConfig) config object.");
+        }
+
+        // set context config member reference
+        this.config = config;
+
+        // create internal runtime state instance  (READ-ONLY ACCESS OBJECT)
+        this.runtime = DefaultRuntime.newInstance(this);
+
+        // create API accessible registry instance  (READ-ONLY ACCESS OBJECT)
+        this.registry = DefaultRegistry.newInstance(this.runtime.registry());
+
+        // create API accessible providers instance  (READ-ONLY ACCESS OBJECT)
+        this.providers = DefaultProviders.newInstance(this.runtime.providers());
+
+        // create API accessible platforms instance  (READ-ONLY ACCESS OBJECT)
+        this.platforms = DefaultPlatforms.newInstance(this.runtime.platforms());
+
+        // initialize runtime now
+        this.runtime.initialize();
+
+        logger.debug("Pi4J runtime context successfully created & initialized.'");
     }
 
     @Override
-    public Providers providers() {
-        return providers;
-    }
+    public ContextConfig config() { return this.config; }
+
+    @Override
+    public Providers providers() { return providers; }
 
     @Override
     public Registry registry() { return this.registry; }
@@ -73,13 +100,15 @@ public class DefaultContext implements Context {
     public Platforms platforms() { return this.platforms; }
 
     @Override
-    public Bindings bindings() {
-        return bindings;
+    public Context inject(Object... objects) throws AnnotationException {
+        this.runtime.inject(objects);
+        return this;
     }
 
     @Override
-    public Context inject(Object... objects) throws AnnotationException {
-        annotationEngine.inject(objects);
+    public Context shutdown() throws ShutdownException {
+        // shutdown the runtime
+        this.runtime.shutdown();
         return this;
     }
 }

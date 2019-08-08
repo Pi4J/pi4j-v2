@@ -28,43 +28,47 @@ package com.pi4j.test.platform;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 public class AutoPlatformsTest {
 
+    private Context pi4j;
+
     @Before
     public void beforeTest() throws Pi4JException {
-        // Initialize Pi4J with AUTO-DETECT BINDINGS enabled
-        // we want to load all detected Pi4J binding libraries
-        // in the class path for this test case
-        Pi4J.initialize(true);
+        // initialize Pi4J with an auto context
+        // An auto context includes AUTO-DETECT BINDINGS enabled
+        // which will load all detected Pi4J extension libraries
+        // (Platforms and Providers) in the class path
+        pi4j = Pi4J.newAutoContext();
     }
 
     @After
     public void afterTest() {
         try {
-            Pi4J.terminate();
+            pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
     @Test
     public void testPlatformsNotNull() throws Pi4JException {
-        assertNotNull(Pi4J.context().platforms());
+        assertNotNull(pi4j.platforms());
     }
 
     @Test
     public void testPlatformsNotEmpty() throws Exception {
         // ensure that 1 or more platforms were detected/loaded into the Pi4J context
-        assertFalse(Pi4J.context().platforms().all().isEmpty());
+        assertFalse(pi4j.platforms().all().isEmpty());
 
-        // print out the detected Pi4J binding libraries found on the class path
-        Pi4J.platforms().describe().print(System.out);
+        // print out the detected Pi4J platforms found on the class path
+        pi4j.platforms().describe().print(System.out);
     }
 
 }
