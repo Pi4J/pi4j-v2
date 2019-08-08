@@ -1,4 +1,4 @@
-import com.pi4j.linuxfs.LinuxFsPlugin;
+import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
 
 /*-
  * #%L
@@ -31,8 +31,8 @@ import com.pi4j.linuxfs.LinuxFsPlugin;
 module pi4j.plugin.linuxfs {
     requires pi4j.api;
 
-    exports com.pi4j.linuxfs;
-    exports com.pi4j.linuxfs.provider.gpio.digital;
+    exports com.pi4j.plugin.linuxfs;
+    exports com.pi4j.plugin.linuxfs.provider.gpio.digital;
 
     provides com.pi4j.extension.Plugin
             with LinuxFsPlugin;

@@ -37,23 +37,23 @@ module pi4j.test {
 
     // Pi4J Mock Platform and Providers
     requires pi4j.plugin.mock;
-    uses com.pi4j.mock.platform.MockPlatform;
-    uses com.pi4j.mock.provider.gpio.analog.MockAnalogInput;
-    uses com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
-    uses com.pi4j.mock.provider.gpio.analog.MockAnalogOutput;
-    uses com.pi4j.mock.provider.gpio.analog.MockAnalogOutputProvider;
-    uses com.pi4j.mock.provider.gpio.digital.MockDigitalInput;
-    uses com.pi4j.mock.provider.gpio.digital.MockDigitalInputProvider;
-    uses com.pi4j.mock.provider.gpio.digital.MockDigitalOutput;
-    uses com.pi4j.mock.provider.gpio.digital.MockDigitalOutputProvider;
-    uses com.pi4j.mock.provider.pwm.MockPwm;
-    uses com.pi4j.mock.provider.pwm.MockPwmProvider;
-    uses com.pi4j.mock.provider.i2c.MockI2C;
-    uses com.pi4j.mock.provider.i2c.MockI2CProvider;
-    uses com.pi4j.mock.provider.spi.MockSpi;
-    uses com.pi4j.mock.provider.spi.MockSpiProvider;
-    uses com.pi4j.mock.provider.serial.MockSerial;
-    uses com.pi4j.mock.provider.serial.MockSerialProvider;
+    uses com.pi4j.plugin.mock.platform.MockPlatform;
+    uses com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInput;
+    uses com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInputProvider;
+    uses com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogOutput;
+    uses com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogOutputProvider;
+    uses com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInput;
+    uses com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInputProvider;
+    uses com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutput;
+    uses com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProvider;
+    uses com.pi4j.plugin.mock.provider.pwm.MockPwm;
+    uses com.pi4j.plugin.mock.provider.pwm.MockPwmProvider;
+    uses com.pi4j.plugin.mock.provider.i2c.MockI2C;
+    uses com.pi4j.plugin.mock.provider.i2c.MockI2CProvider;
+    uses com.pi4j.plugin.mock.provider.spi.MockSpi;
+    uses com.pi4j.plugin.mock.provider.spi.MockSpiProvider;
+    uses com.pi4j.plugin.mock.provider.serial.MockSerial;
+    uses com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
 
 
     exports com.pi4j.test.platform;

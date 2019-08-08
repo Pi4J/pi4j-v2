@@ -30,8 +30,8 @@ package com.pi4j.example.gpio.digital;
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalState;
-import com.pi4j.mock.provider.gpio.digital.MockDigitalInput;
-import com.pi4j.mock.provider.gpio.digital.MockDigitalInputProvider;
+import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInput;
+import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInputProvider;
 import com.pi4j.util.Console;
 
 

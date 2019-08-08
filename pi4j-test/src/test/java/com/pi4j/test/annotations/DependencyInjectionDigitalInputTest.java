@@ -32,7 +32,7 @@ import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.mock.platform.MockPlatform;
+import com.pi4j.plugin.mock.platform.MockPlatform;
 import com.pi4j.test.platform.TestPlatform;
 import com.pi4j.test.provider.TestDigitalInputProvider;
 import org.junit.After;

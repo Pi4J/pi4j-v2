@@ -32,7 +32,7 @@ import com.pi4j.annotation.Inject;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.pwm.PwmProvider;
-import com.pi4j.mock.provider.pwm.MockPwmProvider;
+import com.pi4j.plugin.mock.provider.pwm.MockPwmProvider;
 import com.pi4j.test.About;
 import com.pi4j.test.provider.TestPwmProvider;
 import org.junit.After;

@@ -1,5 +1,3 @@
-import com.pi4j.mock.MockPlugin;
-
 /*-
  * #%L
  * **********************************************************************
@@ -31,15 +29,15 @@ import com.pi4j.mock.MockPlugin;
 module pi4j.plugin.mock {
     requires pi4j.api;
 
-    exports com.pi4j.mock;
-    exports com.pi4j.mock.platform;
-    exports com.pi4j.mock.provider.gpio.digital;
-    exports com.pi4j.mock.provider.gpio.analog;
-    exports com.pi4j.mock.provider.pwm;
-    exports com.pi4j.mock.provider.serial;
-    exports com.pi4j.mock.provider.spi;
-    exports com.pi4j.mock.provider.i2c;
+    exports com.pi4j.plugin.mock;
+    exports com.pi4j.plugin.mock.platform;
+    exports com.pi4j.plugin.mock.provider.gpio.digital;
+    exports com.pi4j.plugin.mock.provider.gpio.analog;
+    exports com.pi4j.plugin.mock.provider.pwm;
+    exports com.pi4j.plugin.mock.provider.serial;
+    exports com.pi4j.plugin.mock.provider.spi;
+    exports com.pi4j.plugin.mock.provider.i2c;
 
     provides com.pi4j.extension.Plugin
-            with com.pi4j.mock.MockPlugin;
+            with com.pi4j.plugin.mock.MockPlugin;
 }

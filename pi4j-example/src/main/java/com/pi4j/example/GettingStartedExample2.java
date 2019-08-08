@@ -33,15 +33,15 @@ import com.pi4j.io.gpio.analog.*;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProviderBase;
-import com.pi4j.mock.platform.MockPlatform;
-import com.pi4j.mock.provider.gpio.analog.MockAnalogInputProvider;
-import com.pi4j.mock.provider.gpio.analog.MockAnalogOutputProvider;
-import com.pi4j.mock.provider.gpio.digital.MockDigitalInputProvider;
-import com.pi4j.mock.provider.gpio.digital.MockDigitalOutputProvider;
-import com.pi4j.mock.provider.i2c.MockI2CProvider;
-import com.pi4j.mock.provider.pwm.MockPwmProvider;
-import com.pi4j.mock.provider.serial.MockSerialProvider;
-import com.pi4j.mock.provider.spi.MockSpiProvider;
+import com.pi4j.plugin.mock.platform.MockPlatform;
+import com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInputProvider;
+import com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogOutputProvider;
+import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInputProvider;
+import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProvider;
+import com.pi4j.plugin.mock.provider.i2c.MockI2CProvider;
+import com.pi4j.plugin.mock.provider.pwm.MockPwmProvider;
+import com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
+import com.pi4j.plugin.mock.provider.spi.MockSpiProvider;
 
 public class GettingStartedExample2 {
 
