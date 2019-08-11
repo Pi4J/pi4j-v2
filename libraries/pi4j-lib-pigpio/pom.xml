@@ -14,19 +14,11 @@
     <artifactId>pi4j-lib-pigpio</artifactId>
     <name>Pi4J :: LIBRARY  :: PIGPIO Library</name>
     <description>Pi4J wrapper for the PIGPIO library</description>
+    <packaging>jar</packaging>
 
     <!-- DEPENDENCIES -->
     <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <!--<scope>test</scope>-->
-        </dependency>
+        <!-- inherited from parent -->
     </dependencies>
-    <packaging>jar</packaging>
 
 </project>
