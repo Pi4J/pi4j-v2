@@ -30,5 +30,4 @@ module pi4j.library.pigpio {
 
     // SLF4J
     requires slf4j.api;
-    requires slf4j.simple;
 }

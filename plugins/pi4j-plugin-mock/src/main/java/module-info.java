@@ -29,6 +29,8 @@
 module pi4j.plugin.mock {
     requires pi4j.api;
 
+    uses com.pi4j.extension.Plugin;
+
     exports com.pi4j.plugin.mock;
     exports com.pi4j.plugin.mock.platform;
     exports com.pi4j.plugin.mock.provider.gpio.digital;
