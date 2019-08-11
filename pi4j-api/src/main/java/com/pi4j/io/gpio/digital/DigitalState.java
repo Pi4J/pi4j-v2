@@ -57,6 +57,10 @@ public enum DigitalState {
         return (this == LOW);
     }
 
+    public Number value() {
+        return getValue();
+    }
+
     public Number getValue() {
         return value;
     }
@@ -99,6 +103,10 @@ public enum DigitalState {
         return name;
     }
 
+    public static DigitalState state(Number state) {
+        return getState(state);
+    }
+
     public static DigitalState getState(Number state) {
         for (var item : DigitalState.values()) {
             if (item.getValue().intValue() == state.intValue()) {
@@ -106,6 +114,10 @@ public enum DigitalState {
             }
         }
         return null;
+    }
+
+    public static DigitalState inverseState(DigitalState state) {
+        return getInverseState(state);
     }
 
     public static DigitalState getInverseState(DigitalState state) {

@@ -1,11 +1,11 @@
-import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
+package com.pi4j.library.pigpio;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
- * FILENAME      :  module-info.java
+ * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * FILENAME      :  PiGpioState.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,13 +28,26 @@ import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.plugin.linuxfs {
-    requires pi4j.api;
-    requires jsch;
 
-    exports com.pi4j.plugin.linuxfs;
-    exports com.pi4j.plugin.linuxfs.provider.gpio.digital;
+public enum PiGpioState {
+    UNKNOWN(-1),
+    LOW  (0),
+    HIGH (1);
 
-    provides com.pi4j.extension.Plugin
-            with LinuxFsPlugin;
+    private int value;
+
+    PiGpioState(int value){
+        this.value  =value;
+    }
+
+    public int value(){
+        return this.value;
+    }
+
+    public static PiGpioState from(Number value){
+        for(PiGpioState c : PiGpioState.values()){
+            if(c.value() == value.intValue()) return c;
+        }
+        return UNKNOWN;
+    }
 }

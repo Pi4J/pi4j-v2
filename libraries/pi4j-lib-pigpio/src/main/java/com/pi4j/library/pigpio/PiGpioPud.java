@@ -1,11 +1,11 @@
-import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
+package com.pi4j.library.pigpio;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
- * FILENAME      :  module-info.java
+ * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * FILENAME      :  PiGpioPud.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,13 +28,29 @@ import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.plugin.linuxfs {
-    requires pi4j.api;
-    requires jsch;
 
-    exports com.pi4j.plugin.linuxfs;
-    exports com.pi4j.plugin.linuxfs.provider.gpio.digital;
+import static com.pi4j.library.pigpio.PiGpioConst.*;
 
-    provides com.pi4j.extension.Plugin
-            with LinuxFsPlugin;
+public enum PiGpioPud {
+    UNKNOWN(-1),
+    OFF  (PI_PUD_OFF),
+    DOWN (PI_PUD_DOWN),
+    UP   (PI_PUD_UP);
+
+    private int value;
+
+    PiGpioPud(int value){
+        this.value  =value;
+    }
+
+    public int value(){
+        return this.value;
+    }
+
+    public static PiGpioPud from(Number value){
+        for(PiGpioPud c : PiGpioPud.values()){
+            if(c.value() == value.intValue()) return c;
+        }
+        return UNKNOWN;
+    }
 }
