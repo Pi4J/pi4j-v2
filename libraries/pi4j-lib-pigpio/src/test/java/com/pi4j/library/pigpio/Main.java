@@ -36,24 +36,45 @@ public class Main {
 
         PiGpio pig = PiGpio.newSocketInstance("rpi3bp");
 
-        pig.initialize();
+        pig.gpioSetMode(3, PiGpioMode.OUTPUT);
 
-        System.out.println("---------------------------------------------------------------------");
-        System.out.println("Raspberry Pi - Hardware Revision  : " + pig.gpioHardwareRevisionString());
-        System.out.println("Raspberry Pi - PIGPIO Lib Version : " + pig.gpioVersion());
-        System.out.println("---------------------------------------------------------------------");
+//        for(int x = 0; x < 100; x++) {
+//            pig.gpioWrite(2, PiGpioState.LOW);
+//            pig.gpioWrite(3, PiGpioState.LOW);
+//            pig.gpioWrite(2, PiGpioState.HIGH);
+//            pig.gpioWrite(3, PiGpioState.HIGH);
+//        }
 
-        pig.gpioSetMode(28, PiGpioMode.OUTPUT);
-        pig.gpioWrite(28, PiGpioState.HIGH);
+//        pig.gpioPWM(2, 50);
+//        Thread.sleep(1000);;
+//        pig.gpioPWM(2, 0);
 
-        for (int p = 0; p <= 31; p++) {
-            System.out.println("  GPIO " + p + "; MODE=" + pig.gpioGetMode(p) + "; STATE=" + pig.gpioRead(p));
+
+        pig.gpioSetMode(4, PiGpioMode.INPUT);
+        pig.gpioSetPullUpDown(4, PiGpioPud.DOWN);
+
+        for(int x = 0; x < 100000; x++) {
+            var value = pig.gpioRead(4);
+            System.out.println(value);
         }
 
-        pig.gpioGetPWMdutycycle(9);
-        pig.gpioPWM(9,50);
-        pig.gpioSetPWMrange(9, 50);
-        pig.gpioGetPWMrange(9);
-        pig.gpioGetPWMrealRange(9);
+
+
+//        pig.initialize();
+//
+//        System.out.println("---------------------------------------------------------------------");
+//        System.out.println("Raspberry Pi - Hardware Revision  : " + pig.gpioHardwareRevisionString());
+//        System.out.println("Raspberry Pi - PIGPIO Lib Version : " + pig.gpioVersion());
+//        System.out.println("---------------------------------------------------------------------");
+//
+//        pig.gpioSetMode(28, PiGpioMode.OUTPUT);
+//        pig.gpioWrite(28, PiGpioState.HIGH);
+//
+//        for (int p = 0; p <= 31; p++) {
+//            System.out.println("  GPIO " + p + "; MODE=" + pig.gpioGetMode(p) + "; STATE=" + pig.gpioRead(p));
+//        }
+
+        pig.gpioTick();
+
     }
 }

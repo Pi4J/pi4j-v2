@@ -104,6 +104,22 @@ public abstract class PiGpioBase implements PiGpio {
                     "; (supported range: " + min + " - " + max + ")");
     }
 
+    protected void validateDelayMicroseconds(int micros){
+        int min = 0;
+        int max = PI_MAX_MICS_DELAY;
+        if(micros < min || micros > max)
+            throw new IllegalArgumentException("Invalid microseconds delay: " + micros +
+                    "; (supported range: " + min + " - " + max + ")");
+    }
+
+    protected void validateDelayMilliseconds(int millis){
+        int min = 0;
+        int max = PI_MAX_MILS_DELAY;
+        if(millis < min || millis > max)
+            throw new IllegalArgumentException("Invalid milliseconds delay: " + millis +
+                    "; (supported range: " + min + " - " + max + ")");
+    }
+
     protected void validateResult(PiGpioPacket result) throws IOException{
         validateResult(result.result());
     }

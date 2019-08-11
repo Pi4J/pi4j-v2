@@ -5,7 +5,7 @@ package com.pi4j.library.pigpio.impl;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
- * FILENAME      :  PiGpioSocketImpl.java
+ * FILENAME      :  PiGpioSocketBase.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -101,7 +101,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 
         // read receive packet
         PiGpioPacket rx = new PiGpioPacket(in);
-        logger.trace("[RX] <- " + tx.toString());
+        logger.trace("[RX] <- " + rx.toString());
         return rx;
     }
 }
