@@ -36,8 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static com.pi4j.library.pigpio.PiGpioCmd.*;
-import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_HOST;
-import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_PORT;
+import static com.pi4j.library.pigpio.PiGpioConst.*;
 
 public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
 
@@ -280,10 +279,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public void gpioWrite(int pin, PiGpioState state) throws IOException {
-        logger.trace("[GPIO::SET] -> PIN: {}, {}({});", pin, state.name(), state.value());
+        logger.trace("[GPIO::SET] -> PIN: {}; {}({});", pin, state.name(), state.value());
         validatePin(pin);
         PiGpioPacket result = sendCommand(WRITE, pin, state.value());
-        logger.trace("[GPIO::SET] <- PIN: {}, {}({}); SUCCESS={}",  pin, state.name(), state.value(), result.success());
+        logger.trace("[GPIO::SET] <- PIN: {}; {}({}); SUCCESS={}",  pin, state.name(), state.value(), result.success());
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_GPIO or PI_BAD_LEVEL.
     }
 
@@ -298,11 +297,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioPWM"
      */
     public void gpioPWM(int pin, int dutyCycle) throws IOException {
-        logger.trace("[PWM::SET] -> PIN: {}, DUTY-CYCLE={};", pin, dutyCycle);
+        logger.trace("[PWM::SET] -> PIN: {}; DUTY-CYCLE={};", pin, dutyCycle);
         validateUserPin(pin);
         validateDutyCycle(dutyCycle);
         PiGpioPacket result = sendCommand(PWM, pin, dutyCycle);
-        logger.trace("[PWM::SET] <- PIN: {}, DUTY-CYCLE={}; SUCCESS={}",  pin, dutyCycle, result.success());
+        logger.trace("[PWM::SET] <- PIN: {}; DUTY-CYCLE={}; SUCCESS={}",  pin, dutyCycle, result.success());
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_GPIO or PI_BAD_LEVEL.
     }
 
@@ -324,7 +323,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateUserPin(pin);
         PiGpioPacket result = sendCommand(GDC, pin);
         var dutyCycle = result.result();
-        logger.trace("[PWM::GET] <- PIN: {}, DUTY-CYCLE={}; SUCCESS={}",  pin, dutyCycle, result.success());
+        logger.trace("[PWM::GET] <- PIN: {}; DUTY-CYCLE={}; SUCCESS={}",  pin, dutyCycle, result.success());
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO or PI_NOT_PWM_GPIO.
         return dutyCycle;
     }
@@ -357,12 +356,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange"
      */
     public int gpioSetPWMrange(int pin, int range) throws IOException {
-        logger.trace("[PWM-RANGE::SET] -> PIN: {}", pin);
+        logger.trace("[PWM-RANGE::SET] -> PIN: {}; RANGE={}", pin, range);
         validateUserPin(pin);
         validateDutyCycleRange(range);
         PiGpioPacket result = sendCommand(PRS, pin, range);
         var actualRange = result.result();
-        logger.trace("[PWM-RANGE::SET] <- PIN: {}, RANGE={}; SUCCESS={}",  pin, actualRange, result.success());
+        logger.trace("[PWM-RANGE::SET] <- PIN: {}; RANGE={}; SUCCESS={}",  pin, actualRange, result.success());
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO or PI_BAD_DUTYRANGE.
         return actualRange;
     }
@@ -380,7 +379,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateUserPin(pin);
         PiGpioPacket result = sendCommand(PRG, pin);
         var range = result.result();
-        logger.trace("[PWM-RANGE::GET] <- PIN: {}, RANGE={}; SUCCESS={}",  pin, range, result.success());
+        logger.trace("[PWM-RANGE::GET] <- PIN: {}; RANGE={}; SUCCESS={}",  pin, range, result.success());
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO or PI_BAD_DUTYRANGE.
         return range;
     }
@@ -400,9 +399,147 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateUserPin(pin);
         PiGpioPacket result = sendCommand(PRRG, pin);
         var range = result.result();
-        logger.trace("[PWM-REAL-RANGE::GET] <- PIN: {}, RANGE={}; SUCCESS={}",  pin, range, result.success());
+        logger.trace("[PWM-REAL-RANGE::GET] <- PIN: {}; RANGE={}; SUCCESS={}",  pin, range, result.success());
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO or PI_BAD_DUTYRANGE.
         return range;
     }
 
+    /**
+     * Sets the frequency in hertz to be used for the GPIO.
+     *
+     * If PWM is currently active on the GPIO it will be switched off and then back on at the new frequency.
+     * Each GPIO can be independently set to one of 18 different PWM frequencies.
+     * The selectable frequencies depend upon the sample rate which may be 1, 2, 4, 5, 8, or 10 microseconds (default 5).
+     *
+     * The frequencies for each sample rate are:
+     *
+     *                        Hertz
+     *
+     *        1: 40000 20000 10000 8000 5000 4000 2500 2000 1600
+     *            1250  1000   800  500  400  250  200  100   50
+     *
+     *        2: 20000 10000  5000 4000 2500 2000 1250 1000  800
+     *             625   500   400  250  200  125  100   50   25
+     *
+     *        4: 10000  5000  2500 2000 1250 1000  625  500  400
+     *             313   250   200  125  100   63   50   25   13
+     * sample
+     *  rate
+     *  (us)  5:  8000  4000  2000 1600 1000  800  500  400  320
+     *             250   200   160  100   80   50   40   20   10
+     *
+     *        8:  5000  2500  1250 1000  625  500  313  250  200
+     *             156   125   100   63   50   31   25   13    6
+     *
+     *       10:  4000  2000  1000  800  500  400  250  200  160
+     *             125   100    80   50   40   25   20   10    5
+     *
+     *
+     * Example:
+     *    gpioSetPWMfrequency(23, 0); // Set GPIO23 to lowest frequency.
+     *    gpioSetPWMfrequency(24, 500); // Set GPIO24 to 500Hz.
+     *    gpioSetPWMfrequency(25, 100000); // Set GPIO25 to highest frequency.
+     *
+     * @param pin user_gpio: 0-31
+     * @param frequency frequency: >=0
+     * @return Returns the numerically closest frequency if OK
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange"
+     */
+    public int gpioSetPWMfrequency(int pin, int frequency) throws IOException {
+        logger.trace("[PWM-FREQ::SET] -> PIN: {}; FREQUENCY={}", pin, frequency);
+        validateUserPin(pin);
+        // validateFrequency(frequency); TODO :: IMPLEMENT 'validateFrequency()'
+        PiGpioPacket result = sendCommand(PRS, pin, frequency);
+        var actualRange = result.result();
+        logger.trace("[PWM-FREQ::SET] <- PIN: {}; FREQUENCY={}; SUCCESS={}",  pin, frequency, result.success());
+        validateResult(result);  // Returns the numerically closest frequency if OK, otherwise PI_BAD_USER_GPIO.
+        return actualRange;
+    }
+
+    /**
+     * Returns the frequency (in hertz) used for the GPIO
+     *
+     * For normal PWM the frequency will be that defined for the GPIO by gpioSetPWMfrequency.
+     * If a hardware clock is active on the GPIO the reported frequency will be that set by gpioHardwareClock.
+     * If hardware PWM is active on the GPIO the reported frequency will be that set by gpioHardwarePWM.
+     *
+     * Example:
+     *    f = gpioGetPWMfrequency(23); // Get frequency used for GPIO23.
+     *
+     * @param pin user_gpio: 0-31
+     * @return Returns the frequency (in hertz) used for the GPIO if OK.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMfrequency"
+     */
+    public int gpioGetPWMfrequency(int pin) throws IOException {
+        logger.trace("[PWM-FREQ::GET] -> PIN: {}", pin);
+        validateUserPin(pin);
+        PiGpioPacket result = sendCommand(PRRG, pin);
+        var frequency = result.result();
+        logger.trace("[PWM-FREQ::GET] <- PIN: {}; FREQUENCY={}; SUCCESS={}",  pin, frequency, result.success());
+        validateResult(result);  // Returns the frequency (in hertz) used for the GPIO if OK, otherwise PI_BAD_USER_GPIO.
+        return frequency;
+    }
+
+    /**
+     * Delays for at least the number of microseconds specified by micros.
+     * (Delays of 100 microseconds or less use busy waits.)
+     *
+     * @param micros micros: the number of microseconds to sleep
+     * @return Returns the actual length of the delay in microseconds.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioDelay"
+     */
+    public int gpioDelay(int micros) throws IOException {
+        logger.trace("[DELAY] -> MICROS: {}", micros);
+        validateDelayMicroseconds(micros);
+        PiGpioPacket result = sendCommand(MICS, (int)micros);
+        logger.trace("[DELAY] <- MICROS: {}; SUCCESS={}",  micros, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        return micros;
+    }
+
+    /**
+     * Delays for at least the number of milliseconds specified by micros. (between 1 and 60000 <1 minute>)
+     *
+     * @param millis millis: the number of milliseconds to sleep (between 1 and 60000 <1 minute>)
+     * @return Returns the actual length of the delay in milliseconds.
+     * @see "http://abyz.me.uk/rpi/pigpio/pigs.html#MILS"
+     */
+    public int gpioDelayMilliseconds(int millis) throws IOException{
+        logger.trace("[DELAY] -> MILLIS: {}", millis);
+        validateDelayMilliseconds(millis);
+        PiGpioPacket result = sendCommand(MILS, (int)millis);
+        logger.trace("[DELAY] <- MILLIS: {}; SUCCESS={}",  millis, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        return millis;
+    }
+
+    /**
+     * Returns the current system tick.
+     * Tick is the number of microseconds since system boot.
+     *
+     * As tick is an unsigned 32 bit quantity it wraps around after 2^32 microseconds, which is
+     * approximately 1 hour 12 minutes.  You don't need to worry about the wrap around as long as you
+     * take a tick (uint32_t) from another tick, i.e. the following code will always provide the
+     * correct difference.
+     *
+     * Example
+     *   uint32_t startTick, endTick;
+     *   int diffTick;
+     *   startTick = gpioTick();
+     *
+     *   // do some processing
+     *   endTick = gpioTick();
+     *   diffTick = endTick - startTick;
+     *   printf("some processing took %d microseconds", diffTick);
+     *
+     * @return Returns the current system tick.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioTick"
+     */
+    public long gpioTick() throws IOException {
+        logger.trace("[TICK::GET] -> Get current tick");
+        PiGpioPacket result = sendCommand(TICK);
+        long tick = Integer.toUnsignedLong(result.result()); // convert (UInt32) 32-bit unsigned value to long
+        logger.trace("[TICK::GET] <- TICK: {}; SUCCESS={}",  tick, result.success());
+        return tick;
+    }
 }

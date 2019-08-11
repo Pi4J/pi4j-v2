@@ -284,4 +284,110 @@ public interface PiGpio {
      */
     int gpioGetPWMrealRange(int pin) throws IOException;
 
+    /**
+     * Sets the frequency in hertz to be used for the GPIO.
+     *
+     * If PWM is currently active on the GPIO it will be switched off and then back on at the new frequency.
+     * Each GPIO can be independently set to one of 18 different PWM frequencies.
+     * The selectable frequencies depend upon the sample rate which may be 1, 2, 4, 5, 8, or 10 microseconds (default 5).
+     *
+     * The frequencies for each sample rate are:
+     *
+     *                        Hertz
+     *
+     *        1: 40000 20000 10000 8000 5000 4000 2500 2000 1600
+     *            1250  1000   800  500  400  250  200  100   50
+     *
+     *        2: 20000 10000  5000 4000 2500 2000 1250 1000  800
+     *             625   500   400  250  200  125  100   50   25
+     *
+     *        4: 10000  5000  2500 2000 1250 1000  625  500  400
+     *             313   250   200  125  100   63   50   25   13
+     * sample
+     *  rate
+     *  (us)  5:  8000  4000  2000 1600 1000  800  500  400  320
+     *             250   200   160  100   80   50   40   20   10
+     *
+     *        8:  5000  2500  1250 1000  625  500  313  250  200
+     *             156   125   100   63   50   31   25   13    6
+     *
+     *       10:  4000  2000  1000  800  500  400  250  200  160
+     *             125   100    80   50   40   25   20   10    5
+     *
+     *
+     * Example:
+     *    gpioSetPWMfrequency(23, 0); // Set GPIO23 to lowest frequency.
+     *    gpioSetPWMfrequency(24, 500); // Set GPIO24 to 500Hz.
+     *    gpioSetPWMfrequency(25, 100000); // Set GPIO25 to highest frequency.
+     *
+     * @param pin user_gpio: 0-31
+     * @param frequency frequency: >=0
+     * @return Returns the numerically closest frequency if OK
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange"
+     */
+    int gpioSetPWMfrequency(int pin, int frequency) throws IOException;
+
+
+    /**
+     * Returns the frequency (in hertz) used for the GPIO
+     *
+     * For normal PWM the frequency will be that defined for the GPIO by gpioSetPWMfrequency.
+     * If a hardware clock is active on the GPIO the reported frequency will be that set by gpioHardwareClock.
+     * If hardware PWM is active on the GPIO the reported frequency will be that set by gpioHardwarePWM.
+     *
+     * Example:
+     *    f = gpioGetPWMfrequency(23); // Get frequency used for GPIO23.
+     *
+     * @param pin user_gpio: 0-31
+     * @return Returns the frequency (in hertz) used for the GPIO if OK.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMfrequency"
+     */
+    int gpioGetPWMfrequency(int pin) throws IOException;
+
+
+    /**
+     * Delays for at least the number of microseconds specified by micros. (between 1 and 1000000 <1 second>)
+     * (Delays of 100 microseconds or less use busy waits.)
+     *
+     * @param micros micros: the number of microseconds to sleep (between 1 and 1000000 <1 second>)
+     * @return Returns the actual length of the delay in microseconds.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioDelay"
+     */
+    int gpioDelay(int micros) throws IOException;
+    default int gpioDelayMicroseconds(int micros) throws IOException{
+        return gpioDelay(micros);
+    }
+
+    /**
+     * Delays for at least the number of milliseconds specified by micros. (between 1 and 60000 <1 minute>)
+     *
+     * @param millis millis: the number of milliseconds to sleep (between 1 and 60000 <1 minute>)
+     * @return Returns the actual length of the delay in milliseconds.
+     * @see "http://abyz.me.uk/rpi/pigpio/pigs.html#MILS"
+     */
+    int gpioDelayMilliseconds(int millis) throws IOException;
+
+    /**
+     * Returns the current system tick.
+     * Tick is the number of microseconds since system boot.
+     *
+     * As tick is an unsigned 32 bit quantity it wraps around after 2^32 microseconds, which is
+     * approximately 1 hour 12 minutes.  You don't need to worry about the wrap around as long as you
+     * take a tick (uint32_t) from another tick, i.e. the following code will always provide the
+     * correct difference.
+     *
+     * Example
+     *   uint32_t startTick, endTick;
+     *   int diffTick;
+     *   startTick = gpioTick();
+     *
+     *   // do some processing
+     *   endTick = gpioTick();
+     *   diffTick = endTick - startTick;
+     *   printf("some processing took %d microseconds", diffTick);
+     *
+     * @return Returns the current system tick.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioTick"
+     */
+    long gpioTick() throws IOException;
 }

@@ -227,4 +227,11 @@ public interface PiGpioConst {
     int PI_HW_PWM_MAX_FREQ          = 125000000;
     int PI_HW_PWM_MAX_FREQ_2711     = 187500000;
     int PI_HW_PWM_RANGE             = 1000000;
+
+    // ----------------------------------
+    // DELAYS
+    // ----------------------------------
+    int PI_MAX_MICS_DELAY           = 1000000; /* 1 second */
+    int PI_MAX_MILS_DELAY           = 60000;   /* 60 seconds */
+
 }
