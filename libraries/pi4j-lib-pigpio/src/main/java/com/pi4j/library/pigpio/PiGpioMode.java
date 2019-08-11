@@ -1,11 +1,11 @@
-import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
+package com.pi4j.library.pigpio;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
- * FILENAME      :  module-info.java
+ * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * FILENAME      :  PiGpioMode.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,13 +28,34 @@ import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.plugin.linuxfs {
-    requires pi4j.api;
-    requires jsch;
 
-    exports com.pi4j.plugin.linuxfs;
-    exports com.pi4j.plugin.linuxfs.provider.gpio.digital;
+import static com.pi4j.library.pigpio.PiGpioConst.*;
 
-    provides com.pi4j.extension.Plugin
-            with LinuxFsPlugin;
+public enum PiGpioMode {
+    UNKNOWN(-1),
+    INPUT  (PI_INPUT),
+    OUTPUT (PI_OUTPUT),
+    ALT0   (PI_ALT0),
+    ALT1   (PI_ALT1),
+    ALT2   (PI_ALT2),
+    ALT3   (PI_ALT3),
+    ALT4   (PI_ALT4),
+    ALT5   (PI_ALT5);
+
+    private int value;
+
+    PiGpioMode(int value){
+        this.value  =value;
+    }
+
+    public int value(){
+        return this.value;
+    }
+
+    public static PiGpioMode from(Number value){
+        for(PiGpioMode c : PiGpioMode.values()){
+            if(c.value() == value.intValue()) return c;
+        }
+        return UNKNOWN;
+    }
 }

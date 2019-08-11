@@ -51,5 +51,4 @@ public interface DigitalOutputProvider extends DigitalProvider<DigitalOutputProv
         builder.id(id).address(address).id(id).name(name).description(description);
         return (T)create(builder.build());
     }
-
 }

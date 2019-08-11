@@ -1,10 +1,8 @@
-import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
-
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
+ * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
  * FILENAME      :  module-info.java
  *
  * This file is part of the Pi4J project. More information about
@@ -28,13 +26,9 @@ import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.plugin.linuxfs {
-    requires pi4j.api;
-    requires jsch;
+module pi4j.library.pigpio {
 
-    exports com.pi4j.plugin.linuxfs;
-    exports com.pi4j.plugin.linuxfs.provider.gpio.digital;
-
-    provides com.pi4j.extension.Plugin
-            with LinuxFsPlugin;
+    // SLF4J
+    requires slf4j.api;
+    requires slf4j.simple;
 }

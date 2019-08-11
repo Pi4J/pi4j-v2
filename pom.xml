@@ -95,6 +95,7 @@
 	<modules>
         <!-- THE FOLLOWING MODULES ARE V2 -->
         <module>pi4j-api</module>
+        <module>libraries/pi4j-library</module>
         <module>plugins/pi4j-plugin</module>
         <module>pi4j-test</module>
         <module>pi4j-example</module>

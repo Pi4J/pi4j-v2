@@ -37,7 +37,7 @@ public interface Extension<T> extends Identity, Lifecycle<T> {
         return Descriptor.create()
                 .id(this.id())
                 .name(this.name())
-                .category("BINDING")
+                .category("EXTENSION")
                 .description(this.description()).type(this.getClass());
     }
 }
