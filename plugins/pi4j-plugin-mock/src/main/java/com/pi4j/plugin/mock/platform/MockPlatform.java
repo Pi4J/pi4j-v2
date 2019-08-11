@@ -30,6 +30,8 @@ package com.pi4j.plugin.mock.platform;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.platform.Platform;
+import com.pi4j.platform.PlatformBase;
 import com.pi4j.plugin.mock.Mock;
 import com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInputProvider;
 import com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogOutputProvider;
@@ -39,8 +41,6 @@ import com.pi4j.plugin.mock.provider.i2c.MockI2CProvider;
 import com.pi4j.plugin.mock.provider.pwm.MockPwmProvider;
 import com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
 import com.pi4j.plugin.mock.provider.spi.MockSpiProvider;
-import com.pi4j.platform.Platform;
-import com.pi4j.platform.PlatformBase;
 
 public class MockPlatform extends PlatformBase<MockPlatform> implements Platform {
 

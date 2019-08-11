@@ -31,7 +31,6 @@ package com.pi4j.plugin.raspberrypi;
 
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
-import com.pi4j.provider.Provider;
 import com.pi4j.plugin.raspberrypi.platform.RaspberryPiPlatform;
 import com.pi4j.plugin.raspberrypi.provider.gpio.digital.RpiDigitalInputProvider;
 import com.pi4j.plugin.raspberrypi.provider.gpio.digital.RpiDigitalOutputProvider;
@@ -39,6 +38,7 @@ import com.pi4j.plugin.raspberrypi.provider.i2c.RpiI2CProvider;
 import com.pi4j.plugin.raspberrypi.provider.pwm.RpiPwmProvider;
 import com.pi4j.plugin.raspberrypi.provider.serial.RpiSerialProvider;
 import com.pi4j.plugin.raspberrypi.provider.spi.RpiSpiProvider;
+import com.pi4j.provider.Provider;
 
 public class RaspberryPiPlugin implements Plugin {
 

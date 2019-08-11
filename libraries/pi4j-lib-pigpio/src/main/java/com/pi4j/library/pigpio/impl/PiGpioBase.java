@@ -30,7 +30,6 @@ package com.pi4j.library.pigpio.impl;
  */
 
 import com.pi4j.library.pigpio.PiGpio;
-import com.pi4j.library.pigpio.PiGpioConst;
 import com.pi4j.library.pigpio.PiGpioError;
 import com.pi4j.library.pigpio.PiGpioPacket;
 import org.slf4j.Logger;

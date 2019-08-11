@@ -32,9 +32,6 @@ package com.pi4j.plugin.linuxfs.provider.gpio;
 import com.pi4j.io.gpio.digital.DigitalState;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
