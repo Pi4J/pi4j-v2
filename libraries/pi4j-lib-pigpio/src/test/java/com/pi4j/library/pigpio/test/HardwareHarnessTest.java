@@ -30,6 +30,9 @@ package com.pi4j.library.pigpio.test;
  */
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortEvent;
+import com.fazecast.jSerialComm.SerialPortMessageListener;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,6 +40,14 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Timeout;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import static com.fazecast.jSerialComm.SerialPort.*;
 
 
 @TestMethodOrder(OrderAnnotation.class)
@@ -100,9 +111,109 @@ public class HardwareHarnessTest {
     }
 
     @Test
+    @Timeout(5) // seconds
     @Order(3)
-    public void abc() {
-        System.out.println("HERE");
-    }
+    public void testTestHarnessConnection() throws IOException, InterruptedException {
 
+        final BlockingQueue<Object> values = new LinkedBlockingQueue<Object>();
+
+        // get port instance
+        SerialPort port = SerialPort.getCommPort("tty.usbmodem142301");
+
+        // configure port
+        port.setBaudRate(115200);
+        port.setNumDataBits(8);
+        port.setNumStopBits(1);
+        port.setParity(0);
+        port.setFlowControl(FLOW_CONTROL_DISABLED);
+
+        port.setComPortTimeouts(TIMEOUT_NONBLOCKING, 0, 0);
+
+        // open serial port
+        port.openPort();
+
+        // test serial port
+        Assert.assertTrue("Serial port to test harness failed.", port.isOpen());
+
+        // if the port is open, then proceed with tests
+        if(port.isOpen()) {
+
+            // send the "info" command to the test harness
+            port.getOutputStream().write("info\r\n".getBytes());
+            port.getOutputStream().flush();
+
+//            Scanner in = new Scanner(port.getInputStream());
+//            while(!in.hasNextLine()){
+//            }
+//            System.out.println(in.nextLine());
+
+//            Gson gson = new Gson();
+//            Info info = gson.fromJson(received, Info.class);
+//            System.out.println(info.id);
+//            System.out.println(info.name);
+//            System.out.println(info.version);
+//            System.out.println(info.date);
+//            System.out.println(info.copyright);
+
+
+            SerialPortMessageListener listener = new SerialPortMessageListener() {
+                @Override
+                public int getListeningEvents() {
+                    return LISTENING_EVENT_DATA_RECEIVED;
+                }
+
+                @Override
+                public void serialEvent(SerialPortEvent serialPortEvent) {
+                    try {
+                        byte[] data = serialPortEvent.getReceivedData();
+                        String received  = new String(data, StandardCharsets.US_ASCII);
+
+                        //System.out.println(received);
+
+                        JSONObject payload = new JSONObject(received);
+                        if(payload.has("id") && payload.get("id").toString().equalsIgnoreCase("info")){
+                            // return the info payload to the blocking queue
+                            values.offer(payload);
+                            return;
+                        }
+                        Assert.fail("The response data received is missing the 'info' identifier: " + received);
+
+                        // close serial port
+                        port.closePort();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Assert.fail(e.getMessage());
+                    }
+                }
+
+                @Override
+                public byte[] getMessageDelimiter() {
+                    return new byte[] { 0x0D, 0x0A };
+                }
+
+                @Override
+                public boolean delimiterIndicatesEndOfMessage() {
+                    return true;
+                }
+            };
+
+            // add event listener
+            port.addDataListener(listener);
+
+            // wait here for "info" payload to be received
+            JSONObject response  = (JSONObject) values.take();
+
+            System.out.println("... we are connected to test harness:");
+            System.out.println("----------------------------------------");
+            System.out.println("NAME       : " + response.get("name"));
+            System.out.println("VERSION    : " + response.get("version"));
+            System.out.println("DATE       : " + response.get("date"));
+            System.out.println("COPYRIGHT  : " + response.get("copyright"));
+            System.out.println("----------------------------------------");
+
+            // success; close port
+            port.closePort();
+        }
+    }
 }
