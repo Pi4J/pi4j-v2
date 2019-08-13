@@ -36,28 +36,28 @@ public class Main {
 
         PiGpio pig = PiGpio.newSocketInstance("rpi3bp");
 
-        pig.gpioSetMode(3, PiGpioMode.OUTPUT);
+        pig.gpioSetMode(4, PiGpioMode.OUTPUT);
 
-//        for(int x = 0; x < 100; x++) {
-//            pig.gpioWrite(2, PiGpioState.LOW);
-//            pig.gpioWrite(3, PiGpioState.LOW);
-//            pig.gpioWrite(2, PiGpioState.HIGH);
-//            pig.gpioWrite(3, PiGpioState.HIGH);
-//        }
+        for(int x = 0; x < 100; x++) {
+            pig.gpioWrite(4, PiGpioState.LOW);
+            //pig.gpioWrite(3, PiGpioState.LOW);
+            pig.gpioWrite(4, PiGpioState.HIGH);
+            //pig.gpioWrite(3, PiGpioState.HIGH);
+        }
 
 //        pig.gpioPWM(2, 50);
 //        Thread.sleep(1000);;
 //        pig.gpioPWM(2, 0);
 
 
-        pig.gpioSetMode(4, PiGpioMode.INPUT);
-        pig.gpioSetPullUpDown(4, PiGpioPud.DOWN);
-
-        for(int x = 0; x < 100000; x++) {
-            var value = pig.gpioRead(4);
-            System.out.println(value);
-        }
-
+//        pig.gpioSetMode(4, PiGpioMode.INPUT);
+//        pig.gpioSetPullUpDown(4, PiGpioPud.DOWN);
+//
+//        for(int x = 0; x < 100000; x++) {
+//            var value = pig.gpioRead(4);
+//            System.out.println(value);
+//        }
+//
 
 
 //        pig.initialize();

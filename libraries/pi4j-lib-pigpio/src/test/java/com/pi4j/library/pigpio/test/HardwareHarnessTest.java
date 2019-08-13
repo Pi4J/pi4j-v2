@@ -1,4 +1,4 @@
-package com.pi4j.library.pigpio;
+package com.pi4j.library.pigpio.test;
 
 /*-
  * #%L
@@ -96,7 +96,7 @@ public class HardwareHarnessTest {
         }
 
         Assert.fail("The 'Arduino Due' serial port could not be found; therefore " +
-                " we cannot communicate with the test harness hardware");
+                " we cannot communicate with the testing harness hardware");
     }
 
     @Test
