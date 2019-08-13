@@ -27,7 +27,7 @@
 ###
 
 # ----------------------------------------------------------------------------------
-# This is a Java program with a minimum requirment of JDK8.
+# This is a Java program with a minimum requirement of JDK8.
 # This build should be performed on a Linux platform.
 # ----------------------------------------------------------------------------------
 language: java
