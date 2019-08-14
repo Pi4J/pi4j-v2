@@ -110,6 +110,9 @@ void pin_command_execute(SerialCommands* sender){
         pins[pin].value   = -1;
         pins[pin].mode    = -1;
 
+        // reset actual hardware pins to default mode
+        pinMode(pin, INPUT);
+
         // return current pin state
         response["id"] = "set";
         SerializePin(response, pin, false);
@@ -162,7 +165,7 @@ void pin_command_execute(SerialCommands* sender){
             response["id"] = "error";
             response["errno"] = value;            
             response["pin"] = pin;
-            response["mode"] = mode;
+            response["mode"] = "output";
             response["arg"] = "value";
             response["msg"] = GetCommandArgumentError(value);
             serializeJson(doc, *sender->GetSerial());

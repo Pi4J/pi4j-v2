@@ -92,8 +92,8 @@ public interface PiGpio {
      * Call before program exit.
      * This function resets the used DMA channels, releases memory, and terminates any running threads.
      */
-    void gpioTerminate();
-    default void terminate(){ gpioTerminate(); }
+    void gpioTerminate() throws IOException;
+    default void terminate() throws IOException { gpioTerminate(); }
 
     /**
      * Returns the pigpio library version.
