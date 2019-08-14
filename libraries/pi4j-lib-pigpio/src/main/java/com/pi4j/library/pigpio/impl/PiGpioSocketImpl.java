@@ -114,8 +114,9 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * This function resets the used DMA channels, releases memory, and terminates any running threads.
      */
     @Override
-    public void gpioTerminate() {
+    public void gpioTerminate() throws IOException {
         // TODO :: REMOVE ALL NOTIFICATIONS
+        socket.close();
     }
 
     /**

@@ -5,7 +5,7 @@ package com.pi4j.library.pigpio.test;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
- * FILENAME      :  HardwareHarnessTest.java
+ * FILENAME      :  TestDigitalOutputs.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,170 +29,157 @@ package com.pi4j.library.pigpio.test;
  * #L%
  */
 
-import com.fazecast.jSerialComm.SerialPort;
 import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.library.pigpio.PiGpioMode;
+import com.pi4j.library.pigpio.PiGpioPud;
 import com.pi4j.library.pigpio.PiGpioState;
-import org.json.JSONObject;
+import com.pi4j.library.pigpio.test.harness.ArduinoTestHarness;
+import com.pi4j.library.pigpio.test.harness.TestHarnessInfo;
+import com.pi4j.library.pigpio.test.harness.TestHarnessPin;
+import com.pi4j.library.pigpio.test.harness.TestHarnessPins;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.Timeout;
 
 import java.io.IOException;
-import java.util.Scanner;
 
-import static com.fazecast.jSerialComm.SerialPort.FLOW_CONTROL_DISABLED;
-import static com.fazecast.jSerialComm.SerialPort.TIMEOUT_READ_SEMI_BLOCKING;
-
-
-@TestMethodOrder(OrderAnnotation.class)
+@DisplayName("PIGPIO :: Test Digital Output Pins")
 public class TestDigitalOutputs {
 
-    @Before
-    public void beforeTest() {
+    private static PiGpio pigpio;
+    private static ArduinoTestHarness harness;
+
+    @BeforeAll
+    public static void initialize() {
+        System.out.println();
+        System.out.println("************************************************************************");
+        System.out.println("INITIALIZE TEST (" + TestDigitalOutputs.class.getName() + ")");
+        System.out.println("************************************************************************");
+        System.out.println();
+
+        try {
+            // create test harness and PIGPIO instances
+            pigpio = PiGpio.newSocketInstance("rpi3bp");
+            harness = new ArduinoTestHarness();
+
+            // initialize test harness and PIGPIO instances
+            pigpio.initialize();
+            harness.initialize();
+
+            // get test harness info
+            TestHarnessInfo info = harness.getInfo();
+            System.out.println("... we are connected to test harness:");
+            System.out.println("----------------------------------------");
+            System.out.println("NAME       : " + info.name);
+            System.out.println("VERSION    : " + info.version);
+            System.out.println("DATE       : " + info.date);
+            System.out.println("COPYRIGHT  : " + info.copyright);
+            System.out.println("----------------------------------------");
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
-    @After
-    public void afterTest() {
+    @AfterAll
+    public static void terminate() throws IOException {
+        System.out.println();
+        System.out.println("************************************************************************");
+        System.out.println("TERMINATE TEST (" + TestDigitalOutputs.class.getName() + ") ");
+        System.out.println("************************************************************************");
+        System.out.println();
+
+        // terminate test harness and PIGPIO instances
+        pigpio.terminate();
+        harness.terminate();
     }
 
     @Test
-    @Timeout(5) // seconds
-    @Order(1)
-    public void testGpioDigitalOutputHigh() throws IOException, InterruptedException {
+    public void testGpioDigitalOutputs() throws IOException {
 
-        PiGpio pig = PiGpio.newSocketInstance("rpi3bp");
+        // reset all pins on test harness before proceeding with this test
+        TestHarnessPins reset = harness.reset();
 
-        // get port instance
-        SerialPort port = SerialPort.getCommPort("tty.usbmodem142301");
+        System.out.println();
+        System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
 
-        // configure port
-        port.setBaudRate(115200);
-        port.setNumDataBits(8);
-        port.setNumStopBits(1);
-        port.setParity(0);
-        port.setFlowControl(FLOW_CONTROL_DISABLED);
-
-        // configure read timeout
-        port.setComPortTimeouts(TIMEOUT_READ_SEMI_BLOCKING, 1000, 0);
-
-        // open serial port
-        port.openPort();
-
-        // test serial port was opened
-        // if the port is not open, then fail the test
-        if(!port.isOpen()) {
-            Assert.fail("Serial port to test harness failed.");
-            return;
+        // iterate over pins and perform test on each
+        // TODO :: IMPLEMENT CORRECT SET OF TEST PINS
+        for(int pin = 2; pin <= 12; pin++){
+            testDigitalOutputPin(pin);
         }
-
-        // send the "info" command to the test harness
-        port.getOutputStream().write("pin 2 input\r\n".getBytes());
-        port.getOutputStream().flush();
-
-        pig.gpioWrite(2, PiGpioState.HIGH);
-
-        // send the "info" command to the test harness
-        port.getOutputStream().write("pin 2\r\n".getBytes());
-        port.getOutputStream().flush();
-
-        Scanner in = new Scanner(port.getInputStream());
-        while(in.hasNextLine()){
-            var received  = in.nextLine();
-            System.out.println(received);
-
-            JSONObject payload = new JSONObject(received);
-            if(payload.has("id") && payload.has("pin") &&
-               payload.has("mode") && payload.has("value")){
-
-               if(payload.getString("id").equalsIgnoreCase("get") &&
-                  payload.getInt("pin") == 2  &&
-                  payload.getString("mode").equalsIgnoreCase("input") ) {
-                   int value = payload.getInt("value");
-                   Assert.assertEquals("PIN VALUE MISMATCH", PiGpioState.HIGH.value(), value);
-                   port.closePort();
-                   return;
-               }
-            }
-        }
-
-        // test failed
-        Assert.fail("No 'info' response received from test harness.");
-
-        // close port when done
-        port.closePort();
     }
 
+    public void testDigitalOutputPin(int pin) throws IOException{
 
-    @Test
-    @Timeout(5) // seconds
-    @Order(2)
-    public void testGpioDigitalOutputLow() throws IOException, InterruptedException {
+        System.out.println();
+        System.out.println("----------------------------------------");
+        System.out.println("TEST SOC DIGITAL OUTPUT PIN [" + pin + "]");
+        System.out.println("----------------------------------------");
 
-        PiGpio pig = PiGpio.newSocketInstance("rpi3bp");
+        // configure test pin as an input pin on the test harness;
+        // use the internal pull-up resistor on the Arduino hardware
+        harness.setInputPin(pin, true);
 
-        // get port instance
-        SerialPort port = SerialPort.getCommPort("tty.usbmodem142301");
+        // configure output pin on test SoC (RaspberryPi)
+        pigpio.gpioSetMode(pin, PiGpioMode.OUTPUT);
 
-        // configure port
-        port.setBaudRate(115200);
-        port.setNumDataBits(8);
-        port.setNumStopBits(1);
-        port.setParity(0);
-        port.setFlowControl(FLOW_CONTROL_DISABLED);
+        System.out.println();
+        PiGpioState state = PiGpioState.LOW;
+        System.out.println("TEST OUTPUT FOR [" + state.name() + "] STATE");
+        pigpio.gpioWrite(pin, state); // set output pin state on SoC (RaspberryPi)
+        TestHarnessPin p = harness.getPin(pin); // get input pin state from the test harness
+        System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
+        System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
+        Assert.assertEquals("INCORRECT PIN VALUE", state.value(), p.value);
 
-        // configure read timeout
-        port.setComPortTimeouts(TIMEOUT_READ_SEMI_BLOCKING, 1000, 0);
+        System.out.println();
+        state = PiGpioState.HIGH;
+        System.out.println("TEST OUTPUT FOR [" + state.name() + "] STATE");
+        pigpio.gpioWrite(pin, state); // set output pin state on SoC (RaspberryPi)
+        p = harness.getPin(pin); // get input pin state from the test harness
+        System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
+        System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
+        Assert.assertEquals("INCORRECT PIN VALUE", state.value(), p.value);
 
-        // open serial port
-        port.openPort();
+        System.out.println();
+        state = PiGpioState.LOW;
+        System.out.println("TEST OUTPUT FOR [" + state.name() + "] STATE");
+        pigpio.gpioWrite(pin, state); // set output pin state on SoC (RaspberryPi)
+        p = harness.getPin(pin); // get input pin state from the test harness
+        System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
+        System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
+        Assert.assertEquals("INCORRECT PIN VALUE", state.value(), p.value);
 
-        // test serial port was opened
-        // if the port is not open, then fail the test
-        if(!port.isOpen()) {
-            Assert.fail("Serial port to test harness failed.");
-            return;
-        }
+        System.out.println();
+        state = PiGpioState.HIGH;
+        System.out.println("TEST OUTPUT FOR [" + state.name() + "] STATE");
+        pigpio.gpioWrite(pin, state); // set output pin state on SoC (RaspberryPi)
+        p = harness.getPin(pin); // get input pin state from the test harness
+        System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
+        System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
+        Assert.assertEquals("INCORRECT PIN VALUE", state.value(), p.value);
 
-        // send the "info" command to the test harness
-        port.getOutputStream().write("pin 2 input\r\n".getBytes());
-        port.getOutputStream().flush();
+        System.out.println();
+        state = PiGpioState.LOW;
+        System.out.println("TEST OUTPUT FOR [" + state.name() + "] STATE");
+        pigpio.gpioWrite(pin, state); // set output pin state on SoC (RaspberryPi)
+        p = harness.getPin(pin); // get input pin state from the test harness
+        System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
+        System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
+        Assert.assertEquals("INCORRECT PIN VALUE", state.value(), p.value);
 
-        pig.gpioWrite(2, PiGpioState.LOW);
+        // disable test pin on the test harness
+        p = harness.disablePin(pin);
+        System.out.println();
+        System.out.println("DISABLE TEST PIN [" + p.pin + "] ON TEST HARNESS <" + p.access + ">");
 
-        // send the "info" command to the test harness
-        port.getOutputStream().write("pin 2\r\n".getBytes());
-        port.getOutputStream().flush();
-
-        Scanner in = new Scanner(port.getInputStream());
-        while(in.hasNextLine()){
-            var received  = in.nextLine();
-            System.out.println(received);
-
-            JSONObject payload = new JSONObject(received);
-            if(payload.has("id") && payload.has("pin") &&
-                    payload.has("mode") && payload.has("value")){
-
-                if(payload.getString("id").equalsIgnoreCase("get") &&
-                        payload.getInt("pin") == 2  &&
-                        payload.getString("mode").equalsIgnoreCase("input") ) {
-                    int value = payload.getInt("value");
-                    Assert.assertEquals("PIN VALUE MISMATCH", PiGpioState.LOW.value(), value);
-                    port.closePort();
-                    return;
-                }
-            }
-        }
-
-        // test failed
-        Assert.fail("No 'info' response received from test harness.");
-
-        // close port when done
-        port.closePort();
+        // reset pin on SoC (Raspberry Pi) (defaults as an input pin)
+        pigpio.gpioSetMode(pin, PiGpioMode.INPUT);
+        pigpio.gpioSetPullUpDown(pin, PiGpioPud.OFF);
     }
-
 }

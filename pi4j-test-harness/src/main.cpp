@@ -64,8 +64,7 @@ void setup() {
     // print firmware startup banner and program information
     info(&console);
 
-
-    // pins zero and one are reserved for USB programming
+    // pins zero and one are reserved for USB programming port
     pins[0].restricted = true;
     pins[1].restricted = true;
 
@@ -113,6 +112,9 @@ void reset(){
         pins[p].value = -1;
         pins[p].mode = -1;
         pins[p].counter = 0;
+
+        // reset actual hardware pins to default mode
+        if(!pins[p].restricted) pinMode(p, INPUT);
     }        
 
     // include summary totals
