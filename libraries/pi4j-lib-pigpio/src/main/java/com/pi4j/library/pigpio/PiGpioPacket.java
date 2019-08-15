@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /**
  *
@@ -54,57 +56,28 @@ import java.nio.ByteOrder;
 public class PiGpioPacket {
 
     private PiGpioCmd cmd;
-    private int p1;
-    private int p2;
-    private int p3;
+    private int p1 = 0;
+    private int p2 = 0;
+    private int p3 = 0;
+    private byte[] data = new byte[0];
+
+    public PiGpioPacket(){
+    }
 
     public PiGpioPacket(PiGpioCmd cmd){
-        this(cmd, 0, 0, 0);
+        this.cmd(cmd);
     }
 
     public PiGpioPacket(PiGpioCmd cmd, int p1){
-        this(cmd, p1, 0, 0);
+        this.cmd(cmd).p1(p1);
     }
 
     public PiGpioPacket(PiGpioCmd cmd, int p1, int p2){
-        this(cmd, p1, p2, 0);
+        this.cmd(cmd).p1(p1).p2(p2);
     }
 
-    public PiGpioPacket(PiGpioCmd cmd, int p1, int p2, int p3){
-        this.cmd = cmd;
-        this.p1 = p1;
-        this.p2 = p2;
-        this.p3 = p3;
-    }
-
-    public PiGpioPacket(InputStream stream) throws IOException {
-        this(stream.readNBytes(stream.available()));
-    }
-
-    public PiGpioPacket(byte[] data) throws IOException{
-        ByteBuffer rx = ByteBuffer.wrap(data);
-        rx.order(ByteOrder.LITTLE_ENDIAN);
-
-        // check data length for minimum package size
-        if(data.length < 16){
-            throw new IOException("Insufficient number of data bytes bytes received; COUNT=" + data.length);
-        }
-
-        this.cmd = PiGpioCmd.from(rx.getInt(0)); // CMD
-        this.p1 = rx.getInt(4);  // P1
-        this.p2 = rx.getInt(8);  // P2
-        this.p3 = rx.getInt(12); // P3
-
-//        System.out.println("BYTES RX : "+  avail);
-//        System.out.println(" - [CMD] : " + rx_cmd);
-//        System.out.println(" - [P1]  : " + rx_p1);
-//        System.out.println(" - [P2]  : " + rx_p2);
-//        System.out.println(" - [P3]  : " + rx_p3);
-    }
-
-    @Override
-    public String toString(){
-        return String.format("CMD=%s(%d); P1=%d; P2=%d; P3=%d;", cmd().name(), cmd().value(), p1, p2, p3);
+    public PiGpioPacket(PiGpioCmd cmd, int p1, int p2, byte[] data){
+        this.cmd(cmd).p1(p1).p2(p2).data(data);
     }
 
     public PiGpioCmd cmd(){
@@ -134,11 +107,13 @@ public class PiGpioPacket {
     public int p3(){
         return this.p3;
     }
-    public PiGpioPacket p3(int p3){
+    protected PiGpioPacket p3(int p3){
         this.p3 = p3;
         return this;
     }
 
+    // the following methods are actaully returning the "P3" value as P3
+    // is a C union and used for multiple purposes depending on context
     public int result(){
         return p3();
     }
@@ -146,29 +121,125 @@ public class PiGpioPacket {
         return p3() >= 0;
     }
 
-    public byte[] toBytes(){
+    public boolean hasData(){
+        if(this.data == null) return false;
+        return this.data.length > 0;
+    }
+    public int dataLength(){
+        if(this.data == null) return 0;
+        return this.data.length;
+    }
+
+    public byte[] data(){
+        return this.data;
+    }
+    public PiGpioPacket data(byte[] data){
+        // check for valid data
+        if(data != null && data.length > 0) {
+            this.p3 = data.length;
+            this.data = Arrays.copyOf(data, data.length);
+        }
+        else{
+            this.p3 = 0;
+            this.data = new byte[0];
+        }
+        return this;
+    }
+
+    public PiGpioPacket data(int value){
+        // check for valid value
+        if(value > 0) {
+            this.p3 = 4; // 4 bytes length
+            ByteBuffer buffer = ByteBuffer.allocate(4);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.putInt(value);
+            this.data = buffer.array();
+        }
+        else{
+            this.p3 = 0;
+            this.data = new byte[0];
+        }
+        return this;
+    }
+
+
+    public PiGpioPacket data(byte value){
+        // check for valid value
+        if(value > 0) {
+            this.p3 = 4; // 4 bytes length
+            this.data = new byte[] { value, 0, 0, 0 }; // little endian
+        }
+        else{
+            this.p3 = 0;
+            this.data = new byte[0];
+        }
+        return this;
+    }
+
+    public String dataToString(){
+        if(data == null) return null;
+        if(data.length == 0) return "";
+        return new String(data, StandardCharsets.US_ASCII);
+    }
+
+    public static PiGpioPacket decode(InputStream stream) throws IOException {
+        return PiGpioPacket.decode(stream.readNBytes(stream.available()));
+    }
+
+    public static PiGpioPacket decode(byte[] data) throws IOException {
+        ByteBuffer rx = ByteBuffer.wrap(data);
+        rx.order(ByteOrder.LITTLE_ENDIAN);
+
+        // check data length for minimum package size
+        if(data.length < 16){
+            throw new IOException("Insufficient number of data bytes bytes received; COUNT=" + data.length);
+        }
+
+        // parse packet parameters from raw received bytes
+        PiGpioCmd cmd = PiGpioCmd.from(rx.getInt()); // CMD <4 bytes :: 0-3>
+        int p1 = rx.getInt();                        // P1  <4 bytes :: 4-7>
+        int p2 = rx.getInt();                        // P2  <4 bytes :: 8-11>
+        int p3 = rx.getInt();                        // P3  <4 bytes :: 12-15>
+
+        // create new packet
+        PiGpioPacket packet = new PiGpioPacket(cmd, p1, p2)
+                .p3(p3); // set RAW P3 value
+
+        // apply any extra payload data (if available)
+        if(rx.hasRemaining()){
+            var temp = new byte[rx.remaining()];
+            rx.get(temp);
+            packet.data(temp);
+        }
+        return packet;
+    }
+
+    public static byte[] encode(PiGpioPacket packet){
         // create byte array and byte buffer using LITTLE ENDIAN for the ARM platform
-        byte[] bytes = new byte[16];
+        byte[] bytes = new byte[16 + packet.dataLength()];
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
 
         // place packet values into structured data bytes
-        buffer.putInt(cmd().value());  // CMD
-        buffer.putInt((p1()));  // <P1>
-        buffer.putInt((p2()));  // <P2>
-        buffer.putInt((p3()));  // <P3>
+        buffer.putInt(packet.cmd().value());  // CMD
+        buffer.putInt((packet.p1()));         // <P1>
+        buffer.putInt((packet.p2()));         // <P2>
+        buffer.putInt((packet.p3()));         // <P3>
+        if(packet.hasData()) {
+            buffer.put(packet.data());     // <DATA>
+        }
 
         // return byte array
         return bytes;
     }
 
-//    public static int toUInt32(long value){
-//        return (int)value;
-//    }
-//
-//    public static long toLong(int x) {
-//        return Integer.toUnsignedLong(x);
-//    }
+    @Override
+    public String toString(){
+        if(p3 > 0)
+            return String.format("CMD=%s(%d); P1=%d; P2=%d; P3=%d; PAYLOAD=%s", cmd().name(), cmd().value(), p1(), p2(), p3(), Arrays.toString(data()));
+        else
+            return String.format("CMD=%s(%d); P1=%d; P2=%d;", cmd().name(), cmd().value(), p1(), p2());
+    }
 }
 
 

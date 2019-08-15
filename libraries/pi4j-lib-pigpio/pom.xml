@@ -18,8 +18,6 @@
 
     <!-- DEPENDENCIES -->
     <dependencies>
-        <!-- inherited from parent -->
-
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -31,7 +29,51 @@
             <artifactId>json</artifactId>
             <version>20190722</version>
         </dependency>
-
     </dependencies>
 
+    <profiles>
+
+        <!-- EXCLUDE HARDWARE INTEGRATION TESTS BY DEFAULT -->
+        <profile>
+            <id>default-profile</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/*UsingTestHarness.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- INLCUDE HARDWARE INTEGRATION TESTS WHEN USING THIS BUILD PROFILE -->
+        <profile>
+            <id>test-hardware</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>**</includes>
+                            <systemPropertyVariables>
+                                <pi4j.pigpio.host>${pi4j.test.pigpio.host}</pi4j.pigpio.host>
+                                <pi4j.pigpio.port>${pi4j.test.pigpio.port}</pi4j.pigpio.port>
+                                <pi4j.test.harness.port>${pi4j.test.harness.port}</pi4j.test.harness.port>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
 </project>

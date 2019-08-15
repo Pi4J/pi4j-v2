@@ -28,6 +28,7 @@
 // include main header
 #include "main.h"
 #include "pins.h"
+#include <Wire.h>
 
 // ------------------------------------------------------------------------------------------------------------------------------
 // INTERACTIVE COMMAND PROCESSOR AND COMMANDS
@@ -49,6 +50,13 @@ void setup() {
     // @see: https://www.arduino.cc/en/serial/begin
     CONSOLE_INTERFACE.begin(CONSOLE_BAUD_RATE);
     DEBUG_INTERFACE.begin(DEBUG_BAUD_RATE);
+
+    // initialize i2c as slave
+    Wire.begin(I2C_SLAVE_ADDRESS);
+
+    // define callbacks for i2c communication
+    Wire.onReceive(receiveI2CData);
+    Wire.onRequest(sendI2CData);
 
     // initialize the interactive diagnostics console using the piped console serial ports
     console.init(&console_pipe);
@@ -184,4 +192,46 @@ void reboot() {
     console.println(F("****************************************************"));
     console.println();
     NVIC_SystemReset();  
+}
+
+
+// callback for received data
+void receiveI2CData(int byteCount){
+    
+    console.print("<-- I2C RX Byte Count: ");
+    console.println(byteCount);
+
+    while(Wire.available())    // slave may send less than requested
+    { 
+        int c = Wire.read();    // receive a byte as character
+        Serial.println(c);
+    }
+
+
+    // while(Wire.available()) {
+    //     i2cValue = Wire.read();
+    //     console.print("<-- I2C Data Received: ");
+    //     console.println(i2cValue);
+
+    //     // display ready/running message
+    //     DynamicJsonDocument doc(512);
+    //     JsonObject response = doc.to<JsonObject>();
+    //     response["id"] = "i2c";
+    //     response["value"] = i2cValue;
+    //     serializeJson(doc, console);
+    //     console.println();
+    // }
+}
+
+// callback for sending data
+void sendI2CData(){
+    console.print("--> I2C Data Sent: ");
+    //console.println(i2cValue);
+    //Wire.write(i2cValue);
+    for(int i = 0; i < 32; i++)
+        Wire.write(i);
+
+    //Wire.write(0);
+    //Wire.write(0);
+    //Wire.write(1);
 }

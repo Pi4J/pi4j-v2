@@ -36,11 +36,24 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static com.pi4j.library.pigpio.PiGpioCmd.*;
-import static com.pi4j.library.pigpio.PiGpioConst.*;
+import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_HOST;
+import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_PORT;
 
 public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    /**
+     * Creates a PiGpio instance using TCP Socket communication for remote I/O access.
+     * Connects to a user specified socket hostname/ip address and port.
+     *
+     * @param host hostname or IP address of the RaspberryPi to connect to via TCP/IP socket.
+     * @param port TCP port number of the RaspberryPi to connect to via TCP/IP socket.
+     * @throws IOException
+     */
+    public static PiGpio newInstance(String host, String port) throws IOException {
+        return new PiGpioSocketImpl(host, Integer.parseInt(port));
+    }
 
     /**
      * Creates a PiGpio instance using TCP Socket communication for remote I/O access.
@@ -297,6 +310,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @param dutyCycle dutycycle: 0-range
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioPWM"
      */
+    @Override
     public void gpioPWM(int pin, int dutyCycle) throws IOException {
         logger.trace("[PWM::SET] -> PIN: {}; DUTY-CYCLE={};", pin, dutyCycle);
         validateUserPin(pin);
@@ -319,6 +333,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @return Returns between 0 (off) and range (fully on) if OK.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMdutycycle"
      */
+    @Override
     public int gpioGetPWMdutycycle(int pin) throws IOException {
         logger.trace("[PWM::GET] -> PIN: {}", pin);
         validateUserPin(pin);
@@ -356,6 +371,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @return Returns the real range for the given GPIO's frequency if OK.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange"
      */
+    @Override
     public int gpioSetPWMrange(int pin, int range) throws IOException {
         logger.trace("[PWM-RANGE::SET] -> PIN: {}; RANGE={}", pin, range);
         validateUserPin(pin);
@@ -375,6 +391,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @return duty-cycle range
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrange"
      */
+    @Override
     public int gpioGetPWMrange(int pin) throws IOException {
         logger.trace("[PWM-RANGE::GET] -> PIN: {}", pin);
         validateUserPin(pin);
@@ -395,6 +412,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @return real range used for the GPIO if OK.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrealRange"
      */
+    @Override
     public int gpioGetPWMrealRange(int pin) throws IOException {
         logger.trace("[PWM-REAL-RANGE::GET] -> PIN: {}", pin);
         validateUserPin(pin);
@@ -446,6 +464,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @return Returns the numerically closest frequency if OK
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange"
      */
+    @Override
     public int gpioSetPWMfrequency(int pin, int frequency) throws IOException {
         logger.trace("[PWM-FREQ::SET] -> PIN: {}; FREQUENCY={}", pin, frequency);
         validateUserPin(pin);
@@ -471,6 +490,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @return Returns the frequency (in hertz) used for the GPIO if OK.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMfrequency"
      */
+    @Override
     public int gpioGetPWMfrequency(int pin) throws IOException {
         logger.trace("[PWM-FREQ::GET] -> PIN: {}", pin);
         validateUserPin(pin);
@@ -489,6 +509,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @return Returns the actual length of the delay in microseconds.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioDelay"
      */
+    @Override
     public int gpioDelay(int micros) throws IOException {
         logger.trace("[DELAY] -> MICROS: {}", micros);
         validateDelayMicroseconds(micros);
@@ -505,6 +526,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @return Returns the actual length of the delay in milliseconds.
      * @see "http://abyz.me.uk/rpi/pigpio/pigs.html#MILS"
      */
+    @Override
     public int gpioDelayMilliseconds(int millis) throws IOException{
         logger.trace("[DELAY] -> MILLIS: {}", millis);
         validateDelayMilliseconds(millis);
@@ -536,11 +558,190 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @return Returns the current system tick.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioTick"
      */
+    @Override
     public long gpioTick() throws IOException {
         logger.trace("[TICK::GET] -> Get current tick");
         PiGpioPacket result = sendCommand(TICK);
         long tick = Integer.toUnsignedLong(result.result()); // convert (UInt32) 32-bit unsigned value to long
         logger.trace("[TICK::GET] <- TICK: {}; SUCCESS={}",  tick, result.success());
         return tick;
+    }
+
+    @Override
+    public int i2cOpen(int bus, int device, int flags) throws IOException {
+        logger.trace("[I2C::OPEN] -> Open I2C Bus [{}] and Device [{}]", bus, device);
+        validateI2cBus(bus);
+        validateI2cDeviceAddress(device);
+        PiGpioPacket result = sendCommand(I2CO, bus, device).data(flags);
+        int handle = result.result();
+        logger.trace("[I2C::OPEN] <- HANDLE={}; SUCCESS={}",  handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        return handle;
+    }
+
+    @Override
+    public void i2cClose(int handle) throws IOException {
+        logger.trace("[I2C::CLOSE] -> HANDLE={}, Close I2C Bus", handle);
+        validateI2cHandle(handle);
+        PiGpioPacket result = sendCommand(I2CC, handle);
+        logger.trace("[I2C::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+    }
+
+    @Override
+    public void i2cWriteQuick(int handle, boolean bit) throws IOException {
+        logger.trace("[I2C::WRITE] -> HANDLE={}; R/W Bit [{}]", handle, bit ? 1 : 0);
+        validateI2cHandle(handle);
+        PiGpioPacket result = sendCommand(I2CWQ, handle, bit ? 1 : 0);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+    }
+
+    @Override
+    public void i2cWriteByte(int handle, byte value) throws IOException {
+        logger.trace("[I2C::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
+        validateI2cHandle(handle);
+        PiGpioPacket result = sendCommand(I2CWS, handle, Byte.toUnsignedInt(value));
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+    }
+
+    @Override
+    public byte i2cReadByte(int handle) throws IOException {
+        logger.trace("[I2C::READ] -> [{}]; Byte", handle);
+        validateI2cHandle(handle);
+        PiGpioPacket result = sendCommand(I2CRS, handle);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        return (byte)result.result();
+    }
+
+    @Override
+    public void i2cWriteByteData(int handle, int register, byte value) throws IOException {
+        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Byte [{}]", handle ,register, value);
+        validateI2cHandle(handle);
+        validateI2cRegister(register);
+        PiGpioPacket result = sendCommand(I2CWB, handle, register, value);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+    }
+
+    @Override
+    public void i2cWriteWordData(int handle, int register, int value) throws IOException {
+        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
+        validateI2cHandle(handle);
+        validateI2cRegister(register);
+        PiGpioPacket result = sendCommand(I2CWW, handle, register).data(value);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+    }
+
+    @Override
+    public byte i2cReadByteData(int handle, int register) throws IOException {
+        logger.trace("[I2C::READ] -> [{}]; Register [{}]; Byte", handle ,register);
+        validateI2cHandle(handle);
+        validateI2cRegister(register);
+        PiGpioPacket result = sendCommand(I2CRB, handle, register);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        return (byte)result.result();
+    }
+
+    @Override
+    public int i2cReadWordData(int handle, int register) throws IOException {
+        logger.trace("[I2C::READ] -> [{}]; Register [{}]; Word", handle ,register);
+        validateI2cHandle(handle);
+        validateI2cRegister(register);
+        PiGpioPacket result = sendCommand(I2CRW, handle, register);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        return result.result();
+    }
+
+    @Override
+    public int i2cProcessCall(int handle, int register, int value) throws IOException {
+        logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
+        validateI2cHandle(handle);
+        validateI2cRegister(register);
+        PiGpioPacket result = sendCommand(I2CPC, handle, register).data(value);
+        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        return result.result();
+    }
+
+    @Override
+    public void i2cWriteBlockData(int handle, int register, byte[] data) throws IOException {
+        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, data.length);
+        validateI2cHandle(handle);
+        validateI2cRegister(register);
+        validateI2cDataLength(data.length);
+        PiGpioPacket result = sendCommand(I2CWK, handle, register, data);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+    }
+
+    @Override
+    public byte[] i2cReadBlockData(int handle, int register) throws IOException {
+        logger.trace("[I2C::READ] -> [{}]; Register [{}]; Block", handle ,register);
+        validateI2cHandle(handle);
+        validateI2cRegister(register);
+        PiGpioPacket result = sendCommand(I2CRK, handle, register);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        return result.data();
+    }
+    @Override
+    public byte[] i2cBlockProcessCall(int handle, int register, byte[] data) throws IOException {
+        logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, data.length);
+        validateI2cHandle(handle);
+        validateI2cRegister(register);
+        validateI2cDataLength(data.length);
+        PiGpioPacket result = sendCommand(I2CPK, handle, register, data);
+        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        return result.data();
+    }
+
+    @Override
+    public byte[] i2cReadI2CBlockData(int handle, int register, int length) throws IOException {
+        logger.trace("[I2C::READ] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, length);
+        validateI2cHandle(handle);
+        validateI2cRegister(register);
+        PiGpioPacket result = sendCommand(I2CRI, handle, register).data(length);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        return result.data();
+    }
+
+    @Override
+    public void i2cWriteI2CBlockData(int handle, int register, byte[] data) throws IOException {
+        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, data.length);
+        validateI2cHandle(handle);
+        validateI2cRegister(register);
+        validateI2cDataLength(data.length);
+        PiGpioPacket result = sendCommand(I2CWI, handle, register, data);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+    }
+
+    @Override
+    public byte[] i2cReadDevice(int handle, int length) throws IOException {
+        logger.trace("[I2C::READ] -> [{}]; I2C Raw Read [{} bytes]", handle, length);
+        validateI2cHandle(handle);
+        PiGpioPacket result = sendCommand(I2CRD, handle, length);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        return result.data();
+    }
+
+    @Override
+    public int i2cWriteDevice(int handle, byte[] data) throws IOException {
+        logger.trace("[I2C::WRITE] -> [{}]; I2C Raw Write [{} bytes]", handle, data.length);
+        validateI2cHandle(handle);
+        validateI2cDataLength(data.length);
+        PiGpioPacket result = sendCommand(I2CWD, handle, 0, data);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
+        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        return -1;
     }
 }

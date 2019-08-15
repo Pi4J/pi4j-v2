@@ -5,7 +5,7 @@ package com.pi4j.library.pigpio.test;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
- * FILENAME      :  TestDigitalInputs.java
+ * FILENAME      :  TestDigitalInputsUsingTestHarness.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -46,7 +46,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 @DisplayName("PIGPIO :: Test Digital Input Pins")
-public class TestDigitalInputs {
+public class TestDigitalInputsUsingTestHarness {
 
     private static PiGpio pigpio;
     private static ArduinoTestHarness harness;
@@ -55,14 +55,15 @@ public class TestDigitalInputs {
     public static void initialize() {
         System.out.println();
         System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestDigitalInputs.class.getName() + ")");
+        System.out.println("INITIALIZE TEST (" + TestDigitalInputsUsingTestHarness.class.getName() + ")");
         System.out.println("************************************************************************");
         System.out.println();
 
         try {
             // create test harness and PIGPIO instances
-            pigpio = PiGpio.newSocketInstance("rpi3bp");
-            harness = new ArduinoTestHarness();
+            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142301"));
+            pigpio = PiGpio.newSocketInstance(System.getProperty("pi4j.pigpio.host", "rpi3bp.savage.lan"),
+                                              System.getProperty("pi4j.pigpio.port", "8888"));
 
             // initialize test harness and PIGPIO instances
             pigpio.initialize();
@@ -87,7 +88,7 @@ public class TestDigitalInputs {
     public static void terminate() throws IOException {
         System.out.println();
         System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestDigitalInputs.class.getName() + ") ");
+        System.out.println("TERMINATE TEST (" + TestDigitalInputsUsingTestHarness.class.getName() + ") ");
         System.out.println("************************************************************************");
         System.out.println();
 

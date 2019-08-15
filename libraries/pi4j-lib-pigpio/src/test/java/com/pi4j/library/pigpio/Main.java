@@ -28,6 +28,8 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
+import java.util.Arrays;
+
 public class Main {
 
 
@@ -36,14 +38,52 @@ public class Main {
 
         PiGpio pig = PiGpio.newSocketInstance("rpi3bp");
 
-        pig.gpioSetMode(4, PiGpioMode.OUTPUT);
+        // set pin ALT0 modes for I2C BUS<1> usage on RPI3B
+        pig.gpioSetMode(2, PiGpioMode.ALT0);
+        pig.gpioSetMode(3, PiGpioMode.ALT0);
 
-        for(int x = 0; x < 100; x++) {
-            pig.gpioWrite(4, PiGpioState.LOW);
-            //pig.gpioWrite(3, PiGpioState.LOW);
-            pig.gpioWrite(4, PiGpioState.HIGH);
-            //pig.gpioWrite(3, PiGpioState.HIGH);
-        }
+        int handle = pig.i2cOpen(1, 0x04);
+
+        // SINGLE RAW BYTE
+//        pig.i2cWriteByte(handle, (byte)0xD);
+//        byte b = pig.i2cReadByte(handle);
+//        System.out.println("[BYTE]" + Byte.toUnsignedInt(b));
+
+        // SINGLE WORD
+//        pig.i2cWriteWordData(handle, 2, 256);
+//        int word = pig.i2cReadWordData(handle, 0x02);
+//        System.out.println("[WORD]" + word);
+
+        // DATA BLOCK
+        //pig.i2cWriteBlockData(handle, 2, "Hello World!");
+        //byte[] data = pig.i2cReadBlockData(2 , 0x02);
+        //byte[] data = pig.i2cBlockProcessCall(handle, 2, "Hello World!");
+        //System.out.println("[BLOCK]" + Arrays.toString(data));
+
+//        byte[] rx = pig.i2cReadI2CBlockData(handle, 2, 20);
+//        System.out.println("[BLOCK] <"  + rx.length + "> " + Arrays.toString(rx));
+
+        //pig.i2cWriteI2CBlockData(handle, 99, "Hello World!");
+
+        // RAW I2C READ/WRITE
+        byte[] rawRx = pig.i2cReadDevice(handle, 32);
+        System.out.println("[RAW-READ] <"  + rawRx.length + "> " + Arrays.toString(rawRx));
+
+        pig.i2cWriteDevice(handle, "Hello World!");
+
+        // CLOSE
+        pig.i2cClose(handle);
+
+
+
+//        pig.gpioSetMode(4, PiGpioMode.OUTPUT);
+//
+//        for(int x = 0; x < 100; x++) {
+//            pig.gpioWrite(4, PiGpioState.LOW);
+//            //pig.gpioWrite(3, PiGpioState.LOW);
+//            pig.gpioWrite(4, PiGpioState.HIGH);
+//            //pig.gpioWrite(3, PiGpioState.HIGH);
+//        }
 
 //        pig.gpioPWM(2, 50);
 //        Thread.sleep(1000);;
@@ -74,7 +114,7 @@ public class Main {
 //            System.out.println("  GPIO " + p + "; MODE=" + pig.gpioGetMode(p) + "; STATE=" + pig.gpioRead(p));
 //        }
 
-        pig.gpioTick();
+//        pig.gpioTick();
 
     }
 }
