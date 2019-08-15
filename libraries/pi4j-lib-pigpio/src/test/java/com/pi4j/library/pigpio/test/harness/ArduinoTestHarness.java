@@ -31,17 +31,7 @@ package com.pi4j.library.pigpio.test.harness;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.google.gson.Gson;
-import com.pi4j.library.pigpio.PiGpio;
-import com.pi4j.library.pigpio.PiGpioState;
 import org.json.JSONObject;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.Timeout;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -55,14 +45,9 @@ import static com.fazecast.jSerialComm.SerialPort.TIMEOUT_READ_SEMI_BLOCKING;
 
 public class ArduinoTestHarness {
 
-    protected static String DEFAULT_COM_PORT = "tty.usbmodem142301";
     protected String comport;
     protected SerialPort com = null;
     protected Gson gson = new Gson();
-
-    public ArduinoTestHarness() throws IOException {
-        this(DEFAULT_COM_PORT);
-    }
 
     public ArduinoTestHarness(String comport) throws IOException {
 
@@ -198,6 +183,18 @@ public class ArduinoTestHarness {
         return responses;
     }
 
+    protected void drain() throws IOException {
+
+        // validate serial port is connected
+        if(!com.isOpen()) throw new IOException("Serial port is not open;");
+
+        Scanner in = new Scanner(com.getInputStream());
+        while(in.hasNextByte()){
+            var received  = in.nextByte();
+            System.out.println("[DRAINED]" + received);
+        }
+    }
+
     public void terminate() throws IOException {
 
         // validate serial port is connected
@@ -221,6 +218,8 @@ public class ArduinoTestHarness {
         if(!com.isOpen()) {
             throw new IOException("Serial port [" + comport + "] failed to open;");
         }
-    }
 
+        // drain serial port buffer
+        drain();
+    }
 }

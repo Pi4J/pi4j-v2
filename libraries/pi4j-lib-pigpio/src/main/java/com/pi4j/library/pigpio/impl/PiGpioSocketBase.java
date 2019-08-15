@@ -70,8 +70,11 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
     protected PiGpioPacket sendCommand(PiGpioCmd cmd, int p1, int p2) throws IOException {
         return sendCommand(new PiGpioPacket(cmd, p1, p2));
     }
-    protected PiGpioPacket sendCommand(PiGpioCmd cmd, int p1, int p2, int p3) throws IOException {
-        return sendCommand(new PiGpioPacket(cmd, p1, p2, p3));
+    protected PiGpioPacket sendCommand(PiGpioCmd cmd, int p1, int p2, byte data) throws IOException {
+        return sendCommand(new PiGpioPacket(cmd, p1, p2).data(data));
+    }
+    protected PiGpioPacket sendCommand(PiGpioCmd cmd, int p1, int p2, byte[] data) throws IOException {
+        return sendCommand(new PiGpioPacket(cmd, p1, p2, data));
     }
     protected PiGpioPacket sendCommand(PiGpioPacket tx) throws IOException {
 
@@ -81,7 +84,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 
         // transmit packet
         logger.trace("[TX] -> " + tx.toString());
-        out.write(tx.toBytes());
+        out.write(PiGpioPacket.encode(tx));
         out.flush();
 
         // wait until data has been received (timeout after 500 ms and throw exception)
@@ -100,7 +103,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
         }
 
         // read receive packet
-        PiGpioPacket rx = new PiGpioPacket(in);
+        PiGpioPacket rx = PiGpioPacket.decode(in);
         logger.trace("[RX] <- " + rx.toString());
         return rx;
     }

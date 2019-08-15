@@ -54,6 +54,10 @@ void info(Stream* out);
 void reboot();
 void inititalize();
 void reset();
+void receiveI2CData(int byteCount);
+void sendI2CData();
+
+int i2cValue;
 
 // create priped interface for interactive console (muxed serial ports)
 StreamPipe console_pipe(&CONSOLE_INTERFACE, &DEBUG_INTERFACE);

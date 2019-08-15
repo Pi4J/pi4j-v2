@@ -131,5 +131,39 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    protected void validateI2cHandle(int handle) throws IOException {
+        // validate I2C handle
+        if(handle < 0) {
+            throw new IOException("PIGPIO ERROR: INVALID I2C HANDLE [" + handle + "]; Valid range: >0");
+        }
+    }
+
+    protected void validateI2cRegister(int register) throws IOException {
+        // validate I2C/SMBus register range
+        if(register < 0 || register > 255) {
+            throw new IOException("PIGPIO ERROR: INVALID I2C REGISTER [" + register + "]; Valid range: 0-255");
+        }
+    }
+
+    protected void validateI2cDeviceAddress(int device) throws IOException {
+        // validate I2C/SMBus device address :: 0-0x7F
+        if(device < 0 || device > 0x7F) {
+            throw new IOException("PIGPIO ERROR: INVALID I2C DEVICE ADDRESS [" + device + "]; Valid range: 0-127");
+        }
+    }
+
+    protected void validateI2cBus(int bus) throws IOException {
+        // validate I2C/SMBus bus number :: >=0
+        if(bus < 0) {
+            throw new IOException("PIGPIO ERROR: INVALID I2C BUS [" + bus + "]; Valid range: >=0");
+        }
+    }
+
+    protected void validateI2cDataLength(int length) throws IOException {
+        // validate I2C/SMBus payload data length :: 0-32
+        if(length < 0 || length > 32) {
+            throw new IOException("PIGPIO ERROR: INVALID I2C PAYLOAD DATA LENGTH [" + length + "]; Valid range: 0-32");
+        }
+    }
 
 }

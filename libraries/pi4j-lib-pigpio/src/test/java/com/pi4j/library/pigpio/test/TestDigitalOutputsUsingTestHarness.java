@@ -5,7 +5,7 @@ package com.pi4j.library.pigpio.test;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
- * FILENAME      :  TestDigitalOutputs.java
+ * FILENAME      :  TestDigitalOutputsUsingTestHarness.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -37,9 +37,7 @@ import com.pi4j.library.pigpio.test.harness.ArduinoTestHarness;
 import com.pi4j.library.pigpio.test.harness.TestHarnessInfo;
 import com.pi4j.library.pigpio.test.harness.TestHarnessPin;
 import com.pi4j.library.pigpio.test.harness.TestHarnessPins;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +46,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 @DisplayName("PIGPIO :: Test Digital Output Pins")
-public class TestDigitalOutputs {
+public class TestDigitalOutputsUsingTestHarness {
 
     private static PiGpio pigpio;
     private static ArduinoTestHarness harness;
@@ -57,14 +55,15 @@ public class TestDigitalOutputs {
     public static void initialize() {
         System.out.println();
         System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestDigitalOutputs.class.getName() + ")");
+        System.out.println("INITIALIZE TEST (" + TestDigitalOutputsUsingTestHarness.class.getName() + ")");
         System.out.println("************************************************************************");
         System.out.println();
 
         try {
             // create test harness and PIGPIO instances
-            pigpio = PiGpio.newSocketInstance("rpi3bp");
-            harness = new ArduinoTestHarness();
+            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142301"));
+            pigpio = PiGpio.newSocketInstance(System.getProperty("pi4j.pigpio.host", "rpi3bp.savage.lan"),
+                                              System.getProperty("pi4j.pigpio.port", "8888"));
 
             // initialize test harness and PIGPIO instances
             pigpio.initialize();
@@ -89,7 +88,7 @@ public class TestDigitalOutputs {
     public static void terminate() throws IOException {
         System.out.println();
         System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestDigitalOutputs.class.getName() + ") ");
+        System.out.println("TERMINATE TEST (" + TestDigitalOutputsUsingTestHarness.class.getName() + ") ");
         System.out.println("************************************************************************");
         System.out.println();
 
