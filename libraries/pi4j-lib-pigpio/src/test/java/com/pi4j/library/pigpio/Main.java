@@ -28,21 +28,32 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
-import java.util.Arrays;
-
 public class Main {
 
 
     public static void main(String[] args) throws Exception {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
-        PiGpio pig = PiGpio.newSocketInstance("rpi3bp");
+        PiGpio pig = PiGpio.newSocketInstance("10.1.2.222");
 
         // set pin ALT0 modes for I2C BUS<1> usage on RPI3B
         pig.gpioSetMode(2, PiGpioMode.ALT0);
         pig.gpioSetMode(3, PiGpioMode.ALT0);
 
+
+//        for(int x = 0; x < 256; x++) {
+//            try {
+//                pig.i2cClose(x);
+//            }
+//            catch (IOException e){
+//                continue;
+//            }
+//        }
+
         int handle = pig.i2cOpen(1, 0x04);
+
+
+
 
         // SINGLE RAW BYTE
 //        pig.i2cWriteByte(handle, (byte)0xD);
@@ -50,9 +61,12 @@ public class Main {
 //        System.out.println("[BYTE]" + Byte.toUnsignedInt(b));
 
         // SINGLE WORD
-//        pig.i2cWriteWordData(handle, 2, 256);
-//        int word = pig.i2cReadWordData(handle, 0x02);
-//        System.out.println("[WORD]" + word);
+        //pig.i2cWriteWordData(handle, 2, 1024);
+//        for(int x = 0; x < 50; x++) {
+//            int word = pig.i2cReadWordData(handle, 0x00);
+//            System.out.println("[WORD]" + word);
+//            Thread.sleep(50);
+//        }
 
         // DATA BLOCK
         //pig.i2cWriteBlockData(handle, 2, "Hello World!");
@@ -60,16 +74,21 @@ public class Main {
         //byte[] data = pig.i2cBlockProcessCall(handle, 2, "Hello World!");
         //System.out.println("[BLOCK]" + Arrays.toString(data));
 
-//        byte[] rx = pig.i2cReadI2CBlockData(handle, 2, 20);
+//        pig.i2cWriteI2CBlockData(handle, 2, "Hello World!");
+//        byte[] rx = pig.i2cReadI2CBlockData(handle, 2, 32);
 //        System.out.println("[BLOCK] <"  + rx.length + "> " + Arrays.toString(rx));
+//
 
-        //pig.i2cWriteI2CBlockData(handle, 99, "Hello World!");
 
-        // RAW I2C READ/WRITE
-        byte[] rawRx = pig.i2cReadDevice(handle, 32);
-        System.out.println("[RAW-READ] <"  + rawRx.length + "> " + Arrays.toString(rawRx));
+//        // RAW I2C READ/WRITE
+//        for(int i = 0; i <= 100; i++) {
+//            String data = "Hello World! " + i;
+//            pig.i2cWriteDevice(handle, data);
+//            //Thread.sleep(200);
+//            String rx = pig.i2cReadDeviceToString(handle, data.length());
+//            System.out.println("[RAW-READ] <" + rx.length() + "> " + rx);
+//        }
 
-        pig.i2cWriteDevice(handle, "Hello World!");
 
         // CLOSE
         pig.i2cClose(handle);

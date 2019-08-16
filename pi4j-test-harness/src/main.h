@@ -32,7 +32,7 @@
 #include <string>
 
 // include platform specific libraries
-//#include <Wire.h> // for I2C comms. (SDA, SCL)
+#include <Wire.h> // for I2C comms. (SDA, SCL)
 //#include "wiring_private.h"
 
 // include support for Interactive Serial Commands
@@ -56,8 +56,9 @@ void inititalize();
 void reset();
 void receiveI2CData(int byteCount);
 void sendI2CData();
+void receiveI2CDataRaw(int byteCount);
+void sendI2CDataRaw();
 
-int i2cValue;
 
 // create priped interface for interactive console (muxed serial ports)
 StreamPipe console_pipe(&CONSOLE_INTERFACE, &DEBUG_INTERFACE);
@@ -76,5 +77,33 @@ struct NullStream : public Stream{
     int read( void ){ return -1; }
     size_t write( uint8_t u_Data ){ return u_Data; }
 } nullStream;
+
+
+struct I2cRegister {
+    uint8_t data[32] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+    uint16_t length = 0;
+};
+
+struct I2cCache {
+    I2cRegister reg[255];
+    uint8_t address = 0;
+    uint8_t buffer[32] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+    uint16_t length = 0;
+    bool rawMode = false;
+    TwoWire* wire;
+    void reset(){
+        address = 0;
+        length = 0;
+        rawMode = false;
+        memset(buffer, 0, sizeof buffer);
+        wire = nullptr;
+        for(int i = 0; i < 256; i++){
+            reg[i].length = 0;            
+            memset(reg[i].data, 0, sizeof reg[i].data);
+        }
+    }
+};
+
+I2cCache i2cCache;
 
 #endif //PI4J_MAIN_H

@@ -2,23 +2,23 @@
  *  **********************************************************************
  *  ORGANIZATION  :  Pi4J
  *  PROJECT       :  Pi4J :: TEST  :: Arduino Test Harness
- *  
+ *
  *  This file is part of the Pi4J project. More information about
  *  this project can be found here:  https://pi4j.com/
  *  **********************************************************************
- *  
+ *
  *  Copyright (C) 2012 - 2019 Pi4J
- *  
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as
  *  published by the Free Software Foundation, either version 3 of the
  *  License, or (at your option) any later version.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Lesser Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Lesser Public
  *  License along with this program.  If not, see
  *  <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -38,7 +38,7 @@
  */
 int GetCommandPinArgument(SerialCommands* sender){
 	char* pin_str = sender->Next();
-	if (pin_str == NULL){		
+	if (pin_str == NULL){
 		return ERROR_COMMAND_ARGUMENT_MISSING; // -1 :: missing argument
 	}
 
@@ -55,9 +55,19 @@ int GetCommandPinArgument(SerialCommands* sender){
 
     // validate restricted pins
     if(pin >= 0){
-        if(pins[pin].restricted)
+        if(pins[pin].restricted){
             return ERROR_INVALID_PIN_RESTRICTED;
+        }
+
+        // special pin overrides for Raspberry Pi
+        if(pin == 2){
+            return 20;
+        }
+        if(pin == 3){
+            return 21;
+        }
     }
+
 
     return pin;
 }
@@ -210,12 +220,61 @@ int GetCommandPinModeArgument(SerialCommands* sender){
     }
 }
 
+/**
+ * GET I2C BUS VALUE FROM COMMANDS ARGUMENTS
+ */
+int GetCommandI2cBusArgument(SerialCommands* sender){
+	char* bus_str = sender->Next();
+	if (bus_str == NULL){
+		return ERROR_COMMAND_ARGUMENT_MISSING; // -1 :: missing argument
+	}
+
+    // validate numeric string
+    if(!StringUtil::isNumeric(bus_str)){
+        return ERROR_COMMAND_ARGUMENT_INVALID; // -2 :: invalid argument
+    }
+	int bus = atoi(bus_str);
+
+    // validate bus
+    if(bus < 0 || bus > 1){
+        return ERROR_INVALID_I2C_BUS_OUT_OF_RANGE;
+    }
+
+    return bus;
+}
+
+/**
+ * GET I2C DEVICE VALUE FROM COMMANDS ARGUMENTS
+ */
+int GetCommandI2cDeviceArgument(SerialCommands* sender){
+	char* dev_str = sender->Next();
+	if (dev_str == NULL){
+		return ERROR_COMMAND_ARGUMENT_MISSING; // -1 :: missing argument
+	}
+
+    // validate numeric string
+    if(!StringUtil::isNumeric(dev_str)){
+        return ERROR_COMMAND_ARGUMENT_INVALID; // -2 :: invalid argument
+    }
+	int device = atoi(dev_str);
+
+    // validate device
+    if(device < 0 || device > 127){
+        return ERROR_INVALID_I2C_DEVICE_OUT_OF_RANGE;
+    }
+
+    return device;
+}
+
+
 String GetCommandArgumentError(int error){
     switch(error){
         case ERROR_COMMAND_ARGUMENT_MISSING : {return "MISSING ARGUMENT"; break;}
         case ERROR_COMMAND_ARGUMENT_INVALID : {return "INVALID ARGUMENT"; break;}
         case ERROR_INVALID_PIN_OUT_OF_RANGE : {return "INVALID PIN NUMBER; OUT OF ACCEPTED RANGE"; break;}
         case ERROR_INVALID_PIN_RESTRICTED   : {return "INVALID PIN NUMBER; RESTRICTED PIN"; break;}
+        case ERROR_INVALID_I2C_BUS_OUT_OF_RANGE    : {return "INVALID I2C BUS; UNSUPPORTED BUS"; break;}
+        case ERROR_INVALID_I2C_DEVICE_OUT_OF_RANGE : {return "INVALID I2C DEVICE; OUT OF ACCEPTED RANGE"; break;}
         default: return "UNKNOWN ARGUMENT ERROR";
     }
 }

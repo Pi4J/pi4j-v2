@@ -32,6 +32,7 @@
 #include <ArduinoJson.h>
 #include "CommandsArgumentParser.h"
 #include "EchoCommand.h"
+#include "I2cCommand.h"
 #include "InfoCommand.h"
 #include "InvalidCommand.h"
 #include "PinCommand.h"
@@ -52,6 +53,7 @@ void AddInteractiveCommands(SerialCommands& processor){
     processor.AddCommand(&EchoCommand);
     processor.AddCommand(&RebootCommand);
     processor.AddCommand(&ResetCommand);
+    processor.AddCommand(&I2cCommand);
     processor.AddCommand(&InfoCommand);
     processor.AddCommand(&InfoCommandKey);
     processor.AddCommand(&PinCommand);

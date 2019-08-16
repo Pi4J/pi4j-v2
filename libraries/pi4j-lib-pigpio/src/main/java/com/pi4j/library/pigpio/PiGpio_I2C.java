@@ -5,7 +5,7 @@ package com.pi4j.library.pigpio;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
- * FILENAME      :  PiGpio.java
+ * FILENAME      :  PiGpio_I2C.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -35,8 +35,7 @@ import java.nio.charset.StandardCharsets;
 
 public interface PiGpio_I2C {
 
-    default int i2cOpen(int bus, int device) throws IOException { return i2cOpen(bus, device, 0); }
-    int i2cOpen(int bus, int device, int flags) throws IOException;
+    int i2cOpen(int bus, int device) throws IOException;
     void i2cClose(int handle) throws IOException;
     void i2cWriteQuick(int handle, boolean bit) throws IOException;
     void i2cWriteByte(int handle, byte value) throws IOException;

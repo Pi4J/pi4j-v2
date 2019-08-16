@@ -98,6 +98,7 @@ public class TestDigitalInputsUsingTestHarness {
     }
 
     @Test
+    @DisplayName("GPIO :: Test Digital Input Pins")
     public void testGpioDigitalInputs() throws IOException {
 
         // reset all pins on test harness before proceeding with this test
@@ -114,6 +115,7 @@ public class TestDigitalInputsUsingTestHarness {
     }
 
     @Test
+    @DisplayName("GPIO :: Test Pull-Up/Down on Digital Pins")
     public void testGpioDigitalPullUpDown() throws IOException {
 
         // reset all pins on test harness before proceeding with this test

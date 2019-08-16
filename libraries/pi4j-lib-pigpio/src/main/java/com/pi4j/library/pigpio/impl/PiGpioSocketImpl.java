@@ -561,21 +561,23 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public long gpioTick() throws IOException {
         logger.trace("[TICK::GET] -> Get current tick");
-        PiGpioPacket result = sendCommand(TICK);
-        long tick = Integer.toUnsignedLong(result.result()); // convert (UInt32) 32-bit unsigned value to long
-        logger.trace("[TICK::GET] <- TICK: {}; SUCCESS={}",  tick, result.success());
+        PiGpioPacket tx = new PiGpioPacket(TICK);
+        PiGpioPacket rx = sendPacket(tx);
+        long tick = Integer.toUnsignedLong(rx.result()); // convert (UInt32) 32-bit unsigned value to long
+        logger.trace("[TICK::GET] <- TICK: {}; SUCCESS={}",  tick, rx.success());
         return tick;
     }
 
     @Override
-    public int i2cOpen(int bus, int device, int flags) throws IOException {
+    public int i2cOpen(int bus, int device) throws IOException {
         logger.trace("[I2C::OPEN] -> Open I2C Bus [{}] and Device [{}]", bus, device);
         validateI2cBus(bus);
         validateI2cDeviceAddress(device);
-        PiGpioPacket result = sendCommand(I2CO, bus, device).data(flags);
-        int handle = result.result();
-        logger.trace("[I2C::OPEN] <- HANDLE={}; SUCCESS={}",  handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        PiGpioPacket tx = new PiGpioPacket(I2CO, bus, device);
+        PiGpioPacket rx = sendPacket(tx);
+        int handle = rx.result();
+        logger.trace("[I2C::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
         return handle;
     }
 
@@ -583,37 +585,41 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     public void i2cClose(int handle) throws IOException {
         logger.trace("[I2C::CLOSE] -> HANDLE={}, Close I2C Bus", handle);
         validateI2cHandle(handle);
-        PiGpioPacket result = sendCommand(I2CC, handle);
-        logger.trace("[I2C::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        PiGpioPacket tx = new PiGpioPacket(I2CC, handle);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
     }
 
     @Override
     public void i2cWriteQuick(int handle, boolean bit) throws IOException {
         logger.trace("[I2C::WRITE] -> HANDLE={}; R/W Bit [{}]", handle, bit ? 1 : 0);
         validateI2cHandle(handle);
-        PiGpioPacket result = sendCommand(I2CWQ, handle, bit ? 1 : 0);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        PiGpioPacket tx = new PiGpioPacket(I2CWQ, handle, bit ? 1 : 0);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
     }
 
     @Override
     public void i2cWriteByte(int handle, byte value) throws IOException {
         logger.trace("[I2C::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
         validateI2cHandle(handle);
-        PiGpioPacket result = sendCommand(I2CWS, handle, Byte.toUnsignedInt(value));
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        PiGpioPacket tx = new PiGpioPacket(I2CWS, handle, Byte.toUnsignedInt(value));
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
     }
 
     @Override
     public byte i2cReadByte(int handle) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Byte", handle);
         validateI2cHandle(handle);
-        PiGpioPacket result = sendCommand(I2CRS, handle);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
-        return (byte)result.result();
+        PiGpioPacket tx = new PiGpioPacket(I2CRS, handle);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        return (byte)rx.result();
     }
 
     @Override
@@ -621,9 +627,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Byte [{}]", handle ,register, value);
         validateI2cHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket result = sendCommand(I2CWB, handle, register, value);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        PiGpioPacket tx = new PiGpioPacket(I2CWB, handle, register).data(value);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
     }
 
     @Override
@@ -631,9 +638,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
         validateI2cHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket result = sendCommand(I2CWW, handle, register).data(value);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        PiGpioPacket tx = new PiGpioPacket(I2CWW, handle, register).data(value);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
     }
 
     @Override
@@ -641,10 +649,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Byte", handle ,register);
         validateI2cHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket result = sendCommand(I2CRB, handle, register);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
-        return (byte)result.result();
+        PiGpioPacket tx = new PiGpioPacket(I2CRB, handle, register);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        return (byte)rx.result();
     }
 
     @Override
@@ -652,10 +661,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Word", handle ,register);
         validateI2cHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket result = sendCommand(I2CRW, handle, register);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
-        return result.result();
+        PiGpioPacket tx = new PiGpioPacket(I2CRW, handle, register);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        return rx.result();
     }
 
     @Override
@@ -663,10 +673,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
         validateI2cHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket result = sendCommand(I2CPC, handle, register).data(value);
-        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
-        return result.result();
+        PiGpioPacket tx = new PiGpioPacket(I2CPC, handle, register).data(value);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        return rx.result();
     }
 
     @Override
@@ -675,9 +686,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateI2cHandle(handle);
         validateI2cRegister(register);
         validateI2cDataLength(data.length);
-        PiGpioPacket result = sendCommand(I2CWK, handle, register, data);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        PiGpioPacket tx = new PiGpioPacket(I2CWK, handle, register, data);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
     }
 
     @Override
@@ -685,10 +697,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Block", handle ,register);
         validateI2cHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket result = sendCommand(I2CRK, handle, register);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
-        return result.data();
+        PiGpioPacket tx = new PiGpioPacket(I2CRK, handle, register);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        return rx.data();
     }
     @Override
     public byte[] i2cBlockProcessCall(int handle, int register, byte[] data) throws IOException {
@@ -696,10 +709,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateI2cHandle(handle);
         validateI2cRegister(register);
         validateI2cDataLength(data.length);
-        PiGpioPacket result = sendCommand(I2CPK, handle, register, data);
-        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
-        return result.data();
+        PiGpioPacket tx = new PiGpioPacket(I2CPK, handle, register, data);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        return rx.data();
     }
 
     @Override
@@ -707,10 +721,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, length);
         validateI2cHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket result = sendCommand(I2CRI, handle, register).data(length);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
-        return result.data();
+        PiGpioPacket tx = new PiGpioPacket(I2CRI, handle, register).data(length);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        return rx.data();
     }
 
     @Override
@@ -719,19 +734,21 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateI2cHandle(handle);
         validateI2cRegister(register);
         validateI2cDataLength(data.length);
-        PiGpioPacket result = sendCommand(I2CWI, handle, register, data);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        PiGpioPacket tx = new PiGpioPacket(I2CWI, handle, register, data);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
     }
 
     @Override
     public byte[] i2cReadDevice(int handle, int length) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; I2C Raw Read [{} bytes]", handle, length);
         validateI2cHandle(handle);
-        PiGpioPacket result = sendCommand(I2CRD, handle, length);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
-        return result.data();
+        PiGpioPacket tx = new PiGpioPacket(I2CRD, handle, length);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        return rx.data();
     }
 
     @Override
@@ -739,9 +756,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::WRITE] -> [{}]; I2C Raw Write [{} bytes]", handle, data.length);
         validateI2cHandle(handle);
         validateI2cDataLength(data.length);
-        PiGpioPacket result = sendCommand(I2CWD, handle, 0, data);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, result.success());
-        validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
+        PiGpioPacket tx = new PiGpioPacket(I2CWD, handle, 0, data);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
         return -1;
     }
 }
