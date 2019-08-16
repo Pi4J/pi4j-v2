@@ -1,4 +1,4 @@
-package com.pi4j.library.pigpio.test;
+package com.pi4j.library.pigpio.test.i2c;
 
 /*-
  * #%L

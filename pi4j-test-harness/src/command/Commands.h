@@ -32,6 +32,7 @@
 #include <ArduinoJson.h>
 #include "CommandsArgumentParser.h"
 #include "EchoCommand.h"
+#include "FrequencyCommand.h"
 #include "I2cCommand.h"
 #include "InfoCommand.h"
 #include "InvalidCommand.h"
@@ -51,6 +52,8 @@ void AddInteractiveCommands(SerialCommands& processor){
 
     // add Pi4J interactive commands
     processor.AddCommand(&EchoCommand);
+    processor.AddCommand(&FrequencyCommand);
+    processor.AddCommand(&FrequencyShortCommand);
     processor.AddCommand(&RebootCommand);
     processor.AddCommand(&ResetCommand);
     processor.AddCommand(&I2cCommand);
