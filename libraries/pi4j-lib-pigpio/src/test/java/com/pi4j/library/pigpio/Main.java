@@ -34,14 +34,16 @@ public class Main {
     public static void main(String[] args) throws Exception {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
-        PiGpio pig = PiGpio.newSocketInstance("10.1.2.222");
+        PiGpio pig = PiGpio.newSocketInstance("rpi3bp"); //"10.1.2.222"
+
+        pig.initialize();
 
         // set pin ALT0 modes for I2C BUS<1> usage on RPI3B
         pig.gpioSetMode(2, PiGpioMode.ALT0);
         pig.gpioSetMode(3, PiGpioMode.ALT0);
 
 
-//        for(int x = 0; x < 256; x++) {
+//        for(int x = 0; x < 10; x++) {
 //            try {
 //                pig.i2cClose(x);
 //            }
@@ -49,10 +51,20 @@ public class Main {
 //                continue;
 //            }
 //        }
+//
+//        int handle = pig.i2cOpen(1, 0x04);
 
-        int handle = pig.i2cOpen(1, 0x04);
 
+        //pig.initialize();
+        //pig.gpioSetPWMfrequency(4, 5000);
+        pig.gpioHardwarePWM(13, 100, 500000);
 
+        //var frequency = pig.gpioGetPWMfrequency(4);
+        //System.out.println("FREQUENCY: " + frequency);
+
+        System.in.read();
+
+//        pig.gpioHardwarePWM(18, 0,0);
 
 
         // SINGLE RAW BYTE
@@ -90,8 +102,10 @@ public class Main {
 //        }
 
 
-        // CLOSE
-        pig.i2cClose(handle);
+        pig.gpioWrite(4, PiGpioState.LOW);
+
+//        // CLOSE
+//        pig.i2cClose(handle);
 
 
 

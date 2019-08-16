@@ -65,7 +65,7 @@ public class ArduinoTestHarness {
         com.setFlowControl(FLOW_CONTROL_DISABLED);
 
         // configure read timeout
-        com.setComPortTimeouts(TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
+        com.setComPortTimeouts(TIMEOUT_READ_SEMI_BLOCKING, 250, 0);
     }
 
     public TestHarnessPins reset() throws IOException {
@@ -122,6 +122,12 @@ public class ArduinoTestHarness {
     public TestHarnessResponse enableI2C(int bus, int device, boolean rawMode) throws IOException {
         send(String.format("i2c %d %d %b", bus, device, rawMode));
         TestHarnessResponse response = read(TestHarnessResponse.class);
+        return response;
+    }
+
+    public TestHarnessFrequency getFrequency(int pin) throws IOException {
+        send("frequency " + pin);
+        TestHarnessFrequency response = read(TestHarnessFrequency.class);
         return response;
     }
 
@@ -191,6 +197,11 @@ public class ArduinoTestHarness {
                    }
                    case "reset": {
                        TestHarnessPins response = gson.fromJson(received, TestHarnessPins.class);
+                       responses.add(response);
+                       break;
+                   }
+                   case "frequency": {
+                       TestHarnessFrequency response = gson.fromJson(received, TestHarnessFrequency.class);
                        responses.add(response);
                        break;
                    }

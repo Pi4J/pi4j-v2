@@ -60,7 +60,6 @@ public interface PiGpio_I2C {
         return new String(rx, StandardCharsets.US_ASCII);
     }
 
-
     byte[] i2cBlockProcessCall(int handle, int register, byte[] data) throws IOException;
     default String i2cBlockProcessCallToString(int handle, int register, byte[] data) throws IOException{
         byte[] rx = i2cBlockProcessCall(handle, register, data);
@@ -93,7 +92,6 @@ public interface PiGpio_I2C {
         byte[] rx = i2cReadDevice(handle, length);
         return new String(rx, StandardCharsets.US_ASCII);
     }
-
 
     int i2cWriteDevice(int handle, byte[] data) throws IOException;
     default void i2cWriteDevice(int handle, ByteBuffer buffer) throws IOException{

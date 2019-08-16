@@ -175,4 +175,44 @@ public interface PiGpio_PWM {
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMfrequency"
      */
     int gpioGetPWMfrequency(int pin) throws IOException;
+
+
+    /**
+     * Starts hardware PWM on a GPIO at the specified frequency and duty-cycle.
+     * Frequencies above 30MHz are unlikely to work.
+     *
+     * NOTE: Any waveform started by gpioWaveTxSend, or gpioWaveChain will be cancelled.
+     *
+     * This function is only valid if the pigpio main clock is PCM.
+     * The main clock defaults to PCM but may be overridden by a call to gpioCfgClock.
+     *
+     * The same PWM channel is available on multiple GPIO. The latest frequency and duty-cycle
+     * setting will be used by all GPIO which share a PWM channel.
+     *
+     * The GPIO must be one of the following.
+     *
+     *   12  PWM channel 0  All models but A and B
+     *   13  PWM channel 1  All models but A and B
+     *   18  PWM channel 0  All models
+     *   19  PWM channel 1  All models but A and B
+     *
+     *   40  PWM channel 0  Compute module only
+     *   41  PWM channel 1  Compute module only
+     *   45  PWM channel 1  Compute module only
+     *   52  PWM channel 0  Compute module only
+     *   53  PWM channel 1  Compute module only
+     *
+     *
+     * The actual number of steps between off and fully on is the integral part of
+     * 250M/PWMfreq (375M/PWMfreq for the BCM2711).
+     * The actual frequency set is 250M/steps (375M/steps for the BCM2711).
+     * There will only be a million steps for a frequency of 250 (375 for the BCM2711). Lower
+     * frequencies will have more steps and higher frequencies will have fewer steps.
+     * dutyCycle is automatically scaled to take this into account.
+     *
+     * @param pin a supported hardware PWM pin
+     * @param frequency  0 (off) or 1-125M (1-187.5M for the BCM2711)
+     * @param dutyCycle  0 (off) to 1000000 (1M)(fully on)
+     */
+    void gpioHardwarePWM(int pin, int frequency, int dutyCycle) throws IOException;
 }
