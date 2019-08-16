@@ -114,6 +114,17 @@ public class ArduinoTestHarness {
         return response;
     }
 
+
+    public TestHarnessResponse enableI2C(int bus, int device) throws IOException {
+        return enableI2C(bus, device, false);
+    }
+
+    public TestHarnessResponse enableI2C(int bus, int device, boolean rawMode) throws IOException {
+        send(String.format("i2c %d %d %b", bus, device, rawMode));
+        TestHarnessResponse response = read(TestHarnessResponse.class);
+        return response;
+    }
+
     public void send(String command) throws IOException {
 
         // validate serial port is connected
@@ -127,10 +138,17 @@ public class ArduinoTestHarness {
 
     protected <T extends TestHarnessResponse> T read(Class<T> type) throws IOException {
         List<TestHarnessResponse> responses = read();
+        TestHarnessError err = null;
         for (var response : responses){
-            if(type.isInstance(response)){
-               return (T)response;
+            if(TestHarnessError.class.isInstance(response)){
+                err = (TestHarnessError)response;
             }
+            else if(type.isInstance(response)){
+                return (T)response;
+            }
+        }
+        if(err != null){
+            throw new IOException("TEST HARNESS ERROR: [" + err.errno + "] " + err.msg);
         }
         return null;
     }
@@ -151,6 +169,11 @@ public class ArduinoTestHarness {
                var id = payload.getString("id").toLowerCase();
 
                switch (id){
+                   case "error": {
+                       TestHarnessError response = gson.fromJson(received, TestHarnessError.class);
+                       responses.add(response);
+                       break;
+                   }
                    case "info": {
                        TestHarnessInfo response = gson.fromJson(received, TestHarnessInfo.class);
                        responses.add(response);
@@ -220,6 +243,6 @@ public class ArduinoTestHarness {
         }
 
         // drain serial port buffer
-        drain();
+        //drain();
     }
 }

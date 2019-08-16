@@ -93,7 +93,7 @@
 #endif
 
 #ifndef FIRMWARE_BOOT_DELAY
-#define FIRMWARE_BOOT_DELAY            5
+#define FIRMWARE_BOOT_DELAY            0
 #endif
 
 
@@ -140,12 +140,14 @@
 //#include "runtime/Runtime.h"
 
 
-#define ERROR_COMMAND_ARGUMENT_MISSING       -1
-#define ERROR_COMMAND_ARGUMENT_INVALID       -2
-#define ERROR_INVALID_PIN_OUT_OF_RANGE       -3 
-#define ERROR_INVALID_PIN_RESTRICTED         -4
-#define ERROR_INVALID_PIN_DISABLED           -5
-#define ERROR_UNSUPPORTED_COMMAND            -99
+#define ERROR_COMMAND_ARGUMENT_MISSING        -1
+#define ERROR_COMMAND_ARGUMENT_INVALID        -2
+#define ERROR_INVALID_PIN_OUT_OF_RANGE        -3 
+#define ERROR_INVALID_PIN_RESTRICTED          -4
+#define ERROR_INVALID_PIN_DISABLED            -5
+#define ERROR_INVALID_I2C_BUS_OUT_OF_RANGE    -11
+#define ERROR_INVALID_I2C_DEVICE_OUT_OF_RANGE -12
+#define ERROR_UNSUPPORTED_COMMAND             -99
 
 
 #endif //PI4J_H

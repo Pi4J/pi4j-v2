@@ -98,6 +98,7 @@ public class TestDigitalOutputsUsingTestHarness {
     }
 
     @Test
+    @DisplayName("GPIO :: Test Digital Output Pins")
     public void testGpioDigitalOutputs() throws IOException {
 
         // reset all pins on test harness before proceeding with this test

@@ -62,21 +62,16 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
     }
 
     protected PiGpioPacket sendCommand(PiGpioCmd cmd) throws IOException {
-        return sendCommand(new PiGpioPacket(cmd));
+        return sendPacket(new PiGpioPacket(cmd));
     }
+
     protected PiGpioPacket sendCommand(PiGpioCmd cmd, int p1) throws IOException {
-        return sendCommand(new PiGpioPacket(cmd, p1));
+        return sendPacket(new PiGpioPacket(cmd, p1));
     }
     protected PiGpioPacket sendCommand(PiGpioCmd cmd, int p1, int p2) throws IOException {
-        return sendCommand(new PiGpioPacket(cmd, p1, p2));
+        return sendPacket(new PiGpioPacket(cmd, p1, p2));
     }
-    protected PiGpioPacket sendCommand(PiGpioCmd cmd, int p1, int p2, byte data) throws IOException {
-        return sendCommand(new PiGpioPacket(cmd, p1, p2).data(data));
-    }
-    protected PiGpioPacket sendCommand(PiGpioCmd cmd, int p1, int p2, byte[] data) throws IOException {
-        return sendCommand(new PiGpioPacket(cmd, p1, p2, data));
-    }
-    protected PiGpioPacket sendCommand(PiGpioPacket tx) throws IOException {
+    protected PiGpioPacket sendPacket(PiGpioPacket tx) throws IOException {
 
         // get socket streams
         var in = socket.getInputStream();
