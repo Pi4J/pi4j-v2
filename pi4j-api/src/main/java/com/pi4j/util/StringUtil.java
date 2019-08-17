@@ -28,6 +28,9 @@ package com.pi4j.util;
  */
 
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
 public class StringUtil {
 
     public static final String EMPTY = "";
@@ -249,4 +252,57 @@ public class StringUtil {
         }
         return sb.toString();
     }
+
+    public static void appendHexString(StringBuilder builder, byte byt){
+        builder.append(String.format("%02X", byt));
+    }
+    public static String toHexString(byte byt){
+        return String.format("%02X", byt);
+    }
+
+    public static void appendHexString(StringBuilder builder, int byt){
+        builder.append(String.format("%02X", (byte)byt));
+    }
+    public static String toHexString(int byt){
+        return String.format("%02X", (byte)byt);
+    }
+
+    public static void appendHexString(StringBuilder builder, byte[] bytes){
+        for (byte b : bytes) {
+            builder.append(String.format("%02X ", b));
+        }
+    }
+    public static String toHexString(byte[] bytes){
+        StringBuilder sb = new StringBuilder();
+        appendHexString(sb, bytes);
+        return sb.toString().trim();
+    }
+
+    public static void appendHexString(StringBuilder builder, ByteBuffer buffer){
+        appendHexString(builder, buffer.array());
+    }
+    public static String toHexString(ByteBuffer buffer){
+        StringBuilder sb = new StringBuilder();
+        appendHexString(sb, buffer);
+        return sb.toString().trim();
+    }
+
+    public static void appendHexString(StringBuilder builder, byte[] bytes, int offset, int length){
+        appendHexString(builder, Arrays.copyOfRange(bytes, offset, length));
+    }
+    public static String toHexString(byte[] bytes, int offset, int length){
+        StringBuilder sb = new StringBuilder();
+        appendHexString(sb, bytes, offset, length);
+        return sb.toString().trim();
+    }
+
+    public static void appendHexString(StringBuilder builder, ByteBuffer buffer, int offset, int length){
+        appendHexString(builder, buffer.array(), offset, length);
+    }
+    public static String toHexString(ByteBuffer buffer, int offset, int length){
+        StringBuilder sb = new StringBuilder();
+        appendHexString(sb, buffer, offset, length);
+        return sb.toString().trim();
+    }
+
 }

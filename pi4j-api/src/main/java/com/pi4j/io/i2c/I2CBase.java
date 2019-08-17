@@ -28,10 +28,20 @@ package com.pi4j.io.i2c;
  */
 
 import com.pi4j.io.IOBase;
+import com.pi4j.io.i2c.impl.I2CRegisterImpl;
 
 public abstract class I2CBase extends IOBase<I2C, I2CConfig, I2CProvider> implements I2C {
 
     public I2CBase(I2CProvider provider, I2CConfig config) {
         super(provider, config);
+    }
+
+    /**
+     * Get an encapsulated interface for reading and writing to a specific I2C device register
+     * @param address
+     * @return
+     */
+    public I2CRegister getRegister(int address){
+        return new I2CRegisterImpl(this, address);
     }
 }

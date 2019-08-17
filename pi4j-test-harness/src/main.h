@@ -87,7 +87,7 @@ struct I2cRegister {
 struct I2cCache {
     I2cRegister reg[255];
     uint8_t address = 0;
-    uint8_t buffer[32] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+    uint8_t buffer[1024];
     uint16_t length = 0;
     bool rawMode = false;
     TwoWire* wire;

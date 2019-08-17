@@ -734,7 +734,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, data.length);
         validateI2cHandle(handle);
         validateI2cRegister(register);
-        validateI2cDataLength(data.length);
+        validateI2cBlockLength(data.length);
         PiGpioPacket tx = new PiGpioPacket(I2CWK, handle, register, data);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
@@ -757,7 +757,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, data.length);
         validateI2cHandle(handle);
         validateI2cRegister(register);
-        validateI2cDataLength(data.length);
+        validateI2cBlockLength(data.length);
         PiGpioPacket tx = new PiGpioPacket(I2CPK, handle, register, data);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
@@ -782,7 +782,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, data.length);
         validateI2cHandle(handle);
         validateI2cRegister(register);
-        validateI2cDataLength(data.length);
+        validateI2cBlockLength(data.length);
         PiGpioPacket tx = new PiGpioPacket(I2CWI, handle, register, data);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
@@ -804,7 +804,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     public int i2cWriteDevice(int handle, byte[] data) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; I2C Raw Write [{} bytes]", handle, data.length);
         validateI2cHandle(handle);
-        validateI2cDataLength(data.length);
+        //validateI2cDataLength(data.length);
         PiGpioPacket tx = new PiGpioPacket(I2CWD, handle, 0, data);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());

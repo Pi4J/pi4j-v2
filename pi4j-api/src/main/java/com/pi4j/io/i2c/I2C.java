@@ -29,21 +29,25 @@ package com.pi4j.io.i2c;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.IO;
+import com.pi4j.io.IODataReader;
+import com.pi4j.io.IODataWriter;
 import com.pi4j.io.i2c.impl.I2CFactory;
 import com.pi4j.provider.exception.ProviderException;
 
-import java.io.IOException;
-
 
 /**
- * This is abstraction of an i2c device. It allows data to be read or written to the device.
+ * I2C I/O Interface for Pi4J I2C Bus/Device Communications
  *
- * @author Daniel Sendula, refactored by <a href="http://raspelikan.blogspot.co.at">RasPelikan</a>
+ * @author Robert Savage
  *
+ * Based on previous contributions from:
+ *        Daniel Sendula,
+ *        <a href="http://raspelikan.blogspot.co.at">RasPelikan</a>
  */
-public interface I2C extends IO<I2C, I2CConfig, I2CProvider> {
-
-    static final String ID = "I2C";
+public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
+        IODataWriter, IODataReader,
+        I2CRegisterDataWriter, I2CRegisterDataReader,
+        AutoCloseable {
 
     static I2C instance(Context context, String device, int address) throws ProviderException {
         return I2CFactory.instance(context, device, address);
@@ -70,133 +74,39 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider> {
     }
 
     /**
-     * @return The address for which this instance is constructed for.
+     * I2C Device Address
+     * @return The I2C device address for which this instance is constructed for.
      */
     int getAddress();
 
     /**
-     * This method writes one byte directly to i2c device.
-     *
-     * @param b byte to be written
-     *
-     * @throws IOException thrown in case byte cannot be written to the i2c device or i2c bus
+     * I2C Device Communication State is OPEN
+     * @return The I2C device communication state
      */
-    void write(byte b) throws IOException;
+    boolean isOpen();
 
     /**
-     * This method writes several bytes directly to the i2c device from given buffer at given offset.
-     *
-     * @param buffer buffer of data to be written to the i2c device in one go
-     * @param offset offset in buffer
-     * @param size number of bytes to be written
-     *
-     * @throws IOException thrown in case byte cannot be written to the i2c device or i2c bus
+     * I2C Device Address
+     * @return The I2C device address for which this instance is constructed for.
      */
-    void write(byte[] buffer, int offset, int size) throws IOException;
+    default int address(){
+        return getAddress();
+    }
 
     /**
-     * This method writes all bytes included in the given buffer directly to the i2c device.
-     *
-     * @param buffer buffer of data to be written to the i2c device in one go
-     *
-     * @throws IOException thrown in case byte cannot be written to the i2c device or i2c bus
+     * Get an encapsulated interface for reading and writing to a specific I2C device register
+     * @param address
+     * @return
      */
-    void write(byte[] buffer) throws IOException;
+    I2CRegister getRegister(int address);
 
     /**
-     * This method writes one byte to i2c device.
-     *
-     * @param address local address in the i2c device
-     * @param b byte to be written
-     *
-     * @throws IOException thrown in case byte cannot be written to the i2c device or i2c bus
+     * I2C Device Register
+     * Get an encapsulated interface for reading and writing to a specific I2C device register
+     * @param address the (16-bit) device register address
+     * @return an instance of I2CRegister for the provided register address
      */
-    void write(int address, byte b) throws IOException;
-
-    /**
-     * This method writes several bytes to the i2c device from given buffer at given offset.
-     *
-     * @param address local address in the i2c device
-     * @param buffer buffer of data to be written to the i2c device in one go
-     * @param offset offset in buffer
-     * @param size number of bytes to be written
-     *
-     * @throws IOException thrown in case byte cannot be written to the i2c device or i2c bus
-     */
-    void write(int address, byte[] buffer, int offset, int size) throws IOException;
-
-    /**
-     * This method writes all bytes included in the given buffer directoy to the register address on the i2c device
-     *
-     * @param address local address in the i2c device
-     * @param buffer buffer of data to be written to the i2c device in one go
-     *
-     * @throws IOException thrown in case byte cannot be written to the i2c device or i2c bus
-     */
-    void write(int address, byte[] buffer) throws IOException;
-
-    /**
-     * This method reads one byte from the i2c device.
-     * Result is between 0 and 255 if read operation was successful, else a negative number for an error.
-     *
-     * @return byte value read: positive number (or zero) to 255 if read was successful. Negative number if reading failed.
-     *
-     * @throws IOException thrown in case byte cannot be read from the i2c device or i2c bus
-     */
-    int read() throws IOException;
-
-    /**
-     * This method reads bytes directly from the i2c device to given buffer at asked offset.
-     *
-     * @param buffer buffer of data to be read from the i2c device in one go
-     * @param offset offset in buffer
-     * @param size number of bytes to be read
-     *
-     * @return number of bytes read
-     *
-     * @throws IOException thrown in case byte cannot be read from the i2c device or i2c bus
-     */
-    int read(byte[] buffer, int offset, int size) throws IOException;
-
-    /**
-     * This method reads one byte from the i2c device.
-     * Result is between 0 and 255 if read operation was successful, else a negative number for an error.
-     *
-     * @param address local address in the i2c device
-     * @return byte value read: positive number (or zero) to 255 if read was successful. Negative number if reading failed.
-     *
-     * @throws IOException thrown in case byte cannot be read from the i2c device or i2c bus
-     */
-    int read(int address) throws IOException;
-
-    /**
-     * This method reads bytes from the i2c device to given buffer at asked offset.
-     *
-     * @param address local address in the i2c device
-     * @param buffer buffer of data to be read from the i2c device in one go
-     * @param offset offset in buffer
-     * @param size number of bytes to be read
-     *
-     * @return number of bytes read
-     *
-     * @throws IOException thrown in case byte cannot be read from the i2c device or i2c bus
-     */
-    int read(int address, byte[] buffer, int offset, int size) throws IOException;
-
-    /**
-     * This method writes and reads bytes to/from the i2c device in a single method call
-     *
-     * @param writeBuffer buffer of data to be written to the i2c device in one go
-     * @param writeOffset offset in write buffer
-     * @param writeSize number of bytes to be written from buffer
-     * @param readBuffer buffer of data to be read from the i2c device in one go
-     * @param readOffset offset in read buffer
-     * @param readSize number of bytes to be read
-     *
-     * @return number of bytes read
-     *
-     * @throws IOException thrown in case byte cannot be read from the i2c device or i2c bus
-     */
-    int read(byte[] writeBuffer, int writeOffset, int writeSize, byte[] readBuffer, int readOffset, int readSize) throws IOException;
-
+    default I2CRegister register(int address){
+        return getRegister(address);
+    }
 }

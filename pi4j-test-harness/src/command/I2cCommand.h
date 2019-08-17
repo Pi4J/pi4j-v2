@@ -70,6 +70,7 @@ void i2c_command_execute(SerialCommands* sender){
       response["id"] = "i2c";
       response["bus"] = bus;
       response["device"] = device;
+      response["raw"] = (bool)rawMode;
 
       // default callback handlers for Register operations
       void (*i2cReceive_ptr)(int) = &receiveI2CData; 

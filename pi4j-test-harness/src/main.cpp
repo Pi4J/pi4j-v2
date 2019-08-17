@@ -2,23 +2,23 @@
  *  **********************************************************************
  *  ORGANIZATION  :  Pi4J
  *  PROJECT       :  Pi4J :: TEST  :: Arduino Test Harness
- *  
+ *
  *  This file is part of the Pi4J project. More information about
  *  this project can be found here:  https://pi4j.com/
  *  **********************************************************************
- *  
+ *
  *  Copyright (C) 2012 - 2019 Pi4J
- *  
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as
  *  published by the Free Software Foundation, either version 3 of the
  *  License, or (at your option) any later version.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Lesser Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Lesser Public
  *  License along with this program.  If not, see
  *  <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -128,7 +128,7 @@ void reset(){
 
         // reset actual hardware pins to default mode
         if(!pins[p].restricted) pinMode(p, INPUT);
-    }        
+    }
 
     // reset I2C cache
     i2cCache.reset();
@@ -153,27 +153,27 @@ void loop() {
     processor.ReadSerial();
     console_pipe.loop();
 
-    for(int p = 0; p < GPIO_MAX_PINS; p++){
-        if(pins[p].enabled && 
-          !pins[p].restricted && 
-          (pins[p].mode == INPUT || pins[p].mode == INPUT_PULLUP)){
-            byte v = digitalRead(p);
-            if(v != pins[p].value){
-                
-                // update pin cache
-                pins[p].value = v;
-                pins[p].counter++;
+    // for(int p = 0; p < GPIO_MAX_PINS; p++){
+    //     if(pins[p].enabled &&
+    //       !pins[p].restricted &&
+    //       (pins[p].mode == INPUT || pins[p].mode == INPUT_PULLUP)){
+    //         byte v = digitalRead(p);
+    //         if(v != pins[p].value){
 
-                // print pin status
-                DynamicJsonDocument doc(1024);
-                JsonObject response = doc.to<JsonObject>();
-                response["id"] = "change";
-                SerializePin(response, p);
-                serializeJson(doc, console);
-                console.println();
-            }
-        }
-    }    
+    //             // update pin cache
+    //             pins[p].value = v;
+    //             pins[p].counter++;
+
+    //             // print pin status
+    //             DynamicJsonDocument doc(1024);
+    //             JsonObject response = doc.to<JsonObject>();
+    //             response["id"] = "change";
+    //             SerializePin(response, p);
+    //             serializeJson(doc, console);
+    //             console.println();
+    //         }
+    //     }
+    // }
 }
 
 /**
@@ -192,7 +192,7 @@ void info(Stream* out){
 }
 
 /**
- * HARD REBOOT SYSTEM (in one second) 
+ * HARD REBOOT SYSTEM (in one second)
  */
 void reboot() {
     console.println();
@@ -203,18 +203,18 @@ void reboot() {
     console.println(F("restarted in one second."));
     console.println(F("****************************************************"));
     console.println();
-    NVIC_SystemReset();  
+    NVIC_SystemReset();
 }
 
 
 // // callback for received data
 // void receiveI2CDataSMBus(int byteCount){
-    
+
 //     console.print("<-- I2C RX Byte Count: ");
 //     console.println(byteCount);
 //     console.println(byteCount);
 //     console.println(byteCount);
-    
+
 //     // process bytes received
 //     if(byteCount > 0){
 
@@ -263,7 +263,7 @@ void reboot() {
 //             if(byteCount == 1){
 //                 // -------------------------------------------
 //                 // REQUEST RECEIVED FOR READING A REGISTER
-//                 // -------------------------------------------                
+//                 // -------------------------------------------
 //                 uint16_t length = i2cCache.reg[address].length;
 
 //                 console.print("    REQUEST RECEIVED TO READ REGISTER: ");
@@ -280,7 +280,7 @@ void reboot() {
 //                     i2cCache.buffer[i] = i2cCache.reg[address].data[i];
 //                 }
 //             }
-            
+
 //             // if we received multiple bytes, then this is a WRITE operation
 //             else{
 //                 // -------------------------------------------
@@ -288,11 +288,11 @@ void reboot() {
 //                 // -------------------------------------------
 
 //                 // get the data lenght from the number bytes available subtracting address (first) byte
-//                 uint16_t length = byteCount - 1; 
+//                 uint16_t length = byteCount - 1;
 
 //                 // only maximum of 32 bytes are supported; bounds check the data length
-//                 if(length > 32) length = 32; 
-                
+//                 if(length > 32) length = 32;
+
 //                 // update I2C register in the cache with the recevied data length
 //                 i2cCache.reg[address].length = length;
 //                 i2cCache.length = length;
@@ -302,7 +302,7 @@ void reboot() {
 //                 console.print("; BYTES=");
 //                 console.println(length);
 
-//                 // // process data recevied 
+//                 // // process data recevied
 //                 // for(int i = 0; i < length; i++){
 //                 //     // copy the received data to this register's storage buffer
 //                 //     i2cCache.reg[address].data[i] = buffer[i+1];
@@ -326,12 +326,12 @@ void reboot() {
 //     return;
 
 
-    
+
 
 //     // handle single byte values
-//     if(Wire.available() == 1){                    
+//     if(Wire.available() == 1){
 //         int c = Wire.read();    // receive a byte as character
-        
+
 //         if(c > 10){
 //             // WRITING RAW BYTE VALUES
 //             i2cCache.length = 1;
@@ -349,13 +349,13 @@ void reboot() {
 //             if(address < 0 || address >= 10){
 //                 // while(Wire.available())
 //                 // Wire.read();
-//             } 
+//             }
 
 //             console.print("    READING REGISTER: ");
 //             console.println(address);
 
 //             // copy register data to read buffer
-//             i2cCache.length = i2cCache.reg[address].length;            
+//             i2cCache.length = i2cCache.reg[address].length;
 //             if(i2cCache.length > 0){
 //                 console.print("    COPYING REGISTER TO READ BUFFER: (");
 //                 console.print(i2cCache.length);
@@ -367,18 +367,18 @@ void reboot() {
 //     else {
 //         // WRITING A REGISTER
 //         int address = Wire.read(); // get register address
-        
+
 //         // bail out if address is unsupported; drain buffer
 //         if(address < 0 || address >= 10){
 //             //if(Wire.available())
 //             //Wire.read(Wire.av);
-//         } 
+//         }
 
 //         // get number of bytes still available to read
 //         int bytesRemaining = Wire.available();
-        
+
 //         // maximum of 32 bytes supported
-//         if(bytesRemaining > 32) bytesRemaining = 32; 
+//         if(bytesRemaining > 32) bytesRemaining = 32;
 
 //         // update I2C cache with data length
 //         i2cCache.reg[address].length = bytesRemaining;
@@ -441,7 +441,7 @@ void sendI2CDataRaw(){
 // WRITING RAW BYTE VALUES
 // -------------------------------------------
 // callback for received data
-void receiveI2CDataRaw(int byteCount){    
+void receiveI2CDataRaw(int byteCount){
     console.print("<-- I2C <RAW> RECEIVE [");
     console.print(byteCount);
     console.println("] BYTES");
@@ -462,7 +462,7 @@ void receiveI2CDataRaw(int byteCount){
 void receiveI2CData(int byteCount){
     if(byteCount == 0) return; // ignore any zero byte callbacks
     uint8_t address = i2cCache.wire->read();
-    uint8_t length = byteCount - 1; // substract for address byte    
+    uint8_t length = byteCount - 1; // substract for address byte
     console.print("--> I2C <REGISTER:");
     console.print(address);
     console.print("> RECEIVE [");
@@ -478,11 +478,11 @@ void receiveI2CData(int byteCount){
     // update active register address
     i2cCache.address = address;
 
-    // if a data payload is included, then we need to cache 
+    // if a data payload is included, then we need to cache
     // the value in the  register's data store
     if(length > 0){
 
-        // clear register data store    
+        // clear register data store
         memset(i2cCache.reg[address].data, 0, sizeof i2cCache.reg[address].data);
 
         // update register data length

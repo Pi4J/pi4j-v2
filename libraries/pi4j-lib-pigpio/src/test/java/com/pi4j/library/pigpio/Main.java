@@ -51,8 +51,8 @@ public class Main {
 //                continue;
 //            }
 //        }
-//
-//        int handle = pig.i2cOpen(1, 0x04);
+
+        int handle = pig.i2cOpen(1, 0x04);
 
 
         //pig.initialize();
@@ -62,7 +62,7 @@ public class Main {
         //var frequency = pig.gpioGetPWMfrequency(4);
         //System.out.println("FREQUENCY: " + frequency);
 
-        System.in.read();
+        //System.in.read();
 
 //        pig.gpioHardwarePWM(18, 0,0);
 
@@ -91,6 +91,19 @@ public class Main {
 //        System.out.println("[BLOCK] <"  + rx.length + "> " + Arrays.toString(rx));
 //
 
+        int max = 32;
+        byte[] data = new byte[max];
+        for(int i = 0; i < max; i++) {
+            data[i] = (byte)i;
+        }
+
+        pig.i2cWriteDevice(handle, data);
+
+        //Thread.sleep(200);
+        //byte rx[] = pig.i2cReadDevice(handle, data.length);
+
+        //System.out.println("[RAW-READ] <" + rx.length + "> " + rx);
+
 
 //        // RAW I2C READ/WRITE
 //        for(int i = 0; i <= 100; i++) {
@@ -101,11 +114,11 @@ public class Main {
 //            System.out.println("[RAW-READ] <" + rx.length() + "> " + rx);
 //        }
 
+//
+//        pig.gpioWrite(4, PiGpioState.LOW);
 
-        pig.gpioWrite(4, PiGpioState.LOW);
-
-//        // CLOSE
-//        pig.i2cClose(handle);
+        // CLOSE
+        pig.i2cClose(handle);
 
 
 

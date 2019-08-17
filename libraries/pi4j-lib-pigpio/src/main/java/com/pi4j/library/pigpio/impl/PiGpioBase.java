@@ -159,7 +159,7 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
-    protected void validateI2cDataLength(int length) throws IOException {
+    protected void validateI2cBlockLength(int length) throws IOException {
         // validate I2C/SMBus payload data length :: 0-32
         if(length < 0 || length > 32) {
             throw new IOException("PIGPIO ERROR: INVALID I2C PAYLOAD DATA LENGTH [" + length + "]; Valid range: 0-32");
