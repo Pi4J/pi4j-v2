@@ -30,12 +30,10 @@ package com.pi4j.plugin.raspberrypi.provider.i2c;
  */
 
 
-import com.pi4j.io.i2c.I2C;
-import com.pi4j.io.i2c.I2CBase;
-import com.pi4j.io.i2c.I2CConfig;
-import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.io.i2c.*;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class RpiI2C extends I2CBase implements I2C {
 
@@ -49,33 +47,8 @@ public class RpiI2C extends I2CBase implements I2C {
     }
 
     @Override
-    public void write(byte b) throws IOException {
-
-    }
-
-    @Override
-    public void write(byte[] buffer, int offset, int size) throws IOException {
-
-    }
-
-    @Override
-    public void write(byte[] buffer) throws IOException {
-
-    }
-
-    @Override
-    public void write(int address, byte b) throws IOException {
-
-    }
-
-    @Override
-    public void write(int address, byte[] buffer, int offset, int size) throws IOException {
-
-    }
-
-    @Override
-    public void write(int address, byte[] buffer) throws IOException {
-
+    public boolean isOpen() {
+        return false;
     }
 
     @Override
@@ -84,22 +57,42 @@ public class RpiI2C extends I2CBase implements I2C {
     }
 
     @Override
-    public int read(byte[] buffer, int offset, int size) throws IOException {
+    public int read(ByteBuffer buffer, int offset, int length) throws IOException {
         return 0;
     }
 
     @Override
-    public int read(int address) throws IOException {
+    public void write(byte b) throws IOException {
+
+    }
+
+    @Override
+    public int write(ByteBuffer buffer, int offset, int length) throws IOException {
         return 0;
     }
 
     @Override
-    public int read(int address, byte[] buffer, int offset, int size) throws IOException {
+    public int readRegister(int register) throws IOException {
         return 0;
     }
 
     @Override
-    public int read(byte[] writeBuffer, int writeOffset, int writeSize, byte[] readBuffer, int readOffset, int readSize) throws IOException {
+    public int readRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException {
         return 0;
+    }
+
+    @Override
+    public void writeRegister(int register, byte b) throws IOException {
+
+    }
+
+    @Override
+    public int writeRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException {
+        return 0;
+    }
+
+    @Override
+    public void close() throws Exception {
+
     }
 }

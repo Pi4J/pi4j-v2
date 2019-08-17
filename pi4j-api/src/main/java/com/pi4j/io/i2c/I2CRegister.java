@@ -1,11 +1,11 @@
 package com.pi4j.io.i2c;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  I2CConfig.java
+ * FILENAME      :  I2CRegister.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,16 +27,21 @@ package com.pi4j.io.i2c;
  * #L%
  */
 
-import com.pi4j.config.impl.DeviceConfigBase;
-import com.pi4j.io.IOConfig;
+import com.pi4j.io.IODataReader;
+import com.pi4j.io.IODataWriter;
 
-public class I2CConfig extends DeviceConfigBase<I2CConfig> implements IOConfig<I2CConfig> {
-
-    public I2CConfig(){
-        super();
-    }
-
-    public I2CConfig(String device, int address){
-        //super(device, address);
+/**
+ * I2C Device Register.
+ * This abstraction allows data to be read or written to a specific device register on the I2C bus.
+ *
+ * @author Robert Savage
+ */
+public interface I2CRegister extends IODataWriter, IODataReader {
+    /**
+     * @return This I2C device register address
+     */
+    int getAddress();
+    default int address(){
+        return getAddress();
     }
 }

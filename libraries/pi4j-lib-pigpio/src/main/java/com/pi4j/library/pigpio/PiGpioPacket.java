@@ -238,7 +238,7 @@ public class PiGpioPacket {
         if(p3 > 0)
             return String.format("CMD=%s(%d); P1=%d; P2=%d; P3=%d; PAYLOAD=%s", cmd().name(), cmd().value(), p1(), p2(), p3(), Arrays.toString(data()));
         else
-            return String.format("CMD=%s(%d); P1=%d; P2=%d;", cmd().name(), cmd().value(), p1(), p2());
+            return String.format("CMD=%s(%d); P1=%d; P2=%d; P3=%d", cmd().name(), cmd().value(), p1(), p2(), p3());
     }
 }
 

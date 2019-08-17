@@ -34,13 +34,32 @@ import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CBase;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.plugin.mock.Mock;
+import com.pi4j.util.StringUtil;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.util.ArrayDeque;
+import java.util.Objects;
 
 public class MockI2C extends I2CBase implements I2C {
 
+    /**
+     * ATTENTION:  The storage and management of the byte arrays
+     *  are terribly inefficient and not intended for real-world
+     *  usage.  These are only intended to unit testing the
+     *  Pi4J I2C APIs.
+     */
+    protected ArrayDeque<Byte>[] registers = new ArrayDeque[256]; // 256 supported registers (0-255)
+    protected ArrayDeque<Byte> raw = new ArrayDeque<>();
+
     public MockI2C(I2CProvider provider, I2CConfig config){
         super(provider, config);
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: CREATE()");
+        System.out.println();
     }
 
     @Override
@@ -49,57 +68,243 @@ public class MockI2C extends I2CBase implements I2C {
     }
 
     @Override
+    public boolean isOpen() {
+        return false;
+    }
+
+    @Override
+    public void close() throws IOException {
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: CLOSE()");
+        System.out.println();
+    }
+
+    // -------------------------------------------------------------------
+    // RAW DEVICE WRITE FUNCTIONS
+    // -------------------------------------------------------------------
+
+    @Override
     public void write(byte b) throws IOException {
-
+        raw.add(b);
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: WRITE(0x");
+        System.out.print(StringUtil.toHexString(b));
+        System.out.println(")");
     }
 
     @Override
-    public void write(byte[] buffer, int offset, int size) throws IOException {
-
+    public int write(ByteBuffer buffer, int offset, int length) throws IOException {
+        Objects.checkFromIndexSize(offset, length, buffer.capacity());
+        for(int p = offset; p-offset < length; p++){
+            raw.add(buffer.get(p)); // add to internal buffer
+        }
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: WRITE(0x");
+        System.out.print(StringUtil.toHexString(buffer, offset, length));
+        System.out.println(")");
+        return length;
     }
 
     @Override
-    public void write(byte[] buffer) throws IOException {
+    public int write(String data, Charset charset) throws IOException {
+        byte[] buffer = data.getBytes(charset);
+        for(int p = 0; p < buffer.length; p++){
+            raw.add(buffer[p]); // add to internal buffer
+        }
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: WRITE(\"");
+        System.out.print(data);
+        System.out.println("\")");
+        return data.length();
+    }
 
+    // -------------------------------------------------------------------
+    // RAW DEVICE READ FUNCTIONS
+    // -------------------------------------------------------------------
+
+    @Override
+    public int read() throws IOException{
+        if(raw.isEmpty()) return -1;
+        byte b = raw.pop();
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: READ(0x");
+        System.out.print(StringUtil.toHexString(b));
+        System.out.println(")");
+        return b;
     }
 
     @Override
-    public void write(int address, byte b) throws IOException {
+    public int read(ByteBuffer buffer, int offset, int length) throws IOException{
+        Objects.checkFromIndexSize(offset, length, buffer.capacity());
 
+        if(raw.isEmpty()) return -1;
+        int counter = 0;
+        for(int p = 0; p < length; p++) {
+            if(p+offset > buffer.capacity()) break;
+            if(raw.isEmpty()) break;;
+            buffer.put(offset + p, raw.pop());
+            counter++;
+        }
+
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: READ(0x");
+        System.out.print(StringUtil.toHexString(buffer, offset, length));
+        System.out.println(")");
+
+        return counter;
     }
 
     @Override
-    public void write(int address, byte[] buffer, int offset, int size) throws IOException {
+    public String readString(int length, Charset charset) throws IOException{
+        if(raw.isEmpty()) return null;
+        byte[] buffer = new byte[length];
+        for(int p = 0; p < length; p++) {
+            if(raw.isEmpty()) break;;
+            buffer[p] = raw.pop();
+        }
+        String result = new String(buffer, charset);
 
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: READ(\"");
+        System.out.print(result);
+        System.out.println("\")");
+
+        return result;
+    }
+
+    // -------------------------------------------------------------------
+    // DEVICE REGISTER WRITE FUNCTIONS
+    // -------------------------------------------------------------------
+
+    @Override
+    public void writeRegister(int register, byte b) throws IOException {
+
+        if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
+        registers[register].add(b);
+
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: WRITE(");
+        System.out.print("REG=");
+        System.out.print(register);
+        System.out.print(", 0x");
+        System.out.print(StringUtil.toHexString(b));
+        System.out.println(")");
     }
 
     @Override
-    public void write(int address, byte[] buffer) throws IOException {
+    public int writeRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException {
+        Objects.checkFromIndexSize(offset, length, buffer.capacity());
 
+        // add to internal buffer
+        if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
+        for(int p = offset; p-offset < length; p++){
+            registers[register].add(buffer.get(p));
+        }
+
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: WRITE(");
+        System.out.print("REG=");
+        System.out.print(register);
+        System.out.print(", 0x");
+        System.out.print(StringUtil.toHexString(buffer, offset, length));
+        System.out.println(")");
+
+        return length;
     }
 
     @Override
-    public int read() throws IOException {
-        return 0;
+    public int writeRegister(int register, String data, Charset charset) throws IOException{
+
+        if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
+        byte[] buffer = data.getBytes(charset);
+        for(int p = 0; p < buffer.length; p++){
+            registers[register].add(buffer[p]); // add to internal buffer
+        }
+
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: WRITE(");
+        System.out.print("REG=");
+        System.out.print(register);
+        System.out.print(", \"");
+        System.out.print(data);
+        System.out.println("\")");
+        return data.length();
+    }
+
+    // -------------------------------------------------------------------
+    // DEVICE REGISTER READ FUNCTIONS
+    // -------------------------------------------------------------------
+
+    @Override
+    public int readRegister(int register) throws IOException {
+        if(registers[register] == null) throw new IOException("No available data to read");
+        if(registers[register].isEmpty()) throw new IOException("No available data to read");
+        byte b = registers[register].pop();
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: READ(");
+        System.out.print("REG=");
+        System.out.print(register);
+        System.out.print(", 0x");
+        System.out.print(StringUtil.toHexString(b));
+        System.out.println(")");
+        return b;
     }
 
     @Override
-    public int read(byte[] buffer, int offset, int size) throws IOException {
-        return 0;
+    public int readRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException {
+        if(registers[register] == null) return -1;
+        if(registers[register].isEmpty()) return -1;
+
+        int counter = 0;
+        for(int p = 0; p < length; p++) {
+            if(p+offset > buffer.capacity()) break;
+            if(registers[register].isEmpty()) break;;
+            buffer.put(offset + p, registers[register].pop());
+            counter++;
+        }
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: READ(");
+        System.out.print("REG=");
+        System.out.print(register);
+        System.out.print(", 0x");
+        System.out.print(StringUtil.toHexString(buffer, offset, length));
+        System.out.println(")");
+        return counter;
     }
 
     @Override
-    public int read(int address) throws IOException {
-        return 0;
-    }
+    public String readRegisterString(int register, int length, Charset charset) throws IOException {
+        if(registers[register] == null) return null;
+        if(registers[register].isEmpty()) return null;
 
-    @Override
-    public int read(int address, byte[] buffer, int offset, int size) throws IOException {
-        return 0;
-    }
+        byte[] buffer = new byte[length];
+        for(int p = 0; p < length; p++) {
+            if(registers[register].isEmpty()) break;;
+            buffer[p] = registers[register].pop();
+        }
+        String result = new String(buffer, charset);
 
-    @Override
-    public int read(byte[] writeBuffer, int writeOffset, int writeSize, byte[] readBuffer, int readOffset, int readSize) throws IOException {
-        return 0;
+        System.out.print(" [");
+        System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("] :: READ(");
+        System.out.print("REG=");
+        System.out.print(register);
+        System.out.print(", \"");
+        System.out.print(result);
+        System.out.println("\")");
+
+        return result;
     }
 }
