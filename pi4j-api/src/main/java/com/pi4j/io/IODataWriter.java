@@ -66,6 +66,27 @@ public interface IODataWriter {
     int write(ByteBuffer buffer, int offset, int length) throws IOException;
 
     /**
+     * Write a single raw byte value.
+     *
+     * @param b byte to be written
+     * @throws IOException thrown on write error
+     */
+    default void write(int b) throws IOException{
+        write((byte)b);
+    }
+
+    /**
+     * Write a single word value (16-bit) to the raw I2C device.
+     *
+     * @param word 16-bit word value to be written
+     * @throws IOException thrown on write error
+     */
+    default void writeWord(int word) throws IOException{
+        byte[] buffer = new byte[] { (byte)(word >> 8), (byte)word };
+        this.write(buffer);
+    }
+
+    /**
      * Write an array of byte values with given offset (starting position) and length in the provided data array.
      *
      * @param data data array of bytes to be written

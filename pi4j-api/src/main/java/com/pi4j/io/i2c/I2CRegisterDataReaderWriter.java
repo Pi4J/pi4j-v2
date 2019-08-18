@@ -5,7 +5,7 @@ package com.pi4j.io.i2c;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  I2CRegisterDataReader.java
+ * FILENAME      :  I2CRegisterDataReaderWriter.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -26,6 +26,8 @@ package com.pi4j.io.i2c;
  * limitations under the License.
  * #L%
  */
+
+import com.pi4j.io.exception.IOReadException;
 
 import java.io.IOException;
 
@@ -48,9 +50,8 @@ public interface I2CRegisterDataReaderWriter extends I2CRegisterDataReader, I2CR
      * @return The 16-bit word value read/returned; or a negative value if error
      * @throws IOException thrown on write error
      */
-    default int writeReadRegister16(int register, int word) throws IOException{
-        int ret = writeRegister16(register, word);
-        if(ret <= 0) return ret;
-        return readRegister16(register);
+    default int writeReadRegisterWord(int register, int word) throws IOException, IOReadException {
+        writeRegisterWord(register, word);
+        return readRegisterWord(register);
     }
 }

@@ -298,7 +298,7 @@ public class TestI2cUsingTestHarness {
         for(int register = 0; register < MAX_REGISTERS; register++) {
             Thread.sleep(50);
             System.out.println("[TEST WRITE BLOCK] :: REGISTER=" + register);
-            values[register] = UUID.randomUUID().toString().substring(0, 10);
+            values[register] = UUID.randomUUID().toString().substring(0, 30);
             System.out.println(" (WRITE) >> VALUE = " + values[register]);
 
             // WRITE :: BLOCK TO REGISTER
@@ -307,12 +307,26 @@ public class TestI2cUsingTestHarness {
 
         // READ back the random values from the I2C storage registers on the test harness and compare them.
         for(int register = 0; register < MAX_REGISTERS; register++) {
-            Thread.sleep(50);
             System.out.println("[TEST READ BLOCK] :: REGISTER=" + register + "; LENGTH=" + values[register].length());
 
             // READ :: BLOCK
+            Thread.sleep(100);
             String value = pigpio.i2cReadI2CBlockDataToString(handle, register, values[register].length());
             System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + values[register] + ")");
+
+            // attempt #2
+            if(!values[register].equals(value)){
+                Thread.sleep(500);
+                value = pigpio.i2cReadI2CBlockDataToString(handle, register, values[register].length());
+                System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + values[register] + ") <ATTEMPT #2>");
+            }
+
+            // attempt #3
+            if(!values[register].equals(value)){
+                Thread.sleep(1000);
+                value = pigpio.i2cReadI2CBlockDataToString(handle, register, values[register].length());
+                System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + values[register] + ") <ATTEMPT #3>");
+            }
 
             // validate read value match with expected value that was writted to this register
             Assert.assertEquals("I2C BLOCK VALUE MISMATCH",  values[register], value);

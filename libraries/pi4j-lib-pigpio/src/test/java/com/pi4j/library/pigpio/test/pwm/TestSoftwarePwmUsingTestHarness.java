@@ -215,11 +215,11 @@ public class TestSoftwarePwmUsingTestHarness {
         TestHarnessFrequency measured = harness.getFrequency(pin);
         System.out.println(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency);
 
-        // we allow a 50% margin of error, the testing harness uses a simple pulse counter to crudely
+        // we allow a 60% margin of error, the testing harness uses a simple pulse counter to crudely
         // measure the PWM signal, its not very accurate but should provide sufficient validation testing
         // just to verify the applied PWM signal is close to the expected frequency
         // calculate margin of error offset value
-        long marginOfError = Math.round(frequency * .50);
+        long marginOfError = Math.round(frequency * .60);
 
         // test measured value against HI/LOW offsets to determine acceptable range
         if(measured.frequency < frequency-marginOfError) return false;

@@ -5,7 +5,7 @@ package com.pi4j.example.i2c;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: EXAMPLE  :: Sample Code
- * FILENAME      :  I2cRawDeviceExample.java
+ * FILENAME      :  I2cDeviceExample.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -33,9 +33,9 @@ import com.pi4j.util.Console;
 
 import java.nio.ByteBuffer;
 
-public class I2cRawDeviceExample {
+public class I2cDeviceExample {
 
-    public I2cRawDeviceExample() {
+    public I2cDeviceExample() {
     }
 
     public static void main(String[] args) throws Exception {
@@ -46,6 +46,9 @@ public class I2cRawDeviceExample {
 
         // print program title/header
         console.title("<-- The Pi4J Project -->", "Basic I2C Raw Device Example");
+
+        // allow for user to exit program using CTRL-C
+        console.promptForExit();
 
         // Initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled
@@ -59,37 +62,45 @@ public class I2cRawDeviceExample {
         // use try-with-resources to auto-close I2C when complete
         try (var i2c = pi4j.i2c().create(config);) {
 
-            // --> write a single (8-bit) byte value to the raw I2C device (not to a register)
-            i2c.write(0x0D);
+            // we will be reading and writing to register address 0x01
+            var register = i2c.register(0x01);
 
-            // <-- read a single (8-bit) byte value from the raw I2C device (not to a register)
-            byte readByte = i2c.readByte();
+            // --> write a single (8-bit) byte value to the I2C device register
+            register.write(0x0D);
 
-            // --> write a single (16-bit) word value to the raw I2C device (not to a register)
-            i2c.writeWord(0xFFFF);
+            // <-- read a single (8-bit) byte value from the I2C device register
+            byte readByte = register.readByte();
 
-            // <-- read a single (16-bit) word value from the raw I2C device (not to a register)
-            int readWord = i2c.readWord();
+            // --> write a single (16-bit) word value to the I2C device register
+            register.writeWord(0xFFFF);
 
-            // --> write an array of data bytes to the raw I2C device (not to a register)
-            i2c.write(new byte[] { 0,1,2,3,4,5,6,7,8,9 });
+            // <-- read a single (16-bit) word value from the I2C device register
+            int readWord = register.readWord();
 
-            // <-- read a byte array of specified length from the raw I2C device (not to a register)
-            byte[] readArray = i2c.readArray(10);
+            // --> write an array of data bytes to the I2C device register
+            register.write(new byte[] { 0,1,2,3,4,5,6,7,8,9 });
 
-            // --> write a buffer of data bytes to the raw I2C device (not to a register)
+            // <-- read a byte array of specified length from the I2C device register
+            byte[] readArray = register.readArray(10);
+
+            // --> write a buffer of data bytes to the I2C device register
             ByteBuffer buffer = ByteBuffer.allocate(10);
-            i2c.write(buffer);
+            register.write(buffer);
 
-            // <-- read ByteBuffer of specified length from the raw I2C device (not to a register)
-            ByteBuffer readBuffer = i2c.readBuffer(10);
+            // <-- read ByteBuffer of specified length from the I2C device register
+            ByteBuffer readBuffer = register.readBuffer(10);
 
-            // --> write a string of data to the raw I2C device (not to a register)
-            i2c.write("This is a test");
+            // --> write a string of data to the I2C device register
+            register.write("This is a test");
 
-            // <-- read string of data of specified length from the raw I2C device (not to a register)
-            String readString = i2c.readString(14);
+            // <-- read string of data of specified length from the I2C device register
+            String readString = register.readString(14);
         }
+
+
+        // create a digital input instance using the default digital input provider
+        // wait (block) for user to exit program using CTRL-C
+        console.waitForExit();
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");

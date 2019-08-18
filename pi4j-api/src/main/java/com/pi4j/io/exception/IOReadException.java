@@ -1,11 +1,11 @@
-package com.pi4j.io.i2c;
+package com.pi4j.io.exception;
 
 /*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  I2CRegister.java
+ * FILENAME      :  IOReadException.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,34 +27,30 @@ package com.pi4j.io.i2c;
  * #L%
  */
 
-import com.pi4j.io.IODataReader;
-import com.pi4j.io.IODataWriter;
-import com.pi4j.io.exception.IOReadException;
-
-import java.io.IOException;
 
 /**
- * I2C Device Register.
- * This abstraction allows data to be read or written to a specific device register on the I2C bus.
+ * <p>
+ * This exception is thrown if a platform assignment is attempted when a
+ * platform instance has already been assigned.
+ * </p>
  *
- * @author Robert Savage
+ * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
+ * @author Robert Savage (<a
+ *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  */
-public interface I2CRegister extends IODataWriter, IODataReader {
+public class IOReadException extends IOException {
+
     /**
-     * @return This I2C device register address
+     * Default Constructor
      */
-    int getAddress();
-    default int address(){
-        return getAddress();
+    public IOReadException(String message){
+        super(message);
     }
 
     /**
-     * Write a single word value (16-bit) to the I2C device register
-     * and immediately reads back a 16-bit word value.
-     *
-     * @param word 16-bit word value to be written
-     * @return The 16-bit word value read/returned; or a negative value if error
-     * @throws IOException thrown on write error
+     * Alternate Constructor
      */
-    int writeReadWord(int word) throws IOException, IOReadException;
+    public IOReadException(int error){
+        super("I/O READ ERROR: " + error);
+    }
 }
