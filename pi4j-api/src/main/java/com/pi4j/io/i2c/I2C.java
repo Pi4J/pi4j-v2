@@ -45,8 +45,9 @@ import com.pi4j.provider.exception.ProviderException;
  *        <a href="http://raspelikan.blogspot.co.at">RasPelikan</a>
  */
 public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
-        IODataWriter, IODataReader,
-        I2CRegisterDataWriter, I2CRegisterDataReader,
+        IODataWriter,
+        IODataReader,
+        I2CRegisterDataReaderWriter,
         AutoCloseable {
 
     static I2C instance(Context context, String device, int address) throws ProviderException {

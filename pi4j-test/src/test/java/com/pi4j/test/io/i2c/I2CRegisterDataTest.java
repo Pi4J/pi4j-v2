@@ -77,6 +77,7 @@ public class I2CRegisterDataTest {
 
     public class TestData{
         public final byte byt;
+        public final int word;
         public final byte[] array;
         public final ByteBuffer buffer;
         public final String str;
@@ -84,6 +85,7 @@ public class I2CRegisterDataTest {
         public TestData(){
             Random rand = new Random();
             byt = (byte) rand.nextInt(255);
+            word = rand.nextInt(65536);
             this.array = new byte[rand.nextInt(32)];
             rand.nextBytes(this.array);
             byte bufferArray[] = new byte[rand.nextInt(32)];
@@ -125,8 +127,11 @@ public class I2CRegisterDataTest {
 
     public void writeRegister(I2CRegister register, TestData sample) throws Exception {
 
-        // write a single byte to the raw I2C device (not to a register)
+        // write a single byte (8-bit) value to the raw I2C device (not to a register)
         register.write(sample.byt);
+
+        // write a single word (16-bit) value to the raw I2C device (not to a register)
+        register.write16(sample.word);
 
         // write an array of data bytes to the raw I2C device (not to a register)
         register.write(sample.array);
@@ -140,9 +145,13 @@ public class I2CRegisterDataTest {
 
     public void readRegister(I2CRegister register, TestData sample) throws Exception {
 
-        // read single byte from the raw I2C device (not from a register)
+        // read single byte (8-bit) value from the raw I2C device (not from a register)
         byte b = (byte)register.read();
         Assert.assertEquals(sample.byt, b);
+
+        // read single word (16-bit) value from the raw I2C device (not from a register)
+        int w = register.read16();
+        Assert.assertEquals(sample.word, w);
 
         // read an array of data bytes from the raw I2C device (not from a register)
         byte byteArray[] = new byte[sample.array.length];

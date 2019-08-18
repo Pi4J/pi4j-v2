@@ -55,6 +55,28 @@ public class I2CRegisterImpl implements I2CRegister {
         this.i2c.writeRegister(this.address, b);
     }
 
+    /**
+     * Write a single word value (16-bit) to the I2C device register.
+     *
+     * @param word 16-bit word value to be written
+     * @return The number of bytes written, possibly zero; typically 2
+     * @throws IOException thrown on write error
+     */
+    @Override
+    public int write16(int word) throws IOException{
+        return this.i2c.writeRegister16(this.address, word);
+    }
+
+    @Override
+    public int read16() throws IOException {
+        return this.i2c.readRegister16(this.address);
+    }
+
+    @Override
+    public int writeRead16(int word) throws IOException {
+        return this.i2c.writeReadRegister16(this.address, word);
+    }
+
     @Override
     public int write(ByteBuffer buffer, int offset, int length) throws IOException {
         Objects.checkFromIndexSize(offset, length, buffer.capacity());
