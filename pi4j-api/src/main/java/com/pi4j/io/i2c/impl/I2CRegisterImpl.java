@@ -27,6 +27,7 @@ package com.pi4j.io.i2c.impl;
  * #L%
  */
 
+import com.pi4j.io.exception.IOReadException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CRegister;
 
@@ -63,18 +64,18 @@ public class I2CRegisterImpl implements I2CRegister {
      * @throws IOException thrown on write error
      */
     @Override
-    public int write16(int word) throws IOException{
-        return this.i2c.writeRegister16(this.address, word);
+    public void writeWord(int word) throws IOException{
+        this.i2c.writeRegisterWord(this.address, word);
     }
 
     @Override
-    public int read16() throws IOException {
-        return this.i2c.readRegister16(this.address);
+    public int readWord() throws IOException, IOReadException {
+        return this.i2c.readRegisterWord(this.address);
     }
 
     @Override
-    public int writeRead16(int word) throws IOException {
-        return this.i2c.writeReadRegister16(this.address, word);
+    public int writeReadWord(int word) throws IOException, IOReadException {
+        return this.i2c.writeReadRegisterWord(this.address, word);
     }
 
     @Override
@@ -100,7 +101,7 @@ public class I2CRegisterImpl implements I2CRegister {
     }
 
     @Override
-    public String readString(int length, Charset charset) throws IOException {
+    public String readString(int length, Charset charset) throws IOException, IOReadException {
         return this.i2c.readRegisterString(this.address, length, charset);
     }
 }

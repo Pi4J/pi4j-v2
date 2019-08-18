@@ -131,7 +131,7 @@ public class I2CRegisterDataTest {
         register.write(sample.byt);
 
         // write a single word (16-bit) value to the raw I2C device (not to a register)
-        register.write16(sample.word);
+        register.writeWord(sample.word);
 
         // write an array of data bytes to the raw I2C device (not to a register)
         register.write(sample.array);
@@ -150,7 +150,7 @@ public class I2CRegisterDataTest {
         Assert.assertEquals(sample.byt, b);
 
         // read single word (16-bit) value from the raw I2C device (not from a register)
-        int w = register.read16();
+        int w = register.readWord();
         Assert.assertEquals(sample.word, w);
 
         // read an array of data bytes from the raw I2C device (not from a register)
