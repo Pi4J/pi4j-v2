@@ -156,6 +156,13 @@ public interface I2CRegisterDataReader {
     int readRegister(int register) throws IOException;
     int readRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException;
 
+    default int readRegister16(int register) throws IOException{
+        byte[] buffer=  new byte[2];
+        int ret = readRegister(register, buffer);
+        if(ret <= 0) return ret;
+        return ((buffer[0] & 0xff) << 8) | (buffer[1] & 0xff);
+    }
+
     default ByteBuffer readRegister(int register, int length) throws IOException {
         byte[] temp = new byte[length];
         int actual = readRegister(register, temp, 0, length);

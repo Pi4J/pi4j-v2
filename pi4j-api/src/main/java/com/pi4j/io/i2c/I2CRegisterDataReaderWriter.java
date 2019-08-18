@@ -5,7 +5,7 @@ package com.pi4j.io.i2c;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  I2CRegister.java
+ * FILENAME      :  I2CRegisterDataReader.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,51 +27,30 @@ package com.pi4j.io.i2c;
  * #L%
  */
 
-import com.pi4j.io.IODataReader;
-import com.pi4j.io.IODataWriter;
-
 import java.io.IOException;
 
 /**
- * I2C Device Register.
- * This abstraction allows data to be read or written to a specific device register on the I2C bus.
+ * I2C Register Data Writer Interface for Pi4J Data Communications
  *
  * @author Robert Savage
+ *
+ * Based on previous contributions from:
+ *        Daniel Sendula,
+ *        <a href="http://raspelikan.blogspot.co.at">RasPelikan</a>
  */
-public interface I2CRegister extends IODataWriter, IODataReader {
-    /**
-     * @return This I2C device register address
-     */
-    int getAddress();
-    default int address(){
-        return getAddress();
-    }
-
-    /**
-     * Write a single word value (16-bit) to the I2C device register.
-     *
-     * @param word 16-bit word value to be written
-     * @return The number of bytes written, possibly zero; typically 2
-     * @throws IOException thrown on write error
-     */
-    int write16(int word) throws IOException;
-
-    /**
-     * Read a single word value (16-bit) from the I2C device register.
-     *
-     * @return The 16-bit word value; or a negative value if error
-     * @throws IOException thrown on write error
-     */
-    int read16() throws IOException;
-
-
+public interface I2CRegisterDataReaderWriter extends I2CRegisterDataReader, I2CRegisterDataWriter {
     /**
      * Write a single word value (16-bit) to the I2C device register
      * and immediately reads back a 16-bit word value.
      *
+     * @param register the register address to write to
      * @param word 16-bit word value to be written
      * @return The 16-bit word value read/returned; or a negative value if error
      * @throws IOException thrown on write error
      */
-    int writeRead16(int word) throws IOException;
+    default int writeReadRegister16(int register, int word) throws IOException{
+        int ret = writeRegister16(register, word);
+        if(ret <= 0) return ret;
+        return readRegister16(register);
+    }
 }

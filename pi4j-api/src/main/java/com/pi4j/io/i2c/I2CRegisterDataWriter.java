@@ -46,13 +46,26 @@ import java.util.Objects;
 public interface I2CRegisterDataWriter {
 
     /**
-     * Write a single raw byte value to the I2C device register.
+     * Write a single raw byte (8-bit) value to the I2C device register.
      *
      * @param register the register address to write to
      * @param b byte to be written
      * @throws IOException thrown on write error
      */
     void writeRegister(int register, byte b) throws IOException;
+
+    /**
+     * Write a single word value (16-bit) to the I2C device register.
+     *
+     * @param register the register address to write to
+     * @param word 16-bit word value to be written
+     * @return The number of bytes written, possibly zero; typically 2
+     * @throws IOException thrown on write error
+     */
+    default int writeRegister16(int register, int word) throws IOException{
+        byte[] buffer = new byte[] { (byte)(word >> 8), (byte)word };
+        return this.writeRegister(register, buffer);
+    }
 
     /**
      * This method writes all bytes included in the given buffer directly to the i2c device.
