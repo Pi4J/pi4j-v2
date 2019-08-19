@@ -27,12 +27,55 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBase;
-import com.pi4j.io.IOConfig;
+import com.pi4j.config.AddressConfig;
+import com.pi4j.io.gpio.GpioConfig;
 
-public class PwmConfig extends AddressConfigBase<PwmConfig> implements IOConfig<PwmConfig> {
+public interface PwmConfig extends GpioConfig<PwmConfig>, AddressConfig<PwmConfig> {
 
-    public PwmConfig(Number address) {
-        super(address);
+    String PWM_TYPE_KEY = "pwm-type";
+    String FREQUENCY_KEY = "frequency";
+    String RANGE_KEY = "range";
+    String DUTY_CYCLE_KEY = "duty-cycle";
+    String DUTY_CYCLE_PERCENT_KEY = "duty-cycle-percent";
+    String SHUTDOWN_VALUE_KEY = "shutdown";
+    String INITIAL_VALUE_KEY = "initial";
+
+    Integer dutyCycle();
+    default Integer getDutyCycle() {
+        return dutyCycle();
+    }
+
+    Integer dutyCyclePercent();
+    default Integer getDutyCyclePercent() {
+        return dutyCyclePercent();
+    }
+
+    Integer range();
+    default Integer getRange() {
+        return range();
+    }
+
+    Integer frequency();
+    default Integer getFrequency() {
+        return frequency();
+    }
+
+    PwmType pwmType();
+    default PwmType getPwmType(){
+        return pwmType();
+    }
+
+    Integer shutdownValue();
+    PwmConfig shutdownValue(Integer value);
+    default Integer getShutdownValue(){
+        return shutdownValue();
+    }
+    default void setShutdownValue(Integer value){
+        this.shutdownValue(value);
+    }
+
+    Integer initialValue();
+    default Integer getInitialValue(){
+        return initialValue();
     }
 }

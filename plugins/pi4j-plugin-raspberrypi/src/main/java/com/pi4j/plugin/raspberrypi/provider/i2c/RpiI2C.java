@@ -45,16 +45,6 @@ public class RpiI2C extends I2CBase implements I2C {
     }
 
     @Override
-    public int getAddress() {
-        return 0;
-    }
-
-    @Override
-    public boolean isOpen() {
-        return false;
-    }
-
-    @Override
     public int read() throws IOException {
         return 0;
     }
@@ -92,10 +82,5 @@ public class RpiI2C extends I2CBase implements I2C {
     @Override
     public int writeRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException {
         return 0;
-    }
-
-    @Override
-    public void close() throws Exception {
-
     }
 }

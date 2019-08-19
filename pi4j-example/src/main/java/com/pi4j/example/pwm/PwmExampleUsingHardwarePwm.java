@@ -29,12 +29,13 @@ package com.pi4j.example.pwm;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.pwm.Pwm;
+import com.pi4j.io.pwm.PwmType;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.util.Console;
 
-public class PwmExampleUsingSoftwarePwm {
+public class PwmExampleUsingHardwarePwm {
 
-    public static int PWM_PIN = 4;
+    public static int PWM_PIN = 13; // MUST BE A HARDWARE PWM SUPPORTED PIN
 
     public static void main(String[] args) throws Exception {
 
@@ -59,11 +60,10 @@ public class PwmExampleUsingSoftwarePwm {
                 .id("my-pwm-pin")
                 .name("My Test PWM Pin")
                 .address(PWM_PIN)
-                .frequency(1000)   // optionally pre-configure the desired frequency to 1KHz
-                .range(255)        // optionally pre-configure the desired duty-cycle range (0-255)
-                .dutyCycle(128)    // optionally pre-configure the desired duty-cycle (50%)
-                .shutdown(0)       // optionally pre-configure a shutdown duty-cycle value (on terminate)
-                //.initial(125)      // optionally pre-configure an initial duty-cycle value (on startup)
+                .pwmType(PwmType.HARDWARE) // USE HARDWARE PWM
+                .frequency(1000)    // optionally pre-configure the desired frequency to 1KHz
+                .shutdown(0)        // optionally pre-configure a shutdown duty-cycle value (on terminate)
+                //.initial(125)     // optionally pre-configure an initial duty-cycle value (on startup)
                 .build();
 
         // use try-with-resources to auto-close I2C when complete
@@ -74,18 +74,13 @@ public class PwmExampleUsingSoftwarePwm {
         //pwm.frequency(1000);
 
         // <OPTIONAL>
-        // optionally override pre-configured duty-cycle range (Default is 0-255);
-        // this function sets the upper limit of the range
-        //pwm.setRange(255);
-
-        // <OPTIONAL>
         // optionally override pre-configured duty-cycle value;
         // this is in relation to the previously defined rage value
-        //pwm.setDutyCycle(128);
+        //pwm.setDutyCycle(500000);   // hardware PWM range is 0-1M; this value is 50% of range
 
         // <OPTIONAL>
         // alternatively, you can also just simply set the duty-cycle as a percent value
-        //pwm.setDutyCyclePercent(50); // 50%
+        pwm.setDutyCyclePercent(50); // 50%
 
         // enable the PWM signal
         pwm.on();

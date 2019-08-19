@@ -32,11 +32,14 @@ import com.pi4j.io.exception.IOBoundsException;
 import com.pi4j.io.exception.IOIllegalValueException;
 
 public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig, AnalogOutputProvider>, Output {
-    AnalogOutput value(Integer value) throws IOIllegalValueException, IOBoundsException;
 
+    static AnalogOutputConfigBuilder newConfigBuilder(){
+        return AnalogOutputConfigBuilder.newInstance();
+    }
+
+    AnalogOutput value(Integer value) throws IOIllegalValueException, IOBoundsException;
     AnalogOutput stepUp();
     AnalogOutput stepDown();
     AnalogOutput step(Integer value) throws IOIllegalValueException, IOBoundsException;
-
     default AnalogOutput setValue(Integer value) throws IOIllegalValueException, IOBoundsException { return value(value); };
 }

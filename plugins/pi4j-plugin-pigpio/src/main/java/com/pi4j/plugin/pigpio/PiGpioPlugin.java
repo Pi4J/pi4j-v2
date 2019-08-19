@@ -34,7 +34,6 @@ import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProvider;
-import com.pi4j.plugin.pigpio.provider.pwm.PiGpioHardwarePwmProvider;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.provider.Provider;
 
@@ -87,7 +86,6 @@ public class PiGpioPlugin implements Plugin {
 
         Provider providers[] = {
                 PiGpioPwmProvider.newInstance(piGpio),
-                PiGpioHardwarePwmProvider.newInstance(piGpio),
                 PiGpioI2CProvider.newInstance(piGpio),
         };
 

@@ -30,5 +30,47 @@ package com.pi4j.io.i2c;
 import com.pi4j.provider.Provider;
 
 public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
-    //I2C instance(I2CConfig config) throws Exception;
+
+    default <T extends I2C> T create(I2CConfigBuilder builder) throws Exception {
+        return (T)create(builder.build());
+    }
+
+    default <T extends I2C> T create(Integer bus, Integer device) throws Exception {
+        var config = I2C.newConfigBuilder()
+                .bus(bus)
+                .device(device)
+                .build();
+        return (T)create(config);
+    }
+
+    default <T extends I2C> T create(Integer bus, Integer device, String id) throws Exception {
+        var config = I2C.newConfigBuilder()
+                .bus(bus)
+                .device(device)
+                .id(id)
+                .build();
+        return (T)create(config);
+    }
+
+    default <T extends I2C> T create(Integer bus, Integer device, String id, String name) throws Exception {
+        var config = I2C.newConfigBuilder()
+                .bus(bus)
+                .device(device)
+                .id(id)
+                .name(name)
+                .build();
+        return (T)create(config);
+    }
+
+    default <T extends I2C> T create(Integer bus, Integer device, String id, String name, String description) throws Exception {
+        var config = I2C.newConfigBuilder()
+                .bus(bus)
+                .device(device)
+                .id(id)
+                .name(name)
+                .description(description)
+                .build();
+        return (T)create(config);
+    }
+
 }

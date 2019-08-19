@@ -46,40 +46,37 @@ public class PiGpioI2C extends I2CBase implements I2C {
 
     protected final PiGpio piGpio;
     protected final int handle;
-    protected boolean isOpen = false;
 
     public PiGpioI2C(PiGpio piGpio, I2CProvider provider, I2CConfig config) throws IOException {
         super(provider, config);
 
+        // set local reference instance
         this.piGpio = piGpio;
 
         // create I2C instance of PIGPIO I2C
-        // TODO :: ADD SUPPORT FOR CONFIGURED BUS & DEVICE
-        this.handle = piGpio.i2cOpen(1, 4);
+        this.handle = piGpio.i2cOpen(config.bus(), config.device());
 
-        // TODO :: ADD SUPPORT FOR ALT MODE CONFIG FOR DIFFERENT I2C BUS NUMBERS
-        // set pin ALT0 modes for I2C BUS<1> usage on RPI3B
-        piGpio.gpioSetMode(2, PiGpioMode.ALT0);
-        piGpio.gpioSetMode(3, PiGpioMode.ALT0);
+        // set pin ALT0 modes for I2C BUS<1> or BUS<2> usage on RPI3B
+        switch(config.bus()) {
+            case 0: {
+                piGpio.gpioSetMode(0, PiGpioMode.ALT0);
+                piGpio.gpioSetMode(1, PiGpioMode.ALT0);
+                break;
+            }
+            case 1: {
+                piGpio.gpioSetMode(2, PiGpioMode.ALT0);
+                piGpio.gpioSetMode(3, PiGpioMode.ALT0);
+            }
+        }
 
         // set open state flag
         this.isOpen = true;
     }
 
     @Override
-    public int getAddress() {
-        return config.getAddress();
-    }
-
-    @Override
-    public boolean isOpen() {
-        return this.isOpen;
-    }
-
-    @Override
     public void close() throws IOException {
-        isOpen = false;
         piGpio.i2cClose(this.handle);
+        super.close();
     }
 
     // -------------------------------------------------------------------

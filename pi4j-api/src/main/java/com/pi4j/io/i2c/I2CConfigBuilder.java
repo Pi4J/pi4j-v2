@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.digital;
+package com.pi4j.io.i2c;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalInput.java
+ * FILENAME      :  I2CConfigBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,14 +27,14 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
+import com.pi4j.config.ConfigBuilder;
+import com.pi4j.io.i2c.impl.DefaultI2CConfigBuilder;
 
-import com.pi4j.io.Input;
-
-public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig, DigitalInputProvider>, Input {
-
-    static DigitalInputConfigBuilder newConfigBuilder(){
-        return DigitalInputConfigBuilder.newInstance();
+public interface I2CConfigBuilder extends ConfigBuilder<I2CConfigBuilder, I2CConfig> {
+    static I2CConfigBuilder newInstance()  {
+        return DefaultI2CConfigBuilder.newInstance();
     }
 
-    default PullResistance pull() { return config().pull(); }
+    I2CConfigBuilder bus(Integer bus);
+    I2CConfigBuilder device(Integer device);
 }

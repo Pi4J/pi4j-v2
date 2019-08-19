@@ -80,8 +80,10 @@ module pi4j.api {
                     DigitalChangeListenerRegistrationProcessor,
                     DigitalInputRegistrationProcessor,
                     DigitalOutputRegistrationProcessor,
+                    I2CRegistrationProcessor,
                     PlatformRegistrationProcessor,
                     ProviderRegistrationProcessor,
+                    PwmRegistrationProcessor,
                     com.pi4j.annotation.processor.event.AnalogChangeEventProcessor,
                     com.pi4j.annotation.processor.event.DigitalChangeEventProcessor;
 

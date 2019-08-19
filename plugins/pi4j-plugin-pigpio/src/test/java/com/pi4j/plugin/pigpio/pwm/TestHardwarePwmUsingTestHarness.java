@@ -29,19 +29,15 @@ package com.pi4j.plugin.pigpio.pwm;
  * #L%
  */
 
-import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.pwm.Pwm;
-import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
+import com.pi4j.io.pwm.PwmType;
 import com.pi4j.library.pigpio.PiGpio;
-import com.pi4j.plugin.pigpio.provider.pwm.PiGpioHardwarePwmProvider;
-import com.pi4j.plugin.pigpio.provider.pwm.PiGpioHardwarePwmProviderImpl;
-import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProviderImpl;
+import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
-import jdk.jfr.Percentage;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
@@ -111,9 +107,6 @@ public class TestHardwarePwmUsingTestHarness {
     @BeforeEach
     public void beforeEach() throws Exception {
 
-        // create I2C config
-        I2CConfig config = new I2CConfig("test", I2C_DEVICE);
-
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
         piGpio = PiGpio.newSocketInstance("rpi3bp");
 
@@ -121,7 +114,7 @@ public class TestHardwarePwmUsingTestHarness {
         piGpio.initialize();
 
         // create PWM provider instance to test with
-        provider = PiGpioHardwarePwmProvider.newInstance(piGpio);
+        provider = PiGpioPwmProvider.newInstance(piGpio);
     }
 
     @AfterEach
@@ -172,6 +165,28 @@ public class TestHardwarePwmUsingTestHarness {
         testPwm(10000);
     }
 
+    @Test
+    @Order(6)
+    @DisplayName("PWM :: Test Hardware PWM @ 10000 Hz (10 KHz)")
+    public void testUnsupportedPin() throws Exception {
+
+        // create PWM instance config
+        var config = Pwm.newConfigBuilder()
+                .address(1)
+                .pwmType(PwmType.HARDWARE)
+                .build();
+
+        // create PWM I/O instance
+        Pwm pwm = provider.create(config);
+
+        // when we attempt to turn on the PWM pin, we expect an exception
+        // to occur because this is not a hardware supported PWM pin
+        Assertions.assertThrows(IOException.class, () -> {
+            pwm.on();
+        });
+    }
+
+
     public void testPwm(int frequency) throws Exception {
         testPwm(frequency, 50); // 80% duty-cycle by default
     }
@@ -197,14 +212,24 @@ public class TestHardwarePwmUsingTestHarness {
 
         for(int p : pins) {
 
-            PwmConfig config = new PwmConfig(p);
+            // create PWM instance config
+            var config = Pwm.newConfigBuilder()
+                    .id("my-pwm-pin-" + p)
+                    .name("My Test PWM Pin #" + p)
+                    .address(p)
+                    .pwmType(PwmType.HARDWARE)
+                    .build();
+
+            // create PWM I/O instance
             Pwm pwm = provider.create(config);
 
             System.out.println();
             System.out.println("[TEST HARDWARE PWM] :: PIN=" + p);
 
             // turn on PWM pulses with specified frequency and duty-cycle
-            pwm.dutyCyclePercent(dutyCycle).frequency(frequency).on();
+            pwm.dutyCyclePercent(dutyCycle)
+                    .frequency(frequency)
+                    .on();
 
             System.out.println(" (PWM) >> SET FREQUENCY  = " + frequency);
             System.out.println(" (PWM) >> SET DUTY-CYCLE = " + dutyCycle + "%");

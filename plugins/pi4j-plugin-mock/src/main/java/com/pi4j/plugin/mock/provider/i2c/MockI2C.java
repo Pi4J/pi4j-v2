@@ -58,26 +58,21 @@ public class MockI2C extends I2CBase implements I2C {
         super(provider, config);
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
-        System.out.print("] :: CREATE()");
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: CREATE(BUS=" + config.bus() + "; DEVICE=" + config.device() + ")");
         System.out.println();
-    }
-
-    @Override
-    public int getAddress() {
-        return 0;
-    }
-
-    @Override
-    public boolean isOpen() {
-        return false;
     }
 
     @Override
     public void close() throws IOException {
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
-        System.out.print("] :: CLOSE()");
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: CLOSE(BUS=" + config.bus() + "; DEVICE=" + config.device() + ")");
         System.out.println();
+        super.close();
     }
 
     // -------------------------------------------------------------------
@@ -89,6 +84,8 @@ public class MockI2C extends I2CBase implements I2C {
         raw.add(b);
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
         System.out.print("] :: WRITE(0x");
         System.out.print(StringUtil.toHexString(b));
         System.out.println(")");
@@ -102,6 +99,8 @@ public class MockI2C extends I2CBase implements I2C {
         }
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
         System.out.print("] :: WRITE(0x");
         System.out.print(StringUtil.toHexString(buffer, offset, length));
         System.out.println(")");
@@ -116,6 +115,8 @@ public class MockI2C extends I2CBase implements I2C {
         }
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
         System.out.print("] :: WRITE(\"");
         System.out.print(data);
         System.out.println("\")");
@@ -132,6 +133,8 @@ public class MockI2C extends I2CBase implements I2C {
         byte b = raw.pop();
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
         System.out.print("] :: READ(0x");
         System.out.print(StringUtil.toHexString(b));
         System.out.println(")");
@@ -153,6 +156,8 @@ public class MockI2C extends I2CBase implements I2C {
 
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
         System.out.print("] :: READ(0x");
         System.out.print(StringUtil.toHexString(buffer, offset, length));
         System.out.println(")");
@@ -172,6 +177,8 @@ public class MockI2C extends I2CBase implements I2C {
 
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
         System.out.print("] :: READ(\"");
         System.out.print(result);
         System.out.println("\")");
@@ -191,6 +198,8 @@ public class MockI2C extends I2CBase implements I2C {
 
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
         System.out.print("] :: WRITE(");
         System.out.print("REG=");
         System.out.print(register);
@@ -211,6 +220,8 @@ public class MockI2C extends I2CBase implements I2C {
 
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
         System.out.print("] :: WRITE(");
         System.out.print("REG=");
         System.out.print(register);
@@ -232,6 +243,8 @@ public class MockI2C extends I2CBase implements I2C {
 
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
         System.out.print("] :: WRITE(");
         System.out.print("REG=");
         System.out.print(register);
@@ -252,6 +265,8 @@ public class MockI2C extends I2CBase implements I2C {
         byte b = registers[register].pop();
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
         System.out.print("] :: READ(");
         System.out.print("REG=");
         System.out.print(register);
@@ -275,6 +290,8 @@ public class MockI2C extends I2CBase implements I2C {
         }
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
         System.out.print("] :: READ(");
         System.out.print("REG=");
         System.out.print(register);
@@ -298,6 +315,8 @@ public class MockI2C extends I2CBase implements I2C {
 
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
         System.out.print("] :: READ(");
         System.out.print("REG=");
         System.out.print(register);

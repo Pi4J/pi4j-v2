@@ -29,27 +29,41 @@ package com.pi4j.io.gpio.digital;
 
 public interface DigitalInputProvider extends DigitalProvider<DigitalInputProvider, DigitalInput, DigitalInputConfig> {
 
-    default <T extends DigitalInput> T create(Integer address) throws Exception {
-        var builder = DigitalInputConfigBuilder.newInstance();
-        builder.address(address);
+    default <T extends DigitalInput> T create(DigitalInputConfigBuilder builder) throws Exception {
         return (T)create(builder.build());
+    }
+
+    default <T extends DigitalInput> T create(Integer address) throws Exception {
+        var config = DigitalInput.newConfigBuilder()
+                .address(address)
+                .build();
+        return (T)create(config);
     }
 
     default <T extends DigitalInput> T create(Integer address, String id) throws Exception {
-        var builder = DigitalInputConfigBuilder.newInstance();
-        builder.id(id).address(address).id(id);
-        return (T)create(builder.build());
+        var config = DigitalInput.newConfigBuilder()
+                .address(address)
+                .id(id)
+                .build();
+        return (T)create(config);
     }
 
     default <T extends DigitalInput> T create(Integer address, String id, String name) throws Exception {
-        var builder = DigitalInputConfigBuilder.newInstance();
-        builder.id(id).address(address).id(id).name(name);
-        return (T)create(builder.build());
+        var config = DigitalInput.newConfigBuilder()
+                .address(address)
+                .id(id)
+                .name(name)
+                .build();
+        return (T)create(config);
     }
 
     default <T extends DigitalInput> T create(Integer address, String id, String name, String description) throws Exception {
-        var builder = DigitalInputConfigBuilder.newInstance();
-        builder.id(id).address(address).id(id).name(name).description(description);
-        return (T)create(builder.build());
+        var config = DigitalInput.newConfigBuilder()
+                .address(address)
+                .id(id)
+                .name(name)
+                .description(description)
+                .build();
+        return (T)create(config);
     }
 }

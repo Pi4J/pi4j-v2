@@ -28,15 +28,15 @@ package com.pi4j.example.i2c;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.i2c.I2C;
 import com.pi4j.util.Console;
 
 import java.nio.ByteBuffer;
 
 public class I2cRawDeviceExample {
 
-    public I2cRawDeviceExample() {
-    }
+    private static int I2C_BUS = 1;
+    private static int I2C_DEVICE = 0x04;
 
     public static void main(String[] args) throws Exception {
 
@@ -53,8 +53,13 @@ public class I2cRawDeviceExample {
         // (Platforms and Providers) in the class path
         var pi4j = Pi4J.newAutoContext();
 
-        // TODO :: UPDATE THIS IMPL
-        I2CConfig config = new I2CConfig();
+        // create I2C config
+        var config  = I2C.newConfigBuilder()
+                .id("my-i2c-bus")
+                .name("My I2C Bus")
+                .bus(I2C_BUS)
+                .device(I2C_DEVICE)
+                .build();
 
         // use try-with-resources to auto-close I2C when complete
         try (var i2c = pi4j.i2c().create(config);) {

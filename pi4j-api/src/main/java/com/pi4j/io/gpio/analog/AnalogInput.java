@@ -30,5 +30,8 @@ package com.pi4j.io.gpio.analog;
 import com.pi4j.io.Input;
 
 public interface AnalogInput extends Analog<AnalogInput, AnalogInputConfig, AnalogInputProvider>, Input {
+    static AnalogInputConfigBuilder newConfigBuilder(){
+        return AnalogInputConfigBuilder.newInstance();
+    }
 }
 

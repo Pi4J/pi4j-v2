@@ -30,7 +30,7 @@ package com.pi4j.test.io.i2c;
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.i2c.I2C;
 import com.pi4j.util.StringUtil;
 import org.junit.After;
 import org.junit.Assert;
@@ -44,6 +44,9 @@ import static org.junit.Assert.assertNotNull;
 
 public class I2CRawDataTest {
     private Context pi4j;
+
+    private static int I2C_BUS = 1;
+    private static int I2C_DEVICE = 0x04;
     private static byte SAMPLE_BYTE = 0x0d;
     private static byte[] SAMPLE_BYTE_ARRAY = new byte[] { 0,1,2,3,4,5,6,7,8,9 };
     private static byte[] SAMPLE_BUFFER_ARRAY = new byte[] { 10,11,12,13,14,15,16,17,18,19 };
@@ -70,10 +73,15 @@ public class I2CRawDataTest {
     public void testRawDataWriteRead() throws Exception {
 
         // create I2C config
-        I2CConfig c = new I2CConfig();
+        var config  = I2C.newConfigBuilder()
+                .id("my-i2c-bus")
+                .name("My I2C Bus")
+                .bus(I2C_BUS)
+                .device(I2C_DEVICE)
+                .build();
 
         // use try-with-resources to auto-close I2C when complete
-        try (var i2c = pi4j.i2c().create(c);) {
+        try (var i2c = pi4j.i2c().create(config);) {
 
             // ensure that the I2C instance is not null;
             assertNotNull(i2c);
@@ -118,10 +126,15 @@ public class I2CRawDataTest {
         rand.nextBytes(sample);
 
         // create I2C config
-        I2CConfig c = new I2CConfig();
+        var config  = I2C.newConfigBuilder()
+                .id("my-i2c-bus")
+                .name("My I2C Bus")
+                .bus(I2C_BUS)
+                .device(I2C_DEVICE)
+                .build();
 
         // use try-with-resources to auto-close I2C when complete
-        try (var i2c = pi4j.i2c().create(c);) {
+        try (var i2c = pi4j.i2c().create(config);) {
 
             // write sample data using output stream
             i2c.out().write(sample);

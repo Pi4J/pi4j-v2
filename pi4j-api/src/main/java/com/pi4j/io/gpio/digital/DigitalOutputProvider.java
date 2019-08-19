@@ -28,27 +28,41 @@ package com.pi4j.io.gpio.digital;
  */
 public interface DigitalOutputProvider extends DigitalProvider<DigitalOutputProvider, DigitalOutput, DigitalOutputConfig> {
 
-    default <T extends DigitalOutput> T create(Integer address) throws Exception {
-        var builder = DigitalOutputConfigBuilder.newInstance();
-        builder.address(address);
+    default <T extends DigitalOutput> T create(DigitalOutputConfigBuilder builder) throws Exception {
         return (T)create(builder.build());
+    }
+
+    default <T extends DigitalOutput> T create(Integer address) throws Exception {
+        var config = DigitalOutput.newConfigBuilder()
+                .address(address)
+                .build();
+        return (T)create(config);
     }
 
     default <T extends DigitalOutput> T create(Integer address, String id) throws Exception {
-        var builder = DigitalOutputConfigBuilder.newInstance();
-        builder.id(id).address(address).id(id);
-        return (T)create(builder.build());
+        var config = DigitalOutput.newConfigBuilder()
+                .id(id)
+                .address(address)
+                .build();
+        return (T)create(config);
     }
 
     default <T extends DigitalOutput> T create(Integer address, String id, String name) throws Exception {
-        var builder = DigitalOutputConfigBuilder.newInstance();
-        builder.id(id).address(address).id(id).name(name);
-        return (T)create(builder.build());
+        var config = DigitalOutput.newConfigBuilder()
+                .address(address)
+                .id(id)
+                .name(name)
+                .build();
+        return (T)create(config);
     }
 
     default <T extends DigitalOutput> T create(Integer address, String id, String name, String description) throws Exception {
-        var builder = DigitalOutputConfigBuilder.newInstance();
-        builder.id(id).address(address).id(id).name(name).description(description);
-        return (T)create(builder.build());
+        var config = DigitalOutput.newConfigBuilder()
+                .address(address)
+                .id(id)
+                .name(name)
+                .description(description)
+                .build();
+        return (T)create(config);
     }
 }
