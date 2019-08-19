@@ -53,6 +53,10 @@ module pi4j.example {
     uses com.pi4j.plugin.mock.provider.serial.MockSerial;
     uses com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
 
+    requires pi4j.plugin.pigpio;
+    requires pi4j.plugin.raspberrypi;
+    requires pi4j.plugin.linuxfs;
+
     // allow access to classes in the following namespaces for Pi4J annotation processing
     opens com.pi4j.example.gpio.analog;
     opens com.pi4j.example.gpio.digital;

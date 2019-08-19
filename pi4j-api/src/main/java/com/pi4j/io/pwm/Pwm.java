@@ -69,8 +69,24 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
         return getAddress();
     }
 
+    boolean isOn();
     Pwm on() throws IOException;
     Pwm off() throws IOException;
+
+    default Pwm on(int dutyCycle) throws IOException{
+        setDutyCycle(dutyCycle);
+        return on();
+    }
+
+    default Pwm on(int dutyCycle, int frequency) throws IOException{
+        setDutyCycle(dutyCycle);
+        setFrequency(frequency);
+        return on();
+    }
+
+    default boolean isOff(){
+        return !isOn();
+    }
 
     default float getDutyCyclePercent() throws IOException{
         return getDutyCycle() * 100 / getRange();

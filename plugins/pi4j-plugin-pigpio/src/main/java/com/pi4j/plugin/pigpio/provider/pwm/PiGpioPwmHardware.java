@@ -64,19 +64,31 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
         // get initial values
         this.range = 1000000;  // fixed range for hardware PWM
         this.frequency = piGpio.gpioGetPWMfrequency(this.address());
-        this.dutyCycle = 0;
+        this.dutyCycle = this.range / 2;  // default duty-cycle is 50% of total range
     }
 
-    @Override
-    public void setDutyCycle(int dutyCycle) throws IOException {
-            piGpio.gpioHardwarePWM(this.address(), this.frequency, dutyCycle);
-        this.dutyCycle = dutyCycle;
+    public Pwm on() throws IOException{
+
+        // set PWM frequency & duty-cycle; enable PWM signal
+        piGpio.gpioHardwarePWM(this.address(), this.frequency, this.dutyCycle);
+
+        // determine existing state
+        if(this.dutyCycle > 0){
+            this.onState = true;  // update tracking state
+        }
+
+        return this;
     }
 
-    @Override
-    public void setFrequency(int frequency) throws IOException {
-        piGpio.gpioHardwarePWM(this.address(), frequency, this.dutyCycle);
-        this.frequency = frequency;
+    public Pwm off() throws IOException{
+
+        // set PWM duty-cycle and enable PWM
+        piGpio.gpioHardwarePWM(this.address(), 0, 0);
+
+        // update tracking state
+        this.onState = false;
+
+        return this;
     }
 
     @Override

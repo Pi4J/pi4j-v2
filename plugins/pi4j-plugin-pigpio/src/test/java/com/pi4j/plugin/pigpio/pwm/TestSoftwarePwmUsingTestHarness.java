@@ -188,7 +188,7 @@ public class TestSoftwarePwmUsingTestHarness {
             System.out.println("[TEST SOFT PWM] :: PIN=" + p);
 
             // turn on PWM pulses with specified frequency and duty-cycle
-            pwm.dutyCyclePercent(dutyCycle).frequency(frequency);
+            pwm.dutyCyclePercent(dutyCycle).frequency(frequency).on();
 
             System.out.println(" (PWM) >> SET FREQUENCY  = " + frequency);
             System.out.println(" (PWM) >> SET DUTY-CYCLE = " + dutyCycle + "%");
