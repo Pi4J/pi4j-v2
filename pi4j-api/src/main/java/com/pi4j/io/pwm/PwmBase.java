@@ -29,10 +29,60 @@ package com.pi4j.io.pwm;
 
 import com.pi4j.io.IOBase;
 
+import java.io.IOException;
+
 public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implements Pwm {
+
+    protected int range = -1;
+    protected int frequency = -1;
+    protected int dutyCycle = -1;
 
     public PwmBase(PwmProvider provider, PwmConfig config) {
         super(provider, config);
         this.name = "PWM-" + config.address();
+        // TODO :: INITIALIZE PWM SETTINGS WITH DEFAULTS
+    }
+
+    @Override
+    public Pwm on() throws IOException {
+        setDutyCycle(0); // turn on duty-cycle to 50%
+        setDutyCyclePercent(50f);
+        return this;
+    }
+
+    @Override
+    public Pwm off() throws IOException {
+        setDutyCycle(0); // turn off duty-cycle
+        return this;
+    }
+
+    @Override
+    public int getDutyCycle() throws IOException {
+        return this.dutyCycle;
+    }
+
+    @Override
+    public int getFrequency() throws IOException {
+        return this.frequency;
+    }
+
+    @Override
+    public void setDutyCycle(int dutyCycle) throws IOException {
+        this.dutyCycle = dutyCycle;
+    }
+
+    @Override
+    public void setFrequency(int frequency) throws IOException {
+        this.frequency = frequency;
+    }
+
+    @Override
+    public int getRange() throws IOException {
+        return this.range;
+    }
+
+    @Override
+    public void setRange(int range) throws IOException {
+        this.range = range;
     }
 }

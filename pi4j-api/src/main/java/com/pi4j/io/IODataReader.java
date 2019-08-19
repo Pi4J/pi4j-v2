@@ -91,7 +91,10 @@ public interface IODataReader {
      */
     default byte readByte() throws IOException{
         int actual = read();
-        if(actual < 0) throw new IOException("I2C READ ERROR; " + actual);
+        if(actual < 0) {
+            System.out.println(actual);
+            throw new IOException("I2C READ ERROR; " + actual);
+        }
         return (byte)actual;
     }
 

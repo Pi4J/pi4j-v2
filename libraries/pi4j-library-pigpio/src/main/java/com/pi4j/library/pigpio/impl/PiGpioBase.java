@@ -124,10 +124,21 @@ public abstract class PiGpioBase implements PiGpio {
         validateResult(result.result());
     }
 
+    protected void validateResult(PiGpioPacket result, boolean throwException) throws IOException{
+        validateResult(result.result(), throwException);
+    }
+
     protected void validateResult(long value) throws IOException {
+        validateResult(value, true);
+    }
+
+    protected void validateResult(long value, boolean throwException) throws IOException {
         if(value < 0) {
             PiGpioError err = PiGpioError.from(value);
-            throw new IOException("PIGPIO ERROR: " + err.name() + "; " + err.message());
+            logger.warn("PIGPIO ERROR: " + err.name() + "; " + err.message());
+            if(throwException) {
+                throw new IOException("PIGPIO ERROR: " + err.name() + "; " + err.message());
+            }
         }
     }
 

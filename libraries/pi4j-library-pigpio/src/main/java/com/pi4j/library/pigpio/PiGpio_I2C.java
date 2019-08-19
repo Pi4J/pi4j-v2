@@ -42,10 +42,10 @@ public interface PiGpio_I2C {
     void i2cClose(int handle) throws IOException;
     void i2cWriteQuick(int handle, boolean bit) throws IOException;
     void i2cWriteByte(int handle, byte value) throws IOException;
-    byte i2cReadByte(int handle) throws IOException;
+    int i2cReadByte(int handle) throws IOException;
     void i2cWriteByteData(int handle, int register, byte value) throws IOException;
     void i2cWriteWordData(int handle, int register, int value) throws IOException;
-    byte i2cReadByteData(int handle, int register) throws IOException;
+    int i2cReadByteData(int handle, int register) throws IOException;
     int i2cReadWordData(int handle, int register) throws IOException;
     int i2cProcessCall(int handle, int register, int value) throws IOException;
 

@@ -4,7 +4,7 @@ package com.pi4j.test.platform;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
+ * PROJECT       :  Pi4J :: TESTING  :: Unit/Integration Tests
  * FILENAME      :  AutoPlatformsTest.java
  *
  * This file is part of the Pi4J project. More information about

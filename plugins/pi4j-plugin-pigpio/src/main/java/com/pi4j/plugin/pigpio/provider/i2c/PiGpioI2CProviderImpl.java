@@ -32,16 +32,20 @@ package com.pi4j.plugin.pigpio.provider.i2c;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProviderBase;
+import com.pi4j.library.pigpio.PiGpio;
 
 public class PiGpioI2CProviderImpl extends I2CProviderBase implements PiGpioI2CProvider {
 
-    public PiGpioI2CProviderImpl(){
+    final PiGpio piGpio;
+
+    public PiGpioI2CProviderImpl(PiGpio piGpio){
         this.id = ID;
         this.name = NAME;
+        this.piGpio = piGpio;
     }
 
     @Override
     public I2C create(I2CConfig config) throws Exception {
-        return new PiGpioI2C(this, config);
+        return new PiGpioI2C(piGpio,this, config);
     }
 }

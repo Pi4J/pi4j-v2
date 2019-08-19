@@ -49,10 +49,7 @@ import com.pi4j.runtime.Runtime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.ServiceLoader;
-import java.util.Set;
+import java.util.*;
 
 public class DefaultRuntime implements Runtime {
 
@@ -62,6 +59,7 @@ public class DefaultRuntime implements Runtime {
     private RuntimeRegistry registry = null;
     private RuntimeProviders providers = null;
     private RuntimePlatforms platforms = null;
+    private List<Plugin> plugins = new ArrayList<>();
 
     public static Runtime newInstance(Context context) throws Pi4JException {
         return new DefaultRuntime(context);
@@ -115,6 +113,14 @@ public class DefaultRuntime implements Runtime {
             // remove all I/O instances
             this.registry.shutdown();
 
+            // shutdown all plugins
+            for(Plugin plugin : this.plugins){
+                try{
+                    plugin.shutdown(this.context);
+                } catch (Exception e){
+                    logger.error(e.getMessage(), e);
+                }
+            }
         } catch (Exception e) {
             logger.error("failed to 'shutdown(); '", e);
             throw new ShutdownException(e);
@@ -129,6 +135,9 @@ public class DefaultRuntime implements Runtime {
     public Runtime initialize() throws InitializeException {
         logger.trace("invoked 'initialize();'");
         try {
+            // clear plugins container
+            plugins.clear();
+
             // container sets for providers and platforms to load
             Set<Provider> providers = Collections.synchronizedSet(new HashSet<>());
             Set<Platform> platforms = Collections.synchronizedSet(new HashSet<>());
@@ -147,6 +156,9 @@ public class DefaultRuntime implements Runtime {
                         logger.trace("detected plugin: [{}] in classpath; calling 'initialize()'",
                                 plugin.getClass().getName());
                         try {
+                            // add plugin to internal cache
+                            this.plugins.add(plugin);
+
                             PluginStore store = new PluginStore();
                             plugin.initialize(DefaultPluginService.newInstance(this.context(), store));
 

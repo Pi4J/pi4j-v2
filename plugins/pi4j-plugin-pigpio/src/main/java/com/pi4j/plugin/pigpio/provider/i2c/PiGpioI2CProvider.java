@@ -30,12 +30,13 @@ package com.pi4j.plugin.pigpio.provider.i2c;
  */
 
 import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.PiGpioPlugin;
 
 public interface PiGpioI2CProvider extends I2CProvider {
     String NAME = PiGpioPlugin.I2C_PROVIDER_NAME;
     String ID = PiGpioPlugin.I2C_PROVIDER_ID;
-    static PiGpioI2CProvider newInstance() {
-        return new PiGpioI2CProviderImpl();
+    static PiGpioI2CProvider newInstance(PiGpio piGpio) {
+        return new PiGpioI2CProviderImpl(piGpio);
     }
 }

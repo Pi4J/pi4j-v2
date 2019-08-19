@@ -48,6 +48,11 @@ public abstract class AddressConfigBase<CONFIG_TYPE extends Config>
         super();
     }
 
+    protected AddressConfigBase(Number address){
+        super();
+        this.address = address.intValue();
+    }
+
     /**
      * PRIVATE CONSTRUCTOR
      * @param properties

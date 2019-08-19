@@ -31,16 +31,16 @@ package com.pi4j.library.pigpio.test.i2c;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
-import com.pi4j.library.test.harness.ArduinoTestHarness;
-import com.pi4j.library.test.harness.TestHarnessInfo;
-import com.pi4j.library.test.harness.TestHarnessPins;
+import com.pi4j.test.harness.ArduinoTestHarness;
+import com.pi4j.test.harness.TestHarnessInfo;
+import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.util.UUID;
 
-@DisplayName("PIGPIO :: Test I2C Raw Communication")
+@DisplayName("PIGPIO Library :: Test I2C Raw Communication")
 public class TestI2cRawUsingTestHarness {
 
     private static int I2C_BUS = 1;
@@ -148,10 +148,10 @@ public class TestI2cRawUsingTestHarness {
             // WRITE :: SINGLE RAW BYTE
             System.out.println(" (WRITE) >> VALUE = " + b);
             pigpio.i2cWriteByte(handle, (byte)b);
-            Thread.sleep(20);
+            Thread.sleep(5);
 
             // READ :: SINGLE RAW BYTE
-            byte rx = pigpio.i2cReadByte(handle);
+            byte rx = (byte)pigpio.i2cReadByte(handle);
             System.out.println(" (READ)  << VALUE = " + Byte.toUnsignedInt(rx));
 
             Assert.assertEquals("I2C BYTE VALUE MISMATCH",  b, Byte.toUnsignedInt(rx));
@@ -176,12 +176,12 @@ public class TestI2cRawUsingTestHarness {
             // WRITE :: RAW MULTI-BYTE
             System.out.println(" (WRITE) >> VALUE = " + value);
             pigpio.i2cWriteDevice(handle, value);
-            Thread.sleep(20);
+            Thread.sleep(5);
 
             // READ :: RAW MULTI-BYTE
             String rx = pigpio.i2cReadDeviceToString(handle, value.length());
             System.out.println(" (READ)  << VALUE = " + rx);
-            Thread.sleep(20);
+            Thread.sleep(5);
 
             Assert.assertEquals("I2C MULTI-BYTE VALUE MISMATCH",  value, rx);
         }

@@ -33,6 +33,6 @@ import com.pi4j.io.IOConfig;
 public class PwmConfig extends AddressConfigBase<PwmConfig> implements IOConfig<PwmConfig> {
 
     public PwmConfig(Number address) {
-        super();
+        super(address);
     }
 }

@@ -30,12 +30,15 @@ package com.pi4j.plugin.pigpio.provider.pwm;
  */
 
 import com.pi4j.io.pwm.PwmProvider;
+import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.PiGpioPlugin;
+
+import java.io.IOException;
 
 public interface PiGpioPwmProvider extends PwmProvider {
     String NAME = PiGpioPlugin.PWM_PROVIDER_NAME;
     String ID = PiGpioPlugin.PWM_PROVIDER_ID;
-    static PiGpioPwmProvider newInstance() {
-        return new PiGpioPwmProviderImpl();
+    static PiGpioPwmProvider newInstance(PiGpio piGpio) throws IOException {
+        return new PiGpioPwmProviderImpl(piGpio);
     }
 }

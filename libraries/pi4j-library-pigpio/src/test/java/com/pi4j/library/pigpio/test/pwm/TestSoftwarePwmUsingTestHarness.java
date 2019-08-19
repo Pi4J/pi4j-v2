@@ -30,16 +30,16 @@ package com.pi4j.library.pigpio.test.pwm;
  */
 
 import com.pi4j.library.pigpio.PiGpio;
-import com.pi4j.library.test.harness.ArduinoTestHarness;
-import com.pi4j.library.test.harness.TestHarnessFrequency;
-import com.pi4j.library.test.harness.TestHarnessInfo;
-import com.pi4j.library.test.harness.TestHarnessPins;
+import com.pi4j.test.harness.ArduinoTestHarness;
+import com.pi4j.test.harness.TestHarnessFrequency;
+import com.pi4j.test.harness.TestHarnessInfo;
+import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 
-@DisplayName("PWM :: Test Software Emulated PWM Pins")
+@DisplayName("PIGPIO Library :: Test Software Emulated PWM Pins")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestSoftwarePwmUsingTestHarness {
 

@@ -10,7 +10,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>pi4j-test</artifactId>
-    <name>Pi4J :: UNITTEST :: Unit/Integration Tests</name>
+    <name>Pi4J :: TESTING  :: Unit/Integration Tests</name>
     <description>Pi4J Unit and Integration Tests</description>
 
     <dependencies>

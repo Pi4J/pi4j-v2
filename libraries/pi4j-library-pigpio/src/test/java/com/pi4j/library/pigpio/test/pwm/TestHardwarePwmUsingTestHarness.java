@@ -31,17 +31,17 @@ package com.pi4j.library.pigpio.test.pwm;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
-import com.pi4j.library.test.harness.ArduinoTestHarness;
-import com.pi4j.library.test.harness.TestHarnessFrequency;
-import com.pi4j.library.test.harness.TestHarnessInfo;
-import com.pi4j.library.test.harness.TestHarnessPins;
+import com.pi4j.test.harness.ArduinoTestHarness;
+import com.pi4j.test.harness.TestHarnessFrequency;
+import com.pi4j.test.harness.TestHarnessInfo;
+import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-@DisplayName("PWM :: Test Hardware-Supported PWM Pins")
+@DisplayName("PIGPIO Library :: Test Hardware-Supported PWM Pins")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestHardwarePwmUsingTestHarness {
 
@@ -236,11 +236,11 @@ public class TestHardwarePwmUsingTestHarness {
         TestHarnessFrequency measured = harness.getFrequency(pin);
         System.out.println(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency);
 
-        // we allow a 35% margin of error, the testing harness uses a simple pulse counter to crudely
+        // we allow a 75% margin of error, the testing harness uses a simple pulse counter to crudely
         // measure the PWM signal, its not very accurate but should provide sufficient validation testing
         // just to verify the applied PWM signal is close to the expected frequency
         // calculate margin of error offset value
-        long marginOfError = Math.round(frequency * .35);
+        long marginOfError = Math.round(frequency * .75);
 
         // test measured value against HI/LOW offsets to determine acceptable range
         if(measured.frequency < frequency-marginOfError) return false;

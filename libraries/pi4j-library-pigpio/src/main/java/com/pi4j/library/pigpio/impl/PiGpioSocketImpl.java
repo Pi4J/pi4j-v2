@@ -375,12 +375,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     public int gpioSetPWMrange(int pin, int range) throws IOException {
         logger.trace("[PWM-RANGE::SET] -> PIN: {}; RANGE={}", pin, range);
         validateUserPin(pin);
-        validateDutyCycleRange(range);
+        //validateDutyCycleRange(range);
         PiGpioPacket result = sendCommand(PRS, pin, range);
-        var actualRange = result.result();
-        logger.trace("[PWM-RANGE::SET] <- PIN: {}; RANGE={}; SUCCESS={}",  pin, actualRange, result.success());
+        var readRange = result.result();
+        logger.trace("[PWM-RANGE::SET] <- PIN: {}; REAL-RANGE={}; SUCCESS={}",  pin, readRange, result.success());
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO or PI_BAD_DUTYRANGE.
-        return actualRange;
+        return result.result();
     }
 
     /**
@@ -661,22 +661,22 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     @Override
-    public byte i2cReadByte(int handle) throws IOException {
+    public int i2cReadByte(int handle) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Byte", handle);
         validateI2cHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CRS, handle);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
-        return (byte)rx.result();
+        validateResult(rx, false); // Upon success nothing is returned. On error a negative status code will be returned.
+        return rx.result();
     }
 
     @Override
     public void i2cWriteByteData(int handle, int register, byte value) throws IOException {
-        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Byte [{}]", handle ,register, value);
+        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Byte [{}]", handle ,register, Byte.toUnsignedInt(value));
         validateI2cHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket tx = new PiGpioPacket(I2CWB, handle, register).data(value);
+        PiGpioPacket tx = new PiGpioPacket(I2CWB, handle, register).data(Byte.toUnsignedInt(value));
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
         validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
@@ -694,15 +694,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     @Override
-    public byte i2cReadByteData(int handle, int register) throws IOException {
+    public int i2cReadByteData(int handle, int register) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Byte", handle ,register);
         validateI2cHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRB, handle, register);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
-        return (byte)rx.result();
+        validateResult(rx, false); // Upon success nothing is returned. On error a negative status code will be returned.
+        return rx.result();
     }
 
     @Override
@@ -713,7 +713,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         PiGpioPacket tx = new PiGpioPacket(I2CRW, handle, register);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, false); // Upon success nothing is returned. On error a negative status code will be returned.
         return rx.result();
     }
 
@@ -725,7 +725,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         PiGpioPacket tx = new PiGpioPacket(I2CPC, handle, register).data(value);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, false); // Upon success nothing is returned. On error a negative status code will be returned.
         return rx.result();
     }
 
@@ -749,7 +749,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         PiGpioPacket tx = new PiGpioPacket(I2CRK, handle, register);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, true); // Upon success nothing is returned. On error a negative status code will be returned.
         return rx.data();
     }
     @Override
@@ -761,7 +761,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         PiGpioPacket tx = new PiGpioPacket(I2CPK, handle, register, data);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, true); // Upon success nothing is returned. On error a negative status code will be returned.
         return rx.data();
     }
 
@@ -773,7 +773,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         PiGpioPacket tx = new PiGpioPacket(I2CRI, handle, register).data(length);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, true); // Upon success nothing is returned. On error a negative status code will be returned.
         return rx.data();
     }
 
@@ -796,7 +796,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         PiGpioPacket tx = new PiGpioPacket(I2CRD, handle, length);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, false); // Upon success nothing is returned. On error a negative status code will be returned.
         return rx.data();
     }
 

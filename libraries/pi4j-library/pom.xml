@@ -18,7 +18,6 @@
 
     <!-- PROJECT MODULES <Pi4J PLUGINS> -->
     <modules>
-        <module>../pi4j-library-testharness</module>
         <module>../pi4j-library-pigpio</module>
     </modules>
 
