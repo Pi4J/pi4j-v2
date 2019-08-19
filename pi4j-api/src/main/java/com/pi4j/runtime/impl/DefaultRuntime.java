@@ -60,6 +60,7 @@ public class DefaultRuntime implements Runtime {
     private RuntimeProviders providers = null;
     private RuntimePlatforms platforms = null;
     private List<Plugin> plugins = new ArrayList<>();
+    private boolean isShutdown = false;
 
     public static Runtime newInstance(Context context) throws Pi4JException {
         return new DefaultRuntime(context);
@@ -76,6 +77,19 @@ public class DefaultRuntime implements Runtime {
         this.platforms = DefaultRuntimePlatforms.newInstance(this);
 
         logger.debug("Pi4J runtime context successfully created & initialized.'");
+
+        // listen for shutdown to properly clean up
+        // TODO :: ADD PI4J INTERNAL SHUTDOWN CALLBACKS/EVENTS
+        java.lang.Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                // shutdown Pi4J
+                shutdown();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }));
+
     }
 
     @Override
@@ -102,32 +116,36 @@ public class DefaultRuntime implements Runtime {
 
     @Override
     public Runtime shutdown() throws ShutdownException {
-        logger.trace("invoked 'shutdown();'");
-        try {
-             // shutdown all providers
-            this.providers.shutdown();
+        if(!isShutdown) { // re-entrant calls should not perform shutdown again
+            isShutdown = true;
+            logger.trace("invoked 'shutdown();'");
+            try {
+                // remove all I/O instances
+                this.registry.shutdown();
 
-            // shutdown platforms
-            this.platforms.shutdown();
+                // shutdown platforms
+                this.platforms.shutdown();
 
-            // remove all I/O instances
-            this.registry.shutdown();
+                // shutdown all providers
+                this.providers.shutdown();
 
-            // shutdown all plugins
-            for(Plugin plugin : this.plugins){
-                try{
-                    plugin.shutdown(this.context);
-                } catch (Exception e){
-                    logger.error(e.getMessage(), e);
+                // shutdown all plugins
+                for (Plugin plugin : this.plugins) {
+                    try {
+                        plugin.shutdown(this.context);
+                    } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                    }
                 }
+            } catch (Exception e) {
+                logger.error("failed to 'shutdown(); '", e);
+                throw new ShutdownException(e);
             }
-        } catch (Exception e) {
-            logger.error("failed to 'shutdown(); '", e);
-            throw new ShutdownException(e);
+
+            logger.debug("Pi4J context/runtime successfully shutdown.'");
+        } else{
+            logger.debug("Pi4J context/runtime is already shutdown.'");
         }
-
-        logger.debug("Pi4J context/runtime successfully shutdown.'");
-
         return this;
     }
 

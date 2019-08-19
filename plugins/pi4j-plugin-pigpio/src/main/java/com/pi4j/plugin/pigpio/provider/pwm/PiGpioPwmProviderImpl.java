@@ -32,6 +32,7 @@ package com.pi4j.plugin.pigpio.provider.pwm;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProviderBase;
+import com.pi4j.io.pwm.PwmType;
 import com.pi4j.library.pigpio.PiGpio;
 
 import java.io.IOException;
@@ -48,6 +49,11 @@ public class PiGpioPwmProviderImpl extends PwmProviderBase implements PiGpioPwmP
 
     @Override
     public Pwm create(PwmConfig config) throws Exception {
-        return new PiGpioPwm(piGpio, this, config);
+        if(config.pwmType() == PwmType.HARDWARE){
+            return new PiGpioPwmHardware(piGpio, this, config);
+        }
+        else {
+            return new PiGpioPwmSoftware(piGpio, this, config);
+        }
     }
 }

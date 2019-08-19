@@ -35,6 +35,10 @@ import java.util.concurrent.TimeUnit;
 
 public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider>, Output {
 
+    static DigitalOutputConfigBuilder newConfigBuilder(){
+        return DigitalOutputConfigBuilder.newInstance();
+    }
+
     DigitalOutput state(DigitalState state);
     DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback);
     Future<?> pulseAsync(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback);

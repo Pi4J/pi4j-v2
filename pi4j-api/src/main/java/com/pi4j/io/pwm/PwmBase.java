@@ -27,6 +27,9 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
+import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.IOBase;
 
 import java.io.IOException;
@@ -40,8 +43,9 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
 
     public PwmBase(PwmProvider provider, PwmConfig config) {
         super(provider, config);
-        this.name = "PWM-" + config.address();
-        // TODO :: INITIALIZE PWM SETTINGS WITH DEFAULTS
+        this.name = config.name();
+        this.id = config.id();
+        this.description = config.description();
     }
 
     @Override
@@ -77,5 +81,36 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
     @Override
     public boolean isOn() {
         return this.onState;
+    }
+
+    @Override
+    public Pwm initialize(Context context) throws InitializeException {
+        // apply an initial value if configured
+        if(this.config.initialValue() != null){
+            try {
+                this.on(this.config.initialValue());
+            } catch (IOException e) {
+                throw new InitializeException(e);
+            }
+        }
+        return this;
+    }
+
+
+    @Override
+    public Pwm shutdown(Context context) throws ShutdownException {
+        // apply a shutdown value if configured
+        if(this.config.shutdownValue() != null){
+            try {
+                if(this.config.shutdownValue() <= 0){
+                    this.off();
+                } else {
+                    this.on(this.config.shutdownValue());
+                }
+            } catch (IOException e) {
+                throw new ShutdownException(e);
+            }
+        }
+        return this;
     }
 }

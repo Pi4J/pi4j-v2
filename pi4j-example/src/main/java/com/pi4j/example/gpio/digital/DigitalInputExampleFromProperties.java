@@ -29,7 +29,7 @@ package com.pi4j.example.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.io.gpio.digital.DigitalInputConfigBuilder;
+import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.util.Console;
 
 import java.util.Properties;
@@ -68,8 +68,11 @@ public class DigitalInputExampleFromProperties {
 
         // create a digital input instance using the default digital input provider
         // we will use the PULL_DOWN argument to set the pin pull-down resistance on this GPIO pin
-        var builder = DigitalInputConfigBuilder.newInstance().load(properties);
-        var input = pi4j.din().create(builder.build());
+        var config = DigitalInput.newConfigBuilder()
+                .load(properties)
+                .build();
+
+        var input = pi4j.din().create(config);
 
         // setup a digital output listener to listen for any state changes on the digital input
         input.addListener((DigitalChangeListener) event -> {

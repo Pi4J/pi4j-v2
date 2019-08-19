@@ -29,13 +29,10 @@ package com.pi4j.plugin.pigpio.pwm;
  * #L%
  */
 
-import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.pwm.Pwm;
-import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
-import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProviderImpl;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
 import com.pi4j.test.harness.TestHarnessInfo;
@@ -109,9 +106,6 @@ public class TestSoftwarePwmUsingTestHarness {
     @BeforeEach
     public void beforeEach() throws Exception {
 
-        // create I2C config
-        I2CConfig config = new I2CConfig("test", I2C_DEVICE);
-
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
         piGpio = PiGpio.newSocketInstance("rpi3bp");
 
@@ -181,7 +175,14 @@ public class TestSoftwarePwmUsingTestHarness {
 
         for(int p = 2; p < 20; p++) {
 
-            PwmConfig config = new PwmConfig(p);
+            // create PWM instance config
+            var config = Pwm.newConfigBuilder()
+                    .id("my-pwm-pin-" + p)
+                    .name("My Test PWM Pin #" + p)
+                    .address(p)
+                    .build();
+
+            // create PWM I/O instance
             Pwm pwm = provider.create(config);
 
             System.out.println();

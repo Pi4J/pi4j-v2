@@ -27,12 +27,9 @@ package com.pi4j.io.i2c;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 import com.pi4j.io.IODataReader;
 import com.pi4j.io.IODataWriter;
-import com.pi4j.io.i2c.impl.I2CFactory;
-import com.pi4j.provider.exception.ProviderException;
 
 
 /**
@@ -50,35 +47,25 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
         I2CRegisterDataReaderWriter,
         AutoCloseable {
 
-    static I2C instance(Context context, String device, int address) throws ProviderException {
-        return I2CFactory.instance(context, device, address);
-    }
-
-    static I2C instance(Context context, I2CConfig config) throws ProviderException {
-        return I2CFactory.instance(context, config);
-    }
-
-    static I2C instance(Context context, String providerId, String device, int address) throws ProviderException {
-        return I2CFactory.instance(context, providerId, device, address);
-    }
-
-    static I2C instance(Context context, String providerId, I2CConfig config) throws ProviderException {
-        return I2CFactory.instance(context, providerId, config);
-    }
-
-    static I2C instance(I2CProvider provider, String device, int address) throws ProviderException {
-        return I2CFactory.instance(provider, device ,address);
-    }
-
-    static I2C instance(I2CProvider provider, I2CConfig config) throws ProviderException {
-        return I2CFactory.instance(provider, config);
+    static I2CConfigBuilder newConfigBuilder(){
+        return I2CConfigBuilder.newInstance();
     }
 
     /**
      * I2C Device Address
      * @return The I2C device address for which this instance is constructed for.
      */
-    int getAddress();
+    default int device(){
+        return config().device();
+    }
+
+    /**
+     * I2C Bus Address
+     * @return The I2C bus address for which this instance is constructed for.
+     */
+    default int bus(){
+        return config().bus();
+    }
 
     /**
      * I2C Device Communication State is OPEN
@@ -87,11 +74,19 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
     boolean isOpen();
 
     /**
+     * I2C Bus Address
+     * @return The I2C bus address for which this instance is constructed for.
+     */
+    default int getBus(){
+        return bus();
+    }
+
+    /**
      * I2C Device Address
      * @return The I2C device address for which this instance is constructed for.
      */
-    default int address(){
-        return getAddress();
+    default int getDevice(){
+        return device();
     }
 
     /**

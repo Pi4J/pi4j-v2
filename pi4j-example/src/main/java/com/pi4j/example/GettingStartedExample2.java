@@ -29,7 +29,10 @@ package com.pi4j.example;
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.analog.*;
+import com.pi4j.io.gpio.analog.AnalogInput;
+import com.pi4j.io.gpio.analog.AnalogInputConfig;
+import com.pi4j.io.gpio.analog.AnalogInputProvider;
+import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProviderBase;
@@ -84,7 +87,7 @@ public class GettingStartedExample2 {
         AnalogInput ain1 = pi4j.ain().create(1, "my-custom-name-1");
 
         // create I/O config
-        AnalogInputConfig config = AnalogInputConfigBuilder.newInstance()
+        var config = AnalogInput.newConfigBuilder()
                 .address(2)
                 .name("my-custom-name-2")
                 .build();

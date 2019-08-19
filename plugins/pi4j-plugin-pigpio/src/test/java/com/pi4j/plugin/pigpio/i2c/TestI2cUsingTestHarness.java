@@ -31,7 +31,6 @@ package com.pi4j.plugin.pigpio.i2c;
 
 import com.pi4j.io.exception.IOReadException;
 import com.pi4j.io.i2c.I2C;
-import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CRegister;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProvider;
@@ -116,7 +115,12 @@ public class TestI2cUsingTestHarness {
     public void beforeEach() throws Exception {
 
         // create I2C config
-        I2CConfig config = new I2CConfig("test", I2C_DEVICE);
+        var config  = I2C.newConfigBuilder()
+                .id("my-i2c-bus")
+                .name("My I2C Bus")
+                .bus(I2C_BUS)
+                .device(I2C_DEVICE)
+                .build();
 
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
         piGpio = PiGpio.newSocketInstance("rpi3bp");

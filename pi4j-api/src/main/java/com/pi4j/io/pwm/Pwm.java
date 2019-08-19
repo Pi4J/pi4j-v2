@@ -27,39 +27,14 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.IO;
-import com.pi4j.io.pwm.impl.PwmFactory;
-import com.pi4j.provider.exception.ProviderException;
 
 import java.io.IOException;
 
 public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
 
-    static final String ID = "PWM";
-
-    static Pwm instance(Context context, PwmConfig config) throws ProviderException {
-        return PwmFactory.instance(context, config);
-    }
-
-    static Pwm instance(Context context, int address) throws ProviderException {
-        return PwmFactory.instance(context, address);
-    }
-
-    static Pwm instance(Context context, String providerId, int address) throws ProviderException {
-        return PwmFactory.instance(context, providerId, address);
-    }
-
-    static Pwm instance(Context context, String providerId, PwmConfig config) throws ProviderException {
-        return PwmFactory.instance(context, providerId, config);
-    }
-
-    static Pwm instance(PwmProvider provider, int address) throws ProviderException {
-        return PwmFactory.instance(provider, address);
-    }
-
-    static Pwm instance(PwmProvider provider, PwmConfig config) throws ProviderException {
-        return PwmFactory.instance(provider, config);
+    static PwmConfigBuilder newConfigBuilder(){
+        return PwmConfigBuilder.newInstance();
     }
 
     default int getAddress(){
@@ -73,15 +48,32 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
     Pwm on() throws IOException;
     Pwm off() throws IOException;
 
+    default PwmType pwmType(){
+        return config().getPwmType();
+    }
+    default PwmType getPwmType(){
+        return pwmType();
+    }
+
     default Pwm on(int dutyCycle) throws IOException{
-        setDutyCycle(dutyCycle);
-        return on();
+        if(dutyCycle > 0) {
+            setDutyCycle(dutyCycle);
+            return on();
+        }
+        else{
+            return off();
+        }
     }
 
     default Pwm on(int dutyCycle, int frequency) throws IOException{
-        setDutyCycle(dutyCycle);
-        setFrequency(frequency);
-        return on();
+        if(dutyCycle > 0 && frequency  > 0) {
+            setDutyCycle(dutyCycle);
+            setFrequency(frequency);
+            return on();
+        }
+        else{
+            return off();
+        }
     }
 
     default boolean isOff(){

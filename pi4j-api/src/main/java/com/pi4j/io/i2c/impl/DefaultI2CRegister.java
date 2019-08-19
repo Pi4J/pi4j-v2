@@ -5,7 +5,7 @@ package com.pi4j.io.i2c.impl;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  I2CRegisterImpl.java
+ * FILENAME      :  DefaultI2CRegister.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -36,12 +36,12 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
-public class I2CRegisterImpl implements I2CRegister {
+public class DefaultI2CRegister implements I2CRegister {
 
     protected final int address;
     protected final I2C i2c;
 
-    public I2CRegisterImpl(I2C i2c, int address){
+    public DefaultI2CRegister(I2C i2c, int address){
         this.i2c = i2c;
         this.address = address;
     }

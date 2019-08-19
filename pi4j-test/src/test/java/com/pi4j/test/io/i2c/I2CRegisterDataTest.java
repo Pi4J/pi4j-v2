@@ -30,7 +30,7 @@ package com.pi4j.test.io.i2c;
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CRegister;
 import org.junit.After;
 import org.junit.Assert;
@@ -47,6 +47,8 @@ import static org.junit.Assert.assertNotNull;
 
 public class I2CRegisterDataTest {
 
+    private static int I2C_BUS = 1;
+    private static int I2C_DEVICE = 0x04;
     private static int NUMBER_OF_REGISTERS = 100;
 
     private Context pi4j;
@@ -99,10 +101,15 @@ public class I2CRegisterDataTest {
     public void testRegisterDataWriteRead() throws Exception {
 
         // create I2C config
-        I2CConfig c = new I2CConfig();
+        var config  = I2C.newConfigBuilder()
+                .id("my-i2c-bus")
+                .name("My I2C Bus")
+                .bus(I2C_BUS)
+                .device(I2C_DEVICE)
+                .build();
 
         // use try-with-resources to auto-close I2C when complete
-        try (var i2c = pi4j.i2c().create(c);) {
+        try (var i2c = pi4j.i2c().create(config);) {
 
             // ensure that the I2C instance is not null;
             assertNotNull(i2c);

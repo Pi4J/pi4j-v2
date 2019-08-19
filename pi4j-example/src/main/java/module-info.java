@@ -60,5 +60,7 @@ module pi4j.example {
     // allow access to classes in the following namespaces for Pi4J annotation processing
     opens com.pi4j.example.gpio.analog;
     opens com.pi4j.example.gpio.digital;
+    opens com.pi4j.example.pwm;
+    opens com.pi4j.example.i2c;
     opens com.pi4j.example;
 }

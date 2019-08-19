@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.digital;
+package com.pi4j.io.pwm;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalInput.java
+ * FILENAME      :  PwmConfigBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,14 +27,19 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
+import com.pi4j.io.gpio.GpioConfigBuilder;
+import com.pi4j.io.pwm.impl.DefaultPwmConfigBuilder;
 
-import com.pi4j.io.Input;
-
-public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig, DigitalInputProvider>, Input {
-
-    static DigitalInputConfigBuilder newConfigBuilder(){
-        return DigitalInputConfigBuilder.newInstance();
+public interface PwmConfigBuilder extends GpioConfigBuilder<PwmConfigBuilder, PwmConfig> {
+    static PwmConfigBuilder newInstance()  {
+        return DefaultPwmConfigBuilder.newInstance();
     }
 
-    default PullResistance pull() { return config().pull(); }
+    PwmConfigBuilder range(Integer range);
+    PwmConfigBuilder frequency(Integer frequency);
+    PwmConfigBuilder dutyCycle(Integer dutyCycle);
+    PwmConfigBuilder dutyCyclePercent(Integer percent);
+    PwmConfigBuilder pwmType(PwmType pwmType);
+    PwmConfigBuilder shutdown(Integer value);
+    PwmConfigBuilder initial(Integer value);
 }

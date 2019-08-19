@@ -1,11 +1,11 @@
-package com.pi4j.io.i2c;
+package com.pi4j.io.i2c.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  I2CConfig.java
+ * FILENAME      :  DefaultI2CConfigBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,24 +27,40 @@ package com.pi4j.io.i2c;
  * #L%
  */
 
-import com.pi4j.io.IOConfig;
+import com.pi4j.config.impl.ConfigBuilderBase;
+import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.i2c.I2CConfigBuilder;
 
-public interface I2CConfig extends IOConfig<I2CConfig> {
+public class DefaultI2CConfigBuilder
+        extends ConfigBuilderBase<I2CConfigBuilder, I2CConfig>
+        implements I2CConfigBuilder {
 
-    String BUS_KEY = "bus";
-    String DEVICE_KEY = "device";
-
-    Integer bus();
-    default Integer getBus() {
-        return bus();
+    /**
+     * PRIVATE CONSTRUCTOR
+     */
+    protected DefaultI2CConfigBuilder(){
+        super();
     }
 
-    Integer device();
-    default Integer getDevice() {
-        return device();
+    public static I2CConfigBuilder newInstance() {
+        return new DefaultI2CConfigBuilder();
     }
 
-    static I2CConfigBuilder newBuilder()  {
-        return I2CConfigBuilder.newInstance();
+    @Override
+    public I2CConfig build() {
+        I2CConfig config = new DefaultI2CConfig(properties);
+        return config;
+    }
+
+    @Override
+    public I2CConfigBuilder bus(Integer bus){
+        this.properties.put(I2CConfig.BUS_KEY, bus.toString());
+        return this;
+    }
+
+    @Override
+    public I2CConfigBuilder device(Integer device){
+        this.properties.put(I2CConfig.DEVICE_KEY, device.toString());
+        return this;
     }
 }

@@ -20,7 +20,9 @@ com.pi4j.annotation.processor.register.AnalogOutputRegistrationProcessor
 com.pi4j.annotation.processor.register.DigitalChangeListenerRegistrationProcessor
 com.pi4j.annotation.processor.register.DigitalInputRegistrationProcessor
 com.pi4j.annotation.processor.register.DigitalOutputRegistrationProcessor
+com.pi4j.annotation.processor.register.I2CRegistrationProcessor
 com.pi4j.annotation.processor.register.PlatformRegistrationProcessor
 com.pi4j.annotation.processor.register.ProviderRegistrationProcessor
+com.pi4j.annotation.processor.register.PwmRegistrationProcessor
 com.pi4j.annotation.processor.event.AnalogChangeEventProcessor
 com.pi4j.annotation.processor.event.DigitalChangeEventProcessor
