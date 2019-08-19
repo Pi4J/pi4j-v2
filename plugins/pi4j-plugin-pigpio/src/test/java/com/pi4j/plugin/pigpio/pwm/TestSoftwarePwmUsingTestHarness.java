@@ -205,7 +205,7 @@ public class TestSoftwarePwmUsingTestHarness {
                     Thread.sleep(2000);
                     if(measureFrequency(pwm) == false){
                         // turn off PWM pin
-                        piGpio.gpioPWM(p, 0);;
+                        pwm.off();
 
                         // give up and fail
                         Assert.fail("PWM MEASURED FREQUENCY OUT OF ACCEPTABLE MARGIN OF ERROR");
