@@ -5,7 +5,7 @@ package com.pi4j.plugin.pigpio.provider.pwm;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PLUGIN   :: PIGPIO I/O Providers
- * FILENAME      :  PiGpioPwm.java
+ * FILENAME      :  PiGpioPwmSoftware.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -30,13 +30,46 @@ package com.pi4j.plugin.pigpio.provider.pwm;
  */
 
 import com.pi4j.io.pwm.Pwm;
-import com.pi4j.io.pwm.PwmBase;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
+import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.library.pigpio.PiGpioMode;
 
-public class PiGpioPwm extends PwmBase implements Pwm {
+import java.io.IOException;
 
-    public PiGpioPwm(PwmProvider provider, PwmConfig config){
-        super(provider, config);
+public class PiGpioPwm extends PiGpioPwmBase implements Pwm {
+
+    public PiGpioPwm(PiGpio piGpio, PwmProvider provider, PwmConfig config) throws IOException {
+        super(piGpio, provider, config);
+
+        // set pin mode to output
+        piGpio.gpioSetMode(this.address(), PiGpioMode.OUTPUT);
+
+        // get existing range and and duty-cycle
+        this.range = piGpio.gpioGetPWMrange(this.address());
+        this.frequency = piGpio.gpioGetPWMfrequency(this.address());
+    }
+
+    @Override
+    public void setDutyCycle(int dutyCycle) throws IOException {
+        piGpio.gpioPWM(this.address(), dutyCycle);
+        this.dutyCycle = piGpio.gpioGetPWMdutycycle(this.address());
+    }
+
+    @Override
+    public void setFrequency(int frequency) throws IOException {
+        int actual = piGpio.gpioSetPWMfrequency(this.address(), frequency);
+        if(actual > 0) {
+            this.frequency = actual;
+        }
+        else{
+            throw new IOException("PiGpio failed to set PWM frequency: " + actual);
+        }
+    }
+
+    @Override
+    public void setRange(int range) throws IOException {
+        piGpio.gpioSetPWMrange(this.address(), range);
+        this.range = piGpio.gpioGetPWMrange(this.address());
     }
 }

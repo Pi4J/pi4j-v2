@@ -30,11 +30,13 @@ package com.pi4j.plugin.pigpio.provider.i2c;
  */
 
 
+import com.pi4j.io.exception.IOReadException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CBase;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.library.pigpio.PiGpioMode;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -46,18 +48,19 @@ public class PiGpioI2C extends I2CBase implements I2C {
     protected final int handle;
     protected boolean isOpen = false;
 
-    public PiGpioI2C(I2CProvider provider, I2CConfig config) throws IOException {
+    public PiGpioI2C(PiGpio piGpio, I2CProvider provider, I2CConfig config) throws IOException {
         super(provider, config);
 
-        // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
-        piGpio = PiGpio.newSocketInstance();
-
-        // initialize the PIGPIO library
-        piGpio.initialize();
+        this.piGpio = piGpio;
 
         // create I2C instance of PIGPIO I2C
-        // TODO :: ADD SUPPORT FOR CONFIGURED BUS
-        this.handle = piGpio.i2cOpen(0, this.address());
+        // TODO :: ADD SUPPORT FOR CONFIGURED BUS & DEVICE
+        this.handle = piGpio.i2cOpen(1, 4);
+
+        // TODO :: ADD SUPPORT FOR ALT MODE CONFIG FOR DIFFERENT I2C BUS NUMBERS
+        // set pin ALT0 modes for I2C BUS<1> usage on RPI3B
+        piGpio.gpioSetMode(2, PiGpioMode.ALT0);
+        piGpio.gpioSetMode(3, PiGpioMode.ALT0);
 
         // set open state flag
         this.isOpen = true;
@@ -76,7 +79,7 @@ public class PiGpioI2C extends I2CBase implements I2C {
     @Override
     public void close() throws IOException {
         isOpen = false;
-        piGpio.terminate();
+        piGpio.i2cClose(this.handle);
     }
 
     // -------------------------------------------------------------------
@@ -108,7 +111,8 @@ public class PiGpioI2C extends I2CBase implements I2C {
     public int read(ByteBuffer buffer, int offset, int length) throws IOException{
         Objects.checkFromIndexSize(offset, length, buffer.capacity());
         byte[] data = piGpio.i2cReadDevice(this.handle, length);
-        buffer.put(data, offset, length);
+        if(data.length > 0)
+            buffer.put(data, offset, length);
         return length;
     }
 
@@ -140,8 +144,14 @@ public class PiGpioI2C extends I2CBase implements I2C {
     @Override
     public int readRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException {
         Objects.checkFromIndexSize(offset, length, buffer.capacity());
-        byte data[] =piGpio.i2cReadI2CBlockData(this.handle, register, length);
-        buffer.put(data, offset, length);
+        byte data[] = piGpio.i2cReadI2CBlockData(this.handle, register, length);
+        if(data.length > 0)
+            buffer.put(data, offset, length);
         return length;
+    }
+
+    @Override
+    public int writeReadRegisterWord(int register, int word) throws IOException, IOReadException {
+        return piGpio.i2cProcessCall(this.handle, register, word);
     }
 }

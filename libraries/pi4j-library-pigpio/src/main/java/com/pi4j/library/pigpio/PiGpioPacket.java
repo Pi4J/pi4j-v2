@@ -29,6 +29,8 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
+import com.pi4j.library.pigpio.util.StringUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -226,7 +228,7 @@ public class PiGpioPacket {
         buffer.putInt((packet.p2()));         // <P2>
         buffer.putInt((packet.p3()));         // <P3>
         if(packet.hasData()) {
-            buffer.put(packet.data());     // <DATA>
+            buffer.put(packet.data());        // <DATA>
         }
 
         // return byte array
@@ -235,8 +237,8 @@ public class PiGpioPacket {
 
     @Override
     public String toString(){
-        if(p3 > 0)
-            return String.format("CMD=%s(%d); P1=%d; P2=%d; P3=%d; PAYLOAD=%s", cmd().name(), cmd().value(), p1(), p2(), p3(), Arrays.toString(data()));
+        if(hasData())
+            return String.format("CMD=%s(%d); P1=%d; P2=%d; P3=%d; PAYLOAD=[0x%s]", cmd().name(), cmd().value(), p1(), p2(), p3(), StringUtil.toHexString(data()));
         else
             return String.format("CMD=%s(%d); P1=%d; P2=%d; P3=%d", cmd().name(), cmd().value(), p1(), p2(), p3());
     }

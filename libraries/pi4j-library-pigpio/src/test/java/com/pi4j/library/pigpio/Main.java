@@ -28,6 +28,8 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
+import java.io.IOException;
+
 public class Main {
 
 
@@ -43,14 +45,14 @@ public class Main {
         pig.gpioSetMode(3, PiGpioMode.ALT0);
 
 
-//        for(int x = 0; x < 10; x++) {
-//            try {
-//                pig.i2cClose(x);
-//            }
-//            catch (IOException e){
-//                continue;
-//            }
-//        }
+        for(int x = 0; x < 100; x++) {
+            try {
+                pig.i2cClose(x);
+            }
+            catch (IOException e){
+                continue;
+            }
+        }
 
         int handle = pig.i2cOpen(1, 0x04);
 

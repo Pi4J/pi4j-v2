@@ -33,10 +33,10 @@ import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.library.pigpio.PiGpioPud;
 import com.pi4j.library.pigpio.PiGpioState;
-import com.pi4j.library.test.harness.ArduinoTestHarness;
-import com.pi4j.library.test.harness.TestHarnessInfo;
-import com.pi4j.library.test.harness.TestHarnessPin;
-import com.pi4j.library.test.harness.TestHarnessPins;
+import com.pi4j.test.harness.ArduinoTestHarness;
+import com.pi4j.test.harness.TestHarnessInfo;
+import com.pi4j.test.harness.TestHarnessPin;
+import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -45,7 +45,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-@DisplayName("PIGPIO :: Test Digital Output Pins")
+@DisplayName("PIGPIO Library :: Test Digital Ouput Pins")
 public class TestDigitalOutputsUsingTestHarness {
 
     private static PiGpio pigpio;

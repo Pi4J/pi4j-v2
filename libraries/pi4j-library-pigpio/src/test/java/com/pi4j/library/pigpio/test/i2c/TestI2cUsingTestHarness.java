@@ -31,9 +31,9 @@ package com.pi4j.library.pigpio.test.i2c;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
-import com.pi4j.library.test.harness.ArduinoTestHarness;
-import com.pi4j.library.test.harness.TestHarnessInfo;
-import com.pi4j.library.test.harness.TestHarnessPins;
+import com.pi4j.test.harness.ArduinoTestHarness;
+import com.pi4j.test.harness.TestHarnessInfo;
+import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
@@ -42,7 +42,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 import java.util.UUID;
 
-@DisplayName("PIGPIO :: Test I2C Communication")
+@DisplayName("PIGPIO Library :: Test I2C Communication")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestI2cUsingTestHarness {
 
@@ -135,6 +135,47 @@ public class TestI2cUsingTestHarness {
         pigpio.terminate();
     }
 
+    @Test
+    @DisplayName("I2C :: Test register: BYTE (W/R)")
+    @Order(1)
+    public void testI2CSingleByteTxRx() throws IOException, InterruptedException {
+
+        System.out.println();
+        System.out.println("----------------------------------------");
+        System.out.println("TEST I2C REGISTER READ/WRITE BYTE");
+        System.out.println("----------------------------------------");
+
+        // value cache
+        byte[] values = new byte[MAX_REGISTERS];
+
+        // WRITE random values to the I2C storage registers on the test harness.
+        // the test harness contains 256 registers from address 0 to 255;
+        for(int register = 0; register < MAX_REGISTERS; register++) {
+            Thread.sleep(5);
+            System.out.println("[TEST WRITE BYTE] :: REGISTER=" + register);
+
+            Random rand = new Random();
+            values[register] = (byte)rand.nextInt(0xFF); // max 8 bits (1 byte)
+            System.out.println(" (WRITE) >> VALUE = " + Byte.toUnsignedInt(values[register]));
+
+            // WRITE :: SINGLE WORD TO REGISTER
+            pigpio.i2cWriteByteData(handle, register, values[register]);
+        }
+
+        // READ back the 10 random values from the I2C storage registers on the test harness and compare them.
+        for(int register = 0; register < MAX_REGISTERS; register++) {
+            Thread.sleep(5);
+            System.out.println("[TEST READ BYTE] :: REGISTER=" + register);
+
+            // READ :: SINGLE RAW WORD
+            int value = pigpio.i2cReadByteData(handle, register);
+            System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + Byte.toUnsignedInt(values[register]) + ")");
+
+            // validate read value match with expected value that was writted to this register
+            Assert.assertEquals("I2C WORD VALUE MISMATCH",  values[register], (byte)value);
+        }
+    }
+
 
     @Test
     @DisplayName("I2C :: Test register: WORD (W/R)")
@@ -152,7 +193,7 @@ public class TestI2cUsingTestHarness {
         // WRITE random values to the I2C storage registers on the test harness.
         // the test harness contains 256 registers from address 0 to 255;
         for(int register = 0; register < MAX_REGISTERS; register++) {
-            Thread.sleep(50);
+            Thread.sleep(5);
             System.out.println("[TEST WRITE WORD] :: REGISTER=" + register);
 
             Random rand = new Random();
@@ -165,7 +206,7 @@ public class TestI2cUsingTestHarness {
 
         // READ back the 10 random values from the I2C storage registers on the test harness and compare them.
         for(int register = 0; register < MAX_REGISTERS; register++) {
-            Thread.sleep(50);
+            Thread.sleep(5);
             System.out.println("[TEST READ WORD] :: REGISTER=" + register);
 
             // READ :: SINGLE RAW WORD
@@ -191,7 +232,7 @@ public class TestI2cUsingTestHarness {
         // the test harness contains 256 registers from address 0 to 255;
         // the process call should immediately return the same values back.
         for(int register = 0; register < MAX_REGISTERS; register++) {
-            Thread.sleep(50);
+            Thread.sleep(10);
             System.out.println("[TEST PROCESS WORD] :: REGISTER=" + register);
 
             Random rand = new Random();
@@ -223,9 +264,9 @@ public class TestI2cUsingTestHarness {
         // WRITE random values to the I2C storage registers on the test harness.
         // the test harness contains 256 registers from address 0 to 255;
         for(int register = 0; register < MAX_REGISTERS; register++) {
-            Thread.sleep(50);
+            Thread.sleep(10);
             System.out.println("[TEST WRITE BLOCK] :: REGISTER=" + register);
-            values[register] = UUID.randomUUID().toString().substring(0, 10);
+            values[register] = UUID.randomUUID().toString().substring(0, 30);
             System.out.println(" (WRITE) >> VALUE = " + values[register]);
 
             // WRITE :: BLOCK TO REGISTER
@@ -266,7 +307,7 @@ public class TestI2cUsingTestHarness {
         // the test harness contains 256 registers from address 0 to 255;
         // the process call should immediately return the same values back.
         for(int register = 0; register < MAX_REGISTERS; register++) {
-            Thread.sleep(50);
+            Thread.sleep(10);
             System.out.println("[TEST PROCESS BLOCK] :: REGISTER=" + register);
 
             String generatedValue = UUID.randomUUID().toString().substring(0, 10);
@@ -310,20 +351,20 @@ public class TestI2cUsingTestHarness {
             System.out.println("[TEST READ BLOCK] :: REGISTER=" + register + "; LENGTH=" + values[register].length());
 
             // READ :: BLOCK
-            Thread.sleep(100);
+            Thread.sleep(50);
             String value = pigpio.i2cReadI2CBlockDataToString(handle, register, values[register].length());
             System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + values[register] + ")");
 
             // attempt #2
             if(!values[register].equals(value)){
-                Thread.sleep(500);
+                Thread.sleep(100);
                 value = pigpio.i2cReadI2CBlockDataToString(handle, register, values[register].length());
                 System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + values[register] + ") <ATTEMPT #2>");
             }
 
             // attempt #3
             if(!values[register].equals(value)){
-                Thread.sleep(1000);
+                Thread.sleep(500);
                 value = pigpio.i2cReadI2CBlockDataToString(handle, register, values[register].length());
                 System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + values[register] + ") <ATTEMPT #3>");
             }

@@ -32,6 +32,8 @@ import com.pi4j.io.IO;
 import com.pi4j.io.pwm.impl.PwmFactory;
 import com.pi4j.provider.exception.ProviderException;
 
+import java.io.IOException;
+
 public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
 
     static final String ID = "PWM";
@@ -59,4 +61,43 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
     static Pwm instance(PwmProvider provider, PwmConfig config) throws ProviderException {
         return PwmFactory.instance(provider, config);
     }
+
+    default int getAddress(){
+        return config().address();
+    }
+    default int address(){
+        return getAddress();
+    }
+
+    Pwm on() throws IOException;
+    Pwm off() throws IOException;
+
+    default float getDutyCyclePercent() throws IOException{
+        return getDutyCycle() * 100 / getRange();
+    }
+    default float dutyCyclePercent() throws IOException { return getDutyCyclePercent();}
+
+    int getDutyCycle() throws IOException;
+    default int dutyCycle() throws IOException { return getDutyCycle();}
+
+    int getFrequency() throws IOException;
+    default int frequency() throws IOException { return getFrequency();}
+
+    void setDutyCycle(int dutyCycle) throws IOException;
+    default Pwm dutyCycle(int dutyCycle) throws IOException { setDutyCycle(dutyCycle); return this; }
+
+    default void setDutyCyclePercent(float percent) throws IOException{
+        int dutyCycle = Math.round(this.range() * percent / 100);
+        setDutyCycle(dutyCycle);
+    }
+    default Pwm dutyCyclePercent(int percent) throws IOException { setDutyCyclePercent(percent); return this; }
+
+    void setFrequency(int frequency) throws IOException;
+    default Pwm frequency(int frequency) throws IOException { setFrequency(frequency); return this; }
+
+    int getRange() throws IOException;
+    default int range() throws IOException { return getRange();}
+
+    void setRange(int range) throws IOException;
+    default Pwm range(int range) throws IOException { setRange(range); return this; }
 }

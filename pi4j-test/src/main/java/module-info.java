@@ -4,7 +4,7 @@ import com.pi4j.extension.Extension;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: UNITTEST :: Unit/Integration Tests
+ * PROJECT       :  Pi4J :: TESTING  :: Unit/Integration Tests
  * FILENAME      :  module-info.java
  *
  * This file is part of the Pi4J project. More information about

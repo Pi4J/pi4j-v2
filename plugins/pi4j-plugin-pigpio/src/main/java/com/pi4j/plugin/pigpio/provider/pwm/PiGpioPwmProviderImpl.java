@@ -32,16 +32,22 @@ package com.pi4j.plugin.pigpio.provider.pwm;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProviderBase;
+import com.pi4j.library.pigpio.PiGpio;
+
+import java.io.IOException;
 
 public class PiGpioPwmProviderImpl extends PwmProviderBase implements PiGpioPwmProvider {
 
-    public PiGpioPwmProviderImpl(){
+    final PiGpio piGpio;
+
+    public PiGpioPwmProviderImpl(PiGpio piGpio) throws IOException {
         this.id = ID;
         this.name = NAME;
+        this.piGpio = piGpio;
     }
 
     @Override
     public Pwm create(PwmConfig config) throws Exception {
-        return new PiGpioPwm(this, config);
+        return new PiGpioPwm(piGpio, this, config);
     }
 }

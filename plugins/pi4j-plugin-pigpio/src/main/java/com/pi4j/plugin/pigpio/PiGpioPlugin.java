@@ -29,11 +29,16 @@ package com.pi4j.plugin.pigpio;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
+import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProvider;
+import com.pi4j.plugin.pigpio.provider.pwm.PiGpioHardwarePwmProvider;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.provider.Provider;
+
+import java.io.IOException;
 
 public class PiGpioPlugin implements Plugin {
 
@@ -52,6 +57,10 @@ public class PiGpioPlugin implements Plugin {
     public static final String PWM_PROVIDER_NAME = NAME + " PWM Provider";
     public static final String PWM_PROVIDER_ID = ID + "-pwm";
 
+    // PWM Provider name and unique ID
+    public static final String HW_PWM_PROVIDER_NAME = NAME + " Hardware PWM Provider";
+    public static final String HW_PWM_PROVIDER_ID = ID + "-hardware-pwm";
+
     // I2C Provider name and unique ID
     public static final String I2C_PROVIDER_NAME = NAME + " I2C Provider";
     public static final String I2C_PROVIDER_ID = ID + "-i2c";
@@ -64,14 +73,31 @@ public class PiGpioPlugin implements Plugin {
     public static final String SERIAL_PROVIDER_NAME = NAME + " Serial Provider";
     public static final String SERIAL_PROVIDER_ID = ID + "-serial";
 
-    private Provider providers[] = {
-            PiGpioPwmProvider.newInstance(),
-            PiGpioI2CProvider.newInstance(),
-    };
+
+    protected PiGpio piGpio = null;
 
     @Override
-    public void initialize(PluginService service) {
+    public void initialize(PluginService service) throws IOException {
+
+        // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
+        piGpio = PiGpio.newSocketInstance("rpi3bp");
+
+        // initialize the PIGPIO library
+        piGpio.initialize();
+
+        Provider providers[] = {
+                PiGpioPwmProvider.newInstance(piGpio),
+                PiGpioHardwarePwmProvider.newInstance(piGpio),
+                PiGpioI2CProvider.newInstance(piGpio),
+        };
+
         // register all PiGpio I/O Providers with the plugin service
         service.register(providers);
+    }
+
+    @Override
+    public void shutdown(Context context) throws IOException {
+        // shutdown the PiGpio library
+        piGpio.terminate();
     }
 }
