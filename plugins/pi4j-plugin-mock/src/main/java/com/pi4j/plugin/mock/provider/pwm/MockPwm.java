@@ -34,9 +34,23 @@ import com.pi4j.io.pwm.PwmBase;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 
+import java.io.IOException;
+
 public class MockPwm extends PwmBase implements Pwm {
 
     public MockPwm(PwmProvider provider, PwmConfig config){
         super(provider, config);
+    }
+
+    @Override
+    public Pwm on() throws IOException {
+        this.onState = true;
+        return this;
+    }
+
+    @Override
+    public Pwm off() throws IOException {
+        this.onState = false;
+        return this;
     }
 }

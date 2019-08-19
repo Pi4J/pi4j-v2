@@ -35,7 +35,7 @@ import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.library.pigpio.PiGpio;
 
-public class PiGpioPwmBase extends PwmBase implements Pwm {
+public abstract class PiGpioPwmBase extends PwmBase implements Pwm {
 
     protected final PiGpio piGpio;
 

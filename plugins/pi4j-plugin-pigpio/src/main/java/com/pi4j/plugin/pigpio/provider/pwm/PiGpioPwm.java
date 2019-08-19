@@ -5,7 +5,7 @@ package com.pi4j.plugin.pigpio.provider.pwm;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PLUGIN   :: PIGPIO I/O Providers
- * FILENAME      :  PiGpioPwmSoftware.java
+ * FILENAME      :  PiGpioPwm.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -39,6 +39,7 @@ import java.io.IOException;
 
 public class PiGpioPwm extends PiGpioPwmBase implements Pwm {
 
+
     public PiGpioPwm(PiGpio piGpio, PwmProvider provider, PwmConfig config) throws IOException {
         super(piGpio, provider, config);
 
@@ -48,28 +49,47 @@ public class PiGpioPwm extends PiGpioPwmBase implements Pwm {
         // get existing range and and duty-cycle
         this.range = piGpio.gpioGetPWMrange(this.address());
         this.frequency = piGpio.gpioGetPWMfrequency(this.address());
-    }
 
-    @Override
-    public void setDutyCycle(int dutyCycle) throws IOException {
-        piGpio.gpioPWM(this.address(), dutyCycle);
-        this.dutyCycle = piGpio.gpioGetPWMdutycycle(this.address());
-    }
+        // get updated duty-cycle value from PiGpio
+        this.dutyCycle = this.range / 2;  // default duty-cycle is 50% of total range
 
-    @Override
-    public void setFrequency(int frequency) throws IOException {
-        int actual = piGpio.gpioSetPWMfrequency(this.address(), frequency);
-        if(actual > 0) {
-            this.frequency = actual;
-        }
-        else{
-            throw new IOException("PiGpio failed to set PWM frequency: " + actual);
+        // determine existing state
+        if(this.dutyCycle > 0){
+            this.onState = true;  // update tracking state
         }
     }
 
-    @Override
-    public void setRange(int range) throws IOException {
+    public Pwm on() throws IOException{
+
+        // set PWM range
         piGpio.gpioSetPWMrange(this.address(), range);
         this.range = piGpio.gpioGetPWMrange(this.address());
+
+        // set PWM frequency
+        piGpio.gpioSetPWMfrequency(this.address(), frequency);
+
+        // set PWM duty-cycle and enable PWM
+        piGpio.gpioPWM(this.address(), this.dutyCycle);
+
+        // get updated duty-cycle value from PiGpio
+        this.dutyCycle = piGpio.gpioGetPWMdutycycle(this.address());
+
+        // determine existing state
+        if(this.dutyCycle > 0){
+            this.onState = true;  // update tracking state
+        }
+
+        return this;
+    }
+
+    public Pwm off() throws IOException{
+
+        // set PWM duty-cycle and enable PWM
+        piGpio.gpioPWM(this.address(), 0);
+
+        // update tracking state
+        this.onState = false;
+
+        return this;
     }
 }

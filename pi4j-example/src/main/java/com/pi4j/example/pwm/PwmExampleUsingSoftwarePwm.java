@@ -1,4 +1,4 @@
-package com.pi4j.example.i2c;
+package com.pi4j.example.pwm;
 
 /*-
  * #%L
@@ -28,15 +28,18 @@ package com.pi4j.example.i2c;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.exception.LifecycleException;
 import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.pwm.PwmConfig;
+import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwm;
+import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.util.Console;
 
 import java.nio.ByteBuffer;
 
-public class I2cDeviceExample {
+public class PwmExampleUsingSoftwarePwm {
 
-    public I2cDeviceExample() {
-    }
+    public static int PWM_PIN = 4;
 
     public static void main(String[] args) throws Exception {
 
@@ -45,7 +48,7 @@ public class I2cDeviceExample {
         final var console = new Console();
 
         // print program title/header
-        console.title("<-- The Pi4J Project -->", "Basic I2C Device Example");
+        console.title("<-- The Pi4J Project -->", "PWM Example using Software-Emulated PWM");
 
         // allow for user to exit program using CTRL-C
         console.promptForExit();
@@ -57,53 +60,55 @@ public class I2cDeviceExample {
         var pi4j = Pi4J.newAutoContext();
 
         // TODO :: UPDATE THIS IMPL
-        I2CConfig config = new I2CConfig();
+        PwmConfig config = new PwmConfig(PWM_PIN);
 
         // use try-with-resources to auto-close I2C when complete
-        try (var i2c = pi4j.i2c().create(config);) {
+        var pwm = pi4j.providers().get(PiGpioPwmProvider.class).create(config);
 
-            // we will be reading and writing to register address 0x01
-            var register = i2c.register(0x01);
+        // listen for shutdown to properly clean up
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                // turn off the pwm signal
+                if(pwm.isOn()) pwm.off();
 
-            // --> write a single (8-bit) byte value to the I2C device register
-            register.write(0x0D);
+                // shutdown Pi4J
+                pi4j.shutdown();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }));
 
-            // <-- read a single (8-bit) byte value from the I2C device register
-            byte readByte = register.readByte();
+        // <OPTIONAL>
+        // configure PWM frequency; set PWM frequency to 1KHz
+        pwm.frequency(5000);
 
-            // --> write a single (16-bit) word value to the I2C device register
-            register.writeWord(0xFFFF);
+        // <OPTIONAL>
+        // the default duty-cycle range is 0-255; this function sets the upper limit of the range
+        pwm.setRange(255);
 
-            // <-- read a single (16-bit) word value from the I2C device register
-            int readWord = register.readWord();
+        // <OPTIONAL>
+        // set an explict duty-cycle value; this is in relation to the previously defined rage value
+        pwm.setDutyCycle(128);
 
-            // --> write an array of data bytes to the I2C device register
-            register.write(new byte[] { 0,1,2,3,4,5,6,7,8,9 });
+        // <OPTIONAL>
+        // alternatively, you can also just simply set the duty-cycle as a percent value
+        //pwm.setDutyCyclePercent(50); // 50%
 
-            // <-- read a byte array of specified length from the I2C device register
-            byte[] readArray = register.readArray(10);
-
-            // --> write a buffer of data bytes to the I2C device register
-            ByteBuffer buffer = ByteBuffer.allocate(10);
-            register.write(buffer);
-
-            // <-- read ByteBuffer of specified length from the I2C device register
-            ByteBuffer readBuffer = register.readBuffer(10);
-
-            // --> write a string of data to the I2C device register
-            register.write("This is a test");
-
-            // <-- read string of data of specified length from the I2C device register
-            String readString = register.readString(14);
-        }
-
+        // enable the PWM signal
+        pwm.on();
 
         // create a digital input instance using the default digital input provider
         // wait (block) for user to exit program using CTRL-C
         console.waitForExit();
 
+        // turn off the pwm signal
+        if(pwm.isOn()) pwm.off();
+
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
+
+        // shutdown Pi4J
         pi4j.shutdown();
     }
 }

@@ -32,6 +32,11 @@
         </dependency>
         <dependency>
             <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-plugin-pigpio</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
             <artifactId>pi4j-plugin-mock</artifactId>
             <version>${project.version}</version>
         </dependency>

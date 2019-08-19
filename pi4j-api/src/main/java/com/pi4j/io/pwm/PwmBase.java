@@ -36,24 +36,12 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
     protected int range = -1;
     protected int frequency = -1;
     protected int dutyCycle = -1;
+    protected boolean onState = false;
 
     public PwmBase(PwmProvider provider, PwmConfig config) {
         super(provider, config);
         this.name = "PWM-" + config.address();
         // TODO :: INITIALIZE PWM SETTINGS WITH DEFAULTS
-    }
-
-    @Override
-    public Pwm on() throws IOException {
-        setDutyCycle(0); // turn on duty-cycle to 50%
-        setDutyCyclePercent(50f);
-        return this;
-    }
-
-    @Override
-    public Pwm off() throws IOException {
-        setDutyCycle(0); // turn off duty-cycle
-        return this;
     }
 
     @Override
@@ -84,5 +72,10 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
     @Override
     public void setRange(int range) throws IOException {
         this.range = range;
+    }
+
+    @Override
+    public boolean isOn() {
+        return this.onState;
     }
 }

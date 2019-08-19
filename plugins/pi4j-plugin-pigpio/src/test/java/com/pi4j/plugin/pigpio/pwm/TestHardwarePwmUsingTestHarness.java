@@ -41,6 +41,7 @@ import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
+import jdk.jfr.Percentage;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
@@ -203,7 +204,7 @@ public class TestHardwarePwmUsingTestHarness {
             System.out.println("[TEST HARDWARE PWM] :: PIN=" + p);
 
             // turn on PWM pulses with specified frequency and duty-cycle
-            pwm.dutyCyclePercent(dutyCycle).frequency(frequency);
+            pwm.dutyCyclePercent(dutyCycle).frequency(frequency).on();
 
             System.out.println(" (PWM) >> SET FREQUENCY  = " + frequency);
             System.out.println(" (PWM) >> SET DUTY-CYCLE = " + dutyCycle + "%");
