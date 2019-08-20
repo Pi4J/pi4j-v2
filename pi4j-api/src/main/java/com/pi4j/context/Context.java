@@ -32,13 +32,19 @@ import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.io.IOType;
-import com.pi4j.io.gpio.analog.AnalogInputProvider;
-import com.pi4j.io.gpio.analog.AnalogOutputProvider;
-import com.pi4j.io.gpio.digital.DigitalInputProvider;
-import com.pi4j.io.gpio.digital.DigitalOutputProvider;
+import com.pi4j.io.gpio.analog.*;
+import com.pi4j.io.gpio.digital.*;
+import com.pi4j.io.i2c.I2C;
+import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.io.pwm.Pwm;
+import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
+import com.pi4j.io.serial.Serial;
+import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
+import com.pi4j.io.spi.Spi;
+import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
@@ -52,6 +58,7 @@ import com.pi4j.registry.Registry;
 public interface Context extends Describable {
 
     ContextConfig config();
+    ContextProperties properties();
     Providers providers();
     Registry registry();
     Platforms platforms();
@@ -159,6 +166,31 @@ public interface Context extends Describable {
         return platforms().getDefault();
     }
 
+    default AnalogOutput create(AnalogOutputConfig config) throws Exception{
+        return this.aout().create(config);
+    }
+    default AnalogInput create(AnalogInputConfig config) throws Exception{
+        return this.ain().create(config);
+    }
+    default DigitalOutput create(DigitalOutputConfig config) throws Exception{
+        return this.dout().create(config);
+    }
+    default DigitalInput create(DigitalInputConfig config) throws Exception{
+        return this.din().create(config);
+    }
+    default Pwm create(PwmConfig config) throws Exception{
+        return this.pwm().create(config);
+    }
+    default I2C create(I2CConfig config) throws Exception{
+        return this.i2c().create(config);
+    }
+    default Spi create(SpiConfig config) throws Exception{
+        return this.spi().create(config);
+    }
+    default Serial create(SerialConfig config) throws Exception{
+        return this.serial().create(config);
+    }
+
     default Descriptor describe() {
         Descriptor descriptor = Descriptor.create()
                 .category("CONTEXT")
@@ -168,6 +200,7 @@ public interface Context extends Describable {
         descriptor.add(registry().describe());
         descriptor.add(platforms().describe());
         descriptor.add(providers().describe());
+        descriptor.add(properties().describe());
         return descriptor;
     }
 }

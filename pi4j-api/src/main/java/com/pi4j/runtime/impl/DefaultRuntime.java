@@ -46,6 +46,7 @@ import com.pi4j.provider.impl.RuntimeProviders;
 import com.pi4j.registry.impl.DefaultRuntimeRegistry;
 import com.pi4j.registry.impl.RuntimeRegistry;
 import com.pi4j.runtime.Runtime;
+import com.pi4j.runtime.RuntimeProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +60,7 @@ public class DefaultRuntime implements Runtime {
     private RuntimeRegistry registry = null;
     private RuntimeProviders providers = null;
     private RuntimePlatforms platforms = null;
+    private RuntimeProperties properties = null;
     private List<Plugin> plugins = new ArrayList<>();
     private boolean isShutdown = false;
 
@@ -71,6 +73,7 @@ public class DefaultRuntime implements Runtime {
 
         // set local references
         this.context = context;
+        this.properties = DefaultRuntimeProperties.newInstance(context);
         this.annotationEngine = DefaultAnnotationEngine.newInstance(context);
         this.registry = DefaultRuntimeRegistry.newInstance(this);
         this.providers = DefaultRuntimeProviders.newInstance(this);
@@ -106,6 +109,11 @@ public class DefaultRuntime implements Runtime {
     @Override
     public RuntimePlatforms platforms() {
         return this.platforms;
+    }
+
+    @Override
+    public RuntimeProperties properties() {
+        return this.properties;
     }
 
     @Override

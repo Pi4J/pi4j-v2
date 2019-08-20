@@ -33,13 +33,13 @@ import com.pi4j.context.ContextConfig;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
+import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class DefaultContextBuilder implements ContextBuilder {
 
@@ -55,6 +55,9 @@ public class DefaultContextBuilder implements ContextBuilder {
     // extensibility modules
     protected Collection<Platform> platforms = Collections.synchronizedList(new ArrayList<>());
     protected Collection<Provider> providers = Collections.synchronizedList(new ArrayList<>());
+
+    // properties
+    protected Map<String,String> properties = Collections.synchronizedMap(new HashMap<>());
 
     /**
      * Private Constructor
@@ -117,6 +120,72 @@ public class DefaultContextBuilder implements ContextBuilder {
     }
 
     @Override
+    public ContextBuilder property(String key, String value){
+        this.properties.put(key, value);
+        return this;
+    }
+
+    @Override
+    public ContextBuilder property(Map.Entry<String,String> ... value){
+        for(Map.Entry e : value){
+            this.properties.put(e.getKey().toString(), e.getValue().toString());
+        }
+        return this;
+    }
+
+    @Override
+    public ContextBuilder properties(Properties properties, String prefixFilter){
+        // convert java.util.Properties to a Map<String,String> object
+        Map<String, String> entries = properties.keySet().stream()
+                .collect(Collectors.toMap(k->k.toString(), key->properties.get(key).toString()));
+        return properties(entries, prefixFilter);
+    }
+
+    @Override
+    public ContextBuilder properties(Map<String,String> properties) {
+        this.properties.putAll(properties);
+        return this;
+    }
+
+    @Override
+    public ContextBuilder properties(Map<String,String> properties, String prefixFilter){
+
+        // if a filter was not provided, then load properties without a filter
+        if(StringUtil.isNullOrEmpty(prefixFilter)) return properties(properties);
+
+        // sanitize the prefix filter and make sure it includes a "." character at the end
+        var prefix = (prefixFilter.endsWith(".")) ? prefixFilter : prefixFilter+".";
+
+        // iterate the properties object and assign any key with the prefix filter to this config
+        properties.keySet().stream().filter(key -> key.startsWith(prefix)).forEach((key)->{
+            this.properties.put(key.substring(prefix.length()), properties.get(key));
+        });
+        return this;
+    }
+
+    @Override
+    public ContextBuilder properties(InputStream stream, String prefixFilter) throws IOException{
+        Properties prop = new Properties();
+        prop.load(stream);
+        return properties(prop, prefixFilter);
+    }
+
+    @Override
+    public ContextBuilder properties(Reader reader, String prefixFilter) throws IOException{
+        Properties prop = new Properties();
+        prop.load(reader);
+        return properties(prop, prefixFilter);
+    }
+
+    @Override
+    public ContextBuilder properties(File file, String prefixFilter) throws IOException{
+        Properties prop = new Properties();
+        prop.load(new FileInputStream(file));
+        return properties(prop, prefixFilter);
+    }
+
+
+    @Override
     public ContextConfig toConfig() {
         // set instance reference
         var builder = this;
@@ -146,6 +215,11 @@ public class DefaultContextBuilder implements ContextBuilder {
             @Override
             public boolean autoDetectProviders() {
                 return builder.autoDetectProviders;
+            }
+
+            @Override
+            public Map<String, String> properties() {
+                return Collections.unmodifiableMap(builder.properties);
             }
         };
     }

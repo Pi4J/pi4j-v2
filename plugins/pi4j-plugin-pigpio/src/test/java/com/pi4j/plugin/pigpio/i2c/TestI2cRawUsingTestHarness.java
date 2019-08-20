@@ -66,6 +66,7 @@ public class TestI2cRawUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
+        // configure logging output
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
         System.out.println();

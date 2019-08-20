@@ -5,7 +5,7 @@ package com.pi4j.runtime;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Runtime.java
+ * FILENAME      :  RuntimeProperties.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,22 +27,14 @@ package com.pi4j.runtime;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.context.Context;
-import com.pi4j.exception.InitializeException;
-import com.pi4j.exception.ShutdownException;
-import com.pi4j.platform.impl.RuntimePlatforms;
-import com.pi4j.provider.impl.RuntimeProviders;
-import com.pi4j.registry.impl.RuntimeRegistry;
+import com.pi4j.context.ContextProperties;
 
-public interface Runtime {
-    RuntimeRegistry registry();
-    RuntimeProviders providers();
-    RuntimePlatforms platforms();
-    RuntimeProperties properties();
-    Context context();
+import java.util.Map;
+import java.util.Properties;
 
-    Runtime inject(Object... objects) throws AnnotationException;
-    Runtime shutdown() throws ShutdownException;
-    Runtime initialize() throws InitializeException;
+public interface RuntimeProperties extends ContextProperties {
+    void put(String key, String value);
+    void put(Properties properties);
+    void put(Map<String,String> values);
+    void put(Map.Entry<String,String> ... value);
 }

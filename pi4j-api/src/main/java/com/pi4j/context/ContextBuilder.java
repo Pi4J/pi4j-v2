@@ -32,6 +32,13 @@ import com.pi4j.context.impl.DefaultContextBuilder;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.Map;
+import java.util.Properties;
+
 public interface ContextBuilder extends Builder<Context> {
 
     static ContextBuilder newInstance(){
@@ -90,5 +97,76 @@ public interface ContextBuilder extends Builder<Context> {
     }
     default ContextBuilder setDefaultPlatform(Platform platform){
         return defaultPlatform(platform);
+    }
+
+
+    ContextBuilder property(String key, String value);
+    ContextBuilder property(Map.Entry<String,String> ... value);
+
+    ContextBuilder properties(Map<String,String> values);
+    ContextBuilder properties(Map<String,String> properties, String prefixFilter);
+    ContextBuilder properties(Properties properties, String prefixFilter);
+    ContextBuilder properties(InputStream stream, String prefixFilter) throws IOException;
+    ContextBuilder properties(Reader reader, String prefixFilter) throws IOException;
+    ContextBuilder properties(File file, String prefixFilter) throws IOException;
+
+    default ContextBuilder properties(Properties properties){
+        return properties(properties, null);
+    }
+    default ContextBuilder properties(InputStream stream) throws IOException{
+        return properties(stream, null);
+    }
+    default ContextBuilder properties(Reader reader) throws IOException{
+        return properties(reader, null);
+    }
+    default ContextBuilder properties(File file) throws IOException{
+        return properties(file, null);
+    }
+
+    default ContextBuilder addProperty(String key, String value){
+        return property(key, value);
+    }
+    default ContextBuilder addProperty(Map.Entry<String,String> ... value){
+        return property(value);
+    }
+    default ContextBuilder addProperties(Properties properties, String prefixFilter){
+        return properties(properties, prefixFilter);
+    }
+    default ContextBuilder addProperties(Properties properties){
+        return properties(properties, null);
+    }
+    default ContextBuilder addProperties(Map<String,String> properties){
+        return properties(properties, null);
+    }
+    default ContextBuilder addProperties(Map<String, String> properties, String prefixFilter){
+        return properties(properties, prefixFilter);
+    }
+
+    default ContextBuilder addProperties(InputStream stream) throws IOException{
+        return properties(stream, null);
+    }
+    default ContextBuilder addProperties(InputStream stream, String prefixFilter) throws IOException{
+        return properties(stream, prefixFilter);
+    }
+
+    default ContextBuilder addProperties(Reader reader) throws IOException{
+        return properties(reader, null);
+    }
+    default ContextBuilder addProperties(Reader reader, String prefixFilter) throws IOException{
+        return properties(reader, prefixFilter);
+    }
+
+    default ContextBuilder addProperties(File file) throws IOException{
+        return properties(file, null);
+    }
+    default ContextBuilder addProperties(File file, String prefixFilter) throws IOException{
+        return properties(file, prefixFilter);
+    }
+
+    default ContextBuilder add(Properties properties, String prefixFilter){
+        return properties(properties, prefixFilter);
+    }
+    default ContextBuilder add(Properties properties){
+        return properties(properties, null);
     }
 }
