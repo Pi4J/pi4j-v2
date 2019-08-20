@@ -53,7 +53,11 @@ public class PwmExampleUsingDependencyInjection {
         @ShutdownValue(0)
         @WithProvider(type=PiGpioPwmProvider.class)
         @Frequency(5000)
-        @DutyCycle(range=1024, percent=50)
+        @DutyCycle(range=1000, percent=50)
+        @AddPwmPreset(name = "one-quarter", dutyCycle = 250 )
+        @AddPwmPreset(name = "three-quarter", dutyCycle = 750 )
+        @AddPwmPreset(name = "1KHZ", frequency = 1000)
+        @AddPwmPreset(name = "10KHZ", frequency = 10000)
         private Pwm pwm;
 
         @Override
@@ -90,7 +94,26 @@ public class PwmExampleUsingDependencyInjection {
             console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + " (" + pwm.dutyCyclePercent()  + "%)");
             console.println(" - IS-ON      : " + pwm.isOn());
             console.println();
-            console.println(" ... WAITING 5 SECONDS TO TURN PWM SIGMNAL OFF");
+            console.println(" ... WAITING 5 SECONDS TO APPLY PRESET: 10KHZ");
+
+            // wait 5 seconds then exit
+            Thread.sleep(5000);
+
+            // turn off PWM pin
+            pwm.applyPreset("10KHZ");
+
+            console.println();
+            console.println(" ... PWM SIGNAL SHOULD BE <--10KHZ-->");
+            console.println();
+            console.println(" - GPIO PIN   : " + pwm.address());
+            console.println(" - PWM TYPE   : " + pwm.pwmType());
+            console.println(" - FREQUENCY  : " + pwm.frequency() + " Hz");
+            console.println(" - RANGE      : 0-" + pwm.range());
+            console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + " (" + pwm.dutyCyclePercent()  + "%)");
+            console.println(" - IS-ON      : " + pwm.isOn());
+
+
+            console.println(" ... WAITING 5 SECONDS TO TURN PWM SIGNAL OFF");
 
             // wait 5 seconds then exit
             Thread.sleep(5000);

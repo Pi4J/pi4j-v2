@@ -30,10 +30,11 @@ package com.pi4j.io.pwm.impl;
 import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.digital.PullResistance;
 import com.pi4j.io.pwm.PwmConfig;
+import com.pi4j.io.pwm.PwmPreset;
 import com.pi4j.io.pwm.PwmType;
 import com.pi4j.util.StringUtil;
 
-import java.util.Map;
+import java.util.*;
 
 public class DefaultPwmConfig
         extends AddressConfigBase<PwmConfig>
@@ -47,6 +48,7 @@ public class DefaultPwmConfig
     protected PwmType pwmType = PwmType.SOFTWARE;
     protected Integer shutdownValue = null;
     protected Integer initialValue = null;
+    protected List<PwmPreset> presets = new ArrayList<>();
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -57,6 +59,15 @@ public class DefaultPwmConfig
 
     // private configuration properties
     protected PullResistance pullResistance = PullResistance.OFF;
+
+    /**
+     * PRIVATE CONSTRUCTOR
+     * @param properties
+     */
+    protected DefaultPwmConfig(Map<String,String> properties, Collection<PwmPreset> presets){
+        this(properties);
+        this.presets.addAll(presets);
+    }
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -161,5 +172,10 @@ public class DefaultPwmConfig
     @Override
     public Integer initialValue() {
         return this.initialValue;
+    }
+
+    @Override
+    public Collection<PwmPreset> presets(){
+        return this.presets;
     }
 }

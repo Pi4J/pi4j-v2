@@ -27,20 +27,13 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
-import com.pi4j.io.gpio.GpioConfigBuilder;
-import com.pi4j.io.pwm.impl.DefaultPwmConfigBuilder;
+import com.pi4j.config.Builder;
+import com.pi4j.io.pwm.impl.DefaultPwmPresetBuilder;
 
-public interface PwmConfigBuilder extends GpioConfigBuilder<PwmConfigBuilder, PwmConfig> {
-    static PwmConfigBuilder newInstance()  {
-        return DefaultPwmConfigBuilder.newInstance();
+public interface PwmPresetBuilder extends Builder<PwmPreset> {
+    static PwmPresetBuilder newInstance(String name)  {
+        return DefaultPwmPresetBuilder.newInstance(name);
     }
-
-    PwmConfigBuilder range(Integer range);
-    PwmConfigBuilder frequency(Integer frequency);
-    PwmConfigBuilder dutyCycle(Integer dutyCycle);
-    PwmConfigBuilder dutyCyclePercent(Integer percent);
-    PwmConfigBuilder pwmType(PwmType pwmType);
-    PwmConfigBuilder shutdown(Integer value);
-    PwmConfigBuilder initial(Integer value);
-    PwmConfigBuilder preset(PwmPreset ... preset);
+    PwmPresetBuilder frequency(Integer frequency);
+    PwmPresetBuilder dutyCycle(Integer dutyCycle);
 }

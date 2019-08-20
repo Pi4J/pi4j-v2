@@ -30,11 +30,17 @@ package com.pi4j.io.pwm.impl;
 import com.pi4j.config.impl.AddressConfigBuilderBase;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmConfigBuilder;
+import com.pi4j.io.pwm.PwmPreset;
 import com.pi4j.io.pwm.PwmType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultPwmConfigBuilder
         extends AddressConfigBuilderBase<PwmConfigBuilder, PwmConfig>
         implements PwmConfigBuilder {
+
+    protected List<PwmPreset> presets = new ArrayList<>();
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -99,8 +105,16 @@ public class DefaultPwmConfigBuilder
     }
 
     @Override
+    public PwmConfigBuilder preset(PwmPreset ... preset){
+        for(PwmPreset p : preset) {
+            this.presets.add(p);
+        }
+        return this;
+    }
+
+    @Override
     public PwmConfig build() {
-        PwmConfig config = new DefaultPwmConfig(properties);
+        PwmConfig config = new DefaultPwmConfig(this.properties, this.presets);
         return config;
     }
 }

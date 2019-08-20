@@ -30,6 +30,7 @@ package com.pi4j.io.pwm;
 import com.pi4j.io.IO;
 
 import java.io.IOException;
+import java.util.Map;
 
 public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
 
@@ -108,4 +109,18 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
 
     void setRange(int range) throws IOException;
     default Pwm range(int range) throws IOException { setRange(range); return this; }
+
+    Map<String, PwmPreset> getPresets();
+    default Map<String, PwmPreset> presets(){
+        return getPresets();
+    }
+
+    PwmPreset getPreset(String name);
+    default PwmPreset preset(String name){
+        return getPreset(name);
+    }
+
+    PwmPreset deletePreset(String name);
+    Pwm addPreset(PwmPreset preset);
+    Pwm applyPreset(String name) throws IOException;
 }

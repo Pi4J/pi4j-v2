@@ -30,6 +30,8 @@ package com.pi4j.io.pwm;
 import com.pi4j.config.AddressConfig;
 import com.pi4j.io.gpio.GpioConfig;
 
+import java.util.Collection;
+
 public interface PwmConfig extends GpioConfig<PwmConfig>, AddressConfig<PwmConfig> {
 
     String PWM_TYPE_KEY = "pwm-type";
@@ -39,6 +41,7 @@ public interface PwmConfig extends GpioConfig<PwmConfig>, AddressConfig<PwmConfi
     String DUTY_CYCLE_PERCENT_KEY = "duty-cycle-percent";
     String SHUTDOWN_VALUE_KEY = "shutdown";
     String INITIAL_VALUE_KEY = "initial";
+    String PRESET_KEY = "applyPreset";
 
     Integer dutyCycle();
     default Integer getDutyCycle() {
@@ -78,4 +81,10 @@ public interface PwmConfig extends GpioConfig<PwmConfig>, AddressConfig<PwmConfi
     default Integer getInitialValue(){
         return initialValue();
     }
+
+    Collection<PwmPreset> presets();
+    default Collection<PwmPreset> getPresets(){
+        return presets();
+    }
+
 }
