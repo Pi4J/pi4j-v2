@@ -1,11 +1,11 @@
-package com.pi4j.runtime;
+package com.pi4j.context.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Runtime.java
+ * FILENAME      :  DefaultContextProperties.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,22 +27,40 @@ package com.pi4j.runtime;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.context.Context;
-import com.pi4j.exception.InitializeException;
-import com.pi4j.exception.ShutdownException;
-import com.pi4j.platform.impl.RuntimePlatforms;
-import com.pi4j.provider.impl.RuntimeProviders;
-import com.pi4j.registry.impl.RuntimeRegistry;
+import com.pi4j.context.ContextProperties;
+import com.pi4j.runtime.RuntimeProperties;
 
-public interface Runtime {
-    RuntimeRegistry registry();
-    RuntimeProviders providers();
-    RuntimePlatforms platforms();
-    RuntimeProperties properties();
-    Context context();
+import java.util.Map;
 
-    Runtime inject(Object... objects) throws AnnotationException;
-    Runtime shutdown() throws ShutdownException;
-    Runtime initialize() throws InitializeException;
+public class DefaultContextProperties implements ContextProperties {
+
+    private final RuntimeProperties properties;
+
+    public static ContextProperties newInstance(RuntimeProperties properties){
+        return new DefaultContextProperties(properties);
+    }
+
+    private DefaultContextProperties(RuntimeProperties properties){
+        this.properties = properties;
+    }
+
+    @Override
+    public boolean has(String key) {
+        return this.properties.has(key);
+    }
+
+    @Override
+    public String get(String key) {
+        return this.properties.get(key);
+    }
+
+    @Override
+    public Map<String, String> all() {
+        return this.properties.all();
+    }
+
+    @Override
+    public int count() {
+        return this.properties.count();
+    }
 }

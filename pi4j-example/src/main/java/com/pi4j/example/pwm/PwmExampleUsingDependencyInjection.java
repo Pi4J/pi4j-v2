@@ -77,7 +77,17 @@ public class PwmExampleUsingDependencyInjection {
             // ...
             // Also, inject this class instance into the Pi4J context
             // for annotation processing and dependency injection
-            Context pi4j = Pi4J.newAutoContext().inject(this);
+            var contextBuidler = Pi4J.newContextBuilder().autoDetect();
+
+            // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
+            // this temporary property is used to tell
+            // PIGPIO which remote Raspberry Pi to connect to
+            contextBuidler.property("host", "rpi3bp.savage.lan");
+
+            // create Pi4J context
+            Context pi4j = contextBuidler.build().inject(this);
+
+            pi4j.describe().print(System.out);
 
             // turn on the PWM pin
             pwm.on();

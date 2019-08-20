@@ -31,6 +31,7 @@ import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 
 import java.util.Collection;
+import java.util.Map;
 
 public interface ContextConfig {
 
@@ -60,4 +61,9 @@ public interface ContextConfig {
     boolean autoDetectProviders();
     default boolean getAutoDetectProviders() { return autoDetectProviders(); };
     default boolean isAutoDetectProviders() { return autoDetectProviders(); };
+
+    // **************************************************
+    // PROPERTIES
+    // **************************************************
+    Map<String,String> properties();
 }

@@ -47,6 +47,11 @@ public class I2cExampleUsingDependencyInjection {
 
     public static void main(String[] args) throws Exception {
 
+//        // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
+//        // this temporary property is used to tell
+//        // PIGPIO which remote Raspberry Pi to connect to
+//        System.setProperty("pi4j.host", "rpi3bp.savage.lan");
+
         // Pi4J cannot perform dependency injection on static classes
         // we will create a container instance to run our example
         new RuntimeContainer().call();

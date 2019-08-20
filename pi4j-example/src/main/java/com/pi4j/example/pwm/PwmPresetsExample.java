@@ -39,6 +39,11 @@ public class PwmPresetsExample {
 
     public static void main(String[] args) throws Exception {
 
+        // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
+        // this temporary property is used to tell
+        // PIGPIO which remote Raspberry Pi to connect to
+        System.setProperty("pi4j.host", "rpi3bp.savage.lan");
+
         // create Pi4J console wrapper/helper
         // (This is a utility class to abstract some of the boilerplate stdin/stdout code)
         final var console = new Console();

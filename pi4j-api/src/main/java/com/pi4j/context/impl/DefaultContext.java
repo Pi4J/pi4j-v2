@@ -30,6 +30,7 @@ package com.pi4j.context.impl;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
+import com.pi4j.context.ContextProperties;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
@@ -49,6 +50,7 @@ public class DefaultContext implements Context {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private Runtime runtime = null;
     private ContextConfig config = null;
+    private ContextProperties properties = null;
     private Providers providers = null;
     private Platforms platforms = null;
     private Registry registry = null;
@@ -72,6 +74,9 @@ public class DefaultContext implements Context {
         // create internal runtime state instance  (READ-ONLY ACCESS OBJECT)
         this.runtime = DefaultRuntime.newInstance(this);
 
+        // create API accessible properties instance  (READ-ONLY ACCESS OBJECT)
+        this.properties = DefaultContextProperties.newInstance(this.runtime.properties());
+
         // create API accessible registry instance  (READ-ONLY ACCESS OBJECT)
         this.registry = DefaultRegistry.newInstance(this.runtime.registry());
 
@@ -89,6 +94,11 @@ public class DefaultContext implements Context {
 
     @Override
     public ContextConfig config() { return this.config; }
+
+    @Override
+    public ContextProperties properties() {
+        return this.properties;
+    }
 
     @Override
     public Providers providers() { return providers; }

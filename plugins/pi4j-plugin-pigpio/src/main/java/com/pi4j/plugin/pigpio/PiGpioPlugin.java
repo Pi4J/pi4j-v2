@@ -75,11 +75,33 @@ public class PiGpioPlugin implements Plugin {
 
     protected PiGpio piGpio = null;
 
+    public static String PI4J_HOST_PROPERTY = "pi4j.host";
+    public static String PIGPIO_HOST_PROPERTY = "pi4j.pigpio.host";
+    public static String PIGPIO_PORT_PROPERTY = "pi4j.pigpio.port";
+    public static String DEFAULT_PIGPIO_HOST = "127.0.0.1";
+    public static String DEFAULT_PIGPIO_PORT = "8888";
+
     @Override
     public void initialize(PluginService service) throws IOException {
 
+//        // get PIGPIO hostname/address
+//        String host = System.getProperty(PIGPIO_HOST_PROPERTY, System.getenv(PIGPIO_HOST_PROPERTY));
+//        if(StringUtil.isNullOrEmpty(host, true)){
+//            host = System.getProperty(PI4J_HOST_PROPERTY, System.getenv(PI4J_HOST_PROPERTY));
+//        }
+//        host = StringUtil.setIfNullOrEmpty(host, DEFAULT_PIGPIO_HOST);
+//
+//        // get PIGPIO hostname/address
+//        String portStr = System.getProperty(PIGPIO_PORT_PROPERTY, System.getenv(PIGPIO_PORT_PROPERTY));
+//        portStr = StringUtil.setIfNullOrEmpty(host, DEFAULT_PIGPIO_PORT);
+//        int port = StringUtil.parseInteger(portStr, 8888);
+//
+        String host = service.context().properties().get("host", DEFAULT_PIGPIO_HOST);
+        int port = 8888;
+
+
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
-        piGpio = PiGpio.newSocketInstance("rpi3bp");
+        piGpio = PiGpio.newSocketInstance(host, port);
 
         // initialize the PIGPIO library
         piGpio.initialize();

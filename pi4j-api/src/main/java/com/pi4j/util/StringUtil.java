@@ -305,4 +305,22 @@ public class StringUtil {
         return sb.toString().trim();
     }
 
+    public static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
+    }
+
+    public static int parseInteger(String str, Integer defaultValue) {
+        try {
+            Integer v = Integer.parseInt(str);
+            return v.intValue();
+        } catch(NumberFormatException e){
+            return defaultValue;
+        }
+    }
 }
+
