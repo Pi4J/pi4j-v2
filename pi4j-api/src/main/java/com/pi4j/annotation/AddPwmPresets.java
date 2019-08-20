@@ -1,11 +1,11 @@
-package com.pi4j.io.pwm;
+package com.pi4j.annotation;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  PwmConfigBuilder.java
+ * FILENAME      :  ShutdownValue.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,20 +27,10 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
-import com.pi4j.io.gpio.GpioConfigBuilder;
-import com.pi4j.io.pwm.impl.DefaultPwmConfigBuilder;
+import java.lang.annotation.*;
 
-public interface PwmConfigBuilder extends GpioConfigBuilder<PwmConfigBuilder, PwmConfig> {
-    static PwmConfigBuilder newInstance()  {
-        return DefaultPwmConfigBuilder.newInstance();
-    }
-
-    PwmConfigBuilder range(Integer range);
-    PwmConfigBuilder frequency(Integer frequency);
-    PwmConfigBuilder dutyCycle(Integer dutyCycle);
-    PwmConfigBuilder dutyCyclePercent(Integer percent);
-    PwmConfigBuilder pwmType(PwmType pwmType);
-    PwmConfigBuilder shutdown(Integer value);
-    PwmConfigBuilder initial(Integer value);
-    PwmConfigBuilder preset(PwmPreset ... preset);
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+public @interface AddPwmPresets {
+    AddPwmPreset[] value();
 }

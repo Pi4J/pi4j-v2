@@ -32,6 +32,8 @@ import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.WithAnnotationProcessor;
 import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
+import com.pi4j.io.pwm.PwmPreset;
+import com.pi4j.io.pwm.PwmPresetBuilder;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.platform.Platform;
 import com.pi4j.util.StringUtil;
@@ -124,6 +126,22 @@ public class PwmRegistrationProcessor implements RegisterProcessor<Pwm> {
                 if(dutyCycle.percent() >= 0) {
                     //builder.dutyCycle(dutyCycle.range());
                 }
+            }
+        }
+
+        AddPwmPresets pwmPresets = null;
+        if (field.isAnnotationPresent(AddPwmPresets.class)) {
+            pwmPresets = field.getAnnotation(AddPwmPresets.class);
+            AddPwmPreset[] presets  = pwmPresets.value();
+            for(AddPwmPreset preset : presets){
+                PwmPresetBuilder presetBuilder = PwmPreset.newBuilder(preset.name());
+                if(preset.dutyCycle() >= 0)
+                    presetBuilder.dutyCycle(preset.dutyCycle());
+                if(preset.frequency() >= 0)
+                    presetBuilder.frequency(preset.frequency());
+
+                // add applyPreset to PWM config builder
+                builder.preset(presetBuilder.build());
             }
         }
 

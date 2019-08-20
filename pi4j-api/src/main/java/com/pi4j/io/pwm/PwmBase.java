@@ -33,6 +33,9 @@ import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.IOBase;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implements Pwm {
 
@@ -40,12 +43,16 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
     protected int frequency = -1;
     protected int dutyCycle = -1;
     protected boolean onState = false;
+    protected Map<String, PwmPreset> presets = Collections.synchronizedMap(new HashMap<>());
 
     public PwmBase(PwmProvider provider, PwmConfig config) {
         super(provider, config);
         this.name = config.name();
         this.id = config.id();
         this.description = config.description();
+        for(PwmPreset preset : config.presets()){
+            this.presets.put(preset.name().toLowerCase().trim(), preset);
+        }
     }
 
     @Override
@@ -96,7 +103,6 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
         return this;
     }
 
-
     @Override
     public Pwm shutdown(Context context) throws ShutdownException {
         // apply a shutdown value if configured
@@ -110,6 +116,52 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
             } catch (IOException e) {
                 throw new ShutdownException(e);
             }
+        }
+        return this;
+    }
+
+    @Override
+    public Map<String, PwmPreset> getPresets(){
+        return Collections.unmodifiableMap(this.presets);
+    }
+
+    @Override
+    public PwmPreset getPreset(String name){
+        String key = name.toLowerCase().trim();
+        if(presets.containsKey(key)) {
+            return presets.get(key);
+        }
+        return null;
+    }
+
+    @Override
+    public PwmPreset deletePreset(String name){
+        String key = name.toLowerCase().trim();
+        if(presets.containsKey(key)) {
+            return presets.remove(key);
+        }
+        return null;
+    }
+
+    @Override
+    public Pwm addPreset(PwmPreset preset){
+        String key = preset.name().toLowerCase().trim();
+        presets.put(key, preset);
+        return this;
+    }
+
+    @Override
+    public Pwm applyPreset(String name) throws IOException {
+        String key = name.toLowerCase().trim();
+        if(presets.containsKey(key)) {
+            PwmPreset preset = presets.get(key);
+            if(preset.dutyCycle() != null)
+                setDutyCycle(preset.dutyCycle().intValue());
+            if(preset.frequency() != null)
+                setFrequency(preset.frequency().intValue());
+            on(); // update PWM signal now
+        } else{
+            throw new IOException("PWM PRESET NOT FOUND: "+ name);
         }
         return this;
     }

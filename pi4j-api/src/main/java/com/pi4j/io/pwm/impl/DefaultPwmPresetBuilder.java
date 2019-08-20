@@ -1,11 +1,11 @@
-package com.pi4j.io.pwm;
+package com.pi4j.io.pwm.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  PwmConfigBuilder.java
+ * FILENAME      :  DefaultPwmConfigBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,20 +27,38 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
-import com.pi4j.io.gpio.GpioConfigBuilder;
-import com.pi4j.io.pwm.impl.DefaultPwmConfigBuilder;
+import com.pi4j.io.pwm.PwmPreset;
+import com.pi4j.io.pwm.PwmPresetBuilder;
 
-public interface PwmConfigBuilder extends GpioConfigBuilder<PwmConfigBuilder, PwmConfig> {
-    static PwmConfigBuilder newInstance()  {
-        return DefaultPwmConfigBuilder.newInstance();
+public class DefaultPwmPresetBuilder implements PwmPresetBuilder{
+    protected Integer dutyCycle = null;
+    protected Integer frequency = null;
+    protected final String name;
+
+    /**
+     * PRIVATE CONSTRUCTOR
+     */
+    protected DefaultPwmPresetBuilder(String name){
+        super(); this.name = name;
     }
 
-    PwmConfigBuilder range(Integer range);
-    PwmConfigBuilder frequency(Integer frequency);
-    PwmConfigBuilder dutyCycle(Integer dutyCycle);
-    PwmConfigBuilder dutyCyclePercent(Integer percent);
-    PwmConfigBuilder pwmType(PwmType pwmType);
-    PwmConfigBuilder shutdown(Integer value);
-    PwmConfigBuilder initial(Integer value);
-    PwmConfigBuilder preset(PwmPreset ... preset);
+    public static PwmPresetBuilder newInstance(String name) {
+        return new DefaultPwmPresetBuilder(name);
+    }
+
+    @Override
+    public PwmPresetBuilder frequency(Integer frequency) {
+        this.frequency = frequency;
+        return this;
+    }
+
+    @Override
+    public PwmPresetBuilder dutyCycle(Integer dutyCycle) {
+        this.dutyCycle = dutyCycle;
+        return this;
+    }
+    @Override
+    public PwmPreset build() {
+        return new DefaultPwmPreset(this.name, this.dutyCycle, this.frequency);
+    }
 }

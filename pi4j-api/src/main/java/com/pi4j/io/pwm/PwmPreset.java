@@ -5,7 +5,7 @@ package com.pi4j.io.pwm;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  PwmConfigBuilder.java
+ * FILENAME      :  PwmConfig.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,20 +27,26 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
-import com.pi4j.io.gpio.GpioConfigBuilder;
-import com.pi4j.io.pwm.impl.DefaultPwmConfigBuilder;
+import com.pi4j.io.pwm.impl.DefaultPwmPresetBuilder;
 
-public interface PwmConfigBuilder extends GpioConfigBuilder<PwmConfigBuilder, PwmConfig> {
-    static PwmConfigBuilder newInstance()  {
-        return DefaultPwmConfigBuilder.newInstance();
+public interface PwmPreset {
+
+    static PwmPresetBuilder newBuilder(String name){
+        return DefaultPwmPresetBuilder.newInstance(name);
     }
 
-    PwmConfigBuilder range(Integer range);
-    PwmConfigBuilder frequency(Integer frequency);
-    PwmConfigBuilder dutyCycle(Integer dutyCycle);
-    PwmConfigBuilder dutyCyclePercent(Integer percent);
-    PwmConfigBuilder pwmType(PwmType pwmType);
-    PwmConfigBuilder shutdown(Integer value);
-    PwmConfigBuilder initial(Integer value);
-    PwmConfigBuilder preset(PwmPreset ... preset);
+    String name();
+    default String getName() {
+        return name();
+    }
+
+    Integer dutyCycle();
+    default Integer getDutyCycle() {
+        return dutyCycle();
+    }
+
+    Integer frequency();
+    default Integer getFrequency() {
+        return frequency();
+    }
 }
