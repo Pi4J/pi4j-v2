@@ -31,18 +31,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- include Pi4J providers to test with -->
-        <!--<dependency>-->
-            <!--<groupId>com.pi4j</groupId>-->
-            <!--<artifactId>pi4j-provider-raspberrypi</artifactId>-->
-            <!--<version>${project.version}</version>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-plugin-mock</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
     </dependencies>
 
     <build>
