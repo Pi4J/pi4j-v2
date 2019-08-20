@@ -5,7 +5,7 @@ package com.pi4j.example.i2c;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: EXAMPLE  :: Sample Code
- * FILENAME      :  DigitalOutputBlinkExampleUsingDependencyInjection.java
+ * FILENAME      :  I2cExampleUsingDependencyInjection.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
