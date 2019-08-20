@@ -109,17 +109,20 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
 
     @Override
     public Future<?> pulseAsync(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback) {
-        return null;
+        // TODO :: IMPLEMENT DIGITAL OUTPUT PULSE ASYNC
+        throw new UnsupportedOperationException("PULSE ASYNC has not yet been implemented!");
     }
 
     @Override
     public DigitalOutput blink(int delay, int duration, TimeUnit unit, DigitalState state, Callable<Void> callback) {
-        return null;
+        // TODO :: IMPLEMENT DIGITAL OUTPUT BLINK
+        throw new UnsupportedOperationException("BLINK has not yet been implemented!");
     }
 
     @Override
     public Future<?> blinkAsync(int delay, int duration, TimeUnit unit, DigitalState state, Callable<Void> callback) {
-        return null;
+        // TODO :: IMPLEMENT DIGITAL OUTPUT BLINK ASYNC
+        throw new UnsupportedOperationException("BLINK ASYNC has not yet been implemented!");
     }
 
     @Override
