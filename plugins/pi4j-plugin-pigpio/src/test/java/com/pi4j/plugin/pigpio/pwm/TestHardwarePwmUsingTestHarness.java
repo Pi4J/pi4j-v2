@@ -29,8 +29,9 @@ package com.pi4j.plugin.pigpio.pwm;
  * #L%
  */
 
+import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
-import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.pwm.PwmType;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
@@ -53,7 +54,7 @@ public class TestHardwarePwmUsingTestHarness {
     private static int I2C_TEST_HARNESS_DEVICE = 0x04;
 
     private PiGpio piGpio;
-    private PwmProvider provider;
+    private Context pi4j;
     private static ArduinoTestHarness harness;
 
     @BeforeAll
@@ -115,7 +116,10 @@ public class TestHardwarePwmUsingTestHarness {
         piGpio.initialize();
 
         // create PWM provider instance to test with
-        provider = PiGpioPwmProvider.newInstance(piGpio);
+        var provider = PiGpioPwmProvider.newInstance(piGpio);
+
+        // initialize Pi4J instance with this single provider
+        pi4j = Pi4J.newContextBuilder().add(provider).build();
     }
 
     @AfterEach
@@ -178,7 +182,7 @@ public class TestHardwarePwmUsingTestHarness {
                 .build();
 
         // create PWM I/O instance
-        Pwm pwm = provider.create(config);
+        Pwm pwm = pi4j.create(config);
 
         // when we attempt to turn on the PWM pin, we expect an exception
         // to occur because this is not a hardware supported PWM pin
@@ -222,7 +226,7 @@ public class TestHardwarePwmUsingTestHarness {
                     .build();
 
             // create PWM I/O instance
-            Pwm pwm = provider.create(config);
+            Pwm pwm = pi4j.create(config);
 
             System.out.println();
             System.out.println("[TEST HARDWARE PWM] :: PIN=" + p);
@@ -238,6 +242,7 @@ public class TestHardwarePwmUsingTestHarness {
             System.out.println(" (PWM) << GET DUTY-CYCLE = " + pwm.dutyCycle() + " (" + pwm.dutyCyclePercent() + "%)");
             System.out.println(" (PWM) << GET RANGE MAX  = " + pwm.range());
 
+            Thread.sleep(10);
             // test once ..
             if(measureFrequency(pwm) == false){
                 // test twice ..

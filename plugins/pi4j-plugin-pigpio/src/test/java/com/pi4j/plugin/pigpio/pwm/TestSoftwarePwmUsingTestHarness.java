@@ -29,8 +29,9 @@ package com.pi4j.plugin.pigpio.pwm;
  * #L%
  */
 
+import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
-import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.test.harness.ArduinoTestHarness;
@@ -52,7 +53,7 @@ public class TestSoftwarePwmUsingTestHarness {
     private static int I2C_TEST_HARNESS_DEVICE = 0x04;
 
     private PiGpio piGpio;
-    private PwmProvider provider;
+    private Context pi4j;
     private static ArduinoTestHarness harness;
 
     @BeforeAll
@@ -114,7 +115,10 @@ public class TestSoftwarePwmUsingTestHarness {
         piGpio.initialize();
 
         // create PWM provider instance to test with
-        provider = PiGpioPwmProvider.newInstance(piGpio);
+        var provider = PiGpioPwmProvider.newInstance(piGpio);
+
+        // initialize Pi4J instance with this single provider
+        pi4j = Pi4J.newContextBuilder().add(provider).build();
     }
 
     @AfterEach
@@ -184,7 +188,7 @@ public class TestSoftwarePwmUsingTestHarness {
                     .build();
 
             // create PWM I/O instance
-            Pwm pwm = provider.create(config);
+            Pwm pwm = pi4j.create(config);
 
             System.out.println();
             System.out.println("[TEST SOFT PWM] :: PIN=" + p);

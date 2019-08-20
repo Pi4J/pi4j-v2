@@ -30,6 +30,7 @@ package com.pi4j.plugin.mock.provider.gpio.digital;
  */
 
 
+import com.pi4j.io.exception.IOException;
 import com.pi4j.io.gpio.digital.*;
 
 
@@ -38,7 +39,7 @@ public class MockDigitalOutput extends DigitalOutputBase implements DigitalOutpu
         super(provider, config);
     }
 
-    public MockDigitalOutput mockState(DigitalState state){
+    public MockDigitalOutput mockState(DigitalState state) throws IOException {
         this.state(state);
         return this;
     }

@@ -30,6 +30,8 @@ package com.pi4j.plugin.pigpio.provider.i2c;
  */
 
 
+import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
 import com.pi4j.io.exception.IOReadException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CBase;
@@ -53,9 +55,6 @@ public class PiGpioI2C extends I2CBase implements I2C {
         // set local reference instance
         this.piGpio = piGpio;
 
-        // create I2C instance of PIGPIO I2C
-        this.handle = piGpio.i2cOpen(config.bus(), config.device());
-
         // set pin ALT0 modes for I2C BUS<1> or BUS<2> usage on RPI3B
         switch(config.bus()) {
             case 0: {
@@ -69,8 +68,17 @@ public class PiGpioI2C extends I2CBase implements I2C {
             }
         }
 
+        // create I2C instance of PIGPIO I2C
+        this.handle = piGpio.i2cOpen(config.bus(), config.device());
+
         // set open state flag
         this.isOpen = true;
+    }
+
+    @Override
+    public I2C initialize(Context context) throws InitializeException {
+        super.initialize(context);
+        return this;
     }
 
     @Override

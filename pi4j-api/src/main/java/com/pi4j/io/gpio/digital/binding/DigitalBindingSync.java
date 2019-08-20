@@ -27,12 +27,17 @@ package com.pi4j.io.gpio.digital.binding;
  * #L%
  */
 
+import com.pi4j.io.exception.IOException;
 import com.pi4j.io.gpio.digital.DigitalChangeEvent;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DigitalBindingSync extends DigitalBindingBase<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider> implements DigitalBinding<DigitalOutput> {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Default Constructor
@@ -45,7 +50,11 @@ public class DigitalBindingSync extends DigitalBindingBase<DigitalOutput, Digita
     @Override
     public void process(DigitalChangeEvent event) {
         targets.forEach((target)->{
-            ((DigitalOutput)target).state(event.state());
+            try {
+                ((DigitalOutput)target).state(event.state());
+            } catch (IOException e) {
+                logger.error(e.getMessage(), e);
+            }
         });
     }
 }

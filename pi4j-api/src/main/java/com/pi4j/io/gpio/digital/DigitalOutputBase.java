@@ -28,6 +28,9 @@ package com.pi4j.io.gpio.digital;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
+import com.pi4j.io.exception.IOException;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -39,15 +42,25 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
 
     public DigitalOutputBase(DigitalOutputProvider provider, DigitalOutputConfig config){
         super(provider, config);
-
-        // update the analog value to the initial value if an initial value was configured
-        if(config().initialState() != null){
-            state(config().initialState());
-        }
     }
 
     @Override
-    public DigitalOutput state(DigitalState state) {
+    public DigitalOutput initialize(Context context) throws InitializeException {
+        super.initialize(context);
+
+        // update the analog value to the initial value if an initial value was configured
+        if(config().initialState() != null){
+            try {
+                state(config().initialState());
+            } catch (IOException e) {
+                throw new InitializeException(e);
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public DigitalOutput state(DigitalState state) throws IOException {
 
         if(!this.equals(state)){
             this.state = state;
@@ -57,7 +70,7 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
     }
 
     @Override
-    public DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback){
+    public DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback) throws IOException {
         int millis = 0;
 
         // validate arguments
@@ -115,11 +128,15 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
     }
 
     @Override
-    public DigitalOutput shutdown(Context context){
+    public DigitalOutput shutdown(Context context) throws ShutdownException {
         // set pin state to shutdown state if a shutdown state is configured
         if(config().shutdownState() != null && config().shutdownState() != DigitalState.UNKNOWN){
-            state(config().shutdownState());
+            try {
+                state(config().shutdownState());
+            } catch (IOException e) {
+                throw new ShutdownException(e);
+            }
         }
-        return this;
+        return super.shutdown(context);
     }
 }

@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -113,11 +114,14 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
         // fourth; load an application-embedded resource Pi4J properties file
         // {app}/{resources}/pi4j.properties
         try {
-            File resourceFile = new File(getClass().getClassLoader().getResource(PI4J_PROPERTIES_FILE_NAME).getFile());
-            if(resourceFile.exists()) {
-                Properties p = new Properties();
-                p.load(new FileInputStream(resourceFile));
-                put(p);
+            URL resource = getClass().getClassLoader().getResource(PI4J_PROPERTIES_FILE_NAME);
+            if(resource != null) {
+                File resourceFile = new File(resource.getFile());
+                if (resourceFile != null && resourceFile.exists()) {
+                    Properties p = new Properties();
+                    p.load(new FileInputStream(resourceFile));
+                    put(p);
+                }
             }
         }
         catch (Exception e){
