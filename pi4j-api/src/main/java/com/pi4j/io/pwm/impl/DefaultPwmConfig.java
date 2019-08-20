@@ -34,7 +34,10 @@ import com.pi4j.io.pwm.PwmPreset;
 import com.pi4j.io.pwm.PwmType;
 import com.pi4j.util.StringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class DefaultPwmConfig
         extends AddressConfigBase<PwmConfig>
