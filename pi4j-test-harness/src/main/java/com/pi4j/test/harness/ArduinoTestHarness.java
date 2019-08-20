@@ -60,7 +60,7 @@ public class ArduinoTestHarness {
         com.setFlowControl(SerialPort.FLOW_CONTROL_DISABLED);
 
         // configure read timeout
-        com.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 250, 0);
+        com.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
     }
 
     public TestHarnessPins reset() throws IOException {

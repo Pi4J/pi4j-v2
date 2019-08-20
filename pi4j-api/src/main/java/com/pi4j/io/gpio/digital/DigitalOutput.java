@@ -28,6 +28,7 @@ package com.pi4j.io.gpio.digital;
  */
 
 import com.pi4j.io.Output;
+import com.pi4j.io.exception.IOException;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -39,48 +40,48 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
         return DigitalOutputConfigBuilder.newInstance();
     }
 
-    DigitalOutput state(DigitalState state);
-    DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback);
+    DigitalOutput state(DigitalState state) throws IOException;
+    DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback) throws IOException;
     Future<?> pulseAsync(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback);
     DigitalOutput blink(int delay, int duration, TimeUnit unit, DigitalState state, Callable<Void> callback);
     Future<?> blinkAsync(int delay, int duration, TimeUnit unit, DigitalState state, Callable<Void> callback);
 
-    default DigitalOutput setState(boolean state){
+    default DigitalOutput setState(boolean state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
-    default DigitalOutput setState(byte state){
+    default DigitalOutput setState(byte state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
-    default DigitalOutput setState(short state){
+    default DigitalOutput setState(short state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
-    default DigitalOutput setState(int state){
+    default DigitalOutput setState(int state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
-    default DigitalOutput setState(long state){
+    default DigitalOutput setState(long state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
-    default DigitalOutput setState(float state){
+    default DigitalOutput setState(float state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
-    default DigitalOutput setState(double state){
+    default DigitalOutput setState(double state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
-    default DigitalOutput high(){
+    default DigitalOutput high() throws IOException {
         return this.state(DigitalState.HIGH);
     }
-    default DigitalOutput low(){
+    default DigitalOutput low() throws IOException {
         return this.state(DigitalState.LOW);
     }
-    default DigitalOutput toggle(){
+    default DigitalOutput toggle() throws IOException {
         return this.state(DigitalState.getInverseState(this.state()));
     }
 
 
-    default DigitalOutput pulseHigh(int interval, TimeUnit unit){
+    default DigitalOutput pulseHigh(int interval, TimeUnit unit) throws IOException {
         return pulse(interval, unit, DigitalState.HIGH);
     }
-    default DigitalOutput pulseLow(int interval, TimeUnit unit){
+    default DigitalOutput pulseLow(int interval, TimeUnit unit) throws IOException {
         return pulse(interval, unit, DigitalState.LOW);
     }
 
@@ -92,10 +93,10 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
         return pulseAsync(interval, unit, DigitalState.LOW, callback);
     }
 
-    default DigitalOutput pulse(int interval, TimeUnit unit){
+    default DigitalOutput pulse(int interval, TimeUnit unit) throws IOException {
         return pulse(interval, unit, DigitalState.HIGH);
     }
-    default DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state){
+    default DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state) throws IOException {
         return pulse(interval, unit, state, null);
     }
 

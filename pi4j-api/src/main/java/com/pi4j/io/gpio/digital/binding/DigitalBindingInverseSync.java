@@ -27,10 +27,13 @@ package com.pi4j.io.gpio.digital.binding;
  * #L%
  */
 
+import com.pi4j.io.exception.IOException;
 import com.pi4j.io.gpio.digital.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DigitalBindingInverseSync extends DigitalBindingBase<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider> implements DigitalBinding<DigitalOutput> {
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * Default Constructor
      * @param target Variable argument list of analog outputs
@@ -42,7 +45,11 @@ public class DigitalBindingInverseSync extends DigitalBindingBase<DigitalOutput,
     @Override
     public void process(DigitalChangeEvent event) {
         targets.forEach((target)->{
-            ((DigitalOutput)target).state(DigitalState.getInverseState(event.state()));
+            try {
+                ((DigitalOutput)target).state(DigitalState.getInverseState(event.state()));
+            } catch (IOException e) {
+                logger.error(e.getMessage(), e);
+            }
         });
     }
 }

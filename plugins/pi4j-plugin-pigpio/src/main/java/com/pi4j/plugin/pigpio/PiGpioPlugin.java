@@ -33,6 +33,8 @@ import com.pi4j.context.Context;
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
 import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider;
+import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalOutputProvider;
 import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProvider;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.provider.Provider;
@@ -79,26 +81,14 @@ public class PiGpioPlugin implements Plugin {
     public static String PIGPIO_HOST_PROPERTY = "pi4j.pigpio.host";
     public static String PIGPIO_PORT_PROPERTY = "pi4j.pigpio.port";
     public static String DEFAULT_PIGPIO_HOST = "127.0.0.1";
-    public static String DEFAULT_PIGPIO_PORT = "8888";
+    public static Integer DEFAULT_PIGPIO_PORT = 8888;
 
     @Override
     public void initialize(PluginService service) throws IOException {
 
-//        // get PIGPIO hostname/address
-//        String host = System.getProperty(PIGPIO_HOST_PROPERTY, System.getenv(PIGPIO_HOST_PROPERTY));
-//        if(StringUtil.isNullOrEmpty(host, true)){
-//            host = System.getProperty(PI4J_HOST_PROPERTY, System.getenv(PI4J_HOST_PROPERTY));
-//        }
-//        host = StringUtil.setIfNullOrEmpty(host, DEFAULT_PIGPIO_HOST);
-//
-//        // get PIGPIO hostname/address
-//        String portStr = System.getProperty(PIGPIO_PORT_PROPERTY, System.getenv(PIGPIO_PORT_PROPERTY));
-//        portStr = StringUtil.setIfNullOrEmpty(host, DEFAULT_PIGPIO_PORT);
-//        int port = StringUtil.parseInteger(portStr, 8888);
-//
+        // get PIGPIO hostname/ip-address and ip-port
         String host = service.context().properties().get("host", DEFAULT_PIGPIO_HOST);
-        int port = 8888;
-
+        int port = service.context().properties().getInteger("pigpio.port", DEFAULT_PIGPIO_PORT);
 
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
         piGpio = PiGpio.newSocketInstance(host, port);
@@ -107,6 +97,8 @@ public class PiGpioPlugin implements Plugin {
         piGpio.initialize();
 
         Provider providers[] = {
+                PiGpioDigitalInputProvider.newInstance(piGpio),
+                PiGpioDigitalOutputProvider.newInstance(piGpio),
                 PiGpioPwmProvider.newInstance(piGpio),
                 PiGpioI2CProvider.newInstance(piGpio),
         };

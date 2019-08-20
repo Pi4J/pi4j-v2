@@ -29,6 +29,8 @@ package com.pi4j.plugin.pigpio.provider.pwm;
  * #L%
  */
 
+import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
@@ -42,35 +44,45 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
 
     public PiGpioPwmSoftware(PiGpio piGpio, PwmProvider provider, PwmConfig config) throws IOException {
         super(piGpio, provider, config);
+    }
 
-        // set pin mode to output
-        piGpio.gpioSetMode(this.address(), PiGpioMode.OUTPUT);
+    @Override
+    public Pwm initialize(Context context) throws InitializeException {
+        super.initialize(context);
 
-        // get current frequency from config or from actual PWM pin
-        if(config.frequency() != null){
-            this.frequency = config.frequency();
-        } else {
-            this.frequency = piGpio.gpioGetPWMfrequency(this.address());
+        try {
+            // set pin mode to output
+            piGpio.gpioSetMode(this.address(), PiGpioMode.OUTPUT);
+
+            // get current frequency from config or from actual PWM pin
+            if (config.frequency() != null) {
+                this.frequency = config.frequency();
+            } else {
+                this.frequency = piGpio.gpioGetPWMfrequency(this.address());
+            }
+
+            // get current range from config or from actual PWM pin
+            if (config.range() != null) {
+                this.range = config.range();
+            } else {
+                this.range = piGpio.gpioGetPWMrange(this.address());
+            }
+
+            // get current duty-cycle from config or set to default 50%
+            if (config.dutyCycle() != null) {
+                this.dutyCycle = config.dutyCycle();
+            } else if (config.dutyCyclePercent() != null) {
+                dutyCyclePercent(config.dutyCyclePercent());
+            } else {
+                // get updated duty-cycle value from PiGpio
+                this.dutyCycle = this.range / 2;  // default duty-cycle is 50% of total range
+            }
+        }
+        catch (IOException e){
+            throw  new InitializeException(e);
         }
 
-        // get current range from config or from actual PWM pin
-        if(config.range() != null){
-            this.range = config.range();
-        } else {
-            this.range = piGpio.gpioGetPWMrange(this.address());
-        }
-
-        // get current duty-cycle from config or set to default 50%
-        if(config.dutyCycle() != null){
-            this.dutyCycle = config.dutyCycle();
-        }
-        else if(config.dutyCyclePercent() != null){
-            dutyCyclePercent(config.dutyCyclePercent());
-        }
-        else {
-            // get updated duty-cycle value from PiGpio
-            this.dutyCycle = this.range / 2;  // default duty-cycle is 50% of total range
-        }
+        return this;
     }
 
     public Pwm on() throws IOException{

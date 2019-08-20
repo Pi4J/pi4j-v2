@@ -28,6 +28,7 @@ package com.pi4j.io.gpio.digital;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.gpio.GpioBase;
 import com.pi4j.io.gpio.digital.binding.DigitalBinding;
 
@@ -91,7 +92,7 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
     }
 
     @Override
-    public DIGITAL_TYPE shutdown(Context context){
+    public DIGITAL_TYPE shutdown(Context context) throws ShutdownException {
         // remove all listeners
         listeners.clear();
 

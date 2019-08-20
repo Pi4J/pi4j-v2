@@ -109,7 +109,7 @@ public class TestDigitalInputsUsingTestHarness {
 
         // iterate over pins and perform test on each
         // TODO :: IMPLEMENT CORRECT SET OF TEST PINS
-        for(int pin = 2; pin <= 12; pin++){
+        for(int pin = 2; pin <= 19; pin++){
             testDigitalInputPin(pin);
         }
     }
@@ -126,7 +126,7 @@ public class TestDigitalInputsUsingTestHarness {
 
         // iterate over pins and perform test on each
         // TODO :: IMPLEMENT CORRECT SET OF TEST PINS
-        for(int pin = 2; pin <= 12; pin++){
+        for(int pin = 2; pin <= 19; pin++){
 
             // the following inputs are skipped because they always fail; possible
             // because they are tied to other things that override the pull-up/down
@@ -136,7 +136,10 @@ public class TestDigitalInputsUsingTestHarness {
             if(pin == 10) continue;
             if(pin == 11) continue;
             if(pin == 12) continue;
-
+            if(pin == 13) continue;
+            if(pin == 16) continue;
+            if(pin == 18) continue;
+            if(pin == 19) continue;
             testDigitalInputPullUpDown(pin);
         }
     }
