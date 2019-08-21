@@ -550,7 +550,7 @@
                     <artifactId>s3-upload-maven-plugin</artifactId>
                     <version>${s3-upload-maven-plugin.version}</version>
                 </plugin>
-                
+
                 <!-- ENFORCER PLUGIN -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -687,7 +687,7 @@
                                 <requireJavaVersion>
                                     <version>${java.version}</version>
                                 </requireJavaVersion>
-                            </rules>    
+                            </rules>
                         </configuration>
                     </execution>
                 </executions>
