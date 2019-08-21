@@ -90,6 +90,22 @@ public interface Platform extends Extension<Platform> {
         return this.provider(IOType.DIGITAL_OUTPUT);
     }
 
+    default <T extends AnalogInputProvider> T ain() throws ProviderException{
+        return analogInput();
+    }
+
+    default <T extends AnalogOutputProvider> T aout() throws ProviderException{
+        return analogOutput();
+    }
+
+    default <T extends DigitalInputProvider> T din() throws ProviderException{
+        return digitalInput();
+    }
+
+    default <T extends DigitalOutputProvider> T dout() throws ProviderException{
+        return digitalOutput();
+    }
+
     default <T extends PwmProvider> T pwm() throws ProviderException{
         return this.provider(IOType.PWM);
     }

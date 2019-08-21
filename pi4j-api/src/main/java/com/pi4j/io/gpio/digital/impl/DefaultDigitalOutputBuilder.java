@@ -27,80 +27,116 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalOutputBuilder;
-import com.pi4j.io.gpio.digital.DigitalState;
+import com.pi4j.context.Context;
+import com.pi4j.io.gpio.digital.*;
 import com.pi4j.platform.Platform;
+import com.pi4j.util.StringUtil;
+import com.pi4j.provider.Provider;
 
-import java.security.Provider;
 
 public class DefaultDigitalOutputBuilder implements DigitalOutputBuilder {
+
+    private final Context context;
+    private final DigitalOutputConfigBuilder builder;
+
+    private String platformId = null;
+    private Class<? extends Platform> platformClass = null;
+    private String providerId = null;
+    private Class<? extends Provider> providerClass = null;
+
+    public static DigitalOutputBuilder newInstance(Context context) {
+        return new DefaultDigitalOutputBuilder(context);
+    }
 
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected DefaultDigitalOutputBuilder(){
+    protected DefaultDigitalOutputBuilder(Context context) {
         super();
+        this.context = context;
+        this.builder = DigitalOutputConfigBuilder.newInstance();
     }
 
     @Override
     public DigitalOutputBuilder id(String id) {
-        return null;
+        this.builder.id(id);
+        return this;
     }
 
     @Override
     public DigitalOutputBuilder name(String name) {
-        return null;
+        this.builder.name(name);
+        return this;
     }
 
     @Override
     public DigitalOutputBuilder description(String description) {
-        return null;
+        this.builder.description(description);
+        return this;
     }
 
     @Override
     public DigitalOutputBuilder address(Integer address) {
-        return null;
+        this.builder.address(address);
+        return this;
     }
 
     @Override
     public DigitalOutputBuilder shutdown(DigitalState state) {
-        return null;
+        this.builder.shutdown(state);
+        return this;
     }
 
     @Override
     public DigitalOutputBuilder initial(DigitalState state) {
-        return null;
+        this.builder.initial(state);
+        return this;
     }
 
     @Override
     public DigitalOutputBuilder platform(String platformId) {
-        return null;
+        this.platformId = platformId;
+        return this;
     }
 
     @Override
     public DigitalOutputBuilder platform(Class<? extends Platform> platformClass) {
-        return null;
+        this.platformClass = platformClass;
+        return this;
     }
 
     @Override
     public DigitalOutputBuilder provider(String providerId) {
-        return null;
+        this.providerId = providerId;
+        return this;
     }
 
     @Override
     public DigitalOutputBuilder provider(Class<? extends Provider> providerClass) {
-        return null;
-    }
-
-    public static DigitalOutputBuilder newInstance() {
-        return new DefaultDigitalOutputBuilder();
+        this.providerClass = providerClass;
+        return this;
     }
 
     @Override
-    public DigitalOutput build() {
-        return null;
+    public DigitalOutput build() throws Exception {
+
+        // create I/O instance config
+        DigitalOutputConfig config = this.builder.build();
+
+        if (StringUtil.isNotNullOrEmpty(this.providerId)) {
+            return (DigitalOutput) context.provider(this.providerId).create(config);
+        }
+        if (this.providerClass != null) {
+            return (DigitalOutput) context.provider(this.providerClass).create(config);
+        }
+        if (StringUtil.isNotNullOrEmpty(this.platformId)) {
+            return context.platforms().get(this.platformId).dout().create(config);
+        }
+        if (this.platformClass != null) {
+            return context.platforms().get(this.platformClass).dout().create(config);
+        }
+
+        // use default digital output provider
+        return context.dout().create(config);
     }
-
-
 }
