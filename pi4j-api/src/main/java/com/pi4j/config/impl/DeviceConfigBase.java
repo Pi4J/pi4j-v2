@@ -27,13 +27,14 @@ package com.pi4j.config.impl;
  * #L%
  */
 
+import com.pi4j.config.ConfigBase;
 import com.pi4j.config.DeviceConfig;
 import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
 
 import java.util.Map;
 
 public abstract class DeviceConfigBase<CONFIG_TYPE extends DeviceConfig<CONFIG_TYPE>>
-        extends AddressConfigBase<CONFIG_TYPE>
+        extends ConfigBase<CONFIG_TYPE>
         implements DeviceConfig<CONFIG_TYPE> {
 
     // private configuration variables

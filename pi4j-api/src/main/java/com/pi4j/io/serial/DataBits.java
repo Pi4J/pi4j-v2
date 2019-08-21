@@ -1,11 +1,11 @@
 package com.pi4j.io.serial;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  Serial.java
+ * PROJECT       :  Pi4J :: Java Library (Core)
+ * FILENAME      :  DataBits.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,23 +27,40 @@ package com.pi4j.io.serial;
  * #L%
  */
 
-import com.pi4j.io.IO;
-import com.pi4j.io.pwm.PwmConfigBuilder;
+public enum DataBits {
 
-import java.io.IOException;
+    _5(5),
+    _6(6),
+    _7(7),
+    _8(8);
 
-public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCloseable {
+    private int dataBits = 0;
 
-    int DEFAULT_BAUD = 9600;
-    DataBits DEFAULT_DATA_BITS = DataBits._8;
-    Parity DEFAULT_PARITY = Parity.NONE;
-    StopBits DEFAULT_STOP_BITS = StopBits._1;
-    FlowControl DEFAULT_FLOW_CONTROL = FlowControl.NONE;
-
-    static SerialConfigBuilder newConfigBuilder(){
-        return SerialConfigBuilder.newInstance();
+    private DataBits(int dataBits){
+        this.dataBits = dataBits;
     }
 
-    void open() throws IOException;
-    void close() throws IOException;
+    public int getValue(){
+        return this.dataBits;
+    }
+    public int value(){
+        return this.dataBits;
+    }
+
+    public static DataBits getInstance(int data_bits){
+        for(DataBits db : DataBits.values()){
+            if(db.getValue() == data_bits){
+                return db;
+            }
+        }
+        return null;
+    }
+
+    public static DataBits parse(String parity) {
+        if(parity.equalsIgnoreCase("5")) return DataBits._5;
+        if(parity.equalsIgnoreCase("6")) return DataBits._6;
+        if(parity.equalsIgnoreCase("7")) return DataBits._7;
+        if(parity.equalsIgnoreCase("8")) return DataBits._8;
+        return DataBits._8;
+    }
 }

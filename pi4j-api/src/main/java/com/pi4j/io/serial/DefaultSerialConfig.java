@@ -1,11 +1,11 @@
-package com.pi4j.config;
+package com.pi4j.io.serial;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DeviceConfigBuilder.java
+ * FILENAME      :  SerialConfig.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,6 +27,33 @@ package com.pi4j.config;
  * #L%
  */
 
-public interface DeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
-    BUILDER_TYPE device(String device);
+import com.pi4j.config.impl.DeviceConfigBase;
+import com.pi4j.io.IOConfig;
+
+public class DefaultSerialConfig extends DeviceConfigBase<DefaultSerialConfig> implements IOConfig<DefaultSerialConfig> {
+
+    int baud = Serial.DEFAULT_BAUD;
+
+    public DefaultSerialConfig(){
+        //super(Serial.DEFAULT_DEVICE);
+        super();
+    }
+
+    public DefaultSerialConfig(String device) {
+        //super(device);
+    }
+
+    public DefaultSerialConfig(String device, int baud) {
+        //super(device);
+        this.baud = baud;
+    }
+
+    public int baud() { return this.baud; };
+    public DefaultSerialConfig baud(int baud) { this.baud = baud; return this; }
+
+    @Override
+    public String toString(){
+        return String.format("[device=%s; baud=%d]", device(), baud());
+    }
+
 }

@@ -34,6 +34,15 @@ import com.pi4j.io.serial.SerialBase;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.util.Collection;
+
 public class RpiSerial extends SerialBase implements Serial {
 
     public RpiSerial(SerialProvider provider, SerialConfig config){

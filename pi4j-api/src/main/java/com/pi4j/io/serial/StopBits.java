@@ -1,11 +1,11 @@
-package com.pi4j.config;
+package com.pi4j.io.serial;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DeviceConfigBuilder.java
+ * PROJECT       :  Pi4J :: Java Library (Core)
+ * FILENAME      :  StopBits.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,6 +27,36 @@ package com.pi4j.config;
  * #L%
  */
 
-public interface DeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
-    BUILDER_TYPE device(String device);
+public enum StopBits {
+
+    _1(1),
+    _2(2);
+
+    private int stopBits = 0;
+
+    private StopBits(int stopBits){
+        this.stopBits = stopBits;
+    }
+
+    public int getValue(){
+        return this.stopBits;
+    }
+    public int value(){
+        return this.stopBits;
+    }
+
+    public static StopBits getInstance(int stop_bits){
+        for(StopBits sb : StopBits.values()){
+            if(sb.getValue() == stop_bits){
+                return sb;
+            }
+        }
+        return null;
+    }
+
+    public static StopBits parse(String parity) {
+        if(parity.equalsIgnoreCase("1")) return StopBits._1;
+        if(parity.equalsIgnoreCase("2")) return StopBits._2;
+        return StopBits._1;
+    }
 }

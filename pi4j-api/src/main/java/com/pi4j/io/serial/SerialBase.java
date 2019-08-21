@@ -32,6 +32,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.util.Collection;
 
 public abstract class SerialBase extends IOBase<Serial, SerialConfig, SerialProvider> implements Serial {
 
@@ -50,10 +57,5 @@ public abstract class SerialBase extends IOBase<Serial, SerialConfig, SerialProv
     @Override
     public void close() throws IOException {
         logger.trace("invoked 'closed()'");
-    }
-
-    @Override
-    public void send(CharSequence data) {
-        logger.trace("invoked 'send({})'", data);
     }
 }

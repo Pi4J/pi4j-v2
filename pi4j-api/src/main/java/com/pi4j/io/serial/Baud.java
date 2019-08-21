@@ -1,11 +1,11 @@
-package com.pi4j.config;
+package com.pi4j.io.serial;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DeviceConfigBuilder.java
+ * PROJECT       :  Pi4J :: Java Library (Core)
+ * FILENAME      :  Baud.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,6 +27,46 @@ package com.pi4j.config;
  * #L%
  */
 
-public interface DeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
-    BUILDER_TYPE device(String device);
+public enum Baud {
+
+    _50(50),
+    _75(75),
+    _110(110),
+    _134(134),
+    _150(150),
+    _200(200),
+    _300(300),
+    _600(600),
+    _1200(1200),
+    _1800(1800),
+    _2400(2400),
+    _4800(4800),
+    _9600(9600),
+    _19200(19200),
+    _38400(38400),
+    _57600(57600),
+    _115200(115200),
+    _230400(230400);
+
+    private int baud = 0;
+
+    private Baud(int baud){
+        this.baud = baud;
+    }
+
+    public int getValue(){
+        return this.baud;
+    }
+    public int value(){
+        return this.baud;
+    }
+
+    public static Baud getInstance(int baud_rate){
+        for(Baud b : Baud.values()){
+            if(b.getValue() == baud_rate){
+                return b;
+            }
+        }
+        return null;
+    }
 }
