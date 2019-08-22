@@ -27,8 +27,6 @@ package com.pi4j.io.serial;
  * #L%
  */
 
-import com.pi4j.io.pwm.Pwm;
-import com.pi4j.io.pwm.PwmConfigBuilder;
 import com.pi4j.provider.Provider;
 
 

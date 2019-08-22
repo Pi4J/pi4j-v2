@@ -27,8 +27,6 @@ package com.pi4j.io.serial;
  * #L%
  */
 
-import com.pi4j.io.gpio.digital.PullResistance;
-
 public enum Parity {
 
     NONE(0),

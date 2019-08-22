@@ -38,7 +38,9 @@ import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;
 
@@ -310,15 +312,21 @@ public class TestI2cUsingTestHarness {
             Thread.sleep(10);
             System.out.println("[TEST PROCESS BLOCK] :: REGISTER=" + register);
 
-            String generatedValue = UUID.randomUUID().toString().substring(0, 10);
-            System.out.println(" (WRITE) >> VALUE = " + generatedValue);
+            // create a random test array of bytes between 5 and 25 bytes in length
+            Random r = new Random();
+            byte[] writeBuffer = new byte[r.nextInt(20) + 5];
+            r.nextBytes(writeBuffer);
+            System.out.println(" (WRITE) >> VALUE = " + Arrays.toString(writeBuffer));
 
             // WRITE/READ :: BLOCK TO REGISTER
-            String returnedValue = pigpio.i2cBlockProcessCallToString(handle, register, generatedValue);
-            System.out.println(" (READ)  << VALUE = " + returnedValue);
+            byte[] readBuffer = new byte[writeBuffer.length];
+            var result = pigpio.i2cBlockProcessCall(handle, register, writeBuffer, readBuffer);
+
+            System.out.println(" (READ)  << RESULT = " + result);
+            System.out.println(" (READ)  << VALUE = " + Arrays.toString(readBuffer));
 
             // validate read value match with expected value that was written to this register
-            Assert.assertEquals("I2C BLOCK VALUE MISMATCH",  generatedValue, returnedValue);
+            Assert.assertArrayEquals("I2C BLOCK VALUE MISMATCH",  writeBuffer, readBuffer);
         }
     }
 
@@ -350,27 +358,42 @@ public class TestI2cUsingTestHarness {
         for(int register = 0; register < MAX_REGISTERS; register++) {
             System.out.println("[TEST READ BLOCK] :: REGISTER=" + register + "; LENGTH=" + values[register].length());
 
+            String valueString = "";
+
             // READ :: BLOCK
-            Thread.sleep(50);
-            String value = pigpio.i2cReadI2CBlockDataToString(handle, register, values[register].length());
-            System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + values[register] + ")");
+            Thread.sleep(100);
+            byte[] buffer = new byte[values[register].length()];
+            int result = pigpio.i2cReadI2CBlockData(handle, register, buffer);
+            System.out.println(" (READ)  << RESULT = " + result);
+            if(result > 0) {
+                valueString = new String(buffer, StandardCharsets.US_ASCII);
+                System.out.println(" (READ)  << VALUE = " + valueString + "; (EXPECTED=" + values[register] + ")");
+            }
 
             // attempt #2
-            if(!values[register].equals(value)){
+            if(!values[register].equals(valueString)){
                 Thread.sleep(100);
-                value = pigpio.i2cReadI2CBlockDataToString(handle, register, values[register].length());
-                System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + values[register] + ") <ATTEMPT #2>");
+                result = pigpio.i2cReadI2CBlockData(handle, register, buffer);
+                System.out.println(" (READ)  << RESULT = " + result);
+                if(result > 0) {
+                    valueString = new String(buffer, StandardCharsets.US_ASCII);
+                    System.out.println(" (READ)  << VALUE = " + valueString + "; (EXPECTED=" + values[register] + ")");
+                }
             }
 
             // attempt #3
-            if(!values[register].equals(value)){
+            if(!values[register].equals(valueString)){
                 Thread.sleep(500);
-                value = pigpio.i2cReadI2CBlockDataToString(handle, register, values[register].length());
-                System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + values[register] + ") <ATTEMPT #3>");
+                result = pigpio.i2cReadI2CBlockData(handle, register, buffer);
+                System.out.println(" (READ)  << RESULT = " + result);
+                if(result > 0) {
+                    valueString = new String(buffer, StandardCharsets.US_ASCII);
+                    System.out.println(" (READ)  << VALUE = " + valueString + "; (EXPECTED=" + values[register] + ")");
+                }
             }
 
             // validate read value match with expected value that was writted to this register
-            Assert.assertEquals("I2C BLOCK VALUE MISMATCH",  values[register], value);
+            Assert.assertEquals("I2C BLOCK VALUE MISMATCH",  values[register], valueString);
         }
     }
 }

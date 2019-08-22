@@ -27,7 +27,6 @@ package com.pi4j.config.impl;
  * #L%
  */
 
-import com.pi4j.config.AddressConfigBuilder;
 import com.pi4j.config.ConfigBuilder;
 import com.pi4j.config.DeviceConfig;
 import com.pi4j.config.DeviceConfigBuilder;

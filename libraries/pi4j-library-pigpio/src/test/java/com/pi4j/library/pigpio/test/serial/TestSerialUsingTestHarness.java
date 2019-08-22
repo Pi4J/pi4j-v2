@@ -31,7 +31,6 @@ package com.pi4j.library.pigpio.test.serial;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
-import com.pi4j.library.pigpio.util.StringUtil;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
@@ -39,11 +38,8 @@ import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Random;
-import java.util.UUID;
 
 @DisplayName("PIGPIO Library :: Test Serial Communication")
 public class TestSerialUsingTestHarness {

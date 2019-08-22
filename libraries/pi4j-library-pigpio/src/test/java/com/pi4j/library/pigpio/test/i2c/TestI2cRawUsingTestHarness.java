@@ -182,11 +182,19 @@ public class TestI2cRawUsingTestHarness {
             Thread.sleep(20);
 
             // READ :: RAW MULTI-BYTE
-            String rx = pigpio.i2cReadDeviceToString(handle, value.length());
-            System.out.println(" (READ)  << VALUE = " + rx);
-            Thread.sleep(20);
+            byte[] buffer = new byte[value.length()];
+            var result = pigpio.i2cReadDevice(handle, buffer);
 
-            Assert.assertEquals("I2C MULTI-BYTE VALUE MISMATCH",  value, rx);
+            System.out.println(" (READ)  << RESULT = " + result);
+            if(result > 0) {
+                String resultString = new String(buffer);
+                System.out.println(" (READ)  << VALUE = " + resultString);
+                Assert.assertEquals("I2C MULTI-BYTE VALUE MISMATCH", value, resultString);
+            } else {
+                Assert.fail("I2C READ FAILED: " + result);
+            }
+
+            Thread.sleep(20);
         }
     }
 }

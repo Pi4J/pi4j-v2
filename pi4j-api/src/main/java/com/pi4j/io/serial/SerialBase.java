@@ -32,13 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Writer;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.util.Collection;
 
 public abstract class SerialBase extends IOBase<Serial, SerialConfig, SerialProvider> implements Serial {
 

@@ -115,10 +115,7 @@ public class PiGpioI2C extends I2CBase implements I2C {
     @Override
     public int read(ByteBuffer buffer, int offset, int length) throws IOException{
         Objects.checkFromIndexSize(offset, length, buffer.capacity());
-        byte[] data = piGpio.i2cReadDevice(this.handle, length);
-        if(data.length > 0)
-            buffer.put(data, offset, length);
-        return length;
+        return piGpio.i2cReadDevice(this.handle, buffer, offset, length);
     }
 
     // -------------------------------------------------------------------
@@ -149,10 +146,7 @@ public class PiGpioI2C extends I2CBase implements I2C {
     @Override
     public int readRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException {
         Objects.checkFromIndexSize(offset, length, buffer.capacity());
-        byte data[] = piGpio.i2cReadI2CBlockData(this.handle, register, length);
-        if(data.length > 0)
-            buffer.put(data, offset, length);
-        return length;
+        return piGpio.i2cReadI2CBlockData(this.handle, register, buffer, offset, length);
     }
 
     @Override

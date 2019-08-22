@@ -28,12 +28,6 @@ package com.pi4j.io.serial;
  */
 
 import com.pi4j.config.DeviceConfigBuilder;
-import com.pi4j.config.impl.DeviceConfigBuilderBase;
-import com.pi4j.io.gpio.GpioConfigBuilder;
-import com.pi4j.io.pwm.PwmConfig;
-import com.pi4j.io.pwm.PwmPreset;
-import com.pi4j.io.pwm.PwmType;
-import com.pi4j.io.pwm.impl.DefaultPwmConfigBuilder;
 import com.pi4j.io.serial.impl.DefaultSerialConfigBuilder;
 
 public interface SerialConfigBuilder extends DeviceConfigBuilder<SerialConfigBuilder, SerialConfig> {

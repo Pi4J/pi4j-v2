@@ -28,7 +28,6 @@ package com.pi4j.io.serial;
  */
 
 import com.pi4j.io.IO;
-import com.pi4j.io.pwm.PwmConfigBuilder;
 
 import java.io.IOException;
 

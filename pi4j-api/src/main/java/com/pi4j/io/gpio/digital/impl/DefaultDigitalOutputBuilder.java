@@ -30,8 +30,8 @@ package com.pi4j.io.gpio.digital.impl;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.*;
 import com.pi4j.platform.Platform;
-import com.pi4j.util.StringUtil;
 import com.pi4j.provider.Provider;
+import com.pi4j.util.StringUtil;
 
 
 public class DefaultDigitalOutputBuilder implements DigitalOutputBuilder {

@@ -28,8 +28,6 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
-import java.io.IOException;
-
 public class Main {
 
 

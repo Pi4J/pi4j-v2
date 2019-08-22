@@ -28,7 +28,6 @@ package com.pi4j.io.spi;
  */
 
 
-import com.pi4j.io.serial.Serial;
 import com.pi4j.provider.Provider;
 
 public interface SpiProvider extends Provider<SpiProvider, Spi, SpiConfig> {

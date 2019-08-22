@@ -33,8 +33,6 @@ import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
-import com.pi4j.test.harness.TestHarnessInfo;
-import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
