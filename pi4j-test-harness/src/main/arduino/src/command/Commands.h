@@ -40,6 +40,7 @@
 #include "PinsCommand.h"
 #include "RebootCommand.h"
 #include "ResetCommand.h"
+#include "SerialEchoCommand.h"
 
 
 /**
@@ -62,6 +63,7 @@ void AddInteractiveCommands(SerialCommands& processor){
     processor.AddCommand(&PinCommand);
     processor.AddCommand(&PinsCommand);
     processor.AddCommand(&PinShortCommand);
+    processor.AddCommand(&SerialEchoCommand);
 }
 
 #endif // PI4J_COMMANDS_H

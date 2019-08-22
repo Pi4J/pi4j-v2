@@ -188,6 +188,7 @@ public class TestSoftwarePwmUsingTestHarness {
             Assert.assertEquals("PWM FREQUENCY MISMATCH",  actualFrequency, readFrequency);
             Assert.assertEquals("PWM DUTY-CYCLE MISMATCH",  dutyCycle, readDutyCycle);
 
+            Thread.sleep(50);
 
             // test once ..
             if(measureFrequency(p, actualFrequency) == false){

@@ -1,4 +1,4 @@
-package com.pi4j.library.pigpio.test.i2c;
+package com.pi4j.library.pigpio.test.serial;
 
 /*-
  * #%L
@@ -31,6 +31,7 @@ package com.pi4j.library.pigpio.test.i2c;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
+import com.pi4j.library.pigpio.util.StringUtil;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
@@ -38,27 +39,29 @@ import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Formatter;
+import java.util.Random;
 import java.util.UUID;
 
-@DisplayName("PIGPIO Library :: Test I2C Raw Communication")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TestI2cRawUsingTestHarness {
+@DisplayName("PIGPIO Library :: Test Serial Communication")
+public class TestSerialUsingTestHarness {
 
-    private static int I2C_BUS = 1;
-    private static int I2C_DEVICE = 0x04;
-    private static int I2C_TEST_HARNESS_BUS    = 0;
-    private static int I2C_TEST_HARNESS_DEVICE = 0x04;
+    private static String SERIAL_DEVICE = "/dev/ttyS0";
+    private static int BAUD_RATE = 9600;
+    private static int TEST_HARNESS_UART = 3;
 
     private PiGpio pigpio;
     private int handle;
 
     @BeforeAll
     public static void initialize() {
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestI2cRawUsingTestHarness.class.getName() + ")");
+        System.out.println("INITIALIZE TEST (" + TestSerialUsingTestHarness.class.getName() + ")");
         System.out.println("************************************************************************");
         System.out.println();
 
@@ -79,16 +82,13 @@ public class TestI2cRawUsingTestHarness {
             System.out.println("COPYRIGHT  : " + info.copyright);
             System.out.println("----------------------------------------");
 
-            // reset all pins on test harness before proceeding with this test
-            TestHarnessPins reset = harness.reset();
-            System.out.println();
-            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+//            // reset all pins on test harness before proceeding with this test
+//            TestHarnessPins reset = harness.reset();
+//            System.out.println();
+//            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
 
-            // enable the I2C bus and device on the test harness hardware
-            // (enable RAW mode data processing)
-            harness.enableI2C(I2C_TEST_HARNESS_BUS, I2C_TEST_HARNESS_DEVICE, true);
-            System.out.println();
-            System.out.println("ENABLE I2C BUS [" + I2C_BUS + "] ON TEST HARNESS;");
+            // enable the Serial Echo (Loopback) function on the test harness for these tests
+            harness.enableSerialEcho(TEST_HARNESS_UART,  BAUD_RATE);
 
             // terminate connection to test harness
             harness.terminate();
@@ -101,7 +101,7 @@ public class TestI2cRawUsingTestHarness {
     public static void terminate() throws IOException {
         System.out.println();
         System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestI2cRawUsingTestHarness.class.getName() + ") ");
+        System.out.println("TERMINATE TEST (" + TestSerialUsingTestHarness.class.getName() + ") ");
         System.out.println("************************************************************************");
         System.out.println();
     }
@@ -115,78 +115,110 @@ public class TestI2cRawUsingTestHarness {
         // initialize test harness and PIGPIO instances
         pigpio.initialize();
 
-        // set pin ALT0 modes for I2C BUS<1> usage on RPI3B
-        pigpio.gpioSetMode(2, PiGpioMode.ALT0);
-        pigpio.gpioSetMode(3, PiGpioMode.ALT0);
+        // set pin ALT5 modes for SERIAL RX & TX PINS on RPI3B
+        pigpio.gpioSetMode(14, PiGpioMode.ALT5);
+        pigpio.gpioSetMode(15, PiGpioMode.ALT5);
 
-        // OPEN I2C
-        handle = pigpio.i2cOpen(I2C_BUS, I2C_DEVICE);
+        // OPEN SERIAL PORT
+        handle = pigpio.serOpen(SERIAL_DEVICE, BAUD_RATE);
     }
 
     @AfterEach
     public void afterEach() throws IOException {
 
-        // CLOSE I2C
-        pigpio.i2cClose(handle);
+        // CLOSE SERIAL PORT
+        pigpio.serClose(handle);
 
         // terminate test harness and PIGPIO instances
         pigpio.terminate();
     }
 
     @Test
-    @DisplayName("I2C :: Test SINGLE-BYTE (W/R)")
-    @Order(1)
-    public void testI2CSingleByteTxRx() throws IOException, InterruptedException {
+    @DisplayName("SERIAL :: Test SINGLE-BYTE (W/R)")
+    public void testSerialSingleByteTxRx() throws IOException, InterruptedException {
         System.out.println();
-        System.out.println("----------------------------------------");
-        System.out.println("TEST I2C SINGLE BYTE RAW READ/WRITE");
-        System.out.println("----------------------------------------");
+        System.out.println("--------------------------------------------");
+        System.out.println("TEST SERIAL PORT SINGLE BYTE RAW READ/WRITE");
+        System.out.println("--------------------------------------------");
+
+        // drain any pending bytes in buffer
+        pigpio.serDrain(handle);
 
         // iterate over BYTE range of values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
-        for(int b = 0; b < 255; b++) {
+        for(int b = 0; b < 256; b++) {
             System.out.println("[TEST WRITE/READ SINGLE BYTE]");
-
             // WRITE :: SINGLE RAW BYTE
-            System.out.println(" (WRITE) >> VALUE = " + b);
-            pigpio.i2cWriteByte(handle, (byte)b);
-            Thread.sleep(5);
+            System.out.println(" (WRITE) >> VALUE = 0x" + Integer.toHexString(b));
+            pigpio.serWriteByte(handle, (byte)b);
 
-            // READ :: SINGLE RAW BYTE
-            byte rx = (byte)pigpio.i2cReadByte(handle);
-            System.out.println(" (READ)  << VALUE = " + Byte.toUnsignedInt(rx));
+            // READ :: NUMBER OF BYTES AVAILABLE TO READ
+            int available = pigpio.serDataAvailable(handle);
+            System.out.println(" (READ)  << AVAIL = " + available);
+            Assert.assertEquals("SERIAL BYTE VALUE MISMATCH",  1, available);
 
-            Assert.assertEquals("I2C BYTE VALUE MISMATCH",  b, Byte.toUnsignedInt(rx));
+             // READ :: SINGLE RAW BYTE
+            int rx = pigpio.serReadByte(handle);
+            System.out.println(" (READ)  << VALUE = 0x" + Integer.toHexString(rx));
+            Assert.assertEquals("SERIAL BYTE VALUE MISMATCH",  b, rx);
+            System.out.println();
         }
     }
 
     @Test
-    @DisplayName("I2C :: Test MULTI-BYTE (W/R)")
-    @Order(2)
-    public void testI2CMultiByteTxRx() throws IOException, InterruptedException {
+    @DisplayName("SERIAL :: Test MULTI-BYTE (W/R)")
+    public void testSerialMultiByteTxRx() throws IOException, InterruptedException {
         System.out.println();
         System.out.println("----------------------------------------");
-        System.out.println("TEST I2C MULTI-BYTE RAW READ/WRITE");
+        System.out.println("TEST SERIAL MULTI-BYTE READ/WRITE");
         System.out.println("----------------------------------------");
 
         // iterate over series of test values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
-        for(int x = 0; x < 100; x++) {
+        for(int x = 0; x < 50; x++) {
             System.out.println("[TEST WRITE/READ MULTI-BYTE]");
 
-            String value = UUID.randomUUID().toString().substring(0, 8);
+            // drain any pending bytes in buffer
+            pigpio.serDrain(handle);
 
-            // WRITE :: RAW MULTI-BYTE
-            System.out.println(" (WRITE) >> VALUE = " + value);
-            pigpio.i2cWriteDevice(handle, value);
-            Thread.sleep(5);
+            // Arduino max serial buffer length is 32
+            // create a random series of bytes up to 32 bytes long
+            Random r = new Random();
+            int len = r.nextInt((32 - 4) + 1) + 4;
+            byte[] testData = new byte[len];
+            r.nextBytes(testData);
 
-            // READ :: RAW MULTI-BYTE
-            String rx = pigpio.i2cReadDeviceToString(handle, value.length());
-            System.out.println(" (READ)  << VALUE = " + rx);
-            Thread.sleep(5);
+            // WRITE :: MULTI-BYTE
+            System.out.println(" (WRITE) >> VALUE = " + byteToHex(testData));
+            pigpio.serWrite(handle, testData);
 
-            Assert.assertEquals("I2C MULTI-BYTE VALUE MISMATCH",  value, rx);
+            // take a breath while buffer catches up
+            Thread.sleep(50);
+
+            // READ :: NUMBER OF BYTES AVAILABLE TO READ
+            int available = pigpio.serDataAvailable(handle);
+            System.out.println(" (READ)  << AVAIL = " + available);
+            Assert.assertEquals("SERIAL READ AVAIL MISMATCH",  testData.length, available);
+
+            // READ :: MULTI-BYTE
+            byte[] readBuffer = new byte[available];
+            int bytesRead = pigpio.serRead(handle, readBuffer, available);
+            System.out.println(" (READ)  << BYTES READ = " + bytesRead);
+            System.out.println(" (READ)  << VALUE = " + byteToHex(readBuffer));
+            //Thread.sleep(50);
+
+            Assert.assertArrayEquals("SERIAL MULTI-BYTE VALUE MISMATCH",  testData, readBuffer);
         }
+    }
+
+    private String byteToHex(final byte[] hash)
+    {
+        Formatter formatter = new Formatter();
+        for (byte b : hash) {
+            formatter.format("%02x ", b);
+        }
+        String result = "[0x" + formatter.toString().trim() + "]";
+        formatter.close();
+        return result;
     }
 }

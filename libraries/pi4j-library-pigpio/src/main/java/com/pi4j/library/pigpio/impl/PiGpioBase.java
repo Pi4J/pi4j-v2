@@ -142,10 +142,10 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
-    protected void validateI2cHandle(int handle) throws IOException {
+    protected void validateHandle(int handle) throws IOException {
         // validate I2C handle
         if(handle < 0) {
-            throw new IOException("PIGPIO ERROR: INVALID I2C HANDLE [" + handle + "]; Valid range: >0");
+            throw new IOException("PIGPIO ERROR: INVALID I2C/SPI/SERIAL HANDLE [" + handle + "]; Valid range: >0");
         }
     }
 

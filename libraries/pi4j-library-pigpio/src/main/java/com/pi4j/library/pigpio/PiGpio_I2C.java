@@ -68,11 +68,11 @@ public interface PiGpio_I2C {
     default void i2cWriteBlockData(int handle, int register, ByteBuffer buffer, int length) throws IOException{
         i2cWriteBlockData(handle, register, buffer, 0, length);
     }
-    default void i2cWriteBlockData(int handle, int register, String data) throws IOException{
+    default void i2cWriteBlockData(int handle, int register, CharSequence data) throws IOException{
         i2cWriteBlockData(handle, register, data, StandardCharsets.US_ASCII);
     }
-    default void i2cWriteBlockData(int handle, int register, String data, Charset charset) throws IOException{
-        i2cWriteBlockData(handle, register, data.getBytes(charset));
+    default void i2cWriteBlockData(int handle, int register, CharSequence data, Charset charset) throws IOException{
+        i2cWriteBlockData(handle, register, data.toString().getBytes(charset));
     }
 
     byte[] i2cReadBlockData(int handle, int register) throws IOException;
@@ -86,10 +86,10 @@ public interface PiGpio_I2C {
         byte[] rx = i2cBlockProcessCall(handle, register, data);
         return new String(rx, StandardCharsets.US_ASCII);
     }
-    default byte[] i2cBlockProcessCall(int handle, int register, String data) throws IOException{
-        return i2cBlockProcessCall(handle, register, data.getBytes(StandardCharsets.US_ASCII));
+    default byte[] i2cBlockProcessCall(int handle, int register, CharSequence data) throws IOException{
+        return i2cBlockProcessCall(handle, register, data.toString().getBytes(StandardCharsets.US_ASCII));
     }
-    default String i2cBlockProcessCallToString(int handle, int register, String data) throws IOException{
+    default String i2cBlockProcessCallToString(int handle, int register, CharSequence data) throws IOException{
         byte[] rx = i2cBlockProcessCall(handle, register, data);
         return new String(rx, StandardCharsets.US_ASCII);
     }
@@ -119,11 +119,11 @@ public interface PiGpio_I2C {
     default void i2cWriteI2CBlockData(int handle, int register, ByteBuffer buffer, int length) throws IOException{
         i2cWriteI2CBlockData(handle, register, buffer, 0, length);
     }
-    default void i2cWriteI2CBlockData(int handle, int register, String data) throws IOException{
+    default void i2cWriteI2CBlockData(int handle, int register, CharSequence data) throws IOException{
         i2cWriteI2CBlockData(handle, register, data, StandardCharsets.US_ASCII);
     }
-    default void i2cWriteI2CBlockData(int handle, int register, String data, Charset charset) throws IOException{
-        i2cWriteI2CBlockData(handle, register, data.getBytes(charset));
+    default void i2cWriteI2CBlockData(int handle, int register, CharSequence data, Charset charset) throws IOException{
+        i2cWriteI2CBlockData(handle, register, data.toString().getBytes(charset));
     }
 
     byte[] i2cReadDevice(int handle, int length) throws IOException;
@@ -151,10 +151,10 @@ public interface PiGpio_I2C {
         Objects.checkFromIndexSize(offset, length, buffer.capacity());
         i2cWriteDevice(handle, buffer.array(), offset, length);
     }
-    default void i2cWriteDevice(int handle, String data) throws IOException{
+    default void i2cWriteDevice(int handle, CharSequence data) throws IOException{
         i2cWriteDevice(handle, data, StandardCharsets.US_ASCII);
     }
-    default void i2cWriteDevice(int handle, String data, Charset charset) throws IOException{
-        i2cWriteDevice(handle, data.getBytes(charset));
+    default void i2cWriteDevice(int handle, CharSequence data, Charset charset) throws IOException{
+        i2cWriteDevice(handle, data.toString().getBytes(charset));
     }
 }

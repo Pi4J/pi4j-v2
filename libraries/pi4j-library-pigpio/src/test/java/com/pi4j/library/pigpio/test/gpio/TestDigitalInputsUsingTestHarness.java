@@ -53,6 +53,8 @@ public class TestDigitalInputsUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+
         System.out.println();
         System.out.println("************************************************************************");
         System.out.println("INITIALIZE TEST (" + TestDigitalInputsUsingTestHarness.class.getName() + ")");
@@ -129,17 +131,11 @@ public class TestDigitalInputsUsingTestHarness {
         for(int pin = 2; pin <= 19; pin++){
 
             // the following inputs are skipped because they always fail; possible
-            // because they are tied to other things that override the pull-up/down
-            if(pin == 5) continue;
-            if(pin == 6) continue;
-            if(pin == 9) continue;
-            if(pin == 10) continue;
-            if(pin == 11) continue;
-            if(pin == 12) continue;
-            if(pin == 13) continue;
-            if(pin == 16) continue;
-            if(pin == 18) continue;
-            if(pin == 19) continue;
+            // because they are tied to other things that override the software
+            // configurable pull-up/down resistors
+            if(pin == 2) continue; // RPi I2C PINS have on-board pull-up resistors
+            if(pin == 3) continue; // RPi I2C PINS have on-board pull-up resistors
+
             testDigitalInputPullUpDown(pin);
         }
     }
@@ -159,7 +155,7 @@ public class TestDigitalInputsUsingTestHarness {
 
         // do not use internal pull down resistors;
         // these seem to overpower the HIGH signal from the Arduino
-        pigpio.gpioSetPullUpDown(pin, PiGpioPud.OFF);
+        pigpio.gpioSetPullUpDown(pin, PiGpioPud.DOWN);
 
         // get input pin state from SoC (RaspberryPi)
         PiGpioState state = pigpio.gpioRead(pin);
@@ -219,7 +215,7 @@ public class TestDigitalInputsUsingTestHarness {
         System.out.println("----------------------------------------");
 
         // configure pin as an input pin on the test harness
-        harness.setInputPin(pin, true);
+        harness.setInputPin(pin, false);
 
         // configure input pin on test SoC (RaspberryPi)
         pigpio.gpioSetMode(pin, PiGpioMode.INPUT);

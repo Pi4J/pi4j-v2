@@ -135,11 +135,24 @@ public class PiGpioPacket {
     public byte[] data(){
         return this.data;
     }
-    public PiGpioPacket data(byte[] data){
+
+    public PiGpioPacket data(CharSequence data){
+        return this.data(data.toString().getBytes(StandardCharsets.US_ASCII));
+    }
+
+    public PiGpioPacket data(byte[] data) {
+        return data(data, data.length);
+    }
+
+    public PiGpioPacket data(byte[] data, int length) {
+        return data(data, 0, data.length);
+    }
+
+    public PiGpioPacket data(byte[] data, int offset, int length){
         // check for valid data
-        if(data != null && data.length > 0) {
-            this.p3 = data.length;
-            this.data = Arrays.copyOf(data, data.length);
+        if(data != null && data.length > 0 && length > 0) {
+            this.p3 = length;
+            this.data = Arrays.copyOfRange(data, offset, length);
         }
         else{
             this.p3 = 0;

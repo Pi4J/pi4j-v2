@@ -30,6 +30,7 @@
 #include "pins.h"
 #include <Wire.h>
 
+
 // ------------------------------------------------------------------------------------------------------------------------------
 // INTERACTIVE COMMAND PROCESSOR AND COMMANDS
 // ------------------------------------------------------------------------------------------------------------------------------
@@ -97,7 +98,6 @@ void inititalize(){
     // Wire.onReceive(receiveI2CData);
     // Wire.onRequest(sendI2CData);
     // i2cCache.wire = &Wire;
-
 }
 
 void reset(){
@@ -137,6 +137,11 @@ void reset(){
     Wire.end();
     Wire1.end();
 
+    // termiante all SERIAL communication pins
+    if(serialEcho != nullptr){
+        serialEcho->end();
+    }
+
     // include summary totals
     response["total"] = total;
     response["inputs"] = inputs;
@@ -172,8 +177,17 @@ void loop() {
     //             serializeJson(doc, console);
     //             console.println();
     //         }
-    //     }
+    //     }    
     // }
+
+    if(serialEcho != nullptr){
+        if (serialEcho->available()){
+            int byt = serialEcho->read();
+            //Serial.print("[SERIAL-ECHO] ");
+            //Serial.println(byt);
+            serialEcho->write(byt);  // ECHO DATA BACK TO CALLER
+        }
+    }
 }
 
 /**
@@ -205,216 +219,6 @@ void reboot() {
     console.println();
     NVIC_SystemReset();
 }
-
-
-// // callback for received data
-// void receiveI2CDataSMBus(int byteCount){
-
-//     console.print("<-- I2C RX Byte Count: ");
-//     console.println(byteCount);
-//     console.println(byteCount);
-//     console.println(byteCount);
-
-//     // process bytes received
-//     if(byteCount > 0){
-
-//         // create a receive data buffer
-//         uint8_t buffer[36] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-
-//         // read all available bytes from the I2C bus
-//         byteCount = Wire.readBytes(buffer, byteCount);
-
-//         console.print("    BYTES READ ");
-//         console.print(byteCount);
-//         //console.println();
-
-//         console.print(" :: ");
-//         for(int i = 0; i < byteCount; i++){
-//             console.print(buffer[i]);
-//             console.print(", ");
-//         }
-//         console.println();
-
-//         // if the first byte is greater than 10, then treat this as a raw data byte write operation
-//         if(byteCount == 1 && buffer[0] >= 10){
-//             // -------------------------------------------
-//             // WRITING RAW BYTE VALUES
-//             // -------------------------------------------
-//             console.print("    WRITING RAW BYTE: ");
-//             console.println((int)buffer[0]);
-//             i2cCache.length = 1;
-//             i2cCache.buffer[0] = buffer[0];
-//         }
-
-//         // if the first byte is between 0 and 9, then treat this as a SMBus registry data access operation
-//         else if(buffer[0] >= 0 && buffer[0] < 10){
-
-//             // regsiter address is the first byte
-//             int address = buffer[0];
-
-//             console.print("    REGISTER ");
-//             console.print(buffer[0]);
-//             console.println();
-
-//             return;
-
-
-//             // if we only received a single byte, then this is a READ operation
-//             if(byteCount == 1){
-//                 // -------------------------------------------
-//                 // REQUEST RECEIVED FOR READING A REGISTER
-//                 // -------------------------------------------
-//                 uint16_t length = i2cCache.reg[address].length;
-
-//                 console.print("    REQUEST RECEIVED TO READ REGISTER: ");
-//                 console.print(address);
-//                 console.print("; (");
-//                 console.print(length);
-//                 console.println(" bytes)");
-// return;
-//                 // copy register data length to read buffer length
-//                 i2cCache.length = length;
-
-//                 // copy the data from this register to the read buffer
-//                 for(int i = 0; i < length; i++){
-//                     i2cCache.buffer[i] = i2cCache.reg[address].data[i];
-//                 }
-//             }
-
-//             // if we received multiple bytes, then this is a WRITE operation
-//             else{
-//                 // -------------------------------------------
-//                 // WRITE REGISTER DATA
-//                 // -------------------------------------------
-
-//                 // get the data lenght from the number bytes available subtracting address (first) byte
-//                 uint16_t length = byteCount - 1;
-
-//                 // only maximum of 32 bytes are supported; bounds check the data length
-//                 if(length > 32) length = 32;
-
-//                 // update I2C register in the cache with the recevied data length
-//                 i2cCache.reg[address].length = length;
-//                 i2cCache.length = length;
-
-//                 console.print("    WRITING REGISTER: ");
-//                 console.print(address);
-//                 console.print("; BYTES=");
-//                 console.println(length);
-
-//                 // // process data recevied
-//                 // for(int i = 0; i < length; i++){
-//                 //     // copy the received data to this register's storage buffer
-//                 //     i2cCache.reg[address].data[i] = buffer[i+1];
-
-//                 //     // copy the data from this register to the read buffer
-//                 //     i2cCache.buffer[i] = buffer[i+1];
-//                 // }
-//             }
-//         }
-//         else {
-//             console.print("    UNSUPPORTED REGISTER ADDRESS: ");
-//             console.print(buffer[0]);
-//             console.println();
-//         }
-//     }
-
-//     // drain anything remaining in buffer
-//     // while(Wire.available()){
-//     //     Wire.read();
-//     // }
-//     return;
-
-
-
-
-//     // handle single byte values
-//     if(Wire.available() == 1){
-//         int c = Wire.read();    // receive a byte as character
-
-//         if(c > 10){
-//             // WRITING RAW BYTE VALUES
-//             i2cCache.length = 1;
-//             i2cCache.buffer[0] = c;
-
-//             console.print("    WRITING RAW BYTE: ");
-//             console.println((int)c);
-
-//         }
-//         else{
-//             // READING A REGISTER
-//             int address = c;
-
-//             // bail out if address is unsupported; drain buffer
-//             if(address < 0 || address >= 10){
-//                 // while(Wire.available())
-//                 // Wire.read();
-//             }
-
-//             console.print("    READING REGISTER: ");
-//             console.println(address);
-
-//             // copy register data to read buffer
-//             i2cCache.length = i2cCache.reg[address].length;
-//             if(i2cCache.length > 0){
-//                 console.print("    COPYING REGISTER TO READ BUFFER: (");
-//                 console.print(i2cCache.length);
-//                 console.println(" bytes)");
-//                 memcpy(i2cCache.buffer, i2cCache.reg[address].data, i2cCache.length);
-//             }
-//         }
-//     }
-//     else {
-//         // WRITING A REGISTER
-//         int address = Wire.read(); // get register address
-
-//         // bail out if address is unsupported; drain buffer
-//         if(address < 0 || address >= 10){
-//             //if(Wire.available())
-//             //Wire.read(Wire.av);
-//         }
-
-//         // get number of bytes still available to read
-//         int bytesRemaining = Wire.available();
-
-//         // maximum of 32 bytes supported
-//         if(bytesRemaining > 32) bytesRemaining = 32;
-
-//         // update I2C cache with data length
-//         i2cCache.reg[address].length = bytesRemaining;
-//         i2cCache.length = bytesRemaining;
-
-//         console.print("    WRITING REGISTER: ");
-//         console.print(address);
-//         console.print("; BYTES=");
-//         console.println(bytesRemaining);
-
-//         if(bytesRemaining > 0){
-//             //Wire.readBytes(i2cCache.reg[address].data, i2cCache.reg[address].length) ;
-//             // for(int i = 0; i < bytesRemaining; i++){
-//             //     char b = Wire.read();
-//             //     i2cCache.reg[address].data[i] = b;
-//             //     i2cCache.buffer[i] = b;
-//             //     console.print("WRITING VALUE BYTE: ");
-//             //     console.print((uint)b);
-//             //     console.println();
-//             // }
-
-//             console.print("WRITING VALUE: ");
-//             //console.printHex(i2cCache.reg[address].data, bytesRemaining);
-//             console.println();
-//         }
-//     }
-
-//     //     // display ready/running message
-//     //     DynamicJsonDocument doc(512);
-//     //     JsonObject response = doc.to<JsonObject>();
-//     //     response["id"] = "i2c";
-//     //     response["value"] = i2cValue;
-//     //     serializeJson(doc, console);
-//     //     console.println();
-// }
-
 
 
 // callback for sending data

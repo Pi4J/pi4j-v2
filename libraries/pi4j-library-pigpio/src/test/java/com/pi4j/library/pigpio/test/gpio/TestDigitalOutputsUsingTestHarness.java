@@ -109,7 +109,7 @@ public class TestDigitalOutputsUsingTestHarness {
 
         // iterate over pins and perform test on each
         // TODO :: IMPLEMENT CORRECT SET OF TEST PINS
-        for(int pin = 2; pin <= 12; pin++){
+        for(int pin = 2; pin <= 19; pin++){
             testDigitalOutputPin(pin);
         }
     }
