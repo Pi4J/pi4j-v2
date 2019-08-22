@@ -288,11 +288,11 @@ int GetCommandSerialPortArgument(SerialCommands* sender){
 	int port = atoi(port_str);
 
     // validate device
-    if(port != 2 && port != 3){
-        return ERROR_UNSUPPORTED_SERIAL_PORT;
-    }
+    if(port == 0) return port;
+    if(port == 3) return port;
 
-    return port;
+    // unsupported port
+    return ERROR_UNSUPPORTED_SERIAL_PORT;
 }
 
 /**

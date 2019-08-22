@@ -171,7 +171,7 @@ public class TestI2cRawUsingTestHarness {
 
         // iterate over series of test values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
-        for(int x = 0; x < 100; x++) {
+        for(int x = 0; x < 50; x++) {
             System.out.println("[TEST WRITE/READ MULTI-BYTE]");
 
             String value = UUID.randomUUID().toString().substring(0, 8);
@@ -179,12 +179,12 @@ public class TestI2cRawUsingTestHarness {
             // WRITE :: RAW MULTI-BYTE
             System.out.println(" (WRITE) >> VALUE = " + value);
             pigpio.i2cWriteDevice(handle, value);
-            Thread.sleep(5);
+            Thread.sleep(20);
 
             // READ :: RAW MULTI-BYTE
             String rx = pigpio.i2cReadDeviceToString(handle, value.length());
             System.out.println(" (READ)  << VALUE = " + rx);
-            Thread.sleep(5);
+            Thread.sleep(20);
 
             Assert.assertEquals("I2C MULTI-BYTE VALUE MISMATCH",  value, rx);
         }

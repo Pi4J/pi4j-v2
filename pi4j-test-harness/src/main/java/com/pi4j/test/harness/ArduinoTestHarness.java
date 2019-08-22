@@ -193,6 +193,13 @@ public class ArduinoTestHarness {
     protected List<TestHarnessResponse> read() throws IOException {
         List<TestHarnessResponse> responses = new ArrayList<>();
 
+        try {
+            Thread.sleep(50);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
         // validate serial port is connected
         if(!com.isOpen()) throw new IOException("Serial port is not open;");
 

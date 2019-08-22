@@ -5,7 +5,7 @@ package com.pi4j.example.serial;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: EXAMPLE  :: Sample Code
- * FILENAME      :  I2cDeviceExample.java
+ * FILENAME      :  SerialExample.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/

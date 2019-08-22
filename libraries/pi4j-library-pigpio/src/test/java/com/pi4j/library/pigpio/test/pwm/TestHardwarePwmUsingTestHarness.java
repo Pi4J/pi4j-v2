@@ -69,20 +69,20 @@ public class TestHardwarePwmUsingTestHarness {
             // initialize test harness and PIGPIO instances
             harness.initialize();
 
-            // get test harness info
-            TestHarnessInfo info = harness.getInfo();
-            System.out.println("... we are connected to test harness:");
-            System.out.println("----------------------------------------");
-            System.out.println("NAME       : " + info.name);
-            System.out.println("VERSION    : " + info.version);
-            System.out.println("DATE       : " + info.date);
-            System.out.println("COPYRIGHT  : " + info.copyright);
-            System.out.println("----------------------------------------");
-
-            // reset all pins on test harness before proceeding with this test
-            TestHarnessPins reset = harness.reset();
-            System.out.println();
-            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+//            // get test harness info
+//            TestHarnessInfo info = harness.getInfo();
+//            System.out.println("... we are connected to test harness:");
+//            System.out.println("----------------------------------------");
+//            System.out.println("NAME       : " + info.name);
+//            System.out.println("VERSION    : " + info.version);
+//            System.out.println("DATE       : " + info.date);
+//            System.out.println("COPYRIGHT  : " + info.copyright);
+//            System.out.println("----------------------------------------");
+//
+//            // reset all pins on test harness before proceeding with this test
+//            TestHarnessPins reset = harness.reset();
+//            System.out.println();
+//            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
 
         } catch (IOException e){
             e.printStackTrace();
@@ -186,7 +186,7 @@ public class TestHardwarePwmUsingTestHarness {
     }
 
     public void testPwm(PiGpioMode mode, int[] pins, int frequency) throws IOException, InterruptedException {
-        testPwm(mode, pins, frequency, 35); // 35% duty-cycle by default
+        testPwm(mode, pins, frequency, 50); // 50% duty-cycle by default
     }
     public void testPwm(PiGpioMode mode, int[] pins, int frequency, int dutyCycle) throws IOException, InterruptedException {
         System.out.println();
@@ -203,12 +203,12 @@ public class TestHardwarePwmUsingTestHarness {
             System.out.println("[TEST HARDWARE PWM] :: PIN=" + p + " <" + mode.name() + ">");
 
             // hardware PWM duty cycle scaling
-            dutyCycle = dutyCycle * 10000;
+            int dc = dutyCycle * 10000;
 
             // write PWM frequency and duty-cycle
-            pigpio.gpioHardwarePWM(p, frequency, dutyCycle);
+            pigpio.gpioHardwarePWM(p, frequency, dc);
             System.out.println(" (WRITE) >> PWM FREQUENCY  = " + frequency);
-            System.out.println(" (WRITE) >> PWM DUTY-CYCLE = " + dutyCycle);
+            System.out.println(" (WRITE) >> PWM DUTY-CYCLE = " + dc);
 
             // test once ..
             if(measureFrequency(p, frequency) == false){
@@ -234,13 +234,15 @@ public class TestHardwarePwmUsingTestHarness {
 
     private boolean measureFrequency(int pin, int frequency) throws IOException {
         TestHarnessFrequency measured = harness.getFrequency(pin);
-        System.out.println(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency);
 
-        // we allow a 75% margin of error, the testing harness uses a simple pulse counter to crudely
-        // measure the PWM signal, its not very accurate but should provide sufficient validation testing
-        // just to verify the applied PWM signal is close to the expected frequency
-        // calculate margin of error offset value
-        long marginOfError = Math.round(frequency * .75);
+        float deviation = (measured.frequency - frequency) * 100/(float)frequency;
+        System.out.println(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency + "; (EXPECTED=" + frequency + "; DEVIATION: " + deviation + "%)");
+
+        // we allow a 30% margin of error, the testing harness uses a simple pulse counter to crudely
+        // measure the PWM signal, its not very accurate and we don't take enough samples to get a
+        // better average, but it should provide sufficient validation testing just to verify the
+        // applied PWM signal is close to the expected frequency calculate margin of error offset value
+        long marginOfError = Math.round(frequency * .30);
 
         // test measured value against HI/LOW offsets to determine acceptable range
         if(measured.frequency < frequency-marginOfError) return false;

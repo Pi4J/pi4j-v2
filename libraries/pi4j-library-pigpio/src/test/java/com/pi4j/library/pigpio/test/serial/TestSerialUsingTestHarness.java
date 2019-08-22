@@ -5,7 +5,7 @@ package com.pi4j.library.pigpio.test.serial;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
- * FILENAME      :  TestI2cRawUsingTestHarness.java
+ * FILENAME      :  TestSerialUsingTestHarness.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -83,9 +83,9 @@ public class TestSerialUsingTestHarness {
             System.out.println("----------------------------------------");
 
 //            // reset all pins on test harness before proceeding with this test
-//            TestHarnessPins reset = harness.reset();
-//            System.out.println();
-//            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+            TestHarnessPins reset = harness.reset();
+            System.out.println();
+            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
 
             // enable the Serial Echo (Loopback) function on the test harness for these tests
             harness.enableSerialEcho(TEST_HARNESS_UART,  BAUD_RATE);
@@ -193,7 +193,7 @@ public class TestSerialUsingTestHarness {
             pigpio.serWrite(handle, testData);
 
             // take a breath while buffer catches up
-            Thread.sleep(50);
+            Thread.sleep(100);
 
             // READ :: NUMBER OF BYTES AVAILABLE TO READ
             int available = pigpio.serDataAvailable(handle);

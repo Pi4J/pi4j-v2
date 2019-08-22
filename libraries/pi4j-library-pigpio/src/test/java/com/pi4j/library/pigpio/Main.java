@@ -41,7 +41,7 @@ public class Main {
         pig.initialize();
 
 
-        pig.gpioSetMode(5, PiGpioMode.OUTPUT);
+        //pig.gpioSetMode(5, PiGpioMode.OUTPUT);
 
 
 
@@ -64,7 +64,12 @@ public class Main {
 
         //pig.initialize();
         //pig.gpioSetPWMfrequency(4, 5000);
-        pig.gpioHardwarePWM(13, 100, 500000);
+
+
+        pig.gpioHardwarePWM(13, 50000000, 500000);
+
+        pig.gpioSetPWMfrequency(2, 830);
+        pig.gpioPWM(2, 128);
 
         //var frequency = pig.gpioGetPWMfrequency(4);
         //System.out.println("FREQUENCY: " + frequency);

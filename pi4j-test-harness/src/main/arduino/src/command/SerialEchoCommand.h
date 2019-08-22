@@ -70,15 +70,27 @@ void serial_command_execute(SerialCommands* sender){
       // end any existing serial echo
       if(serialEcho != nullptr){
          serialEcho->end();         
+         serialEcho = nullptr;
       }
 
       // setup which I2C bus to enable
       if(port == 3){  
          serialEcho = &Serial3;   // setup SERIAL UART3
-      } else if(port == 2){
-         serialEcho = &Serial2;   // setup SERIAL UART2
+         PIO_Configure(
+            g_APinDescription[PINS_USART3].pPort,
+            g_APinDescription[PINS_USART3].ulPinType,
+            g_APinDescription[PINS_USART3].ulPin,
+            g_APinDescription[PINS_USART3].ulPinConfiguration);
+
+      } else if(port == 0){
+         serialEcho = &Serial;   // setup SERIAL UART0
+         PIO_Configure(
+            g_APinDescription[PINS_USART0].pPort,
+            g_APinDescription[PINS_USART0].ulPinType,
+            g_APinDescription[PINS_USART0].ulPin,
+            g_APinDescription[PINS_USART0].ulPinConfiguration);
       } else {
-         serialEcho = nullptr;
+         serialEcho = nullptr; 
       }
 
       // start seria lecho
