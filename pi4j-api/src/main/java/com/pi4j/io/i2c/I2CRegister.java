@@ -49,6 +49,15 @@ public interface I2CRegister extends IODataWriter, IODataReader {
     }
 
     /**
+     * Write a single word value (16-bit) to the I2C device register.
+     *
+     * @param word 16-bit word value to be written
+     * @return The number of bytes written, possibly zero; typically 2
+     * @throws IOException thrown on write error
+     */
+    void writeWord(int word) throws IOException;
+
+    /**
      * Write a single word value (16-bit) to the I2C device register
      * and immediately reads back a 16-bit word value.
      *

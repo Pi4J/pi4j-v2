@@ -181,14 +181,14 @@ public interface PiGpio_Serial {
      * port associated with handle.
      *
      * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
-     * @param data the character/string data to write
      * @param charset the character set/type used to decode the character sequence/string to bytes
+     * @param data the character/string data to write
      * @param offset the starting offset position in the provided data to start writing from.
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWrite"
      */
-    default int serWrite(int handle, CharSequence data, Charset charset, int offset, int length) throws IOException{
+    default int serWrite(int handle, Charset charset, CharSequence data, int offset, int length) throws IOException{
         return serWrite(handle, data.toString().getBytes(charset), offset, length);
     }
 
@@ -197,14 +197,14 @@ public interface PiGpio_Serial {
      * port associated with handle.
      *
      * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
-     * @param data the character/string data to write
      * @param charset the character set/type used to decode the character sequence/string to bytes
+     * @param data the character/string data to write
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWrite"
      */
-    default int serWrite(int handle, CharSequence data, Charset charset, int length) throws IOException{
-        return serWrite(handle, data, charset, 0, length);
+    default int serWrite(int handle, Charset charset, CharSequence data, int length) throws IOException{
+        return serWrite(handle, charset, data, 0, length);
     }
 
     /**
@@ -212,13 +212,13 @@ public interface PiGpio_Serial {
      * port associated with handle.
      *
      * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
-     * @param data the character/string data to write
      * @param charset the character set/type used to decode the character sequence/string to bytes
+     * @param data the character/string data to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWrite"
      */
     default int serWrite(int handle, CharSequence data, Charset charset) throws IOException{
-        return serWrite(handle, data, charset,0, data.length());
+        return serWrite(handle, charset, data, 0, data.length());
     }
 
     /**
@@ -233,7 +233,7 @@ public interface PiGpio_Serial {
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWrite"
      */
     default int serWrite(int handle, CharSequence data, int offset, int length) throws IOException{
-        return serWrite(handle, data, StandardCharsets.US_ASCII, offset, length);
+        return serWrite(handle, StandardCharsets.US_ASCII, data, offset, length);
     }
 
     /**
@@ -247,7 +247,7 @@ public interface PiGpio_Serial {
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWrite"
      */
     default int serWrite(int handle, CharSequence data, int length) throws IOException{
-        return serWrite(handle, data, StandardCharsets.US_ASCII, length);
+        return serWrite(handle, data, length);
     }
 
     /**
@@ -260,7 +260,7 @@ public interface PiGpio_Serial {
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWrite"
      */
     default int serWrite(int handle, CharSequence data) throws IOException{
-        return serWrite(handle, data, StandardCharsets.US_ASCII);
+        return serWrite(handle, data, data.length());
     }
 
     /**

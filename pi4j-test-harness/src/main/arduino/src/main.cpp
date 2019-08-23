@@ -107,6 +107,15 @@ void reset(){
     response["id"] = "reset";
     JsonArray pinscontainer = response.createNestedArray("pins");
 
+    // terminate all I2C buses
+    Wire.end();
+    Wire1.end();
+
+    // termiante all SERIAL communication pins
+    if(serialEcho != nullptr){
+        serialEcho->end();
+    }
+
     // reset pins states
     int total, inputs, outputs;
     total = inputs = outputs = 0;
@@ -132,15 +141,6 @@ void reset(){
 
     // reset I2C cache
     i2cCache.reset();
-
-    // terminate all I2C buses
-    Wire.end();
-    Wire1.end();
-
-    // termiante all SERIAL communication pins
-    if(serialEcho != nullptr){
-        serialEcho->end();
-    }
 
     // include summary totals
     response["total"] = total;

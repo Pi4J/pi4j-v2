@@ -53,7 +53,7 @@ public class TestSerialUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
@@ -78,7 +78,7 @@ public class TestSerialUsingTestHarness {
             System.out.println("COPYRIGHT  : " + info.copyright);
             System.out.println("----------------------------------------");
 
-//            // reset all pins on test harness before proceeding with this test
+            // reset all pins on test harness before proceeding with this test
             TestHarnessPins reset = harness.reset();
             System.out.println();
             System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");

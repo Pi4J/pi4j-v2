@@ -982,8 +982,20 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
+
+        logger.trace("[I2C::READ] <- DATA SIZE={}",  rx.result());
+        logger.trace("[I2C::READ] <- DATA LENGTH={}",  rx.dataLength());
+        logger.trace("[I2C::READ] <- BUFFER SIZE={}",  rx.data());
+        logger.trace("[I2C::READ] <- OFFSET={}",  offset);
+
         if(rx.success()) {
-            System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+            try {
+                System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+            }
+            catch (ArrayIndexOutOfBoundsException a){
+                a.printStackTrace();
+            }
+
         }
         return rx.result();
     }

@@ -32,7 +32,6 @@ import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CRegister;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
@@ -52,8 +51,8 @@ public class DefaultI2CRegister implements I2CRegister {
     }
 
     @Override
-    public void write(byte b) throws IOException {
-        this.i2c.writeRegister(this.address, b);
+    public int write(byte b) throws IOException {
+        return this.i2c.writeRegister(this.address, b);
     }
 
     /**
@@ -69,6 +68,12 @@ public class DefaultI2CRegister implements I2CRegister {
     }
 
     @Override
+    public int write(byte[] data, int offset, int length) throws IOException {
+        Objects.checkFromIndexSize(offset, length, data.length);
+        return this.i2c.writeRegister(this.address, data, offset, length);
+    }
+
+    @Override
     public int readWord() throws IOException, IOReadException {
         return this.i2c.readRegisterWord(this.address);
     }
@@ -79,24 +84,13 @@ public class DefaultI2CRegister implements I2CRegister {
     }
 
     @Override
-    public int write(ByteBuffer buffer, int offset, int length) throws IOException {
-        Objects.checkFromIndexSize(offset, length, buffer.capacity());
-        return this.i2c.writeRegister(this.address, buffer, offset, length);
-    }
-
-    @Override
-    public int write(String data, Charset charset) throws IOException {
-        return this.i2c.writeRegister(this.address, data, charset);
-    }
-
-    @Override
     public int read() throws IOException {
         return this.i2c.readRegister(this.address);
     }
 
     @Override
-    public int read(ByteBuffer buffer, int offset, int length) throws IOException {
-        Objects.checkFromIndexSize(offset, length, buffer.capacity());
+    public int read(byte[] buffer, int offset, int length) throws IOException {
+        Objects.checkFromIndexSize(offset, length, buffer.length);
         return this.i2c.readRegister(this.address, buffer, offset, length);
     }
 

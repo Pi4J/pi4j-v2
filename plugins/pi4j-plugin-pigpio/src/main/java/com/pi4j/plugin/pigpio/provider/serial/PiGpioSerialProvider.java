@@ -1,11 +1,11 @@
-package com.pi4j.plugin.raspberrypi.provider.serial;
+package com.pi4j.plugin.pigpio.provider.serial;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: RaspberryPi Platform & Providers
- * FILENAME      :  RpiSerial.java
+ * PROJECT       :  Pi4J :: PLUGIN   :: PIGPIO I/O Providers
+ * FILENAME      :  PiGpioSerialProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,41 +29,14 @@ package com.pi4j.plugin.raspberrypi.provider.serial;
  * #L%
  */
 
-import com.pi4j.io.serial.Serial;
-import com.pi4j.io.serial.SerialBase;
-import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
+import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.plugin.pigpio.PiGpioPlugin;
 
-import java.io.IOException;
-
-public class RpiSerial extends SerialBase implements Serial {
-
-    public RpiSerial(SerialProvider provider, SerialConfig config){
-        super(provider, config);
-    }
-
-    @Override
-    public int write(byte b) throws IOException {
-        return 0;
-    }
-
-    @Override
-    public int write(byte[] data, int offset, int length) throws IOException {
-        return 0;
-    }
-
-    @Override
-    public int read() throws IOException {
-        return 0;
-    }
-
-    @Override
-    public int read(byte[] buffer, int offset, int length) throws IOException {
-        return 0;
-    }
-
-    @Override
-    public int available() throws IOException {
-        return 0;
+public interface PiGpioSerialProvider extends SerialProvider {
+    String NAME = PiGpioPlugin.SERIAL_PROVIDER_NAME;
+    String ID = PiGpioPlugin.SERIAL_PROVIDER_ID;
+    static PiGpioSerialProvider newInstance(PiGpio piGpio) {
+        return new PiGpioSerialProviderImpl(piGpio);
     }
 }

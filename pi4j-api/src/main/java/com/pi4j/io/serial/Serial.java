@@ -28,10 +28,12 @@ package com.pi4j.io.serial;
  */
 
 import com.pi4j.io.IO;
+import com.pi4j.io.IODataReader;
+import com.pi4j.io.IODataWriter;
 
 import java.io.IOException;
 
-public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCloseable {
+public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCloseable, IODataWriter, IODataReader {
 
     int DEFAULT_BAUD = 9600;
     DataBits DEFAULT_DATA_BITS = DataBits._8;
@@ -42,6 +44,20 @@ public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCl
     static SerialConfigBuilder newConfigBuilder(){
         return SerialConfigBuilder.newInstance();
     }
+
+    /**
+     * Serial Device Communication State is OPEN
+     * @return The Serial device communication state
+     */
+    boolean isOpen();
+
+
+    /**
+     * Get the number of data bytes available in the serial receive buffer
+     * @return
+     */
+    int available() throws IOException;
+
 
     void open() throws IOException;
     void close() throws IOException;

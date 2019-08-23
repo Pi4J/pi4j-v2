@@ -60,16 +60,10 @@ public class ArduinoTestHarness {
         com.setFlowControl(SerialPort.FLOW_CONTROL_DISABLED);
 
         // configure read timeout
-        com.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 200, 0);
+        com.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 50, 0);
     }
 
     public TestHarnessPins reset() throws IOException {
-//        send("reboot");
-//        try {
-//            Thread.sleep(500);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         send("reset");
         TestHarnessPins response = read(TestHarnessPins.class);
         return response;
@@ -203,18 +197,18 @@ public class ArduinoTestHarness {
         // validate serial port is connected
         if(!com.isOpen()) throw new IOException("Serial port is not open;");
 
-        int counter = 0;
-        try {
-            while (com.bytesAvailable() <= 0) {
-                counter++;
-                if(counter > 20)
-                     return responses;
-                Thread.sleep(50);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+//        int counter = 0;
+//        try {
+//            while (com.bytesAvailable() <= 0) {
+//                counter++;
+//                if(counter > 20)
+//                     return responses;
+//                Thread.sleep(50);
+//            }
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//        }
 
         Scanner in = new Scanner(com.getInputStream());
         while(in.hasNextLine()){

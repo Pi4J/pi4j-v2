@@ -36,10 +36,16 @@ import java.io.IOException;
 public abstract class SerialBase extends IOBase<Serial, SerialConfig, SerialProvider> implements Serial {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected boolean isOpen = false;
 
     public SerialBase(SerialProvider provider, SerialConfig config){
         super(provider, config);
         logger.trace("created instance with config: {}", config);
+    }
+
+    @Override
+    public boolean isOpen() {
+        return this.isOpen;
     }
 
     @Override
@@ -50,5 +56,6 @@ public abstract class SerialBase extends IOBase<Serial, SerialConfig, SerialProv
     @Override
     public void close() throws IOException {
         logger.trace("invoked 'closed()'");
+        this.isOpen = false;
     }
 }

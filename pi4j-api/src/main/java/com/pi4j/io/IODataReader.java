@@ -48,24 +48,41 @@ import java.util.Objects;
  */
 public interface IODataReader {
 
+    // ------------------------------------------------------------------------------------
+    // SINGLE BYTE
+    // ------------------------------------------------------------------------------------
+
     int read() throws IOException;
-    int read(ByteBuffer buffer, int offset, int length) throws IOException;
 
-    // ------------------------------------------------------------------------------------------------------------
 
-    default int read(byte[] buffer, int offset, int length) throws IOException{
-        ByteBuffer bb = ByteBuffer.wrap(buffer);
-        return read(bb, offset, length);
-    }
+    // ------------------------------------------------------------------------------------
+    // BYTE ARRAY
+    // ------------------------------------------------------------------------------------
+
+    int read(byte[] buffer, int offset, int length) throws IOException;
+
     default int read(byte[] buffer, int length) throws IOException{
         return read(buffer, 0, length);
     }
+
     default int read(byte[] buffer) throws IOException{
         return read(buffer, 0, buffer.length);
     }
+
+    // ------------------------------------------------------------------------------------------------------------
+
+    // ------------------------------------------------------------------------------------
+    // BYTE BUFFER
+    // ------------------------------------------------------------------------------------
+
+    default int read(ByteBuffer buffer, int offset, int length) throws IOException{
+        return read(buffer.array(), offset, length);
+    }
+
     default int read(ByteBuffer buffer, int length) throws IOException{
         return read(buffer, 0, length);
     }
+
     default int read(ByteBuffer buffer) throws IOException{
         return read(buffer, 0, buffer.capacity());
     }

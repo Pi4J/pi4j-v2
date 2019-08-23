@@ -80,7 +80,7 @@ public class MockI2C extends I2CBase implements I2C {
     // -------------------------------------------------------------------
 
     @Override
-    public void write(byte b) throws IOException {
+    public int write(byte b) throws IOException {
         raw.add(b);
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
@@ -89,27 +89,28 @@ public class MockI2C extends I2CBase implements I2C {
         System.out.print("] :: WRITE(0x");
         System.out.print(StringUtil.toHexString(b));
         System.out.println(")");
+        return 0;
     }
 
     @Override
-    public int write(ByteBuffer buffer, int offset, int length) throws IOException {
-        Objects.checkFromIndexSize(offset, length, buffer.capacity());
+    public int write(byte[] data, int offset, int length) throws IOException {
+        Objects.checkFromIndexSize(offset, length, data.length);
         for(int p = offset; p-offset < length; p++){
-            raw.add(buffer.get(p)); // add to internal buffer
+            raw.add(data[p]); // add to internal buffer
         }
         System.out.print(" [");
         System.out.print(Mock.I2C_PROVIDER_NAME);
         System.out.print("::");
         System.out.print(this.id);
         System.out.print("] :: WRITE(0x");
-        System.out.print(StringUtil.toHexString(buffer, offset, length));
+        System.out.print(StringUtil.toHexString(data, offset, length));
         System.out.println(")");
         return length;
     }
 
     @Override
-    public int write(String data, Charset charset) throws IOException {
-        byte[] buffer = data.getBytes(charset);
+    public int write(Charset charset, CharSequence data) throws IOException {
+        byte[] buffer = data.toString().getBytes(charset);
         for(int p = 0; p < buffer.length; p++){
             raw.add(buffer[p]); // add to internal buffer
         }
@@ -142,15 +143,15 @@ public class MockI2C extends I2CBase implements I2C {
     }
 
     @Override
-    public int read(ByteBuffer buffer, int offset, int length) throws IOException{
-        Objects.checkFromIndexSize(offset, length, buffer.capacity());
+    public int read(byte[] buffer, int offset, int length) throws IOException{
+        Objects.checkFromIndexSize(offset, length, buffer.length);
 
         if(raw.isEmpty()) return -1;
         int counter = 0;
         for(int p = 0; p < length; p++) {
-            if(p+offset > buffer.capacity()) break;
+            if(p+offset > buffer.length) break;
             if(raw.isEmpty()) break;;
-            buffer.put(offset + p, raw.pop());
+            buffer[offset + p] = raw.pop();
             counter++;
         }
 
@@ -191,7 +192,7 @@ public class MockI2C extends I2CBase implements I2C {
     // -------------------------------------------------------------------
 
     @Override
-    public void writeRegister(int register, byte b) throws IOException {
+    public int writeRegister(int register, byte b) throws IOException {
 
         if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
         registers[register].add(b);
@@ -206,16 +207,17 @@ public class MockI2C extends I2CBase implements I2C {
         System.out.print(", 0x");
         System.out.print(StringUtil.toHexString(b));
         System.out.println(")");
+        return 0;
     }
 
     @Override
-    public int writeRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException {
-        Objects.checkFromIndexSize(offset, length, buffer.capacity());
+    public int writeRegister(int register, byte[] data, int offset, int length) throws IOException {
+        Objects.checkFromIndexSize(offset, length, data.length);
 
         // add to internal buffer
         if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
         for(int p = offset; p-offset < length; p++){
-            registers[register].add(buffer.get(p));
+            registers[register].add(data[p]);
         }
 
         System.out.print(" [");
@@ -226,17 +228,17 @@ public class MockI2C extends I2CBase implements I2C {
         System.out.print("REG=");
         System.out.print(register);
         System.out.print(", 0x");
-        System.out.print(StringUtil.toHexString(buffer, offset, length));
+        System.out.print(StringUtil.toHexString(data, offset, length));
         System.out.println(")");
 
         return length;
     }
 
     @Override
-    public int writeRegister(int register, String data, Charset charset) throws IOException{
+    public int writeRegister(int register, Charset charset, CharSequence data) throws IOException{
 
         if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
-        byte[] buffer = data.getBytes(charset);
+        byte[] buffer = data.toString().getBytes(charset);
         for(int p = 0; p < buffer.length; p++){
             registers[register].add(buffer[p]); // add to internal buffer
         }

@@ -271,15 +271,15 @@ public interface PiGpio_I2C {
      *
      * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
      * @param register the I2C register address to write to. (0-255)
-     * @param data the character/string data to write
      * @param charset the character set/type used to decode the character sequence/string to bytes
+     * @param data the character/string data to write
      * @param offset the starting offset position in the provided data to start writing from.
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @throws IOException
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData"
      */
-    default int i2cWriteBlockData(int handle, int register, CharSequence data, Charset charset, int offset, int length) throws IOException{
+    default int i2cWriteBlockData(int handle, int register, Charset charset, CharSequence data, int offset, int length) throws IOException{
         return i2cWriteBlockData(handle, register, data.toString().getBytes(charset), offset, length);
     }
 
@@ -288,15 +288,15 @@ public interface PiGpio_I2C {
      *
      * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
      * @param register the I2C register address to write to. (0-255)
-     * @param data the character/string data to write
      * @param charset the character set/type used to decode the character sequence/string to bytes
+     * @param data the character/string data to write
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @throws IOException
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData"
      */
-    default int i2cWriteBlockData(int handle, int register, CharSequence data, Charset charset, int length) throws IOException{
-        return i2cWriteBlockData(handle, register, data, charset,0, length);
+    default int i2cWriteBlockData(int handle, int register, Charset charset, CharSequence data, int length) throws IOException{
+        return i2cWriteBlockData(handle, register, charset, data, 0, length);
     }
 
     /**
@@ -304,14 +304,14 @@ public interface PiGpio_I2C {
      *
      * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
      * @param register the I2C register address to write to. (0-255)
-     * @param data the character/string data to write
      * @param charset the character set/type used to decode the character sequence/string to bytes
+     * @param data the character/string data to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @throws IOException
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData"
      */
-    default int i2cWriteBlockData(int handle, int register, CharSequence data, Charset charset) throws IOException{
-        return i2cWriteBlockData(handle, register, data, charset, data.length());
+    default int i2cWriteBlockData(int handle, int register, Charset charset, CharSequence data) throws IOException{
+        return i2cWriteBlockData(handle, register, charset, data, data.length());
     }
 
     /**
@@ -936,15 +936,15 @@ public interface PiGpio_I2C {
      *
      * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
      * @param register the I2C register address to write to. (0-255)
-     * @param data a byte array containing the data to write to the I2C device register
      * @param charset the character set/type used to encode the character sequence/string to bytes
+     * @param data a byte array containing the data to write to the I2C device register
      * @param offset the starting offset position in the provided buffer to start writing from.
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @throws IOException
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData"
      */
-    default int i2cWriteI2CBlockData(int handle, int register, CharSequence data, Charset charset, int offset, int length) throws IOException{
+    default int i2cWriteI2CBlockData(int handle, int register, Charset charset, CharSequence data, int offset, int length) throws IOException{
         return i2cWriteI2CBlockData(handle, register, data.toString().getBytes(charset), offset, length);
     }
 
@@ -953,15 +953,15 @@ public interface PiGpio_I2C {
      *
      * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
      * @param register the I2C register address to write to. (0-255)
-     * @param data a byte array containing the data to write to the I2C device register
      * @param charset the character set/type used to encode the character sequence/string to bytes
+     * @param data a byte array containing the data to write to the I2C device register
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @throws IOException
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData"
      */
-    default int i2cWriteI2CBlockData(int handle, int register, CharSequence data, Charset charset, int length) throws IOException{
-        return i2cWriteI2CBlockData(handle, register, data, charset, 0, length);
+    default int i2cWriteI2CBlockData(int handle, int register, Charset charset, CharSequence data, int length) throws IOException{
+        return i2cWriteI2CBlockData(handle, register, charset, data, 0, length);
     }
 
     /**
@@ -969,14 +969,14 @@ public interface PiGpio_I2C {
      *
      * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
      * @param register the I2C register address to write to. (0-255)
-     * @param data a byte array containing the data to write to the I2C device register
      * @param charset the character set/type used to encode the character sequence/string to bytes
+     * @param data a byte array containing the data to write to the I2C device register
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @throws IOException
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData"
      */
-    default int i2cWriteI2CBlockData(int handle, int register, CharSequence data, Charset charset) throws IOException{
-        return i2cWriteI2CBlockData(handle, register, data, charset, data.length());
+    default int i2cWriteI2CBlockData(int handle, int register, Charset charset, CharSequence data) throws IOException{
+        return i2cWriteI2CBlockData(handle, register, charset, data, data.length());
     }
 
     /**
@@ -1192,15 +1192,15 @@ public interface PiGpio_I2C {
      * This writes the length of bytes from the provided byte buffer to the raw I2C device.
      *
      * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param data the character sequence or string of data to write to the I2C device
      * @param charset the character set/type used to encode the character sequence/string to bytes
+     * @param data the character sequence or string of data to write to the I2C device
      * @param offset the starting offset position in the provided character sequence/string to start writing from.
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @throws IOException
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice"
      */
-    default int i2cWriteDevice(int handle, CharSequence data, Charset charset, int offset, int length) throws IOException{
+    default int i2cWriteDevice(int handle, Charset charset, CharSequence data, int offset, int length) throws IOException{
         return i2cWriteDevice(handle, data.toString().getBytes(charset), offset ,length);
     }
 
@@ -1208,29 +1208,29 @@ public interface PiGpio_I2C {
      * This writes the length of bytes from the provided byte buffer to the raw I2C device.
      *
      * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param data the character sequence or string of data to write to the I2C device
      * @param charset the character set/type used to encode the character sequence/string to bytes
+     * @param data the character sequence or string of data to write to the I2C device
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @throws IOException
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice"
      */
-    default int i2cWriteDevice(int handle, CharSequence data, Charset charset, int length) throws IOException{
-        return i2cWriteDevice(handle, data, charset, 0, length);
+    default int i2cWriteDevice(int handle, Charset charset, CharSequence data, int length) throws IOException{
+        return i2cWriteDevice(handle, charset, data, 0, length);
     }
 
     /**
      * This writes the length of bytes from the provided byte buffer to the raw I2C device.
      *
      * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param data the character sequence or string of data to write to the I2C device
      * @param charset the character set/type used to encode the character sequence/string to bytes
+     * @param data the character sequence or string of data to write to the I2C device
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @throws IOException
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice"
      */
-    default int i2cWriteDevice(int handle, CharSequence data, Charset charset) throws IOException{
-        return i2cWriteDevice(handle, data, charset, data.length());
+    default int i2cWriteDevice(int handle, Charset charset, CharSequence data) throws IOException{
+        return i2cWriteDevice(handle, charset, data, data.length());
     }
 
     /**

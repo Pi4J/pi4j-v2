@@ -75,12 +75,6 @@ public class I2cRawDeviceExample {
             // <-- read a single (8-bit) byte value from the raw I2C device (not to a register)
             byte readByte = i2c.readByte();
 
-            // --> write a single (16-bit) word value to the raw I2C device (not to a register)
-            i2c.writeWord(0xFFFF);
-
-            // <-- read a single (16-bit) word value from the raw I2C device (not to a register)
-            int readWord = i2c.readWord();
-
             // --> write an array of data bytes to the raw I2C device (not to a register)
             i2c.write(new byte[] { 0,1,2,3,4,5,6,7,8,9 });
 

@@ -221,10 +221,19 @@ public class PiGpioPacket {
                 .p3(p3); // set RAW P3 value
 
         // apply any extra payload data (if available)
-        if(rx.hasRemaining()){
-            var temp = new byte[rx.remaining()];
-            rx.get(temp);
-            packet.data(temp);
+        int remaining = rx.remaining();
+
+        // bounds check remaining byte count
+        if(p3 < remaining) remaining = p3;
+
+        //System.out.println("HAS-REMAINING: " + remaining);
+        if(remaining > 0){
+            var temp = new byte[remaining];
+            rx.get(temp, 0, remaining);
+            //System.out.println("[REMAINING ]" + Arrays.toString(temp));
+            //packet.data(temp);
+            packet.data = Arrays.copyOf(temp, remaining);
+            //System.out.println("[DATA SIZE ]" + packet.dataLength());
         }
         return packet;
     }
@@ -240,7 +249,7 @@ public class PiGpioPacket {
         buffer.putInt((packet.p1()));         // <P1>
         buffer.putInt((packet.p2()));         // <P2>
         buffer.putInt((packet.p3()));         // <P3>
-        if(packet.hasData()) {
+        if(packet.data != null && packet.data.length > 0) {
             buffer.put(packet.data());        // <DATA>
         }
 
@@ -250,7 +259,8 @@ public class PiGpioPacket {
 
     @Override
     public String toString(){
-        if(hasData())
+        //if(this.data != null && this.data.length > 0)
+        if(p3() > 0)
             return String.format("CMD=%s(%d); P1=%d; P2=%d; P3=%d; PAYLOAD=[0x%s]", cmd().name(), cmd().value(), p1(), p2(), p3(), StringUtil.toHexString(data()));
         else
             return String.format("CMD=%s(%d); P1=%d; P2=%d; P3=%d", cmd().name(), cmd().value(), p1(), p2(), p3());

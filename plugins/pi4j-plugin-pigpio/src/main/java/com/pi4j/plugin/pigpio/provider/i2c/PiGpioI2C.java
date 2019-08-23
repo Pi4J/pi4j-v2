@@ -92,14 +92,14 @@ public class PiGpioI2C extends I2CBase implements I2C {
     // -------------------------------------------------------------------
 
     @Override
-    public void write(byte b) throws IOException {
-        piGpio.i2cWriteByte(this.handle, b);;
+    public int write(byte b) throws IOException {
+        return piGpio.i2cWriteByte(this.handle, b);
     }
 
     @Override
-    public int write(ByteBuffer buffer, int offset, int length) throws IOException {
-        Objects.checkFromIndexSize(offset, length, buffer.capacity());
-        piGpio.i2cWriteDevice(this.handle, buffer, offset, length);
+    public int write(byte[] data, int offset, int length) throws IOException {
+        Objects.checkFromIndexSize(offset, length, data.length);
+        piGpio.i2cWriteDevice(this.handle, data, offset, length);
         return length;
     }
 
@@ -113,8 +113,8 @@ public class PiGpioI2C extends I2CBase implements I2C {
     }
 
     @Override
-    public int read(ByteBuffer buffer, int offset, int length) throws IOException{
-        Objects.checkFromIndexSize(offset, length, buffer.capacity());
+    public int read(byte[] buffer, int offset, int length) throws IOException{
+        Objects.checkFromIndexSize(offset, length, buffer.length);
         return piGpio.i2cReadDevice(this.handle, buffer, offset, length);
     }
 
@@ -123,14 +123,14 @@ public class PiGpioI2C extends I2CBase implements I2C {
     // -------------------------------------------------------------------
 
     @Override
-    public void writeRegister(int register, byte b) throws IOException {
-        piGpio.i2cWriteByteData(this.handle, register, b);
+    public int writeRegister(int register, byte b) throws IOException {
+        return piGpio.i2cWriteByteData(this.handle, register, b);
     }
 
     @Override
-    public int writeRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException {
-        Objects.checkFromIndexSize(offset, length, buffer.capacity());
-        piGpio.i2cWriteI2CBlockData(this.handle, register, buffer, offset, length);
+    public int writeRegister(int register, byte[] data, int offset, int length) throws IOException {
+        Objects.checkFromIndexSize(offset, length, data.length);
+        piGpio.i2cWriteI2CBlockData(this.handle, register, data, offset, length);
         return length;
     }
 

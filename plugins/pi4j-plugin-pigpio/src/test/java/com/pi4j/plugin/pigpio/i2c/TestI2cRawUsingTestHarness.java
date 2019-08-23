@@ -67,7 +67,7 @@ public class TestI2cRawUsingTestHarness {
     @BeforeAll
     public static void initialize() {
         // configure logging output
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
@@ -178,22 +178,6 @@ public class TestI2cRawUsingTestHarness {
     public void testI2CSingleByteRead() throws Exception {
         // read single byte from the raw I2C device (not from a register)
         Assert.assertEquals(SAMPLE_BYTE, i2c.readByte());
-    }
-
-    @Test
-    @DisplayName("I2C :: Test WORD (WRITE)")
-    @Order(4)
-    public void testI2CSingleWordWrite() throws Exception {
-        // write a single word (16 bits) to the raw I2C device (not to a register)
-        i2c.writeWord(SAMPLE_WORD);
-    }
-
-    @Test
-    @DisplayName("I2C :: Test WORD (READ)")
-    @Order(5)
-    public void testI2CSingleWordRead() throws Exception {
-        // read single word (16 bits) from the raw I2C device (not from a register)
-        Assert.assertEquals(SAMPLE_WORD, i2c.readWord());
     }
 
     @Test

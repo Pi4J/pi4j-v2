@@ -28,11 +28,8 @@ package com.pi4j.example.serial;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.util.Console;
-
-import java.nio.ByteBuffer;
 
 public class SerialExample {
 

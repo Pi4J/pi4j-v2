@@ -30,6 +30,7 @@ package com.pi4j.library.pigpio.test.pwm;
  */
 
 import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
 import com.pi4j.test.harness.TestHarnessInfo;
@@ -168,6 +169,10 @@ public class TestSoftwarePwmUsingTestHarness {
         System.out.println("----------------------------------------");
 
         for(int p = 2; p < 20; p++) {
+
+            // set pin to output pin
+            pigpio.gpioSetMode(p, PiGpioMode.OUTPUT);
+
             System.out.println();
             System.out.println("[TEST SOFT PWM] :: PIN=" + p);
             int actualFrequency = pigpio.gpioSetPWMfrequency(p, frequency);
