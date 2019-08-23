@@ -50,8 +50,6 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
 
     @Override
     public Pwm initialize(Context context) throws InitializeException {
-        super.initialize(context);
-
         try {
             // set pin mode to output
             piGpio.gpioSetMode(this.address(), PiGpioMode.OUTPUT);
@@ -69,6 +67,9 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
                 this.frequency = this.actualFrequency;
             }
 
+            // initialize
+            super.initialize(context);
+
             // get current duty-cycle from config or set to default 50%
             if (config.dutyCycle() != null) {
                 this.dutyCycle = config.dutyCycle();
@@ -84,6 +85,7 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
         return this;
     }
 
+    @Override
     public Pwm on() throws IOException{
 
         // set PWM frequency; return actual frequency
@@ -98,6 +100,7 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
         return this;
     }
 
+    @Override
     public Pwm off() throws IOException{
 
         // set PWM duty-cycle and enable PWM

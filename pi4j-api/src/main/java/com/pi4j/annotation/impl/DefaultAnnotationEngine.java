@@ -31,6 +31,7 @@ import com.pi4j.annotation.AnnotationEngine;
 import com.pi4j.annotation.Processor;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.context.Context;
+import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -280,7 +281,9 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
                 }
             }
             catch (Exception e){
-                StringBuilder message = new StringBuilder(e.getMessage());
+                String msg = e.getMessage();
+                if(StringUtil.isNullOrEmpty(msg)) msg = e.getClass().getName();
+                StringBuilder message = new StringBuilder(msg);
                 message.append(" <");
                 message.append("Annotation '@");
                 message.append(annotation.annotationType().getSimpleName());

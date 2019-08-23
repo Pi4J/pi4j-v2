@@ -122,6 +122,12 @@ public class PwmRegistrationProcessor implements RegisterProcessor<Pwm> {
             }
         }
 
+        WithPwmType pwmType = null;
+        if (field.isAnnotationPresent(WithPwmType.class)) {
+            pwmType = field.getAnnotation(WithPwmType.class);
+            if (pwmType != null) builder.pwmType(pwmType.value());
+        }
+
         AddPwmPresets pwmPresets = null;
         if (field.isAnnotationPresent(AddPwmPresets.class)) {
             pwmPresets = field.getAnnotation(AddPwmPresets.class);

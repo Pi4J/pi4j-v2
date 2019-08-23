@@ -31,6 +31,7 @@ import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
+import com.pi4j.io.pwm.PwmType;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.util.Console;
 
@@ -49,15 +50,17 @@ public class PwmExampleUsingDependencyInjection {
 
         // create a digital output instance using the default digital output provider
         @Register("My PWM Pin")
-        @Address(2)  // pin number 2
-        @ShutdownValue(0)
+        @Address(13)  // pin number 13
         @WithProvider(type=PiGpioPwmProvider.class)
-        @Frequency(5000) // 5 KHz frequency
-        @DutyCycle(50)   // 50% duty-cycle
+        @WithPwmType(PwmType.HARDWARE)
+        @ShutdownValue(0)    // 0% duty-cycle on shutdown
+        @InitialValue(10)    // 10% duty-cycle on startup
+        @DutyCycle(50)       // 50% duty-cycle by default (when called with 'on()')
+        @Frequency(500)      // 500 Hz frequency used by default (until overwritten)
         @AddPwmPreset(name = "one-quarter", dutyCycle = 25.5f )   // 25%
         @AddPwmPreset(name = "three-quarter", dutyCycle = 75.0f ) // 75%
         @AddPwmPreset(name = "1KHZ", frequency = 1000)
-        @AddPwmPreset(name = "10KHZ", frequency = 10000)
+        @AddPwmPreset(name = "10KHZ", frequency = 10000, dutyCycle = 25.5f)
         private Pwm pwm;
 
         @Override
@@ -89,13 +92,10 @@ public class PwmExampleUsingDependencyInjection {
 
             pi4j.describe().print(System.out);
 
-            // turn on the PWM pin
-            pwm.on();
-
             console.println("[PWM I/O INSTANCE] : ");
             pwm.describe().print(System.out);
             console.println();
-            console.println(" ... PWM SIGNAL SHOULD BE <--ON-->");
+            console.println(" ... PWM SIGNAL SHOULD BE <--ON--> USING INITAL DUTY-CYCLE VALUE: " + pwm.config().initialValue().floatValue());
             console.println();
             console.println(" - GPIO PIN   : " + pwm.address());
             console.println(" - PWM TYPE   : " + pwm.pwmType());
@@ -103,10 +103,29 @@ public class PwmExampleUsingDependencyInjection {
             console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + "%");
             console.println(" - IS-ON      : " + pwm.isOn());
             console.println();
-            console.println(" ... WAITING 5 SECONDS TO APPLY PRESET: 10KHZ");
+            console.println(" ... WAITING 10 SECONDS TO CALL ON() METHOD");
 
-            // wait 5 seconds then exit
-            Thread.sleep(5000);
+            // wait 10 seconds
+            Thread.sleep(10000);
+
+            // turn on the PWM pin
+            pwm.on();
+
+            console.println("[PWM I/O INSTANCE] : ");
+            pwm.describe().print(System.out);
+            console.println();
+            console.println(" ... PWM SIGNAL SHOULD BE <--ON--> USING CONFIGURED DUTY-CYCLE: " + pwm.config().dutyCycle().floatValue());
+            console.println();
+            console.println(" - GPIO PIN   : " + pwm.address());
+            console.println(" - PWM TYPE   : " + pwm.pwmType());
+            console.println(" - FREQUENCY  : " + pwm.frequency() + " Hz");
+            console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + "%");
+            console.println(" - IS-ON      : " + pwm.isOn());
+            console.println();
+            console.println(" ... WAITING 10 SECONDS TO APPLY PRESET: 10KHZ");
+
+            // wait 10 seconds
+            Thread.sleep(10000);
 
             // turn off PWM pin
             pwm.applyPreset("10KHZ");
@@ -119,12 +138,11 @@ public class PwmExampleUsingDependencyInjection {
             console.println(" - FREQUENCY  : " + pwm.frequency() + " Hz");
             console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + "%");
             console.println(" - IS-ON      : " + pwm.isOn());
+            console.println();
+            console.println(" ... WAITING 10 SECONDS TO TURN PWM SIGNAL OFF");
 
-
-            console.println(" ... WAITING 5 SECONDS TO TURN PWM SIGNAL OFF");
-
-            // wait 5 seconds then exit
-            Thread.sleep(5000);
+            // wait 10 seconds
+            Thread.sleep(10000);
 
             // turn off PWM pin
             pwm.off();

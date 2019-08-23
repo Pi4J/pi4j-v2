@@ -29,6 +29,8 @@ package com.pi4j.plugin.pigpio.provider.pwm;
  * #L%
  */
 
+import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
@@ -44,49 +46,65 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
 
     public PiGpioPwmHardware(PiGpio piGpio, PwmProvider provider, PwmConfig config) throws IOException {
         super(piGpio, provider, config, RANGE);
-
-//        12  PWM channel 0  All models but A and B
-//        13  PWM channel 1  All models but A and B
-//        18  PWM channel 0  All models
-//        19  PWM channel 1  All models but A and B
-
-        // TODO :: SET PIN ALT MODES FOR HARDWARE PWM ON COMPUTE MODULE
-//        40  PWM channel 0  Compute module only
-//        41  PWM channel 1  Compute module only
-//        45  PWM channel 1  Compute module only
-//        52  PWM channel 0  Compute module only
-//        53  PWM channel 1  Compute module only
-
-        if(this.address() == 12 || this.address() == 13 || this.address() == 41 || this.address() == 42 || this.address() == 45) {
-            piGpio.gpioSetMode(this.address(), PiGpioMode.ALT0);
-        }
-        else if(this.address() == 18 || this.address() == 19) {
-            piGpio.gpioSetMode(this.address(), PiGpioMode.ALT0);
-        }
-//        else{
-//            throw new IOException("<PIGPIO> UNSUPPORTED HARDWARE PWM PIN: " + this.address());
-//        }
-
-        // get actual PWM frequency
-        this.actualFrequency = piGpio.gpioGetPWMfrequency(this.address());
-
-        // get current frequency from config or from actual PWM pin
-        if(config.frequency() != null){
-            this.frequency = config.frequency();
-        } else {
-            this.frequency = this.getActualFrequency();
-        }
-
-        // get current duty-cycle from config or set to default 50%
-        if(config.dutyCycle() != null){
-            this.dutyCycle(config.dutyCycle());
-        }
-        else {
-            // get updated duty-cycle value from PiGpio
-            this.dutyCycle = 50;  // default duty-cycle is 50% of total range
-        }
     }
 
+    @Override
+    public Pwm initialize(Context context) throws InitializeException {
+        try {
+
+            // TODO :: SET PIN ALT MODES FOR HARDWARE PWM ON COMPUTE MODULE
+            //  12  PWM channel 0  All models but A and B
+            //  13  PWM channel 1  All models but A and B
+            //  18  PWM channel 0  All models
+            //  19  PWM channel 1  All models but A and B
+            //  40  PWM channel 0  Compute module only
+            //  41  PWM channel 1  Compute module only
+            //  45  PWM channel 1  Compute module only
+            //  52  PWM channel 0  Compute module only
+            //  53  PWM channel 1  Compute module only
+
+            if(this.address() == 12 || this.address() == 13 || this.address() == 41 || this.address() == 42 || this.address() == 45) {
+                piGpio.gpioSetMode(this.address(), PiGpioMode.ALT0);
+            }
+            else if(this.address() == 18 || this.address() == 19) {
+                piGpio.gpioSetMode(this.address(), PiGpioMode.ALT0);
+            }
+    //        else{
+    //            throw new IOException("<PIGPIO> UNSUPPORTED HARDWARE PWM PIN: " + this.address());
+    //        }
+
+            // set pin mode to output
+            piGpio.gpioSetMode(this.address(), PiGpioMode.OUTPUT);
+
+            // get actual PWM frequency
+            this.actualFrequency = piGpio.gpioGetPWMfrequency(this.address());
+
+            // get current frequency from config or from actual PWM pin
+            if (config.frequency() != null) {
+                this.frequency = config.frequency();
+            } else {
+                this.frequency = this.actualFrequency;
+            }
+
+            // initialize
+            super.initialize(context);
+
+            // get current duty-cycle from config or set to default 50%
+            if (config.dutyCycle() != null) {
+                this.dutyCycle = config.dutyCycle();
+            } else {
+                // get updated duty-cycle value from PiGpio
+                this.dutyCycle = 50;  // default duty-cycle is 50% of total range
+            }
+        }
+        catch (IOException e){
+            throw  new InitializeException(e);
+        }
+
+        return this;
+    }
+
+    @Override
     public Pwm on() throws IOException{
         // set PWM frequency & duty-cycle; enable PWM signal
         piGpio.gpioHardwarePWM(this.address(), this.frequency, calculateActualDutyCycle(this.dutyCycle));
@@ -100,6 +118,7 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
         return this;
     }
 
+    @Override
     public Pwm off() throws IOException{
 
         // set PWM duty-cycle and enable PWM

@@ -45,11 +45,14 @@ public class DefaultPwmPreset  implements PwmPreset {
         this.name = name.toLowerCase().trim();
 
         // bounds check the duty-cycle value
-        float dc = dutyCycle.floatValue();
-        if(dc < 0) dc = 0;
-        if(dc > 100) dc = 100;
-
-        this.dutyCycle = dc;
+        if(dutyCycle != null) {
+            float dc = dutyCycle.floatValue();
+            if (dc < 0) dc = 0;
+            if (dc > 100) dc = 100;
+            this.dutyCycle = dc;
+        } else {
+            this.dutyCycle = null;
+        }
         this.frequency = frequency;
     }
 
