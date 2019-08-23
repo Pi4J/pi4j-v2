@@ -35,7 +35,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 public @interface DutyCycle {
-    int value() default -1;
-    int percent() default -1;
-    int range() default -1;
+    float value() default -1;
 }

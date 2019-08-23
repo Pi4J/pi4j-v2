@@ -31,7 +31,7 @@ import com.pi4j.io.pwm.PwmPreset;
 import com.pi4j.io.pwm.PwmPresetBuilder;
 
 public class DefaultPwmPresetBuilder implements PwmPresetBuilder{
-    protected Integer dutyCycle = null;
+    protected Float dutyCycle = null;
     protected Integer frequency = null;
     protected final String name;
 
@@ -53,8 +53,14 @@ public class DefaultPwmPresetBuilder implements PwmPresetBuilder{
     }
 
     @Override
-    public PwmPresetBuilder dutyCycle(Integer dutyCycle) {
-        this.dutyCycle = dutyCycle;
+    public PwmPresetBuilder dutyCycle(Number dutyCycle) {
+        float dc = dutyCycle.floatValue();
+
+        // bounds check the duty-cycle value
+        if(dc < 0) dc = 0;
+        if(dc > 100) dc = 100;
+
+        this.dutyCycle = dc;
         return this;
     }
     @Override

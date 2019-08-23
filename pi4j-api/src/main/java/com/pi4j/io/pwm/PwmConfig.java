@@ -36,55 +36,177 @@ public interface PwmConfig extends GpioConfig<PwmConfig>, AddressConfig<PwmConfi
 
     String PWM_TYPE_KEY = "pwm-type";
     String FREQUENCY_KEY = "frequency";
-    String RANGE_KEY = "range";
     String DUTY_CYCLE_KEY = "duty-cycle";
-    String DUTY_CYCLE_PERCENT_KEY = "duty-cycle-percent";
     String SHUTDOWN_VALUE_KEY = "shutdown";
     String INITIAL_VALUE_KEY = "initial";
-    String PRESET_KEY = "applyPreset";
 
-    Integer dutyCycle();
-    default Integer getDutyCycle() {
+    /**
+     *  Get the configured duty-cycle value as a decimal value that represents
+     *  the percentage of the ON vs OFF time of the PWM signal for each period.
+     *  The duty-cycle range is valid from 0 to 100 including factional values.
+     *  (Values above 50% mean the signal will remain HIGH more time than LOW.)
+     *
+     *  Example: A value of 50 represents a duty-cycle where half of
+     *  the time period the signal is LOW and the other half is HIGH.
+     *
+     * @return duty-cycle value expressed as a percentage (rage: 0-100)
+     */
+    Float dutyCycle();
+
+    /**
+     *  Get the configured duty-cycle value as a decimal value that represents
+     *  the percentage of the ON vs OFF time of the PWM signal for each period.
+     *  The duty-cycle range is valid from 0 to 100 including factional values.
+     *  (Values above 50% mean the signal will remain HIGH more time than LOW.)
+     *
+     *  Example: A value of 50 represents a duty-cycle where half of
+     *  the time period the signal is LOW and the other half is HIGH.
+     *
+     * @return duty-cycle value expressed as a percentage (rage: 0-100)
+     */
+    default Float getDutyCycle() {
         return dutyCycle();
     }
 
-    Integer dutyCyclePercent();
-    default Integer getDutyCyclePercent() {
-        return dutyCyclePercent();
-    }
-
-    Integer range();
-    default Integer getRange() {
-        return range();
-    }
-
+    /**
+     *  Get the configured frequency value in Hertz (number of cycles per second)
+     *  that the PWM signal generator should attempt to output when the PWM state is
+     *  enabled.
+     *
+     * @return frequency value in Hz (number of cycles per second)
+     */
     Integer frequency();
+
+    /**
+     *  Get the configured frequency value in Hertz (number of cycles per second)
+     *  that the PWM signal generator should attempt to output when the PWM state is
+     *  enabled.
+     *
+     * @return frequency value in Hz (number of cycles per second)
+     */
     default Integer getFrequency() {
         return frequency();
     }
 
+    /**
+     * Get the configured PwmType of this PWM instance. (Hardware/Software)
+     * Please note that not all PWM providers support both hardware and software
+     * PWM generators.  Please consult the documentation for your PWM provider
+     * to determine what support is available and what limitations may apply.
+     *
+     * @return the PwmType for this PWM instance
+     */
     PwmType pwmType();
+
+    /**
+     * Get the configured PwmType of this PWM instance. (Hardware/Software)
+     * Please note that not all PWM providers support both hardware and software
+     * PWM generators.  Please consult the documentation for your PWM provider
+     * to determine what support is available and what limitations may apply.
+     *
+     * @return the PwmType for this PWM instance
+     */
     default PwmType getPwmType(){
         return pwmType();
     }
 
-    Integer shutdownValue();
-    PwmConfig shutdownValue(Integer value);
-    default Integer getShutdownValue(){
+    /**
+     * Get configured PWM duty-cycle value that is automatically applied
+     * to the PWM instance when the Pi4J context is shutdown.
+     *
+     * This option can be helpful if you wish to do something like stop a PWM
+     * signal (by configuring this 'shutdown' value to zero) when your application
+     * is terminated an Pi4J is shutdown.
+     *
+     * @return optional duty-cycle value expressed as a percentage (rage: 0-100)
+     *         that is applied when shutting down the Pi4J context.
+     */
+    Float shutdownValue();
+
+    /**
+     * Get configured PWM duty-cycle value that is automatically applied
+     * to the PWM instance when the Pi4J context is shutdown.
+     *
+     * This option can be helpful if you wish to do something like stop a PWM
+     * signal (by configuring this 'shutdown' value to zero) when your application
+     * is terminated an Pi4J is shutdown.
+     *
+     * @return duty-cycle value expressed as a percentage (rage: 0-100)
+     *         that is applied when shutting down the Pi4J context.
+     */
+    default Float getShutdownValue(){
         return shutdownValue();
     }
-    default void setShutdownValue(Integer value){
-        this.shutdownValue(value);
+
+    /**
+     * Optionally configure a PWM duty-cycle value that should automatically
+     * be applied to the PWM instance when the Pi4J context is shutdown.
+     * This option can be helpful if you wish to do something like stop a PWM
+     * signal (by configuring this 'shutdown' value to zero) when your application
+     * is terminated an Pi4J is shutdown.
+     *
+     * @param dutyCycle duty-cycle value expressed as a percentage (rage: 0-100)
+     * @return this PwmConfig instance
+     */
+    PwmConfig shutdownValue(Number dutyCycle);
+
+    /**
+     * Optionally configure a PWM duty-cycle value that should automatically
+     * be applied to the PWM instance when the Pi4J context is shutdown.
+     * This option can be helpful if you wish to do something like stop a PWM
+     * signal (by configuring this 'shutdown' value to zero) when your application
+     * is terminated an Pi4J is shutdown.
+     *
+     * @param dutyCycle duty-cycle value expressed as a percentage (rage: 0-100)
+     * @return this builder instance
+     */
+    default void setShutdownValue(Number dutyCycle){
+        this.shutdownValue(dutyCycle);
     }
 
-    Integer initialValue();
-    default Integer getInitialValue(){
+    /**
+     * Get configured PWM duty-cycle value that is automatically applied to
+     * the PWM instance when this PWM instance is created and initialized.
+     *
+     * This option can be helpful if you wish to do something like set a default PWM
+     * signal (by configuring this 'initial' value to 50%) when your application
+     * creates the PWM instance.  This just helps eliminate a second line of code
+     * to manually start the PWM signal for cases where you prefer it is auto-started.
+     *
+     * @return duty-cycle value expressed as a percentage (rage: 0-100)
+     *         that is applied when creating and initializing the PWM instance.
+     */
+    Float initialValue();
+
+    /**
+     * Get configured PWM duty-cycle value that is automatically applied to
+     * the PWM instance when this PWM instance is created and initialized.
+     *
+     * This option can be helpful if you wish to do something like set a default PWM
+     * signal (by configuring this 'initial' value to 50%) when your application
+     * creates the PWM instance.  This just helps eliminate a second line of code
+     * to manually start the PWM signal for cases where you prefer it is auto-started.
+     *
+     * @return duty-cycle value expressed as a percentage (rage: 0-100)
+     *         that is applied when creating and initializing the PWM instance.
+     */
+    default Float getInitialValue(){
         return initialValue();
     }
 
+    /**
+     * Get the configured PwmPresets assigned to this PWM instance.
+     *
+     * @return collection of PwmPresets
+     */
     Collection<PwmPreset> presets();
+
+    /**
+     * Get the configured PwmPresets assigned to this PWM instance.
+     *
+     * @return collection of PwmPresets
+     */
     default Collection<PwmPreset> getPresets(){
         return presets();
     }
-
 }

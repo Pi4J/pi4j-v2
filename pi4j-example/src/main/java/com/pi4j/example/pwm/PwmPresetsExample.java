@@ -63,10 +63,9 @@ public class PwmPresetsExample {
                 .name("My Test PWM Pin")
                 .address(PWM_PIN)
                 .frequency(1000)   // optionally pre-configure the desired frequency to 1KHz
-                .range(255)        // optionally pre-configure the desired duty-cycle range (0-255)
-                .dutyCycle(128)    // optionally pre-configure the desired duty-cycle (50%)
+                .dutyCycle(50)     // optionally pre-configure the desired duty-cycle (50%)
                 .shutdown(0)       // optionally pre-configure a shutdown duty-cycle value (on terminate)
-                //.initial(125)      // optionally pre-configure an initial duty-cycle value (on startup)
+                //.initial(50)     // optionally pre-configure an initial duty-cycle value (on startup)
                 .build();
 
         // use try-with-resources to auto-close I2C when complete
@@ -74,16 +73,16 @@ public class PwmPresetsExample {
 
         // add PWM presets
         pwm.addPreset(PwmPreset.newBuilder("one")
-                .frequency(5000)
-                .dutyCycle(128)
+                .frequency(5000) // 5 KHz
+                .dutyCycle(50)   // 50%
                 .build());
 
         pwm.addPreset(PwmPreset.newBuilder("two")
-                .frequency(80)
+                .frequency(80)   // 80 Hz
                 .build());
 
         pwm.addPreset(PwmPreset.newBuilder("three")
-                .dutyCycle(180)
+                .dutyCycle(75)   // 75%
                 .build());
 
 
@@ -117,8 +116,7 @@ public class PwmPresetsExample {
         console.println(" - GPIO PIN   : " + pwm.address());
         console.println(" - PWM TYPE   : " + pwm.pwmType());
         console.println(" - FREQUENCY  : " + pwm.frequency() + " Hz");
-        console.println(" - RANGE      : 0-" + pwm.range());
-        console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + " (" + pwm.dutyCyclePercent()  + "%)");
+        console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + "%");
         console.println(" - IS-ON      : " + pwm.isOn());
 
         // wait 5 seconds then exit
@@ -135,8 +133,7 @@ public class PwmPresetsExample {
         console.println(" - GPIO PIN   : " + pwm.address());
         console.println(" - PWM TYPE   : " + pwm.pwmType());
         console.println(" - FREQUENCY  : " + pwm.frequency() + " Hz");
-        console.println(" - RANGE      : 0-" + pwm.range());
-        console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + " (" + pwm.dutyCyclePercent()  + "%)");
+        console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + "%");
         console.println(" - IS-ON      : " + pwm.isOn());
 
 
@@ -154,8 +151,7 @@ public class PwmPresetsExample {
         console.println(" - GPIO PIN   : " + pwm.address());
         console.println(" - PWM TYPE   : " + pwm.pwmType());
         console.println(" - FREQUENCY  : " + pwm.frequency() + " Hz");
-        console.println(" - RANGE      : 0-" + pwm.range());
-        console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + " (" + pwm.dutyCyclePercent()  + "%)");
+        console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + "%");
         console.println(" - IS-ON      : " + pwm.isOn());
 
 
@@ -173,8 +169,7 @@ public class PwmPresetsExample {
         console.println(" - GPIO PIN   : " + pwm.address());
         console.println(" - PWM TYPE   : " + pwm.pwmType());
         console.println(" - FREQUENCY  : " + pwm.frequency() + " Hz");
-        console.println(" - RANGE      : 0-" + pwm.range());
-        console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + " (" + pwm.dutyCyclePercent()  + "%)");
+        console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + "%");
         console.println(" - IS-ON      : " + pwm.isOn());
 
         // wait 5 seconds then exit

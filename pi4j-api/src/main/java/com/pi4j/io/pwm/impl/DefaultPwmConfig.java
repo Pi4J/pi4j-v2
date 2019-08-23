@@ -44,13 +44,11 @@ public class DefaultPwmConfig
         implements PwmConfig {
 
     // private configuration properties
-    protected Integer dutyCycle = null;
-    protected Integer dutyCyclePercent = null;
-    protected Integer range = null;
+    protected Float dutyCycle = null;
     protected Integer frequency = null;
     protected PwmType pwmType = PwmType.SOFTWARE;
-    protected Integer shutdownValue = null;
-    protected Integer initialValue = null;
+    protected Float shutdownValue = null;
+    protected Float initialValue = null;
     protected List<PwmPreset> presets = new ArrayList<>();
 
     /**
@@ -86,22 +84,12 @@ public class DefaultPwmConfig
 
         // load optional pwm duty-cycle from properties
         if(properties.containsKey(DUTY_CYCLE_KEY)){
-            this.dutyCycle = Integer.parseInt(properties.get(DUTY_CYCLE_KEY));
-        }
-
-        // load optional pwm duty-cycle from properties
-        if(properties.containsKey(DUTY_CYCLE_PERCENT_KEY)){
-            this.dutyCyclePercent = Integer.parseInt(properties.get(DUTY_CYCLE_PERCENT_KEY));
+            this.dutyCycle = Float.parseFloat(properties.get(DUTY_CYCLE_KEY));
         }
 
         // load optional pwm frequency from properties
         if(properties.containsKey(FREQUENCY_KEY)){
             this.frequency = Integer.parseInt(properties.get(FREQUENCY_KEY));
-        }
-
-        // load optional pwm range from properties
-        if(properties.containsKey(RANGE_KEY)){
-            this.range = Integer.parseInt(properties.get(RANGE_KEY));
         }
 
         // load optional pwm type from properties
@@ -111,31 +99,26 @@ public class DefaultPwmConfig
 
         // load initial value property
         if(properties.containsKey(INITIAL_VALUE_KEY)){
-            this.initialValue = Integer.parseInt(properties.get(INITIAL_VALUE_KEY));
+            this.initialValue = Float.parseFloat(properties.get(INITIAL_VALUE_KEY));
         }
 
         // load shutdown value property
         if(properties.containsKey(SHUTDOWN_VALUE_KEY)){
-            this.shutdownValue = Integer.parseInt(properties.get(SHUTDOWN_VALUE_KEY));
+            this.shutdownValue = Float.parseFloat(properties.get(SHUTDOWN_VALUE_KEY));
         }
 
         // bounds checking
-        if(this.dutyCyclePercent != null && this.dutyCyclePercent > 100)
-            this.dutyCyclePercent = 100;
+        if(this.dutyCycle != null && this.dutyCycle > 100)
+            this.dutyCycle = 100f;
 
         // bounds checking
-        if(this.dutyCyclePercent != null && this.dutyCyclePercent < 0)
-            this.dutyCyclePercent = 0;
+        if(this.dutyCycle != null && this.dutyCycle < 0)
+            this.dutyCycle = 0f;
     }
 
     @Override
-    public Integer dutyCycle() {
+    public Float dutyCycle() {
         return this.dutyCycle;
-    }
-
-    @Override
-    public Integer range() {
-        return this.range;
     }
 
     @Override
@@ -149,31 +132,24 @@ public class DefaultPwmConfig
     }
 
     @Override
-    public Integer shutdownValue(){
+    public Float shutdownValue(){
         return this.shutdownValue;
     }
 
     @Override
-    public Integer dutyCyclePercent(){
-        // bounds checking
-        if(this.dutyCyclePercent != null && this.dutyCyclePercent > 100)
-            this.dutyCyclePercent = 100;
+    public PwmConfig shutdownValue(Number dutyCycle){
 
-        // bounds checking
-        if(this.dutyCyclePercent != null && this.dutyCyclePercent < 0)
-            this.dutyCyclePercent = 0;
+        // bounds check the duty-cycle value
+        float dc = dutyCycle.floatValue();
+        if(dc < 0) dc = 0;
+        if(dc > 100) dc = 100;
 
-        return this.dutyCyclePercent;
-    }
-
-    @Override
-    public PwmConfig shutdownValue(Integer value){
-        this.shutdownValue = value;
+        this.shutdownValue = dc;
         return this;
     }
 
     @Override
-    public Integer initialValue() {
+    public Float initialValue() {
         return this.initialValue;
     }
 

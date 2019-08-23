@@ -32,18 +32,24 @@ import com.pi4j.io.pwm.PwmPreset;
 public class DefaultPwmPreset  implements PwmPreset {
 
     protected final String name;
-    protected final Integer dutyCycle;
+    protected final Float dutyCycle;
     protected final Integer frequency;
 
-    public DefaultPwmPreset(String name, Integer dutyCycle){
+    public DefaultPwmPreset(String name, Number dutyCycle){
         this.name = name.toLowerCase().trim();
-        this.dutyCycle = dutyCycle;
+        this.dutyCycle = dutyCycle.floatValue();
         this.frequency = null;
     }
 
-    public DefaultPwmPreset(String name, Integer dutyCycle, Integer frequency){
+    public DefaultPwmPreset(String name, Number dutyCycle, Integer frequency){
         this.name = name.toLowerCase().trim();
-        this.dutyCycle = dutyCycle;
+
+        // bounds check the duty-cycle value
+        float dc = dutyCycle.floatValue();
+        if(dc < 0) dc = 0;
+        if(dc > 100) dc = 100;
+
+        this.dutyCycle = dc;
         this.frequency = frequency;
     }
 
@@ -53,7 +59,7 @@ public class DefaultPwmPreset  implements PwmPreset {
     }
 
     @Override
-    public Integer dutyCycle() {
+    public Float dutyCycle() {
         return this.dutyCycle;
     }
 

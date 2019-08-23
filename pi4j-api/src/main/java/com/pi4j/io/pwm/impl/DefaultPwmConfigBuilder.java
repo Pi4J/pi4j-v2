@@ -54,35 +54,19 @@ public class DefaultPwmConfigBuilder
     }
 
     @Override
-    public PwmConfigBuilder range(Integer range) {
-        this.properties.put(PwmConfig.RANGE_KEY, range.toString());
-        return this;
-    }
-
-    @Override
     public PwmConfigBuilder frequency(Integer frequency) {
         this.properties.put(PwmConfig.FREQUENCY_KEY, frequency.toString());
         return this;
     }
 
     @Override
-    public PwmConfigBuilder dutyCycle(Integer dutyCycle) {
-        this.properties.put(PwmConfig.DUTY_CYCLE_KEY, dutyCycle.toString());
-        return this;
-    }
+    public PwmConfigBuilder dutyCycle(Number dutyCycle) {
+        // bounds check the duty-cycle value
+        float dc = dutyCycle.floatValue();
+        if(dc < 0) dc = 0;
+        if(dc > 100) dc = 100;
 
-    @Override
-    public PwmConfigBuilder dutyCyclePercent(Integer percent) {
-
-        // bounds checking
-        if(percent != null && percent > 100)
-            percent = 100;
-
-        // bounds checking
-        if(percent != null && percent < 0)
-            percent = 0;
-
-        this.properties.put(PwmConfig.DUTY_CYCLE_PERCENT_KEY, percent.toString());
+        this.properties.put(PwmConfig.DUTY_CYCLE_KEY, Float.toString(dc));
         return this;
     }
 
@@ -93,14 +77,25 @@ public class DefaultPwmConfigBuilder
     }
 
     @Override
-    public PwmConfigBuilder shutdown(Integer value) {
-        this.properties.put(PwmConfig.SHUTDOWN_VALUE_KEY, value.toString());
+    public PwmConfigBuilder shutdown(Number dutyCycle) {
+        // bounds check the duty-cycle value
+        float dc = dutyCycle.floatValue();
+        if(dc < 0) dc = 0;
+        if(dc > 100) dc = 100;
+
+        this.properties.put(PwmConfig.SHUTDOWN_VALUE_KEY, Float.toString(dc));
         return this;
     }
 
     @Override
-    public PwmConfigBuilder initial(Integer value) {
-        this.properties.put(PwmConfig.INITIAL_VALUE_KEY, value.toString());
+    public PwmConfigBuilder initial(Number dutyCycle) {
+
+        // bounds check the duty-cycle value
+        float dc = dutyCycle.floatValue();
+        if(dc < 0) dc = 0;
+        if(dc > 100) dc = 100;
+
+        this.properties.put(PwmConfig.INITIAL_VALUE_KEY, Float.toString(dc));
         return this;
     }
 

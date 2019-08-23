@@ -116,15 +116,8 @@ public class PwmRegistrationProcessor implements RegisterProcessor<Pwm> {
         if (field.isAnnotationPresent(DutyCycle.class)) {
             dutyCycle = field.getAnnotation(DutyCycle.class);
             if (dutyCycle != null){
-
                 if(dutyCycle.value() >= 0) {
                     builder.dutyCycle(dutyCycle.value());
-                }
-                if(dutyCycle.range() >= 0) {
-                    builder.range(dutyCycle.range());
-                }
-                if(dutyCycle.percent() >= 0) {
-                    //builder.dutyCycle(dutyCycle.range());
                 }
             }
         }

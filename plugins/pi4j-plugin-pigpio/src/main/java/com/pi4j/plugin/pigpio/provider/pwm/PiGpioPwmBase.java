@@ -38,9 +38,21 @@ import com.pi4j.library.pigpio.PiGpio;
 public abstract class PiGpioPwmBase extends PwmBase implements Pwm {
 
     protected final PiGpio piGpio;
+    protected final int range;
+    protected int actualFrequency = -1;
 
-    public PiGpioPwmBase(PiGpio piGpio, PwmProvider provider, PwmConfig config){
+    public PiGpioPwmBase(PiGpio piGpio, PwmProvider provider, PwmConfig config, int range){
         super(provider, config);
         this.piGpio = piGpio;
+        this.range = range;
+    }
+
+    protected int calculateActualDutyCycle(float dutyCycle){
+        return Math.round((this.range * dutyCycle) / 100);
+    }
+
+    @Override
+    public int getActualFrequency() {
+        return this.actualFrequency;
     }
 }

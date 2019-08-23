@@ -39,8 +39,11 @@ import java.io.IOException;
 
 public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
 
+    // fixed range for hardware PWM
+    public static int RANGE = 1000000;
+
     public PiGpioPwmHardware(PiGpio piGpio, PwmProvider provider, PwmConfig config) throws IOException {
-        super(piGpio, provider, config);
+        super(piGpio, provider, config, RANGE);
 
 //        12  PWM channel 0  All models but A and B
 //        13  PWM channel 1  All models but A and B
@@ -64,33 +67,32 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
 //            throw new IOException("<PIGPIO> UNSUPPORTED HARDWARE PWM PIN: " + this.address());
 //        }
 
+        // get actual PWM frequency
+        this.actualFrequency = piGpio.gpioGetPWMfrequency(this.address());
+
         // get current frequency from config or from actual PWM pin
         if(config.frequency() != null){
             this.frequency = config.frequency();
         } else {
-            this.frequency = piGpio.gpioGetPWMfrequency(this.address());
+            this.frequency = this.getActualFrequency();
         }
-
-        // ignore any configured range values,
-        // fixed range for hardware PWM
-        this.range = 1000000;
 
         // get current duty-cycle from config or set to default 50%
         if(config.dutyCycle() != null){
-            this.dutyCycle = config.dutyCycle();
-        }
-        else if(config.dutyCyclePercent() != null){
-            dutyCyclePercent(config.dutyCyclePercent());
+            this.dutyCycle(config.dutyCycle());
         }
         else {
             // get updated duty-cycle value from PiGpio
-            this.dutyCycle = this.range / 2;  // default duty-cycle is 50% of total range
+            this.dutyCycle = 50;  // default duty-cycle is 50% of total range
         }
     }
 
     public Pwm on() throws IOException{
         // set PWM frequency & duty-cycle; enable PWM signal
-        piGpio.gpioHardwarePWM(this.address(), this.frequency, this.dutyCycle);
+        piGpio.gpioHardwarePWM(this.address(), this.frequency, calculateActualDutyCycle(this.dutyCycle));
+
+        // get actual PWM frequency
+        this.actualFrequency = piGpio.gpioGetPWMfrequency(this.address());
 
         // update tracking state
         this.onState = (this.frequency > 0 && this.dutyCycle > 0);
@@ -107,11 +109,5 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
         this.onState = false;
 
         return this;
-    }
-
-    @Override
-    public void setRange(int range) throws IOException {
-        // NOT SUPPORTED
-        throw new UnsupportedOperationException("Hardware PWM does not support custom ranges; rage will always be 0-1M");
     }
 }

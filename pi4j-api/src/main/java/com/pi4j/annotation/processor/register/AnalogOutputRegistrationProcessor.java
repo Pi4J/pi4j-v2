@@ -109,7 +109,7 @@ public class AnalogOutputRegistrationProcessor implements RegisterProcessor<Anal
         InitialValue initialValue = null;
         if (field.isAnnotationPresent(InitialValue.class)) {
             initialValue = field.getAnnotation(InitialValue.class);
-            if (initialValue != null) builder.initial(initialValue.value());
+            if (initialValue != null) builder.initial((int)Math.round(initialValue.value()));
         }
 
         StepValue stepValue = null;

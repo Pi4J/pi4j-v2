@@ -39,9 +39,8 @@ import java.util.Map;
 
 public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implements Pwm {
 
-    protected int range = -1;
-    protected int frequency = -1;
-    protected int dutyCycle = -1;
+    protected int frequency = 100;
+    protected float dutyCycle = 50;
     protected boolean onState = false;
     protected Map<String, PwmPreset> presets = Collections.synchronizedMap(new HashMap<>());
 
@@ -56,7 +55,7 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
     }
 
     @Override
-    public int getDutyCycle() throws IOException {
+    public float getDutyCycle() throws IOException {
         return this.dutyCycle;
     }
 
@@ -66,23 +65,25 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
     }
 
     @Override
-    public void setDutyCycle(int dutyCycle) throws IOException {
-        this.dutyCycle = dutyCycle;
+    public int getActualFrequency() throws IOException {
+        return this.frequency;
+    }
+
+    @Override
+    public void setDutyCycle(Number dutyCycle) throws IOException {
+        float dc = dutyCycle.floatValue();
+
+        // bounds check the duty-cycle value
+        if(dc < 0) dc = 0;
+        if(dc > 100) dc = 100;
+
+        // update the duty-cycle member
+        this.dutyCycle = dc;
     }
 
     @Override
     public void setFrequency(int frequency) throws IOException {
         this.frequency = frequency;
-    }
-
-    @Override
-    public int getRange() throws IOException {
-        return this.range;
-    }
-
-    @Override
-    public void setRange(int range) throws IOException {
-        this.range = range;
     }
 
     @Override
@@ -156,7 +157,7 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
         if(presets.containsKey(key)) {
             PwmPreset preset = presets.get(key);
             if(preset.dutyCycle() != null)
-                setDutyCycle(preset.dutyCycle().intValue());
+                setDutyCycle(preset.dutyCycle().floatValue());
             if(preset.frequency() != null)
                 setFrequency(preset.frequency().intValue());
             on(); // update PWM signal now
