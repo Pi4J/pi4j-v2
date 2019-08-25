@@ -130,7 +130,7 @@ public class MockSerial extends SerialBase implements Serial {
         System.out.print(Mock.SERIAL_PROVIDER_NAME);
         System.out.print("::");
         System.out.print(this.id);
-        System.out.print("] :: READ(0x");
+        System.out.print("] :: READ (0x");
         System.out.print(StringUtil.toHexString(b));
         System.out.println(")");
         return b;
@@ -153,7 +153,7 @@ public class MockSerial extends SerialBase implements Serial {
         System.out.print(Mock.SERIAL_PROVIDER_NAME);
         System.out.print("::");
         System.out.print(this.id);
-        System.out.print("] :: READ(0x");
+        System.out.print("] :: READ (0x");
         System.out.print(StringUtil.toHexString(buffer, offset, length));
         System.out.println(")");
 

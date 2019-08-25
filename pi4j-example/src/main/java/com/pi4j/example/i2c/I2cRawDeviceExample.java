@@ -39,6 +39,7 @@ public class I2cRawDeviceExample {
     private static int I2C_DEVICE = 0x04;
 
     public static void main(String[] args) throws Exception {
+        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
         // this temporary property is used to tell
