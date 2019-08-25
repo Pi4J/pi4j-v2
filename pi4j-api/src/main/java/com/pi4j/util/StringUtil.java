@@ -288,7 +288,7 @@ public class StringUtil {
     }
 
     public static void appendHexString(StringBuilder builder, byte[] bytes, int offset, int length){
-        appendHexString(builder, Arrays.copyOfRange(bytes, offset, length));
+        appendHexString(builder, Arrays.copyOfRange(bytes, offset, offset+length));
     }
     public static String toHexString(byte[] bytes, int offset, int length){
         StringBuilder sb = new StringBuilder();

@@ -152,7 +152,7 @@ public class PiGpioPacket {
         // check for valid data
         if(data != null && data.length > 0 && length > 0) {
             this.p3 = length;
-            this.data = Arrays.copyOfRange(data, offset, length);
+            this.data = Arrays.copyOfRange(data, offset, offset+length);
         }
         else{
             this.p3 = 0;
