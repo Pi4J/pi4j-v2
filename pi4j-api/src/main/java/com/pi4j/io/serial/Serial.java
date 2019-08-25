@@ -58,6 +58,22 @@ public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCl
      */
     int available() throws IOException;
 
+    /**
+     * This function will drain the current serial receive buffer of any lingering bytes.
+     *
+     * @return Returns the number of bytes of data drained (>=0) if OK, otherwise a negative error code.
+     */
+    default int drain() throws IOException{
+        // get number of bytes available
+        int avail = this.available();
+        if(avail > 0) {
+            byte[] temp = new byte[avail];
+            return this.read(temp);
+        }
+        else{
+            return 0;
+        }
+    }
 
     void open() throws IOException;
     void close() throws IOException;

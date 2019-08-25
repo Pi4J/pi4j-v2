@@ -112,16 +112,12 @@ public class PiGpioSerial extends SerialBase implements Serial {
         return piGpio.serRead(this.handle, buffer, offset, length);
     }
 
+    // -------------------------------------------------------------------
+    // MISC I/O FUNCTIONS
+    // -------------------------------------------------------------------
 
-//    @Override
-//    public int read() throws IOException{
-//        return piGpio.i2cReadByte(this.handle);
-//    }
-//
-//    @Override
-//    public int read(ByteBuffer buffer, int offset, int length) throws IOException{
-//        Objects.checkFromIndexSize(offset, length, buffer.capacity());
-//        return piGpio.i2cReadDevice(this.handle, buffer, offset, length);
-//    }
-
+    @Override
+    public int drain() throws IOException{
+        return piGpio.serDrain(this.handle);
+    }
 }
