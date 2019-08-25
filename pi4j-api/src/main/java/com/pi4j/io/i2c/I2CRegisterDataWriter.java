@@ -172,6 +172,14 @@ public interface I2CRegisterDataWriter {
      * Write a buffer of byte values starting from a given offset index in the
      * array up to the provided length to a specific I2C device register.
      *
+     * NOTE:  The buffer's internal position tracking is no
+     *        used but rather only the explicit offset and
+     *        length provided.  If the requested length is
+     *        greater than the buffers capacity (minus offset)
+     *        then the specified length will be ignored and
+     *        this function will only read the number of
+     *        bytes up to the buffers' available space.
+     *
      * @param register the register address to write to
      * @param buffer byte buffer of data to be written to the i2c device in one go
      * @param offset offset in buffer
@@ -180,6 +188,10 @@ public interface I2CRegisterDataWriter {
      * @throws IOException thrown on write error
      */
     default int writeRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException{
+        // perform bounds checking on requested length versus total remaining size available
+        if(length > (buffer.capacity()-offset)){
+            length = buffer.capacity()-offset;
+        }
         return writeRegister(register, buffer.array(), offset, length);
     }
 
@@ -197,6 +209,14 @@ public interface I2CRegisterDataWriter {
      * Write a buffer of byte values starting from the first byte in the buffer
      * up to the provided length to a specific I2C device register.
      *
+     * NOTE:  The contents from the byte buffer is read
+     *        from the current position index up to the length
+     *        requested or up to the buffer's remaining limit;
+     *        whichever is is lower .  If the buffer's current
+     *        position is already at the buffer's limit, then we
+     *        will automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's limit.
+     *
      * @param register the register address to write to
      * @param buffer byte buffer of data to be written to the i2c device in one go
      * @param length number of bytes to be written
@@ -204,11 +224,28 @@ public interface I2CRegisterDataWriter {
      * @throws IOException thrown on write error
      */
     default int writeRegister(int register, ByteBuffer buffer, int length) throws IOException{
+        // if the buffer position is already at the buffer limit, then flip the buffer for
+        //reading data from the buffer at the starting position to write to the I/O device
+        if(buffer.position() == buffer.limit()) buffer.flip();
+
+        // bounds check the requested length; only allow reading up to the remaining space in the buffer
+        if(length > buffer.remaining()) length = buffer.remaining();
+
+        // write contents from the buffer starting at the current position up the the specified length
         return writeRegister(register, buffer, buffer.position(), length);
+
     }
 
     /**
      * Write a buffer of byte values (all bytes in buffer) to a specific I2C device register.
+     *
+     * NOTE:  The contents from the byte buffer is read
+     *        from the current position index up to the buffer's
+     *        remaining limit.  If the buffer's current position
+     *        is already at the buffer's limit, then we will
+     *        automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's
+     *        limit.
      *
      * @param register the register address to write to
      * @param buffer byte buffer of data to be written to the i2c device in one go
@@ -216,11 +253,24 @@ public interface I2CRegisterDataWriter {
      * @throws IOException thrown on write error
      */
     default int writeRegister(int register, ByteBuffer buffer) throws IOException{
-        return writeRegister(register, buffer, buffer.remaining());
+        // if the buffer position is already at the buffer limit, then flip the buffer for
+        //reading data from the buffer at the starting position to write to the I/O device
+        if(buffer.position() == buffer.limit()) buffer.flip();
+
+        // write contents from the buffer starting at the current position up the the remaining buffer size
+        return writeRegister(register, buffer, buffer.position(), buffer.remaining());
     }
 
     /**
      * Write multiple byte buffers to a specific I2C device register.
+     *
+     * NOTE:  The contents from each byte buffer is read
+     *        from the current position index up to the buffer's
+     *        remaining limit.  If the buffer's current position
+     *        is already at the buffer's limit, then we will
+     *        automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's
+     *        limit.
      *
      * @param register the register address to write to
      * @param buffer byte buffer of data to be written to the i2c device in one go
@@ -230,6 +280,12 @@ public interface I2CRegisterDataWriter {
     default int writeRegister(int register, ByteBuffer ... buffer) throws IOException{
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         for (ByteBuffer bb : buffer) {
+
+            // if the buffer position is already at the buffer limit, then flip the buffer for
+            //reading data from the buffer at the starting position to write to the I/O device
+            if(bb.position() == bb.limit()) bb.flip();
+
+            // write the byte array to the byte output stream
             os.write(bb.array());
         }
         return writeRegister(register, os.toByteArray());
@@ -249,6 +305,20 @@ public interface I2CRegisterDataWriter {
      */
     default int writeRegister(int register, InputStream stream) throws IOException{
         return writeRegister(register, stream.readAllBytes());
+    }
+
+    /**
+     * Write a stream of stream of data up to the length (number of bytes)
+     * specified to a specific I2C device register.
+     *
+     * @param register the register address to write to
+     * @param stream stream of data to be written
+     * @param length number of bytes to be written
+     * @return The number of bytes written, possibly zero
+     * @throws IOException thrown on write error
+     */
+    default int write(int register, InputStream stream, int length) throws IOException{
+        return writeRegister(register, stream.readNBytes(length));
     }
 
     /**
@@ -527,56 +597,105 @@ public interface I2CRegisterDataWriter {
     }
 
     /**
-     * Writes an ASCII based character buffer with a given offset and length using a specified
+     * Writes a character buffer with a given offset and length using a specified
      * character set to encode the chars into bytes to a specific I2C device register.
+     *
+     * NOTE:  The buffer's internal position tracking is no
+     *        used but rather only the explicit offset and
+     *        length provided.  If the requested length is
+     *        greater than the buffers capacity (minus offset)
+     *        then the specified length will be ignored and
+     *        this function will only read the number of
+     *        characters up to the buffers' available space.
      *
      * @param register the register address to write to
      * @param charset character set to use for byte encoding
-     * @param data ASCII character array used for data write
+     * @param buffer character buffer used for data write
      * @param offset offset in data character array to start at
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
      * @throws IOException thrown on write error
      */
-    default int writeRegister(int register, Charset charset, CharBuffer data, int offset, int length) throws IOException {
-        ByteBuffer bb = charset.encode(CharBuffer.wrap(data, offset, length));
+    default int writeRegister(int register, Charset charset, CharBuffer buffer, int offset, int length) throws IOException {
+        // perform bounds checking on requested length versus total remaining size available
+        if(length > (buffer.capacity()-offset)){
+            length = buffer.capacity()-offset;
+        }
+
+        // convert the character array to a byte array and write the byte array
+        ByteBuffer bb = charset.encode(CharBuffer.wrap(buffer.array(), offset, length));
         return writeRegister(register, bb.array());
     }
 
     /**
-     * Writes an ASCII based character buffer starting at first index to a given length using
+     * Write a character buffer starting at first index to a given length using
      * a specified character set to encode the chars into bytes to a specific I2C device register.
+     *
+     * NOTE:  The contents from the character buffer is read
+     *        from the current position index up to the length
+     *        requested or up to the buffer's remaining limit;
+     *        whichever is is lower .  If the buffer's current
+     *        position is already at the buffer's limit, then we
+     *        will automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's limit.
      *
      * @param register the register address to write to
      * @param charset character set to use for byte encoding
-     * @param data ASCII character array used for data write
+     * @param buffer character buffer used for data write
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
      * @throws IOException thrown on write error
      */
-    default int writeRegister(int register, Charset charset, CharBuffer data, int length) throws IOException {
-        ByteBuffer bb = charset.encode(CharBuffer.wrap(data, 0, length));
-        return writeRegister(register, bb.array());
+    default int writeRegister(int register, Charset charset, CharBuffer buffer, int length) throws IOException {
+        // if the buffer position is already at the buffer limit, then flip the buffer for
+        //reading data from the buffer at the starting position to write to the I/O device
+        if(buffer.position() == buffer.limit()) buffer.flip();
+
+        // bounds check the requested length; only allow reading up to the remaining space in the buffer
+        if(length > buffer.remaining()) length = buffer.remaining();
+
+        // write contents from the buffer starting at the current position up the the specified length
+        return writeRegister(register, charset, buffer, buffer.position(), length);
     }
 
     /**
-     * Writes an ASCII based character buffer using a specified character set
+     * Write a character buffer using a specified character set
      * to encode the chars into bytes to a specific I2C device register.
+     *
+     * NOTE:  The contents from the character buffer is read
+     *        from the current position index up to the buffer's
+     *        remaining limit.  If the buffer's current position
+     *        is already at the buffer's limit, then we will
+     *        automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's
+     *        limit.
      *
      * @param register the register address to write to
      * @param charset character set to use for byte encoding
-     * @param data ASCII character array used for data write
+     * @param buffer character array used for data write
      * @return The number of bytes (not characters) written, possibly zero
      * @throws IOException thrown on write error
      */
-    default int writeRegister(int register, Charset charset, CharBuffer data) throws IOException {
-        ByteBuffer bb = charset.encode(data);
-        return writeRegister(register, bb.array());
+    default int writeRegister(int register, Charset charset, CharBuffer buffer) throws IOException {
+        // if the buffer position is already at the buffer limit, then flip the buffer for
+        //reading data from the buffer at the starting position to write to the I/O device
+        if(buffer.position() == buffer.limit()) buffer.flip();
+
+        // write contents from the buffer starting at the current position up the the remaining buffer size
+        return writeRegister(register, charset, buffer, buffer.position(), buffer.remaining());
     }
 
     /**
-     * Writes an ASCII based character buffer using a specified character
+     * Writes multiple character buffers using a specified character
      * set to encode the chars into bytes to a specific I2C device register.
+     *
+     * NOTE:  The contents from each character buffer is read
+     *        from the current position index up to the buffer's
+     *        remaining limit.  If the buffer's current position
+     *        is already at the buffer's limit, then we will
+     *        automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's
+     *        limit.
      *
      * @param register the register address to write to
      * @param charset character set to use for byte encoding
@@ -587,7 +706,14 @@ public interface I2CRegisterDataWriter {
     default int writeRegister(int register, Charset charset, CharBuffer ... data) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         for (CharBuffer cb : data) {
-            ByteBuffer bb = charset.encode(cb);
+            // if the buffer position is already at the buffer limit, then flip the buffer for
+            //reading data from the buffer at the starting position to write to the I/O device
+            if(cb.position() == cb.limit()) cb.flip();
+
+            // encode the contents of the character buffer from the current position up to the limit
+            ByteBuffer bb = charset.encode(CharBuffer.wrap(cb.array(), cb.position(), cb.remaining()));
+
+            // write the encoded byte buffer to the byte array output stream
             os.write(bb.array());
         }
         return writeRegister(register, os.toByteArray());

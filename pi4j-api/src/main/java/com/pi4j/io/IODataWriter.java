@@ -145,6 +145,14 @@ public interface IODataWriter {
     /**
      * Write a buffer of byte values with given offset (starting position) and length in the provided data buffer.
      *
+     * NOTE:  The buffer's internal position tracking is no
+     *        used but rather only the explicit offset and
+     *        length provided.  If the requested length is
+     *        greater than the buffers capacity (minus offset)
+     *        then the specified length will be ignored and
+     *        this function will only read the number of
+     *        bytes up to the buffers' available space.
+     *
      * @param buffer byte buffer of data to be written
      * @param offset offset in data buffer to start at
      * @param length number of bytes to be written
@@ -152,11 +160,23 @@ public interface IODataWriter {
      * @throws IOException thrown on write error
      */
     default int write(ByteBuffer buffer, int offset, int length) throws IOException{
+        // perform bounds checking on requested length versus total remaining size available
+        if(length > (buffer.capacity()-offset)){
+            length = buffer.capacity()-offset;
+        }
         return write(buffer.array(), offset, length);
     }
 
     /**
      * Write a buffer of byte values starting with the first byte in the array up to the provided length.
+     *
+     * NOTE:  The contents from the byte buffer is read
+     *        from the current position index up to the length
+     *        requested or up to the buffer's remaining limit;
+     *        whichever is is lower .  If the buffer's current
+     *        position is already at the buffer's limit, then we
+     *        will automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's limit.
      *
      * @param buffer byte buffer of data to be written
      * @param length number of bytes to be written
@@ -164,25 +184,51 @@ public interface IODataWriter {
      * @throws IOException thrown on write error
      */
     default int write(ByteBuffer buffer, int length) throws IOException{
+        // if the buffer position is already at the buffer limit, then flip the buffer for
+        //reading data from the buffer at the starting position to write to the I/O device
+        if(buffer.position() == buffer.limit()) buffer.flip();
+
+        // bounds check the requested length; only allow reading up to the remaining space in the buffer
+        if(length > buffer.remaining()) length = buffer.remaining();
+
+        // write contents from the buffer starting at the current position up the the specified length
         return write(buffer, buffer.position(), length);
     }
 
     /**
      * Write a buffer of byte values (all bytes in buffer).
      *
-     * (The byte buffer is read from the current position up to the 'limit' value, not the 'capacity'.
-     *  You may need to rewind() or flip() the byte buffer if you have just written to it.)
+     * NOTE:  The contents from the byte buffer is read
+     *        from the current position index up to the buffer's
+     *        remaining limit.  If the buffer's current position
+     *        is already at the buffer's limit, then we will
+     *        automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's
+     *        limit.
      *
      * @param buffer byte buffer of data to be written (from current position to limit)
      * @return The number of bytes written, possibly zero
      * @throws IOException thrown on write error
      */
     default int write(ByteBuffer buffer) throws IOException{
-        return write(buffer, buffer.remaining());
+        // if the buffer position is already at the buffer limit, then flip the buffer for
+        //reading data from the buffer at the starting position to write to the I/O device
+        if(buffer.position() == buffer.limit()) buffer.flip();
+
+        // write contents from the buffer starting at the current position up the the remaining buffer size
+        return write(buffer, buffer.position(), buffer.remaining());
     }
 
     /**
      * Write multiple byte buffers of data.
+     *
+     * NOTE:  The contents from each byte buffer is read
+     *        from the current position index up to the buffer's
+     *        remaining limit.  If the buffer's current position
+     *        is already at the buffer's limit, then we will
+     *        automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's
+     *        limit.
      *
      * @param buffer byte buffer of data to be written
      * @return The number of bytes written, possibly zero
@@ -191,6 +237,11 @@ public interface IODataWriter {
     default int write(ByteBuffer ... buffer) throws IOException{
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         for (ByteBuffer bb : buffer) {
+            // if the buffer position is already at the buffer limit, then flip the buffer for
+            //reading data from the buffer at the starting position to write to the I/O device
+            if(bb.position() == bb.limit()) bb.flip();
+
+            // write the byte array to the byte output stream
             os.write(bb.array());
         }
         return write(os.toByteArray());
@@ -201,7 +252,7 @@ public interface IODataWriter {
     // ------------------------------------------------------------------------------------
 
     /**
-     * Write a buffer of byte values (all bytes in buffer).
+     * Write a stream of data (all bytes available in input stream).
      *
      * @param stream stream of data to be written
      * @return The number of bytes written, possibly zero
@@ -212,7 +263,19 @@ public interface IODataWriter {
     }
 
     /**
-     * Write a buffer of byte values (all bytes in buffer).
+     * Write a stream of stream of data up to the length (number of bytes) specified.
+     *
+     * @param stream stream of data to be written
+     * @param length number of bytes to be written
+     * @return The number of bytes written, possibly zero
+     * @throws IOException thrown on write error
+     */
+    default int write(InputStream stream, int length) throws IOException{
+        return write(stream.readNBytes(length));
+    }
+
+    /**
+     * Write multiple streams of data (all bytes available in each input stream).
      *
      * @param stream stream of data to be written
      * @return The number of bytes written, possibly zero
@@ -420,108 +483,164 @@ public interface IODataWriter {
     /**
      * Writes an ASCII based character buffer with a given offset and length.
      *
-     * @param data ASCII character array used for data write
+     * @param buffer ASCII character buffer used for data write
      * @param offset offset in data character array to start at
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
      * @throws IOException thrown on write error
      */
-    default int write(CharBuffer data, int offset, int length) throws IOException {
-        return write(StandardCharsets.US_ASCII, data, offset, length);
+    default int write(CharBuffer buffer, int offset, int length) throws IOException {
+        return write(StandardCharsets.US_ASCII, buffer, offset, length);
     }
 
     /**
      * Writes an ASCII based character buffer starting at first index to a given length.
      *
-     * @param data ASCII character array used for data write
+     * @param buffer ASCII character buffer used for data write
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
      * @throws IOException thrown on write error
      */
-    default int write(CharBuffer data, int length) throws IOException {
-        return write(StandardCharsets.US_ASCII, data, length);
+    default int write(CharBuffer buffer, int length) throws IOException {
+        return write(StandardCharsets.US_ASCII, buffer, length);
     }
 
     /**
      * Writes an ASCII based character buffer.
      *
-     * @param data ASCII character array used for data write
+     * @param buffer ASCII character buffer used for data write
      * @return The number of bytes (not characters) written, possibly zero
      * @throws IOException thrown on write error
      */
-    default int write(CharBuffer data) throws IOException {
-        return write(StandardCharsets.US_ASCII, data);
+    default int write(CharBuffer buffer) throws IOException {
+        return write(StandardCharsets.US_ASCII, buffer);
     }
 
     /**
-     * Writes an ASCII based character buffer.
+     * Writes multiple ASCII based character buffers.
      *
-     * @param data ASCII character array used for data write
+     * @param buffer ASCII character buffer used for data write
      * @return The number of bytes (not characters) written, possibly zero
      * @throws IOException thrown on write error
      */
-    default int write(CharBuffer ... data) throws IOException {
-        return write(StandardCharsets.US_ASCII, data);
+    default int write(CharBuffer ... buffer) throws IOException {
+        return write(StandardCharsets.US_ASCII, buffer);
     }
 
     /**
-     * Writes an ASCII based character buffer with a given offset and length
+     * Writes a character buffer with a given offset and length
      * using a specified character set to encode the chars into bytes.
      *
+     * NOTE:  The buffer's internal position tracking is no
+     *        used but rather only the explicit offset and
+     *        length provided.  If the requested length is
+     *        greater than the buffers capacity (minus offset)
+     *        then the specified length will be ignored and
+     *        this function will only read the number of
+     *        characters up to the buffers' available space.
+     *
      * @param charset character set to use for byte encoding
-     * @param data ASCII character array used for data write
+     * @param buffer character buffer used for data write
      * @param offset offset in data character array to start at
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
      * @throws IOException thrown on write error
      */
-    default int write(Charset charset, CharBuffer data, int offset, int length) throws IOException {
-        ByteBuffer bb = charset.encode(CharBuffer.wrap(data, offset, length));
+    default int write(Charset charset, CharBuffer buffer, int offset, int length) throws IOException {
+        // perform bounds checking on requested length versus total remaining size available
+        if(length > (buffer.capacity()-offset)){
+            length = buffer.capacity()-offset;
+        }
+
+        // convert the character array to a byte array and write the byte array
+        ByteBuffer bb = charset.encode(CharBuffer.wrap(buffer.array(), offset, length));
         return write(bb.array());
     }
 
     /**
-     * Writes an ASCII based character buffer starting at first index to a
+     * Writes a character buffer starting at first index to a
      * given length using a specified character set to encode the chars into bytes.
      *
+     * NOTE:  The contents from the character buffer is read
+     *        from the current position index up to the length
+     *        requested or up to the buffer's remaining limit;
+     *        whichever is is lower .  If the buffer's current
+     *        position is already at the buffer's limit, then we
+     *        will automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's limit.
+     *
      * @param charset character set to use for byte encoding
-     * @param data ASCII character array used for data write
+     * @param buffer character buffer used for data write
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
      * @throws IOException thrown on write error
      */
-    default int write(Charset charset, CharBuffer data, int length) throws IOException {
-        ByteBuffer bb = charset.encode(CharBuffer.wrap(data, 0, length));
-        return write(bb.array());
+    default int write(Charset charset, CharBuffer buffer, int length) throws IOException {
+        // if the buffer position is already at the buffer limit, then flip the buffer for
+        //reading data from the buffer at the starting position to write to the I/O device
+        if(buffer.position() == buffer.limit()) buffer.flip();
+
+        // bounds check the requested length; only allow reading up to the remaining space in the buffer
+        if(length > buffer.remaining()) length = buffer.remaining();
+
+        // write contents from the buffer starting at the current position up the the specified length
+        return write(charset, buffer, buffer.position(), length);
     }
 
     /**
-     * Writes an ASCII based character buffer using a specified
+     * Writes character buffer using a specified
      * character set to encode the chars into bytes.
      *
+     * NOTE:  The contents from the character buffer is read
+     *        from the current position index up to the buffer's
+     *        remaining limit.  If the buffer's current position
+     *        is already at the buffer's limit, then we will
+     *        automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's
+     *        limit.
+     *
      * @param charset character set to use for byte encoding
-     * @param data ASCII character array used for data write
+     * @param buffer character buffer used for data write
      * @return The number of bytes (not characters) written, possibly zero
      * @throws IOException thrown on write error
      */
-    default int write(Charset charset, CharBuffer data) throws IOException {
-        ByteBuffer bb = charset.encode(data);
-        return write(bb.array());
+    default int write(Charset charset, CharBuffer buffer) throws IOException {
+        // if the buffer position is already at the buffer limit, then flip the buffer for
+        //reading data from the buffer at the starting position to write to the I/O device
+        if(buffer.position() == buffer.limit()) buffer.flip();
+
+        // write contents from the buffer starting at the current position up the the remaining buffer size
+        return write(charset, buffer, buffer.position(), buffer.remaining());
     }
 
     /**
-     * Writes an ASCII based character buffer using a specified
+     * Writes multiple character buffers using a specified
      * character set to encode the chars into bytes.
      *
+     * NOTE:  The contents from each character buffer is read
+     *        from the current position index up to the buffer's
+     *        remaining limit.  If the buffer's current position
+     *        is already at the buffer's limit, then we will
+     *        automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's
+     *        limit.
+     *
      * @param charset character set to use for byte encoding
-     * @param data ASCII character array used for data write
+     * @param buffer character buffer used for data write
      * @return The number of bytes (not characters) written, possibly zero
      * @throws IOException thrown on write error
      */
-    default int write(Charset charset, CharBuffer ... data) throws IOException {
+    default int write(Charset charset, CharBuffer ... buffer) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        for (CharBuffer cb : data) {
-            ByteBuffer bb = charset.encode(cb);
+        for (CharBuffer cb : buffer) {
+            // if the buffer position is already at the buffer limit, then flip the buffer for
+            //reading data from the buffer at the starting position to write to the I/O device
+            if(cb.position() == cb.limit()) cb.flip();
+
+            // encode the contents of the character buffer from the current position up to the limit
+            ByteBuffer bb = charset.encode(CharBuffer.wrap(cb.array(), cb.position(), cb.remaining()));
+
+            // write the encoded byte buffer to the byte array output stream
             os.write(bb.array());
         }
         return write(os.toByteArray());
