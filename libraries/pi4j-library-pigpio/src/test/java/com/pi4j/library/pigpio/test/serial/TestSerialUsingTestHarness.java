@@ -31,6 +31,7 @@ package com.pi4j.library.pigpio.test.serial;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
+import com.pi4j.library.pigpio.util.StringUtil;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
@@ -38,7 +39,6 @@ import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
-import java.util.Formatter;
 import java.util.Random;
 
 @DisplayName("PIGPIO Library :: Test Serial Communication")
@@ -185,7 +185,7 @@ public class TestSerialUsingTestHarness {
             r.nextBytes(testData);
 
             // WRITE :: MULTI-BYTE
-            System.out.println(" (WRITE) >> VALUE = " + byteToHex(testData));
+            System.out.println(" (WRITE) >> VALUE = " + StringUtil.toHexString(testData));
             pigpio.serWrite(handle, testData);
 
             // take a breath while buffer catches up
@@ -200,21 +200,10 @@ public class TestSerialUsingTestHarness {
             byte[] readBuffer = new byte[available];
             int bytesRead = pigpio.serRead(handle, readBuffer, available);
             System.out.println(" (READ)  << BYTES READ = " + bytesRead);
-            System.out.println(" (READ)  << VALUE = " + byteToHex(readBuffer));
+            System.out.println(" (READ)  << VALUE = " + StringUtil.toHexString(readBuffer));
             //Thread.sleep(50);
 
             Assert.assertArrayEquals("SERIAL MULTI-BYTE VALUE MISMATCH",  testData, readBuffer);
         }
-    }
-
-    private String byteToHex(final byte[] hash)
-    {
-        Formatter formatter = new Formatter();
-        for (byte b : hash) {
-            formatter.format("%02x ", b);
-        }
-        String result = "[0x" + formatter.toString().trim() + "]";
-        formatter.close();
-        return result;
     }
 }

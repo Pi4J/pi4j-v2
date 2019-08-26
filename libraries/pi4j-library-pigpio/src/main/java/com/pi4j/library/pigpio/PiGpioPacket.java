@@ -230,10 +230,7 @@ public class PiGpioPacket {
         if(remaining > 0){
             var temp = new byte[remaining];
             rx.get(temp, 0, remaining);
-            //System.out.println("[REMAINING ]" + Arrays.toString(temp));
-            //packet.data(temp);
-            packet.data = Arrays.copyOf(temp, remaining);
-            //System.out.println("[DATA SIZE ]" + packet.dataLength());
+            packet.data(temp);
         }
         return packet;
     }
