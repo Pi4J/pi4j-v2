@@ -27,6 +27,7 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.Output;
 import com.pi4j.io.exception.IOException;
 
@@ -38,6 +39,9 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
 
     static DigitalOutputConfigBuilder newConfigBuilder(){
         return DigitalOutputConfigBuilder.newInstance();
+    }
+    static DigitalOutputBuilder newBuilder(Context context){
+        return DigitalOutputBuilder.newInstance(context);
     }
 
     DigitalOutput state(DigitalState state) throws IOException;

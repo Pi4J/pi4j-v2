@@ -69,7 +69,6 @@ public class Main {
 
         var din1 = pi4j.dout().create(11);
         var ain1 = pi4j.ain().create(21, "test-analog-input-provider");
-
         var input = pi4j.ain().create(98);
 
         input.name("My Analog Input #1");
@@ -83,7 +82,6 @@ public class Main {
             System.out.print("] VALUE CHANGE: ");
             System.out.println(event.value());
         });
-
 
         output1.addListener((AnalogChangeListener) event -> {
             System.out.print("ANALOG OUTPUT [");

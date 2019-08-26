@@ -67,7 +67,7 @@ public class TestI2cRawUsingTestHarness {
     @BeforeAll
     public static void initialize() {
         // configure logging output
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
@@ -181,22 +181,6 @@ public class TestI2cRawUsingTestHarness {
     }
 
     @Test
-    @DisplayName("I2C :: Test WORD (WRITE)")
-    @Order(4)
-    public void testI2CSingleWordWrite() throws Exception {
-        // write a single word (16 bits) to the raw I2C device (not to a register)
-        i2c.writeWord(SAMPLE_WORD);
-    }
-
-    @Test
-    @DisplayName("I2C :: Test WORD (READ)")
-    @Order(5)
-    public void testI2CSingleWordRead() throws Exception {
-        // read single word (16 bits) from the raw I2C device (not from a register)
-        Assert.assertEquals(SAMPLE_WORD, i2c.readWord());
-    }
-
-    @Test
     @DisplayName("I2C :: Test BYTE-ARRAY (WRITE)")
     @Order(6)
     public void testI2CByteArrayWrite() throws Exception {
@@ -209,7 +193,7 @@ public class TestI2cRawUsingTestHarness {
     @Order(7)
     public void testI2CByteArrayRead() throws Exception {
         // read an array of data bytes from the raw I2C device (not from a register)
-        byte[] byteArray = i2c.readArray(SAMPLE_BYTE_ARRAY.length);
+        byte[] byteArray = i2c.readNBytes(SAMPLE_BYTE_ARRAY.length);
         Assert.assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
     }
 
@@ -226,7 +210,7 @@ public class TestI2cRawUsingTestHarness {
     @Order(9)
     public void testI2CByteBufferRead() throws Exception {
         // read a buffer of data bytes from the raw I2C device (not from a register)
-        ByteBuffer buffer = i2c.readBuffer(SAMPLE_BUFFER.capacity());
+        ByteBuffer buffer = i2c.readByteBuffer(SAMPLE_BUFFER.capacity());
         Assert.assertArrayEquals(SAMPLE_BUFFER.array(), buffer.array());
     }
 

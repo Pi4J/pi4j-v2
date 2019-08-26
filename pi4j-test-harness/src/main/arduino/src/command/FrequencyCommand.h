@@ -44,13 +44,17 @@ void frequency_command_execute(SerialCommands* sender){
    int pin = GetCommandPinArgument(sender);
 
    // handle pin argument errors
-   if(pin < 0 && pin != ERROR_INVALID_PIN_DISABLED) {
+   if(pin < 0) {
       response["id"] = "error";
       response["errno"] = pin;
       response["arg"] = "pin";
       response["msg"] = GetCommandArgumentError(pin);
    } 
    else {
+        // make sure to disable any HIGH signals on the pin
+        pinMode(pin, OUTPUT);
+        digitalWrite(pin, LOW);
+
         // make sure the reading pin is an input pin
         pinMode(pin, INPUT);
         pins[pin].enabled = true;

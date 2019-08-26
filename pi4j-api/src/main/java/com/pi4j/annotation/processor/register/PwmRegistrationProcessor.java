@@ -116,17 +116,16 @@ public class PwmRegistrationProcessor implements RegisterProcessor<Pwm> {
         if (field.isAnnotationPresent(DutyCycle.class)) {
             dutyCycle = field.getAnnotation(DutyCycle.class);
             if (dutyCycle != null){
-
                 if(dutyCycle.value() >= 0) {
                     builder.dutyCycle(dutyCycle.value());
                 }
-                if(dutyCycle.range() >= 0) {
-                    builder.range(dutyCycle.range());
-                }
-                if(dutyCycle.percent() >= 0) {
-                    //builder.dutyCycle(dutyCycle.range());
-                }
             }
+        }
+
+        WithPwmType pwmType = null;
+        if (field.isAnnotationPresent(WithPwmType.class)) {
+            pwmType = field.getAnnotation(WithPwmType.class);
+            if (pwmType != null) builder.pwmType(pwmType.value());
         }
 
         AddPwmPresets pwmPresets = null;

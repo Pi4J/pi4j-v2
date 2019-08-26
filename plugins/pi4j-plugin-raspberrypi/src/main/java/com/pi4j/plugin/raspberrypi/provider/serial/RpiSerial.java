@@ -34,9 +34,36 @@ import com.pi4j.io.serial.SerialBase;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
 
+import java.io.IOException;
+
 public class RpiSerial extends SerialBase implements Serial {
 
     public RpiSerial(SerialProvider provider, SerialConfig config){
         super(provider, config);
+    }
+
+    @Override
+    public int write(byte b) throws IOException {
+        return 0;
+    }
+
+    @Override
+    public int write(byte[] data, int offset, int length) throws IOException {
+        return 0;
+    }
+
+    @Override
+    public int read() throws IOException {
+        return 0;
+    }
+
+    @Override
+    public int read(byte[] buffer, int offset, int length) throws IOException {
+        return 0;
+    }
+
+    @Override
+    public int available() throws IOException {
+        return 0;
     }
 }

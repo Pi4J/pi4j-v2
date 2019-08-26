@@ -55,7 +55,7 @@ public class TestDigitalInputUsingTestHarness {
     @BeforeAll
     public static void initialize() {
         // configure logging output
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
@@ -197,19 +197,6 @@ public class TestDigitalInputUsingTestHarness {
 
         for(int p = 2; p < 20; p++) {
 
-            // the following inputs are skipped because they always fail; possible
-            // because they are tied to other things that override the pull-up/down
-            if(p == 5) continue;
-            if(p == 6) continue;
-            if(p == 9) continue;
-            if(p == 10) continue;
-            if(p == 11) continue;
-            if(p == 12) continue;
-            if(p == 13) continue;
-            if(p == 16) continue;
-            if(p == 18) continue;
-            if(p == 19) continue;
-
             // create Digital Input instance config
             var config = DigitalInput.newConfigBuilder()
                     .id("my-din-pin-" + p)
@@ -241,6 +228,12 @@ public class TestDigitalInputUsingTestHarness {
 
         for(int p = 2; p < 20; p++) {
 
+            // the following inputs are skipped because they always fail; possible
+            // because they are tied to other things that override the software
+            // configurable pull-up/down resistors
+            if(p == 2) continue; // RPi I2C PINS have on-board pull-up resistors
+            if(p == 3) continue; // RPi I2C PINS have on-board pull-up resistors
+
             // create Digital Input instance config
             var config = DigitalInput.newConfigBuilder()
                     .id("my-din-pin-" + p)
@@ -253,7 +246,7 @@ public class TestDigitalInputUsingTestHarness {
             DigitalInput din = pi4j.create(config);
 
             // configure input pin and read value/state on testing harness
-            harness.setInputPin(p, true);
+            harness.setInputPin(p, false);
             int pull = harness.getPin(p).value;
 
             System.out.println("(PIN #" + p + ") >> PULL = " + pull);

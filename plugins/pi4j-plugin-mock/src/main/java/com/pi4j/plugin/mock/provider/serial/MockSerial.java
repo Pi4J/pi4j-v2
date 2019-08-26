@@ -33,10 +33,130 @@ import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialBase;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
+import com.pi4j.plugin.mock.Mock;
+import com.pi4j.util.StringUtil;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayDeque;
+import java.util.Objects;
 
 public class MockSerial extends SerialBase implements Serial {
 
+    /**
+     * ATTENTION:  The storage and management of the byte arrays
+     *  are terribly inefficient and not intended for real-world
+     *  usage.  These are only intended to unit testing the
+     *  Pi4J I2C APIs.
+     */
+    protected ArrayDeque<Byte> raw = new ArrayDeque<>();
+
     public MockSerial(SerialProvider provider, SerialConfig config){
         super(provider, config);
+        System.out.print(" [");
+        System.out.print(Mock.SERIAL_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: CLOSE(DEVICE=" + config.device() + "; BAUD=" + config.baud() + ")");
+        System.out.println();
+    }
+
+    @Override
+    public int available() throws IOException {
+        return raw.size();
+    }
+
+    @Override
+    public void close() throws IOException {
+        System.out.print(" [");
+        System.out.print(Mock.SERIAL_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: CLOSE(DEVICE=" + config.device() + "; BAUD=" + config.baud() + ")");
+        System.out.println();
+        super.close();
+    }
+
+    @Override
+    public int write(byte b) throws IOException {
+        raw.add(b);
+        System.out.print(" [");
+        System.out.print(Mock.SERIAL_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: WRITE(0x");
+        System.out.print(StringUtil.toHexString(b));
+        System.out.println(")");
+        return 0;
+    }
+
+    @Override
+    public int write(byte[] data, int offset, int length) throws IOException {
+        Objects.checkFromIndexSize(offset, length, data.length);
+        for(int p = offset; p-offset < length; p++){
+            raw.add(data[p]); // add to internal buffer
+        }
+        System.out.print(" [");
+        System.out.print(Mock.SERIAL_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: WRITE(0x");
+        System.out.print(StringUtil.toHexString(data, offset, length));
+        System.out.println(")");
+        return length;
+    }
+
+    @Override
+    public int write(Charset charset, CharSequence data) throws IOException {
+        byte[] buffer = data.toString().getBytes(charset);
+        for(int p = 0; p < buffer.length; p++){
+            raw.add(buffer[p]); // add to internal buffer
+        }
+        System.out.print(" [");
+        System.out.print(Mock.SERIAL_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: WRITE(\"");
+        System.out.print(data);
+        System.out.println("\")");
+        return data.length();
+    }
+
+    @Override
+    public int read() throws IOException {
+        if(raw.isEmpty()) return -1;
+        byte b = raw.pop();
+        System.out.print(" [");
+        System.out.print(Mock.SERIAL_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: READ (0x");
+        System.out.print(StringUtil.toHexString(b));
+        System.out.println(")");
+        return b;
+    }
+
+    @Override
+    public int read(byte[] buffer, int offset, int length) throws IOException{
+        Objects.checkFromIndexSize(offset, length, buffer.length);
+
+        if(raw.isEmpty()) return -1;
+        int counter = 0;
+        for(int p = 0; p < length; p++) {
+            if(p+offset > buffer.length) break;
+            if(raw.isEmpty()) break;;
+            buffer[offset + p] = raw.pop();
+            counter++;
+        }
+
+        System.out.print(" [");
+        System.out.print(Mock.SERIAL_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: READ (0x");
+        System.out.print(StringUtil.toHexString(buffer, offset, length));
+        System.out.println(")");
+
+        return counter;
     }
 }

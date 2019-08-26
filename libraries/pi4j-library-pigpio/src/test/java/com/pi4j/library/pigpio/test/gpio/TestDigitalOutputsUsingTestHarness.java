@@ -53,6 +53,8 @@ public class TestDigitalOutputsUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
+        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+
         System.out.println();
         System.out.println("************************************************************************");
         System.out.println("INITIALIZE TEST (" + TestDigitalOutputsUsingTestHarness.class.getName() + ")");
@@ -109,7 +111,7 @@ public class TestDigitalOutputsUsingTestHarness {
 
         // iterate over pins and perform test on each
         // TODO :: IMPLEMENT CORRECT SET OF TEST PINS
-        for(int pin = 2; pin <= 12; pin++){
+        for(int pin = 2; pin <= 19; pin++){
             testDigitalOutputPin(pin);
         }
     }

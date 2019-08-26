@@ -27,6 +27,6 @@ package com.pi4j.config;
  * #L%
  */
 
-public interface DeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends AddressConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
+public interface DeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
     BUILDER_TYPE device(String device);
 }

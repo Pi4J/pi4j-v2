@@ -66,6 +66,12 @@ int GetCommandPinArgument(SerialCommands* sender){
         if(pin == 3){
             return 21;
         }
+        if(pin == 14){
+            return 15;
+        }
+        if(pin == 15){
+            return 14;
+        }
     }
 
 
@@ -266,6 +272,51 @@ int GetCommandI2cDeviceArgument(SerialCommands* sender){
     return device;
 }
 
+/**
+ * GET SERIAL PORT VALUE FROM COMMANDS ARGUMENTS
+ */
+int GetCommandSerialPortArgument(SerialCommands* sender){
+	char* port_str = sender->Next();
+	if (port_str == NULL){
+		return ERROR_COMMAND_ARGUMENT_MISSING; // -1 :: missing argument
+	}
+
+    // validate numeric string
+    if(!StringUtil::isNumeric(port_str)){
+        return ERROR_COMMAND_ARGUMENT_INVALID; // -2 :: invalid argument
+    }
+	int port = atoi(port_str);
+
+    // validate device
+    if(port == 0) return port;
+    if(port == 3) return port;
+
+    // unsupported port
+    return ERROR_UNSUPPORTED_SERIAL_PORT;
+}
+
+/**
+ * GET SERIAL BAUD RATE VALUE FROM COMMANDS ARGUMENTS
+ */
+int GetCommandSerialBaudArgument(SerialCommands* sender){
+	char* baud_str = sender->Next();
+	if (baud_str == NULL){
+		return ERROR_COMMAND_ARGUMENT_MISSING; // -1 :: missing argument
+	}
+
+    // validate numeric string
+    if(!StringUtil::isNumeric(baud_str)){
+        return ERROR_COMMAND_ARGUMENT_INVALID; // -2 :: invalid argument
+    }
+	int baud = atoi(baud_str);
+
+    // validate device
+    if(baud < 0 || baud > 230400){
+        return ERROR_UNSUPPORTED_SERIAL_BAUD_RATE;
+    }
+
+    return baud;
+}
 
 String GetCommandArgumentError(int error){
     switch(error){
@@ -275,6 +326,8 @@ String GetCommandArgumentError(int error){
         case ERROR_INVALID_PIN_RESTRICTED   : {return "INVALID PIN NUMBER; RESTRICTED PIN"; break;}
         case ERROR_INVALID_I2C_BUS_OUT_OF_RANGE    : {return "INVALID I2C BUS; UNSUPPORTED BUS"; break;}
         case ERROR_INVALID_I2C_DEVICE_OUT_OF_RANGE : {return "INVALID I2C DEVICE; OUT OF ACCEPTED RANGE"; break;}
+        case ERROR_UNSUPPORTED_SERIAL_PORT  : {return "INVALID SERIAL PORT; UNSUPPORTED PORT NUMBER"; break;}
+        case ERROR_UNSUPPORTED_SERIAL_BAUD_RATE : {return "INVALID SERIAL BAUD RATE; UNSUPPORTED BAUD"; break;}
         default: return "UNKNOWN ARGUMENT ERROR";
     }
 }

@@ -27,33 +27,38 @@ package com.pi4j.io.serial;
  * #L%
  */
 
-import com.pi4j.config.impl.DeviceConfigBase;
+import com.pi4j.config.DeviceConfig;
 import com.pi4j.io.IOConfig;
 
-public class SerialConfig extends DeviceConfigBase<SerialConfig> implements IOConfig<SerialConfig> {
+public interface SerialConfig extends DeviceConfig<SerialConfig>, IOConfig<SerialConfig> {
+    String BAUD_KEY = "baud";
+    String STOP_BITS_KEY = "stop-bits";
+    String DATA_BITS_KEY = "data-bits";
+    String PARITY_KEY = "parity";
+    String FLOW_CONTROL_KEY = "flow-control";
 
-    int baud = Serial.DEFAULT_BAUD;
-
-    public SerialConfig(){
-        //super(Serial.DEFAULT_DEVICE);
-        super();
+    Integer baud();
+    default Integer getBaud() {
+        return baud();
     }
 
-    public SerialConfig(String device) {
-        //super(device);
+    StopBits stopBits();
+    default StopBits getStopBits() {
+        return stopBits();
     }
 
-    public SerialConfig(String device, int baud) {
-        //super(device);
-        this.baud = baud;
+    DataBits dataBits();
+    default DataBits getDataBits() {
+        return dataBits();
     }
 
-    public int baud() { return this.baud; };
-    public SerialConfig baud(int baud) { this.baud = baud; return this; }
-
-    @Override
-    public String toString(){
-        return String.format("[device=%s; baud=%d]", device(), baud());
+    Parity parity();
+    default Parity getParity() {
+        return parity();
     }
 
+    FlowControl flowControl();
+    default FlowControl getFlowControl(){
+        return flowControl();
+    }
 }

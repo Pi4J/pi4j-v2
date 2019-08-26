@@ -28,8 +28,6 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
-import java.io.IOException;
-
 public class Main {
 
 
@@ -40,26 +38,36 @@ public class Main {
 
         pig.initialize();
 
-        // set pin ALT0 modes for I2C BUS<1> usage on RPI3B
-        pig.gpioSetMode(2, PiGpioMode.ALT0);
-        pig.gpioSetMode(3, PiGpioMode.ALT0);
+
+        //pig.gpioSetMode(5, PiGpioMode.OUTPUT);
 
 
-        for(int x = 0; x < 100; x++) {
-            try {
-                pig.i2cClose(x);
-            }
-            catch (IOException e){
-                continue;
-            }
-        }
 
-        int handle = pig.i2cOpen(1, 0x04);
+//        // set pin ALT0 modes for I2C BUS<1> usage on RPI3B
+//        pig.gpioSetMode(2, PiGpioMode.ALT0);
+//        pig.gpioSetMode(3, PiGpioMode.ALT0);
+
+
+//        for(int x = 0; x < 100; x++) {
+//            try {
+//                pig.i2cClose(x);
+//            }
+//            catch (IOException e){
+//                continue;
+//            }
+//        }
+//
+//        int handle = pig.i2cOpen(1, 0x04);
 
 
         //pig.initialize();
         //pig.gpioSetPWMfrequency(4, 5000);
-        pig.gpioHardwarePWM(13, 100, 500000);
+
+
+        pig.gpioHardwarePWM(13, 50000000, 500000);
+
+        pig.gpioSetPWMfrequency(2, 830);
+        pig.gpioPWM(2, 128);
 
         //var frequency = pig.gpioGetPWMfrequency(4);
         //System.out.println("FREQUENCY: " + frequency);
@@ -92,14 +100,14 @@ public class Main {
 //        byte[] rx = pig.i2cReadI2CBlockData(handle, 2, 32);
 //        System.out.println("[BLOCK] <"  + rx.length + "> " + Arrays.toString(rx));
 //
-
-        int max = 32;
-        byte[] data = new byte[max];
-        for(int i = 0; i < max; i++) {
-            data[i] = (byte)i;
-        }
-
-        pig.i2cWriteDevice(handle, data);
+//
+//        int max = 32;
+//        byte[] data = new byte[max];
+//        for(int i = 0; i < max; i++) {
+//            data[i] = (byte)i;
+//        }
+//
+//        pig.i2cWriteDevice(handle, data);
 
         //Thread.sleep(200);
         //byte rx[] = pig.i2cReadDevice(handle, data.length);
@@ -119,8 +127,8 @@ public class Main {
 //
 //        pig.gpioWrite(4, PiGpioState.LOW);
 
-        // CLOSE
-        pig.i2cClose(handle);
+//        // CLOSE
+//        pig.i2cClose(handle);
 
 
 

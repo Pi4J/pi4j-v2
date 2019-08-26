@@ -135,11 +135,24 @@ public class PiGpioPacket {
     public byte[] data(){
         return this.data;
     }
-    public PiGpioPacket data(byte[] data){
+
+    public PiGpioPacket data(CharSequence data){
+        return this.data(data.toString().getBytes(StandardCharsets.US_ASCII));
+    }
+
+    public PiGpioPacket data(byte[] data) {
+        return data(data, data.length);
+    }
+
+    public PiGpioPacket data(byte[] data, int length) {
+        return data(data, 0, data.length);
+    }
+
+    public PiGpioPacket data(byte[] data, int offset, int length){
         // check for valid data
-        if(data != null && data.length > 0) {
-            this.p3 = data.length;
-            this.data = Arrays.copyOf(data, data.length);
+        if(data != null && data.length > 0 && length > 0) {
+            this.p3 = length;
+            this.data = Arrays.copyOfRange(data, offset, offset+length);
         }
         else{
             this.p3 = 0;
@@ -208,10 +221,19 @@ public class PiGpioPacket {
                 .p3(p3); // set RAW P3 value
 
         // apply any extra payload data (if available)
-        if(rx.hasRemaining()){
-            var temp = new byte[rx.remaining()];
-            rx.get(temp);
-            packet.data(temp);
+        int remaining = rx.remaining();
+
+        // bounds check remaining byte count
+        if(p3 < remaining) remaining = p3;
+
+        //System.out.println("HAS-REMAINING: " + remaining);
+        if(remaining > 0){
+            var temp = new byte[remaining];
+            rx.get(temp, 0, remaining);
+            //System.out.println("[REMAINING ]" + Arrays.toString(temp));
+            //packet.data(temp);
+            packet.data = Arrays.copyOf(temp, remaining);
+            //System.out.println("[DATA SIZE ]" + packet.dataLength());
         }
         return packet;
     }
@@ -227,7 +249,7 @@ public class PiGpioPacket {
         buffer.putInt((packet.p1()));         // <P1>
         buffer.putInt((packet.p2()));         // <P2>
         buffer.putInt((packet.p3()));         // <P3>
-        if(packet.hasData()) {
+        if(packet.data != null && packet.data.length > 0) {
             buffer.put(packet.data());        // <DATA>
         }
 
@@ -237,7 +259,8 @@ public class PiGpioPacket {
 
     @Override
     public String toString(){
-        if(hasData())
+        //if(this.data != null && this.data.length > 0)
+        if(p3() > 0)
             return String.format("CMD=%s(%d); P1=%d; P2=%d; P3=%d; PAYLOAD=[0x%s]", cmd().name(), cmd().value(), p1(), p2(), p3(), StringUtil.toHexString(data()));
         else
             return String.format("CMD=%s(%d); P1=%d; P2=%d; P3=%d", cmd().name(), cmd().value(), p1(), p2(), p3());

@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @DisplayName("PIGPIO Library :: Test I2C Raw Communication")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestI2cRawUsingTestHarness {
 
     private static int I2C_BUS = 1;
@@ -134,6 +135,7 @@ public class TestI2cRawUsingTestHarness {
 
     @Test
     @DisplayName("I2C :: Test SINGLE-BYTE (W/R)")
+    @Order(1)
     public void testI2CSingleByteTxRx() throws IOException, InterruptedException {
         System.out.println();
         System.out.println("----------------------------------------");
@@ -160,6 +162,7 @@ public class TestI2cRawUsingTestHarness {
 
     @Test
     @DisplayName("I2C :: Test MULTI-BYTE (W/R)")
+    @Order(2)
     public void testI2CMultiByteTxRx() throws IOException, InterruptedException {
         System.out.println();
         System.out.println("----------------------------------------");
@@ -168,7 +171,7 @@ public class TestI2cRawUsingTestHarness {
 
         // iterate over series of test values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
-        for(int x = 0; x < 100; x++) {
+        for(int x = 0; x < 50; x++) {
             System.out.println("[TEST WRITE/READ MULTI-BYTE]");
 
             String value = UUID.randomUUID().toString().substring(0, 8);
@@ -176,14 +179,22 @@ public class TestI2cRawUsingTestHarness {
             // WRITE :: RAW MULTI-BYTE
             System.out.println(" (WRITE) >> VALUE = " + value);
             pigpio.i2cWriteDevice(handle, value);
-            Thread.sleep(5);
+            Thread.sleep(20);
 
             // READ :: RAW MULTI-BYTE
-            String rx = pigpio.i2cReadDeviceToString(handle, value.length());
-            System.out.println(" (READ)  << VALUE = " + rx);
-            Thread.sleep(5);
+            byte[] buffer = new byte[value.length()];
+            var result = pigpio.i2cReadDevice(handle, buffer);
 
-            Assert.assertEquals("I2C MULTI-BYTE VALUE MISMATCH",  value, rx);
+            System.out.println(" (READ)  << RESULT = " + result);
+            if(result > 0) {
+                String resultString = new String(buffer);
+                System.out.println(" (READ)  << VALUE = " + resultString);
+                Assert.assertEquals("I2C MULTI-BYTE VALUE MISMATCH", value, resultString);
+            } else {
+                Assert.fail("I2C READ FAILED: " + result);
+            }
+
+            Thread.sleep(20);
         }
     }
 }

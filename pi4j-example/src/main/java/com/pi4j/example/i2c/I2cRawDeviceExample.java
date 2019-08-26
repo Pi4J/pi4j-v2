@@ -39,6 +39,7 @@ public class I2cRawDeviceExample {
     private static int I2C_DEVICE = 0x04;
 
     public static void main(String[] args) throws Exception {
+        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
         // this temporary property is used to tell
@@ -75,24 +76,18 @@ public class I2cRawDeviceExample {
             // <-- read a single (8-bit) byte value from the raw I2C device (not to a register)
             byte readByte = i2c.readByte();
 
-            // --> write a single (16-bit) word value to the raw I2C device (not to a register)
-            i2c.writeWord(0xFFFF);
-
-            // <-- read a single (16-bit) word value from the raw I2C device (not to a register)
-            int readWord = i2c.readWord();
-
             // --> write an array of data bytes to the raw I2C device (not to a register)
             i2c.write(new byte[] { 0,1,2,3,4,5,6,7,8,9 });
 
             // <-- read a byte array of specified length from the raw I2C device (not to a register)
-            byte[] readArray = i2c.readArray(10);
+            byte[] readArray = i2c.readNBytes(10);
 
             // --> write a buffer of data bytes to the raw I2C device (not to a register)
             ByteBuffer buffer = ByteBuffer.allocate(10);
             i2c.write(buffer);
 
             // <-- read ByteBuffer of specified length from the raw I2C device (not to a register)
-            ByteBuffer readBuffer = i2c.readBuffer(10);
+            ByteBuffer readBuffer = i2c.readByteBuffer(10);
 
             // --> write a string of data to the raw I2C device (not to a register)
             i2c.write("This is a test");

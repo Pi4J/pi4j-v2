@@ -33,7 +33,7 @@ import com.pi4j.library.pigpio.impl.PiGpioSocketImpl;
 
 import java.io.IOException;
 
-public interface PiGpio extends PiGpio_I2C, PiGpio_GPIO, PiGpio_PWM {
+public interface PiGpio extends PiGpio_I2C, PiGpio_GPIO, PiGpio_PWM, PiGpio_Serial {
 
     /**
      * Creates a PiGpio instance using TCP Socket communication for remote I/O access.

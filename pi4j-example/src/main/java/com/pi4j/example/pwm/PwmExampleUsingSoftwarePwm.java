@@ -34,7 +34,7 @@ import com.pi4j.util.Console;
 
 public class PwmExampleUsingSoftwarePwm {
 
-    public static int PWM_PIN = 4;
+    public static int PWM_PIN = 13;
 
     public static void main(String[] args) throws Exception {
 
@@ -65,10 +65,9 @@ public class PwmExampleUsingSoftwarePwm {
                 .name("My Test PWM Pin")
                 .address(PWM_PIN)
                 .frequency(1000)   // optionally pre-configure the desired frequency to 1KHz
-                .range(255)        // optionally pre-configure the desired duty-cycle range (0-255)
-                .dutyCycle(128)    // optionally pre-configure the desired duty-cycle (50%)
+                .dutyCycle(50)     // optionally pre-configure the desired duty-cycle (50%)
                 .shutdown(0)       // optionally pre-configure a shutdown duty-cycle value (on terminate)
-                //.initial(125)      // optionally pre-configure an initial duty-cycle value (on startup)
+                //.initial(50)     // optionally pre-configure an initial duty-cycle value (on startup)
                 .build();
 
         // use try-with-resources to auto-close I2C when complete
@@ -101,8 +100,7 @@ public class PwmExampleUsingSoftwarePwm {
         console.println(" - GPIO PIN   : " + pwm.address());
         console.println(" - PWM TYPE   : " + pwm.pwmType());
         console.println(" - FREQUENCY  : " + pwm.frequency() + " Hz");
-        console.println(" - RANGE      : 0-" + pwm.range());
-        console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + " (" + pwm.dutyCyclePercent()  + "%)");
+        console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + "%");
         console.println(" - IS-ON      : " + pwm.isOn());
 
         // create a digital input instance using the default digital input provider

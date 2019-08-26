@@ -49,7 +49,7 @@ public class PwmExampleUsingHardwarePwm {
         final var console = new Console();
 
         // print program title/header
-        console.title("<-- The Pi4J Project -->", "PWM Example using Software-Emulated PWM");
+        console.title("<-- The Pi4J Project -->", "PWM Example using Hardware PWM");
 
         // allow for user to exit program using CTRL-C
         console.promptForExit();
@@ -79,13 +79,8 @@ public class PwmExampleUsingHardwarePwm {
         //pwm.frequency(1000);
 
         // <OPTIONAL>
-        // optionally override pre-configured duty-cycle value;
-        // this is in relation to the previously defined rage value
-        //pwm.setDutyCycle(500000);   // hardware PWM range is 0-1M; this value is 50% of range
-
-        // <OPTIONAL>
-        // alternatively, you can also just simply set the duty-cycle as a percent value
-        pwm.setDutyCyclePercent(50); // 50%
+        // optionally override a pre-configured PWM duty-cycle (percent 0-100%)
+        pwm.dutyCycle(50); // 50%
 
         // enable the PWM signal
         pwm.on();
@@ -96,8 +91,7 @@ public class PwmExampleUsingHardwarePwm {
         console.println(" - GPIO PIN   : " + pwm.address());
         console.println(" - PWM TYPE   : " + pwm.pwmType());
         console.println(" - FREQUENCY  : " + pwm.frequency() + " Hz");
-        console.println(" - RANGE      : 0-" + pwm.range());
-        console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + " (" + pwm.dutyCyclePercent()  + "%)");
+        console.println(" - DUTY-CYCLE : " + pwm.dutyCycle() + "%");
         console.println(" - IS-ON      : " + pwm.isOn());
 
         // create a digital input instance using the default digital input provider

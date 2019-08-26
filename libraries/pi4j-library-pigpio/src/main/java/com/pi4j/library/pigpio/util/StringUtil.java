@@ -303,7 +303,7 @@ public class StringUtil {
     }
     public static String toHexString(ByteBuffer buffer, int offset, int length){
         StringBuilder sb = new StringBuilder();
-        appendHexString(sb, buffer, offset, length);
+        appendHexString(sb, buffer, offset, offset+length);
         return sb.toString().trim();
     }
 

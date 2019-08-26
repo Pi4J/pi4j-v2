@@ -27,58 +27,54 @@ package com.pi4j.io.serial;
  * #L%
  */
 
-import com.pi4j.context.Context;
 import com.pi4j.io.IO;
-import com.pi4j.io.serial.impl.SerialFactory;
-import com.pi4j.provider.exception.ProviderException;
+import com.pi4j.io.IODataReader;
+import com.pi4j.io.IODataWriter;
 
 import java.io.IOException;
 
-public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCloseable {
+public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCloseable, IODataWriter, IODataReader {
 
-    static final String ID = "SERIAL";
+    int DEFAULT_BAUD = 9600;
+    DataBits DEFAULT_DATA_BITS = DataBits._8;
+    Parity DEFAULT_PARITY = Parity.NONE;
+    StopBits DEFAULT_STOP_BITS = StopBits._1;
+    FlowControl DEFAULT_FLOW_CONTROL = FlowControl.NONE;
 
-    static final int DEFAULT_BAUD = 9600;
-    static final String DEFAULT_DEVICE = "{DEFAULT}";
-
-    static Serial instance(Context context, SerialConfig config) throws ProviderException {
-        return SerialFactory.instance(context, config);
+    static SerialConfigBuilder newConfigBuilder(){
+        return SerialConfigBuilder.newInstance();
     }
 
-    static Serial instance(Context context, String device) throws ProviderException {
-        return SerialFactory.instance(context, device);
+    /**
+     * Serial Device Communication State is OPEN
+     * @return The Serial device communication state
+     */
+    boolean isOpen();
+
+
+    /**
+     * Get the number of data bytes available in the serial receive buffer
+     * @return
+     */
+    int available() throws IOException;
+
+    /**
+     * This function will drain the current serial receive buffer of any lingering bytes.
+     *
+     * @return Returns the number of bytes of data drained (>=0) if OK, otherwise a negative error code.
+     */
+    default int drain() throws IOException{
+        // get number of bytes available
+        int avail = this.available();
+        if(avail > 0) {
+            byte[] temp = new byte[avail];
+            return this.read(temp);
+        }
+        else{
+            return 0;
+        }
     }
 
-    static Serial instance(Context context, String device, int baud) throws ProviderException {
-        return SerialFactory.instance(context, device, baud);
-    }
-
-    static Serial instance(Context context, String providerId, String device) throws ProviderException {
-        return SerialFactory.instance(context, providerId, device);
-    }
-
-    static Serial instance(Context context, String providerId, String device, int baud) throws ProviderException {
-        return SerialFactory.instance(context, providerId, device);
-    }
-
-    static Serial instance(Context context, String providerId, SerialConfig config) throws ProviderException {
-        return SerialFactory.instance(context, providerId, config);
-    }
-
-    static Serial instance(SerialProvider provider, String device) throws ProviderException {
-        return SerialFactory.instance(provider, device);
-    }
-
-    static Serial instance(SerialProvider provider, String device, int baud) throws ProviderException {
-        return SerialFactory.instance(provider, device);
-    }
-
-    static Serial instance(SerialProvider provider, SerialConfig config) throws ProviderException {
-        return SerialFactory.instance(provider, config);
-    }
-
-
-    public void open() throws IOException;
-    public void close() throws IOException;
-    public void send(CharSequence data);
+    void open() throws IOException;
+    void close() throws IOException;
 }

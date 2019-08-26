@@ -60,7 +60,7 @@ public class TestHardwarePwmUsingTestHarness {
     @BeforeAll
     public static void initialize() {
         // configure logging output
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
@@ -172,7 +172,7 @@ public class TestHardwarePwmUsingTestHarness {
 
     @Test
     @Order(6)
-    @DisplayName("PWM :: Test Hardware PWM @ 10000 Hz (10 KHz)")
+    @DisplayName("PWM :: Test Unsupported Hardware PWM Pin")
     public void testUnsupportedPin() throws Exception {
 
         // create PWM instance config
@@ -232,15 +232,11 @@ public class TestHardwarePwmUsingTestHarness {
             System.out.println("[TEST HARDWARE PWM] :: PIN=" + p);
 
             // turn on PWM pulses with specified frequency and duty-cycle
-            pwm.dutyCyclePercent(dutyCycle)
-                    .frequency(frequency)
-                    .on();
+            pwm.dutyCycle(dutyCycle).frequency(frequency).on();
 
             System.out.println(" (PWM) >> SET FREQUENCY  = " + frequency);
             System.out.println(" (PWM) >> SET DUTY-CYCLE = " + dutyCycle + "%");
             System.out.println(" (PWM) << GET FREQUENCY  = " + pwm.frequency());
-            System.out.println(" (PWM) << GET DUTY-CYCLE = " + pwm.dutyCycle() + " (" + pwm.dutyCyclePercent() + "%)");
-            System.out.println(" (PWM) << GET RANGE MAX  = " + pwm.range());
 
             Thread.sleep(10);
             // test once ..
@@ -266,15 +262,16 @@ public class TestHardwarePwmUsingTestHarness {
     }
 
     private boolean measureFrequency(Pwm pwm) throws IOException {
-        int frequency = pwm.frequency();
+        int frequency = pwm.actualFrequency();
         TestHarnessFrequency measured = harness.getFrequency(pwm.address());
-        System.out.println(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency);
+        float deviation = (measured.frequency - frequency) * 100/(float)frequency;
+        System.out.println(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency + "; (EXPECTED=" + frequency + "; DEVIATION: " + deviation + "%)");
 
-        // we allow a 60% margin of error, the testing harness uses a simple pulse counter to crudely
+        // we allow a 25% margin of error, the testing harness uses a simple pulse counter to crudely
         // measure the PWM signal, its not very accurate but should provide sufficient validation testing
         // just to verify the applied PWM signal is close to the expected frequency
         // calculate margin of error offset value
-        long marginOfError = Math.round(frequency * .60);
+        long marginOfError = Math.round(frequency * .25);
 
         // test measured value against HI/LOW offsets to determine acceptable range
         if(measured.frequency < frequency-marginOfError) return false;

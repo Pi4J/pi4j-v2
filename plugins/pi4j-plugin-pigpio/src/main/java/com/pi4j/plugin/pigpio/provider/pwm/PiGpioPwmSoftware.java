@@ -41,41 +41,41 @@ import java.io.IOException;
 
 public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
 
+    // fixed range for software PWM
+    public static int RANGE = 255;
 
     public PiGpioPwmSoftware(PiGpio piGpio, PwmProvider provider, PwmConfig config) throws IOException {
-        super(piGpio, provider, config);
+        super(piGpio, provider, config, RANGE);
     }
 
     @Override
     public Pwm initialize(Context context) throws InitializeException {
-        super.initialize(context);
-
         try {
             // set pin mode to output
             piGpio.gpioSetMode(this.address(), PiGpioMode.OUTPUT);
+
+            // set PWM range (to fixed range)
+            piGpio.gpioSetPWMrange(this.address(), RANGE);
+
+            // get actual PWM frequency
+            this.actualFrequency = piGpio.gpioGetPWMfrequency(this.address());
 
             // get current frequency from config or from actual PWM pin
             if (config.frequency() != null) {
                 this.frequency = config.frequency();
             } else {
-                this.frequency = piGpio.gpioGetPWMfrequency(this.address());
+                this.frequency = this.actualFrequency;
             }
 
-            // get current range from config or from actual PWM pin
-            if (config.range() != null) {
-                this.range = config.range();
-            } else {
-                this.range = piGpio.gpioGetPWMrange(this.address());
-            }
+            // initialize
+            super.initialize(context);
 
             // get current duty-cycle from config or set to default 50%
             if (config.dutyCycle() != null) {
                 this.dutyCycle = config.dutyCycle();
-            } else if (config.dutyCyclePercent() != null) {
-                dutyCyclePercent(config.dutyCyclePercent());
             } else {
                 // get updated duty-cycle value from PiGpio
-                this.dutyCycle = this.range / 2;  // default duty-cycle is 50% of total range
+                this.dutyCycle = 50;  // default duty-cycle is 50% of total range
             }
         }
         catch (IOException e){
@@ -85,20 +85,14 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
         return this;
     }
 
+    @Override
     public Pwm on() throws IOException{
 
-        // set PWM range
-        piGpio.gpioSetPWMrange(this.address(), range);
-        this.range = piGpio.gpioGetPWMrange(this.address());
-
-        // set PWM frequency
-        piGpio.gpioSetPWMfrequency(this.address(), frequency);
+        // set PWM frequency; return actual frequency
+        this.actualFrequency = piGpio.gpioSetPWMfrequency(this.address(), frequency);
 
         // set PWM duty-cycle and enable PWM
-        piGpio.gpioPWM(this.address(), this.dutyCycle);
-
-        // get updated duty-cycle value from PiGpio
-        this.dutyCycle = piGpio.gpioGetPWMdutycycle(this.address());
+        piGpio.gpioPWM(this.address(), calculateActualDutyCycle(this.dutyCycle));
 
         // update tracking state
         this.onState = (this.frequency > 0 && this.dutyCycle > 0);
@@ -106,6 +100,7 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
         return this;
     }
 
+    @Override
     public Pwm off() throws IOException{
 
         // set PWM duty-cycle and enable PWM

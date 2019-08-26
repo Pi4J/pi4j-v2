@@ -30,8 +30,7 @@ package com.pi4j.io.gpio.digital;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.impl.DefaultDigitalOutputBuilder;
 import com.pi4j.platform.Platform;
-
-import java.security.Provider;
+import com.pi4j.provider.Provider;
 
 public interface DigitalOutputBuilder {
 
@@ -48,8 +47,8 @@ public interface DigitalOutputBuilder {
     DigitalOutputBuilder provider(Class<? extends Provider> providerClass);
 
     static DigitalOutputBuilder newInstance(Context context)  {
-        return DefaultDigitalOutputBuilder.newInstance();
+        return DefaultDigitalOutputBuilder.newInstance(context);
     }
 
-    DigitalOutput build();
+    DigitalOutput build() throws Exception;
 }

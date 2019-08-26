@@ -106,4 +106,6 @@ struct I2cCache {
 
 I2cCache i2cCache;
 
+HardwareSerial* serialEcho = nullptr;
+
 #endif //PI4J_MAIN_H

@@ -31,5 +31,42 @@ import com.pi4j.provider.Provider;
 
 
 public interface SerialProvider extends Provider<SerialProvider, Serial, SerialConfig> {
-    //Serial instance(SerialConfig config) throws Exception;
+
+    default <T extends Serial> T create(SerialConfigBuilder builder) throws Exception {
+        return (T)create(builder.build());
+    }
+
+//    default <T extends Serial> T create(Integer address) throws Exception {
+//        var config = Serial.newConfigBuilder()
+//                .address(address)
+//                .build();
+//        return (T)create(config);
+//    }
+//
+//    default <T extends Serial> T create(Integer address, String id) throws Exception {
+//        var config = Serial.newConfigBuilder()
+//                .address(address)
+//                .id(id)
+//                .build();
+//        return (T)create(config);
+//    }
+//
+//    default <T extends Serial> T create(Integer address, String id, String name) throws Exception {
+//        var config = Serial.newConfigBuilder()
+//                .address(address)
+//                .id(id)
+//                .name(name)
+//                .build();
+//        return (T)create(config);
+//    }
+//
+//    default <T extends Serial> T create(Integer address, String id, String name, String description) throws Exception {
+//        var config = Serial.newConfigBuilder()
+//                .address(address)
+//                .id(id)
+//                .name(name)
+//                .description(description)
+//                .build();
+//        return (T)create(config);
+//    }
 }

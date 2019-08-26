@@ -30,6 +30,7 @@ package com.pi4j.library.pigpio.test.pwm;
  */
 
 import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
 import com.pi4j.test.harness.TestHarnessInfo;
@@ -159,7 +160,7 @@ public class TestSoftwarePwmUsingTestHarness {
     }
 
     public void testPwm(int frequency) throws IOException, InterruptedException {
-        testPwm(frequency, 80); // 80% duty-cycle by default
+        testPwm(frequency, 128); // 50% duty-cycle by default
     }
     public void testPwm(int frequency, int dutyCycle) throws IOException, InterruptedException {
         System.out.println();
@@ -168,6 +169,10 @@ public class TestSoftwarePwmUsingTestHarness {
         System.out.println("----------------------------------------");
 
         for(int p = 2; p < 20; p++) {
+
+            // set pin to output pin
+            pigpio.gpioSetMode(p, PiGpioMode.OUTPUT);
+
             System.out.println();
             System.out.println("[TEST SOFT PWM] :: PIN=" + p);
             int actualFrequency = pigpio.gpioSetPWMfrequency(p, frequency);
@@ -188,6 +193,7 @@ public class TestSoftwarePwmUsingTestHarness {
             Assert.assertEquals("PWM FREQUENCY MISMATCH",  actualFrequency, readFrequency);
             Assert.assertEquals("PWM DUTY-CYCLE MISMATCH",  dutyCycle, readDutyCycle);
 
+            Thread.sleep(100);
 
             // test once ..
             if(measureFrequency(p, actualFrequency) == false){
@@ -213,13 +219,15 @@ public class TestSoftwarePwmUsingTestHarness {
 
     private boolean measureFrequency(int pin, int frequency) throws IOException {
         TestHarnessFrequency measured = harness.getFrequency(pin);
-        System.out.println(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency);
 
-        // we allow a 60% margin of error, the testing harness uses a simple pulse counter to crudely
+        float deviation = (measured.frequency - frequency) * 100/(float)frequency;
+        System.out.println(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency + "; (EXPECTED=" + frequency + "; DEVIATION: " + deviation + "%)");
+
+        // we allow a 25% margin of error, the testing harness uses a simple pulse counter to crudely
         // measure the PWM signal, its not very accurate but should provide sufficient validation testing
         // just to verify the applied PWM signal is close to the expected frequency
         // calculate margin of error offset value
-        long marginOfError = Math.round(frequency * .60);
+        long marginOfError = Math.round(frequency * 25);
 
         // test measured value against HI/LOW offsets to determine acceptable range
         if(measured.frequency < frequency-marginOfError) return false;

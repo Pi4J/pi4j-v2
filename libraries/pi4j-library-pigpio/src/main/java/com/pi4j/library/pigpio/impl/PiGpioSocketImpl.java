@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static com.pi4j.library.pigpio.PiGpioCmd.*;
 import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_HOST;
@@ -209,6 +210,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         return revisionString;
     }
 
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+    // GPIO IMPLEMENTATION
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+
     /**
      * Sets or clears resistor pull ups or downs on the GPIO.
      *
@@ -221,7 +228,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     public void gpioSetPullUpDown(int pin, PiGpioPud pud) throws IOException {
         logger.trace("[GPIO::PUD-SET] -> PIN: {}; PUD={}({});", pin, pud.name(), pud.value());
         validatePin(pin);
-        PiGpioPacket result = sendCommand(MODES, pin, pud.value());
+        PiGpioPacket result = sendCommand(PUD, pin, pud.value());
         logger.trace("[GPIO::PUD-SET] <- PIN: {}; PUD={}({}); SUCCESS={}", pud.name(), pud.value(), result.success());
         validateResult(result); // Returns 0 if OK, otherwise PI_BAD_GPIO or PI_BAD_MODE.
     }
@@ -299,6 +306,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[GPIO::SET] <- PIN: {}; {}({}); SUCCESS={}",  pin, state.name(), state.value(), result.success());
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_GPIO or PI_BAD_LEVEL.
     }
+
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+    // PWM IMPLEMENTATION
+    // *****************************************************************************************************
+    // *****************************************************************************************************
 
     /**
      * Starts PWM on the GPIO, dutycycle between 0 (off) and range (fully on). Range defaults to 255.
@@ -550,6 +563,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateResult(rx);  // Returns the numerically closest frequency if OK, otherwise PI_BAD_USER_GPIO.
     }
 
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+    // DELAY/SLEEP/TIMER IMPLEMENTATION
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+
     /**
      * Delays for at least the number of microseconds specified by micros.
      * (Delays of 100 microseconds or less use busy waits.)
@@ -617,198 +636,617 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         return tick;
     }
 
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+    // I2C IMPLEMENTATION
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+
+    /**
+     * Opens a I2C device on a I2C bus for communications.
+     * This returns a handle for the device at the address on the I2C bus.
+     * Physically buses 0 and 1 are available on the Pi.
+     * Higher numbered buses will be available if a kernel supported bus multiplexor is being used.
+     *
+     * The GPIO used are given in the following table.
+     *         SDA   SCL
+     * I2C0     0     1
+     * I2C1     2     3
+     *
+     * @param bus the I2C bus address to open/access for reading and writing. (>=0)
+     * @param device the I2C device address to open/access for reading and writing. (0-0x7F)
+     * @param flags no flags are currently defined. This parameter should be set to zero.
+     * @return Returns a handle (>=0) if OK, otherwise PI_BAD_I2C_BUS, PI_BAD_I2C_ADDR, PI_BAD_FLAGS, PI_NO_HANDLE, or PI_I2C_OPEN_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cOpen"
+     */
     @Override
-    public int i2cOpen(int bus, int device) throws IOException {
+    public int i2cOpen(int bus, int device, int flags) throws IOException {
         logger.trace("[I2C::OPEN] -> Open I2C Bus [{}] and Device [{}]", bus, device);
         validateI2cBus(bus);
         validateI2cDeviceAddress(device);
-        PiGpioPacket tx = new PiGpioPacket(I2CO, bus, device);
+        PiGpioPacket tx = new PiGpioPacket(I2CO, bus, device).data(flags);
         PiGpioPacket rx = sendPacket(tx);
         int handle = rx.result();
         logger.trace("[I2C::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, false);
         return handle;
     }
 
+    /**
+     * This closes the I2C device associated with the handle.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cClose"
+     */
     @Override
-    public void i2cClose(int handle) throws IOException {
+    public int i2cClose(int handle) throws IOException {
         logger.trace("[I2C::CLOSE] -> HANDLE={}, Close I2C Bus", handle);
-        validateI2cHandle(handle);
+        validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CC, handle);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
-    }
-
-    @Override
-    public void i2cWriteQuick(int handle, boolean bit) throws IOException {
-        logger.trace("[I2C::WRITE] -> HANDLE={}; R/W Bit [{}]", handle, bit ? 1 : 0);
-        validateI2cHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(I2CWQ, handle, bit ? 1 : 0);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
-    }
-
-    @Override
-    public void i2cWriteByte(int handle, byte value) throws IOException {
-        logger.trace("[I2C::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
-        validateI2cHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(I2CWS, handle, Byte.toUnsignedInt(value));
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
-    }
-
-    @Override
-    public int i2cReadByte(int handle) throws IOException {
-        logger.trace("[I2C::READ] -> [{}]; Byte", handle);
-        validateI2cHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(I2CRS, handle);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, false);
         return rx.result();
     }
 
+    /**
+     * This sends a single bit (in the Rd/Wr bit) to the device associated with handle.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param bit 0-1, the value to write
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteQuick"
+     */
     @Override
-    public void i2cWriteByteData(int handle, int register, byte value) throws IOException {
+    public int i2cWriteQuick(int handle, boolean bit) throws IOException {
+        logger.trace("[I2C::WRITE] -> HANDLE={}; R/W Bit [{}]", handle, bit ? 1 : 0);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(I2CWQ, handle, bit ? 1 : 0);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx, false);
+        return rx.result();
+    }
+
+    /**
+     * This sends a single byte to the device associated with handle.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param value raw byte value (0-0xFF) to write to I2C device
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByte"
+     */
+    @Override
+    public int i2cWriteByte(int handle, byte value) throws IOException {
+        logger.trace("[I2C::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(I2CWS, handle, Byte.toUnsignedInt(value));
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx, false);
+        return rx.result();
+    }
+
+    /**
+     * This reads a single byte from the device associated with handle.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @return Returns the byte read (>=0) if OK, otherwise PI_BAD_HANDLE, or PI_I2C_READ_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByte"
+     */
+    @Override
+    public int i2cReadByte(int handle) throws IOException {
+        logger.trace("[I2C::READ] -> [{}]; Byte", handle);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(I2CRS, handle);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx, false);
+        return rx.result();
+    }
+
+    /**
+     * This writes a single byte to the specified register of the device associated with handle.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param register i2cReg: 0-255, the register to write
+     * @param value raw byte value (0-0xFF) to write to I2C device
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByteData"
+     */
+    @Override
+    public int i2cWriteByteData(int handle, int register, byte value) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Byte [{}]", handle ,register, Byte.toUnsignedInt(value));
-        validateI2cHandle(handle);
+        validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CWB, handle, register).data(Byte.toUnsignedInt(value));
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, false);
+        return rx.result();
     }
 
+    /**
+     * This writes a single 16 bit word to the specified register of the device associated with handle.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param register the I2C register address to write to. (0-255)
+     * @param value raw word (2-byte) value (0-0xFFFF) to write to I2C device
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteWordData"
+     */
     @Override
-    public void i2cWriteWordData(int handle, int register, int value) throws IOException {
+    public int i2cWriteWordData(int handle, int register, int value) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
-        validateI2cHandle(handle);
+        validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CWW, handle, register).data(value);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, false);
+        return rx.result();
     }
 
+    /**
+     * This reads a single byte from the specified register of the device associated with handle.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param register the I2C register address to read from. (0-255)
+     * @return Returns the byte read (>=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByteData"
+     */
     @Override
     public int i2cReadByteData(int handle, int register) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Byte", handle ,register);
-        validateI2cHandle(handle);
+        validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRB, handle, register);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, false);
         return rx.result();
     }
 
+    /**
+     * This reads a single 16 bit word from the specified register of the device associated with handle.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param register the I2C register address to read from. (0-255)
+     * @return Returns the word (2-byte value) read (>=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadWordData"
+     */
     @Override
     public int i2cReadWordData(int handle, int register) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Word", handle ,register);
-        validateI2cHandle(handle);
+        validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRW, handle, register);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, false);
         return rx.result();
     }
 
+    /**
+     * This writes 16 bits of data to the specified register of the device associated with
+     * handle and reads 16 bits of data in return. (in a single transaction)
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param register the I2C register address to write to and read from. (0-255)
+     * @param value raw word (2-byte) value (0-0xFFFF) to write to I2C device
+     * @return Returns the word read (>=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cProcessCall"
+     */
     @Override
     public int i2cProcessCall(int handle, int register, int value) throws IOException {
         logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
-        validateI2cHandle(handle);
+        validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CPC, handle, register).data(value);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, false);
         return rx.result();
     }
 
+    /**
+     * This writes up to 32 bytes to the specified register of the device associated with handle.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param register the I2C register address to write to. (0-255)
+     * @param data the array of bytes to write
+     * @param offset the starting offset position in the provided buffer to start writing from.
+     * @param length the number of bytes to write (maximum 32 bytes supported)
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData"
+     */
     @Override
-    public void i2cWriteBlockData(int handle, int register, byte[] data) throws IOException {
+    public int i2cWriteBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, data.length);
-        validateI2cHandle(handle);
+        Objects.checkFromIndexSize(offset, length, data.length);
+        validateHandle(handle);
         validateI2cRegister(register);
-        validateI2cBlockLength(data.length);
-        PiGpioPacket tx = new PiGpioPacket(I2CWK, handle, register, data);
+        validateI2cBlockLength(length);
+        PiGpioPacket tx = new PiGpioPacket(I2CWK, handle, register).data(data, offset, length);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, false);
+        return rx.result();
     }
 
+    /**
+     * This reads a block of up to 32 bytes from the specified register of the device associated with handle.
+     * The amount of returned data is set by the device.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param register the I2C register address to read from. (0-255)
+     * @param buffer a byte array to receive the read data
+     * @param offset the starting offset position in the provided buffer to start copying the data bytes read.
+     * @param length the maximum number of bytes to read
+     * @return Returns the number of bytes read (>=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
+     * @throws IOException
+     */
     @Override
-    public byte[] i2cReadBlockData(int handle, int register) throws IOException {
+    public int i2cReadBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Block", handle ,register);
-        validateI2cHandle(handle);
+        Objects.checkFromIndexSize(offset, length, buffer.length);
+        validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRK, handle, register);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, true); // Upon success nothing is returned. On error a negative status code will be returned.
-        return rx.data();
-    }
-    @Override
-    public byte[] i2cBlockProcessCall(int handle, int register, byte[] data) throws IOException {
-        logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, data.length);
-        validateI2cHandle(handle);
-        validateI2cRegister(register);
-        validateI2cBlockLength(data.length);
-        PiGpioPacket tx = new PiGpioPacket(I2CPK, handle, register, data);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, true); // Upon success nothing is returned. On error a negative status code will be returned.
-        return rx.data();
+        if(rx.success()) {
+            System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+        }
+        return rx.result();
     }
 
+    /**
+     * This writes data bytes to the specified register of the device associated with handle and reads a
+     * device specified number of bytes of data in return.
+     *
+     * The SMBus 2.0 documentation states that a minimum of 1 byte may be sent and a minimum of 1 byte may be received.
+     * The total number of bytes sent/received must be 32 or less.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param register the I2C register address to read from. (0-255)
+     * @param write a byte array containing data to write
+     * @param writeOffset the starting offset position in the provided byte array to start writing from.
+     * @param writeLength the number of bytes to write (maximum 32 bytes supported)
+     * @param read a byte array to receive the read data; note the size must be pre-allocated and must be at
+     *             is determined by the actual I2C device  (a pre-allocated array/buffer of 32 bytes is safe)
+     * @param readOffset the starting offset position in the provided read array/buffer to start copying the data bytes read.
+     * @return Returns the number of bytes read (>=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall"
+     */
     @Override
-    public byte[] i2cReadI2CBlockData(int handle, int register, int length) throws IOException {
+    public int i2cBlockProcessCall(int handle, int register,
+                                   byte[] write, int writeOffset, int writeLength,
+                                   byte[] read, int readOffset) throws IOException {
+        logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, writeLength);
+        Objects.checkFromIndexSize(writeOffset, writeLength, write.length);
+        validateHandle(handle);
+        validateI2cRegister(register);
+        validateI2cBlockLength(writeLength);
+
+        // write/read from I2C device
+        PiGpioPacket tx = new PiGpioPacket(I2CPK, handle, register).data(write, writeOffset, writeLength);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx, false);
+
+        // copy data bytes to provided "read" array/buffer
+        if(rx.success()) {
+            int readLength = rx.result();
+            // make sure the read array has sufficient space to store the bytes returned
+            Objects.checkFromIndexSize(readOffset, readLength, read.length);
+            System.arraycopy(rx.data(), 0, read, readOffset, readLength);
+        }
+        return rx.result();
+    }
+
+    /**
+     * This reads count bytes from the specified register of the device associated with handle .
+     * The maximum length of data that can be read is 32 bytes.
+     * The minimum length of data that can be read is 1 byte.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param register the I2C register address to read from. (0-255)
+     * @param buffer a byte array (pre-allocated) to receive the read data
+     * @param offset the starting offset position in the provided buffer to start copying the data bytes read.
+     * @param length the maximum number of bytes to read (1-32)
+     * @return Returns the number of bytes read (>0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadI2CBlockData"
+     */
+    @Override
+    public int i2cReadI2CBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException{
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, length);
-        validateI2cHandle(handle);
+        Objects.checkFromIndexSize(offset, length, buffer.length);
+        validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRI, handle, register).data(length);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, true); // Upon success nothing is returned. On error a negative status code will be returned.
-        return rx.data();
+        validateResult(rx, false);
+
+        logger.trace("[I2C::READ] <- DATA SIZE={}",  rx.result());
+        logger.trace("[I2C::READ] <- DATA LENGTH={}",  rx.dataLength());
+        logger.trace("[I2C::READ] <- BUFFER SIZE={}",  rx.data());
+        logger.trace("[I2C::READ] <- OFFSET={}",  offset);
+
+        if(rx.success()) {
+            try {
+                System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+            }
+            catch (ArrayIndexOutOfBoundsException a){
+                a.printStackTrace();
+            }
+
+        }
+        return rx.result();
     }
 
+    /**
+     * This writes 1 to 32 bytes to the specified register of the device associated with handle.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param register the I2C register address to write to. (0-255)
+     * @param data a byte array containing the data to write to the I2C device register
+     * @param offset the starting offset position in the provided buffer to start writing from.
+     * @param length the maximum number of bytes to read (1-32)
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData"
+     */
     @Override
-    public void i2cWriteI2CBlockData(int handle, int register, byte[] data) throws IOException {
+    public int i2cWriteI2CBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, data.length);
-        validateI2cHandle(handle);
+        validateHandle(handle);
         validateI2cRegister(register);
         validateI2cBlockLength(data.length);
-        PiGpioPacket tx = new PiGpioPacket(I2CWI, handle, register, data);
+        PiGpioPacket tx = new PiGpioPacket(I2CWI, handle, register).data(data, offset, length);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
+        validateResult(rx, false);
+        return rx.result();
     }
 
+    /**
+     * This reads count bytes from the raw device into byte buffer array.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param buffer a byte array (pre-allocated) to receive the read data
+     * @param offset the starting offset position in the provided buffer to start copying the data bytes read.
+     * @param length the maximum number of bytes to read (1-32)
+     * @return Returns number of bytes read (>0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadDevice"
+     */
     @Override
-    public byte[] i2cReadDevice(int handle, int length) throws IOException {
+    public int i2cReadDevice(int handle, byte[] buffer, int offset, int length) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; I2C Raw Read [{} bytes]", handle, length);
-        validateI2cHandle(handle);
+        validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CRD, handle, length);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false); // Upon success nothing is returned. On error a negative status code will be returned.
-        return rx.data();
+        validateResult(rx, false);
+        if(rx.success()) {
+            System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+        }
+        return rx.result();
     }
 
+    /**
+     * This writes the length of bytes from the provided data array to the raw I2C device.
+     *
+     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
+     * @param data the array of bytes to write
+     * @param offset the starting offset position in the provided array/buffer to start writing from.
+     * @param length the number of bytes to write (maximum 32 bytes supported)
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice"
+     */
     @Override
-    public int i2cWriteDevice(int handle, byte[] data) throws IOException {
+    public int i2cWriteDevice(int handle, byte[] data, int offset, int length) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; I2C Raw Write [{} bytes]", handle, data.length);
-        validateI2cHandle(handle);
-        //validateI2cDataLength(data.length);
-        PiGpioPacket tx = new PiGpioPacket(I2CWD, handle, 0, data);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(I2CWD, handle).data(data, offset, length);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx); // Upon success nothing is returned. On error a negative status code will be returned.
-        return -1;
+        validateResult(rx, false);
+        return rx.result();
+    }
+
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+    // SERIAL IMPLEMENTATION
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+
+    /**
+     * This function opens a serial device at a specified baud rate and with specified flags.
+     * The device name must start with "/dev/tty" or "/dev/serial".
+     *
+     * @param device the serial device to open (Example: "/dev/ttyAMA0")
+     * @param baud  the baud rate in bits per second, see below
+     *              The baud rate must be one of 50, 75, 110, 134, 150, 200, 300, 600, 1200,
+     *              1800, 2400, 4800, 9600, 19200, 38400, 57600, 115200, or 230400.
+     * @param flags  No flags are currently defined. This parameter should be set to zero.
+     * @return Returns a handle (>=0) if OK, otherwise PI_NO_HANDLE, or PI_SER_OPEN_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serOpen"
+     */
+    @Override
+    public int serOpen(CharSequence device, int baud, int flags) throws IOException {
+        logger.trace("[SERIAL::OPEN] -> Open Serial Port [{}] at Baud Rate [{}]", device, baud);
+        PiGpioPacket tx = new PiGpioPacket(SERO, baud, flags).data(device);
+        PiGpioPacket rx = sendPacket(tx);
+        int handle = rx.result();
+        logger.trace("[SERIAL::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx, false);
+        return handle;
+    }
+
+    /**
+     * This function closes the serial device associated with handle.
+     *
+     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serClose"
+     */
+    @Override
+    public int serClose(int handle) throws IOException {
+        logger.trace("[SERIAL::CLOSE] -> HANDLE={}, Close Serial Port", handle);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SERC, handle);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[SERIAL::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx, false);
+        return rx.result();
+    }
+
+    /**
+     * This function writes a single byte "value" to the serial port associated with handle.
+     *
+     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
+     * @param value byte value to write to serial port
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWriteByte"
+     */
+    @Override
+    public int serWriteByte(int handle, byte value) throws IOException {
+        logger.trace("[SERIAL::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SERWB, handle, Byte.toUnsignedInt(value));
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[SERIAL::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx, false);
+        return 0;
+    }
+
+    /**
+     * This function reads a byte from the serial port associated with handle.
+     * If no data is ready PI_SER_READ_NO_DATA is returned.
+     *
+     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
+     * @return Returns the read byte (>=0) if OK, otherwise PI_BAD_HANDLE, PI_SER_READ_NO_DATA, or PI_SER_READ_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte"
+     */
+    @Override
+    public int serReadByte(int handle) throws IOException {
+        logger.trace("[SERIAL::READ] -> [{}]; Byte", handle);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SERRB, handle);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[SERIAL::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.p3());
+        validateResult(rx, false);
+        return rx.result();
+    }
+
+    /**
+     * This function writes multiple bytes from the buffer array ('data') to the the serial
+     * port associated with handle.
+     *
+     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
+     * @param data the array of bytes to write
+     * @param offset the starting offset position in the provided buffer to start writing from.
+     * @param length the number of bytes to write
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWrite"
+     */
+    @Override
+    public int serWrite(int handle, byte[] data, int offset, int length) throws IOException {
+        logger.trace("[SERIAL::WRITE] -> [{}]; Serial Write [{} bytes]", handle, data.length);
+        Objects.checkFromIndexSize(offset, length, data.length);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SERW, handle).data(data, offset, length);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx, false);
+        return rx.result();
+    }
+
+    /**
+     * This function reads up count bytes from the the serial port associated with handle and
+     * writes them to the buffer parameter.   If no data is ready, zero is returned.
+     *
+     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
+     * @param buffer a byte array to receive the read data
+     * @param offset the starting offset position in the provided buffer to start copying the data bytes read.
+     * @param length the maximum number of bytes to read
+     * @return Returns the number of bytes read (>0=) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_READ_NO_DATA.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serRead"
+     */
+    @Override
+    public int serRead(int handle, byte[] buffer, int offset, int length) throws IOException {
+        logger.trace("[SERIAL::READ] -> [{}]; Serial Read [{} bytes]", handle, length);
+        Objects.checkFromIndexSize(offset, length, buffer.length);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SERR, handle, length);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[SERIAL::READ] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, rx.success(), rx.dataLength());
+        validateResult(rx, false);
+        if(rx.success()) {
+            System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+        }
+        return rx.result();
+    }
+
+    /**
+     * This function returns the number of bytes available to be read from the device associated with handle.
+     *
+     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
+     * @return Returns the number of bytes of data available (>=0) if OK, otherwise PI_BAD_HANDLE.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serDataAvailable"
+     */
+    @Override
+    public int serDataAvailable(int handle) throws IOException {
+        logger.trace("[SERIAL::AVAIL] -> Get number of bytes available to read");
+        PiGpioPacket tx = new PiGpioPacket(SERDA, handle);
+        PiGpioPacket rx = sendPacket(tx);
+        int available = rx.result();
+        logger.trace("[SERIAL::AVAIL] <- HANDLE={}; SUCCESS={}; AVAILABLE={}",  handle, rx.success(), available);
+        validateResult(rx, false);
+        return available;
+    }
+
+    /**
+     * This function will drain the current serial receive buffer of any lingering bytes.
+     *
+     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
+     * @return Returns the number of bytes of data drained (>=0) if OK, otherwise PI_BAD_HANDLE.
+     */
+    @Override
+    public int serDrain(int handle) throws IOException{
+        logger.trace("[SERIAL::DRAIN] -> Drain any remaining bytes in serial RX buffer");
+
+        // get number of bytes available
+        PiGpioPacket tx = new PiGpioPacket(SERDA, handle);
+        PiGpioPacket rx = sendPacket(tx);
+        validateResult(rx, false);
+        int available = rx.result();
+
+        // if any bytes are available, then drain them now
+        if(available > 0){
+            tx = new PiGpioPacket(SERR, handle, available);
+            rx = sendPacket(tx);
+            validateResult(rx, false);
+        }
+        logger.trace("[SERIAL::DRAIN] <- HANDLE={}; SUCCESS={}; DRAINED={}",  handle, rx.success(), rx.result());
+        return available;
     }
 }

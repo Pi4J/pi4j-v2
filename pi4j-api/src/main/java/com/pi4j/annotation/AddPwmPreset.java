@@ -35,5 +35,5 @@ import java.lang.annotation.*;
 public @interface AddPwmPreset {
     String name();
     int frequency() default -1;
-    int dutyCycle() default -1;
+    float dutyCycle() default -1;
 }

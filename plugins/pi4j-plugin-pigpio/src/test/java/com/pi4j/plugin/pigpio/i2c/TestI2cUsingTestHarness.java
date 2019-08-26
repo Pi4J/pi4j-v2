@@ -62,7 +62,7 @@ public class TestI2cUsingTestHarness {
     @BeforeAll
     public static void initialize() {
         // configure logging output
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
@@ -296,7 +296,7 @@ public class TestI2cUsingTestHarness {
             System.out.println("[TEST READ BYTE-ARRAY] :: REGISTER=" + register.address());
 
             // READ :: BYTE-ARRAY
-            byte[] value = register.readArray(10);
+            byte[] value = register.readNBytes(10);
             byte[] expected = values.get(r);
 
             System.out.println(" (READ)  << VALUE = " + StringUtil.toHexString(value) +
@@ -305,14 +305,14 @@ public class TestI2cUsingTestHarness {
             if(!Arrays.equals(expected, value)){
                 Thread.sleep(500);
                 // READ :: BYTE-BUFFER
-                register.readArray(10);
+                register.readNBytes(10);
                 System.out.println(" (READ)  << VALUE = " + StringUtil.toHexString(value) +
                         "; (EXPECTED=" + StringUtil.toHexString(expected) + ") <ATTEMPT #2>");
 
                 if(!Arrays.equals(expected, value)){
                     Thread.sleep(1000);
                     // READ :: BYTE-BUFFER
-                    register.readArray(10);
+                    register.readNBytes(10);
                     System.out.println(" (READ)  << VALUE = " + StringUtil.toHexString(value) +
                             "; (EXPECTED=" + StringUtil.toHexString(expected) + ") <ATTEMPT #3>");
 
@@ -362,7 +362,7 @@ public class TestI2cUsingTestHarness {
             System.out.println("[TEST READ BYTE-BUFFER] :: REGISTER=" + register.address());
 
             // READ :: BYTE-BUFFER
-            ByteBuffer value = register.readBuffer(10);
+            ByteBuffer value = register.readByteBuffer(10);
             ByteBuffer expected = values.get(r);
 
             System.out.println(" (READ)  << VALUE = " + StringUtil.toHexString(value) +
@@ -371,14 +371,14 @@ public class TestI2cUsingTestHarness {
             if(!Arrays.equals(expected.array(), value.array())){
                 Thread.sleep(500);
                 // READ :: BYTE-BUFFER
-                value = register.readBuffer(10);
+                value = register.readByteBuffer(10);
                 System.out.println(" (READ)  << VALUE = " + StringUtil.toHexString(value) +
                         "; (EXPECTED=" + StringUtil.toHexString(expected) + ") <ATTEMPT #2>");
 
                 if(!Arrays.equals(expected.array(), value.array())){
                     Thread.sleep(500);
                     // READ :: BYTE-BUFFER
-                    value = register.readBuffer(10);
+                    value = register.readByteBuffer(10);
                     System.out.println(" (READ)  << VALUE = " + StringUtil.toHexString(value) +
                             "; (EXPECTED=" + StringUtil.toHexString(expected) + ") <ATTEMPT #3>");
 
