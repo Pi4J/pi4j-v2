@@ -908,7 +908,9 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         if(rx.success()) {
-            System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+            int actual = rx.result();
+            if(rx.dataLength() < actual) actual = rx.dataLength();
+            System.arraycopy(rx.data(), 0, buffer, offset, actual);
         }
         return rx.result();
     }
@@ -951,6 +953,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         // copy data bytes to provided "read" array/buffer
         if(rx.success()) {
             int readLength = rx.result();
+            if(rx.dataLength() < readLength) readLength = rx.dataLength();
+
             // make sure the read array has sufficient space to store the bytes returned
             Objects.checkFromIndexSize(readOffset, readLength, read.length);
             System.arraycopy(rx.data(), 0, read, readOffset, readLength);
@@ -990,7 +994,9 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
 
         if(rx.success()) {
             try {
-                System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+                int actual = rx.result();
+                if(rx.dataLength() < actual) actual = rx.dataLength();
+                System.arraycopy(rx.data(), 0, buffer, offset, actual);
             }
             catch (ArrayIndexOutOfBoundsException a){
                 a.printStackTrace();
@@ -1045,7 +1051,9 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
         if(rx.success()) {
-            System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+            int actual = rx.result();
+            if(rx.dataLength() < actual) actual = rx.dataLength();
+            System.arraycopy(rx.data(), 0, buffer, offset, actual);
         }
         return rx.result();
     }
@@ -1175,7 +1183,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SERW, handle).data(data, offset, length);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        logger.trace("[SERIAL::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
         validateResult(rx, false);
         return rx.result();
     }
@@ -1201,7 +1209,9 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[SERIAL::READ] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, rx.success(), rx.dataLength());
         validateResult(rx, false);
         if(rx.success()) {
-            System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+            int actual = rx.result();
+            if(rx.dataLength() < actual) actual = rx.dataLength();
+            System.arraycopy(rx.data(), 0, buffer, offset, actual);
         }
         return rx.result();
     }
@@ -1248,5 +1258,192 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         }
         logger.trace("[SERIAL::DRAIN] <- HANDLE={}; SUCCESS={}; DRAINED={}",  handle, rx.success(), rx.result());
         return available;
+    }
+
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+    // SPI IMPLEMENTATION
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+
+    /**
+     * This function opens a SPI device channel at a specified baud rate and with specified flags.
+     * Data will be transferred at baud bits per second.
+     * The flags may be used to modify the default behaviour of 4-wire operation, mode 0, active low chip select.
+     *
+     * The Pi has two SPI peripherals: main and auxiliary.
+     * The main SPI has two chip selects (channels), the auxiliary has three.
+     * The auxiliary SPI is available on all models but the A and B.
+     *
+     * The GPIO pins used are given in the following table.
+     *
+     *             MISO    MOSI   SCLK   CE0   CE1   CE2
+     *             -------------------------------------
+     *   Main SPI    9      10     11      8	 7	   -
+     *   Aux SPI    19      20     21     18	17    16
+     *
+     *
+     *  spiChan  : 0-1 (0-2 for the auxiliary SPI)
+     *  baud     : 32K-125M (values above 30M are unlikely to work)
+     *  spiFlags : see below
+     *
+     * spiFlags consists of the least significant 22 bits.
+     * -----------------------------------------------------------------
+     * 21 20 19 18 17 16 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
+     *  b  b  b  b  b  b  R  T  n  n  n  n  W  A u2 u1 u0 p2 p1 p0  m  m
+     * -----------------------------------------------------------------
+     *
+     * [mm] defines the SPI mode.
+     *      (Warning: modes 1 and 3 do not appear to work on the auxiliary SPI.)
+     *
+     *      Mode POL  PHA
+     *      -------------
+     *       0    0    0
+     *       1    0    1
+     *       2    1    0
+     *       3    1    1
+     *
+     * [px] is 0 if CEx is active low (default) and 1 for active high.
+     * [ux] is 0 if the CEx GPIO is reserved for SPI (default) and 1 otherwise.
+     * [A] is 0 for the main SPI, 1 for the auxiliary SPI.
+     * [W] is 0 if the device is not 3-wire, 1 if the device is 3-wire. Main SPI only.
+     * [nnnn] defines the number of bytes (0-15) to write before switching the MOSI line to MISO to read data. This field is ignored if W is not set. Main SPI only.
+     * [T] is 1 if the least significant bit is transmitted on MOSI first, the default (0) shifts the most significant bit out first. Auxiliary SPI only.
+     * [R] is 1 if the least significant bit is received on MISO first, the default (0) receives the most significant bit first. Auxiliary SPI only.
+     * [bbbbbb] defines the word size in bits (0-32). The default (0) sets 8 bits per word. Auxiliary SPI only.
+     *
+     * The spiRead, spiWrite, and spiXfer functions transfer data packed into 1, 2, or 4 bytes according to the word size in bits.
+     *  - For bits 1-8 there will be one byte per word.
+     *  - For bits 9-16 there will be two bytes per word.
+     *  - For bits 17-32 there will be four bytes per word.
+     *
+     * Multi-byte transfers are made in least significant byte first order.
+     * E.g. to transfer 32 11-bit words buf should contain 64 bytes and count should be 64.
+     * E.g. to transfer the 14 bit value 0x1ABC send the bytes 0xBC followed by 0x1A.
+     * The other bits in flags should be set to zero.
+     *
+     * @param channel the SPI device/channel to open [0-1 (0-2 for the auxiliary SPI)]
+     * @param baud  baud rate in bits per second
+     * @param flags  optional flags to define SPI modes and other SPI communication characteristic, see details above.
+     * @return Returns a handle (>=0) if OK, otherwise PI_BAD_SPI_CHANNEL, PI_BAD_SPI_SPEED, PI_BAD_FLAGS, PI_NO_AUX_SPI, or PI_SPI_OPEN_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiOpen"
+     */
+    @Override
+    public int spiOpen(int channel, int baud, int flags) throws IOException {
+        logger.trace("[SPI::OPEN] -> Open SPI Channel [{}] at Baud Rate [{}]; Flags=[{}]", channel, baud, flags);
+        PiGpioPacket tx = new PiGpioPacket(SPIO, channel, baud).data(flags);
+        PiGpioPacket rx = sendPacket(tx);
+        int handle = rx.result();
+        logger.trace("[SPI::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx, false);
+        return handle;
+    }
+
+    /**
+     * This functions closes the SPI device identified by the handle.
+     *
+     * @param handle the open SPI device handle; (>=0, as returned by a call to spiOpen)
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiClose"
+     */
+    @Override
+    public int spiClose(int handle) throws IOException {
+        logger.trace("[SPI::CLOSE] -> HANDLE={}, Close Serial Port", handle);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SPIC, handle);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[SPI::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx, false);
+        return rx.result();
+    }
+
+    /**
+     * This function writes multiple bytes from the byte array ('data') to the SPI
+     * device associated with the handle from the given offset index to the specified length.
+     *
+     * @param handle the open SPI device handle; (>=0, as returned by a call to spiOpen)
+     * @param data the array of bytes to write
+     * @param offset the starting offset position in the provided buffer to start writing from.
+     * @param length the number of bytes to write
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     */
+    @Override
+    public int spiWrite(int handle, byte[] data, int offset, int length) throws IOException {
+        logger.trace("[SPI::WRITE] -> [{}]; Serial Write [{} bytes]", handle, data.length);
+        Objects.checkFromIndexSize(offset, length, data.length);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SPIW, handle).data(data, offset, length);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[SPI::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx, false);
+        return rx.result();
+    }
+
+    /**
+     * This function reads a number of bytes specified by the 'length' parameter from the
+     * SPI device associated with the handle and copies them to the 'buffer' byte array parameter.
+     * The 'offset' parameter determines where to start copying/inserting read data in the byte array.
+     * If no data is ready, zero is returned; otherwise, the number of bytes read is returned.
+     *
+     * @param handle the open SPI device handle; (>=0, as returned by a call to spiOpen)
+     * @param buffer a byte array to receive the read data
+     * @param offset the starting offset position in the provided buffer to start copying the data bytes read.
+     * @param length the maximum number of bytes to read
+     * @return Returns the number of bytes read (>0=) if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiRead"
+     */
+    @Override
+    public int spiRead(int handle, byte[] buffer, int offset, int length) throws IOException {
+        logger.trace("[SPI::READ] -> [{}]; Serial Read [{} bytes]", handle, length);
+        Objects.checkFromIndexSize(offset, length, buffer.length);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SPIR, handle, length);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[SPI::READ] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, rx.success(), rx.dataLength());
+        validateResult(rx, false);
+        if(rx.success()) {
+            int actual = rx.result();
+            if(rx.dataLength() < actual) actual = rx.dataLength();
+            System.arraycopy(rx.data(), 0, buffer, offset, actual);
+        }
+        return rx.result();
+    }
+
+    /**
+     * This function transfers (writes/reads simultaneously) multiple bytes with the SPI
+     * device associated with the handle.  Write data is taken from the 'write' byte array
+     * from the given 'writeOffset' index to the specified length ('numberOfBytes').  Data
+     * read from the SPI device is then copied to the 'read' byte array at the given 'readOffset'
+     * using the same length.  Both the 'write' and 'read' byte arrays must be at least the size
+     * of the defined 'numberOfBytes' + their corresponding offsets.
+     *
+     * @param handle the open SPI device handle; (>=0, as returned by a call to spiOpen)
+     * @param write the array of bytes to write to the SPI device
+     * @param writeOffset the starting offset position in the provided 'write' buffer to
+     *                    start writing to the SPI device from.
+     * @param read the array of bytes to store read data in from the SPI device
+     * @param readOffset the starting offset position in the provided 'read' buffer to place
+     *                   data bytes read from the SPI device.
+     * @param numberOfBytes the number of bytes to transfer (write & read))
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     */
+    @Override
+    public int spiXfer(int handle, byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException {
+        logger.trace("[SPI::XFER] -> [{}]; Serial Transfer [{} bytes]", handle, numberOfBytes);
+        Objects.checkFromIndexSize(writeOffset, numberOfBytes, write.length);
+        Objects.checkFromIndexSize(readOffset, numberOfBytes, read.length);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SPIX, handle).data(write, writeOffset, numberOfBytes);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[SPI::XFER] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, rx.success(), rx.dataLength());
+        validateResult(rx, false);
+        if(rx.success()) {
+            int actual = rx.result();
+            if(rx.dataLength() < actual) actual = rx.dataLength();
+            System.arraycopy(rx.data(), 0, read, readOffset, actual);
+        }
+        return rx.result();
     }
 }
