@@ -41,7 +41,6 @@ import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Objects;
 
 public class PiGpioI2C extends I2CBase implements I2C {
@@ -144,8 +143,8 @@ public class PiGpioI2C extends I2CBase implements I2C {
     }
 
     @Override
-    public int readRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException {
-        Objects.checkFromIndexSize(offset, length, buffer.capacity());
+    public int readRegister(int register, byte[] buffer, int offset, int length) throws IOException {
+        Objects.checkFromIndexSize(offset, length, buffer.length);
         return piGpio.i2cReadI2CBlockData(this.handle, register, buffer, offset, length);
     }
 

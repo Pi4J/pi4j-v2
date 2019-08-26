@@ -95,7 +95,7 @@ public class DefaultI2CRegister implements I2CRegister {
     }
 
     @Override
-    public String readString(int length, Charset charset) throws IOException, IOReadException {
-        return this.i2c.readRegisterString(this.address, length, charset);
+    public String readString(Charset charset, int length) throws IOException, IOReadException {
+        return this.i2c.readRegisterString(this.address, charset, length);
     }
 }

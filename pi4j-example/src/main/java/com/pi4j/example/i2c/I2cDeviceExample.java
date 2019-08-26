@@ -91,14 +91,14 @@ public class I2cDeviceExample {
             register.write(new byte[] { 0,1,2,3,4,5,6,7,8,9 });
 
             // <-- read a byte array of specified length from the I2C device register
-            byte[] readArray = register.readArray(10);
+            byte[] readArray = register.readNBytes(10);
 
             // --> write a buffer of data bytes to the I2C device register
             ByteBuffer buffer = ByteBuffer.allocate(10);
             register.write(buffer);
 
             // <-- read ByteBuffer of specified length from the I2C device register
-            ByteBuffer readBuffer = register.readBuffer(10);
+            ByteBuffer readBuffer = register.readByteBuffer(10);
 
             // --> write a string of data to the I2C device register
             register.write("This is a test");

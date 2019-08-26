@@ -214,7 +214,7 @@ public class TestSerialUsingTestHarness {
     @Order(5)
     public void testSerialByteArrayRead() throws Exception {
         // read an array of data bytes from the serial device
-        byte[] byteArray = serial.readArray(SAMPLE_BYTE_ARRAY.length);
+        byte[] byteArray = serial.readNBytes(SAMPLE_BYTE_ARRAY.length);
         Assert.assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
     }
 
@@ -231,7 +231,7 @@ public class TestSerialUsingTestHarness {
     @Order(7)
     public void testSerialByteBufferRead() throws Exception {
         // read a buffer of data bytes from the serial device
-        ByteBuffer buffer = serial.readBuffer(SAMPLE_BUFFER.capacity());
+        ByteBuffer buffer = serial.readByteBuffer(SAMPLE_BUFFER.capacity());
         Assert.assertArrayEquals(SAMPLE_BUFFER.array(), buffer.array());
     }
 

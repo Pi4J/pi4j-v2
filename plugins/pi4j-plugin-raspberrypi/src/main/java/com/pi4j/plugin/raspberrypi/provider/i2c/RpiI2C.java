@@ -36,7 +36,6 @@ import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 public class RpiI2C extends I2CBase implements I2C {
 
@@ -70,7 +69,7 @@ public class RpiI2C extends I2CBase implements I2C {
     }
 
     @Override
-    public int readRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException {
+    public int readRegister(int register, byte[] buffer, int offset, int length) throws IOException {
         return 0;
     }
 

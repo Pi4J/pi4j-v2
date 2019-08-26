@@ -38,7 +38,6 @@ import com.pi4j.plugin.mock.Mock;
 import com.pi4j.util.StringUtil;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayDeque;
 import java.util.Objects;
@@ -167,7 +166,7 @@ public class MockI2C extends I2CBase implements I2C {
     }
 
     @Override
-    public String readString(int length, Charset charset) throws IOException{
+    public String readString(Charset charset, int length) throws IOException{
         if(raw.isEmpty()) return null;
         byte[] buffer = new byte[length];
         for(int p = 0; p < length; p++) {
@@ -279,15 +278,15 @@ public class MockI2C extends I2CBase implements I2C {
     }
 
     @Override
-    public int readRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException {
+    public int readRegister(int register, byte[] buffer, int offset, int length) throws IOException {
         if(registers[register] == null) return -1;
         if(registers[register].isEmpty()) return -1;
 
         int counter = 0;
         for(int p = 0; p < length; p++) {
-            if(p+offset > buffer.capacity()) break;
+            if(p+offset > buffer.length) break;
             if(registers[register].isEmpty()) break;;
-            buffer.put(offset + p, registers[register].pop());
+            buffer[offset + p] = registers[register].pop();
             counter++;
         }
         System.out.print(" [");
@@ -304,7 +303,7 @@ public class MockI2C extends I2CBase implements I2C {
     }
 
     @Override
-    public String readRegisterString(int register, int length, Charset charset) throws IOException {
+    public String readRegisterString(int register, Charset charset, int length) throws IOException {
         if(registers[register] == null) return null;
         if(registers[register].isEmpty()) return null;
 

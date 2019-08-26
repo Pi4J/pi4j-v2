@@ -80,14 +80,14 @@ public class I2cRawDeviceExample {
             i2c.write(new byte[] { 0,1,2,3,4,5,6,7,8,9 });
 
             // <-- read a byte array of specified length from the raw I2C device (not to a register)
-            byte[] readArray = i2c.readArray(10);
+            byte[] readArray = i2c.readNBytes(10);
 
             // --> write a buffer of data bytes to the raw I2C device (not to a register)
             ByteBuffer buffer = ByteBuffer.allocate(10);
             i2c.write(buffer);
 
             // <-- read ByteBuffer of specified length from the raw I2C device (not to a register)
-            ByteBuffer readBuffer = i2c.readBuffer(10);
+            ByteBuffer readBuffer = i2c.readByteBuffer(10);
 
             // --> write a string of data to the raw I2C device (not to a register)
             i2c.write("This is a test");

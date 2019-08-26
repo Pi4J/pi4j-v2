@@ -193,7 +193,7 @@ public class TestI2cRawUsingTestHarness {
     @Order(7)
     public void testI2CByteArrayRead() throws Exception {
         // read an array of data bytes from the raw I2C device (not from a register)
-        byte[] byteArray = i2c.readArray(SAMPLE_BYTE_ARRAY.length);
+        byte[] byteArray = i2c.readNBytes(SAMPLE_BYTE_ARRAY.length);
         Assert.assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
     }
 
@@ -210,7 +210,7 @@ public class TestI2cRawUsingTestHarness {
     @Order(9)
     public void testI2CByteBufferRead() throws Exception {
         // read a buffer of data bytes from the raw I2C device (not from a register)
-        ByteBuffer buffer = i2c.readBuffer(SAMPLE_BUFFER.capacity());
+        ByteBuffer buffer = i2c.readByteBuffer(SAMPLE_BUFFER.capacity());
         Assert.assertArrayEquals(SAMPLE_BUFFER.array(), buffer.array());
     }
 

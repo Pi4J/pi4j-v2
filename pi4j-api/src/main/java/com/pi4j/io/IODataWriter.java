@@ -145,7 +145,7 @@ public interface IODataWriter {
     /**
      * Write a buffer of byte values with given offset (starting position) and length in the provided data buffer.
      *
-     * NOTE:  The buffer's internal position tracking is no
+     * NOTE:  The buffer's internal position tracking is not
      *        used but rather only the explicit offset and
      *        length provided.  If the requested length is
      *        greater than the buffers capacity (minus offset)
@@ -483,6 +483,14 @@ public interface IODataWriter {
     /**
      * Writes an ASCII based character buffer with a given offset and length.
      *
+     * NOTE:  The buffer's internal position tracking is not
+     *        used but rather only the explicit offset and
+     *        length provided.  If the requested length is
+     *        greater than the buffers capacity (minus offset)
+     *        then the specified length will be ignored and
+     *        this function will only read the number of
+     *        characters up to the buffers' available space.
+     *
      * @param buffer ASCII character buffer used for data write
      * @param offset offset in data character array to start at
      * @param length number of character in character array to be written
@@ -496,6 +504,14 @@ public interface IODataWriter {
     /**
      * Writes an ASCII based character buffer starting at first index to a given length.
      *
+     * NOTE:  The contents from the character buffer is read
+     *        from the current position index up to the length
+     *        requested or up to the buffer's remaining limit;
+     *        whichever is is lower .  If the buffer's current
+     *        position is already at the buffer's limit, then we
+     *        will automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's limit.
+     *
      * @param buffer ASCII character buffer used for data write
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
@@ -508,6 +524,14 @@ public interface IODataWriter {
     /**
      * Writes an ASCII based character buffer.
      *
+     * NOTE:  The contents from the character buffer is read
+     *        from the current position index up to the buffer's
+     *        remaining limit.  If the buffer's current position
+     *        is already at the buffer's limit, then we will
+     *        automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's
+     *        limit.
+     *
      * @param buffer ASCII character buffer used for data write
      * @return The number of bytes (not characters) written, possibly zero
      * @throws IOException thrown on write error
@@ -518,6 +542,14 @@ public interface IODataWriter {
 
     /**
      * Writes multiple ASCII based character buffers.
+     *
+     * NOTE:  The contents from each character buffer is read
+     *        from the current position index up to the buffer's
+     *        remaining limit.  If the buffer's current position
+     *        is already at the buffer's limit, then we will
+     *        automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's
+     *        limit.
      *
      * @param buffer ASCII character buffer used for data write
      * @return The number of bytes (not characters) written, possibly zero
@@ -531,7 +563,7 @@ public interface IODataWriter {
      * Writes a character buffer with a given offset and length
      * using a specified character set to encode the chars into bytes.
      *
-     * NOTE:  The buffer's internal position tracking is no
+     * NOTE:  The buffer's internal position tracking is not
      *        used but rather only the explicit offset and
      *        length provided.  If the requested length is
      *        greater than the buffers capacity (minus offset)
