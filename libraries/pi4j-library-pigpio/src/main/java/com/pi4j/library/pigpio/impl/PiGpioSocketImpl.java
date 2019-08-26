@@ -1158,7 +1158,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This function writes multiple bytes from the buffer array ('data') to the the serial
+     * This function writes multiple bytes from the buffer array ('data') to the serial
      * port associated with handle.
      *
      * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
@@ -1181,7 +1181,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This function reads up count bytes from the the serial port associated with handle and
+     * This function reads up count bytes from the serial port associated with handle and
      * writes them to the buffer parameter.   If no data is ready, zero is returned.
      *
      * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
