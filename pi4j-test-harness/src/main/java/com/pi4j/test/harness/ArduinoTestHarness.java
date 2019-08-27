@@ -113,6 +113,11 @@ public class ArduinoTestHarness {
         return response;
     }
 
+    public TestHarnessFrequency getFrequency(int pin) throws IOException {
+        send("frequency " + pin);
+        TestHarnessFrequency response = read(TestHarnessFrequency.class);
+        return response;
+    }
 
     public TestHarnessResponse enableI2C(int bus, int device) throws IOException {
         return enableI2C(bus, device, false);
@@ -124,14 +129,14 @@ public class ArduinoTestHarness {
         return response;
     }
 
-    public TestHarnessFrequency getFrequency(int pin) throws IOException {
-        send("frequency " + pin);
-        TestHarnessFrequency response = read(TestHarnessFrequency.class);
+    public TestHarnessResponse enableSerialEcho(int port, int baudRate) throws IOException {
+        send(String.format("serial %d %d", port, baudRate));
+        TestHarnessResponse response = read(TestHarnessResponse.class);
         return response;
     }
 
-    public TestHarnessResponse enableSerialEcho(int port, int baudRate) throws IOException {
-        send(String.format("serial %d %d", port, baudRate));
+    public TestHarnessResponse enableSpiEcho(int channel) throws IOException {
+        send(String.format("spi %d", channel));
         TestHarnessResponse response = read(TestHarnessResponse.class);
         return response;
     }
@@ -144,6 +149,10 @@ public class ArduinoTestHarness {
         // drain any previous data
         drain();
 
+        com.getOutputStream().write(0x0D); // <CR>
+        com.getOutputStream().write(0x0A); // <LF>
+        com.getOutputStream().write(0x0D); // <CR>
+        com.getOutputStream().write(0x0A); // <LF>
         com.getOutputStream().write(command.getBytes(StandardCharsets.US_ASCII));
         com.getOutputStream().write(0x0D); // <CR>
         com.getOutputStream().write(0x0A); // <LF>
@@ -247,6 +256,21 @@ public class ArduinoTestHarness {
                    }
                    case "frequency": {
                        TestHarnessFrequency response = gson.fromJson(received, TestHarnessFrequency.class);
+                       responses.add(response);
+                       break;
+                   }
+                   case "i2c": {
+                       TestHarnessResponse response = gson.fromJson(received, TestHarnessResponse.class);
+                       responses.add(response);
+                       break;
+                   }
+                   case "serial": {
+                       TestHarnessResponse response = gson.fromJson(received, TestHarnessResponse.class);
+                       responses.add(response);
+                       break;
+                   }
+                   case "spi": {
+                       TestHarnessResponse response = gson.fromJson(received, TestHarnessResponse.class);
                        responses.add(response);
                        break;
                    }

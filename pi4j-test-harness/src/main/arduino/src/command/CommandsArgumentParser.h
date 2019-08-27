@@ -55,22 +55,41 @@ int GetCommandPinArgument(SerialCommands* sender){
 
     // validate restricted pins
     if(pin >= 0){
-        if(pins[pin].restricted){
-            return ERROR_INVALID_PIN_RESTRICTED;
-        }
 
         // special pin overrides for Raspberry Pi
+        if(pin == 0){
+            return 30;
+        }
+        if(pin == 1){
+            return 31;
+        }
         if(pin == 2){
             return 20;
         }
         if(pin == 3){
             return 21;
         }
+        if(pin == 8){
+            return 10;
+        }
+        if(pin == 10){
+            return 8;
+        }
         if(pin == 14){
             return 15;
         }
         if(pin == 15){
             return 14;
+        }
+        if(pin == 20){
+            return 2;
+        }
+        if(pin == 21){
+            return 3;
+        }
+
+        if(pins[pin].restricted){
+            return ERROR_INVALID_PIN_RESTRICTED;
         }
     }
 
@@ -318,6 +337,30 @@ int GetCommandSerialBaudArgument(SerialCommands* sender){
     return baud;
 }
 
+/**
+ * GET SPI CHIP SELECT CHANNEL VALUE FROM COMMANDS ARGUMENTS
+ */
+int GetCommandSpiChannelArgument(SerialCommands* sender){
+	char* channel_str = sender->Next();
+	if (channel_str == NULL){
+		return ERROR_COMMAND_ARGUMENT_MISSING; // -1 :: missing argument
+	}
+
+    // validate numeric string
+    if(!StringUtil::isNumeric(channel_str)){
+        return ERROR_COMMAND_ARGUMENT_INVALID; // -2 :: invalid argument
+    }
+	int channel = atoi(channel_str);
+
+    // validate channel
+    if(channel == 10) return channel;
+    if(channel == 4) return channel;
+
+    // unsupported port
+    return ERROR_UNSUPPORTED_SPI_CHANNEL;
+}
+
+
 String GetCommandArgumentError(int error){
     switch(error){
         case ERROR_COMMAND_ARGUMENT_MISSING : {return "MISSING ARGUMENT"; break;}
@@ -328,6 +371,7 @@ String GetCommandArgumentError(int error){
         case ERROR_INVALID_I2C_DEVICE_OUT_OF_RANGE : {return "INVALID I2C DEVICE; OUT OF ACCEPTED RANGE"; break;}
         case ERROR_UNSUPPORTED_SERIAL_PORT  : {return "INVALID SERIAL PORT; UNSUPPORTED PORT NUMBER"; break;}
         case ERROR_UNSUPPORTED_SERIAL_BAUD_RATE : {return "INVALID SERIAL BAUD RATE; UNSUPPORTED BAUD"; break;}
+        case ERROR_UNSUPPORTED_SPI_CHANNEL : { return "NVALID SPI CHIP SELECT; UNSUPPORTED CHANNEL"; break; }
         default: return "UNKNOWN ARGUMENT ERROR";
     }
 }

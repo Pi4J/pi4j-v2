@@ -64,7 +64,7 @@ public class TestI2cRawUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            ArduinoTestHarness harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142301"));
+            ArduinoTestHarness harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
 
             // initialize test harness and PIGPIO instances
             harness.initialize();

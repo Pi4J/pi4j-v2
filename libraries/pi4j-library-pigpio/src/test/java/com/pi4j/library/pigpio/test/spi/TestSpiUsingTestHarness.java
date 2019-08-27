@@ -31,6 +31,9 @@ package com.pi4j.library.pigpio.test.spi;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.util.StringUtil;
+import com.pi4j.test.harness.ArduinoTestHarness;
+import com.pi4j.test.harness.TestHarnessInfo;
+import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
@@ -43,9 +46,10 @@ import java.util.Random;
 public class TestSpiUsingTestHarness {
 
     private static int SPI_CHANNEL = 0;
-    //private static int BAUD_RATE = 50000; // .5 MHz
-    private static int BAUD_RATE = 100000; // 1 MHz
-    //private static int TEST_HARNESS_SPI = 0;
+    private static int BAUD_RATE = 50000; // .5 MHz
+    //private static int BAUD_RATE = 100000; // 1 MHz
+    //private static int BAUD_RATE = 200000; // 2 MHz
+    private static int TEST_HARNESS_SPI_CHANNEL = 10;
 
     private PiGpio pigpio;
     private int handle;
@@ -60,36 +64,36 @@ public class TestSpiUsingTestHarness {
         System.out.println("************************************************************************");
         System.out.println();
 
-//        try {
-//            // create test harness and PIGPIO instances
-//            ArduinoTestHarness harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142301"));
-//
-//            // initialize test harness and PIGPIO instances
-//            harness.initialize();
-//
-//            // get test harness info
-//            TestHarnessInfo info = harness.getInfo();
-//            System.out.println("... we are connected to test harness:");
-//            System.out.println("----------------------------------------");
-//            System.out.println("NAME       : " + info.name);
-//            System.out.println("VERSION    : " + info.version);
-//            System.out.println("DATE       : " + info.date);
-//            System.out.println("COPYRIGHT  : " + info.copyright);
-//            System.out.println("----------------------------------------");
-//
-//            // reset all pins on test harness before proceeding with this test
-//            TestHarnessPins reset = harness.reset();
-//            System.out.println();
-//            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
-//
-//            // enable the Serial Echo (Loopback) function on the test harness for these tests
-//            //harness.enableSerialEcho(TEST_HARNESS_UART,  BAUD_RATE);
-//
-//            // terminate connection to test harness
-//            harness.terminate();
-//        } catch (IOException e){
-//            e.printStackTrace();
-//        }
+        try {
+            // create test harness and PIGPIO instances
+            ArduinoTestHarness harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
+
+            // initialize test harness and PIGPIO instances
+            harness.initialize();
+
+            // get test harness info
+            TestHarnessInfo info = harness.getInfo();
+            System.out.println("... we are connected to test harness:");
+            System.out.println("----------------------------------------");
+            System.out.println("NAME       : " + info.name);
+            System.out.println("VERSION    : " + info.version);
+            System.out.println("DATE       : " + info.date);
+            System.out.println("COPYRIGHT  : " + info.copyright);
+            System.out.println("----------------------------------------");
+
+            // reset all pins on test harness before proceeding with this test
+            TestHarnessPins reset = harness.reset();
+            System.out.println();
+            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+
+            // enable the SPI Echo (Loopback) function on the test harness for these tests
+            harness.enableSpiEcho(TEST_HARNESS_SPI_CHANNEL);
+
+            // terminate connection to test harness
+            harness.terminate();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     @AfterAll
@@ -163,7 +167,7 @@ public class TestSpiUsingTestHarness {
 
         // iterate over BYTE range of values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
-        for(int b = 10; b < 256; b++) {
+        for(int b = 0; b < 256; b++) {
             System.out.println("[TEST XFER SINGLE BYTE]");
             // XFER :: SINGLE RAW BYTE
             System.out.println(" (WRITE) >> VALUE = 0x" + Integer.toHexString(b));

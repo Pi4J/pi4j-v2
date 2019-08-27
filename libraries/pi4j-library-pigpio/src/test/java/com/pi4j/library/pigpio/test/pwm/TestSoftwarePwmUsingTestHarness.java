@@ -60,7 +60,7 @@ public class TestSoftwarePwmUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142301"));
+            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
@@ -168,7 +168,7 @@ public class TestSoftwarePwmUsingTestHarness {
         System.out.println("TEST PWM SIGNALS AT " + frequency + " HZ");
         System.out.println("----------------------------------------");
 
-        for(int p = 2; p < 20; p++) {
+        for(int p = 0; p <= 27; p++) {
 
             // set pin to output pin
             pigpio.gpioSetMode(p, PiGpioMode.OUTPUT);

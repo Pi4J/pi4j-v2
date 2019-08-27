@@ -42,7 +42,7 @@ void echo_command_execute(SerialCommands* sender){
 
 	// if a state was not provided, then return the current pin state
    if (enable == ERROR_COMMAND_ARGUMENT_MISSING){       
-      enable = console_pipe.isEcho();
+      //enable = console_pipe.isEcho();
       response["id"] = "get";
       response["echo"] =  (enable) ?  "on" : "off";
    }    
@@ -53,7 +53,7 @@ void echo_command_execute(SerialCommands* sender){
       response["msg"] = GetCommandArgumentError(enable);
    }
    else {      
-      console_pipe.echo(enable); // update echo state on console pipe
+      //console_pipe.echo(enable); // update echo state on console pipe
       response["id"] = "set";
       response["echo"] =  (enable) ?  "on" : "off";
    }
