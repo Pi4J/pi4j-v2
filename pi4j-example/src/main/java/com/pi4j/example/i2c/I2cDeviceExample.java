@@ -29,6 +29,9 @@ package com.pi4j.example.i2c;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.i2c.I2C;
+import com.pi4j.plugin.mock.Mock;
+import com.pi4j.plugin.mock.provider.i2c.MockI2C;
+import com.pi4j.plugin.mock.provider.i2c.MockI2CProvider;
 import com.pi4j.util.Console;
 
 import java.nio.ByteBuffer;
@@ -52,9 +55,6 @@ public class I2cDeviceExample {
         // print program title/header
         console.title("<-- The Pi4J Project -->", "Basic I2C Device Example");
 
-        // allow for user to exit program using CTRL-C
-        console.promptForExit();
-
         // Initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled
         // which will load all detected Pi4J extension libraries
@@ -70,7 +70,7 @@ public class I2cDeviceExample {
                 .build();
 
         // use try-with-resources to auto-close I2C when complete
-        try (var i2c = pi4j.i2c().create(config);) {
+        try (var i2c = pi4j.provider(MockI2CProvider.class).create(config);) {
 
             // we will be reading and writing to register address 0x01
             var register = i2c.register(0x01);
@@ -107,12 +107,8 @@ public class I2cDeviceExample {
             String readString = register.readString(14);
         }
 
-
-        // create a digital input instance using the default digital input provider
-        // wait (block) for user to exit program using CTRL-C
-        console.waitForExit();
-
         // shutdown Pi4J
+        console.println();
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
         pi4j.shutdown();
     }

@@ -38,6 +38,7 @@ import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalOutputProvider;
 import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProvider;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.plugin.pigpio.provider.serial.PiGpioSerialProvider;
+import com.pi4j.plugin.pigpio.provider.spi.PiGpioSpiProvider;
 import com.pi4j.provider.Provider;
 
 import java.io.IOException;
@@ -102,7 +103,8 @@ public class PiGpioPlugin implements Plugin {
                 PiGpioDigitalOutputProvider.newInstance(piGpio),
                 PiGpioPwmProvider.newInstance(piGpio),
                 PiGpioI2CProvider.newInstance(piGpio),
-                PiGpioSerialProvider.newInstance(piGpio)
+                PiGpioSerialProvider.newInstance(piGpio),
+                PiGpioSpiProvider.newInstance(piGpio)
         };
 
         // register all PiGpio I/O Providers with the plugin service

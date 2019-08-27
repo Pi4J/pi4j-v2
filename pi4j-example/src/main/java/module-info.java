@@ -62,5 +62,7 @@ module pi4j.example {
     opens com.pi4j.example.gpio.digital;
     opens com.pi4j.example.pwm;
     opens com.pi4j.example.i2c;
+    opens com.pi4j.example.serial;
+    opens com.pi4j.example.spi;
     opens com.pi4j.example;
 }

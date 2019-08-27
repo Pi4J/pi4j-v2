@@ -1,9 +1,11 @@
-/*-
+package com.pi4j.plugin.pigpio.provider.spi;
+
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PLUGIN   :: PIGPIO I/O Providers
- * FILENAME      :  module-info.java
+ * FILENAME      :  PiGpioSerialProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -26,20 +28,24 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.plugin.pigpio {
-    requires pi4j.api;
-    requires pi4j.library.pigpio;
-    requires slf4j.api;
 
-    uses com.pi4j.extension.Plugin;
+import com.pi4j.io.spi.Spi;
+import com.pi4j.io.spi.SpiConfig;
+import com.pi4j.io.spi.SpiProviderBase;
+import com.pi4j.library.pigpio.PiGpio;
 
-    exports com.pi4j.plugin.pigpio;
-    exports com.pi4j.plugin.pigpio.provider.gpio.digital;
-    exports com.pi4j.plugin.pigpio.provider.pwm;
-    exports com.pi4j.plugin.pigpio.provider.serial;
-    exports com.pi4j.plugin.pigpio.provider.spi;
-    exports com.pi4j.plugin.pigpio.provider.i2c;
+public class PiGpioSpiProviderImpl extends SpiProviderBase implements PiGpioSpiProvider {
 
-    provides com.pi4j.extension.Plugin
-            with com.pi4j.plugin.pigpio.PiGpioPlugin;
+    final PiGpio piGpio;
+
+    public PiGpioSpiProviderImpl(PiGpio piGpio){
+        this.id = ID;
+        this.name = NAME;
+        this.piGpio = piGpio;
+    }
+
+    @Override
+    public Spi create(SpiConfig config) throws Exception {
+        return new PiGpioSpi(piGpio,this, config);
+    }
 }

@@ -47,7 +47,7 @@ public class MockSerial extends SerialBase implements Serial {
      * ATTENTION:  The storage and management of the byte arrays
      *  are terribly inefficient and not intended for real-world
      *  usage.  These are only intended to unit testing the
-     *  Pi4J I2C APIs.
+     *  Pi4J SERIAL APIs.
      */
     protected ArrayDeque<Byte> raw = new ArrayDeque<>();
 
@@ -57,7 +57,7 @@ public class MockSerial extends SerialBase implements Serial {
         System.out.print(Mock.SERIAL_PROVIDER_NAME);
         System.out.print("::");
         System.out.print(this.id);
-        System.out.print("] :: CLOSE(DEVICE=" + config.device() + "; BAUD=" + config.baud() + ")");
+        System.out.print("] :: OPEN(DEVICE=" + config.device() + "; BAUD=" + config.baud() + ")");
         System.out.println();
     }
 

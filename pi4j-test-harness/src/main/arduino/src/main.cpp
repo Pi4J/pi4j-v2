@@ -170,10 +170,10 @@ void processSpi() {
         spi.rxCounter++;
         spi.rx = SPI0->SPI_RDR;
         spi.tx = spi.rx;
-        //Serial.print("[RX]- 0x");
-        //Serial.print(spi.rx,HEX);
-        //Serial.print(" - ");        
-        //Serial.println(spi.rxCounter);
+        // Serial.print("[RX]- 0x");
+        // Serial.print(spi.rx);
+        // Serial.print(" - ");        
+        // Serial.println(spi.rxCounter);
         spi.pending = true;
     }
 
@@ -182,10 +182,10 @@ void processSpi() {
         // transmit data
         spi.txCounter++;
         SPI0->SPI_TDR = spi.tx;
-        //Serial.print("[TX]- 0x");
-        //Serial.print(spi.tx,HEX);   
-        //Serial.print(" - ");        
-        //Serial.println(spi.txCounter);
+        // Serial.print("[TX]- 0x");
+        // Serial.print(spi.tx);   
+        // Serial.print(" - ");        
+        // Serial.println(spi.txCounter);
         spi.pending = false;
     }
 }

@@ -1,11 +1,11 @@
-package com.pi4j.example.serial;
+package com.pi4j.example.spi;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: EXAMPLE  :: Sample Code
- * FILENAME      :  SerialExample.java
+ * FILENAME      :  SpiExample.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,17 +28,17 @@ package com.pi4j.example.serial;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.io.serial.Serial;
-import com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
+import com.pi4j.io.spi.Spi;
+import com.pi4j.plugin.mock.provider.spi.MockSpiProvider;
 import com.pi4j.util.Console;
 import com.pi4j.util.StringUtil;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
-public class SerialExample {
+public class SpiExample {
 
-    private static int I2C_BUS = 1;
-    private static int I2C_DEVICE = 0x04;
+    private static int SPI_CHANNEL = 0;
 
     public static void main(String[] args) throws Exception {
 
@@ -52,7 +52,7 @@ public class SerialExample {
         final var console = new Console();
 
         // print program title/header
-        console.title("<-- The Pi4J Project -->", "Basic Serial Communications Example");
+        console.title("<-- The Pi4J Project -->", "Basic SPI Communications Example");
 
         // Initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled
@@ -60,36 +60,48 @@ public class SerialExample {
         // (Platforms and Providers) in the class path
         var pi4j = Pi4J.newAutoContext();
 
-        // create SERIAL config
-        var config  = Serial.newConfigBuilder()
-                .id("my-serial-port")
-                .name("My Serial Port")
-                .device("")
-                .use_9600_N81()
+        // create SPI config
+        var config  = Spi.newConfigBuilder()
+                .id("my-spi-device")
+                .name("My SPI Device")
+                .address(SPI_CHANNEL)
+                .baud(Spi.DEFAULT_BAUD)
                 .build();
 
-        // use try-with-resources to auto-close SERIAL when complete
-        try (var serial = pi4j.provider(MockSerialProvider.class).create(config);) {
+        // use try-with-resources to auto-close SPI when complete
+        try (var spi = pi4j.provider(MockSpiProvider.class).create(config);) {
 
-            // open serial port communications
-            serial.open();
+            // open SPI communications
+            spi.open();
 
             // write data to the SPI channel
-            serial.write("THIS IS A TEST");
+            spi.write("THIS IS A TEST");
 
             // read data back from the SPI channel
-            ByteBuffer buffer = serial.readByteBuffer(14);
+            ByteBuffer buffer = spi.readByteBuffer(14);
 
             console.println("--------------------------------------");
             console.println("--------------------------------------");
-            console.println("SERIAL [WRITE/READ] RETURNED THE FOLLOWING: ");
+            console.println("SPI [WRITE/READ] RETURNED THE FOLLOWING: ");
             console.println("[BYTES]  0x" + StringUtil.toHexString(buffer.array()));
             console.println("[STRING] " + new String(buffer.array()));
             console.println("--------------------------------------");
+
+            // read data back from the SPI channel
+            ByteBuffer writeBuffer = ByteBuffer.wrap("Hello World!".getBytes(StandardCharsets.US_ASCII));
+            ByteBuffer readBuffer = ByteBuffer.allocate(writeBuffer.capacity());
+            spi.transfer(writeBuffer, readBuffer, writeBuffer.capacity());
+
+            console.println("--------------------------------------");
+            console.println("SPI [TRANSFER] RETURNED THE FOLLOWING: ");
+            console.println("[BYTES]  0x" + StringUtil.toHexString(readBuffer.array()));
+            console.println("[STRING] " + new String(readBuffer.array()));
+            console.println("--------------------------------------");
             console.println("--------------------------------------");
 
-            // serial port will be closed when this block goes
-            // out of scope by the AutoCloseable interface on Serial
+
+            // SPI channel will be closed when this block goes
+            // out of scope by the AutoCloseable interface on SPI
         }
 
         // shutdown Pi4J

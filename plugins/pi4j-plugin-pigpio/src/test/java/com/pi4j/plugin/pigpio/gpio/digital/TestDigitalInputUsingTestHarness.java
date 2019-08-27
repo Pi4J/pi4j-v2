@@ -48,9 +48,13 @@ import java.io.IOException;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestDigitalInputUsingTestHarness {
 
+    public static int PIN_MIN = 0;
+    public static int PIN_MAX = 27;
+
     private PiGpio piGpio;
     private Context pi4j;
     private static ArduinoTestHarness harness;
+
 
     @BeforeAll
     public static void initialize() {
@@ -65,7 +69,7 @@ public class TestDigitalInputUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142301"));
+            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
@@ -135,7 +139,7 @@ public class TestDigitalInputUsingTestHarness {
         System.out.println("TEST DIGITAL INPUT PINS - HIGH");
         System.out.println("----------------------------------------");
 
-        for(int p = 2; p < 20; p++) {
+        for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
             // create Digital Input instance config
             var config = DigitalInput.newConfigBuilder()
@@ -165,7 +169,7 @@ public class TestDigitalInputUsingTestHarness {
         System.out.println("TEST DIGITAL INPUT PINS - LOW");
         System.out.println("----------------------------------------");
 
-        for(int p = 2; p < 20; p++) {
+        for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
             // create Digital Input instance config
             var config = DigitalInput.newConfigBuilder()
@@ -195,7 +199,7 @@ public class TestDigitalInputUsingTestHarness {
         System.out.println("TEST DIGITAL INPUT PINS - PULL UP");
         System.out.println("----------------------------------------");
 
-        for(int p = 2; p < 20; p++) {
+        for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
             // create Digital Input instance config
             var config = DigitalInput.newConfigBuilder()
@@ -226,7 +230,7 @@ public class TestDigitalInputUsingTestHarness {
         System.out.println("TEST DIGITAL INPUT PINS - PULL DOWN");
         System.out.println("----------------------------------------");
 
-        for(int p = 2; p < 20; p++) {
+        for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
             // the following inputs are skipped because they always fail; possible
             // because they are tied to other things that override the software

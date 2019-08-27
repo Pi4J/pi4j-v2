@@ -46,6 +46,8 @@ import java.io.IOException;
 @DisplayName("PIGPIO Plugin :: Test Digital Output Pins using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestDigitalOutputUsingTestHarness {
+    public static int PIN_MIN = 0;
+    public static int PIN_MAX = 27;
 
     private PiGpio piGpio;
     private Context pi4j;
@@ -64,7 +66,7 @@ public class TestDigitalOutputUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142301"));
+            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
@@ -101,7 +103,6 @@ public class TestDigitalOutputUsingTestHarness {
 
         // terminate connection to test harness
         harness.terminate();
-        ;
     }
 
     @BeforeEach
@@ -128,14 +129,14 @@ public class TestDigitalOutputUsingTestHarness {
 
     @Test
     @Order(1)
-    @DisplayName("DIN :: Test GPIO Digital Outpus Pins")
+    @DisplayName("DIN :: Test GPIO Digital Output Pins")
     public void testDigitalOutputsHigh() throws Exception {
         System.out.println();
         System.out.println("----------------------------------------");
         System.out.println("TEST DIGITAL OUTPUT PINS ");
         System.out.println("----------------------------------------");
 
-        for (int p = 2; p < 20; p++) {
+        for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
             // configure input pin on testing harness
             harness.setInputPin(p, true);

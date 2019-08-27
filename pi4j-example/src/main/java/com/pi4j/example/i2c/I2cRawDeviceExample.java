@@ -29,6 +29,7 @@ package com.pi4j.example.i2c;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.i2c.I2C;
+import com.pi4j.plugin.mock.provider.i2c.MockI2CProvider;
 import com.pi4j.util.Console;
 
 import java.nio.ByteBuffer;
@@ -68,7 +69,7 @@ public class I2cRawDeviceExample {
                 .build();
 
         // use try-with-resources to auto-close I2C when complete
-        try (var i2c = pi4j.i2c().create(config);) {
+        try (var i2c = pi4j.provider(MockI2CProvider.class).create(config);) {
 
             // --> write a single (8-bit) byte value to the raw I2C device (not to a register)
             i2c.write(0x0D);
@@ -97,6 +98,7 @@ public class I2cRawDeviceExample {
         }
 
         // shutdown Pi4J
+        console.println();
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
         pi4j.shutdown();
     }

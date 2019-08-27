@@ -353,6 +353,7 @@ int GetCommandSpiChannelArgument(SerialCommands* sender){
 	int channel = atoi(channel_str);
 
     // validate channel
+    if(channel == 52) return channel;
     if(channel == 10) return channel;
     if(channel == 4) return channel;
 
@@ -371,7 +372,7 @@ String GetCommandArgumentError(int error){
         case ERROR_INVALID_I2C_DEVICE_OUT_OF_RANGE : {return "INVALID I2C DEVICE; OUT OF ACCEPTED RANGE"; break;}
         case ERROR_UNSUPPORTED_SERIAL_PORT  : {return "INVALID SERIAL PORT; UNSUPPORTED PORT NUMBER"; break;}
         case ERROR_UNSUPPORTED_SERIAL_BAUD_RATE : {return "INVALID SERIAL BAUD RATE; UNSUPPORTED BAUD"; break;}
-        case ERROR_UNSUPPORTED_SPI_CHANNEL : { return "NVALID SPI CHIP SELECT; UNSUPPORTED CHANNEL"; break; }
+        case ERROR_UNSUPPORTED_SPI_CHANNEL : { return "INVALID SPI CHIP SELECT; UNSUPPORTED CHANNEL"; break; }
         default: return "UNKNOWN ARGUMENT ERROR";
     }
 }

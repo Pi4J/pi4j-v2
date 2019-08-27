@@ -52,4 +52,12 @@ public enum SpiMode {
         }
         return null;
     }
+
+    public static SpiMode parse(String mode) {
+        if(mode.equalsIgnoreCase("0")) return SpiMode.MODE_0;
+        if(mode.equalsIgnoreCase("1")) return SpiMode.MODE_1;
+        if(mode.equalsIgnoreCase("2")) return SpiMode.MODE_2;
+        if(mode.equalsIgnoreCase("3")) return SpiMode.MODE_3;
+        return Spi.DEFAULT_MODE;
+    }
 }

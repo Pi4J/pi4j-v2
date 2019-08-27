@@ -5,7 +5,7 @@ package com.pi4j.io.spi;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  I2CConfig.java
+ * FILENAME      :  SerialConfigBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,24 +27,16 @@ package com.pi4j.io.spi;
  * #L%
  */
 
-import com.pi4j.config.AddressConfig;
-import com.pi4j.io.IOConfig;
-import com.pi4j.io.i2c.I2CConfigBuilder;
+import com.pi4j.config.AddressConfigBuilder;
+import com.pi4j.io.spi.impl.DefaultSpiConfigBuilder;
 
-public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig> {
-    String BAUD_KEY = "baud";
-    String MODE_KEY = "mode";
-
-    static I2CConfigBuilder newBuilder()  {
-        return I2CConfigBuilder.newInstance();
+public interface SpiConfigBuilder extends AddressConfigBuilder<SpiConfigBuilder, SpiConfig> {
+    static SpiConfigBuilder newInstance()  {
+        return DefaultSpiConfigBuilder.newInstance();
     }
 
-    Integer baud();
-    default Integer getBaud() { return baud(); }
+    SpiConfigBuilder baud(Integer rate);
 
-    SpiMode mode();
-    default SpiMode getMode() {
-        return mode();
-    }
-
+    SpiConfigBuilder mode(SpiMode mode);
+    default SpiConfigBuilder mode(Integer mode){ return mode(SpiMode.getByNumber(mode)); }
 }
