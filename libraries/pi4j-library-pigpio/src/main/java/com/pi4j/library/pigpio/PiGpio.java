@@ -215,6 +215,16 @@ public interface PiGpio extends
 
 
     void gpioNotifications(int pin, boolean enabled) throws IOException;
+    default void gpioEnableNotifications(int pin) throws IOException{
+        gpioNotifications(pin, true);
+    }
+    default void gpioDisableNotifications(int pin) throws IOException{
+        gpioNotifications(pin, false);
+    }
+    void addPinListener(int pin, PiGpioStateChangeListener listener);
+    void removePinListener(int pin, PiGpioStateChangeListener listener);
+    void removePinListeners(int pin);
+    void removeAllPinListeners();
     void addListener(PiGpioStateChangeListener listener);
     void removeListener(PiGpioStateChangeListener listener);
     void removeAllListeners();

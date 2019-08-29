@@ -37,13 +37,7 @@ public class Main {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         PiGpio pig = PiGpio.newSocketInstance("rpi3bp"); //"10.1.2.222"
-
         pig.initialize();
-
-
-        //pig.gpioSetMode(5, PiGpioMode.OUTPUT);
-
-
 
 //        // set pin ALT0 modes for I2C BUS<1> usage on RPI3B
 //        pig.gpioSetMode(2, PiGpioMode.ALT0);
@@ -58,19 +52,6 @@ public class Main {
 //                continue;
 //            }
 //        }
-//
-        //int handle = pig.i2cOpen(1, 0x04);
-        //int handle3 = pig.spiOpen(0, 100000, 0);
-        //int handle2 = pig.serOpen(SERIAL_DEVICE, BAUD_RATE);
-
-        //int handle = 0;
-        //int handle2 = 0;
-
-        //System.out.println(handle + " : " + handle2 + " : " + handle3);
-
-//        pig.i2cClose(handle);
-//        pig.serClose(handle2);
-//        pig.spiClose(handle3);
 
         pig.addListener(new PiGpioStateChangeListener() {
             @Override
@@ -80,7 +61,6 @@ public class Main {
         });
 
         pig.gpioNotifications(0, true);
-
         System.out.println("READY.");
 
         System.in.read();

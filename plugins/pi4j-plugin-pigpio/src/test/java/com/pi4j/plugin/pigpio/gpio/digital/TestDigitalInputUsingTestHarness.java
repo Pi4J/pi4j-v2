@@ -31,9 +31,7 @@ package com.pi4j.plugin.pigpio.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.io.gpio.digital.DigitalState;
-import com.pi4j.io.gpio.digital.PullResistance;
+import com.pi4j.io.gpio.digital.*;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider;
 import com.pi4j.test.harness.ArduinoTestHarness;
@@ -55,11 +53,10 @@ public class TestDigitalInputUsingTestHarness {
     private Context pi4j;
     private static ArduinoTestHarness harness;
 
-
     @BeforeAll
     public static void initialize() {
         // configure logging output
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
@@ -123,6 +120,9 @@ public class TestDigitalInputUsingTestHarness {
 
     @AfterEach
     public void afterEach() throws Exception {
+        // shutdown Pi4J after each test
+        pi4j.shutdown();
+
         // shutdown the PiGpio library after each test
         piGpio.shutdown();
     }
@@ -147,6 +147,14 @@ public class TestDigitalInputUsingTestHarness {
 
             // create Digital Input I/O instance
             DigitalInput din = pi4j.create(config);
+
+            // register event handler
+            din.addListener(new DigitalChangeListener() {
+                @Override
+                public void onChange(DigitalChangeEvent event) {
+                    System.out.println(event.toString());
+                }
+            });
 
             // configure output pin to HIGH state on testing harness
             harness.setOutputPin(p, true);

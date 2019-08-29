@@ -91,8 +91,7 @@ public class DefaultRuntime implements Runtime {
             catch (Exception e) {
                 e.printStackTrace();
             }
-        }));
-
+        }, "pi4j-shutdown"));
     }
 
     @Override

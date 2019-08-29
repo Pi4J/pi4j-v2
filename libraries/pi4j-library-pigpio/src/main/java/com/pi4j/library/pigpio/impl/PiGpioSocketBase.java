@@ -93,19 +93,20 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
     public void initialize() throws IOException {
         logger.trace("[INITIALIZE] -> STARTED");
         if(!this.initialized) {
-            // add a shutdown hook to perform any required clean up actions
-            // when this library is instructed to shutdown
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                try {
-                    // properly terminate this library
-                    shutdown();
-                } catch (Exception e) {
-                    logger.warn(e.getMessage() ,e);
-                }
-            }, "pigpio-shutdown"));
-
-            // set initialized flag
+//            // add a shutdown hook to perform any required clean up actions
+//            // when this library is instructed to shutdown
+//            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//                try {
+//                    // properly terminate this library
+//                    shutdown();
+//                } catch (Exception e) {
+//                    logger.warn(e.getMessage() ,e);
+//                }
+//            }, "pigpio-shutdown"));
+//
+//            // set initialized flag
             this.initialized = true;
+            logger.info("[INITIALIZE] -- INITIALIZED SUCCESSFULLY");
         }
         else{
             logger.warn("[INITIALIZE] -- ALREADY INITIALIZED");
@@ -154,11 +155,11 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
                     e.printStackTrace();
                 }
             });
-        }
 
-        // shutdown GPIO notifications monitor
-        if(monitor != null && monitor.isConnected())
-            monitor.shutdown();
+            // shutdown GPIO notifications monitor
+            if(monitor != null && monitor.isConnected())
+                monitor.shutdown();
+        }
 
         // shutdown connected socket
         if(socket != null && socket.isConnected())
@@ -180,10 +181,10 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
         return sendPacket(new PiGpioPacket(cmd, p1, p2));
     }
     protected PiGpioPacket sendPacket(PiGpioPacket tx) throws IOException {
+        validateReady();
         return sendPacket(tx, this.socket);
     }
     protected PiGpioPacket sendPacket(PiGpioPacket tx, Socket sck) throws IOException {
-        validateReady();
         try {
             // get socket streams
             var in = sck.getInputStream();

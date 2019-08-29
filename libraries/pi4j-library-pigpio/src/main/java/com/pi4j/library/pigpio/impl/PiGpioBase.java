@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.pi4j.library.pigpio.PiGpioConst.*;
@@ -43,6 +45,7 @@ public abstract class PiGpioBase implements PiGpio {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     protected List<PiGpioStateChangeListener> stateChangeListeners = new CopyOnWriteArrayList<>();
+    protected Map<Integer,List<PiGpioStateChangeListener>> pinChangeListeners = new ConcurrentHashMap<>();
 
     /**
      * --------------------------------------------------------------------------
@@ -179,6 +182,91 @@ public abstract class PiGpioBase implements PiGpio {
     }
 
     @Override
+    public void addPinListener(int pin, PiGpioStateChangeListener listener){
+        List<PiGpioStateChangeListener> listeners = null;
+
+        // if the pin already exists in the map, then get the listeners collection by pin number
+        if(pinChangeListeners.containsKey(pin)){
+            listeners = pinChangeListeners.get(pin);
+        }
+
+        // if the pin does not exist in the map, then create a new
+        // listener collection for this pin and add it to the map
+        else if(!pinChangeListeners.containsKey(pin)){
+            listeners = new CopyOnWriteArrayList<>();
+            pinChangeListeners.put(pin, listeners);
+        }
+
+        // add the new listener object to the listeners collection for this pin index
+        if(!listeners.contains(listener)){
+            listeners.add(listener);
+        }
+
+        // enable this GPIO pin for notification monitoring
+        try {
+            this.gpioEnableNotifications(pin);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void removePinListener(int pin, PiGpioStateChangeListener listener){
+        List<PiGpioStateChangeListener> listeners = null;
+
+        // if the pin does not exist in the map, then we are done; nothing to remove
+        if(!pinChangeListeners.containsKey(pin)){
+            return;
+        }
+
+        // if the pin already exists in the map, then get the listeners collection by pin number
+        listeners = pinChangeListeners.get(pin);
+
+        // remove the existing listener object from the listeners collection for this pin index
+        if(!listeners.contains(listener)){
+            listeners.remove(listener);
+        }
+
+        // disable this GPIO pin for notification monitoring
+        if(listeners.isEmpty()) {
+            try {
+                this.gpioDisableNotifications(pin);
+            } catch (IOException e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+    }
+
+    @Override
+    public void removePinListeners(int pin){
+        List<PiGpioStateChangeListener> listeners = null;
+
+        // if the pin does not exist in the map, then we are done; nothing to remove
+        if(!pinChangeListeners.containsKey(pin)){
+            return;
+        }
+
+        // if the pin already exists in the map, then get the listeners collection by pin number
+        listeners = pinChangeListeners.get(pin);
+
+        // remove all listeners from this pin's collection of listeners
+        listeners.clear();
+
+        // disable this GPIO pin for notification monitoring
+        try {
+            this.gpioDisableNotifications(pin);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void removeAllPinListeners(){
+        // remove all pin listeners
+        pinChangeListeners.clear();
+    }
+
+    @Override
     public void addListener(PiGpioStateChangeListener listener){
         // add listener
         if(!stateChangeListeners.contains(listener)) {
@@ -210,5 +298,20 @@ public abstract class PiGpioBase implements PiGpio {
                 logger.error(e.getMessage(), e);
             }
         });
+
+        // dispatch event to each registered pin listener
+        int pin = event.pin();
+
+        if(pinChangeListeners.containsKey(pin)){
+            var listeners = pinChangeListeners.get(pin);
+            listeners.forEach(listener -> {
+                try {
+                    listener.onChange(event);
+                }
+                catch (Exception e){
+                    logger.error(e.getMessage(), e);
+                }
+            });
+        }
     }
 }

@@ -44,6 +44,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+
         // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
         // this temporary property is used to tell
         // PIGPIO which remote Raspberry Pi to connect to

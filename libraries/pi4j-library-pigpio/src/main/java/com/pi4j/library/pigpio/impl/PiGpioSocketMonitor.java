@@ -93,7 +93,7 @@ public class PiGpioSocketMonitor  {
             } else {
                 // update specific pin set to monitor
                 PiGpioPacket tx = new PiGpioPacket(PiGpioCmd.NB, this.handle, pinMonitor);
-                piGpio.sendPacket(tx, listener);
+                piGpio.sendPacket(tx);
             }
         }
     }
@@ -101,6 +101,16 @@ public class PiGpioSocketMonitor  {
     protected void disable() throws IOException {
         // reset pin monitoring flags
         pinMonitor = 0b00000000000000000000000000000000;
+
+        // update specific pin set to monitor
+        logger.trace("[NOTIFY] disable pin notifications [NB] <ALL PINS 0-31>");
+        PiGpioPacket tx = new PiGpioPacket(PiGpioCmd.NB, this.handle, pinMonitor);
+        piGpio.sendPacket(tx);
+
+        // close the notification handle
+        logger.trace("[NOTIFY] disable socket notifications [NC]; HANDLE={}", handle);
+        tx = new PiGpioPacket(PiGpioCmd.NC, handle);
+        piGpio.sendPacket(tx);
     }
 
     private void startMonitoringThread(){
@@ -206,7 +216,7 @@ public class PiGpioSocketMonitor  {
                                                     final PiGpioState state = PiGpioState.from(newState);
                                                     final PiGpioStateChangeEvent event = new PiGpioStateChangeEvent(i, state, sequence, flags, tick);
                                                     logger.trace("[DISPATCH] PiGpioStateChangeEvent(PIN={}; FLAGS={}; TICK={}; STATE=[{}]",
-                                                            i, flags, tick, newPinState);
+                                                            i, flags, tick, Integer.toBinaryString(newPinState));
                                                     piGpio.dispatchEvent(event);
                                                 }
                                             }

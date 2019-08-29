@@ -37,6 +37,7 @@ import com.pi4j.io.gpio.digital.*;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.library.pigpio.PiGpioPud;
+import com.pi4j.library.pigpio.PiGpioStateChangeListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,11 +49,29 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
     private DigitalState state = DigitalState.LOW;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+
+    /**
+     * Default Constructor
+     *
+     * @param piGpio
+     * @param provider
+     * @param config
+     * @throws IOException
+     */
     public PiGpioDigitalInput(PiGpio piGpio, DigitalInputProvider provider, DigitalInputConfig config) throws IOException {
         super(provider, config);
         this.piGpio = piGpio;
         this.pin = config.address().intValue();
     }
+
+    /**
+     * PIGPIO Pin Change Event Handler
+     *
+     * This listener implementation will forward pin change events received from PIGPIO
+     * to registered Pi4J 'DigitalChangeEvent' event listeners on this digital pin.
+     */
+    private PiGpioStateChangeListener piGpioPinListener =
+            event -> dispatch(new DigitalChangeEvent(PiGpioDigitalInput.this, DigitalState.getState(event.state().value())));
 
     @Override
     public DigitalInput initialize(Context context) throws InitializeException {
@@ -73,6 +92,10 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
                     break;
                 }
             }
+
+            // add this pin listener
+            this.piGpio.addPinListener(pin, piGpioPinListener);
+
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             throw new InitializeException(e);
@@ -107,6 +130,8 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
 
     @Override
     public DigitalInput shutdown(Context context) throws ShutdownException {
+        // remove this pin listener
+        this.piGpio.removePinListener(pin, piGpioPinListener);
         return super.shutdown(context);
     }
 }
