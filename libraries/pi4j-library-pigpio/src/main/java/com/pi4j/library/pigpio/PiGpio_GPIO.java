@@ -72,7 +72,6 @@ public interface PiGpio_GPIO {
      */
     PiGpioState gpioRead(int pin) throws IOException;
 
-
     /**
      * Sets the GPIO level, on (HIGH) or off (LOW).
      *
@@ -82,4 +81,28 @@ public interface PiGpio_GPIO {
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite"
      */
     void gpioWrite(int pin, PiGpioState state) throws IOException;
+
+    /**
+     * Sets the GPIO level, 'true' (HIGH) or 'false' (LOW).
+     *
+     * @param pin gpio pin address
+     * @param state HIGH ('true') or LOW ('false')
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite"
+     */
+    default void gpioWrite(int pin, boolean state) throws IOException{
+        gpioWrite(pin, PiGpioState.from(state));
+    };
+
+    /**
+     * Sets the GPIO level, '1' (HIGH) or '0' (LOW).
+     *
+     * @param pin gpio pin address
+     * @param state HIGH ('1') or LOW ('0')
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite"
+     */
+    default void gpioWrite(int pin, int state) throws IOException{
+        gpioWrite(pin, PiGpioState.from(state));
+    };
 }

@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,21 +47,19 @@ import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_PORT;
 
 public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 
-    protected Logger logger = LoggerFactory.getLogger(this.getClass());
-    protected Set<Integer> serialHandles = Collections.synchronizedSet(new HashSet<>());
-    protected Set<Integer> i2cHandles = Collections.synchronizedSet(new HashSet<>());
-    protected Set<Integer> spiHandles = Collections.synchronizedSet(new HashSet<>());
-
-    protected boolean initialized = false;
-    protected Socket socket = null;
-    protected String host = DEFAULT_HOST;
-    protected int port = DEFAULT_PORT;
-
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Set<Integer> serialHandles = Collections.synchronizedSet(new HashSet<>());
+    protected final Set<Integer> i2cHandles = Collections.synchronizedSet(new HashSet<>());
+    protected final Set<Integer> spiHandles = Collections.synchronizedSet(new HashSet<>());
     protected final PiGpioSocketMonitor monitor;
 
-    // 32 bits are used to store the last known states of pins 0-31
-    //protected int pinState = 0b00000000000000000000000000000000;
-    //protected int pinMonitor = 0b00000000000000000000000000000000;
+    protected String host = DEFAULT_HOST;
+    protected int port = DEFAULT_PORT;
+    protected boolean initialized = false;
+    protected boolean connected = false;
+    protected Socket socket = null;
+
+    // TODO :: IMPLEMENT CONNECTION MONITOR TO PROACTIVELY DETECT SOCKET DISCONNECTS AND AUTO-RETRY TO CONNECT IN BACKGROUND THREAD
 
     /**
      * ALTERNATE CONSTRUCTOR
@@ -74,16 +73,100 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
     protected PiGpioSocketBase(String host, int port) throws IOException {
         this.host = host;
         this.port = port;
-        this.socket = new Socket(host, port);
-        this.monitor =  new PiGpioSocketMonitor(this);
+        this.connected = false;
+        this.initialized = false;
+        this.monitor = new PiGpioSocketMonitor(this);
     }
 
+    /**
+     * Initializes the library.
+     * (The Java implementation of this function does not return a value)
+     *
+     * gpioInitialise must be called before using the other library functions with the following exceptions:
+     * - gpioCfg*
+     * - gpioVersion
+     * - gpioHardwareRevision
+     *
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise"
+     */
+    @Override
+    public void initialize() throws IOException {
+        logger.trace("[INITIALIZE] -> STARTED");
+        if(!this.initialized) {
+            // add a shutdown hook to perform any required clean up actions
+            // when this library is instructed to shutdown
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    // properly terminate this library
+                    shutdown();
+                } catch (Exception e) {
+                    logger.warn(e.getMessage() ,e);
+                }
+            }, "pigpio-shutdown"));
+
+            // set initialized flag
+            this.initialized = true;
+        }
+        else{
+            logger.warn("[INITIALIZE] -- ALREADY INITIALIZED");
+        }
+        logger.trace("[INITIALIZE] <- FINISHED");
+    }
+
+    /**
+     * Shutdown the library.
+     *
+     * Returns nothing.
+     * Call before program exit.
+     * This function resets the used DMA channels, releases memory, and terminates any running threads.
+     */
     @Override
     public void shutdown() throws IOException {
-        if (this.initialized) {
-            // shutdown GPIO state monitor
-            if(monitor != null) monitor.shutdown();
+        logger.trace("[SHUTDOWN] -> STARTED");
+        if(this.initialized) {
+
+            // close all open SPI handles
+            spiHandles.forEach((handle) -> {
+                try {
+                    logger.trace("[SHUTDOWN] -- CLOSING OPEN SPI HANDLE: [{}]", handle);
+                    spiClose(handle.intValue());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            // close all open SERIAL handles
+            serialHandles.forEach((handle) -> {
+                try {
+                    logger.trace("[SHUTDOWN] -- CLOSING OPEN SERIAL HANDLE: [{}]", handle);
+                    serClose(handle.intValue());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            // close all open I2C handles
+            i2cHandles.forEach((handle) -> {
+                try {
+                    logger.trace("[SHUTDOWN] -- CLOSING OPEN I2C HANDLE: [{}]", handle);
+                    i2cClose(handle.intValue());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
+
+        // shutdown GPIO notifications monitor
+        if(monitor != null && monitor.isConnected())
+            monitor.shutdown();
+
+        // shutdown connected socket
+        if(socket != null && socket.isConnected())
+            socket.close();
+
+        // clear initialized flag
+        this.initialized = false;
+        logger.trace("[SHUTDOWN] <- FINISHED");
     }
 
     protected PiGpioPacket sendCommand(PiGpioCmd cmd) throws IOException {
@@ -97,74 +180,84 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
         return sendPacket(new PiGpioPacket(cmd, p1, p2));
     }
     protected PiGpioPacket sendPacket(PiGpioPacket tx) throws IOException {
-
-        // get socket streams
-        var in = socket.getInputStream();
-        var out = socket.getOutputStream();
-
-        // transmit packet
-        logger.trace("[TX] -> " + tx.toString());
-        out.write(PiGpioPacket.encode(tx));
-        out.flush();
-
-        // wait until data has been received (timeout after 500 ms and throw exception)
-        int millis = 0;
-        try {
-            while(in.available() < 16){
-                if(millis > 500){   // timeout exception
-                    throw new IOException("Command timed out; no response from host in 500 milliseconds");
-                }
-                millis+=5;
-                Thread.sleep(5); // ... take a breath ..
-            }
-        } catch (InterruptedException e) {
-            // wrap exception
-            throw new IOException(e.getMessage(), e);
-        }
-
-        // read receive packet
-        PiGpioPacket rx = PiGpioPacket.decode(in);
-        logger.trace("[RX] <- " + rx.toString());
-        return rx;
+        return sendPacket(tx, this.socket);
     }
     protected PiGpioPacket sendPacket(PiGpioPacket tx, Socket sck) throws IOException {
-
-        // get socket streams
-        var in = sck.getInputStream();
-        var out = sck.getOutputStream();
-
-        // transmit packet
-        logger.trace("[TX] -> " + tx.toString());
-        out.write(PiGpioPacket.encode(tx));
-        out.flush();
-
-        // wait until data has been received (timeout after 500 ms and throw exception)
-        int millis = 0;
+        validateReady();
         try {
-            while(in.available() < 16){
-                if(millis > 500){   // timeout exception
-                    throw new IOException("Command timed out; no response from host in 500 milliseconds");
-                }
-                millis+=5;
-                Thread.sleep(5); // ... take a breath ..
-            }
-        } catch (InterruptedException e) {
-            // wrap exception
-            throw new IOException(e.getMessage(), e);
-        }
+            // get socket streams
+            var in = sck.getInputStream();
+            var out = sck.getOutputStream();
 
-        // read receive packet
-        PiGpioPacket rx = PiGpioPacket.decode(in);
-        logger.trace("[RX] <- " + rx.toString());
-        return rx;
+            // transmit packet
+            logger.trace("[TX] -> " + tx.toString());
+            out.write(PiGpioPacket.encode(tx));
+            out.flush();
+
+            // wait until data has been received (timeout after 500 ms and throw exception)
+            int millis = 0;
+            try {
+                while(in.available() < 16){
+                    if(millis > 500){   // timeout exception
+                        throw new IOException("Command timed out; no response from host in 500 milliseconds");
+                    }
+                    millis+=5;
+                    Thread.sleep(5); // ... take a breath ..
+                }
+            } catch (InterruptedException e) {
+                // wrap exception
+                throw new IOException(e.getMessage(), e);
+            }
+
+            // read receive packet
+            PiGpioPacket rx = PiGpioPacket.decode(in);
+            logger.trace("[RX] <- " + rx.toString());
+            return rx;
+        }
+        catch (SocketException se){
+            // socket is no longer connected
+            this.connected = false;
+            socket.close();
+            socket = null;
+            throw se;
+        }
     }
 
     public void gpioNotifications(int pin, boolean enabled) throws IOException{
+        logger.trace("[GPIO] -> {} Pin [{}] Notifications", (enabled ? "ENABLE" : "DISABLE"), pin);
+        validateReady();
         this.monitor.enable(pin, enabled);
+        logger.trace("[GPIO] <- Pin [PIN {}] Notifications [{}]", pin, (enabled ? "ENABLED" : "DISABLED"));
     }
 
     protected void disableNotifications() throws IOException {
+        logger.trace("[GPIO] -> DISABLE ALL Pin Notifications");
+        validateReady();
         this.monitor.disable();
+        logger.trace("[GPIO] <- All Pin Notifications are DISABLED");
+    }
+
+    protected void validateReady() throws IOException {
+        validateInitialized();
+        validateConnection();
+    }
+
+    protected void validateInitialized() throws IOException {
+        if(!this.initialized)
+            throw new IOException("PIGPIO NOT INITIALIZED; make sure you call the PiGpio::initialize() function first.");
+    }
+
+    protected void validateConnection() throws IOException {
+        // if not connected, attempt to reconnect
+        if(socket == null || !this.connected){
+            // attempt to connect to PiGpio Daemon on remote Raspberry Pi
+            this.socket = new Socket(host, port);
+
+            // update connection status flag
+            this.connected = this.socket.isConnected();
+        }
+//            throw new IOException("PIGPIO NOT CONNECTED TO REMOTE HOST [" + this.host + ":" + this.port +
+//                    "]; make sure the PiGpio Daemon is running on the remote Raspberry Pi and the host is accessible.");
     }
 
 //    protected void enableNotifications() throws IOException {

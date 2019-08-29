@@ -201,7 +201,7 @@ public class DefaultRuntime implements Runtime {
                         } catch (Exception ex) {
                             // unable to initialize this provider instance
                             logger.error("unable to 'initialize()' plugin: [{}]; {}",
-                                    plugin.getClass().getName(), ex.getMessage());
+                                    plugin.getClass().getName(), ex.getMessage(), ex);
                             continue;
                         }
                     }
