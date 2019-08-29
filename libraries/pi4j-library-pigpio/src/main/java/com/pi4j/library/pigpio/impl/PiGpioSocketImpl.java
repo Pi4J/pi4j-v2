@@ -103,96 +103,6 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * Initializes the library.
-     * (The Java implementation of this function does not return a value)
-     *
-     * gpioInitialise must be called before using the other library functions with the following exceptions:
-     * - gpioCfg*
-     * - gpioVersion
-     * - gpioHardwareRevision
-     *
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise"
-     */
-    @Override
-    public void initialize() {
-        logger.trace("[INITIALIZE] -> STARTED");
-        if(!this.initialized) {
-            // TODO :: SETUP NOTIFICATIONS
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                try {
-                    // properly terminate this library
-                    shutdown();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }, "pigpio-shutdown"));
-
-            // set initialized flag
-            this.initialized = true;
-        }
-        else{
-            logger.warn("[INITIALIZE] -- ALREADY INITIALIZED");
-        }
-        logger.trace("[INITIALIZE] <- FINISHED");
-    }
-
-    /**
-     * Shutdown the library.
-     *
-     * Returns nothing.
-     * Call before program exit.
-     * This function resets the used DMA channels, releases memory, and terminates any running threads.
-     */
-    @Override
-    public void shutdown() throws IOException {
-        logger.trace("[SHUTDOWN] -> STARTED");
-        super.shutdown();
-        if(this.initialized) {
-
-            // close all open SPI handles
-            spiHandles.forEach((handle) -> {
-                try {
-                    logger.trace("[SHUTDOWN] -- CLOSING OPEN SPI HANDLE: [{}]", handle);
-                    spiClose(handle.intValue());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
-            // close all open SERIAL handles
-            serialHandles.forEach((handle) -> {
-                try {
-                    logger.trace("[SHUTDOWN] -- CLOSING OPEN SERIAL HANDLE: [{}]", handle);
-                    serClose(handle.intValue());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
-            // close all open I2C handles
-            i2cHandles.forEach((handle) -> {
-                try {
-                    logger.trace("[SHUTDOWN] -- CLOSING OPEN I2C HANDLE: [{}]", handle);
-                    i2cClose(handle.intValue());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-        else{
-            logger.info("[SHUTDOWN] -- ALREADY SHUTDOWN");
-        }
-
-        // TODO :: REMOVE ALL NOTIFICATIONS
-        if(socket.isConnected())
-            socket.close();
-
-        // clear initialized flag
-        this.initialized = false;
-        logger.trace("[SHUTDOWN] <- FINISHED");
-    }
-
-    /**
      * Returns the pigpio library version.
      *
      * @return pigpio version.
@@ -203,6 +113,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public long gpioVersion() throws IOException {
         logger.trace("[VERSION] -> GET VERSION");
+        validateReady();
         PiGpioPacket result = sendCommand(PIGPV);
         long version = result.result();
         logger.trace("[VERSION] <- RESULT={}", version);
@@ -232,6 +143,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public long gpioHardwareRevision() throws IOException {
         logger.trace("[HARDWARE] -> GET REVISION");
+        validateReady();
         PiGpioPacket result = sendCommand(HWVER);
         long revision = result.result();
         logger.trace("[HARDWARE] <- REVISION: {}", revision);
@@ -262,6 +174,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public String gpioHardwareRevisionString() throws IOException {
         logger.trace("[HARDWARE] -> GET REVISION (STRING)");
+        validateReady();
         PiGpioPacket result = sendCommand(HWVER);
         long revision = result.result();
         String revisionString = Integer.toHexString((int)revision);
@@ -286,6 +199,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public void gpioSetPullUpDown(int pin, PiGpioPud pud) throws IOException {
         logger.trace("[GPIO::PUD-SET] -> PIN: {}; PUD={}({});", pin, pud.name(), pud.value());
+        validateReady();
         validatePin(pin);
         PiGpioPacket result = sendCommand(PUD, pin, pud.value());
         logger.trace("[GPIO::PUD-SET] <- PIN: {}; PUD={}({}); SUCCESS={}", pud.name(), pud.value(), result.success());
@@ -303,6 +217,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public PiGpioMode gpioGetMode(int pin) throws IOException {
         logger.trace("[GPIO::MODE-GET] -> PIN: {};", pin);
+        validateReady();
         validatePin(pin);
         PiGpioPacket result = sendCommand(MODEG, pin);
         validateResult(result); // Returns the GPIO mode if OK, otherwise PI_BAD_GPIO.
@@ -325,6 +240,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public void gpioSetMode(int pin, PiGpioMode mode) throws IOException {
         logger.trace("[GPIO::MODE-SET] -> PIN: {}; MODE={}({});", pin, mode.name(), mode.value());
+        validateReady();
         validatePin(pin);
         PiGpioPacket result = sendCommand(MODES, pin, mode.value());
         logger.trace("[GPIO::MODE-SET] <- PIN: {}; MODE={}({}); SUCCESS={}", mode.name(), mode.value(), result.success());
@@ -341,6 +257,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public PiGpioState gpioRead(int pin) throws IOException {
         logger.trace("[GPIO::GET] -> PIN: {}", pin);
+        validateReady();
         validatePin(pin);
         PiGpioPacket result = sendCommand(READ, pin);
         validateResult(result); // Returns the GPIO level if OK, otherwise PI_BAD_GPIO.
@@ -360,6 +277,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public void gpioWrite(int pin, PiGpioState state) throws IOException {
         logger.trace("[GPIO::SET] -> PIN: {}; {}({});", pin, state.name(), state.value());
+        validateReady();
         validatePin(pin);
         PiGpioPacket result = sendCommand(WRITE, pin, state.value());
         logger.trace("[GPIO::SET] <- PIN: {}; {}({}); SUCCESS={}",  pin, state.name(), state.value(), result.success());
@@ -385,6 +303,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public void gpioPWM(int pin, int dutyCycle) throws IOException {
         logger.trace("[PWM::SET] -> PIN: {}; DUTY-CYCLE={};", pin, dutyCycle);
+        validateReady();
         validateUserPin(pin);
         validateDutyCycle(dutyCycle);
         PiGpioPacket result = sendCommand(PWM, pin, dutyCycle);
@@ -408,6 +327,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int gpioGetPWMdutycycle(int pin) throws IOException {
         logger.trace("[PWM::GET] -> PIN: {}", pin);
+        validateReady();
         validateUserPin(pin);
         PiGpioPacket result = sendCommand(GDC, pin);
         var dutyCycle = result.result();
@@ -446,6 +366,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int gpioSetPWMrange(int pin, int range) throws IOException {
         logger.trace("[PWM-RANGE::SET] -> PIN: {}; RANGE={}", pin, range);
+        validateReady();
         validateUserPin(pin);
         //validateDutyCycleRange(range);
         PiGpioPacket result = sendCommand(PRS, pin, range);
@@ -466,6 +387,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int gpioGetPWMrange(int pin) throws IOException {
         logger.trace("[PWM-RANGE::GET] -> PIN: {}", pin);
+        validateReady();
         validateUserPin(pin);
         PiGpioPacket result = sendCommand(PRG, pin);
         var range = result.result();
@@ -487,6 +409,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int gpioGetPWMrealRange(int pin) throws IOException {
         logger.trace("[PWM-REAL-RANGE::GET] -> PIN: {}", pin);
+        validateReady();
         validateUserPin(pin);
         PiGpioPacket result = sendCommand(PRRG, pin);
         var range = result.result();
@@ -539,6 +462,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int gpioSetPWMfrequency(int pin, int frequency) throws IOException {
         logger.trace("[PWM-FREQ::SET] -> PIN: {}; FREQUENCY={}", pin, frequency);
+        validateReady();
         validateUserPin(pin);
         // validateFrequency(frequency); TODO :: IMPLEMENT 'validateFrequency()'
         PiGpioPacket result = sendCommand(PFS, pin, frequency);
@@ -565,6 +489,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int gpioGetPWMfrequency(int pin) throws IOException {
         logger.trace("[PWM-FREQ::GET] -> PIN: {}", pin);
+        validateReady();
         validateUserPin(pin);
         PiGpioPacket result = sendCommand(PFG, pin);
         var frequency = result.result();
@@ -614,6 +539,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public void gpioHardwarePWM(int pin, int frequency, int dutyCycle) throws IOException {
         logger.trace("[HW-PWM::SET] -> PIN: {}; FREQUENCY={}; DUTY-CYCLE={}", pin, frequency, dutyCycle);
+        validateReady();
         validateUserPin(pin);
         // validateHwPwmFrequency(frequency); TODO :: IMPLEMENT 'validateHwPwmFrequency()'
         PiGpioPacket tx = new PiGpioPacket(HP, pin, frequency).data(dutyCycle);
@@ -639,6 +565,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int gpioDelay(int micros) throws IOException {
         logger.trace("[DELAY] -> MICROS: {}", micros);
+        validateReady();
         validateDelayMicroseconds(micros);
         PiGpioPacket result = sendCommand(MICS, (int)micros);
         logger.trace("[DELAY] <- MICROS: {}; SUCCESS={}",  micros, result.success());
@@ -656,6 +583,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int gpioDelayMilliseconds(int millis) throws IOException{
         logger.trace("[DELAY] -> MILLIS: {}", millis);
+        validateReady();
         validateDelayMilliseconds(millis);
         PiGpioPacket result = sendCommand(MILS, (int)millis);
         logger.trace("[DELAY] <- MILLIS: {}; SUCCESS={}",  millis, result.success());
@@ -688,6 +616,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public long gpioTick() throws IOException {
         logger.trace("[TICK::GET] -> Get current tick");
+        validateReady();
         PiGpioPacket tx = new PiGpioPacket(TICK);
         PiGpioPacket rx = sendPacket(tx);
         long tick = Integer.toUnsignedLong(rx.result()); // convert (UInt32) 32-bit unsigned value to long
@@ -722,6 +651,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cOpen(int bus, int device, int flags) throws IOException {
         logger.trace("[I2C::OPEN] -> Open I2C Bus [{}] and Device [{}]", bus, device);
+        validateReady();
         validateI2cBus(bus);
         validateI2cDeviceAddress(device);
         PiGpioPacket tx = new PiGpioPacket(I2CO, bus, device).data(flags);
@@ -751,6 +681,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cClose(int handle) throws IOException {
         logger.trace("[I2C::CLOSE] -> HANDLE={}, Close I2C Bus", handle);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CC, handle);
         PiGpioPacket rx = sendPacket(tx);
@@ -776,6 +707,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cWriteQuick(int handle, boolean bit) throws IOException {
         logger.trace("[I2C::WRITE] -> HANDLE={}; R/W Bit [{}]", handle, bit ? 1 : 0);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CWQ, handle, bit ? 1 : 0);
         PiGpioPacket rx = sendPacket(tx);
@@ -796,6 +728,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cWriteByte(int handle, byte value) throws IOException {
         logger.trace("[I2C::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CWS, handle, Byte.toUnsignedInt(value));
         PiGpioPacket rx = sendPacket(tx);
@@ -815,6 +748,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cReadByte(int handle) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Byte", handle);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CRS, handle);
         PiGpioPacket rx = sendPacket(tx);
@@ -836,6 +770,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cWriteByteData(int handle, int register, byte value) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Byte [{}]", handle ,register, Byte.toUnsignedInt(value));
+        validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CWB, handle, register).data(Byte.toUnsignedInt(value));
@@ -858,6 +793,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cWriteWordData(int handle, int register, int value) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
+        validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CWW, handle, register).data(value);
@@ -879,6 +815,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cReadByteData(int handle, int register) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Byte", handle ,register);
+        validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRB, handle, register);
@@ -900,6 +837,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cReadWordData(int handle, int register) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Word", handle ,register);
+        validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRW, handle, register);
@@ -923,6 +861,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cProcessCall(int handle, int register, int value) throws IOException {
         logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
+        validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CPC, handle, register).data(value);
@@ -947,6 +886,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cWriteBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, data.length);
+        validateReady();
         Objects.checkFromIndexSize(offset, length, data.length);
         validateHandle(handle);
         validateI2cRegister(register);
@@ -973,6 +913,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cReadBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Block", handle ,register);
+        validateReady();
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
         validateI2cRegister(register);
@@ -1011,6 +952,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
                                    byte[] write, int writeOffset, int writeLength,
                                    byte[] read, int readOffset) throws IOException {
         logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, writeLength);
+        validateReady();
         Objects.checkFromIndexSize(writeOffset, writeLength, write.length);
         validateHandle(handle);
         validateI2cRegister(register);
@@ -1051,6 +993,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cReadI2CBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException{
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, length);
+        validateReady();
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
         validateI2cRegister(register);
@@ -1071,7 +1014,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
                 System.arraycopy(rx.data(), 0, buffer, offset, actual);
             }
             catch (ArrayIndexOutOfBoundsException a){
-                a.printStackTrace();
+                logger.error(a.getMessage(), a);
             }
 
         }
@@ -1093,6 +1036,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cWriteI2CBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, data.length);
+        validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         validateI2cBlockLength(data.length);
@@ -1117,6 +1061,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cReadDevice(int handle, byte[] buffer, int offset, int length) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; I2C Raw Read [{} bytes]", handle, length);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CRD, handle, length);
         PiGpioPacket rx = sendPacket(tx);
@@ -1144,6 +1089,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int i2cWriteDevice(int handle, byte[] data, int offset, int length) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; I2C Raw Write [{} bytes]", handle, data.length);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CWD, handle).data(data, offset, length);
         PiGpioPacket rx = sendPacket(tx);
@@ -1173,6 +1119,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int serOpen(CharSequence device, int baud, int flags) throws IOException {
         logger.trace("[SERIAL::OPEN] -> Open Serial Port [{}] at Baud Rate [{}]", device, baud);
+        validateReady();
         PiGpioPacket tx = new PiGpioPacket(SERO, baud, flags).data(device);
         PiGpioPacket rx = sendPacket(tx);
         int handle = rx.result();
@@ -1196,6 +1143,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int serClose(int handle) throws IOException {
         logger.trace("[SERIAL::CLOSE] -> HANDLE={}, Close Serial Port", handle);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SERC, handle);
         PiGpioPacket rx = sendPacket(tx);
@@ -1220,6 +1168,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int serWriteByte(int handle, byte value) throws IOException {
         logger.trace("[SERIAL::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SERWB, handle, Byte.toUnsignedInt(value));
         PiGpioPacket rx = sendPacket(tx);
@@ -1239,6 +1188,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int serReadByte(int handle) throws IOException {
         logger.trace("[SERIAL::READ] -> [{}]; Byte", handle);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SERRB, handle);
         PiGpioPacket rx = sendPacket(tx);
@@ -1261,6 +1211,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int serWrite(int handle, byte[] data, int offset, int length) throws IOException {
         logger.trace("[SERIAL::WRITE] -> [{}]; Serial Write [{} bytes]", handle, data.length);
+        validateReady();
         Objects.checkFromIndexSize(offset, length, data.length);
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SERW, handle).data(data, offset, length);
@@ -1284,6 +1235,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int serRead(int handle, byte[] buffer, int offset, int length) throws IOException {
         logger.trace("[SERIAL::READ] -> [{}]; Serial Read [{} bytes]", handle, length);
+        validateReady();
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SERR, handle, length);
@@ -1308,6 +1260,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int serDataAvailable(int handle) throws IOException {
         logger.trace("[SERIAL::AVAIL] -> Get number of bytes available to read");
+        validateReady();
         PiGpioPacket tx = new PiGpioPacket(SERDA, handle);
         PiGpioPacket rx = sendPacket(tx);
         int available = rx.result();
@@ -1325,6 +1278,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int serDrain(int handle) throws IOException{
         logger.trace("[SERIAL::DRAIN] -> Drain any remaining bytes in serial RX buffer");
+        validateReady();
 
         // get number of bytes available
         PiGpioPacket tx = new PiGpioPacket(SERDA, handle);
@@ -1413,6 +1367,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int spiOpen(int channel, int baud, int flags) throws IOException {
         logger.trace("[SPI::OPEN] -> Open SPI Channel [{}] at Baud Rate [{}]; Flags=[{}]", channel, baud, flags);
+        validateReady();
         PiGpioPacket tx = new PiGpioPacket(SPIO, channel, baud).data(flags);
         PiGpioPacket rx = sendPacket(tx);
         int handle = rx.result();
@@ -1436,6 +1391,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int spiClose(int handle) throws IOException {
         logger.trace("[SPI::CLOSE] -> HANDLE={}, Close Serial Port", handle);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SPIC, handle);
         PiGpioPacket rx = sendPacket(tx);
@@ -1463,6 +1419,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int spiWrite(int handle, byte[] data, int offset, int length) throws IOException {
         logger.trace("[SPI::WRITE] -> [{}]; Serial Write [{} bytes]", handle, data.length);
+        validateReady();
         Objects.checkFromIndexSize(offset, length, data.length);
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SPIW, handle).data(data, offset, length);
@@ -1488,6 +1445,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int spiRead(int handle, byte[] buffer, int offset, int length) throws IOException {
         logger.trace("[SPI::READ] -> [{}]; Serial Read [{} bytes]", handle, length);
+        validateReady();
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SPIR, handle, length);
@@ -1524,6 +1482,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     @Override
     public int spiXfer(int handle, byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException {
         logger.trace("[SPI::XFER] -> [{}]; Serial Transfer [{} bytes]", handle, numberOfBytes);
+        validateReady();
         Objects.checkFromIndexSize(writeOffset, numberOfBytes, write.length);
         Objects.checkFromIndexSize(readOffset, numberOfBytes, read.length);
         validateHandle(handle);

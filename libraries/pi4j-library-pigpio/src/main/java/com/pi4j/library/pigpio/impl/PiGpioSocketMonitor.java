@@ -45,7 +45,7 @@ import java.nio.ByteOrder;
 
 public class PiGpioSocketMonitor  {
 
-    public static String NAME = "PiGpio-Monitor";
+    public static String NAME = "pigpio-monitor";
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     protected final PiGpioSocketBase piGpio;
@@ -73,6 +73,10 @@ public class PiGpioSocketMonitor  {
         }
     }
 
+    public boolean isConnected(){
+        return (listener != null && listener.isConnected());
+    }
+
     public void enable(int pin, boolean enabled) throws IOException{
 
         // update pin monitor
@@ -95,17 +99,9 @@ public class PiGpioSocketMonitor  {
     }
 
     protected void disable() throws IOException {
-
         // reset pin monitoring flags
         pinMonitor = 0b00000000000000000000000000000000;
-
-        // stop the monitoring thread if its currently running
-        //if(monitoringThread.isAlive()){
-            //this.listener.close();
-          //  monitoringThread.interrupt();
-        //}
     }
-
 
     private void startMonitoringThread(){
         // create monitoring thread

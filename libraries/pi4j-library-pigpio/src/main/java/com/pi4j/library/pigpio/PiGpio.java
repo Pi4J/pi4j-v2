@@ -97,10 +97,10 @@ public interface PiGpio extends
      * @return result value
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise"
      */
-    void initialize();
-    default void gpioInitialize(){ initialize(); } // US spelling variant
-    default void initialise(){ initialize(); }     // UK spelling variant
-    default void gpioInitialise(){ initialize(); }
+    void initialize() throws IOException;
+    default void gpioInitialize() throws IOException { initialize(); } // US spelling variant
+    default void initialise() throws IOException { initialize(); }     // UK spelling variant
+    default void gpioInitialise() throws IOException { initialize(); }
 
     /**
      * Shutdown/Terminate the library.
