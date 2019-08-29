@@ -99,6 +99,12 @@ public class DigitalInputRegistrationProcessor implements RegisterProcessor<Digi
             if (pull != null) builder.pull(pull.value());
         }
 
+        Debounce debounce = null;
+        if (field.isAnnotationPresent(Debounce.class)) {
+            debounce = field.getAnnotation(Debounce.class);
+            if (debounce != null) builder.debounce(debounce.value(), debounce.unit());
+        }
+
         // get designated platform to use to register this IO (if provided)
         Platform platform = null;
         if (field.isAnnotationPresent(WithPlatform.class)) {

@@ -31,11 +31,15 @@ package com.pi4j.io.gpio.digital;
 public interface DigitalInputConfig extends DigitalConfig<DigitalInputConfig> {
 
     String PULL_RESISTANCE_KEY = "pull";
+    String DEBOUNCE_RESISTANCE_KEY = "debounce";
 
     PullResistance pull();
     default PullResistance getPull(){
         return pull();
     }
+
+    Long debounce();
+    default Long getDebounce(){ return debounce(); }
 
     static DigitalInputConfigBuilder newBuilder()  {
         return DigitalInputConfigBuilder.newInstance();

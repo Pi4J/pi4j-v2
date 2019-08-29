@@ -32,6 +32,8 @@ import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputConfigBuilder;
 import com.pi4j.io.gpio.digital.PullResistance;
 
+import java.util.concurrent.TimeUnit;
+
 public class DefaultDigitalInputConfigBuilder
         extends AddressConfigBuilderBase<DigitalInputConfigBuilder, DigitalInputConfig>
         implements DigitalInputConfigBuilder {
@@ -57,5 +59,18 @@ public class DefaultDigitalInputConfigBuilder
     public DigitalInputConfigBuilder pull(PullResistance value) {
         this.properties.put(DigitalInputConfig.PULL_RESISTANCE_KEY, value.toString());
         return this;
+    }
+
+    @Override
+    public DigitalInputConfigBuilder debounce(Long microseconds) {
+        if(microseconds != null) {
+            this.properties.put(DigitalInputConfig.DEBOUNCE_RESISTANCE_KEY, microseconds.toString());
+        }
+        return this;
+    }
+
+    @Override
+    public DigitalInputConfigBuilder debounce(Long interval, TimeUnit units) {
+        return debounce(units.toMicros(interval));
     }
 }

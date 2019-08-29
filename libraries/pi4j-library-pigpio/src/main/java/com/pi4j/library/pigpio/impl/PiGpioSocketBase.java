@@ -106,7 +106,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 //
 //            // set initialized flag
             this.initialized = true;
-            logger.info("[INITIALIZE] -- INITIALIZED SUCCESSFULLY");
+            logger.debug("[INITIALIZE] -- INITIALIZED SUCCESSFULLY");
         }
         else{
             logger.warn("[INITIALIZE] -- ALREADY INITIALIZED");

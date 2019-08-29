@@ -181,6 +181,23 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    protected void validateGpioGlitchFilter(int interval) throws IOException {
+        // validate GPIO glitch filter interval value :: 0-300000
+        if(interval < 0 || interval > 300000) {
+            throw new IOException("PIGPIO ERROR: INVALID GPIO GLITCH FILTER INTERVAL [" + interval + "]; Valid range: 0-300000");
+        }
+    }
+
+    protected void validateGpioNoiseFilter(int steady, int active) throws IOException {
+        // validate GPIO noise filter properties
+        if(steady < 0 || steady > 300000) {
+            throw new IOException("PIGPIO ERROR: INVALID GPIO NOISE FILTER -> STEADY INTERVAL [" + steady + " us]; Valid range: 0-300000");
+        }
+        if(active < 0 || active > 1000000) {
+            throw new IOException("PIGPIO ERROR: INVALID GPIO NOISE FILTER -> ACTIVE INTERVAL [" + steady + " us]; Valid range: 0-1000000");
+        }
+    }
+
     @Override
     public void addPinListener(int pin, PiGpioStateChangeListener listener){
         List<PiGpioStateChangeListener> listeners = null;

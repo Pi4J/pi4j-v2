@@ -28,6 +28,7 @@ package com.pi4j.io.gpio.digital.impl;
  */
 
 import com.pi4j.config.impl.AddressConfigBase;
+import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.PullResistance;
 import com.pi4j.util.StringUtil;
@@ -47,6 +48,7 @@ public class DefaultDigitalInputConfig
 
     // private configuration properties
     protected PullResistance pullResistance = PullResistance.OFF;
+    protected Long debounce = DigitalInput.DEFAULT_DEBOUNCE;
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -64,10 +66,18 @@ public class DefaultDigitalInputConfig
         if(properties.containsKey(PULL_RESISTANCE_KEY)){
             this.pullResistance = PullResistance.parse(properties.get(PULL_RESISTANCE_KEY));
         }
+
+        // load optional pull resistance from properties
+        if(properties.containsKey(DEBOUNCE_RESISTANCE_KEY)){
+            this.debounce = Long.parseLong(properties.get(DEBOUNCE_RESISTANCE_KEY));
+        }
     }
 
     @Override
     public PullResistance pull() {
         return this.pullResistance;
     }
+
+    @Override
+    public Long debounce() { return this.debounce; }
 }

@@ -31,6 +31,7 @@ package com.pi4j.io.gpio.digital;
 import com.pi4j.io.Input;
 
 public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig, DigitalInputProvider>, Input {
+    long DEFAULT_DEBOUNCE = 10000;
 
     static DigitalInputConfigBuilder newConfigBuilder(){
         return DigitalInputConfigBuilder.newInstance();

@@ -284,6 +284,73 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_GPIO or PI_BAD_LEVEL.
     }
 
+    /**
+     * Sets a glitch filter on a GPIO.  (AKA Debounce)
+     *
+     * Level changes on the GPIO are not reported unless the level has been stable for at
+     * least 'steady' microseconds. The level is then reported. Level changes of less
+     * than 'steady' microseconds are ignored.
+     *
+     * This filter affects the GPIO samples returned to callbacks set up with:
+     *  - gpioSetAlertFunc
+     *  - gpioSetAlertFuncEx
+     *  - gpioSetGetSamplesFunc
+     *  - gpioSetGetSamplesFuncEx.
+     *
+     * It does not affect interrupts set up with gpioSetISRFunc, gpioSetISRFuncEx, or
+     * levels read by gpioRead, gpioRead_Bits_0_31, or gpioRead_Bits_32_53.
+     * Each (stable) edge will be timestamped steady microseconds after it was first detected.
+     *
+     * @param pin gpio pin address (valid pins are 0-31)
+     * @param steady interval in microseconds (valid range: 0-300000)
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter"
+     */
+    public void gpioGlitchFilter(int pin, int steady) throws IOException {
+        logger.trace("[GPIO::GLITCH] -> PIN: {}; INTERVAL: {};", pin, steady);
+        validateReady();
+        validatePin(pin);
+        validateGpioGlitchFilter(steady);
+        PiGpioPacket result = sendCommand(FG, pin, steady);
+        logger.trace("[GPIO::GLITCH] <- PIN: {}; SUCCESS={}",  pin, result.success());
+        validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO, or PI_BAD_FILTER.
+    }
+
+    /**
+     * Sets a noise filter on a GPIO.
+     *
+     * Level changes on the GPIO are ignored until a level which has been stable for 'steady'
+     * microseconds is detected. Level changes on the GPIO are then reported for 'active'
+     * microseconds after which the process repeats.
+     *
+     * This filter affects the GPIO samples returned to callbacks set up with:
+     *  - gpioSetAlertFunc
+     *  - gpioSetAlertFuncEx
+     *  - gpioSetGetSamplesFunc
+     *  - gpioSetGetSamplesFuncEx.     *
+     * It does not affect interrupts set up with gpioSetISRFunc, gpioSetISRFuncEx, or
+     * levels read by gpioRead, gpioRead_Bits_0_31, or gpioRead_Bits_32_53.
+     *
+     * Level changes before and after the active period may be reported.
+     * Your software must be designed to cope with such reports.
+     *
+     * @param pin gpio pin address (valid pins are 0-31)
+     * @param steady interval in microseconds (valid range: 0-300000)
+     * @param active interval in microseconds (valid range: 0-1000000)
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter"
+     */
+    public void gpioNoiseFilter(int pin, int steady, int active) throws IOException{
+        logger.trace("[GPIO::NOISE] -> PIN: {}; INTERVAL: {};", pin, steady);
+        validateReady();
+        validatePin(pin);
+        validateGpioNoiseFilter(steady, active);
+        PiGpioPacket result = sendCommand(FN, pin, steady).data(active);
+        logger.trace("[GPIO::NOISE] <- PIN: {}; SUCCESS={}",  pin, result.success());
+        validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO, or PI_BAD_FILTER.
+    }
+
+
     // *****************************************************************************************************
     // *****************************************************************************************************
     // PWM IMPLEMENTATION

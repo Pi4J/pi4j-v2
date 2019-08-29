@@ -43,7 +43,6 @@ public class DigitalInputExample {
     }
 
     public static void main(String[] args) throws Exception {
-
         // configure logging output
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
