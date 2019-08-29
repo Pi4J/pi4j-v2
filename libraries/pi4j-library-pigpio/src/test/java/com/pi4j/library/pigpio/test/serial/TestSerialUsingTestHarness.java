@@ -86,8 +86,8 @@ public class TestSerialUsingTestHarness {
             // enable the Serial Echo (Loopback) function on the test harness for these tests
             harness.enableSerialEcho(TEST_HARNESS_UART,  BAUD_RATE);
 
-            // terminate connection to test harness
-            harness.terminate();
+            // close connection to test harness
+            harness.close();
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -125,8 +125,8 @@ public class TestSerialUsingTestHarness {
         // CLOSE SERIAL PORT
         pigpio.serClose(handle);
 
-        // terminate test harness and PIGPIO instances
-        pigpio.terminate();
+        // shutdown test harness and PIGPIO instances
+        pigpio.shutdown();
     }
 
     @Test

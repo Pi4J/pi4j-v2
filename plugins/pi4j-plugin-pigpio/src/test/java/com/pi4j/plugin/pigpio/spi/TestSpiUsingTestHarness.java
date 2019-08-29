@@ -106,9 +106,8 @@ public class TestSpiUsingTestHarness {
             System.out.println();
             System.out.println("ENABLE SPI CHANNEL [" + TEST_HARNESS_SPI_CHANNEL + "] ON TEST HARNESS; BAUD=" + BAUD_RATE);
 
-            // terminate connection to test harness
-            harness.terminate();
-
+            // close connection to test harness
+            harness.close();
 
             // create SPI config
             var config  = Spi.newConfigBuilder()
@@ -153,8 +152,8 @@ public class TestSpiUsingTestHarness {
         // close down SPI channel
         spi.close();;
 
-        // terminate the PiGpio library
-        piGpio.terminate();
+        // shutdown the PiGpio library
+        piGpio.shutdown();
 
         // shutdown Pi4J
         pi4j.shutdown();

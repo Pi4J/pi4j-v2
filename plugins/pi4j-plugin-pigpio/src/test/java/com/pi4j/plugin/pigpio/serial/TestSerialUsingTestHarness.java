@@ -107,9 +107,8 @@ public class TestSerialUsingTestHarness {
             System.out.println();
             System.out.println("ENABLE SERIAL UART [" + TEST_HARNESS_UART + "] ON TEST HARNESS; BAUD=" + BAUD_RATE);
 
-            // terminate connection to test harness
-            harness.terminate();
-
+            // close connection to test harness
+            harness.close();
 
             // create SERIAL config
             var config  = Serial.newConfigBuilder()
@@ -136,7 +135,6 @@ public class TestSerialUsingTestHarness {
             // create serial instance
             serial = pi4j.create(config);
 
-
         } catch (IOException e){
             e.printStackTrace();
         } catch (Pi4JException e) {
@@ -158,8 +156,8 @@ public class TestSerialUsingTestHarness {
         //if(serial.isOpen())
         serial.close();;
 
-        // terminate the PiGpio library
-        piGpio.terminate();
+        // shutdown the PiGpio library
+        piGpio.shutdown();
 
         // shutdown Pi4J
         pi4j.shutdown();

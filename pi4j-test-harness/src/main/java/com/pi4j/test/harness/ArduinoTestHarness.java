@@ -298,15 +298,23 @@ public class ArduinoTestHarness {
         }
     }
 
-    public void terminate() throws IOException {
+    public void close() throws IOException {
 
         // validate serial port is connected
         if(!com.isOpen()) throw new IOException("Serial port is not open;");
 
-        // close port when done
+        // close serial communications port
         com.closePort();
     }
 
+    public void shutdown() throws IOException {
+
+        // reset all pin states
+        reset();
+
+        // close serial communications port
+        if(com.isOpen()) com.closePort();
+    }
 
     public void initialize() throws IOException {
 

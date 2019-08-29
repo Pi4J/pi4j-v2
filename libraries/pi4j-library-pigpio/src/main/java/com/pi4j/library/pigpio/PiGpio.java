@@ -97,20 +97,20 @@ public interface PiGpio extends
      * @return result value
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise"
      */
-    long gpioInitialise();
-    default long gpioInitialize(){ return gpioInitialise(); } // US spelling variant
-    default long initialise(){ return gpioInitialise(); }
-    default long initialize(){ return gpioInitialise(); }
+    void initialize();
+    default void gpioInitialize(){ initialize(); } // US spelling variant
+    default void initialise(){ initialize(); }     // UK spelling variant
+    default void gpioInitialise(){ initialize(); }
 
     /**
-     * Terminates the library.
+     * Shutdown/Terminate the library.
      *
      * Returns nothing.
      * Call before program exit.
      * This function resets the used DMA channels, releases memory, and terminates any running threads.
      */
-    void gpioTerminate() throws IOException;
-    default void terminate() throws IOException { gpioTerminate(); }
+    void shutdown() throws IOException;
+    default void gpioShutdown() throws IOException { shutdown(); }
 
     /**
      * Returns the pigpio library version.
@@ -213,4 +213,9 @@ public interface PiGpio extends
      */
     long gpioTick() throws IOException;
 
+
+    void gpioNotifications(int pin, boolean enabled) throws IOException;
+    void addListener(PiGpioStateChangeListener listener);
+    void removeListener(PiGpioStateChangeListener listener);
+    void removeAllListeners();
 }

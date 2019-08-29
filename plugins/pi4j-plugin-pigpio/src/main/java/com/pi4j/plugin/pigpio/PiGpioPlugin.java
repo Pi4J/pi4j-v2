@@ -114,6 +114,6 @@ public class PiGpioPlugin implements Plugin {
     @Override
     public void shutdown(Context context) throws IOException {
         // shutdown the PiGpio library
-        if(piGpio != null) piGpio.terminate();
+        if(piGpio != null) piGpio.shutdown();
     }
 }

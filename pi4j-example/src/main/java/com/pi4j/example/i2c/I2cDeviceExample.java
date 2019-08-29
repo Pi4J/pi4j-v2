@@ -29,8 +29,6 @@ package com.pi4j.example.i2c;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.i2c.I2C;
-import com.pi4j.plugin.mock.Mock;
-import com.pi4j.plugin.mock.provider.i2c.MockI2C;
 import com.pi4j.plugin.mock.provider.i2c.MockI2CProvider;
 import com.pi4j.util.Console;
 

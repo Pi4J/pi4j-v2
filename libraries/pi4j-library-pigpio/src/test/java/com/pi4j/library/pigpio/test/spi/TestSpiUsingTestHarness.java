@@ -5,7 +5,7 @@ package com.pi4j.library.pigpio.test.spi;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
- * FILENAME      :  TestSerialUsingTestHarness.java
+ * FILENAME      :  TestSpiUsingTestHarness.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -89,8 +89,8 @@ public class TestSpiUsingTestHarness {
             // enable the SPI Echo (Loopback) function on the test harness for these tests
             harness.enableSpiEcho(TEST_HARNESS_SPI_CHANNEL);
 
-            // terminate connection to test harness
-            harness.terminate();
+            // close connection to test harness
+            harness.close();
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -128,8 +128,8 @@ public class TestSpiUsingTestHarness {
         // CLOSE SPI PORT
         pigpio.spiClose(handle);
 
-        // terminate test harness and PIGPIO instances
-        pigpio.terminate();
+        // shutdown test harness and PIGPIO instances
+        pigpio.shutdown();
     }
 
     @Test

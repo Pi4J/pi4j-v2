@@ -93,8 +93,8 @@ public class TestSoftwarePwmUsingTestHarness {
         System.out.println("************************************************************************");
         System.out.println();
 
-        // terminate connection to test harness
-        harness.terminate();
+        // shutdown connection to test harness
+        harness.shutdown();
     }
 
     @BeforeEach
@@ -112,9 +112,8 @@ public class TestSoftwarePwmUsingTestHarness {
 
     @AfterEach
     public void afterEach() throws IOException {
-
-        // terminate test harness and PIGPIO instances
-        pigpio.terminate();
+        // shutdown test harness and PIGPIO instances
+        pigpio.shutdown();
     }
 
     @Test

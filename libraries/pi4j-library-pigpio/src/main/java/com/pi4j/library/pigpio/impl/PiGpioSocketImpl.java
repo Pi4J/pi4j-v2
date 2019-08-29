@@ -103,34 +103,93 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * Initialises the library.
+     * Initializes the library.
+     * (The Java implementation of this function does not return a value)
      *
-     * Returns the pigpio version number if OK, otherwise PI_INIT_FAILED.
      * gpioInitialise must be called before using the other library functions with the following exceptions:
      * - gpioCfg*
      * - gpioVersion
      * - gpioHardwareRevision
      *
-     * @return result value
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise"
      */
     @Override
-    public long gpioInitialise() {
-        // TODO :: SETUP NOTIFICATIONS
-        return 0;
+    public void initialize() {
+        logger.trace("[INITIALIZE] -> STARTED");
+        if(!this.initialized) {
+            // TODO :: SETUP NOTIFICATIONS
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    // properly terminate this library
+                    shutdown();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }, "pigpio-shutdown"));
+
+            // set initialized flag
+            this.initialized = true;
+        }
+        else{
+            logger.warn("[INITIALIZE] -- ALREADY INITIALIZED");
+        }
+        logger.trace("[INITIALIZE] <- FINISHED");
     }
 
     /**
-     * Terminates the library.
+     * Shutdown the library.
      *
      * Returns nothing.
      * Call before program exit.
      * This function resets the used DMA channels, releases memory, and terminates any running threads.
      */
     @Override
-    public void gpioTerminate() throws IOException {
+    public void shutdown() throws IOException {
+        logger.trace("[SHUTDOWN] -> STARTED");
+        super.shutdown();
+        if(this.initialized) {
+
+            // close all open SPI handles
+            spiHandles.forEach((handle) -> {
+                try {
+                    logger.trace("[SHUTDOWN] -- CLOSING OPEN SPI HANDLE: [{}]", handle);
+                    spiClose(handle.intValue());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            // close all open SERIAL handles
+            serialHandles.forEach((handle) -> {
+                try {
+                    logger.trace("[SHUTDOWN] -- CLOSING OPEN SERIAL HANDLE: [{}]", handle);
+                    serClose(handle.intValue());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            // close all open I2C handles
+            i2cHandles.forEach((handle) -> {
+                try {
+                    logger.trace("[SHUTDOWN] -- CLOSING OPEN I2C HANDLE: [{}]", handle);
+                    i2cClose(handle.intValue());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+        else{
+            logger.info("[SHUTDOWN] -- ALREADY SHUTDOWN");
+        }
+
         // TODO :: REMOVE ALL NOTIFICATIONS
-        socket.close();
+        if(socket.isConnected())
+            socket.close();
+
+        // clear initialized flag
+        this.initialized = false;
+        logger.trace("[SHUTDOWN] <- FINISHED");
     }
 
     /**
@@ -143,10 +202,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public long gpioVersion() throws IOException {
-        logger.trace("[PIGPIO] -> GET VERSION");
+        logger.trace("[VERSION] -> GET VERSION");
         PiGpioPacket result = sendCommand(PIGPV);
         long version = result.result();
-        logger.trace("[PIGPIO] <- VERSION: {}", version);
+        logger.trace("[VERSION] <- RESULT={}", version);
         return version;
     }
 
@@ -670,6 +729,14 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         int handle = rx.result();
         logger.trace("[I2C::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
+
+        // if the open was successful, then we need to cache the I2C handle
+        if(rx.success()) {
+            System.out.println(">>> " + handle);
+            i2cHandles.add(handle);
+        }
+
+        // return handle
         return handle;
     }
 
@@ -689,6 +756,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
+
+        // if the close was successful, then we need to remove the I2C handle from cache
+        if(rx.success()) i2cHandles.remove(handle);
+
+        // return result
         return rx.result();
     }
 
@@ -1106,6 +1178,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         int handle = rx.result();
         logger.trace("[SERIAL::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
+
+        // if the open was successful, then we need to add the SERIAL handle to cache
+        if(rx.success()) serialHandles.add(handle);
+
+        // return the handle
         return handle;
     }
 
@@ -1124,6 +1201,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[SERIAL::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
+
+        // if the close was successful, then we need to remove the SERIAL handle from cache
+        if(rx.success()) serialHandles.remove(handle);
+
+        // return result
         return rx.result();
     }
 
@@ -1336,6 +1418,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         int handle = rx.result();
         logger.trace("[SPI::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
+
+        // if the open was successful, then we need to add the SPI handle to cache
+        if(rx.success()) spiHandles.add(handle);
+
+        // return handle
         return handle;
     }
 
@@ -1354,6 +1441,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[SPI::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
+
+        // if the close was successful, then we need to remove the SPI handle from cache
+        if(rx.success()) spiHandles.remove(handle);
+
+        // return result
         return rx.result();
     }
 

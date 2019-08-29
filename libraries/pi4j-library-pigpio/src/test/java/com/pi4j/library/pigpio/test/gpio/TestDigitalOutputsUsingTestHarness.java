@@ -94,9 +94,9 @@ public class TestDigitalOutputsUsingTestHarness {
         System.out.println("************************************************************************");
         System.out.println();
 
-        // terminate test harness and PIGPIO instances
-        pigpio.terminate();
-        harness.terminate();
+        // shutdown test harness and PIGPIO instances
+        pigpio.shutdown();
+        harness.shutdown();
     }
 
     @Test

@@ -98,11 +98,8 @@ public class TestDigitalOutputUsingTestHarness {
         System.out.println("************************************************************************");
         System.out.println();
 
-        // reset I/O pins
-        harness.reset();
-
-        // terminate connection to test harness
-        harness.terminate();
+        // shutdown connection to test harness
+        harness.shutdown();
     }
 
     @BeforeEach
@@ -123,8 +120,8 @@ public class TestDigitalOutputUsingTestHarness {
 
     @AfterEach
     public void afterEach() throws Exception {
-        // terminate the PiGpio library after each test
-        piGpio.terminate();
+        // shutdown the PiGpio library after each test
+        piGpio.shutdown();
     }
 
     @Test

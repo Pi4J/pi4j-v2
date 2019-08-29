@@ -30,6 +30,8 @@ package com.pi4j.library.pigpio;
 
 public class Main {
 
+    private static String SERIAL_DEVICE = "/dev/ttyS0";
+    private static int BAUD_RATE = 9600;
 
     public static void main(String[] args) throws Exception {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
@@ -47,7 +49,7 @@ public class Main {
 //        pig.gpioSetMode(2, PiGpioMode.ALT0);
 //        pig.gpioSetMode(3, PiGpioMode.ALT0);
 
-
+//
 //        for(int x = 0; x < 100; x++) {
 //            try {
 //                pig.i2cClose(x);
@@ -57,17 +59,54 @@ public class Main {
 //            }
 //        }
 //
-//        int handle = pig.i2cOpen(1, 0x04);
+        //int handle = pig.i2cOpen(1, 0x04);
+        //int handle3 = pig.spiOpen(0, 100000, 0);
+        //int handle2 = pig.serOpen(SERIAL_DEVICE, BAUD_RATE);
 
+        //int handle = 0;
+        //int handle2 = 0;
+
+        //System.out.println(handle + " : " + handle2 + " : " + handle3);
+
+//        pig.i2cClose(handle);
+//        pig.serClose(handle2);
+//        pig.spiClose(handle3);
+
+        pig.addListener(new PiGpioStateChangeListener() {
+            @Override
+            public void onChange(PiGpioStateChangeEvent event) {
+                System.out.println(event);
+            }
+        });
+
+        pig.gpioNotifications(0, true);
+
+        System.out.println("READY.");
+
+        System.in.read();
+        System.out.println("REMOVED LISTENERS.");
+        pig.gpioNotifications(0, false);
+
+
+        System.in.read();
+        System.in.read();
+        System.out.println("ADDED LISTENERS.");
+        pig.gpioNotifications(0, true);
+
+
+        System.in.read();
+        System.in.read();
+        System.out.println("SHUTDOWN NOW");
+        pig.shutdown();
 
         //pig.initialize();
         //pig.gpioSetPWMfrequency(4, 5000);
 
 
-        pig.gpioHardwarePWM(13, 50000000, 500000);
+        //pig.gpioHardwarePWM(13, 50000000, 500000);
 
-        pig.gpioSetPWMfrequency(2, 830);
-        pig.gpioPWM(2, 128);
+        //pig.gpioSetPWMfrequency(2, 830);
+        //pig.gpioPWM(2, 128);
 
         //var frequency = pig.gpioGetPWMfrequency(4);
         //System.out.println("FREQUENCY: " + frequency);

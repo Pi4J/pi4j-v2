@@ -50,4 +50,9 @@ public enum PiGpioState {
         }
         return UNKNOWN;
     }
+
+    public static PiGpioState from(boolean value){
+        if(value == true) return PiGpioState.HIGH;
+        return PiGpioState.LOW;
+    }
 }

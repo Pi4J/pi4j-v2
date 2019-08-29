@@ -121,7 +121,7 @@ public class HardwareHarnessTest {
         System.out.println("COPYRIGHT  : " + info.copyright);
         System.out.println("----------------------------------------");
 
-        // close test harness
-        harness.terminate();
+        // shutdown test harness
+        harness.shutdown();
     }
 }

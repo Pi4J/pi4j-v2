@@ -1,11 +1,11 @@
-package com.pi4j.plugin.pigpio.provider.spi;
+package com.pi4j.library.pigpio;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: PIGPIO I/O Providers
- * FILENAME      :  PiGpioSpiProviderImpl.java
+ * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * FILENAME      :  PiGpioStateChangeListener.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,23 +29,6 @@ package com.pi4j.plugin.pigpio.provider.spi;
  * #L%
  */
 
-import com.pi4j.io.spi.Spi;
-import com.pi4j.io.spi.SpiConfig;
-import com.pi4j.io.spi.SpiProviderBase;
-import com.pi4j.library.pigpio.PiGpio;
-
-public class PiGpioSpiProviderImpl extends SpiProviderBase implements PiGpioSpiProvider {
-
-    final PiGpio piGpio;
-
-    public PiGpioSpiProviderImpl(PiGpio piGpio){
-        this.id = ID;
-        this.name = NAME;
-        this.piGpio = piGpio;
-    }
-
-    @Override
-    public Spi create(SpiConfig config) throws Exception {
-        return new PiGpioSpi(piGpio,this, config);
-    }
+public interface PiGpioStateChangeListener {
+    void onChange(PiGpioStateChangeEvent event);
 }

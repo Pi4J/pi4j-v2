@@ -103,8 +103,8 @@ public class TestI2cRawUsingTestHarness {
             System.out.println();
             System.out.println("ENABLE I2C BUS [" + I2C_BUS + "] ON TEST HARNESS;");
 
-            // terminate connection to test harness
-            harness.terminate();
+            // close connection to test harness
+            harness.close();
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -149,8 +149,8 @@ public class TestI2cRawUsingTestHarness {
         if(i2c.isOpen())
             i2c.close();
 
-        // terminate the PiGpio library after each test
-        piGpio.terminate();
+        // shutdown the PiGpio library after each test
+        piGpio.shutdown();
     }
 
     @Test

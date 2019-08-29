@@ -29,19 +29,20 @@ package com.pi4j.library.pigpio.impl;
  * #L%
  */
 
-import com.pi4j.library.pigpio.PiGpio;
-import com.pi4j.library.pigpio.PiGpioError;
-import com.pi4j.library.pigpio.PiGpioPacket;
+import com.pi4j.library.pigpio.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.pi4j.library.pigpio.PiGpioConst.*;
 
 public abstract class PiGpioBase implements PiGpio {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected List<PiGpioStateChangeListener> stateChangeListeners = new CopyOnWriteArrayList<>();
 
     /**
      * --------------------------------------------------------------------------
@@ -177,4 +178,37 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    @Override
+    public void addListener(PiGpioStateChangeListener listener){
+        // add listener
+        if(!stateChangeListeners.contains(listener)) {
+            stateChangeListeners.add(listener);
+        }
+    }
+
+    @Override
+    public void removeListener(PiGpioStateChangeListener listener){
+        // remove listener
+        if(stateChangeListeners.contains(listener)) {
+            stateChangeListeners.remove(listener);
+        }
+    }
+
+    @Override
+    public void removeAllListeners(){
+        // remove all listeners
+        stateChangeListeners.clear();
+    }
+
+    protected void dispatchEvent(final PiGpioStateChangeEvent event){
+        // dispatch event to each registered listener
+        stateChangeListeners.forEach(listener -> {
+            try {
+                listener.onChange(event);
+            }
+            catch (Exception e){
+                logger.error(e.getMessage(), e);
+            }
+        });
+    }
 }
