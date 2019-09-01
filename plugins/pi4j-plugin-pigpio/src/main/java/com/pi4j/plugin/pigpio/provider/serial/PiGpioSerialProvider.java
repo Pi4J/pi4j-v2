@@ -33,9 +33,23 @@ import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.PiGpioPlugin;
 
+/**
+ * <p>PiGpioSerialProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface PiGpioSerialProvider extends SerialProvider {
+    /** Constant <code>NAME="PiGpioPlugin.SERIAL_PROVIDER_NAME"</code> */
     String NAME = PiGpioPlugin.SERIAL_PROVIDER_NAME;
+    /** Constant <code>ID="PiGpioPlugin.SERIAL_PROVIDER_ID"</code> */
     String ID = PiGpioPlugin.SERIAL_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @return a {@link com.pi4j.plugin.pigpio.provider.serial.PiGpioSerialProvider} object.
+     */
     static PiGpioSerialProvider newInstance(PiGpio piGpio) {
         return new PiGpioSerialProviderImpl(piGpio);
     }

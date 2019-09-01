@@ -41,11 +41,25 @@ import com.pi4j.library.pigpio.PiGpioMode;
 
 import java.io.IOException;
 
+/**
+ * <p>PiGpioSerial class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioSerial extends SerialBase implements Serial {
 
     protected final PiGpio piGpio;
     protected final int handle;
 
+    /**
+     * <p>Constructor for PiGpioSerial.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @param provider a {@link com.pi4j.io.serial.SerialProvider} object.
+     * @param config a {@link com.pi4j.io.serial.SerialConfig} object.
+     * @throws java.io.IOException if any.
+     */
     public PiGpioSerial(PiGpio piGpio, SerialProvider provider, SerialConfig config) throws IOException {
         super(provider, config);
 
@@ -66,17 +80,20 @@ public class PiGpioSerial extends SerialBase implements Serial {
         this.isOpen = true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Serial initialize(Context context) throws InitializeException {
         super.initialize(context);
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int available() throws IOException {
         return piGpio.serDataAvailable(this.handle);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
         piGpio.serClose(this.handle);
@@ -87,11 +104,13 @@ public class PiGpioSerial extends SerialBase implements Serial {
     // DEVICE WRITE FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte b) throws IOException {
         return piGpio.serWriteByte(this.handle, b);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte[] data, int offset, int length) throws IOException {
         return piGpio.serWrite(this.handle, data, offset, length);
@@ -102,11 +121,13 @@ public class PiGpioSerial extends SerialBase implements Serial {
     // RAW DEVICE READ FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int read() throws IOException {
         return piGpio.serReadByte(this.handle);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int read(byte[] buffer, int offset, int length) throws IOException {
         return piGpio.serRead(this.handle, buffer, offset, length);
@@ -116,6 +137,7 @@ public class PiGpioSerial extends SerialBase implements Serial {
     // MISC I/O FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int drain() throws IOException{
         return piGpio.serDrain(this.handle);

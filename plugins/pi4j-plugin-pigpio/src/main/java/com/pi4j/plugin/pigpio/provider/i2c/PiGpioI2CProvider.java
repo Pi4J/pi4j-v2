@@ -33,9 +33,23 @@ import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.PiGpioPlugin;
 
+/**
+ * <p>PiGpioI2CProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface PiGpioI2CProvider extends I2CProvider {
+    /** Constant <code>NAME="PiGpioPlugin.I2C_PROVIDER_NAME"</code> */
     String NAME = PiGpioPlugin.I2C_PROVIDER_NAME;
+    /** Constant <code>ID="PiGpioPlugin.I2C_PROVIDER_ID"</code> */
     String ID = PiGpioPlugin.I2C_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @return a {@link com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProvider} object.
+     */
     static PiGpioI2CProvider newInstance(PiGpio piGpio) {
         return new PiGpioI2CProviderImpl(piGpio);
     }

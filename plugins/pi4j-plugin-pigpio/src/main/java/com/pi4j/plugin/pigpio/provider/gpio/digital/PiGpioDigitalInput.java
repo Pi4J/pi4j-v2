@@ -43,6 +43,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+/**
+ * <p>PiGpioDigitalInput class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput {
     private final PiGpio piGpio;
     private final int pin;
@@ -53,10 +59,10 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
     /**
      * Default Constructor
      *
-     * @param piGpio
-     * @param provider
-     * @param config
-     * @throws IOException
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @param provider a {@link com.pi4j.io.gpio.digital.DigitalInputProvider} object.
+     * @param config a {@link com.pi4j.io.gpio.digital.DigitalInputConfig} object.
+     * @throws java.io.IOException
      */
     public PiGpioDigitalInput(PiGpio piGpio, DigitalInputProvider provider, DigitalInputConfig config) throws IOException {
         super(provider, config);
@@ -73,6 +79,7 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
     private PiGpioStateChangeListener piGpioPinListener =
             event -> dispatch(new DigitalChangeEvent(PiGpioDigitalInput.this, DigitalState.getState(event.state().value())));
 
+    /** {@inheritDoc} */
     @Override
     public DigitalInput initialize(Context context) throws InitializeException {
         super.initialize(context);
@@ -114,6 +121,7 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalState state() {
         try {
@@ -139,6 +147,7 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalInput shutdown(Context context) throws ShutdownException {
         // remove this pin listener

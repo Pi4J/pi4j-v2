@@ -36,16 +36,28 @@ import com.pi4j.library.pigpio.PiGpio;
 
 import java.io.IOException;
 
+/**
+ * <p>PiGpioDigitalInputProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioDigitalInputProviderImpl extends DigitalInputProviderBase implements PiGpioDigitalInputProvider {
 
     protected final PiGpio piGpio;
 
+    /**
+     * <p>Constructor for PiGpioDigitalInputProviderImpl.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     */
     public PiGpioDigitalInputProviderImpl(PiGpio piGpio){
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalInput create(DigitalInputConfig config) throws IOException {
         return new PiGpioDigitalInput(piGpio, this, config);

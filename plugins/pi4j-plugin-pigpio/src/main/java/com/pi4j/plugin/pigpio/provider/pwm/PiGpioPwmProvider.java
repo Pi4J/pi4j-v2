@@ -35,9 +35,24 @@ import com.pi4j.plugin.pigpio.PiGpioPlugin;
 
 import java.io.IOException;
 
+/**
+ * <p>PiGpioPwmProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface PiGpioPwmProvider extends PwmProvider {
+    /** Constant <code>NAME="PiGpioPlugin.PWM_PROVIDER_NAME"</code> */
     String NAME = PiGpioPlugin.PWM_PROVIDER_NAME;
+    /** Constant <code>ID="PiGpioPlugin.PWM_PROVIDER_ID"</code> */
     String ID = PiGpioPlugin.PWM_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @return a {@link com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider} object.
+     * @throws java.io.IOException if any.
+     */
     static PiGpioPwmProvider newInstance(PiGpio piGpio) throws IOException {
         return new PiGpioPwmProviderImpl(piGpio);
     }

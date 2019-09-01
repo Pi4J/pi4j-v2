@@ -34,16 +34,28 @@ import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProviderBase;
 import com.pi4j.library.pigpio.PiGpio;
 
+/**
+ * <p>PiGpioSpiProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioSpiProviderImpl extends SpiProviderBase implements PiGpioSpiProvider {
 
     final PiGpio piGpio;
 
+    /**
+     * <p>Constructor for PiGpioSpiProviderImpl.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     */
     public PiGpioSpiProviderImpl(PiGpio piGpio){
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Spi create(SpiConfig config) throws Exception {
         return new PiGpioSpi(piGpio,this, config);

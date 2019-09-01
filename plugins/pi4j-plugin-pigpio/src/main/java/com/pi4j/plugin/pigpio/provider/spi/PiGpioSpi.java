@@ -40,11 +40,25 @@ import com.pi4j.library.pigpio.PiGpio;
 
 import java.io.IOException;
 
+/**
+ * <p>PiGpioSpi class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioSpi extends SpiBase implements Spi {
 
     protected final PiGpio piGpio;
     protected final int handle;
 
+    /**
+     * <p>Constructor for PiGpioSpi.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @param provider a {@link com.pi4j.io.spi.SpiProvider} object.
+     * @param config a {@link com.pi4j.io.spi.SpiConfig} object.
+     * @throws java.io.IOException if any.
+     */
     public PiGpioSpi(PiGpio piGpio, SpiProvider provider, SpiConfig config) throws IOException {
         super(provider, config);
 
@@ -61,12 +75,14 @@ public class PiGpioSpi extends SpiBase implements Spi {
         this.isOpen = true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Spi initialize(Context context) throws InitializeException {
         super.initialize(context);
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
         piGpio.spiClose(this.handle);
@@ -77,6 +93,7 @@ public class PiGpioSpi extends SpiBase implements Spi {
     // DEVICE TRANSFER FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int transfer(byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException {
         return piGpio.spiXfer(this.handle, write, writeOffset, read, readOffset, numberOfBytes);
@@ -86,11 +103,13 @@ public class PiGpioSpi extends SpiBase implements Spi {
     // DEVICE WRITE FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte b) throws IOException {
         return piGpio.spiWriteByte(this.handle, b);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte[] data, int offset, int length) throws IOException {
         return piGpio.spiWrite(this.handle, data, offset, length);
@@ -101,11 +120,13 @@ public class PiGpioSpi extends SpiBase implements Spi {
     // RAW DEVICE READ FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int read() throws IOException {
         return piGpio.spiReadByte(this.handle);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int read(byte[] buffer, int offset, int length) throws IOException {
         return piGpio.spiRead(this.handle, buffer, offset, length);

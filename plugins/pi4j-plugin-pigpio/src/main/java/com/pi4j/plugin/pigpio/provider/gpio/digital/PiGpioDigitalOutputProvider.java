@@ -33,10 +33,24 @@ import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.PiGpioPlugin;
 
+/**
+ * <p>PiGpioDigitalOutputProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface PiGpioDigitalOutputProvider extends DigitalOutputProvider {
+    /** Constant <code>NAME="PiGpioPlugin.DIGITAL_OUTPUT_PROVIDER_NA"{trunked}</code> */
     String NAME = PiGpioPlugin.DIGITAL_OUTPUT_PROVIDER_NAME;
+    /** Constant <code>ID="PiGpioPlugin.DIGITAL_OUTPUT_PROVIDER_ID"</code> */
     String ID = PiGpioPlugin.DIGITAL_OUTPUT_PROVIDER_ID;
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @return a {@link com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalOutputProvider} object.
+     */
     static PiGpioDigitalOutputProvider newInstance(PiGpio piGpio) {
         return new PiGpioDigitalOutputProviderImpl(piGpio);
     }

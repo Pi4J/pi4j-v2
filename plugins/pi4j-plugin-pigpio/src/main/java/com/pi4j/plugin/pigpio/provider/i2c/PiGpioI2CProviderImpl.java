@@ -34,16 +34,28 @@ import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProviderBase;
 import com.pi4j.library.pigpio.PiGpio;
 
+/**
+ * <p>PiGpioI2CProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioI2CProviderImpl extends I2CProviderBase implements PiGpioI2CProvider {
 
     final PiGpio piGpio;
 
+    /**
+     * <p>Constructor for PiGpioI2CProviderImpl.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     */
     public PiGpioI2CProviderImpl(PiGpio piGpio){
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
     }
 
+    /** {@inheritDoc} */
     @Override
     public I2C create(I2CConfig config) throws Exception {
         return new PiGpioI2C(piGpio,this, config);

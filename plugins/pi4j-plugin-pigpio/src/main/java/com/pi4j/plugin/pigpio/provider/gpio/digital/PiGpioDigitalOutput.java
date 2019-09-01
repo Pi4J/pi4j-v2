@@ -42,17 +42,31 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 
+/**
+ * <p>PiGpioDigitalOutput class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioDigitalOutput extends DigitalOutputBase implements DigitalOutput {
     private final PiGpio piGpio;
     private final int pin;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * <p>Constructor for PiGpioDigitalOutput.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @param provider a {@link com.pi4j.io.gpio.digital.DigitalOutputProvider} object.
+     * @param config a {@link com.pi4j.io.gpio.digital.DigitalOutputConfig} object.
+     */
     public PiGpioDigitalOutput(PiGpio piGpio, DigitalOutputProvider provider, DigitalOutputConfig config) {
         super(provider, config);
         this.piGpio = piGpio;
         this.pin = config.address().intValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutput initialize(Context context) throws InitializeException {
         super.initialize(context);
@@ -66,6 +80,7 @@ public class PiGpioDigitalOutput extends DigitalOutputBase implements DigitalOut
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutput state(DigitalState state) throws com.pi4j.io.exception.IOException {
         try {

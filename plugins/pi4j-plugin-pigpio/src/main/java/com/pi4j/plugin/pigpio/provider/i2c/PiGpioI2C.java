@@ -43,11 +43,25 @@ import com.pi4j.library.pigpio.PiGpioMode;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * <p>PiGpioI2C class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioI2C extends I2CBase implements I2C {
 
     protected final PiGpio piGpio;
     protected final int handle;
 
+    /**
+     * <p>Constructor for PiGpioI2C.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @param provider a {@link com.pi4j.io.i2c.I2CProvider} object.
+     * @param config a {@link com.pi4j.io.i2c.I2CConfig} object.
+     * @throws java.io.IOException if any.
+     */
     public PiGpioI2C(PiGpio piGpio, I2CProvider provider, I2CConfig config) throws IOException {
         super(provider, config);
 
@@ -74,12 +88,14 @@ public class PiGpioI2C extends I2CBase implements I2C {
         this.isOpen = true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public I2C initialize(Context context) throws InitializeException {
         super.initialize(context);
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
         piGpio.i2cClose(this.handle);
@@ -90,11 +106,13 @@ public class PiGpioI2C extends I2CBase implements I2C {
     // RAW DEVICE WRITE FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte b) throws IOException {
         return piGpio.i2cWriteByte(this.handle, b);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte[] data, int offset, int length) throws IOException {
         Objects.checkFromIndexSize(offset, length, data.length);
@@ -106,11 +124,13 @@ public class PiGpioI2C extends I2CBase implements I2C {
     // RAW DEVICE READ FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int read() throws IOException{
         return piGpio.i2cReadByte(this.handle);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int read(byte[] buffer, int offset, int length) throws IOException{
         Objects.checkFromIndexSize(offset, length, buffer.length);
@@ -121,11 +141,13 @@ public class PiGpioI2C extends I2CBase implements I2C {
     // DEVICE REGISTER WRITE FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int writeRegister(int register, byte b) throws IOException {
         return piGpio.i2cWriteByteData(this.handle, register, b);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int writeRegister(int register, byte[] data, int offset, int length) throws IOException {
         Objects.checkFromIndexSize(offset, length, data.length);
@@ -137,17 +159,20 @@ public class PiGpioI2C extends I2CBase implements I2C {
     // DEVICE REGISTER READ FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int readRegister(int register) throws IOException {
         return piGpio.i2cReadByteData(this.handle, register);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int readRegister(int register, byte[] buffer, int offset, int length) throws IOException {
         Objects.checkFromIndexSize(offset, length, buffer.length);
         return piGpio.i2cReadI2CBlockData(this.handle, register, buffer, offset, length);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int writeReadRegisterWord(int register, int word) throws IOException, IOReadException {
         return piGpio.i2cProcessCall(this.handle, register, word);

@@ -39,15 +39,31 @@ import com.pi4j.library.pigpio.PiGpioMode;
 
 import java.io.IOException;
 
+/**
+ * <p>PiGpioPwmHardware class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
 
     // fixed range for hardware PWM
+    /** Constant <code>RANGE=1000000</code> */
     public static int RANGE = 1000000;
 
+    /**
+     * <p>Constructor for PiGpioPwmHardware.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @param provider a {@link com.pi4j.io.pwm.PwmProvider} object.
+     * @param config a {@link com.pi4j.io.pwm.PwmConfig} object.
+     * @throws java.io.IOException if any.
+     */
     public PiGpioPwmHardware(PiGpio piGpio, PwmProvider provider, PwmConfig config) throws IOException {
         super(piGpio, provider, config, RANGE);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm initialize(Context context) throws InitializeException {
         try {
@@ -104,6 +120,7 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm on() throws IOException{
         // set PWM frequency & duty-cycle; enable PWM signal
@@ -118,6 +135,7 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm off() throws IOException{
 

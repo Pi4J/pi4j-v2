@@ -33,9 +33,23 @@ import com.pi4j.io.gpio.digital.DigitalInputProvider;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.PiGpioPlugin;
 
+/**
+ * <p>PiGpioDigitalInputProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface PiGpioDigitalInputProvider extends DigitalInputProvider {
+    /** Constant <code>NAME="PiGpioPlugin.DIGITAL_INPUT_PROVIDER_NAM"{trunked}</code> */
     String NAME = PiGpioPlugin.DIGITAL_INPUT_PROVIDER_NAME;
+    /** Constant <code>ID="PiGpioPlugin.DIGITAL_INPUT_PROVIDER_ID"</code> */
     String ID = PiGpioPlugin.DIGITAL_INPUT_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @return a {@link com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider} object.
+     */
     static PiGpioDigitalInputProvider newInstance(PiGpio piGpio) {
         return new PiGpioDigitalInputProviderImpl(piGpio);
     }

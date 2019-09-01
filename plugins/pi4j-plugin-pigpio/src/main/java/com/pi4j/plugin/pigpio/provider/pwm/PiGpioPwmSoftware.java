@@ -39,15 +39,31 @@ import com.pi4j.library.pigpio.PiGpioMode;
 
 import java.io.IOException;
 
+/**
+ * <p>PiGpioPwmSoftware class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
 
     // fixed range for software PWM
+    /** Constant <code>RANGE=255</code> */
     public static int RANGE = 255;
 
+    /**
+     * <p>Constructor for PiGpioPwmSoftware.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @param provider a {@link com.pi4j.io.pwm.PwmProvider} object.
+     * @param config a {@link com.pi4j.io.pwm.PwmConfig} object.
+     * @throws java.io.IOException if any.
+     */
     public PiGpioPwmSoftware(PiGpio piGpio, PwmProvider provider, PwmConfig config) throws IOException {
         super(piGpio, provider, config, RANGE);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm initialize(Context context) throws InitializeException {
         try {
@@ -85,6 +101,7 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm on() throws IOException{
 
@@ -100,6 +117,7 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm off() throws IOException{
 
