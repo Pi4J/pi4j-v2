@@ -108,6 +108,15 @@ public abstract class PiGpioBase implements PiGpio {
                     "; (supported range: " + min + " - " + max + ")");
     }
 
+    protected void validatePulseWidth(int pulseWidth) throws IllegalArgumentException{
+        if(pulseWidth == 0) return;
+        int min = PI_MIN_SERVO_PULSEWIDTH;
+        int max = PI_MAX_SERVO_PULSEWIDTH;
+        if(pulseWidth < min || pulseWidth > max)
+            throw new IllegalArgumentException("Invalid Pulse-Width: " + pulseWidth +
+                    "; (supported pulse-width: " + min + " - " + max + ")");
+    }
+
     protected void validateDelayMicroseconds(int micros){
         int min = 0;
         int max = PI_MAX_MICS_DELAY;

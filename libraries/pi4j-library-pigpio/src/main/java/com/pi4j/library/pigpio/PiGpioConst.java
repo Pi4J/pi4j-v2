@@ -218,7 +218,7 @@ public interface PiGpioConst {
     /* pulsewidth: 0, 500-2500 */
     int PI_SERVO_OFF                = 0;
     int PI_MIN_SERVO_PULSEWIDTH     = 500;
-    int PI_MAX_SERVO_PULSEWIDTH     = 250;
+    int PI_MAX_SERVO_PULSEWIDTH     = 2500;
 
     // ----------------------------------
     // GPIO HARDWARE PWM

@@ -617,6 +617,82 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
 
     // *****************************************************************************************************
     // *****************************************************************************************************
+    // SERVO IMPLEMENTATION
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+
+    /**
+     * Starts servo pulses on the GPIO, 0 (off), 500 (most anti-clockwise) to 2500 (most clockwise).
+     *
+     * The range supported by servos varies and should probably be determined by experiment. A value
+     * of 1500 should always be safe and represents the mid-point of rotation. You can DAMAGE a servo
+     * if you command it to move beyond its limits.
+     *
+     * The following causes an on pulse of 1500 microseconds duration to be transmitted on GPIO 17 at
+     * a rate of 50 times per second. This will command a servo connected to GPIO 17 to rotate to its
+     * mid-point.
+     *
+     * Example:
+     *  - gpioServo(17, 1000); // Move servo to safe position anti-clockwise.
+     *  - gpioServo(23, 1500); // Move servo to centre position.
+     *  - gpioServo(25, 2000); // Move servo to safe position clockwise.
+     *
+     * OTHER UPDATE RATES:
+     * This function updates servos at 50Hz. If you wish to use a different
+     * update frequency you will have to use the PWM functions.
+     *
+     *    PWM Hz      50     100    200    400    500
+     *    1E6/Hz   20000   10000   5000   2500   2000
+     *
+     * Firstly set the desired PWM frequency using gpioSetPWMfrequency.
+     * Then set the PWM range using gpioSetPWMrange to 1E6/frequency. Doing this
+     * allows you to use units of microseconds when setting the servo pulsewidth.
+     *
+     * E.g. If you want to update a servo connected to GPIO25 at 400Hz*
+     *  - gpioSetPWMfrequency(25, 400);
+     *  - gpioSetPWMrange(25, 2500);
+     *
+     * Thereafter use the PWM command to move the servo, e.g. gpioPWM(25, 1500) will set a 1500 us pulse.
+     *
+     * @param pin user_gpio: 0-31
+     * @param pulseWidth  0, 500-2500
+     * @throws IOException
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioServo"
+     */
+    public void gpioServo(int pin, int pulseWidth) throws IOException{
+        logger.trace("[SERVO::SET] -> PIN: {}; PULSE-WIDTH={};", pin, pulseWidth);
+        validateReady();
+        validateUserPin(pin);
+        validatePulseWidth(pulseWidth);
+        PiGpioPacket result = sendCommand(SERVO, pin, pulseWidth);
+        logger.trace("[SERVO::SET] <- PIN: {}; PULSE-WIDTH={}; SUCCESS={}",  pin, pulseWidth, result.success());
+        validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO or PI_BAD_PULSEWIDTH.
+    }
+
+    /**
+     * Returns the servo pulse-width setting for the GPIO.
+     *
+     * @param pin user_gpio: 0-31
+     * @return Returns 0 (off), 500 (most anti-clockwise) to 2500 (most clockwise) if OK.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetServoPulsewidth"
+     */
+    public int gpioGetServoPulsewidth(int pin) throws IOException{
+        logger.trace("[SERVO::GET] -> PIN: {}", pin);
+        validateReady();
+        validateUserPin(pin);
+        PiGpioPacket result = sendCommand(GPW, pin);
+        var pulseWidth = result.result();
+        logger.trace("[SERVO::GET] <- PIN: {}; PULSE-WIDTH={}; SUCCESS={}",  pin, pulseWidth, result.success());
+
+        // Returns 0 (off), 500 (most anti-clockwise) to 2500 (most clockwise)
+        // if OK, otherwise PI_BAD_USER_GPIO or PI_NOT_SERVO_GPIO.
+        validateResult(result);
+        return pulseWidth;
+    }
+
+
+    // *****************************************************************************************************
+    // *****************************************************************************************************
     // DELAY/SLEEP/TIMER IMPLEMENTATION
     // *****************************************************************************************************
     // *****************************************************************************************************

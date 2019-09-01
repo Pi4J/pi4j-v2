@@ -38,7 +38,8 @@ public interface PiGpio extends
         PiGpio_GPIO,
         PiGpio_PWM,
         PiGpio_Serial,
-        PiGpio_SPI {
+        PiGpio_SPI,
+        PiGpio_Servo {
 
     /**
      * Creates a PiGpio instance using TCP Socket communication for remote I/O access.
