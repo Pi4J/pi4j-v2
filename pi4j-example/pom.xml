@@ -111,6 +111,30 @@
                 <!--</configuration>-->
             <!--</plugin>-->
 
+            <!-- DOWNLOAD RUNTIME DEPENDENCIES -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
+                            <excludeGroupIds>com.pi4j</excludeGroupIds>
+                            <includeScope>runtime</includeScope>
+                            <excludeTransitive>true</excludeTransitive>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- OPTIONALLY DEPLOY THE FINAL JAR TO THE RASPBERRY PI -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -136,10 +160,15 @@
                                                  password="${pi4j.dev.password}" trust="true" failonerror="false"
                                                  verbose="true" command="mkdir --parents ${pi4j.dev.directory}" />
 
-                                        <!-- copy the JAR file to the Raspberry Pi -->
-                                        <scp file="${project.build.directory}/${project.build.finalName}.jar"
-                                             todir="${pi4j.dev.user}:${pi4j.dev.password}@${pi4j.dev.host}:${pi4j.dev.directory}"
+                                        <!-- copy the JAR file(s) to the Raspberry Pi -->
+                                        <scp todir="${pi4j.dev.user}:${pi4j.dev.password}@${pi4j.dev.host}:${pi4j.dev.directory}"
                                              port="${pi4j.dev.port}" trust="true" verbose="true" failonerror="true">
+                                            <fileset dir="${project.build.directory}">
+                                                <include name="${project.build.finalName}.jar"/>
+                                            </fileset>
+                                            <fileset dir="${project.build.directory}/dependencies">
+                                                <include name="*.jar"/>
+                                            </fileset>
                                         </scp>
                                     </then>
                                 </if>

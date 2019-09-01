@@ -58,7 +58,6 @@ public class Main {
      * @throws java.lang.Exception if any.
      */
     public static void main(String[] args) throws Exception {
-
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
@@ -72,85 +71,9 @@ public class Main {
         // (Platforms and Providers) in the class path
         var pi4j = Pi4J.newAutoContext();
 
-        // create SERIAL config
-        var config  = Serial.newConfigBuilder()
-                .id("my-serial-port")
-                .name("My Serial Port")
-                .device(SERIAL_DEVICE)
-                .baud8N1(BAUD_RATE)
-                .build();
-
-        var prov = pi4j.provider(PiGpioSerialProvider.class);
-        var serial = prov.create(config);
-
         System.out.println("--------------------------------------------------------");
-
-        serial.write("HELLO");
-        CharBuffer b = CharBuffer.allocate(10);
-        b.put("1234567890");
-        serial.read(b.array(), 4, 65);
-        System.out.println("CHAR ARRAY : " + Arrays.toString(b.array()));
-        System.out.println(b.rewind().toString());
-
+        pi4j.describe().print(System.out);
         System.out.println("--------------------------------------------------------");
-
-        serial.write("HELLO");
-        char[] ca = new char[]{ '0','1','2','3','4', '5', '6', '7', '8', '9' };
-
-        CharBuffer c = CharBuffer.wrap(ca);
-        //c.put("123456789");
-        //c.append("Z");
-        c.put("-R-");
-        //c.rewind();
-
-        System.out.println(c.remaining());
-        serial.read(c);
-        System.out.println("CHAR BUFFER : " + Arrays.toString(c.array()));
-        System.out.println(c.rewind().toString());
-
-        System.out.println("--------------------------------------------------------");
-
-
-
-        serial.close();
-
-
-//        Serial serial = Serial.instance("/dev/ttyUSB1");
-//        serial.open();
-//        serial.send("TEST DATA");
-//        serial.close();
-//
-//        var din1 = pi4j.din().create(11);
-//        var ain1 = pi4j.ain().create(21);
-//
-//        var input = pi4j.ain().create(98);
-//        var output1 = pi4j.aout().create(99);
-//        var output2 = pi4j.aout().create(100);
-//
-//        input.addListener((AnalogChangeListener) event -> {
-//            System.out.print(event);
-//        });
-//
-//        output1.addListener((AnalogChangeListener) event -> {
-//            System.out.println(event);
-//        });
-//        output2.addListener((AnalogChangeListener) event -> {
-//            System.out.println(event);
-//        });
-//
-//        input.bind(new AnalogBindingSync(output1, output2));
-
-
-        //((TestAnalogInput)input).test(21).test(22).test(23);
-
-
-//        output1.value(12);
-//        output1.setValue(78);
-//        output1.value(0x01);
-
-
-        //AnalogOutput aout1 = AnalogOutput.in
-//        DigitalOutput dout1 = DigitalOutput;
 
         // shutdown Pi4J
         pi4j.shutdown();

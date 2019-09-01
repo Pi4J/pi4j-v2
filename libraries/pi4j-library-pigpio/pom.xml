@@ -79,6 +79,7 @@
                         </goals>
                         <configuration>
                             <includeScope>runtime</includeScope>
+                            <excludeGroupIds>com.pi4j</excludeGroupIds>
                             <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
