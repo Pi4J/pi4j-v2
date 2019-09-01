@@ -5,7 +5,7 @@ package com.pi4j.library.pigpio.internal;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
- * FILENAME      :  Shift.java
+ * FILENAME      :  PIGPIO.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -65,6 +65,10 @@ public class PIGPIO {
     // private constructor
     private PIGPIO() {
         // forbid object construction
+    }
+
+    static {
+        System.loadLibrary("pi4j-pigpio");
     }
 
     public static native int gpioInitialise();
