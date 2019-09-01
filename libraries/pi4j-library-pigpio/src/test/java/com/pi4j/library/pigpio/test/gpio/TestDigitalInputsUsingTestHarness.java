@@ -4,7 +4,7 @@ package com.pi4j.library.pigpio.test.gpio;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
  * FILENAME      :  TestDigitalInputsUsingTestHarness.java
  *
  * This file is part of the Pi4J project. More information about

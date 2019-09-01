@@ -12,7 +12,7 @@
 
     <!-- MAVEN ARTIFACT INFORMATION -->
     <artifactId>pi4j-library-pigpio</artifactId>
-    <name>Pi4J :: LIBRARY  :: PIGPIO Library</name>
+    <name>Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library</name>
     <description>Pi4J wrapper for the PIGPIO library</description>
     <packaging>jar</packaging>
 

@@ -37,7 +37,7 @@
                             <Specification-Version>${project.version}</Specification-Version>
                             <Implementation-Title>${project.groupId}.${project.artifactId}</Implementation-Title>
                             <Implementation-Build-Time>${maven.build.timestamp}</Implementation-Build-Time>
-                            <X-Docker-Repo>${docker.org}/${docker.image}:${project.version}</X-Docker-Repo>
+                            <X-Docker-Repo>pi4j/raspberrypi-compiler:${project.version}</X-Docker-Repo>
                         </manifestEntries>
                     </archive>
                 </configuration>
