@@ -32,6 +32,28 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <!-- JAVA COMPILER -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
+            <!-- INCLUDE SOURCE JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+
+            <!-- INCLUDE JAVADOC JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
     <profiles>
         <!-- EXCLUDE HARDWARE INTEGRATION TESTS BY DEFAULT -->
         <profile>
@@ -41,6 +63,7 @@
             </activation>
             <build>
                 <plugins>
+                    <!-- MAVEN RUN JUNIT5 TESTS -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
@@ -54,11 +77,12 @@
             </build>
         </profile>
 
-        <!-- INLCUDE HARDWARE INTEGRATION TESTS WHEN USING THIS BUILD PROFILE -->
+        <!-- INCLUDE HARDWARE INTEGRATION TESTS WHEN USING THIS BUILD PROFILE -->
         <profile>
             <id>test-hardware</id>
             <build>
                 <plugins>
+                    <!-- MAVEN RUN JUNIT5 TESTS -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>

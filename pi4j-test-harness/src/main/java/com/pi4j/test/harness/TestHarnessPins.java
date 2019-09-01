@@ -27,6 +27,12 @@ package com.pi4j.test.harness;
  * #L%
  */
 
+/**
+ * <p>TestHarnessPins class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class TestHarnessPins extends TestHarnessResponse {
 
     public TestHarnessPin[] pins;
@@ -34,6 +40,9 @@ public class TestHarnessPins extends TestHarnessResponse {
     public int inputs;
     public int outputs;
 
+    /**
+     * <p>Constructor for TestHarnessPins.</p>
+     */
     public TestHarnessPins() {
         // no-args constructor
     }

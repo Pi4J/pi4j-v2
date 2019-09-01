@@ -27,12 +27,21 @@ package com.pi4j.test.harness;
  * #L%
  */
 
+/**
+ * <p>TestHarnessFrequency class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class TestHarnessFrequency extends TestHarnessResponse {
 
     public int pin;
     public int frequency;
     public String units;
 
+    /**
+     * <p>Constructor for TestHarnessFrequency.</p>
+     */
     public TestHarnessFrequency() {
         // no-args constructor
     }
