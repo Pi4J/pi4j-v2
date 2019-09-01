@@ -46,8 +46,20 @@ import com.pi4j.plugin.mock.provider.pwm.MockPwmProvider;
 import com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
 import com.pi4j.plugin.mock.provider.spi.MockSpiProvider;
 
+/**
+ * <p>GettingStartedExample2 class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class GettingStartedExample2 {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
 

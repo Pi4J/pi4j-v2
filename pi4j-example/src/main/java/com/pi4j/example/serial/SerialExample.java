@@ -35,11 +35,23 @@ import com.pi4j.util.StringUtil;
 
 import java.nio.ByteBuffer;
 
+/**
+ * <p>SerialExample class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class SerialExample {
 
     private static int I2C_BUS = 1;
     private static int I2C_DEVICE = 0x04;
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY

@@ -32,16 +32,35 @@ import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.util.Console;
 
+/**
+ * <p>AnalogOutputExample class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class AnalogOutputExample {
 
+    /** Constant <code>ANALOG_OUTPUT_PIN_ID="my.unique.analog.output.pin.id"</code> */
     public static String ANALOG_OUTPUT_PIN_ID = "my.unique.analog.output.pin.id";
+    /** Constant <code>ANALOG_OUTPUT_PIN_NAME="My Unique Output Pin"</code> */
     public static String ANALOG_OUTPUT_PIN_NAME = "My Unique Output Pin";
+    /** Constant <code>ANALOG_OUTPUT_PIN=4</code> */
     public static int ANALOG_OUTPUT_PIN = 4;
+    /** Constant <code>SHUTDOWN_ANALOG_VALUE=-1</code> */
     public static int SHUTDOWN_ANALOG_VALUE = -1;
 
+    /**
+     * <p>Constructor for AnalogOutputExample.</p>
+     */
     public AnalogOutputExample() {
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // create Pi4J console wrapper/helper

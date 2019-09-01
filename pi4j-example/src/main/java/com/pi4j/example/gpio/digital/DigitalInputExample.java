@@ -34,14 +34,30 @@ import com.pi4j.io.gpio.digital.PullResistance;
 import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider;
 import com.pi4j.util.Console;
 
+/**
+ * <p>DigitalInputExample class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DigitalInputExample {
 
+    /** Constant <code>DIGITAL_INPUT_PIN=0</code> */
     public static int DIGITAL_INPUT_PIN = 0;
 
 
+    /**
+     * <p>Constructor for DigitalInputExample.</p>
+     */
     public DigitalInputExample() {
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
         // configure logging output
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");

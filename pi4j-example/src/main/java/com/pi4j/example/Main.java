@@ -34,14 +34,29 @@ import com.pi4j.plugin.pigpio.provider.serial.PiGpioSerialProvider;
 import java.nio.CharBuffer;
 import java.util.Arrays;
 
+/**
+ * <p>Main class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class Main {
 
     private static String SERIAL_DEVICE = "/dev/ttyS0";
     private static int BAUD_RATE = Baud._38400.value();
 
+    /**
+     * <p>Constructor for Main.</p>
+     */
     public Main() {
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");

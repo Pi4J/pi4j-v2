@@ -34,11 +34,23 @@ import com.pi4j.util.Console;
 
 import java.nio.ByteBuffer;
 
+/**
+ * <p>I2cRawDeviceExample class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class I2cRawDeviceExample {
 
     private static int I2C_BUS = 1;
     private static int I2C_DEVICE = 0x04;
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
         //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 

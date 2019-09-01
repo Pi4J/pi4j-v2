@@ -32,10 +32,23 @@ import com.pi4j.io.pwm.Pwm;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.util.Console;
 
+/**
+ * <p>PwmExampleUsingSoftwarePwm class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PwmExampleUsingSoftwarePwm {
 
+    /** Constant <code>PWM_PIN=13</code> */
     public static int PWM_PIN = 13;
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY

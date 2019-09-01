@@ -35,13 +35,29 @@ import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInputProvider;
 import com.pi4j.util.Console;
 
 
+/**
+ * <p>DigitalInputExampleWithMockProvider class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DigitalInputExampleWithMockProvider {
 
+    /** Constant <code>DIGITAL_INPUT_PIN=4</code> */
     public static int DIGITAL_INPUT_PIN = 4;
 
+    /**
+     * <p>Constructor for DigitalInputExampleWithMockProvider.</p>
+     */
     public DigitalInputExampleWithMockProvider() {
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // create Pi4J console wrapper/helper

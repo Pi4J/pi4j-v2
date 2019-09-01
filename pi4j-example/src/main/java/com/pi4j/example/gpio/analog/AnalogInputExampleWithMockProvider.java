@@ -34,13 +34,29 @@ import com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInputProvider;
 import com.pi4j.util.Console;
 
 
+/**
+ * <p>AnalogInputExampleWithMockProvider class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class AnalogInputExampleWithMockProvider {
 
+    /** Constant <code>ANALOG_INPUT_PIN=4</code> */
     public static int ANALOG_INPUT_PIN = 4;
 
+    /**
+     * <p>Constructor for AnalogInputExampleWithMockProvider.</p>
+     */
     public AnalogInputExampleWithMockProvider() {
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // create Pi4J console wrapper/helper

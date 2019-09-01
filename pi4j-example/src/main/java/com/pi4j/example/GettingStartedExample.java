@@ -35,8 +35,20 @@ import com.pi4j.provider.Providers;
 import com.pi4j.registry.Registry;
 import com.pi4j.util.Console;
 
+/**
+ * <p>GettingStartedExample class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class GettingStartedExample {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // create Pi4J console wrapper/helper

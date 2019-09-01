@@ -32,14 +32,31 @@ import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.binding.DigitalBindingSync;
 import com.pi4j.util.Console;
 
+/**
+ * <p>DigitalInputSyncToOutputExample class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DigitalInputSyncToOutputExample {
 
+    /** Constant <code>DIGITAL_INPUT_PIN=4</code> */
     public static int DIGITAL_INPUT_PIN = 4;
+    /** Constant <code>DIGITAL_OUTPUT_PIN=5</code> */
     public static int DIGITAL_OUTPUT_PIN = 5;
 
+    /**
+     * <p>Constructor for DigitalInputSyncToOutputExample.</p>
+     */
     public DigitalInputSyncToOutputExample() {
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // create Pi4J console wrapper/helper

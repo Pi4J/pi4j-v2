@@ -34,13 +34,29 @@ import com.pi4j.util.Console;
 
 import java.util.Properties;
 
+/**
+ * <p>DigitalInputExampleFromProperties class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DigitalInputExampleFromProperties {
 
+    /** Constant <code>DIGITAL_INPUT_PIN=4</code> */
     public static int DIGITAL_INPUT_PIN = 4;
 
+    /**
+     * <p>Constructor for DigitalInputExampleFromProperties.</p>
+     */
     public DigitalInputExampleFromProperties() {
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // create Pi4J console wrapper/helper
