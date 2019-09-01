@@ -32,9 +32,22 @@ package com.pi4j.plugin.raspberrypi.provider.pwm;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.plugin.raspberrypi.RaspberryPi;
 
+/**
+ * <p>RpiPwmProvider interface.</p>
+ *
+ * @author roberts
+ * @version $Id: $Id
+ */
 public interface RpiPwmProvider extends PwmProvider {
+    /** Constant <code>NAME="RaspberryPi.PWM_PROVIDER_NAME"</code> */
     String NAME = RaspberryPi.PWM_PROVIDER_NAME;
+    /** Constant <code>ID="RaspberryPi.PWM_PROVIDER_ID"</code> */
     String ID = RaspberryPi.PWM_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.plugin.raspberrypi.provider.pwm.RpiPwmProvider} object.
+     */
     static RpiPwmProvider newInstance() {
         return new RpiPwmProviderImpl();
     }

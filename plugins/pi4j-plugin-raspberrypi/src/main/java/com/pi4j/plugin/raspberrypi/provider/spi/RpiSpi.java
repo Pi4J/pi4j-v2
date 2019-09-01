@@ -36,47 +36,67 @@ import com.pi4j.io.spi.SpiProvider;
 
 import java.io.IOException;
 
+/**
+ * <p>RpiSpi class.</p>
+ *
+ * @author roberts
+ * @version $Id: $Id
+ */
 public class RpiSpi extends SpiBase implements Spi {
 
+    /**
+     * <p>Constructor for RpiSpi.</p>
+     *
+     * @param provider a {@link com.pi4j.io.spi.SpiProvider} object.
+     * @param config a {@link com.pi4j.io.spi.SpiConfig} object.
+     */
     public RpiSpi(SpiProvider provider, SpiConfig config){
         super(provider, config);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isOpen() {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void open() throws IOException {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public int transfer(byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int read() throws IOException {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int read(byte[] buffer, int offset, int length) throws IOException {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte b) throws IOException {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte[] data, int offset, int length) throws IOException {
         return 0;

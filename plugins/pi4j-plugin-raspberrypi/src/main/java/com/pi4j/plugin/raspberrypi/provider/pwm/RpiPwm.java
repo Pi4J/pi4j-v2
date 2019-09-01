@@ -36,18 +36,32 @@ import com.pi4j.io.pwm.PwmProvider;
 
 import java.io.IOException;
 
+/**
+ * <p>RpiPwm class.</p>
+ *
+ * @author roberts
+ * @version $Id: $Id
+ */
 public class RpiPwm extends PwmBase implements Pwm {
 
+    /**
+     * <p>Constructor for RpiPwm.</p>
+     *
+     * @param provider a {@link com.pi4j.io.pwm.PwmProvider} object.
+     * @param config a {@link com.pi4j.io.pwm.PwmConfig} object.
+     */
     public RpiPwm(PwmProvider provider, PwmConfig config){
         super(provider, config);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm on() throws IOException {
         this.onState = true;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm off() throws IOException {
         this.onState = false;

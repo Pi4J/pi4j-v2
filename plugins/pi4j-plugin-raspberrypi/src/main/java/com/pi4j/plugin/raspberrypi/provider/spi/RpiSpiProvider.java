@@ -32,9 +32,22 @@ package com.pi4j.plugin.raspberrypi.provider.spi;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.plugin.raspberrypi.RaspberryPi;
 
+/**
+ * <p>RpiSpiProvider interface.</p>
+ *
+ * @author roberts
+ * @version $Id: $Id
+ */
 public interface RpiSpiProvider extends SpiProvider{
+    /** Constant <code>NAME="RaspberryPi.SPI_PROVIDER_NAME"</code> */
     String NAME = RaspberryPi.SPI_PROVIDER_NAME;
+    /** Constant <code>ID="RaspberryPi.SPI_PROVIDER_ID"</code> */
     String ID = RaspberryPi.SPI_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.plugin.raspberrypi.provider.spi.RpiSpiProvider} object.
+     */
     static RpiSpiProvider newInstance() {
         return new RpiSpiProviderImpl();
     }

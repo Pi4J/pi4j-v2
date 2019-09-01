@@ -34,13 +34,23 @@ import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProviderBase;
 
 
+/**
+ * <p>RpiSerialProviderImpl class.</p>
+ *
+ * @author roberts
+ * @version $Id: $Id
+ */
 public class RpiSerialProviderImpl extends SerialProviderBase implements RpiSerialProvider {
 
+    /**
+     * <p>Constructor for RpiSerialProviderImpl.</p>
+     */
     public RpiSerialProviderImpl(){
         this.id = ID;
         this.name = NAME;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Serial create(SerialConfig config) throws Exception {
         return new RpiSerial(this, config);

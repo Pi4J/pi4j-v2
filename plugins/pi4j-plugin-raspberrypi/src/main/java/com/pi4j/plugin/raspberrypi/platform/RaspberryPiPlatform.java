@@ -40,15 +40,25 @@ import com.pi4j.plugin.raspberrypi.provider.pwm.RpiPwmProvider;
 import com.pi4j.plugin.raspberrypi.provider.serial.RpiSerialProvider;
 import com.pi4j.plugin.raspberrypi.provider.spi.RpiSpiProvider;
 
+/**
+ * <p>RaspberryPiPlatform class.</p>
+ *
+ * @author roberts
+ * @version $Id: $Id
+ */
 public class RaspberryPiPlatform extends PlatformBase<RaspberryPiPlatform> implements Platform {
 
 
+    /**
+     * <p>Constructor for RaspberryPiPlatform.</p>
+     */
     public RaspberryPiPlatform(){
         super(RaspberryPi.PLATFORM_ID,
                 RaspberryPi.PLATFORM_NAME,
                 RaspberryPi.PLATFORM_DESCRIPTION);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int weight() {
         // the MOCK platform is weighted at zero to indicate that it has a very
@@ -57,6 +67,7 @@ public class RaspberryPiPlatform extends PlatformBase<RaspberryPiPlatform> imple
         return 5;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean enabled(Context context) {
         // the Mock Platform is always available when detected
@@ -65,6 +76,7 @@ public class RaspberryPiPlatform extends PlatformBase<RaspberryPiPlatform> imple
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String[] getProviders() {
         return new String[] {

@@ -32,14 +32,27 @@ package com.pi4j.plugin.raspberrypi.provider.gpio.digital;
 
 import com.pi4j.io.gpio.digital.*;
 
+/**
+ * <p>RpiDigitalInput class.</p>
+ *
+ * @author roberts
+ * @version $Id: $Id
+ */
 public class RpiDigitalInput extends DigitalInputBase implements DigitalInput {
 
     private DigitalState state = DigitalState.LOW;
 
+    /**
+     * <p>Constructor for RpiDigitalInput.</p>
+     *
+     * @param provider a {@link com.pi4j.io.gpio.digital.DigitalInputProvider} object.
+     * @param config a {@link com.pi4j.io.gpio.digital.DigitalInputConfig} object.
+     */
     public RpiDigitalInput(DigitalInputProvider provider, DigitalInputConfig config){
         super(provider, config);
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalState state() {
         return this.state;

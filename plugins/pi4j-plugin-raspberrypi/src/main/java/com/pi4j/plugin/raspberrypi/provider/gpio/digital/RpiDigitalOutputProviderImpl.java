@@ -33,13 +33,23 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
 
+/**
+ * <p>RpiDigitalOutputProviderImpl class.</p>
+ *
+ * @author roberts
+ * @version $Id: $Id
+ */
 public class RpiDigitalOutputProviderImpl extends DigitalOutputProviderBase implements RpiDigitalOutputProvider {
 
+    /**
+     * <p>Constructor for RpiDigitalOutputProviderImpl.</p>
+     */
     public RpiDigitalOutputProviderImpl(){
         this.id = ID;
         this.name = NAME;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) throws Exception {
         return new RpiDigitalOutput(this, config);
