@@ -29,6 +29,12 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
+/**
+ * <p>PiGpioStateChangeEvent class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioStateChangeEvent {
 
     protected final PiGpioState state;
@@ -39,7 +45,12 @@ public class PiGpioStateChangeEvent {
 
     /**
      * Default constructor
+     *
      * @param state the value changed for this event instance
+     * @param pin a int.
+     * @param sequence a long.
+     * @param flags a long.
+     * @param tick a long.
      */
     public PiGpioStateChangeEvent(final int pin,
                                   final PiGpioState state,
@@ -55,7 +66,8 @@ public class PiGpioStateChangeEvent {
 
     /**
      * The new state of this event
-     * @return
+     *
+     * @return a {@link com.pi4j.library.pigpio.PiGpioState} object.
      */
     public PiGpioState state() {
         return this.state;
@@ -63,7 +75,8 @@ public class PiGpioStateChangeEvent {
 
     /**
      * The pin number for this event
-     * @return
+     *
+     * @return a int.
      */
     public int pin() {
         return this.pin;
@@ -71,7 +84,8 @@ public class PiGpioStateChangeEvent {
 
     /**
      * The sequence number for this event
-     * @return
+     *
+     * @return a long.
      */
     public long sequence() {
         return this.sequence;
@@ -79,7 +93,8 @@ public class PiGpioStateChangeEvent {
 
     /**
      * The flags value for this event
-     * @return
+     *
+     * @return a long.
      */
     public long flags() {
         return this.flags;
@@ -87,12 +102,14 @@ public class PiGpioStateChangeEvent {
 
     /**
      * The tick time for this event
-     * @return
+     *
+     * @return a long.
      */
     public long tick() {
         return this.tick;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString(){
         StringBuilder result = new StringBuilder();

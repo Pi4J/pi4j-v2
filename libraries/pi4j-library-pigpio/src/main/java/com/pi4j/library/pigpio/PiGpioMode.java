@@ -31,6 +31,12 @@ package com.pi4j.library.pigpio;
 
 import static com.pi4j.library.pigpio.PiGpioConst.*;
 
+/**
+ * <p>PiGpioMode class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public enum PiGpioMode {
     UNKNOWN(-1),
     INPUT  (PI_INPUT),
@@ -48,10 +54,21 @@ public enum PiGpioMode {
         this.value  =value;
     }
 
+    /**
+     * <p>value.</p>
+     *
+     * @return a int.
+     */
     public int value(){
         return this.value;
     }
 
+    /**
+     * <p>from.</p>
+     *
+     * @param value a {@link java.lang.Number} object.
+     * @return a {@link com.pi4j.library.pigpio.PiGpioMode} object.
+     */
     public static PiGpioMode from(Number value){
         for(PiGpioMode c : PiGpioMode.values()){
             if(c.value() == value.intValue()) return c;

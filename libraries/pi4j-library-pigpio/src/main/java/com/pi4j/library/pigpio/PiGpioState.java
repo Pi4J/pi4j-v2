@@ -29,6 +29,12 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
+/**
+ * <p>PiGpioState class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public enum PiGpioState {
     UNKNOWN(-1),
     LOW  (0),
@@ -40,10 +46,21 @@ public enum PiGpioState {
         this.value  =value;
     }
 
+    /**
+     * <p>value.</p>
+     *
+     * @return a int.
+     */
     public int value(){
         return this.value;
     }
 
+    /**
+     * <p>from.</p>
+     *
+     * @param value a {@link java.lang.Number} object.
+     * @return a {@link com.pi4j.library.pigpio.PiGpioState} object.
+     */
     public static PiGpioState from(Number value){
         for(PiGpioState c : PiGpioState.values()){
             if(c.value() == value.intValue()) return c;
@@ -51,6 +68,12 @@ public enum PiGpioState {
         return UNKNOWN;
     }
 
+    /**
+     * <p>from.</p>
+     *
+     * @param value a boolean.
+     * @return a {@link com.pi4j.library.pigpio.PiGpioState} object.
+     */
     public static PiGpioState from(boolean value){
         if(value == true) return PiGpioState.HIGH;
         return PiGpioState.LOW;

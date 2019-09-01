@@ -30,9 +30,22 @@ package com.pi4j.library.pigpio;
 
 import com.pi4j.library.pigpio.internal.PIGPIO;
 
-import static com.pi4j.library.pigpio.PiGpioConst.*;
+import static com.pi4j.library.pigpio.PiGpioConst.PI_LOW;
+import static com.pi4j.library.pigpio.PiGpioConst.PI_OUTPUT;
 
+/**
+ * <p>Main class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class Main {
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
         System.out.println("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
         System.out.println("PIGPIO HARDWARE  : " + PIGPIO.gpioHardwareRevision());

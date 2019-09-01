@@ -43,8 +43,15 @@ import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/**
+ * <p>PiGpioSocketMonitor class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioSocketMonitor  {
 
+    /** Constant <code>NAME="pigpio-monitor"</code> */
     public static String NAME = "pigpio-monitor";
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -59,10 +66,19 @@ public class PiGpioSocketMonitor  {
     protected int pinMonitor = 0b00000000000000000000000000000000;
 
 
+    /**
+     * <p>Constructor for PiGpioSocketMonitor.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.impl.PiGpioSocketBase} object.
+     * @throws java.io.IOException if any.
+     */
     public PiGpioSocketMonitor(PiGpioSocketBase piGpio) throws IOException {
         this.piGpio = piGpio;
     }
 
+    /**
+     * <p>shutdown.</p>
+     */
     public void shutdown(){
         this.shutdown = true;
         try {
@@ -73,10 +89,22 @@ public class PiGpioSocketMonitor  {
         }
     }
 
+    /**
+     * <p>isConnected.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isConnected(){
         return (listener != null && listener.isConnected());
     }
 
+    /**
+     * <p>enable.</p>
+     *
+     * @param pin a int.
+     * @param enabled a boolean.
+     * @throws java.io.IOException if any.
+     */
     public void enable(int pin, boolean enabled) throws IOException{
 
         // update pin monitor
@@ -98,6 +126,11 @@ public class PiGpioSocketMonitor  {
         }
     }
 
+    /**
+     * <p>disable.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     protected void disable() throws IOException {
         // reset pin monitoring flags
         pinMonitor = 0b00000000000000000000000000000000;

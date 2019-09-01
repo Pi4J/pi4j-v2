@@ -41,6 +41,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.pi4j.library.pigpio.PiGpioConst.*;
 
+/**
+ * <p>Abstract PiGpioBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class PiGpioBase implements PiGpio {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -75,16 +81,34 @@ public abstract class PiGpioBase implements PiGpio {
      * Type 1    -  X  X  -  -  X  X  X  X  X  -  -  -  -  -  -
      * Type 2    -  X  X  -  -  -  X  X  X  X  -  X  X  X  X  X
      * Type 3    X  X  X  X  X  X  X  X  X  X  X  X  -  -  -  -
+     *
+     * @param pin a int.
+     * @throws java.lang.IllegalArgumentException if any.
+     * @throws java.lang.IllegalArgumentException if any.
      */
-
     protected void validateUserPin(int pin) throws IllegalArgumentException {
         validatePin(pin, true);
     }
 
+    /**
+     * <p>validatePin.</p>
+     *
+     * @param pin a int.
+     * @throws java.lang.IllegalArgumentException if any.
+     * @throws java.lang.IllegalArgumentException if any.
+     */
     protected void validatePin(int pin) throws IllegalArgumentException {
         validatePin(pin, false);
     }
 
+    /**
+     * <p>validatePin.</p>
+     *
+     * @param pin a int.
+     * @param userPin a boolean.
+     * @throws java.lang.IllegalArgumentException if any.
+     * @throws java.lang.IllegalArgumentException if any.
+     */
     protected void validatePin(int pin, boolean userPin) throws IllegalArgumentException {
         int min = PI_MIN_GPIO;
         int max = ((userPin ? PI_MAX_USER_GPIO : PI_MAX_GPIO));
@@ -92,6 +116,13 @@ public abstract class PiGpioBase implements PiGpio {
             throw new IllegalArgumentException("Invalid PIN number: " + pin + "; (supported pins: " + min + "-" + max + ")");
     }
 
+    /**
+     * <p>validateDutyCycle.</p>
+     *
+     * @param dutyCycle a int.
+     * @throws java.lang.IllegalArgumentException if any.
+     * @throws java.lang.IllegalArgumentException if any.
+     */
     protected void validateDutyCycle(int dutyCycle) throws IllegalArgumentException{
         int min = 0;
         int max = PI_MAX_DUTYCYCLE_RANGE;
@@ -100,6 +131,13 @@ public abstract class PiGpioBase implements PiGpio {
                     "; (supported duty-cycle: " + min + " - " + max + ")");
     }
 
+    /**
+     * <p>validateDutyCycleRange.</p>
+     *
+     * @param range a int.
+     * @throws java.lang.IllegalArgumentException if any.
+     * @throws java.lang.IllegalArgumentException if any.
+     */
     protected void validateDutyCycleRange(int range) throws IllegalArgumentException{
         int min = PI_MIN_DUTYCYCLE_RANGE;
         int max = PI_MAX_DUTYCYCLE_RANGE;
@@ -108,6 +146,13 @@ public abstract class PiGpioBase implements PiGpio {
                     "; (supported range: " + min + " - " + max + ")");
     }
 
+    /**
+     * <p>validatePulseWidth.</p>
+     *
+     * @param pulseWidth a int.
+     * @throws java.lang.IllegalArgumentException if any.
+     * @throws java.lang.IllegalArgumentException if any.
+     */
     protected void validatePulseWidth(int pulseWidth) throws IllegalArgumentException{
         if(pulseWidth == 0) return;
         int min = PI_MIN_SERVO_PULSEWIDTH;
@@ -117,6 +162,11 @@ public abstract class PiGpioBase implements PiGpio {
                     "; (supported pulse-width: " + min + " - " + max + ")");
     }
 
+    /**
+     * <p>validateDelayMicroseconds.</p>
+     *
+     * @param micros a int.
+     */
     protected void validateDelayMicroseconds(int micros){
         int min = 0;
         int max = PI_MAX_MICS_DELAY;
@@ -125,6 +175,11 @@ public abstract class PiGpioBase implements PiGpio {
                     "; (supported range: " + min + " - " + max + ")");
     }
 
+    /**
+     * <p>validateDelayMilliseconds.</p>
+     *
+     * @param millis a int.
+     */
     protected void validateDelayMilliseconds(int millis){
         int min = 0;
         int max = PI_MAX_MILS_DELAY;
@@ -133,18 +188,44 @@ public abstract class PiGpioBase implements PiGpio {
                     "; (supported range: " + min + " - " + max + ")");
     }
 
+    /**
+     * <p>validateResult.</p>
+     *
+     * @param result a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
+     * @throws java.io.IOException if any.
+     */
     protected void validateResult(PiGpioPacket result) throws IOException{
         validateResult(result.result());
     }
 
+    /**
+     * <p>validateResult.</p>
+     *
+     * @param result a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
+     * @param throwException a boolean.
+     * @throws java.io.IOException if any.
+     */
     protected void validateResult(PiGpioPacket result, boolean throwException) throws IOException{
         validateResult(result.result(), throwException);
     }
 
+    /**
+     * <p>validateResult.</p>
+     *
+     * @param value a long.
+     * @throws java.io.IOException if any.
+     */
     protected void validateResult(long value) throws IOException {
         validateResult(value, true);
     }
 
+    /**
+     * <p>validateResult.</p>
+     *
+     * @param value a long.
+     * @param throwException a boolean.
+     * @throws java.io.IOException if any.
+     */
     protected void validateResult(long value, boolean throwException) throws IOException {
         if(value < 0) {
             PiGpioError err = PiGpioError.from(value);
@@ -155,6 +236,12 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /**
+     * <p>validateHandle.</p>
+     *
+     * @param handle a int.
+     * @throws java.io.IOException if any.
+     */
     protected void validateHandle(int handle) throws IOException {
         // validate I2C handle
         if(handle < 0) {
@@ -162,6 +249,12 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /**
+     * <p>validateI2cRegister.</p>
+     *
+     * @param register a int.
+     * @throws java.io.IOException if any.
+     */
     protected void validateI2cRegister(int register) throws IOException {
         // validate I2C/SMBus register range
         if(register < 0 || register > 255) {
@@ -169,6 +262,12 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /**
+     * <p>validateI2cDeviceAddress.</p>
+     *
+     * @param device a int.
+     * @throws java.io.IOException if any.
+     */
     protected void validateI2cDeviceAddress(int device) throws IOException {
         // validate I2C/SMBus device address :: 0-0x7F
         if(device < 0 || device > 0x7F) {
@@ -176,6 +275,12 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /**
+     * <p>validateI2cBus.</p>
+     *
+     * @param bus a int.
+     * @throws java.io.IOException if any.
+     */
     protected void validateI2cBus(int bus) throws IOException {
         // validate I2C/SMBus bus number :: >=0
         if(bus < 0) {
@@ -183,6 +288,12 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /**
+     * <p>validateI2cBlockLength.</p>
+     *
+     * @param length a int.
+     * @throws java.io.IOException if any.
+     */
     protected void validateI2cBlockLength(int length) throws IOException {
         // validate I2C/SMBus payload data length :: 0-32
         if(length < 0 || length > 32) {
@@ -190,6 +301,12 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /**
+     * <p>validateGpioGlitchFilter.</p>
+     *
+     * @param interval a int.
+     * @throws java.io.IOException if any.
+     */
     protected void validateGpioGlitchFilter(int interval) throws IOException {
         // validate GPIO glitch filter interval value :: 0-300000
         if(interval < 0 || interval > 300000) {
@@ -197,6 +314,13 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /**
+     * <p>validateGpioNoiseFilter.</p>
+     *
+     * @param steady a int.
+     * @param active a int.
+     * @throws java.io.IOException if any.
+     */
     protected void validateGpioNoiseFilter(int steady, int active) throws IOException {
         // validate GPIO noise filter properties
         if(steady < 0 || steady > 300000) {
@@ -207,6 +331,7 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void addPinListener(int pin, PiGpioStateChangeListener listener){
         List<PiGpioStateChangeListener> listeners = null;
@@ -236,6 +361,7 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removePinListener(int pin, PiGpioStateChangeListener listener){
         List<PiGpioStateChangeListener> listeners = null;
@@ -263,6 +389,7 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removePinListeners(int pin){
         List<PiGpioStateChangeListener> listeners = null;
@@ -286,12 +413,14 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeAllPinListeners(){
         // remove all pin listeners
         pinChangeListeners.clear();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void addListener(PiGpioStateChangeListener listener){
         // add listener
@@ -300,6 +429,7 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeListener(PiGpioStateChangeListener listener){
         // remove listener
@@ -308,12 +438,18 @@ public abstract class PiGpioBase implements PiGpio {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeAllListeners(){
         // remove all listeners
         stateChangeListeners.clear();
     }
 
+    /**
+     * <p>dispatchEvent.</p>
+     *
+     * @param event a {@link com.pi4j.library.pigpio.PiGpioStateChangeEvent} object.
+     */
     protected void dispatchEvent(final PiGpioStateChangeEvent event){
         // dispatch event to each registered listener
         stateChangeListeners.forEach(listener -> {

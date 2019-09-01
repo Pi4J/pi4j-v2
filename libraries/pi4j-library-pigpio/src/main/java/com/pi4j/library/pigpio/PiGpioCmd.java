@@ -29,6 +29,12 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
+/**
+ * <p>PiGpioCmd class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public enum PiGpioCmd {
     UNKNOWN(-1),
     MODES  (0),
@@ -157,10 +163,21 @@ public enum PiGpioCmd {
         this.value  =value;
     }
 
+    /**
+     * <p>value.</p>
+     *
+     * @return a int.
+     */
     public int value(){
         return this.value;
     }
 
+    /**
+     * <p>from.</p>
+     *
+     * @param value a {@link java.lang.Number} object.
+     * @return a {@link com.pi4j.library.pigpio.PiGpioCmd} object.
+     */
     public static PiGpioCmd from(Number value){
         for(PiGpioCmd c : PiGpioCmd.values()){
             if(c.value() == value.intValue()) return c;

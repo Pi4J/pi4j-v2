@@ -29,6 +29,17 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
+/**
+ * <p>PiGpioStateChangeListener interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface PiGpioStateChangeListener {
+    /**
+     * <p>onChange.</p>
+     *
+     * @param event a {@link com.pi4j.library.pigpio.PiGpioStateChangeEvent} object.
+     */
     void onChange(PiGpioStateChangeEvent event);
 }
