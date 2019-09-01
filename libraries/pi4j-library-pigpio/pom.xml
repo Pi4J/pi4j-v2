@@ -25,4 +25,161 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <!-- STANDARD BUILD INSTRUCTIONS -->
+    <build>
+        <plugins>
+            <!-- OPTIONALLY DEPLOY THE FINAL JAR TO THE RASPBERRY PI -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+
+                    <!-- copy the compiled JAR file to the Raspberry Pi platform platform -->
+                    <execution>
+                        <id>transfer-compiled-pi4j-jar</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath" />
+                                <if>
+                                    <equals arg1="${pi4j.dev.transfer}" arg2="true" />
+                                    <then>
+                                        <!-- ensure the target directory exists on the Raspberry Pi -->
+                                        <sshexec host="${pi4j.dev.host}" port="${pi4j.dev.port}" username="${pi4j.dev.user}"
+                                                 password="${pi4j.dev.password}" trust="true" failonerror="false"
+                                                 verbose="true" command="mkdir --parents ${pi4j.dev.directory}" />
+
+                                        <!-- copy the JAR file to the Raspberry Pi -->
+                                        <scp file="${project.build.directory}/${project.build.finalName}.jar"
+                                             todir="${pi4j.dev.user}:${pi4j.dev.password}@${pi4j.dev.host}:${pi4j.dev.directory}"
+                                             port="${pi4j.dev.port}" trust="true" verbose="true" failonerror="true">
+                                        </scp>
+                                    </then>
+                                </if>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeScope>runtime</includeScope>
+                            <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- CUSTOM BUILD PROFILES -->
+    <profiles>
+        <!-- NATIVE BUILD PROFILE -->
+        <profile>
+            <id>native</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <!-- ensure that a target directory has been created and copy the JNI native sources -->
+                            <execution>
+                                <id>pi4j-prepare-native</id>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="target" />
+                                        <mkdir dir="target/classes" />
+                                        <mkdir dir="target/native" />
+                                        <copy todir="target/native">
+                                            <fileset dir="src/main/native"/>
+                                        </copy>
+                                        <chmod dir="target/native" perm="ugo+rx" includes="*.sh"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+
+                            <!-- build the native JNI library (and any dependencies needed) -->
+                            <execution>
+                                <id>pi4j-build-native</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <exec dir="target/native" executable="/bin/bash" failonerror="true">
+                                            <arg value="build-dc.sh"/>
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+
+                            <!-- attach the compiled JNI native library as artifacts -->
+                            <execution>
+                                <id>pi4j-attach-native</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target name="pi4j-attach-platform-libraries" >
+                                        <taskdef  resource="net/sf/antcontrib/antcontrib.properties"
+                                                  classpathref="maven.plugin.classpath"/>
+                                        <attachartifact file="${project.build.directory}/native/libpi4j-pigpio.so" type="so"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+
+                            <!-- copy the compiled JNI library to the Raspberry Pi development/test machine -->
+                            <execution>
+                                <id>transfer-native</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                                 classpathref="maven.plugin.classpath" />
+                                        <if>
+                                            <equals arg1="${pi4j.dev.transfer}" arg2="true" />
+                                            <then>
+                                                <!-- copy the SO native library file to the Raspberry Pi -->
+                                                <scp file="${project.build.directory}/native/libpi4j-pigpio.so"
+                                                     todir="${pi4j.dev.user}:${pi4j.dev.password}@${pi4j.dev.host}:${pi4j.dev.directory}"
+                                                     port="${pi4j.dev.port}" trust="true" verbose="true" failonerror="true">
+                                                </scp>
+                                            </then>
+                                        </if>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

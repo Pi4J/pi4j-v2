@@ -30,7 +30,6 @@ CFLAGS      := $(DEBUG) -Wall $(INCLUDE) -Winline -pipe $(CARGS) -fPIC
 LIBS         =  -L pigpio -lpigpio -lrt
 
 TARGET=libpi4j-pigpio.so
-SOVERSION    = 1
 
 # Should not alter anything below this line
 ###############################################################################
@@ -41,15 +40,14 @@ OBJ =	$(SRC:.c=.o)
 
 all:	$(OBJ)
 	    @echo [LINK with DYNAMICALLY linked libraries]
-	    @$(CC) $(OBJ) -shared -o $(TARGET).$(SOVERSION) $(INCLUDE) $(LIBS)
-	    ln -fs $(TARGET).$(SOVERSION) $(TARGET)
+	    @$(CC) $(OBJ) -shared -o $(TARGET) $(INCLUDE) $(LIBS)
 
 .c.o:
 	@echo [COMPILE] $<
 	@$(CC) -c $(CFLAGS) $< -o $@
 
 clean:
-	rm -f $(OBJ) $(TARGET).$(SOVERSION) *~ core tags Makefile.bak
+	rm -f $(OBJ) $(TARGET) *~ core tags Makefile.bak
 
 tags:	$(SRC)
 	@echo [ctags]
