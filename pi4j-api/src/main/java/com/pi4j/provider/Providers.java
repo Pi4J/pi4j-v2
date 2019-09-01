@@ -118,6 +118,7 @@ public interface Providers extends Describable {
      * Get all providers of a specified io class/interface.
      *
      * @param providerClass a {@link java.lang.Class} object.
+     * @param <T> providers extending the {@link com.pi4j.provider.Provider} interface
      * @return a {@link java.util.Map} object.
      * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
      */
@@ -127,6 +128,7 @@ public interface Providers extends Describable {
      * Get all providers of a specified io type.
      *
      * @param ioType a {@link com.pi4j.io.IOType} object.
+     * @param <T> providers extending the {@link com.pi4j.provider.Provider} interface
      * @return a {@link java.util.Map} object.
      * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
      */

@@ -200,16 +200,6 @@ public interface I2CRegisterDataWriter {
     }
 
     /**
-     * Write a buffer of byte values starting with the first byte in the array
-     * up to the provided length to a specific I2C device register.
-     *
-     * @param buffer byte buffer of data to be written
-     * @param length number of bytes to be written
-     * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
-     */
-
-    /**
      * Write a buffer of byte values starting from the first byte in the buffer
      * up to the provided length to a specific I2C device register.
      *
@@ -221,14 +211,11 @@ public interface I2CRegisterDataWriter {
      *        will automatically flip the buffer to begin reading
      *        data from the zero position up to the buffer's limit.
      *
+     * @param register the register address to write to
+     * @param buffer byte buffer of data to be written
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
      * @throws java.io.IOException thrown on write error
-     * @param register the register address to write to
-     * @param buffer byte buffer of data to be written to the i2c device in one go
-     * @param length number of bytes to be written
-     * @return The number of bytes written, possibly zero
-     * @throws java.io.java.io.IOException thrown on write error
      */
     default int writeRegister(int register, ByteBuffer buffer, int length) throws IOException{
         // if the buffer position is already at the buffer limit, then flip the buffer for
@@ -240,7 +227,6 @@ public interface I2CRegisterDataWriter {
 
         // write contents from the buffer starting at the current position up the the specified length
         return writeRegister(register, buffer, buffer.position(), length);
-
     }
 
     /**

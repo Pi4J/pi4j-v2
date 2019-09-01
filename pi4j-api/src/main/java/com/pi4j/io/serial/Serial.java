@@ -80,7 +80,7 @@ public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCl
     /**
      * This function will drain the current serial receive buffer of any lingering bytes.
      *
-     * @return Returns the number of bytes of data drained (>=0) if OK, otherwise a negative error code.
+     * @return Returns the number of bytes of data drained (&gt;=0) if OK, otherwise a negative error code.
      * @throws java.io.IOException if any.
      */
     default int drain() throws IOException{

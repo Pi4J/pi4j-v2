@@ -85,8 +85,8 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      * This function reads a byte from the serial port associated with the handle.
      * If no data is ready PI_SER_READ_NO_DATA is returned.
      *
-     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
-     * @return Returns the read byte (>=0) if OK, otherwise PI_BAD_HANDLE, PI_SER_READ_NO_DATA, or PI_SER_READ_FAILED.
+     * @param handle the open serial device handle; (&gt;=0, as returned by a call to serOpen)
+     * @return Returns the read byte (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_SER_READ_NO_DATA, or PI_SER_READ_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte"
      * @param value a byte.
      * @throws java.io.IOException if any.
@@ -119,7 +119,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      * @param read the array of bytes to store read data in from the SPI device
      * @param readOffset the starting offset position in the provided 'read' buffer to place
      *                   data bytes read from the SPI device.
-     * @param numberOfBytes the number of bytes to transfer/exchange (write & read))
+     * @param numberOfBytes the number of bytes to transfer/exchange (read &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
      * @throws java.io.IOException if any.
@@ -137,7 +137,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      *
      * @param write the array of bytes to write to the SPI device
      * @param read the array of bytes to store read data in from the SPI device
-     * @param numberOfBytes the number of bytes to transfer/exchange (write & read))
+     * @param numberOfBytes the number of bytes to transfer/exchange (read &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
      * @throws java.io.IOException if any.
@@ -178,7 +178,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      *               start writing to the SPI device from and the position
      *               used as the starting offset position to place data bytes
      *               read back from the SPI device.
-     * @param length the number of bytes to transfer/exchange (write & read))
+     * @param length the number of bytes to transfer/exchange (read &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
      * @throws java.io.IOException if any.
@@ -197,7 +197,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      *
      * @param buffer the array of bytes to write to the SPI device and to store read data
      *               back from the SPI device
-     * @param length the number of bytes to transfer/exchange (write & read))
+     * @param length the number of bytes to transfer/exchange (read &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
      * @throws java.io.IOException if any.
@@ -245,7 +245,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      * @param read the ByteBuffer to store read data in from the SPI device
      * @param readOffset the starting offset position in the provided 'read' buffer to place
      *                   data bytes read from the SPI device.
-     * @param numberOfBytes the number of bytes to transfer/exchange (write & read))
+     * @param numberOfBytes the number of bytes to transfer/exchange (read &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
      * @throws java.io.IOException if any.
@@ -302,7 +302,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      *
      * @param write the ByteBuffer to write to the SPI device
      * @param read the ByteBuffer to store read data in from the SPI device
-     * @param numberOfBytes the number of bytes to transfer/exchange (write & read))
+     * @param numberOfBytes the number of bytes to transfer/exchange (read &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
      * @throws java.io.IOException if any.
@@ -345,7 +345,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      *               start writing to the SPI device from and the position
      *               used as the starting offset position to place data bytes
      *               read back from the SPI device.
-     * @param length the number of bytes to transfer/exchange (write & read))
+     * @param length the number of bytes to transfer/exchange (read &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
      * @throws java.io.IOException if any.

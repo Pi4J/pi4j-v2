@@ -85,6 +85,7 @@ public interface Platform extends Extension<Platform> {
      * @throws com.pi4j.provider.exception.ProviderInterfaceException if any.
      */
     <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderInterfaceException;
+
     /**
      * <p>provider.</p>
      *

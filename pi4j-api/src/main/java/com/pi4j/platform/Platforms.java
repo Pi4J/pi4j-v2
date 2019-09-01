@@ -38,8 +38,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * <p>
- * </p>
+ * <p>Platforms</p>
  *
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
@@ -157,6 +156,7 @@ public interface Platforms extends Describable {
      * Get all platforms of a specified io class/interface.
      *
      * @param platformClass a {@link java.lang.Class} object.
+     * @param <T> platforms objects extending the {@link com.pi4j.platform.Platform} interface
      * @return a {@link java.util.Map} object.
      * @throws com.pi4j.platform.exception.PlatformNotFoundException if any.
      */
