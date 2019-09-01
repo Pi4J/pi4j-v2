@@ -42,15 +42,25 @@ import com.pi4j.plugin.mock.provider.pwm.MockPwmProvider;
 import com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
 import com.pi4j.plugin.mock.provider.spi.MockSpiProvider;
 
+/**
+ * <p>MockPlatform class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class MockPlatform extends PlatformBase<MockPlatform> implements Platform {
 
 
+    /**
+     * <p>Constructor for MockPlatform.</p>
+     */
     public MockPlatform(){
         super(Mock.PLATFORM_ID,
               Mock.PLATFORM_NAME,
               Mock.PLATFORM_DESCRIPTION);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int weight() {
         // the MOCK platform is weighted at zero to indicate that it has a very
@@ -59,6 +69,7 @@ public class MockPlatform extends PlatformBase<MockPlatform> implements Platform
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean enabled(Context context) {
         // the Mock Platform is always available when detected
@@ -67,6 +78,7 @@ public class MockPlatform extends PlatformBase<MockPlatform> implements Platform
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String[] getProviders() {
         return new String[] {

@@ -32,19 +32,38 @@ package com.pi4j.plugin.mock.provider.gpio.analog;
 
 import com.pi4j.io.gpio.analog.*;
 
+/**
+ * <p>MockAnalogInput class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class MockAnalogInput extends AnalogInputBase implements AnalogInput {
 
     private Integer value = 0;
 
+    /**
+     * <p>Constructor for MockAnalogInput.</p>
+     *
+     * @param provider a {@link com.pi4j.io.gpio.analog.AnalogInputProvider} object.
+     * @param config a {@link com.pi4j.io.gpio.analog.AnalogInputConfig} object.
+     */
     public MockAnalogInput(AnalogInputProvider provider, AnalogInputConfig config){
         super(provider, config);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer value() {
         return this.value;
     }
 
+    /**
+     * <p>mockValue.</p>
+     *
+     * @param value a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInput} object.
+     */
     public MockAnalogInput mockValue(Integer value){
 
         // check to see of there is a value change; if there is then we need

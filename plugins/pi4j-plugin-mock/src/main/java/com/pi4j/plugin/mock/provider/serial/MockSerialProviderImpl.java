@@ -34,13 +34,23 @@ import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProviderBase;
 
 
+/**
+ * <p>MockSerialProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class MockSerialProviderImpl extends SerialProviderBase implements MockSerialProvider {
 
+    /**
+     * <p>Constructor for MockSerialProviderImpl.</p>
+     */
     public MockSerialProviderImpl(){
         this.id = ID;
         this.name = NAME;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Serial create(SerialConfig config) throws Exception {
         return new MockSerial(this, config);

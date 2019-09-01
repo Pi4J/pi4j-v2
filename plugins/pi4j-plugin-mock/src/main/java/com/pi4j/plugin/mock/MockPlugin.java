@@ -42,6 +42,12 @@ import com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
 import com.pi4j.plugin.mock.provider.spi.MockSpiProvider;
 import com.pi4j.provider.Provider;
 
+/**
+ * <p>MockPlugin class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class MockPlugin implements Plugin {
 
     private Provider providers[] = {
@@ -55,6 +61,7 @@ public class MockPlugin implements Plugin {
             MockSerialProvider.newInstance(),
     };
 
+    /** {@inheritDoc} */
     @Override
     public void initialize(PluginService service) {
 

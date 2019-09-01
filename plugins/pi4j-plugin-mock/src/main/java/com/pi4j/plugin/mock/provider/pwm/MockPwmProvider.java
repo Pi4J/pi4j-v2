@@ -32,9 +32,22 @@ package com.pi4j.plugin.mock.provider.pwm;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.plugin.mock.Mock;
 
+/**
+ * <p>MockPwmProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface MockPwmProvider extends PwmProvider {
+    /** Constant <code>NAME="Mock.PWM_PROVIDER_NAME"</code> */
     String NAME = Mock.PWM_PROVIDER_NAME;
+    /** Constant <code>ID="Mock.PWM_PROVIDER_ID"</code> */
     String ID = Mock.PWM_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.plugin.mock.provider.pwm.MockPwmProvider} object.
+     */
     static MockPwmProvider newInstance() {
         return new MockPwmProviderImpl();
     }

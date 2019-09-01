@@ -37,12 +37,30 @@ import com.pi4j.io.gpio.analog.AnalogOutputBase;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 
+/**
+ * <p>MockAnalogOutput class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class MockAnalogOutput extends AnalogOutputBase implements AnalogOutput {
 
+    /**
+     * <p>Constructor for MockAnalogOutput.</p>
+     *
+     * @param provider a {@link com.pi4j.io.gpio.analog.AnalogOutputProvider} object.
+     * @param config a {@link com.pi4j.io.gpio.analog.AnalogOutputConfig} object.
+     */
     public MockAnalogOutput(AnalogOutputProvider provider, AnalogOutputConfig config){
         super(provider, config);
     }
 
+    /**
+     * <p>mockValue.</p>
+     *
+     * @param number a {@link java.lang.Number} object.
+     * @return a {@link com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogOutput} object.
+     */
     public MockAnalogOutput mockValue(Number number){
         try {
             this.value(value);

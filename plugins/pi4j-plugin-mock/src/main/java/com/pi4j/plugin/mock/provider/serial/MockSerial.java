@@ -41,6 +41,12 @@ import java.nio.charset.Charset;
 import java.util.ArrayDeque;
 import java.util.Objects;
 
+/**
+ * <p>MockSerial class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class MockSerial extends SerialBase implements Serial {
 
     /**
@@ -51,6 +57,12 @@ public class MockSerial extends SerialBase implements Serial {
      */
     protected ArrayDeque<Byte> raw = new ArrayDeque<>();
 
+    /**
+     * <p>Constructor for MockSerial.</p>
+     *
+     * @param provider a {@link com.pi4j.io.serial.SerialProvider} object.
+     * @param config a {@link com.pi4j.io.serial.SerialConfig} object.
+     */
     public MockSerial(SerialProvider provider, SerialConfig config){
         super(provider, config);
         System.out.print(" [");
@@ -61,11 +73,13 @@ public class MockSerial extends SerialBase implements Serial {
         System.out.println();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int available() throws IOException {
         return raw.size();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
         System.out.print(" [");
@@ -77,6 +91,7 @@ public class MockSerial extends SerialBase implements Serial {
         super.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte b) throws IOException {
         raw.add(b);
@@ -90,6 +105,7 @@ public class MockSerial extends SerialBase implements Serial {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte[] data, int offset, int length) throws IOException {
         Objects.checkFromIndexSize(offset, length, data.length);
@@ -106,6 +122,7 @@ public class MockSerial extends SerialBase implements Serial {
         return length;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(Charset charset, CharSequence data) throws IOException {
         byte[] buffer = data.toString().getBytes(charset);
@@ -122,6 +139,7 @@ public class MockSerial extends SerialBase implements Serial {
         return data.length();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int read() throws IOException {
         if(raw.isEmpty()) return -1;
@@ -136,6 +154,7 @@ public class MockSerial extends SerialBase implements Serial {
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int read(byte[] buffer, int offset, int length) throws IOException{
         Objects.checkFromIndexSize(offset, length, buffer.length);

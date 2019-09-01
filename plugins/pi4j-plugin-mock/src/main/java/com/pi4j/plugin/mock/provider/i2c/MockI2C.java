@@ -42,6 +42,12 @@ import java.nio.charset.Charset;
 import java.util.ArrayDeque;
 import java.util.Objects;
 
+/**
+ * <p>MockI2C class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class MockI2C extends I2CBase implements I2C {
 
     /**
@@ -53,6 +59,12 @@ public class MockI2C extends I2CBase implements I2C {
     protected ArrayDeque<Byte>[] registers = new ArrayDeque[256]; // 256 supported registers (0-255)
     protected ArrayDeque<Byte> raw = new ArrayDeque<>();
 
+    /**
+     * <p>Constructor for MockI2C.</p>
+     *
+     * @param provider a {@link com.pi4j.io.i2c.I2CProvider} object.
+     * @param config a {@link com.pi4j.io.i2c.I2CConfig} object.
+     */
     public MockI2C(I2CProvider provider, I2CConfig config){
         super(provider, config);
         System.out.print(" [");
@@ -63,6 +75,7 @@ public class MockI2C extends I2CBase implements I2C {
         System.out.println();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
         System.out.print(" [");
@@ -78,6 +91,7 @@ public class MockI2C extends I2CBase implements I2C {
     // RAW DEVICE WRITE FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte b) throws IOException {
         raw.add(b);
@@ -91,6 +105,7 @@ public class MockI2C extends I2CBase implements I2C {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte[] data, int offset, int length) throws IOException {
         Objects.checkFromIndexSize(offset, length, data.length);
@@ -107,6 +122,7 @@ public class MockI2C extends I2CBase implements I2C {
         return length;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(Charset charset, CharSequence data) throws IOException {
         byte[] buffer = data.toString().getBytes(charset);
@@ -127,6 +143,7 @@ public class MockI2C extends I2CBase implements I2C {
     // RAW DEVICE READ FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int read() throws IOException{
         if(raw.isEmpty()) return -1;
@@ -141,6 +158,7 @@ public class MockI2C extends I2CBase implements I2C {
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int read(byte[] buffer, int offset, int length) throws IOException{
         Objects.checkFromIndexSize(offset, length, buffer.length);
@@ -165,6 +183,7 @@ public class MockI2C extends I2CBase implements I2C {
         return counter;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String readString(Charset charset, int length) throws IOException{
         if(raw.isEmpty()) return null;
@@ -190,6 +209,7 @@ public class MockI2C extends I2CBase implements I2C {
     // DEVICE REGISTER WRITE FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int writeRegister(int register, byte b) throws IOException {
 
@@ -209,6 +229,7 @@ public class MockI2C extends I2CBase implements I2C {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int writeRegister(int register, byte[] data, int offset, int length) throws IOException {
         Objects.checkFromIndexSize(offset, length, data.length);
@@ -233,6 +254,7 @@ public class MockI2C extends I2CBase implements I2C {
         return length;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int writeRegister(int register, Charset charset, CharSequence data) throws IOException{
 
@@ -259,6 +281,7 @@ public class MockI2C extends I2CBase implements I2C {
     // DEVICE REGISTER READ FUNCTIONS
     // -------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     @Override
     public int readRegister(int register) throws IOException {
         if(registers[register] == null) throw new IOException("No available data to read");
@@ -277,6 +300,7 @@ public class MockI2C extends I2CBase implements I2C {
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int readRegister(int register, byte[] buffer, int offset, int length) throws IOException {
         if(registers[register] == null) return -1;
@@ -302,6 +326,7 @@ public class MockI2C extends I2CBase implements I2C {
         return counter;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String readRegisterString(int register, Charset charset, int length) throws IOException {
         if(registers[register] == null) return null;

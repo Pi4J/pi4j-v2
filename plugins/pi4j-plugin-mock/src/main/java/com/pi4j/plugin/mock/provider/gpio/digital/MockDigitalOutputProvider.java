@@ -32,9 +32,22 @@ package com.pi4j.plugin.mock.provider.gpio.digital;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.plugin.mock.Mock;
 
+/**
+ * <p>MockDigitalOutputProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface MockDigitalOutputProvider extends DigitalOutputProvider {
+    /** Constant <code>NAME="Mock.DIGITAL_OUTPUT_PROVIDER_NAME"</code> */
     String NAME = Mock.DIGITAL_OUTPUT_PROVIDER_NAME;
+    /** Constant <code>ID="Mock.DIGITAL_OUTPUT_PROVIDER_ID"</code> */
     String ID = Mock.DIGITAL_OUTPUT_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProvider} object.
+     */
     static MockDigitalOutputProvider newInstance() {
         return new MockDigitalOutputProviderImpl();
     }

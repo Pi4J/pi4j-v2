@@ -41,10 +41,22 @@ import java.nio.charset.Charset;
 import java.util.ArrayDeque;
 import java.util.Objects;
 
+/**
+ * <p>MockSpi class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class MockSpi extends SpiBase implements Spi {
 
     protected ArrayDeque<Byte> raw = new ArrayDeque<>();
 
+    /**
+     * <p>Constructor for MockSpi.</p>
+     *
+     * @param provider a {@link com.pi4j.io.spi.SpiProvider} object.
+     * @param config a {@link com.pi4j.io.spi.SpiConfig} object.
+     */
     public MockSpi(SpiProvider provider, SpiConfig config) {
         super(provider, config);
         System.out.print(" [");
@@ -54,6 +66,7 @@ public class MockSpi extends SpiBase implements Spi {
         System.out.print("] :: OPEN(CHANNEL=" + config.address() + "; BAUD=" + config.baud() + ")");
         System.out.println();
     }
+    /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
         System.out.print(" [");
@@ -65,6 +78,7 @@ public class MockSpi extends SpiBase implements Spi {
         super.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int transfer(byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException {
         int readIndex = readOffset;
@@ -77,6 +91,7 @@ public class MockSpi extends SpiBase implements Spi {
         return readIndex - readOffset;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte b) throws IOException {
         raw.add(b);
@@ -90,6 +105,7 @@ public class MockSpi extends SpiBase implements Spi {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte[] data, int offset, int length) throws IOException {
         Objects.checkFromIndexSize(offset, length, data.length);
@@ -106,6 +122,7 @@ public class MockSpi extends SpiBase implements Spi {
         return length;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(Charset charset, CharSequence data) throws IOException {
         byte[] buffer = data.toString().getBytes(charset);
@@ -122,6 +139,7 @@ public class MockSpi extends SpiBase implements Spi {
         return data.length();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int read() throws IOException {
         if(raw.isEmpty()) return -1;
@@ -136,6 +154,7 @@ public class MockSpi extends SpiBase implements Spi {
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int read(byte[] buffer, int offset, int length) throws IOException{
         Objects.checkFromIndexSize(offset, length, buffer.length);
