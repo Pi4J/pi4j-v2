@@ -32,14 +32,27 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
 
 import com.pi4j.io.gpio.digital.*;
 
+/**
+ * <p>LinuxFsDigitalInput class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class LinuxFsDigitalInput extends DigitalInputBase implements DigitalInput {
 
     private DigitalState state = DigitalState.LOW;
 
+    /**
+     * <p>Constructor for LinuxFsDigitalInput.</p>
+     *
+     * @param provider a {@link com.pi4j.io.gpio.digital.DigitalInputProvider} object.
+     * @param config a {@link com.pi4j.io.gpio.digital.DigitalInputConfig} object.
+     */
     public LinuxFsDigitalInput(DigitalInputProvider provider, DigitalInputConfig config){
         super(provider, config);
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalState state() {
         return this.state;

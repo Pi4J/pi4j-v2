@@ -35,7 +35,7 @@ import com.pi4j.io.gpio.digital.*;
 /**
  * <p>RpiDigitalInput class.</p>
  *
- * @author roberts
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
 public class RpiDigitalInput extends DigitalInputBase implements DigitalInput {

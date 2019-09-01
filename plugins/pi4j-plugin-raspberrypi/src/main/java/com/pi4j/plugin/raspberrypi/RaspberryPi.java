@@ -32,7 +32,7 @@ package com.pi4j.plugin.raspberrypi;
 /**
  * <p>RaspberryPi class.</p>
  *
- * @author roberts
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
 public class RaspberryPi {

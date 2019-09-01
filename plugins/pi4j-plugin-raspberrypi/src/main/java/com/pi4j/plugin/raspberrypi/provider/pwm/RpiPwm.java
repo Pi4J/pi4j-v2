@@ -39,7 +39,7 @@ import java.io.IOException;
 /**
  * <p>RpiPwm class.</p>
  *
- * @author roberts
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
 public class RpiPwm extends PwmBase implements Pwm {

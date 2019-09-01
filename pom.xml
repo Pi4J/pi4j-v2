@@ -16,6 +16,7 @@
 		<url>https://pi4j.com</url>
 	</organization>
 
+
 	<!-- LICENSE -->
     <licenses>
         <license>
@@ -32,7 +33,13 @@
 			<name>Robert Savage</name>
 			<email>robert@pi4j.com</email>
 			<url>http://robertsavage.me</url>
-			<organizationUrl>http://www.savagehomeautomation.com</organizationUrl>
+            <organization>Savage Software</organization>
+			<organizationUrl>http://savagesoftware.com</organizationUrl>
+            <properties>
+                <blog>http://savagehomeautomation.com</blog>
+                <linikedin>https://www.linkedin.com/in/robert-savage</linikedin>
+                <twitter>https://twitter.com/savageautomate</twitter>
+            </properties>
 			<roles>
 				<role>sponsor</role>
 				<role>architect</role>
@@ -47,6 +54,27 @@
             </roles>
         </developer>
 	</developers>
+    <contributors>
+        <contributor>
+            <name>Marcus Hirt</name>
+            <url>http://hirt.se/</url>
+            <organization>Robo4J</organization>
+            <organizationUrl>http://www.robo4j.io</organizationUrl>
+            <properties>
+                <linikedin>https://www.linkedin.com/in/mhirt</linikedin>
+                <twitter>https://twitter.com/hirt</twitter>
+            </properties>
+        </contributor>
+        <contributor>
+            <name>Miroslav Wengner</name>
+            <organization>Robo4J</organization>
+            <organizationUrl>http://www.robo4j.io</organizationUrl>
+            <properties>
+                <linikedin>https://www.linkedin.com/in/mwengner</linikedin>
+                <twitter>https://twitter.com/miragemiko</twitter>
+            </properties>
+        </contributor>
+    </contributors>
 
 	<!-- SOURCE CONTROL -->
 	<scm>

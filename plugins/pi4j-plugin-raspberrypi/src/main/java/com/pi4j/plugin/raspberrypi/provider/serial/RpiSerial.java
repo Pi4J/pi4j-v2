@@ -39,7 +39,7 @@ import java.io.IOException;
 /**
  * <p>RpiSerial class.</p>
  *
- * @author roberts
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
 public class RpiSerial extends SerialBase implements Serial {

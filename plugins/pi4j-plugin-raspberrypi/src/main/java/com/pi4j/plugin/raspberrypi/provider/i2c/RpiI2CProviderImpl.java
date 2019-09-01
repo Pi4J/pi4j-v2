@@ -36,7 +36,7 @@ import com.pi4j.io.i2c.I2CProviderBase;
 /**
  * <p>RpiI2CProviderImpl class.</p>
  *
- * @author roberts
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
 public class RpiI2CProviderImpl extends I2CProviderBase implements RpiI2CProvider {

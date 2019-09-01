@@ -40,7 +40,7 @@ import java.io.IOException;
 /**
  * <p>RpiI2C class.</p>
  *
- * @author roberts
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
 public class RpiI2C extends I2CBase implements I2C {

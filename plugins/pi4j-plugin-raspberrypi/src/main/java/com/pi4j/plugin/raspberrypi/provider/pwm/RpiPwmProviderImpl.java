@@ -36,7 +36,7 @@ import com.pi4j.io.pwm.PwmProviderBase;
 /**
  * <p>RpiPwmProviderImpl class.</p>
  *
- * @author roberts
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
 public class RpiPwmProviderImpl extends PwmProviderBase implements RpiPwmProvider {

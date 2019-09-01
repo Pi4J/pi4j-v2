@@ -36,7 +36,19 @@ import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 
 
+/**
+ * <p>LinuxFsDigitalOutput class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOutput {
+    /**
+     * <p>Constructor for LinuxFsDigitalOutput.</p>
+     *
+     * @param provider a {@link com.pi4j.io.gpio.digital.DigitalOutputProvider} object.
+     * @param config a {@link com.pi4j.io.gpio.digital.DigitalOutputConfig} object.
+     */
     public LinuxFsDigitalOutput(DigitalOutputProvider provider, DigitalOutputConfig config){
         super(provider, config);
     }

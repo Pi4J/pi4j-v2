@@ -37,7 +37,7 @@ import com.pi4j.io.serial.SerialProviderBase;
 /**
  * <p>RpiSerialProviderImpl class.</p>
  *
- * @author roberts
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
 public class RpiSerialProviderImpl extends SerialProviderBase implements RpiSerialProvider {

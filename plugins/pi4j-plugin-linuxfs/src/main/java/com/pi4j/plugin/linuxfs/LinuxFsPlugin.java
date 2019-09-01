@@ -35,6 +35,12 @@ import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalInputProvider
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalOutputProvider;
 import com.pi4j.provider.Provider;
 
+/**
+ * <p>LinuxFsPlugin class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class LinuxFsPlugin implements Plugin {
 
     private Provider providers[] = {
@@ -42,6 +48,7 @@ public class LinuxFsPlugin implements Plugin {
             LinuxFsDigitalOutputProvider.newInstance()
     };
 
+    /** {@inheritDoc} */
     @Override
     public void initialize(PluginService service) {
 

@@ -35,7 +35,7 @@ import com.pi4j.plugin.raspberrypi.RaspberryPi;
 /**
  * <p>RpiI2CProvider interface.</p>
  *
- * @author roberts
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
 public interface RpiI2CProvider extends I2CProvider {

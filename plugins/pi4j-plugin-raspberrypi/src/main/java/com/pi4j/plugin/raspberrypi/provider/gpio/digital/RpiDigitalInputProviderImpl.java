@@ -38,7 +38,7 @@ import java.io.IOException;
 /**
  * <p>RpiDigitalInputProviderImpl class.</p>
  *
- * @author roberts
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
 public class RpiDigitalInputProviderImpl extends DigitalInputProviderBase implements RpiDigitalInputProvider {

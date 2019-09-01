@@ -36,7 +36,7 @@ import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
 /**
  * <p>RpiDigitalOutputProviderImpl class.</p>
  *
- * @author roberts
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
 public class RpiDigitalOutputProviderImpl extends DigitalOutputProviderBase implements RpiDigitalOutputProvider {
