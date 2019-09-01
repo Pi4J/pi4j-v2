@@ -116,7 +116,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * Returns the pigpio library version.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioVersion"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioVersion">PIGPIO::gpioVersion</a>
      */
     @Override
     public long gpioVersion() throws IOException {
@@ -145,7 +145,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *     for "Revision : 0002" the function returns 2.
      *     for "Revision : 000f" the function returns 15.
      *     for "Revision : 000g" the function returns 0.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision">PIGPIO::gpioHardwareRevision</a>
      */
     @Override
     public long gpioHardwareRevision() throws IOException {
@@ -175,7 +175,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *     for "Revision : 0002" the function returns 2.
      *     for "Revision : 000f" the function returns 15.
      *     for "Revision : 000g" the function returns 0.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision">PIGPIO::gpioHardwareRevision</a>
      */
     @Override
     public String gpioHardwareRevisionString() throws IOException {
@@ -198,7 +198,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * Sets or clears resistor pull ups or downs on the GPIO.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPullUpDown"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPullUpDown">PIGPIO::gpioSetPullUpDown</a>
      */
     @Override
     public void gpioSetPullUpDown(int pin, PiGpioPud pud) throws IOException {
@@ -214,7 +214,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * Gets the GPIO mode.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetMode"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetMode">PIGPIO::gpioGetMode</a>
      */
     @Override
     public PiGpioMode gpioGetMode(int pin) throws IOException {
@@ -235,7 +235,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * gpio: 0-53
      * mode: 0-7
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetMode"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetMode">PIGPIO::gpioSetMode</a>
      */
     @Override
     public void gpioSetMode(int pin, PiGpioMode mode) throws IOException {
@@ -251,7 +251,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * Reads the GPIO level, on (HIGH) or off (LOW).
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioRead"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioRead">PIGPIO::gpioRead</a>
      */
     @Override
     public PiGpioState gpioRead(int pin) throws IOException {
@@ -269,7 +269,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * Sets the GPIO level, on (HIGH) or off (LOW).
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite">PIGPIO::gpioWrite</a>
      */
     @Override
     public void gpioWrite(int pin, PiGpioState state) throws IOException {
@@ -299,7 +299,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * It does not affect interrupts set up with gpioSetISRFunc, gpioSetISRFuncEx, or
      * levels read by gpioRead, gpioRead_Bits_0_31, or gpioRead_Bits_32_53.
      * Each (stable) edge will be timestamped steady microseconds after it was first detected.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter">PIGPIO::gpioGlitchFilter</a>
      */
     public void gpioGlitchFilter(int pin, int steady) throws IOException {
         logger.trace("[GPIO::GLITCH] -> PIN: {}; INTERVAL: {};", pin, steady);
@@ -330,7 +330,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * Level changes before and after the active period may be reported.
      * Your software must be designed to cope with such reports.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter">PIGPIO::gpioGlitchFilter</a>
      */
     public void gpioNoiseFilter(int pin, int steady, int active) throws IOException{
         logger.trace("[GPIO::NOISE] -> PIN: {}; INTERVAL: {};", pin, steady);
@@ -356,7 +356,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * This and the servo functionality use the DMA and PWM or PCM peripherals to control and schedule
      * the pulse lengths and duty cycles.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioPWM"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioPWM">PIGPIO::gpioPWM</a>
      */
     @Override
     public void gpioPWM(int pin, int dutyCycle) throws IOException {
@@ -379,7 +379,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * If hardware PWM is active on the GPIO the reported dutycycle will be out of a 1000000 (1M).
      *
      * Normal PWM range defaults to 255.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMdutycycle"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMdutycycle">PIGPIO::gpioGetPWMdutycycle</a>
      */
     @Override
     public int gpioGetPWMdutycycle(int pin) throws IOException {
@@ -417,7 +417,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *   gpioSetPWMrange(24, 2000); // Now 2000 is fully on
      *                              //     1000 is half on
      *                              //      500 is quarter on, etc.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange">PIGPIO::gpioSetPWMrange</a>
      */
     @Override
     public int gpioSetPWMrange(int pin, int range) throws IOException {
@@ -437,7 +437,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * Returns the duty-cycle range used for the GPIO if OK.
      * If a hardware clock or hardware PWM is active on the GPIO the reported range will be 1000000 (1M).
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrange"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrange">PIGPIO::gpioGetPWMrange</a>
      */
     @Override
     public int gpioGetPWMrange(int pin) throws IOException {
@@ -458,7 +458,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * If a hardware clock is active on the GPIO the reported real range will be 1000000 (1M).
      * If hardware PWM is active on the GPIO the reported real range will be approximately 250M
      * divided by the set PWM frequency.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrealRange"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrealRange">PIGPIO::gpioGetPWMrealRange</a>
      */
     @Override
     public int gpioGetPWMrealRange(int pin) throws IOException {
@@ -509,7 +509,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *    gpioSetPWMfrequency(23, 0); // Set GPIO23 to lowest frequency.
      *    gpioSetPWMfrequency(24, 500); // Set GPIO24 to 500Hz.
      *    gpioSetPWMfrequency(25, 100000); // Set GPIO25 to highest frequency.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange">PIGPIO::gpioSetPWMrange</a>
      */
     @Override
     public int gpioSetPWMfrequency(int pin, int frequency) throws IOException {
@@ -535,7 +535,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * Example:
      *    f = gpioGetPWMfrequency(23); // Get frequency used for GPIO23.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMfrequency"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMfrequency">PIGPIO::gpioGetPWMfrequency</a>
      */
     @Override
     public int gpioGetPWMfrequency(int pin) throws IOException {
@@ -636,7 +636,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *  - gpioSetPWMrange(25, 2500);
      *
      * Thereafter use the PWM command to move the servo, e.g. gpioPWM(25, 1500) will set a 1500 us pulse.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioServo"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioServo">PIGPIO::gpioServo</a>
      */
     public void gpioServo(int pin, int pulseWidth) throws IOException{
         logger.trace("[SERVO::SET] -> PIN: {}; PULSE-WIDTH={};", pin, pulseWidth);
@@ -652,7 +652,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * Returns the servo pulse-width setting for the GPIO.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetServoPulsewidth"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetServoPulsewidth">PIGPIO::gpioGetServoPulsewidth</a>
      */
     public int gpioGetServoPulsewidth(int pin) throws IOException{
         logger.trace("[SERVO::GET] -> PIN: {}", pin);
@@ -680,7 +680,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * Delays for at least the number of microseconds specified by micros.
      * (Delays of 100 microseconds or less use busy waits.)
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioDelay"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioDelay">PIGPIO::gpioDelay</a>
      */
     @Override
     public int gpioDelay(int micros) throws IOException {
@@ -697,7 +697,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * Delays for at least the number of milliseconds specified by micros. (between 1 and 60000 [1 minute])
-     * @see "http://abyz.me.uk/rpi/pigpio/pigs.html#MILS"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/pigs.html#MILS">PIGPIO::MILS</a>
      */
     @Override
     public int gpioDelayMilliseconds(int millis) throws IOException{
@@ -730,7 +730,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *   endTick = gpioTick();
      *   diffTick = endTick - startTick;
      *   printf("some processing took %d microseconds", diffTick);
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioTick"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioTick">PIGPIO::gpioTick</a>
      */
     @Override
     public long gpioTick() throws IOException {
@@ -761,7 +761,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *         SDA   SCL
      * I2C0     0     1
      * I2C1     2     3
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cOpen"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cOpen">PIGPIO::i2cOpen</a>
      */
     @Override
     public int i2cOpen(int bus, int device, int flags) throws IOException {
@@ -789,7 +789,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This closes the I2C device associated with the handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cClose"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cClose">PIGPIO::i2cClose</a>
      */
     @Override
     public int i2cClose(int handle) throws IOException {
@@ -812,7 +812,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This sends a single bit (in the Rd/Wr bit) to the device associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteQuick"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteQuick">PIGPIO::i2cWriteQuick</a>
      */
     @Override
     public int i2cWriteQuick(int handle, boolean bit) throws IOException {
@@ -830,7 +830,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This sends a single byte to the device associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByte"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByte">PIGPIO::i2cWriteByte</a>
      */
     @Override
     public int i2cWriteByte(int handle, byte value) throws IOException {
@@ -848,7 +848,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This reads a single byte from the device associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByte"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByte">PIGPIO::i2cReadByte</a>
      */
     @Override
     public int i2cReadByte(int handle) throws IOException {
@@ -866,7 +866,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This writes a single byte to the specified register of the device associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByteData"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByteData">PIGPIO::i2cWriteByteData</a>
      */
     @Override
     public int i2cWriteByteData(int handle, int register, byte value) throws IOException {
@@ -885,7 +885,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This writes a single 16 bit word to the specified register of the device associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteWordData"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteWordData">PIGPIO::i2cWriteWordData</a>
      */
     @Override
     public int i2cWriteWordData(int handle, int register, int value) throws IOException {
@@ -904,7 +904,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This reads a single byte from the specified register of the device associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByteData"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByteData">PIGPIO::i2cReadByteData</a>
      */
     @Override
     public int i2cReadByteData(int handle, int register) throws IOException {
@@ -923,7 +923,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This reads a single 16 bit word from the specified register of the device associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadWordData"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadWordData">PIGPIO::i2cReadWordData</a>
      */
     @Override
     public int i2cReadWordData(int handle, int register) throws IOException {
@@ -943,7 +943,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * This writes 16 bits of data to the specified register of the device associated with
      * handle and reads 16 bits of data in return. (in a single transaction)
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cProcessCall"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cProcessCall">PIGPIO::i2cProcessCall</a>
      */
     @Override
     public int i2cProcessCall(int handle, int register, int value) throws IOException {
@@ -962,7 +962,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This writes up to 32 bytes to the specified register of the device associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
      */
     @Override
     public int i2cWriteBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
@@ -1011,7 +1011,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * The SMBus 2.0 documentation states that a minimum of 1 byte may be sent and a minimum of 1 byte may be received.
      * The total number of bytes sent/received must be 32 or less.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
      */
     @Override
     public int i2cBlockProcessCall(int handle, int register,
@@ -1048,7 +1048,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * This reads count bytes from the specified register of the device associated with handle .
      * The maximum length of data that can be read is 32 bytes.
      * The minimum length of data that can be read is 1 byte.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadI2CBlockData"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadI2CBlockData">PIGPIO::i2cReadI2CBlockData</a>
      */
     @Override
     public int i2cReadI2CBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException{
@@ -1085,7 +1085,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This writes 1 to 32 bytes to the specified register of the device associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
      */
     @Override
     public int i2cWriteI2CBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
@@ -1105,7 +1105,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This reads count bytes from the raw device into byte buffer array.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadDevice"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadDevice">PIGPIO::i2cReadDevice</a>
      */
     @Override
     public int i2cReadDevice(int handle, byte[] buffer, int offset, int length) throws IOException {
@@ -1128,7 +1128,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This writes the length of bytes from the provided data array to the raw I2C device.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
      */
     @Override
     public int i2cWriteDevice(int handle, byte[] data, int offset, int length) throws IOException {
@@ -1153,7 +1153,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * This function opens a serial device at a specified baud rate and with specified flags.
      * The device name must start with "/dev/tty" or "/dev/serial".
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serOpen"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serOpen">PIGPIO::serOpen</a>
      */
     @Override
     public int serOpen(CharSequence device, int baud, int flags) throws IOException {
@@ -1176,7 +1176,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This function closes the serial device associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serClose"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serClose">PIGPIO::serClose</a>
      */
     @Override
     public int serClose(int handle) throws IOException {
@@ -1199,7 +1199,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This function writes a single byte "value" to the serial port associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWriteByte"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWriteByte">PIGPIO::serWriteByte</a>
      */
     @Override
     public int serWriteByte(int handle, byte value) throws IOException {
@@ -1218,7 +1218,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * This function reads a byte from the serial port associated with handle.
      * If no data is ready PI_SER_READ_NO_DATA is returned.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte">PIGPIO::serReadByte</a>
      */
     @Override
     public int serReadByte(int handle) throws IOException {
@@ -1237,7 +1237,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * This function writes multiple bytes from the buffer array ('data') to the serial
      * port associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
      */
     @Override
     public int serWrite(int handle, byte[] data, int offset, int length) throws IOException {
@@ -1257,7 +1257,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * This function reads up count bytes from the serial port associated with handle and
      * writes them to the buffer parameter.   If no data is ready, zero is returned.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serRead"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serRead">PIGPIO::serRead</a>
      */
     @Override
     public int serRead(int handle, byte[] buffer, int offset, int length) throws IOException {
@@ -1281,7 +1281,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This function returns the number of bytes available to be read from the device associated with handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serDataAvailable"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serDataAvailable">PIGPIO::serDataAvailable</a>
      */
     @Override
     public int serDataAvailable(int handle) throws IOException {
@@ -1384,7 +1384,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * E.g. to transfer 32 11-bit words buf should contain 64 bytes and count should be 64.
      * E.g. to transfer the 14 bit value 0x1ABC send the bytes 0xBC followed by 0x1A.
      * The other bits in flags should be set to zero.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiOpen"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiOpen">PIGPIO::spiOpen</a>
      */
     @Override
     public int spiOpen(int channel, int baud, int flags) throws IOException {
@@ -1407,7 +1407,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * {@inheritDoc}
      *
      * This functions closes the SPI device identified by the handle.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiClose"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiClose">PIGPIO::spiClose</a>
      */
     @Override
     public int spiClose(int handle) throws IOException {
@@ -1431,7 +1431,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * This function writes multiple bytes from the byte array ('data') to the SPI
      * device associated with the handle from the given offset index to the specified length.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      */
     @Override
     public int spiWrite(int handle, byte[] data, int offset, int length) throws IOException {
@@ -1453,7 +1453,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * SPI device associated with the handle and copies them to the 'buffer' byte array parameter.
      * The 'offset' parameter determines where to start copying/inserting read data in the byte array.
      * If no data is ready, zero is returned; otherwise, the number of bytes read is returned.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiRead"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiRead">PIGPIO::spiRead</a>
      */
     @Override
     public int spiRead(int handle, byte[] buffer, int offset, int length) throws IOException {
@@ -1482,7 +1482,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * read from the SPI device is then copied to the 'read' byte array at the given 'readOffset'
      * using the same length.  Both the 'write' and 'read' byte arrays must be at least the size
      * of the defined 'numberOfBytes' + their corresponding offsets.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      */
     @Override
     public int spiXfer(int handle, byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException {

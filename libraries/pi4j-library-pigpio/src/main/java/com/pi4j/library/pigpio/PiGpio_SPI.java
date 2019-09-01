@@ -102,7 +102,7 @@ public interface PiGpio_SPI {
      * @param baud  baud rate in bits per second
      * @param flags  optional flags to define SPI modes and other SPI communication characteristic, see details above.
      * @return Returns a handle (&gt;=0) if OK, otherwise PI_BAD_SPI_CHANNEL, PI_BAD_SPI_SPEED, PI_BAD_FLAGS, PI_NO_AUX_SPI, or PI_SPI_OPEN_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiOpen"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiOpen">PIGPIO::spiOpen</a>
      * @throws java.io.IOException if any.
      */
     int spiOpen(int channel, int baud, int flags) throws IOException;
@@ -139,7 +139,7 @@ public interface PiGpio_SPI {
      * @param channel the SPI device/channel to open [0-1 (0-2 for the auxiliary SPI)]
      * @param baud  baud rate in bits per second
      * @return Returns a handle (&gt;=0) if OK, otherwise PI_BAD_SPI_CHANNEL, PI_BAD_SPI_SPEED, PI_BAD_FLAGS, PI_NO_AUX_SPI, or PI_SPI_OPEN_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiOpen"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiOpen">PIGPIO::spiOpen</a>
      * @throws java.io.IOException if any.
      */
     default int spiOpen(int channel, int baud) throws IOException {
@@ -151,7 +151,7 @@ public interface PiGpio_SPI {
      *
      * @param handle the open SPI device handle; (&gt;=0, as returned by a call to spiOpen)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiClose"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiClose">PIGPIO::spiClose</a>
      * @throws java.io.IOException if any.
      */
     int spiClose(int handle) throws IOException;
@@ -167,7 +167,7 @@ public interface PiGpio_SPI {
      * @param handle the open serial device handle; (&gt;=0, as returned by a call to serOpen)
      * @param value byte value to write to serial port
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWriteByte"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWriteByte">PIGPIO::serWriteByte</a>
      * @throws java.io.IOException if any.
      */
     default int spiWriteByte(int handle, byte value) throws IOException{
@@ -185,7 +185,7 @@ public interface PiGpio_SPI {
      *
      * @param handle the open serial device handle; (&gt;=0, as returned by a call to serOpen)
      * @return Returns the read byte (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_SER_READ_NO_DATA, or PI_SER_READ_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte">PIGPIO::serReadByte</a>
      * @throws java.io.IOException if any.
      */
     default int spiReadByte(int handle) throws IOException{
@@ -208,7 +208,7 @@ public interface PiGpio_SPI {
      *
      * @param handle the open serial device handle; (&gt;=0, as returned by a call to serOpen)
      * @return Returns the read byte (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_SER_READ_NO_DATA, or PI_SER_READ_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte">PIGPIO::serReadByte</a>
      * @param value a byte.
      * @throws java.io.IOException if any.
      */
@@ -235,7 +235,7 @@ public interface PiGpio_SPI {
      * @param offset the starting offset position in the provided buffer to start writing from.
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     int spiWrite(int handle, byte[] data, int offset, int length) throws IOException;
@@ -248,7 +248,7 @@ public interface PiGpio_SPI {
      * @param data the array of bytes to write
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiWrite(int handle, byte[] data, int length) throws IOException{
@@ -262,7 +262,7 @@ public interface PiGpio_SPI {
      * @param handle the open SPI device handle; (&gt;=0, as returned by a call to spiOpen)
      * @param data the array of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiWrite(int handle, byte[] data) throws IOException{
@@ -290,7 +290,7 @@ public interface PiGpio_SPI {
      * @param offset the starting offset position in the provided buffer to start writing from.
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiWrite(int handle, ByteBuffer buffer, int offset, int length) throws IOException{
@@ -317,7 +317,7 @@ public interface PiGpio_SPI {
      * @param buffer the byte buffer of data to write
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiWrite(int handle, ByteBuffer buffer, int length) throws IOException{
@@ -348,7 +348,7 @@ public interface PiGpio_SPI {
      * @param handle the open SPI device handle; (&gt;=0, as returned by a call to spiOpen)
      * @param buffer the byte buffer of data to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiWrite(int handle, ByteBuffer buffer) throws IOException{
@@ -374,7 +374,7 @@ public interface PiGpio_SPI {
      * @param offset the starting offset position in the provided data to start writing from.
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiWrite(int handle, Charset charset, CharSequence data, int offset, int length) throws IOException{
@@ -390,7 +390,7 @@ public interface PiGpio_SPI {
      * @param data the character/string data to write
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiWrite(int handle, Charset charset, CharSequence data, int length) throws IOException{
@@ -405,7 +405,7 @@ public interface PiGpio_SPI {
      * @param charset the character set/type used to encode the character sequence/string to bytes
      * @param data the character/string data to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiWrite(int handle, CharSequence data, Charset charset) throws IOException{
@@ -421,7 +421,7 @@ public interface PiGpio_SPI {
      * @param offset the starting offset position in the provided data to start writing from.
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiWrite(int handle, CharSequence data, int offset, int length) throws IOException{
@@ -436,7 +436,7 @@ public interface PiGpio_SPI {
      * @param data the ASCII character/string data to write
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiWrite(int handle, CharSequence data, int length) throws IOException{
@@ -450,7 +450,7 @@ public interface PiGpio_SPI {
      * @param handle the open SPI device handle; (&gt;=0, as returned by a call to spiOpen)
      * @param data the ASCII character/string data to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiWrite(int handle, CharSequence data) throws IOException{
@@ -472,7 +472,7 @@ public interface PiGpio_SPI {
      * @param offset the starting offset position in the provided buffer to start copying the data bytes read.
      * @param length the maximum number of bytes to read
      * @return Returns the number of bytes read if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiRead"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiRead">PIGPIO::spiRead</a>
      * @throws java.io.IOException if any.
      */
     int spiRead(int handle, byte[] buffer, int offset, int length) throws IOException;
@@ -487,7 +487,7 @@ public interface PiGpio_SPI {
      * @param buffer a byte array to receive the read data
      * @param length the maximum number of bytes to read
      * @return Returns the number of bytes read if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiRead"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiRead">PIGPIO::spiRead</a>
      * @throws java.io.IOException if any.
      */
     default int spiRead(int handle, byte[] buffer, int length) throws IOException{
@@ -503,7 +503,7 @@ public interface PiGpio_SPI {
      * @param handle the open SPI device handle; (&gt;=0, as returned by a call to spiOpen)
      * @param buffer a byte array to receive the read data
      * @return Returns the number of bytes read if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiRead"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiRead">PIGPIO::spiRead</a>
      * @throws java.io.IOException if any.
      */
     default int spiRead(int handle, byte[] buffer) throws IOException{
@@ -531,7 +531,7 @@ public interface PiGpio_SPI {
      * @param offset the starting offset position in the provided buffer to start copying the data bytes read.
      * @param length the maximum number of bytes to read
      * @return Returns the number of bytes read if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiRead"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiRead">PIGPIO::spiRead</a>
      * @throws java.io.IOException if any.
      */
     default int spiRead(int handle, ByteBuffer buffer, int offset, int length) throws IOException{
@@ -575,7 +575,7 @@ public interface PiGpio_SPI {
      * @param buffer a byte buffer (with pre-allocated capacity) to receive the read data
      * @param length the maximum number of bytes to read
      * @return Returns the number of bytes read if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiRead"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiRead">PIGPIO::spiRead</a>
      * @throws java.io.IOException if any.
      */
     default int spiRead(int handle, ByteBuffer buffer, int length) throws IOException{
@@ -605,7 +605,7 @@ public interface PiGpio_SPI {
      * @param handle the open SPI device handle; (&gt;=0, as returned by a call to spiOpen)
      * @param buffer a byte buffer (with pre-allocated capacity) to receive the read data
      * @return Returns the number of bytes read if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED..
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiRead"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiRead">PIGPIO::spiRead</a>
      * @throws java.io.IOException if any.
      */
     default int spiRead(int handle, ByteBuffer buffer) throws IOException{
@@ -638,7 +638,7 @@ public interface PiGpio_SPI {
      *                   data bytes read from the SPI device.
      * @param numberOfBytes the number of bytes to transfer/exchange (write &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     int spiXfer(int handle, byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException;
@@ -657,7 +657,7 @@ public interface PiGpio_SPI {
      * @param read the array of bytes to store read data in from the SPI device
      * @param numberOfBytes the number of bytes to transfer/exchange (write &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiXfer(int handle, byte[] write, byte[] read, int numberOfBytes) throws IOException{
@@ -676,7 +676,7 @@ public interface PiGpio_SPI {
      * @param write the array of bytes to write to the SPI device
      * @param read the array of bytes to store read data in from the SPI device
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiXfer(int handle, byte[] write, byte[] read) throws IOException{
@@ -700,7 +700,7 @@ public interface PiGpio_SPI {
      *               read back from the SPI device.
      * @param length the number of bytes to transfer/exchange (write &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiXfer(int handle, byte[] buffer, int offset, int length) throws IOException{
@@ -720,7 +720,7 @@ public interface PiGpio_SPI {
      *               back from the SPI device
      * @param length the number of bytes to transfer/exchange (write &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiXfer(int handle, byte[] buffer, int length) throws IOException{
@@ -737,7 +737,7 @@ public interface PiGpio_SPI {
      * @param buffer the array of bytes to write to the SPI device and to store read data
      *               back from the SPI device
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiXfer(int handle, byte[] buffer) throws IOException{
@@ -770,7 +770,7 @@ public interface PiGpio_SPI {
      *                   data bytes read from the SPI device.
      * @param numberOfBytes the number of bytes to transfer/exchange (write &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiXfer(int handle, ByteBuffer write, int writeOffset, ByteBuffer read, int readOffset, int numberOfBytes) throws IOException{
@@ -828,7 +828,7 @@ public interface PiGpio_SPI {
      * @param read the ByteBuffer to store read data in from the SPI device
      * @param numberOfBytes the number of bytes to transfer/exchange (write &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiXfer(int handle, ByteBuffer write, ByteBuffer read, int numberOfBytes) throws IOException{
@@ -872,7 +872,7 @@ public interface PiGpio_SPI {
      *               read back from the SPI device.
      * @param length the number of bytes to transfer/exchange (write &amp; read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      * @throws java.io.IOException if any.
      */
     default int spiXfer(int handle, ByteBuffer buffer, int offset, int length) throws IOException{

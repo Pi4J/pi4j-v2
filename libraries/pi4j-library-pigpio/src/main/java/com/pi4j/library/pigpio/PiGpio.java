@@ -105,7 +105,7 @@ public interface PiGpio extends
      * - gpioVersion
      * - gpioHardwareRevision
      *
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      * @throws java.io.IOException if any.
      */
     void initialize() throws IOException;
@@ -119,7 +119,7 @@ public interface PiGpio extends
      * - gpioVersion
      * - gpioHardwareRevision
      *
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      * @throws java.io.IOException if any.
      */
     default void gpioInitialize() throws IOException { initialize(); } // US spelling variant
@@ -133,7 +133,7 @@ public interface PiGpio extends
      * - gpioVersion
      * - gpioHardwareRevision
      *
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      * @throws java.io.IOException if any.
      */
     default void initialise() throws IOException { initialize(); }     // UK spelling variant
@@ -147,7 +147,7 @@ public interface PiGpio extends
      * - gpioVersion
      * - gpioHardwareRevision
      *
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      * @throws java.io.IOException if any.
      */
     default void gpioInitialise() throws IOException { initialize(); }
@@ -178,7 +178,7 @@ public interface PiGpio extends
      * Returns the pigpio library version.
      *
      * @return pigpio version.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioVersion"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioVersion">PIGPIO::gpioVersion</a>
      * @throws java.io.IOException if any.
      */
     long gpioVersion() throws IOException;
@@ -200,7 +200,7 @@ public interface PiGpio extends
      *     for "Revision : 000g" the function returns 0.
      *
      * @return hardware revision as raw 32-bit UINT
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision">PIGPIO::gpioHardwareRevision</a>
      * @throws java.io.IOException if any.
      */
     long gpioHardwareRevision() throws IOException;
@@ -223,7 +223,7 @@ public interface PiGpio extends
      *     for "Revision : 000g" the function returns 0.
      *
      * @return hardware revision in hexadecimal string
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision">PIGPIO::gpioHardwareRevision</a>
      * @throws java.io.IOException if any.
      */
     String gpioHardwareRevisionString() throws IOException;
@@ -234,7 +234,7 @@ public interface PiGpio extends
      *
      * @param micros micros: the number of microseconds to sleep (between 1 and 1000000 [1 second])
      * @return Returns the actual length of the delay in microseconds.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioDelay"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioDelay">PIGPIO::gpioDelay</a>
      * @throws java.io.IOException if any.
      */
     int gpioDelay(int micros) throws IOException;
@@ -254,7 +254,7 @@ public interface PiGpio extends
      *
      * @param millis millis: the number of milliseconds to sleep (between 1 and 60000 [1 minute])
      * @return Returns the actual length of the delay in milliseconds.
-     * @see "http://abyz.me.uk/rpi/pigpio/pigs.html#MILS"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/pigs.html#MILS">PIGPIO::MILS</a>
      * @throws java.io.IOException if any.
      */
     int gpioDelayMilliseconds(int millis) throws IOException;
@@ -279,7 +279,7 @@ public interface PiGpio extends
      *   printf("some processing took %d microseconds", diffTick);
      *
      * @return Returns the current system tick.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioTick"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioTick">PIGPIO::gpioTick</a>
      * @throws java.io.IOException if any.
      */
     long gpioTick() throws IOException;

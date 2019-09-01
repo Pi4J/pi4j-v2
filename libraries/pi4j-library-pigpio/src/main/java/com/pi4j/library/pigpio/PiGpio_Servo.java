@@ -74,7 +74,7 @@ public interface PiGpio_Servo {
      *
      * @param pin user_gpio: 0-31
      * @param pulseWidth  0, 500-2500
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioServo"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioServo">PIGPIO::gpioServo</a>
      * @throws java.io.IOException if any.
      */
     void gpioServo(int pin, int pulseWidth) throws IOException;
@@ -114,7 +114,7 @@ public interface PiGpio_Servo {
      *
      * @param pin user_gpio: 0-31
      * @param pulseWidth  0, 500-2500
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioServo"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioServo">PIGPIO::gpioServo</a>
      * @throws java.io.IOException if any.
      */
     default void gpioSetServoPulsewidth(int pin, int pulseWidth) throws IOException{
@@ -126,7 +126,7 @@ public interface PiGpio_Servo {
      *
      * @param pin user_gpio: 0-31
      * @return Returns 0 (off), 500 (most anti-clockwise) to 2500 (most clockwise) if OK.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetServoPulsewidth"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetServoPulsewidth">PIGPIO::gpioGetServoPulsewidth</a>
      * @throws java.io.IOException if any.
      */
     int gpioGetServoPulsewidth(int pin) throws IOException;

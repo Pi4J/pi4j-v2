@@ -94,7 +94,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
      * - gpioCfg*
      * - gpioVersion
      * - gpioHardwareRevision
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      */
     @Override
     public void initialize() throws IOException {

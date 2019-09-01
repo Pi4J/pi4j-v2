@@ -44,7 +44,7 @@ public interface PiGpio_GPIO {
      *
      * @param pin gpio pin address
      * @param pud pull-up, pull-down, pull-off
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPullUpDown"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPullUpDown">PIGPIO::gpioSetPullUpDown</a>
      * @throws java.io.IOException if any.
      */
     void gpioSetPullUpDown(int pin, PiGpioPud pud) throws IOException;
@@ -54,7 +54,7 @@ public interface PiGpio_GPIO {
      *
      * @param pin gpio pin address
      * @return  pin mode: input, output, etc.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetMode"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetMode">PIGPIO::gpioGetMode</a>
      * @throws java.io.IOException if any.
      */
     PiGpioMode gpioGetMode(int pin) throws IOException;
@@ -64,7 +64,7 @@ public interface PiGpio_GPIO {
      *
      * @param pin gpio pin address
      * @param mode pin mode: input, output, etc.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetMode"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetMode">PIGPIO::gpioSetMode</a>
      * @throws java.io.IOException if any.
      */
     void gpioSetMode(int pin, PiGpioMode mode) throws IOException;
@@ -74,7 +74,7 @@ public interface PiGpio_GPIO {
      *
      * @param pin gpio pin address
      * @return pin state: HIGH or LOW
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioRead"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioRead">PIGPIO::gpioRead</a>
      * @throws java.io.IOException if any.
      */
     PiGpioState gpioRead(int pin) throws IOException;
@@ -84,7 +84,7 @@ public interface PiGpio_GPIO {
      *
      * @param pin gpio pin address
      * @param state HIGH or LOW
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite">PIGPIO::gpioWrite</a>
      * @throws java.io.IOException if any.
      */
     void gpioWrite(int pin, PiGpioState state) throws IOException;
@@ -94,7 +94,7 @@ public interface PiGpio_GPIO {
      *
      * @param pin gpio pin address
      * @param state HIGH ('true') or LOW ('false')
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite">PIGPIO::gpioWrite</a>
      * @throws java.io.IOException if any.
      */
     default void gpioWrite(int pin, boolean state) throws IOException{
@@ -106,7 +106,7 @@ public interface PiGpio_GPIO {
      *
      * @param pin gpio pin address
      * @param state HIGH ('1') or LOW ('0')
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite">PIGPIO::gpioWrite</a>
      * @throws java.io.IOException if any.
      */
     default void gpioWrite(int pin, int state) throws IOException{
@@ -133,7 +133,7 @@ public interface PiGpio_GPIO {
      *
      * @param pin gpio pin address (valid pins are 0-31)
      * @param steady interval in microseconds (valid range: 0-300000)
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter">PIGPIO::gpioGlitchFilter</a>
      * @throws java.io.IOException if any.
      */
     void gpioGlitchFilter(int pin, int steady) throws IOException;
@@ -159,7 +159,7 @@ public interface PiGpio_GPIO {
      * @param pin gpio pin address (valid pins are 0-31)
      * @param steady interval in microseconds (valid range: 0-300000)
      * @param active interval in microseconds (valid range: 0-1000000)
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter">PIGPIO::gpioGlitchFilter</a>
      * @throws java.io.IOException if any.
      */
     void gpioNoiseFilter(int pin, int steady, int active) throws IOException;
