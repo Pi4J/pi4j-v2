@@ -31,15 +31,39 @@ import com.pi4j.io.IOType;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 
+/**
+ * <p>About class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class About {
 
 
+    /**
+     * <p>Constructor for About.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     public About() throws Exception {
     }
 
+    /**
+     * <p>enumerateProviders.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @throws com.pi4j.exception.Pi4JException if any.
+     */
     public void enumerateProviders(Context context) throws Pi4JException {
         enumerateProviders(context,"PROVIDERS");
     }
+    /**
+     * <p>enumerateProviders.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @param title a {@link java.lang.String} object.
+     * @throws com.pi4j.exception.Pi4JException if any.
+     */
     public void enumerateProviders(Context context, String title) throws Pi4JException {
         System.out.println("=====================================================");
         System.out.println(title);
@@ -49,6 +73,13 @@ public class About {
         }
     }
 
+    /**
+     * <p>enumerateProviders.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @param ioType a {@link com.pi4j.io.IOType} object.
+     * @throws com.pi4j.exception.Pi4JException if any.
+     */
     public void enumerateProviders(Context context, IOType ioType) throws Pi4JException {
         System.out.println("=====================================================");
         System.out.println(ioType + " PROVIDERS");
@@ -58,6 +89,12 @@ public class About {
         }
     }
 
+    /**
+     * <p>enumeratePlatforms.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @throws com.pi4j.exception.Pi4JException if any.
+     */
     public void enumeratePlatforms(Context context) throws Pi4JException {
         System.out.println("=====================================================");
         System.out.println("PLATFORMS");
@@ -67,6 +104,12 @@ public class About {
         }
     }
 
+    /**
+     * <p>describeDeafultPlatform.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @throws com.pi4j.exception.Pi4JException if any.
+     */
     public void describeDeafultPlatform(Context context) throws Pi4JException {
         System.out.println("=====================================================");
         System.out.println("DEFAULT (RUNTIME) PLATFORM ");

@@ -36,24 +36,52 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * <p>TestPlatform class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class TestPlatform extends PlatformBase<TestPlatform> implements Platform {
 
     protected Set<String> supportedProviderIds = new HashSet<String>();
 
+    /**
+     * <p>Constructor for TestPlatform.</p>
+     */
     public TestPlatform(){ super(); }
 
+    /**
+     * <p>Constructor for TestPlatform.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public TestPlatform(String id){
         super(id);
     }
 
+    /**
+     * <p>Constructor for TestPlatform.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public TestPlatform(String id, String name){
         super(id, name);
     }
 
+    /**
+     * <p>Constructor for TestPlatform.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param description a {@link java.lang.String} object.
+     */
     public TestPlatform(String id, String name, String description){
         super(id, name, description);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int weight() {
         // the Test platform is weighted at zero to indicate that it has a very
@@ -62,6 +90,7 @@ public class TestPlatform extends PlatformBase<TestPlatform> implements Platform
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean enabled(Context context) {
         // the Test Platform is always available when detected
@@ -70,16 +99,27 @@ public class TestPlatform extends PlatformBase<TestPlatform> implements Platform
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String[] getProviders() {
         return this.supportedProviderIds.toArray(new String[]{});
     }
 
+    /**
+     * <p>setProviders.</p>
+     *
+     * @param providerId a {@link java.lang.String} object.
+     */
     public void setProviders(String ... providerId){
         this.supportedProviderIds.clear();
         this.supportedProviderIds.addAll(Arrays.asList(providerId));
     }
 
+    /**
+     * <p>setProviders.</p>
+     *
+     * @param provider a {@link com.pi4j.provider.Provider} object.
+     */
     public void setProviders(Provider ... provider){
         this.supportedProviderIds.clear();
         for(Provider p : provider) {

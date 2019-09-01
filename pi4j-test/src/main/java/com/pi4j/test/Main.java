@@ -32,11 +32,26 @@ import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.binding.AnalogBindingSync;
 import com.pi4j.test.provider.TestAnalogInputProvider;
 
+/**
+ * <p>Main class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class Main {
 
+    /**
+     * <p>Constructor for Main.</p>
+     */
     public Main() {
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // set logging
