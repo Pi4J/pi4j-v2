@@ -1,10 +1,12 @@
 .git
 .ipynb_checkpoints/*
-Dockerfile
 .DS_Store
 .gitignore
 README.md
 test
+build.sh
+deploy.sh
+pom.xml
 
 # To prevent storing dev/temporary container data
 *.csv

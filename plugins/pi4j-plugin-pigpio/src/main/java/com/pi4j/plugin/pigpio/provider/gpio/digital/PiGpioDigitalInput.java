@@ -62,7 +62,7 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      * @param provider a {@link com.pi4j.io.gpio.digital.DigitalInputProvider} object.
      * @param config a {@link com.pi4j.io.gpio.digital.DigitalInputConfig} object.
-     * @throws java.io.IOException
+     * @throws java.io.IOException if any.
      */
     public PiGpioDigitalInput(PiGpio piGpio, DigitalInputProvider provider, DigitalInputConfig config) throws IOException {
         super(provider, config);
