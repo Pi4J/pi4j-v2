@@ -29,9 +29,20 @@ package com.pi4j.io.gpio.analog;
 
 import com.pi4j.event.Event;
 
+/**
+ * <p>AnalogEvent interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface AnalogEvent<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>,
         PROVIDER_TYPE extends AnalogProvider>
         extends Event {
+    /**
+     * <p>source.</p>
+     *
+     * @return a ANALOG_TYPE object.
+     */
     ANALOG_TYPE source();
 }

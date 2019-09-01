@@ -36,9 +36,11 @@ package com.pi4j.config.exception;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class ConfigMissingPrefixException extends ConfigException {
 
+    /** Constant <code>MESSAGE="A required 'prefix' argument is null or"{trunked}</code> */
     public static String MESSAGE =  "A required 'prefix' argument is null or missing.";
 
     /**
@@ -48,6 +50,11 @@ public class ConfigMissingPrefixException extends ConfigException {
         super(MESSAGE);
     }
 
+    /**
+     * <p>Constructor for ConfigMissingPrefixException.</p>
+     *
+     * @param cause a {@link java.lang.Throwable} object.
+     */
     public ConfigMissingPrefixException(Throwable cause){
         super(MESSAGE, cause);
     }

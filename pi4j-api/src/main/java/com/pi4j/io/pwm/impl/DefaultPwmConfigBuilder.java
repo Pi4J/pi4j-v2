@@ -36,6 +36,12 @@ import com.pi4j.io.pwm.PwmType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>DefaultPwmConfigBuilder class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultPwmConfigBuilder
         extends AddressConfigBuilderBase<PwmConfigBuilder, PwmConfig>
         implements PwmConfigBuilder {
@@ -49,16 +55,23 @@ public class DefaultPwmConfigBuilder
         super();
     }
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.pwm.PwmConfigBuilder} object.
+     */
     public static PwmConfigBuilder newInstance() {
         return new DefaultPwmConfigBuilder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public PwmConfigBuilder frequency(Integer frequency) {
         this.properties.put(PwmConfig.FREQUENCY_KEY, frequency.toString());
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PwmConfigBuilder dutyCycle(Number dutyCycle) {
         // bounds check the duty-cycle value
@@ -70,12 +83,14 @@ public class DefaultPwmConfigBuilder
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PwmConfigBuilder pwmType(PwmType pwmType) {
         this.properties.put(PwmConfig.PWM_TYPE_KEY, pwmType.toString());
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PwmConfigBuilder shutdown(Number dutyCycle) {
         // bounds check the duty-cycle value
@@ -87,6 +102,7 @@ public class DefaultPwmConfigBuilder
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PwmConfigBuilder initial(Number dutyCycle) {
 
@@ -99,6 +115,7 @@ public class DefaultPwmConfigBuilder
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PwmConfigBuilder preset(PwmPreset ... preset){
         for(PwmPreset p : preset) {
@@ -107,6 +124,7 @@ public class DefaultPwmConfigBuilder
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PwmConfig build() {
         PwmConfig config = new DefaultPwmConfig(this.properties, this.presets);

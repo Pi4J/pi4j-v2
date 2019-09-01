@@ -31,12 +31,42 @@ import com.pi4j.io.gpio.digital.impl.DefaultDigitalInputConfigBuilder;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * <p>DigitalInputConfigBuilder interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface DigitalInputConfigBuilder extends DigitalConfigBuilder<DigitalInputConfigBuilder, DigitalInputConfig> {
+    /**
+     * <p>pull.</p>
+     *
+     * @param value a {@link com.pi4j.io.gpio.digital.PullResistance} object.
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
+     */
     DigitalInputConfigBuilder pull(PullResistance value);
 
+    /**
+     * <p>debounce.</p>
+     *
+     * @param microseconds a {@link java.lang.Long} object.
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
+     */
     DigitalInputConfigBuilder debounce(Long microseconds);
+    /**
+     * <p>debounce.</p>
+     *
+     * @param interval a {@link java.lang.Long} object.
+     * @param units a {@link java.util.concurrent.TimeUnit} object.
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
+     */
     DigitalInputConfigBuilder debounce(Long interval, TimeUnit units);
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
+     */
     static DigitalInputConfigBuilder newInstance()  {
         return DefaultDigitalInputConfigBuilder.newInstance();
     }

@@ -30,10 +30,28 @@ package com.pi4j.io.gpio.analog;
 import com.pi4j.config.Config;
 import com.pi4j.io.gpio.GpioConfig;
 
+/**
+ * <p>AnalogConfig interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface AnalogConfig<CONFIG_TYPE extends Config> extends GpioConfig<CONFIG_TYPE> {
+    /** Constant <code>RANGE_MIN_KEY="min"</code> */
     String RANGE_MIN_KEY = "min";
+    /** Constant <code>RANGE_MAX_KEY="max"</code> */
     static String RANGE_MAX_KEY = "max";
 
+    /**
+     * <p>range.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogRange} object.
+     */
     AnalogRange range();
+    /**
+     * <p>getRange.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogRange} object.
+     */
     default AnalogRange getRange() { return this.range(); }
 }

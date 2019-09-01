@@ -30,8 +30,15 @@ package com.pi4j.annotation.processor.injector;
 import com.pi4j.annotation.processor.injector.impl.IOInjectorBase;
 import com.pi4j.io.spi.Spi;
 
+/**
+ * <p>SpiInjector class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class SpiInjector extends IOInjectorBase<Spi> implements InjectorProcessor<Spi> {
 
+    /** {@inheritDoc} */
     @Override
     public Class<Spi> getTargetType() { return Spi.class; }
 }

@@ -45,20 +45,38 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * <p>ProviderProxyHandler class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class ProviderProxyHandler implements InvocationHandler {
     private Runtime runtime = null;
     private Provider provider = null;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * <p>Constructor for ProviderProxyHandler.</p>
+     *
+     * @param runtime a {@link com.pi4j.runtime.Runtime} object.
+     * @param provider a {@link com.pi4j.provider.Provider} object.
+     */
     public ProviderProxyHandler(Runtime runtime, Provider provider){
         this.runtime = runtime;
         this.provider = provider;
     }
 
+    /**
+     * <p>provider.</p>
+     *
+     * @return a {@link com.pi4j.provider.Provider} object.
+     */
     public Provider provider() {
         return this.provider;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 

@@ -41,10 +41,17 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
+/**
+ * <p>AnalogOutputRegistrationProcessor class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class AnalogOutputRegistrationProcessor implements RegisterProcessor<AnalogOutput> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /** {@inheritDoc} */
     @Override
     public boolean isEligible(Context context, Object instance, Register annotation, Field field) throws Exception {
 
@@ -56,6 +63,7 @@ public class AnalogOutputRegistrationProcessor implements RegisterProcessor<Anal
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput process(Context context, Object instance, Register annotation, Field field) throws Exception {
 

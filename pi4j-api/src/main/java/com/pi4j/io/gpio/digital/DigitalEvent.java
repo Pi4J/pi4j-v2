@@ -29,9 +29,20 @@ package com.pi4j.io.gpio.digital;
 
 import com.pi4j.event.Event;
 
+/**
+ * <p>DigitalEvent interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface DigitalEvent<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>,
         PROVIDER_TYPE extends DigitalProvider>
         extends Event {
+    /**
+     * <p>source.</p>
+     *
+     * @return a DIGITAL_TYPE object.
+     */
     DIGITAL_TYPE source();
 }

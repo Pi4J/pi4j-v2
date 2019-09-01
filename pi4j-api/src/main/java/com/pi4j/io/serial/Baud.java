@@ -27,6 +27,12 @@ package com.pi4j.io.serial;
  * #L%
  */
 
+/**
+ * <p>Baud class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public enum Baud {
 
     _50(50),
@@ -54,13 +60,29 @@ public enum Baud {
         this.baud = baud;
     }
 
+    /**
+     * <p>getValue.</p>
+     *
+     * @return a int.
+     */
     public int getValue(){
         return this.baud;
     }
+    /**
+     * <p>value.</p>
+     *
+     * @return a int.
+     */
     public int value(){
         return this.baud;
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @param baud_rate a int.
+     * @return a {@link com.pi4j.io.serial.Baud} object.
+     */
     public static Baud getInstance(int baud_rate){
         for(Baud b : Baud.values()){
             if(b.getValue() == baud_rate){

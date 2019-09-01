@@ -27,11 +27,28 @@ package com.pi4j.config;
  * #L%
  */
 
+/**
+ * <p>DeviceConfig interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface DeviceConfig<CONFIG_TYPE extends DeviceConfig> extends Config<CONFIG_TYPE> {
 
+    /** Constant <code>DEVICE_KEY="device"</code> */
     String DEVICE_KEY = "device";
+    /**
+     * <p>device.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     String device();
 
+    /**
+     * <p>getDevice.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     default String getDevice(){
         return this.device();
     }

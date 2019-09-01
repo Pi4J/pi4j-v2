@@ -30,34 +30,95 @@ package com.pi4j.io.serial;
 import com.pi4j.config.DeviceConfig;
 import com.pi4j.io.IOConfig;
 
+/**
+ * <p>SerialConfig interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface SerialConfig extends DeviceConfig<SerialConfig>, IOConfig<SerialConfig> {
+    /** Constant <code>BAUD_KEY="baud"</code> */
     String BAUD_KEY = "baud";
+    /** Constant <code>STOP_BITS_KEY="stop-bits"</code> */
     String STOP_BITS_KEY = "stop-bits";
+    /** Constant <code>DATA_BITS_KEY="data-bits"</code> */
     String DATA_BITS_KEY = "data-bits";
+    /** Constant <code>PARITY_KEY="parity"</code> */
     String PARITY_KEY = "parity";
+    /** Constant <code>FLOW_CONTROL_KEY="flow-control"</code> */
     String FLOW_CONTROL_KEY = "flow-control";
 
+    /**
+     * <p>baud.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     Integer baud();
+    /**
+     * <p>getBaud.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     default Integer getBaud() {
         return baud();
     }
 
+    /**
+     * <p>stopBits.</p>
+     *
+     * @return a {@link com.pi4j.io.serial.StopBits} object.
+     */
     StopBits stopBits();
+    /**
+     * <p>getStopBits.</p>
+     *
+     * @return a {@link com.pi4j.io.serial.StopBits} object.
+     */
     default StopBits getStopBits() {
         return stopBits();
     }
 
+    /**
+     * <p>dataBits.</p>
+     *
+     * @return a {@link com.pi4j.io.serial.DataBits} object.
+     */
     DataBits dataBits();
+    /**
+     * <p>getDataBits.</p>
+     *
+     * @return a {@link com.pi4j.io.serial.DataBits} object.
+     */
     default DataBits getDataBits() {
         return dataBits();
     }
 
+    /**
+     * <p>parity.</p>
+     *
+     * @return a {@link com.pi4j.io.serial.Parity} object.
+     */
     Parity parity();
+    /**
+     * <p>getParity.</p>
+     *
+     * @return a {@link com.pi4j.io.serial.Parity} object.
+     */
     default Parity getParity() {
         return parity();
     }
 
+    /**
+     * <p>flowControl.</p>
+     *
+     * @return a {@link com.pi4j.io.serial.FlowControl} object.
+     */
     FlowControl flowControl();
+    /**
+     * <p>getFlowControl.</p>
+     *
+     * @return a {@link com.pi4j.io.serial.FlowControl} object.
+     */
     default FlowControl getFlowControl(){
         return flowControl();
     }

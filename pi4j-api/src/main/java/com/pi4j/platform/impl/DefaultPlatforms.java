@@ -42,12 +42,20 @@ import java.util.Map;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class DefaultPlatforms implements Platforms {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private RuntimePlatforms platforms = null;
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param platforms a {@link com.pi4j.platform.impl.RuntimePlatforms} object.
+     * @return a {@link com.pi4j.platform.Platforms} object.
+     * @throws com.pi4j.platform.exception.PlatformNotFoundException if any.
+     */
     public static Platforms newInstance(RuntimePlatforms platforms) throws PlatformNotFoundException {
         return new DefaultPlatforms(platforms);
     }
@@ -58,21 +66,25 @@ public class DefaultPlatforms implements Platforms {
         this.platforms = platforms;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Map<String, Platform> all() {
         return platforms.all();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean exists(String platformId) {
         return platforms.exists(platformId);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Platform get(String platformId) throws PlatformNotFoundException {
         return platforms.get(platformId);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Platform> T defaultPlatform() {
         return platforms.defaultPlatform();

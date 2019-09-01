@@ -29,6 +29,12 @@ package com.pi4j.io;
 
 import com.pi4j.config.Config;
 
+/**
+ * <p>IOConfig interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface IOConfig<CONFIG_TYPE> extends Config<CONFIG_TYPE> {
     // MARKER INTERFACE
 }

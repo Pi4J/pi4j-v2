@@ -45,6 +45,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * <p>Abstract PlatformBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class PlatformBase<PLATFORM extends Platform>
         extends ExtensionBase<Platform>
         implements Platform {
@@ -53,27 +59,50 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     protected Map<IOType, Provider> providers = new ConcurrentHashMap<>();
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * <p>Constructor for PlatformBase.</p>
+     */
     public PlatformBase(){
         super();
     }
 
+    /**
+     * <p>Constructor for PlatformBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public PlatformBase(String id){
         super(id);
     }
 
+    /**
+     * <p>Constructor for PlatformBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public PlatformBase(String id, String name){
         super(id, name);
     }
 
+    /**
+     * <p>Constructor for PlatformBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param description a {@link java.lang.String} object.
+     */
     public PlatformBase(String id, String name, String description){
         super(id, name, description);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Map<IOType, Provider> providers() {
         return Collections.unmodifiableMap(this.providers);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderInterfaceException {
 
@@ -105,6 +134,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException {
         if(providers.containsKey(ioType))
@@ -112,12 +142,15 @@ public abstract class PlatformBase<PLATFORM extends Platform>
         throw new ProviderNotFoundException(ioType);
     }
 
+    /** {@inheritDoc} */
     @Override
     public abstract int weight();
 
+    /** {@inheritDoc} */
     @Override
     public abstract boolean enabled(Context context);
 
+    /** {@inheritDoc} */
     @Override
     public PLATFORM initialize(Context context) throws InitializeException {
         this.context = context;
@@ -132,13 +165,26 @@ public abstract class PlatformBase<PLATFORM extends Platform>
         return (PLATFORM) this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PLATFORM shutdown(Context context) throws ShutdownException {
         return (PLATFORM)this;
     }
 
+    /**
+     * <p>Getter for the field <code>providers</code>.</p>
+     *
+     * @return an array of {@link java.lang.String} objects.
+     */
     protected abstract String[] getProviders();
 
+    /**
+     * <p>addProvider.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @param providerId a {@link java.lang.String} object.
+     * @throws com.pi4j.provider.exception.ProviderException if any.
+     */
     protected void addProvider(Context context, String providerId) throws ProviderException {
         var provider = context.providers().get(providerId);
         this.providers.put(IOType.getByProviderClass(provider.getClass()), provider);

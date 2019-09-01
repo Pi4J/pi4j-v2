@@ -32,11 +32,24 @@ import com.pi4j.extension.PluginService;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 
+/**
+ * <p>DefaultPluginService class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultPluginService implements PluginService {
 
     private Context context = null;
     private PluginStore store = null;
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @param store a {@link com.pi4j.extension.impl.PluginStore} object.
+     * @return a {@link com.pi4j.extension.PluginService} object.
+     */
     public static PluginService newInstance(Context context, PluginStore store){
         return new DefaultPluginService(context, store);
     }
@@ -48,11 +61,13 @@ public class DefaultPluginService implements PluginService {
         this.store = store;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Context context() {
         return this.context;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PluginService register(Provider... provider) {
         if(provider != null) {
@@ -63,6 +78,7 @@ public class DefaultPluginService implements PluginService {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PluginService register(Platform... platform) {
         if(platform != null) {

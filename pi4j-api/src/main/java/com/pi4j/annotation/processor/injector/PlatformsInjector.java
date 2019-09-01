@@ -33,14 +33,22 @@ import com.pi4j.platform.Platforms;
 
 import java.lang.reflect.Field;
 
+/**
+ * <p>PlatformsInjector class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PlatformsInjector implements InjectorProcessor<Platforms> {
 
+    /** {@inheritDoc} */
     @Override
     public Platforms process(Context context, Object instance, Inject annotation, Field field) throws Exception {
         // return providers instance
         return context.platforms();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class<Platforms> getTargetType() {
         return Platforms.class;

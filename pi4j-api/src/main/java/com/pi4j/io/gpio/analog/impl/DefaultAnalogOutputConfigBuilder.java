@@ -30,6 +30,12 @@ package com.pi4j.io.gpio.analog.impl;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 import com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder;
 
+/**
+ * <p>DefaultAnalogOutputConfigBuilder class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultAnalogOutputConfigBuilder
         extends AnalogConfigBuilderBase<AnalogOutputConfigBuilder, AnalogOutputConfig>
         implements AnalogOutputConfigBuilder {
@@ -41,28 +47,37 @@ public class DefaultAnalogOutputConfigBuilder
         super();
     }
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder} object.
+     */
     public static AnalogOutputConfigBuilder newInstance() {
         return new DefaultAnalogOutputConfigBuilder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutputConfigBuilder shutdown(Integer value) {
         this.properties.put(AnalogOutputConfig.SHUTDOWN_VALUE_KEY, value.toString());
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutputConfigBuilder initial(Integer value) {
         this.properties.put(AnalogOutputConfig.INITIAL_VALUE_KEY, value.toString());
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutputConfig build() {
         AnalogOutputConfig config = new DefaultAnalogOutputConfig(properties);
         return config;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutputConfigBuilder step(Integer value) {
         this.properties.put(AnalogOutputConfig.STEP_VALUE_KEY, value.toString());

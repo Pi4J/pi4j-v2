@@ -33,11 +33,19 @@ import com.pi4j.registry.Registry;
 
 import java.lang.reflect.Field;
 
+/**
+ * <p>RegistryInjector class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class RegistryInjector implements InjectorProcessor<Registry> {
 
+    /** {@inheritDoc} */
     @Override
     public Class<Registry> getTargetType() { return Registry.class; }
 
+    /** {@inheritDoc} */
     @Override
     public Registry process(Context context, Object instance, Inject annotation, Field field) throws Exception {
         // return static registry instance

@@ -35,6 +35,12 @@ import com.pi4j.util.StringUtil;
 
 import java.util.Map;
 
+/**
+ * <p>DefaultSpiConfig class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultSpiConfig
         extends AddressConfigBase<SpiConfig>
         implements SpiConfig {
@@ -45,7 +51,8 @@ public class DefaultSpiConfig
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
      */
     protected DefaultSpiConfig(Map<String,String> properties){
         super(properties);
@@ -70,11 +77,13 @@ public class DefaultSpiConfig
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer baud() {
         return this.baud;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SpiMode mode() {
         return this.mode;

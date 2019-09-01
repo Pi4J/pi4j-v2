@@ -35,18 +35,26 @@ import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <p>DigitalBindingSync class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DigitalBindingSync extends DigitalBindingBase<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider> implements DigitalBinding<DigitalOutput> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Default Constructor
+     *
      * @param target Variable argument list of analog outputs
      */
     public DigitalBindingSync(DigitalOutput ... target){
         super(target);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void process(DigitalChangeEvent event) {
         targets.forEach((target)->{

@@ -33,26 +33,41 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+/**
+ * <p>Abstract SerialBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class SerialBase extends IOBase<Serial, SerialConfig, SerialProvider> implements Serial {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
     protected boolean isOpen = false;
 
+    /**
+     * <p>Constructor for SerialBase.</p>
+     *
+     * @param provider a {@link com.pi4j.io.serial.SerialProvider} object.
+     * @param config a {@link com.pi4j.io.serial.SerialConfig} object.
+     */
     public SerialBase(SerialProvider provider, SerialConfig config){
         super(provider, config);
         logger.trace("created instance with config: {}", config);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isOpen() {
         return this.isOpen;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void open() throws IOException {
         logger.trace("invoked 'open()'");
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
         logger.trace("invoked 'closed()'");

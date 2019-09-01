@@ -32,9 +32,36 @@ import com.pi4j.context.ContextProperties;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * <p>RuntimeProperties interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface RuntimeProperties extends ContextProperties {
+    /**
+     * <p>put.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @param value a {@link java.lang.String} object.
+     */
     void put(String key, String value);
+    /**
+     * <p>put.</p>
+     *
+     * @param properties a {@link java.util.Properties} object.
+     */
     void put(Properties properties);
+    /**
+     * <p>put.</p>
+     *
+     * @param values a {@link java.util.Map} object.
+     */
     void put(Map<String,String> values);
+    /**
+     * <p>put.</p>
+     *
+     * @param value a {@link java.util.Map.Entry} object.
+     */
     void put(Map.Entry<String,String> ... value);
 }

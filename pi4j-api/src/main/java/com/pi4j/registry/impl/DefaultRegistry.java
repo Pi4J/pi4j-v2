@@ -36,11 +36,23 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+/**
+ * <p>DefaultRegistry class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultRegistry implements Registry {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private RuntimeRegistry registry = null;
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param registry a {@link com.pi4j.registry.impl.RuntimeRegistry} object.
+     * @return a {@link com.pi4j.registry.Registry} object.
+     */
     public static Registry newInstance(RuntimeRegistry registry){
         return new DefaultRegistry(registry);
     }
@@ -51,26 +63,31 @@ public class DefaultRegistry implements Registry {
         this.registry = registry;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean exists(String id, Class<? extends IO> type) {
         return registry.exists(id, type);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean exists(String id) {
         return registry.exists(id);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Map<String, ? extends IO> all() {
         return registry.all();
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends IO> T get(String id) throws IOInvalidIDException, IONotFoundException {
         return registry.get(id);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends IO> T get(String id, Class<T> type) throws IOInvalidIDException, IONotFoundException {
         return registry.get(id, type);

@@ -28,18 +28,38 @@ import com.pi4j.provider.ProviderBase;
  * limitations under the License.
  * #L%
  */
+/**
+ * <p>Abstract SerialProviderBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class SerialProviderBase
         extends ProviderBase<SerialProvider, Serial, SerialConfig>
         implements SerialProvider {
 
+    /**
+     * <p>Constructor for SerialProviderBase.</p>
+     */
     public SerialProviderBase(){
         super();
     }
 
+    /**
+     * <p>Constructor for SerialProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public SerialProviderBase(String id){
         super(id);
     }
 
+    /**
+     * <p>Constructor for SerialProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public SerialProviderBase(String id, String name){
         super(id, name);
     }

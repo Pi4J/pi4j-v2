@@ -32,11 +32,19 @@ import com.pi4j.context.Context;
 
 import java.lang.reflect.Field;
 
+/**
+ * <p>ContextInjector class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class ContextInjector implements InjectorProcessor<Context> {
 
+    /** {@inheritDoc} */
     @Override
     public Class<Context> getTargetType() { return Context.class; }
 
+    /** {@inheritDoc} */
     @Override
     public Context process(Context context, Object instance, Inject annotation, Field field) throws Exception {
         // return static context instance

@@ -27,6 +27,12 @@ package com.pi4j.io;
  * #L%
  */
 
+/**
+ * <p>IOBinding interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface IOBinding {
     // MARKER INTERFACE
 }

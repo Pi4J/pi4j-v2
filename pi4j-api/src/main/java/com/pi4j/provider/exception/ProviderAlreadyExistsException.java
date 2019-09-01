@@ -36,13 +36,14 @@ package com.pi4j.provider.exception;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class ProviderAlreadyExistsException extends ProviderException {
 
     /**
      * Default Constructor
      *
-     * @param providerId
+     * @param providerId a {@link java.lang.String} object.
      */
     public ProviderAlreadyExistsException(String providerId){
         super("The Pi4J io [" + providerId + "] already exists.");

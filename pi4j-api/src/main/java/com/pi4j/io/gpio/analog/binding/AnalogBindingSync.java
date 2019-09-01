@@ -32,16 +32,24 @@ import com.pi4j.io.exception.IOIllegalValueException;
 import com.pi4j.io.gpio.analog.AnalogChangeEvent;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 
+/**
+ * <p>AnalogBindingSync class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class AnalogBindingSync extends AnalogBindingBase implements AnalogBinding<AnalogOutput> {
 
     /**
      * Default Constructor
+     *
      * @param output Variable argument list of analog outputs
      */
     public AnalogBindingSync(AnalogOutput ... output){
         super(output);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void process(AnalogChangeEvent event) {
         outputs.forEach((output)->{

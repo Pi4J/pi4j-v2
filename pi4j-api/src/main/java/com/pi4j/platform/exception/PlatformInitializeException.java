@@ -37,11 +37,15 @@ package com.pi4j.platform.exception;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class PlatformInitializeException extends PlatformException {
 
     /**
      * Default Constructor
+     *
+     * @param platformId a {@link java.lang.String} object.
+     * @param ex a {@link java.lang.Throwable} object.
      */
     public PlatformInitializeException(String platformId, Throwable ex){
         super("Pi4J platform [" + platformId + "] failed to initialize(); " + ex.getMessage(), ex);

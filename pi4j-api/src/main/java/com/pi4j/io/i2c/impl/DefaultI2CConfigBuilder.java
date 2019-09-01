@@ -31,6 +31,12 @@ import com.pi4j.config.impl.ConfigBuilderBase;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CConfigBuilder;
 
+/**
+ * <p>DefaultI2CConfigBuilder class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultI2CConfigBuilder
         extends ConfigBuilderBase<I2CConfigBuilder, I2CConfig>
         implements I2CConfigBuilder {
@@ -42,22 +48,30 @@ public class DefaultI2CConfigBuilder
         super();
     }
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.i2c.I2CConfigBuilder} object.
+     */
     public static I2CConfigBuilder newInstance() {
         return new DefaultI2CConfigBuilder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public I2CConfig build() {
         I2CConfig config = new DefaultI2CConfig(properties);
         return config;
     }
 
+    /** {@inheritDoc} */
     @Override
     public I2CConfigBuilder bus(Integer bus){
         this.properties.put(I2CConfig.BUS_KEY, bus.toString());
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public I2CConfigBuilder device(Integer device){
         this.properties.put(I2CConfig.DEVICE_KEY, device.toString());

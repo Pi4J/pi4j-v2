@@ -30,8 +30,15 @@ package com.pi4j.annotation.processor.injector;
 import com.pi4j.annotation.processor.injector.impl.IOInjectorBase;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 
+/**
+ * <p>AnalogOutputInjector class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class AnalogOutputInjector extends IOInjectorBase<AnalogOutput> implements InjectorProcessor<AnalogOutput> {
 
+    /** {@inheritDoc} */
     @Override
     public Class<AnalogOutput> getTargetType() { return AnalogOutput.class; }
 }

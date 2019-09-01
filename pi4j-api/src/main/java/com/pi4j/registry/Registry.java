@@ -40,16 +40,66 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ * <p>Registry interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Registry extends Describable {
 
+    /**
+     * <p>exists.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param type a {@link java.lang.Class} object.
+     * @return a boolean.
+     */
     boolean exists(String id, Class<? extends IO> type);
+    /**
+     * <p>exists.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     boolean exists(String id);
 
+    /**
+     * <p>all.</p>
+     *
+     * @return a {@link java.util.Map} object.
+     */
     Map<String, ? extends IO> all();
 
+    /**
+     * <p>get.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws com.pi4j.io.exception.IOInvalidIDException if any.
+     * @throws com.pi4j.io.exception.IONotFoundException if any.
+     */
     <T extends IO> T get(String id) throws IOInvalidIDException, IONotFoundException;
+    /**
+     * <p>get.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param type a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws com.pi4j.io.exception.IOInvalidIDException if any.
+     * @throws com.pi4j.io.exception.IONotFoundException if any.
+     */
     <T extends IO> T get(String id, Class<T> type) throws IOInvalidIDException, IONotFoundException;
 
+    /**
+     * <p>allByType.</p>
+     *
+     * @param ioClass a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a {@link java.util.Map} object.
+     */
     default <T extends IO> Map<String, T> allByType(Class<T> ioClass){
         // create a map <io-id, io-instance> of I/O instances that extend of the given IO class
         var result = new ConcurrentHashMap<String, T>();
@@ -59,14 +109,35 @@ public interface Registry extends Describable {
         return Collections.unmodifiableMap(result);
     }
 
+    /**
+     * <p>allByIoType.</p>
+     *
+     * @param ioType a {@link com.pi4j.io.IOType} object.
+     * @param <P> a P object.
+     * @return a {@link java.util.Map} object.
+     */
     default <P extends Provider> Map<String, ? extends IO> allByIoType(IOType ioType){
         return allByType(ioType.getIOClass());
     }
 
+    /**
+     * <p>allByProvider.</p>
+     *
+     * @param providerClass a {@link java.lang.Class} object.
+     * @param <P> a P object.
+     * @return a {@link java.util.Map} object.
+     */
     default <P extends Provider> Map<String, ? extends IO> allByProvider(Class<P> providerClass){
         return allByIoType(IOType.getByProviderClass(providerClass));
     }
 
+    /**
+     * <p>allByProvider.</p>
+     *
+     * @param providerId a {@link java.lang.String} object.
+     * @param <P> a P object.
+     * @return a {@link java.util.Map} object.
+     */
     default <P extends Provider> Map<String, ? extends IO> allByProvider(String providerId){
 
         // create a map <io-id, io-instance> of providers that extend of the given io class
@@ -77,6 +148,15 @@ public interface Registry extends Describable {
         return Collections.unmodifiableMap(result);
     }
 
+    /**
+     * <p>allByProvider.</p>
+     *
+     * @param providerId a {@link java.lang.String} object.
+     * @param ioClass a {@link java.lang.Class} object.
+     * @param <P> a P object.
+     * @param <T> a T object.
+     * @return a {@link java.util.Map} object.
+     */
     default <P extends Provider, T extends IO> Map<String, T> allByProvider(String providerId, Class<T> ioClass){
         // create a map <io-id, io-instance> of providers that extend of the given io class
         var result = new ConcurrentHashMap<String, T>();
@@ -88,6 +168,11 @@ public interface Registry extends Describable {
         return Collections.unmodifiableMap(result);
     }
 
+    /**
+     * <p>describe.</p>
+     *
+     * @return a {@link com.pi4j.common.Descriptor} object.
+     */
     default Descriptor describe() {
 
         Map<String, ? extends IO> instances = all();

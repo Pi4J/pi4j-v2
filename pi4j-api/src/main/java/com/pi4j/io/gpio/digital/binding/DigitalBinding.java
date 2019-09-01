@@ -31,6 +31,17 @@ import com.pi4j.io.IOBinding;
 import com.pi4j.io.gpio.digital.Digital;
 import com.pi4j.io.gpio.digital.DigitalChangeEvent;
 
+/**
+ * <p>DigitalBinding interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface DigitalBinding<DIGITAL_TYPE extends Digital> extends IOBinding {
+    /**
+     * <p>process.</p>
+     *
+     * @param event a {@link com.pi4j.io.gpio.digital.DigitalChangeEvent} object.
+     */
     void process(DigitalChangeEvent event);
 }

@@ -40,8 +40,24 @@ import com.pi4j.util.StringUtil;
 
 import java.lang.reflect.Field;
 
+/**
+ * <p>WithAnnotationProcessor class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class WithAnnotationProcessor {
 
+    /**
+     * <p>getPlatform.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @param field a {@link java.lang.reflect.Field} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws com.pi4j.platform.exception.PlatformNotFoundException if any.
+     * @throws com.pi4j.platform.exception.PlatformTypeException if any.
+     */
     public static <T extends Platform> T getPlatform(Context context, Field field) throws PlatformNotFoundException, PlatformTypeException {
         String platformId = null;
         Class<? extends Platform> platformClass = null;
@@ -94,6 +110,17 @@ public class WithAnnotationProcessor {
         throw new PlatformNotFoundException("ID=" + platformId + "; CLASS=" + platformClass);
     }
 
+    /**
+     * <p>getProvider.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @param platform a {@link com.pi4j.platform.Platform} object.
+     * @param field a {@link java.lang.reflect.Field} object.
+     * @param providerClass a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws com.pi4j.provider.exception.ProviderException if any.
+     */
     public static <T extends Provider> T getProvider(Context context, Platform platform, Field field, Class<T> providerClass) throws ProviderException {
         String id = null;
 

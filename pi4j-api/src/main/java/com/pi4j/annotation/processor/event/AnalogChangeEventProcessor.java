@@ -40,15 +40,23 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * <p>AnalogChangeEventProcessor class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class AnalogChangeEventProcessor implements OnEventProcessor {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /** {@inheritDoc} */
     @Override
     public Class getEventType() {
         return AnalogChangeEvent.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void process(Context context, Object instance, OnEvent annotation, Method method) throws Exception {
         // validate that the 'ID' (value) attribute is not empty on this field annotation

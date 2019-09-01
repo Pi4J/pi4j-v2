@@ -36,15 +36,28 @@ import com.pi4j.event.Event;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
+/**
+ * <p>OnEventProcessor interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface OnEventProcessor extends MethodProcessor<OnEvent> {
 
+    /**
+     * <p>getEventType.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
     Class<? extends Event> getEventType();
 
+    /** {@inheritDoc} */
     @Override
     default Class<OnEvent> annotationType() {
         return OnEvent.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     default boolean isEligible(Context context, Object instance, OnEvent annotation, Method method) throws Exception {
 

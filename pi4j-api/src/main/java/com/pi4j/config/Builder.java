@@ -29,6 +29,18 @@ package com.pi4j.config;
 
 import com.pi4j.exception.Pi4JException;
 
+/**
+ * <p>Builder interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Builder<BUILT_TYPE> {
+    /**
+     * <p>build.</p>
+     *
+     * @return a BUILT_TYPE object.
+     * @throws com.pi4j.exception.Pi4JException if any.
+     */
     BUILT_TYPE build() throws Pi4JException;
 }

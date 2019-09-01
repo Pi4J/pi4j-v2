@@ -29,10 +29,33 @@ package com.pi4j.io.gpio.digital;
 
 import com.pi4j.io.gpio.digital.impl.DefaultDigitalOutputConfigBuilder;
 
+/**
+ * <p>DigitalOutputConfigBuilder interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface DigitalOutputConfigBuilder extends DigitalConfigBuilder<DigitalOutputConfigBuilder, DigitalOutputConfig> {
+    /**
+     * <p>shutdown.</p>
+     *
+     * @param state a {@link com.pi4j.io.gpio.digital.DigitalState} object.
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder} object.
+     */
     DigitalOutputConfigBuilder shutdown(DigitalState state);
+    /**
+     * <p>initial.</p>
+     *
+     * @param state a {@link com.pi4j.io.gpio.digital.DigitalState} object.
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder} object.
+     */
     DigitalOutputConfigBuilder initial(DigitalState state);
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder} object.
+     */
     static DigitalOutputConfigBuilder newInstance()  {
         return DefaultDigitalOutputConfigBuilder.newInstance();
     }

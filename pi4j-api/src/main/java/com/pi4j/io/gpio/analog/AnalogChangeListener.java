@@ -28,6 +28,17 @@ package com.pi4j.io.gpio.analog;
  */
 
 
+/**
+ * <p>AnalogChangeListener interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface AnalogChangeListener extends AnalogListener {
+    /**
+     * <p>onChange.</p>
+     *
+     * @param event a {@link com.pi4j.io.gpio.analog.AnalogChangeEvent} object.
+     */
     void onChange(AnalogChangeEvent event);
 }

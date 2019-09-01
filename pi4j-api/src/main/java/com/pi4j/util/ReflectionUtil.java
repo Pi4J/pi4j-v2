@@ -31,13 +31,31 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * <p>ReflectionUtil class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class ReflectionUtil {
 
+    /**
+     * <p>getAllInterfaces.</p>
+     *
+     * @param target a {@link java.lang.Object} object.
+     * @return a {@link java.util.Collection} object.
+     */
     public static Collection<Class> getAllInterfaces(Object target){
         Set<Class> results = new HashSet<>();
         return getAllInterfaces(target.getClass());
     }
 
+    /**
+     * <p>getAllInterfaces.</p>
+     *
+     * @param targetClass a {@link java.lang.Class} object.
+     * @return a {@link java.util.Collection} object.
+     */
     public static Collection<Class> getAllInterfaces(Class targetClass){
         Set<Class> results = new HashSet<>();
 
@@ -61,11 +79,23 @@ public class ReflectionUtil {
         return results;
     }
 
+    /**
+     * <p>getAllClasses.</p>
+     *
+     * @param target a {@link java.lang.Object} object.
+     * @return a {@link java.util.Collection} object.
+     */
     public static Collection<Class> getAllClasses(Object target){
         Set<Class> results = new HashSet<>();
         return getAllClasses(target.getClass());
     }
 
+    /**
+     * <p>getAllClasses.</p>
+     *
+     * @param targetClass a {@link java.lang.Class} object.
+     * @return a {@link java.util.Collection} object.
+     */
     public static Collection<Class> getAllClasses(Class targetClass){
         Set<Class> results = new HashSet<>();
 

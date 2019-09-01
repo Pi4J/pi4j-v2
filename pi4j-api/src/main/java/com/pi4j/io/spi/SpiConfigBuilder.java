@@ -30,13 +30,42 @@ package com.pi4j.io.spi;
 import com.pi4j.config.AddressConfigBuilder;
 import com.pi4j.io.spi.impl.DefaultSpiConfigBuilder;
 
+/**
+ * <p>SpiConfigBuilder interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface SpiConfigBuilder extends AddressConfigBuilder<SpiConfigBuilder, SpiConfig> {
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
+     */
     static SpiConfigBuilder newInstance()  {
         return DefaultSpiConfigBuilder.newInstance();
     }
 
+    /**
+     * <p>baud.</p>
+     *
+     * @param rate a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
+     */
     SpiConfigBuilder baud(Integer rate);
 
+    /**
+     * <p>mode.</p>
+     *
+     * @param mode a {@link com.pi4j.io.spi.SpiMode} object.
+     * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
+     */
     SpiConfigBuilder mode(SpiMode mode);
+    /**
+     * <p>mode.</p>
+     *
+     * @param mode a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
+     */
     default SpiConfigBuilder mode(Integer mode){ return mode(SpiMode.getByNumber(mode)); }
 }

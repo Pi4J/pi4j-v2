@@ -38,22 +38,33 @@ import com.pi4j.exception.Pi4JException;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class AnnotationException extends Pi4JException {
 
     /**
      * Default Constructor
+     *
+     * @param message a {@link java.lang.String} object.
      */
     public AnnotationException(String message){
         super(message);
     }
 
+    /**
+     * <p>Constructor for AnnotationException.</p>
+     *
+     * @param message a {@link java.lang.String} object.
+     * @param ex a {@link java.lang.Throwable} object.
+     */
     public AnnotationException(String message, Throwable ex){
         super(message, ex);
     }
 
     /**
      * Default Constructor
+     *
+     * @param ex a {@link java.lang.Throwable} object.
      */
     public AnnotationException(Throwable ex){
         super(ex.getMessage(), ex);

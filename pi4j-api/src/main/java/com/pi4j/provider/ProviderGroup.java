@@ -34,6 +34,12 @@ import com.pi4j.provider.exception.ProviderException;
 
 import java.util.Map;
 
+/**
+ * <p>ProviderGroup class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class ProviderGroup<T extends Provider> implements Describable {
 
     private IOType type = null;
@@ -41,7 +47,9 @@ public class ProviderGroup<T extends Provider> implements Describable {
 
     /**
      * Default Constructor
-     * @param type
+     *
+     * @param type a {@link com.pi4j.io.IOType} object.
+     * @param providers a {@link com.pi4j.provider.Providers} object.
      */
     public ProviderGroup(Providers providers, IOType type){
         this.providers = providers;
@@ -51,14 +59,29 @@ public class ProviderGroup<T extends Provider> implements Describable {
         return providers.all(type);
     }
 
+    /**
+     * <p>get.</p>
+     *
+     * @param providerId a {@link java.lang.String} object.
+     * @return a T object.
+     * @throws com.pi4j.provider.exception.ProviderException if any.
+     */
     public T get(String providerId) throws ProviderException {
         return providers.get(providerId, type);
     }
 
+    /**
+     * <p>exists.</p>
+     *
+     * @param providerId a {@link java.lang.String} object.
+     * @return a boolean.
+     * @throws com.pi4j.provider.exception.ProviderException if any.
+     */
     public boolean exists(String providerId) throws ProviderException {
         return providers.exists(providerId, type);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Descriptor describe() {
         Descriptor descriptor = Descriptor.create()

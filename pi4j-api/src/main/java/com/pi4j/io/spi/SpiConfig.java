@@ -31,18 +31,51 @@ import com.pi4j.config.AddressConfig;
 import com.pi4j.io.IOConfig;
 import com.pi4j.io.i2c.I2CConfigBuilder;
 
+/**
+ * <p>SpiConfig interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig> {
+    /** Constant <code>BAUD_KEY="baud"</code> */
     String BAUD_KEY = "baud";
+    /** Constant <code>MODE_KEY="mode"</code> */
     String MODE_KEY = "mode";
 
+    /**
+     * <p>newBuilder.</p>
+     *
+     * @return a {@link com.pi4j.io.i2c.I2CConfigBuilder} object.
+     */
     static I2CConfigBuilder newBuilder()  {
         return I2CConfigBuilder.newInstance();
     }
 
+    /**
+     * <p>baud.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     Integer baud();
+    /**
+     * <p>getBaud.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     default Integer getBaud() { return baud(); }
 
+    /**
+     * <p>mode.</p>
+     *
+     * @return a {@link com.pi4j.io.spi.SpiMode} object.
+     */
     SpiMode mode();
+    /**
+     * <p>getMode.</p>
+     *
+     * @return a {@link com.pi4j.io.spi.SpiMode} object.
+     */
     default SpiMode getMode() {
         return mode();
     }

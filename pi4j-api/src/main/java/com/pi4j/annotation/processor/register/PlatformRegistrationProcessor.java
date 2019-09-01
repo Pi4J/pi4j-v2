@@ -35,10 +35,17 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
+/**
+ * <p>PlatformRegistrationProcessor class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PlatformRegistrationProcessor implements RegisterProcessor<Platform> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /** {@inheritDoc} */
     @Override
     public boolean isEligible(Context context, Object instance, Register annotation, Field field) throws Exception {
 
@@ -53,6 +60,7 @@ public class PlatformRegistrationProcessor implements RegisterProcessor<Platform
 //        return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Platform process(Context context, Object instance, Register annotation, Field field) throws Exception {
 

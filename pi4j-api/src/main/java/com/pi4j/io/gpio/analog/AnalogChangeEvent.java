@@ -28,6 +28,12 @@ package com.pi4j.io.gpio.analog;
  */
 
 
+/**
+ * <p>AnalogChangeEvent class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEvent {
 
     // internal event copy of the changed analog values and analog I/O source
@@ -37,7 +43,10 @@ public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEven
 
     /**
      * Default constructor
+     *
      * @param newValue the value changed for this event instance
+     * @param source a ANALOG_TYPE object.
+     * @param oldValue a {@link java.lang.Integer} object.
      */
     public AnalogChangeEvent(ANALOG_TYPE source, Integer newValue, Integer oldValue){
         this.value = newValue; // cache a copy of the event instance new value
@@ -47,7 +56,8 @@ public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEven
 
     /**
      * The old/prior value change for this event instance
-     * @return
+     *
+     * @return a {@link java.lang.Integer} object.
      */
     public Integer oldValue() {
         return this.oldValue;
@@ -55,17 +65,20 @@ public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEven
 
     /**
      * The current/new value change for this event instance
-     * @return
+     *
+     * @return a {@link java.lang.Integer} object.
      */
     public Integer value() {
         return this.value;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ANALOG_TYPE source() {
         return this.source;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString(){
 

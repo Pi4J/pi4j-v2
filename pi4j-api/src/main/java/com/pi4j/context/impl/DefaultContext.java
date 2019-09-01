@@ -45,6 +45,12 @@ import com.pi4j.runtime.impl.DefaultRuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <p>DefaultContext class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultContext implements Context {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -55,6 +61,13 @@ public class DefaultContext implements Context {
     private Platforms platforms = null;
     private Registry registry = null;
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param config a {@link com.pi4j.context.ContextConfig} object.
+     * @return a {@link com.pi4j.context.Context} object.
+     * @throws com.pi4j.exception.Pi4JException if any.
+     */
     public static Context newInstance(ContextConfig config) throws Pi4JException {
         return new DefaultContext(config);
     }
@@ -92,29 +105,36 @@ public class DefaultContext implements Context {
         logger.debug("Pi4J runtime context successfully created & initialized.'");
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextConfig config() { return this.config; }
 
+    /** {@inheritDoc} */
     @Override
     public ContextProperties properties() {
         return this.properties;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Providers providers() { return providers; }
 
+    /** {@inheritDoc} */
     @Override
     public Registry registry() { return this.registry; }
 
+    /** {@inheritDoc} */
     @Override
     public Platforms platforms() { return this.platforms; }
 
+    /** {@inheritDoc} */
     @Override
     public Context inject(Object... objects) throws AnnotationException {
         this.runtime.inject(objects);
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Context shutdown() throws ShutdownException {
         // shutdown the runtime

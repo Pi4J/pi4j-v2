@@ -33,6 +33,12 @@ import com.pi4j.util.StringUtil;
 
 import java.util.Map;
 
+/**
+ * <p>DefaultAnalogOutputConfig class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultAnalogOutputConfig
         extends AnalogConfigBase<AnalogOutputConfig>
         implements AnalogOutputConfig {
@@ -51,7 +57,8 @@ public class DefaultAnalogOutputConfig
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
      */
     protected DefaultAnalogOutputConfig(Map<String,String> properties){
         super(properties);
@@ -95,32 +102,38 @@ public class DefaultAnalogOutputConfig
         if(this.stepValue == null) this.stepValue = 1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer shutdownValue(){
         return this.shutdownValue;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DefaultAnalogOutputConfig shutdownValue(Integer value){
         this.shutdownValue = value;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer stepValue() {
         return this.stepValue;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutputConfig stepValue(Integer value) {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer initialValue() {
         return this.initialValue;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogRange range() {
         return this.range;

@@ -30,27 +30,59 @@ package com.pi4j.io.serial;
 import com.pi4j.config.impl.DeviceConfigBase;
 import com.pi4j.io.IOConfig;
 
+/**
+ * <p>DefaultSerialConfig class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultSerialConfig extends DeviceConfigBase<DefaultSerialConfig> implements IOConfig<DefaultSerialConfig> {
 
     int baud = Serial.DEFAULT_BAUD;
 
+    /**
+     * <p>Constructor for DefaultSerialConfig.</p>
+     */
     public DefaultSerialConfig(){
         //super(Serial.DEFAULT_DEVICE);
         super();
     }
 
+    /**
+     * <p>Constructor for DefaultSerialConfig.</p>
+     *
+     * @param device a {@link java.lang.String} object.
+     */
     public DefaultSerialConfig(String device) {
         //super(device);
     }
 
+    /**
+     * <p>Constructor for DefaultSerialConfig.</p>
+     *
+     * @param device a {@link java.lang.String} object.
+     * @param baud a int.
+     */
     public DefaultSerialConfig(String device, int baud) {
         //super(device);
         this.baud = baud;
     }
 
+    /**
+     * <p>baud.</p>
+     *
+     * @return a int.
+     */
     public int baud() { return this.baud; };
+    /**
+     * <p>baud.</p>
+     *
+     * @param baud a int.
+     * @return a {@link com.pi4j.io.serial.DefaultSerialConfig} object.
+     */
     public DefaultSerialConfig baud(int baud) { this.baud = baud; return this; }
 
+    /** {@inheritDoc} */
     @Override
     public String toString(){
         return String.format("[device=%s; baud=%d]", device(), baud());

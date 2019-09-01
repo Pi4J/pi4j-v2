@@ -39,6 +39,7 @@ import com.pi4j.platform.Platform;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class PlatformNotFoundException extends PlatformException {
 
@@ -51,6 +52,8 @@ public class PlatformNotFoundException extends PlatformException {
 
     /**
      * Alternate Constructor
+     *
+     * @param platformId a {@link java.lang.String} object.
      */
     public PlatformNotFoundException(String platformId){
         super("Pi4J platform [" + platformId + "] could not be found.  Please include the 'platform' JAR in the classpath for your io.");
@@ -58,6 +61,8 @@ public class PlatformNotFoundException extends PlatformException {
 
     /**
      * Alternate Constructor
+     *
+     * @param platformClass a {@link java.lang.Class} object.
      */
     public PlatformNotFoundException(Class<? extends Platform> platformClass){
         super("Pi4J platform for [" + platformClass + "] could not be found.  Please include a 'platform' JAR in the classpath for this class type.");

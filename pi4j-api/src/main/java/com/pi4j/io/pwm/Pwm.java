@@ -32,8 +32,19 @@ import com.pi4j.io.IO;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * <p>Pwm interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
 
+    /**
+     * <p>newConfigBuilder.</p>
+     *
+     * @return a {@link com.pi4j.io.pwm.PwmConfigBuilder} object.
+     */
     static PwmConfigBuilder newConfigBuilder(){
         return PwmConfigBuilder.newInstance();
     }
@@ -76,20 +87,21 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      * Turn the PWM signal [ON] using the configured frequency and duty-cycle.
      *
      * @return returns this PWM instance
-     * @throws IOException
+     * @throws java.io.IOException
      */
     Pwm on() throws IOException;
 
     /**
      * Turn the PWM signal [OFF] by applying a zero frequency and zero duty-cycle to the PWM pin.
      *
-     * @return
-     * @throws IOException
+     * @throws java.io.IOException
+     * @return a {@link com.pi4j.io.pwm.Pwm} object.
      */
     Pwm off() throws IOException;
 
     /**
      * Get the PWM type of this PWM instance. (Hardware/Software)
+     *
      * @return the PWM type of this PWM instance.
      */
     default PwmType pwmType(){
@@ -98,6 +110,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
 
     /**
      * Get the PWM type of this PWM instance. (Hardware/Software)
+     *
      * @return the PWM type of this PWM instance.
      */
     default PwmType getPwmType(){
@@ -116,7 +129,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *                   values. (Values above 50% mean the signal will remain HIGH more
      *                   time than LOW.)
      * @return returns this PWM instance
-     * @throws IOException
+     * @throws java.io.IOException
      */
     default Pwm on(Number dutyCycle) throws IOException{
         if(dutyCycle.floatValue() > 0) {
@@ -148,7 +161,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *                   properties to determine what frequency the PWM generator actually
      *                   applied.
      * @return returns this PWM instance
-     * @throws IOException
+     * @throws java.io.IOException
      */
     default Pwm on(Number dutyCycle, int frequency) throws IOException{
         if(dutyCycle.floatValue() > 0 && frequency  > 0) {
@@ -172,7 +185,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *  the time period the signal is LOW and the other half is HIGH.
      *
      * @return duty-cycle value expressed as a percentage (rage: 0-100)
-     * @throws IOException
+     * @throws java.io.IOException
      */
     float getDutyCycle() throws IOException;
 
@@ -187,7 +200,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *  the time period the signal is LOW and the other half is HIGH.
      *
      * @return duty-cycle value expressed as a percentage (rage: 0-100)
-     * @throws IOException
+     * @throws java.io.IOException
      */
     default float dutyCycle() throws IOException { return getDutyCycle();}
 
@@ -205,7 +218,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *  the time period the signal is LOW and the other half is HIGH.
      *
      * @param dutyCycle duty-cycle value expressed as a percentage (rage: 0-100)
-     * @throws IOException
+     * @throws java.io.IOException
      */
     void setDutyCycle(Number dutyCycle) throws IOException;
 
@@ -224,7 +237,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @param dutyCycle duty-cycle value expressed as a percentage (rage: 0-100)
      * @return returns this PWM instance
-     * @throws IOException
+     * @throws java.io.IOException
      */
     default Pwm dutyCycle(Number dutyCycle) throws IOException { setDutyCycle(dutyCycle); return this; }
 
@@ -241,7 +254,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @return the configured frequency (Hz) that is used when turning the
      *         PWM signal to the 'ON' state.
-     * @throws IOException
+     * @throws java.io.IOException
      */
     int getFrequency() throws IOException;
 
@@ -258,7 +271,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @return the configured frequency (Hz) that is used when turning the
      *         PWM signal to the 'ON' state.
-     * @throws IOException
+     * @throws java.io.IOException
      */
     default int frequency() throws IOException { return getFrequency();}
 
@@ -273,7 +286,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @return the actual frequency (Hz) applied by the PWM generator when the
      *         PWM signal is set to the 'ON' state.
-     * @throws IOException
+     * @throws java.io.IOException
      */
     int getActualFrequency() throws IOException;
 
@@ -288,7 +301,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @return the actual frequency (Hz) applied by the PWM generator when the
      *         PWM signal is set to the 'ON' state.
-     * @throws IOException
+     * @throws java.io.IOException
      */
     default int actualFrequency() throws IOException { return getActualFrequency();}
 
@@ -302,7 +315,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *  PWM signal.
      *
      * @param frequency the number of cycles per second (Hertz)
-     * @throws IOException
+     * @throws java.io.IOException
      */
     void setFrequency(int frequency) throws IOException;
 
@@ -317,18 +330,20 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @param frequency the number of cycles per second (Hertz)
      * @return returns this PWM instance
-     * @throws IOException
+     * @throws java.io.IOException
      */
     default Pwm frequency(int frequency) throws IOException { setFrequency(frequency); return this; }
 
     /**
      * Get all the PwmPreset instances assigned to this PWM instance.
+     *
      * @return a map of PwmPresets indexed/cataloged by preset name.
      */
     Map<String, PwmPreset> getPresets();
 
     /**
      * Get all the PwmPreset assigned to this PWM instance.
+     *
      * @return a map of PwmPreset indexed/cataloged by preset name.
      */
     default Map<String, PwmPreset> presets(){
@@ -337,6 +352,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
 
     /**
      * Get a single PwmPreset from this PWM instance by the preset's name.
+     *
      * @param name preset name string
      * @return a single PwmPreset instance
      */
@@ -344,6 +360,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
 
     /**
      * Get a single PwmPreset from this PWM instance by the preset's name.
+     *
      * @param name preset name string
      * @return a single PwmPreset instance
      */
@@ -376,7 +393,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @param name preset name string
      * @return the deleted PWM Preset instance
-     * @throws IOException
+     * @throws java.io.IOException
      */
     Pwm applyPreset(String name) throws IOException;
 }

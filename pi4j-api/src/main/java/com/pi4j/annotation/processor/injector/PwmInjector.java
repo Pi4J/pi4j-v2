@@ -30,8 +30,15 @@ package com.pi4j.annotation.processor.injector;
 import com.pi4j.annotation.processor.injector.impl.IOInjectorBase;
 import com.pi4j.io.pwm.Pwm;
 
+/**
+ * <p>PwmInjector class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PwmInjector extends IOInjectorBase<Pwm> implements InjectorProcessor<Pwm> {
 
+    /** {@inheritDoc} */
     @Override
     public Class<Pwm> getTargetType() { return Pwm.class; }
 }

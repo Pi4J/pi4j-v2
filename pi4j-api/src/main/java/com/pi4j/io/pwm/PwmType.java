@@ -34,6 +34,7 @@ import java.util.EnumSet;
  *
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public enum PwmType {
     SOFTWARE(0, "software"),
@@ -47,23 +48,45 @@ public enum PwmType {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>value</code>.</p>
+     *
+     * @return a int.
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return name.toUpperCase();
     }
 
+    /**
+     * <p>all.</p>
+     *
+     * @return a {@link java.util.EnumSet} object.
+     */
     public static EnumSet<PwmType> all() {
         return EnumSet.allOf(PwmType.class);
     }
 
+    /**
+     * <p>parse.</p>
+     *
+     * @param pull a {@link java.lang.String} object.
+     * @return a {@link com.pi4j.io.pwm.PwmType} object.
+     */
     public static PwmType parse(String pull) {
         if(pull.equalsIgnoreCase("0")) return PwmType.SOFTWARE;
         if(pull.equalsIgnoreCase("1")) return PwmType.HARDWARE;

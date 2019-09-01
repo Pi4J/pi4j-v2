@@ -31,8 +31,19 @@ import com.pi4j.common.Descriptor;
 import com.pi4j.common.Identity;
 import com.pi4j.common.Lifecycle;
 
+/**
+ * <p>Extension interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Extension<T> extends Identity, Lifecycle<T> {
 
+    /**
+     * <p>describe.</p>
+     *
+     * @return a {@link com.pi4j.common.Descriptor} object.
+     */
     default Descriptor describe() {
         return Descriptor.create()
                 .id(this.id())

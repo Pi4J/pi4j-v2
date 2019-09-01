@@ -26,18 +26,38 @@ package com.pi4j.io.gpio.analog;
  * limitations under the License.
  * #L%
  */
+/**
+ * <p>Abstract AnalogInputProviderBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class AnalogInputProviderBase
         extends AnalogProviderBase<AnalogInputProvider, AnalogInput, AnalogInputConfig>
         implements AnalogInputProvider {
 
+    /**
+     * <p>Constructor for AnalogInputProviderBase.</p>
+     */
     public AnalogInputProviderBase(){
     }
 
+    /**
+     * <p>Constructor for AnalogInputProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public AnalogInputProviderBase(String id){
         this();
         this.id = id;
     }
 
+    /**
+     * <p>Constructor for AnalogInputProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public AnalogInputProviderBase(String id, String name){
         this(id);
         this.name = name;

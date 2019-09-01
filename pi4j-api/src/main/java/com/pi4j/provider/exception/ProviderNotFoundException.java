@@ -40,6 +40,7 @@ import com.pi4j.provider.Provider;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class ProviderNotFoundException extends ProviderException {
 
@@ -52,6 +53,8 @@ public class ProviderNotFoundException extends ProviderException {
 
     /**
      * Alternate Constructor
+     *
+     * @param providerId a {@link java.lang.String} object.
      */
     public ProviderNotFoundException(String providerId){
         super("Pi4J provider [" + providerId + "] could not be found.  Please include this 'provider' JAR in the classpath.");
@@ -59,6 +62,8 @@ public class ProviderNotFoundException extends ProviderException {
 
     /**
      * Alternate Constructor
+     *
+     * @param ioType a {@link com.pi4j.io.IOType} object.
      */
     public ProviderNotFoundException(IOType ioType){
         super("Pi4J provider IO type [" + ioType + "] could not be found.  Please include this 'provider' JAR in the classpath for this provider type.");
@@ -66,6 +71,8 @@ public class ProviderNotFoundException extends ProviderException {
 
     /**
      * Alternate Constructor
+     *
+     * @param providerClass a {@link java.lang.Class} object.
      */
     public ProviderNotFoundException(Class<? extends Provider> providerClass){
         super("Pi4J provider class [" + providerClass + "] could not be found.  Please include this 'provider' JAR in the classpath for this provider class.");

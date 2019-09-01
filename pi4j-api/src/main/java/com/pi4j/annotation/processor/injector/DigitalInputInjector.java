@@ -30,8 +30,15 @@ package com.pi4j.annotation.processor.injector;
 import com.pi4j.annotation.processor.injector.impl.IOInjectorBase;
 import com.pi4j.io.gpio.digital.DigitalInput;
 
+/**
+ * <p>DigitalInputInjector class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DigitalInputInjector extends IOInjectorBase<DigitalInput> implements InjectorProcessor<DigitalInput> {
 
+    /** {@inheritDoc} */
     @Override
     public Class<DigitalInput> getTargetType() { return DigitalInput.class; }
 }

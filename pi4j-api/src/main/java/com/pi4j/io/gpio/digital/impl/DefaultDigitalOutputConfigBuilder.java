@@ -32,6 +32,12 @@ import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalState;
 
+/**
+ * <p>DefaultDigitalOutputConfigBuilder class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultDigitalOutputConfigBuilder
         extends AddressConfigBuilderBase<DigitalOutputConfigBuilder, DigitalOutputConfig>
         implements DigitalOutputConfigBuilder {
@@ -43,22 +49,30 @@ public class DefaultDigitalOutputConfigBuilder
         super();
     }
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder} object.
+     */
     public static DigitalOutputConfigBuilder newInstance() {
         return new DefaultDigitalOutputConfigBuilder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutputConfigBuilder shutdown(DigitalState state) {
         this.properties.put(DigitalOutputConfig.SHUTDOWN_STATE_KEY, state.toString());
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutputConfigBuilder initial(DigitalState state) {
         this.properties.put(DigitalOutputConfig.INITIAL_STATE_KEY, state.toString());
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutputConfig build() {
         DigitalOutputConfig config = new DefaultDigitalOutputConfig(properties);

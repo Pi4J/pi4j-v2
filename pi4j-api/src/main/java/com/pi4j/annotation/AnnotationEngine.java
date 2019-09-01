@@ -29,6 +29,18 @@ package com.pi4j.annotation;
 
 import com.pi4j.annotation.exception.AnnotationException;
 
+/**
+ * <p>AnnotationEngine interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface AnnotationEngine {
+    /**
+     * <p>inject.</p>
+     *
+     * @param objects a {@link java.lang.Object} object.
+     * @throws com.pi4j.annotation.exception.AnnotationException if any.
+     */
     void inject(Object... objects) throws AnnotationException;
 }

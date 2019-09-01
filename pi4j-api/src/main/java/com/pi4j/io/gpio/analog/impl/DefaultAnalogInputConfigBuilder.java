@@ -30,6 +30,12 @@ package com.pi4j.io.gpio.analog.impl;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.io.gpio.analog.AnalogInputConfigBuilder;
 
+/**
+ * <p>DefaultAnalogInputConfigBuilder class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultAnalogInputConfigBuilder
         extends AnalogConfigBuilderBase<AnalogInputConfigBuilder, AnalogInputConfig>
         implements AnalogInputConfigBuilder {
@@ -41,10 +47,16 @@ public class DefaultAnalogInputConfigBuilder
         super();
     }
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogInputConfigBuilder} object.
+     */
     public static AnalogInputConfigBuilder newInstance() {
         return new DefaultAnalogInputConfigBuilder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogInputConfig build() {
         AnalogInputConfig config = new DefaultAnalogInputConfig(properties);

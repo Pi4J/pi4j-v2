@@ -27,9 +27,26 @@ package com.pi4j.config;
  * #L%
  */
 
+/**
+ * <p>AddressConfig interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface AddressConfig<CONFIG_TYPE extends Config> extends Config<CONFIG_TYPE> {
+    /** Constant <code>ADDRESS_KEY="address"</code> */
     String ADDRESS_KEY = "address";
+    /**
+     * <p>address.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     Integer address();
+    /**
+     * <p>getAddress.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     default Integer getAddress(){
         return this.address();
     }

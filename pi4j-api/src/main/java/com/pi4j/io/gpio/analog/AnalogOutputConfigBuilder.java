@@ -29,11 +29,40 @@ package com.pi4j.io.gpio.analog;
 
 import com.pi4j.io.gpio.analog.impl.DefaultAnalogOutputConfigBuilder;
 
+/**
+ * <p>AnalogOutputConfigBuilder interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface AnalogOutputConfigBuilder extends AnalogConfigBuilder<AnalogOutputConfigBuilder, AnalogOutputConfig> {
+    /**
+     * <p>shutdown.</p>
+     *
+     * @param value a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder} object.
+     */
     AnalogOutputConfigBuilder shutdown(Integer value);
+    /**
+     * <p>initial.</p>
+     *
+     * @param value a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder} object.
+     */
     AnalogOutputConfigBuilder initial(Integer value);
+    /**
+     * <p>step.</p>
+     *
+     * @param value a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder} object.
+     */
     AnalogOutputConfigBuilder step(Integer value);
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder} object.
+     */
     static AnalogOutputConfigBuilder newInstance()  {
         return DefaultAnalogOutputConfigBuilder.newInstance();
     }

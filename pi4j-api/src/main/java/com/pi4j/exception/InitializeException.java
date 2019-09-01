@@ -36,11 +36,14 @@ package com.pi4j.exception;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class InitializeException extends Pi4JException {
 
     /**
      * Default Constructor
+     *
+     * @param message a {@link java.lang.String} object.
      */
     public InitializeException(String message){
         super(message);
@@ -48,6 +51,8 @@ public class InitializeException extends Pi4JException {
 
     /**
      * Default Constructor
+     *
+     * @param ex a {@link java.lang.Throwable} object.
      */
     public InitializeException(Throwable ex){
         super(ex.getMessage(), ex);

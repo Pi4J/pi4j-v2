@@ -36,6 +36,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * <p>Abstract AnalogBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class AnalogBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>,
         PROVIDER_TYPE extends AnalogProvider>
@@ -48,28 +54,38 @@ public abstract class AnalogBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_
     // internal bindings collection
     protected List<AnalogBinding> bindings = Collections.synchronizedList(new ArrayList<>());
 
+    /**
+     * <p>Constructor for AnalogBase.</p>
+     *
+     * @param provider a PROVIDER_TYPE object.
+     * @param config a CONFIG_TYPE object.
+     */
     public AnalogBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
         super(provider, config);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ANALOG_TYPE addListener(AnalogChangeListener... listener) {
         listeners.addAll(Arrays.asList(listener));
         return (ANALOG_TYPE)this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ANALOG_TYPE removeListener(AnalogChangeListener... listener) {
         listeners.removeAll(Arrays.asList(listener));
         return (ANALOG_TYPE)this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ANALOG_TYPE bind(AnalogBinding... binding) {
         bindings.addAll(Arrays.asList(binding));
         return (ANALOG_TYPE)this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ANALOG_TYPE unbind(AnalogBinding ... binding) {
         bindings.removeAll(Arrays.asList(binding));
@@ -78,6 +94,7 @@ public abstract class AnalogBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_
 
     /**
      * Dispatch AnalogInputEvent on analog input changes
+     *
      * @param event AnalogInputEvent
      */
     protected void dispatch(AnalogChangeEvent event){
@@ -89,6 +106,7 @@ public abstract class AnalogBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public ANALOG_TYPE shutdown(Context context){
         // remove all listeners

@@ -36,8 +36,15 @@ import com.pi4j.util.StringUtil;
 
 import java.lang.reflect.Field;
 
+/**
+ * <p>Abstract IOInjectorBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class IOInjectorBase<T extends IO> implements InjectorProcessor<T> {
 
+    /** {@inheritDoc} */
     @Override
     public T process(Context context, Object instance, Inject annotation, Field field) throws Exception {
 

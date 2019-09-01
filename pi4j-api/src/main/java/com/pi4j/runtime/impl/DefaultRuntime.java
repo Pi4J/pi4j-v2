@@ -52,6 +52,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+/**
+ * <p>DefaultRuntime class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultRuntime implements Runtime {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -64,6 +70,13 @@ public class DefaultRuntime implements Runtime {
     private List<Plugin> plugins = new ArrayList<>();
     private boolean isShutdown = false;
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @return a {@link com.pi4j.runtime.Runtime} object.
+     * @throws com.pi4j.exception.Pi4JException if any.
+     */
     public static Runtime newInstance(Context context) throws Pi4JException {
         return new DefaultRuntime(context);
     }
@@ -94,33 +107,40 @@ public class DefaultRuntime implements Runtime {
         }, "pi4j-shutdown"));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Context context() { return this.context; }
 
+    /** {@inheritDoc} */
     @Override
     public RuntimeRegistry registry() { return this.registry; }
 
+    /** {@inheritDoc} */
     @Override
     public RuntimeProviders providers() {
         return this.providers;
     }
 
+    /** {@inheritDoc} */
     @Override
     public RuntimePlatforms platforms() {
         return this.platforms;
     }
 
+    /** {@inheritDoc} */
     @Override
     public RuntimeProperties properties() {
         return this.properties;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Runtime inject(Object... objects) throws AnnotationException {
         annotationEngine.inject(objects);
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Runtime shutdown() throws ShutdownException {
         if(!isShutdown) { // re-entrant calls should not perform shutdown again
@@ -156,6 +176,7 @@ public class DefaultRuntime implements Runtime {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Runtime initialize() throws InitializeException {
         logger.trace("invoked 'initialize();'");

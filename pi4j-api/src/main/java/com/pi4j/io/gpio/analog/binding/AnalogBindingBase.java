@@ -36,6 +36,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * <p>Abstract AnalogBindingBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class AnalogBindingBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>,
         PROVIDER_TYPE extends AnalogProvider> {
@@ -44,6 +50,7 @@ public abstract class AnalogBindingBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, 
 
     /**
      * Default Constructor
+     *
      * @param output Variable argument list of analog outputs
      */
     public AnalogBindingBase(Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>... output){

@@ -34,6 +34,12 @@ import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
 
 import java.util.Map;
 
+/**
+ * <p>Abstract AddressConfigBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class AddressConfigBase<CONFIG_TYPE extends Config>
         extends ConfigBase<CONFIG_TYPE>
         implements AddressConfig<CONFIG_TYPE> {
@@ -48,6 +54,11 @@ public abstract class AddressConfigBase<CONFIG_TYPE extends Config>
         super();
     }
 
+    /**
+     * <p>Constructor for AddressConfigBase.</p>
+     *
+     * @param address a {@link java.lang.Number} object.
+     */
     protected AddressConfigBase(Number address){
         super();
         this.address = address.intValue();
@@ -55,7 +66,8 @@ public abstract class AddressConfigBase<CONFIG_TYPE extends Config>
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
      */
     protected AddressConfigBase(Map<String,String> properties){
         super(properties);
@@ -68,6 +80,11 @@ public abstract class AddressConfigBase<CONFIG_TYPE extends Config>
         }
     }
 
+    /**
+     * <p>address.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer address() {
         return this.address;
     };

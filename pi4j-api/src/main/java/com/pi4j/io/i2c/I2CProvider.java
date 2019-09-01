@@ -29,12 +29,35 @@ package com.pi4j.io.i2c;
 
 import com.pi4j.provider.Provider;
 
+/**
+ * <p>I2CProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
 
+    /**
+     * <p>create.</p>
+     *
+     * @param builder a {@link com.pi4j.io.i2c.I2CConfigBuilder} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws java.lang.Exception if any.
+     */
     default <T extends I2C> T create(I2CConfigBuilder builder) throws Exception {
         return (T)create(builder.build());
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param bus a {@link java.lang.Integer} object.
+     * @param device a {@link java.lang.Integer} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws java.lang.Exception if any.
+     */
     default <T extends I2C> T create(Integer bus, Integer device) throws Exception {
         var config = I2C.newConfigBuilder()
                 .bus(bus)
@@ -43,6 +66,16 @@ public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
         return (T)create(config);
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param bus a {@link java.lang.Integer} object.
+     * @param device a {@link java.lang.Integer} object.
+     * @param id a {@link java.lang.String} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws java.lang.Exception if any.
+     */
     default <T extends I2C> T create(Integer bus, Integer device, String id) throws Exception {
         var config = I2C.newConfigBuilder()
                 .bus(bus)
@@ -52,6 +85,17 @@ public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
         return (T)create(config);
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param bus a {@link java.lang.Integer} object.
+     * @param device a {@link java.lang.Integer} object.
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws java.lang.Exception if any.
+     */
     default <T extends I2C> T create(Integer bus, Integer device, String id, String name) throws Exception {
         var config = I2C.newConfigBuilder()
                 .bus(bus)
@@ -62,6 +106,18 @@ public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
         return (T)create(config);
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param bus a {@link java.lang.Integer} object.
+     * @param device a {@link java.lang.Integer} object.
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param description a {@link java.lang.String} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws java.lang.Exception if any.
+     */
     default <T extends I2C> T create(Integer bus, Integer device, String id, String name, String description) throws Exception {
         var config = I2C.newConfigBuilder()
                 .bus(bus)

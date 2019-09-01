@@ -31,7 +31,27 @@ import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 
+/**
+ * <p>Lifecycle interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Lifecycle<T> {
+    /**
+     * <p>initialize.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @return a T object.
+     * @throws com.pi4j.exception.InitializeException if any.
+     */
     T initialize(Context context) throws InitializeException;
+    /**
+     * <p>shutdown.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @return a T object.
+     * @throws com.pi4j.exception.ShutdownException if any.
+     */
     T shutdown(Context context) throws ShutdownException;
 }

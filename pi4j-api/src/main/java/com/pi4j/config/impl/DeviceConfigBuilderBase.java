@@ -31,6 +31,12 @@ import com.pi4j.config.ConfigBuilder;
 import com.pi4j.config.DeviceConfig;
 import com.pi4j.config.DeviceConfigBuilder;
 
+/**
+ * <p>Abstract DeviceConfigBuilderBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class DeviceConfigBuilderBase<BUILDER_TYPE extends ConfigBuilder, CONFIG_TYPE extends DeviceConfig>
         extends ConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
         implements DeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
@@ -42,6 +48,7 @@ public abstract class DeviceConfigBuilderBase<BUILDER_TYPE extends ConfigBuilder
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public BUILDER_TYPE device(String device){
         this.properties.put(DeviceConfig.DEVICE_KEY, device);

@@ -27,6 +27,12 @@ package com.pi4j.io.serial;
  * #L%
  */
 
+/**
+ * <p>StopBits class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public enum StopBits {
 
     _1(1),
@@ -38,13 +44,29 @@ public enum StopBits {
         this.stopBits = stopBits;
     }
 
+    /**
+     * <p>getValue.</p>
+     *
+     * @return a int.
+     */
     public int getValue(){
         return this.stopBits;
     }
+    /**
+     * <p>value.</p>
+     *
+     * @return a int.
+     */
     public int value(){
         return this.stopBits;
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @param stop_bits a int.
+     * @return a {@link com.pi4j.io.serial.StopBits} object.
+     */
     public static StopBits getInstance(int stop_bits){
         for(StopBits sb : StopBits.values()){
             if(sb.getValue() == stop_bits){
@@ -54,6 +76,12 @@ public enum StopBits {
         return null;
     }
 
+    /**
+     * <p>parse.</p>
+     *
+     * @param parity a {@link java.lang.String} object.
+     * @return a {@link com.pi4j.io.serial.StopBits} object.
+     */
     public static StopBits parse(String parity) {
         if(parity.equalsIgnoreCase("1")) return StopBits._1;
         if(parity.equalsIgnoreCase("2")) return StopBits._2;

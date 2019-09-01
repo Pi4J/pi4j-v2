@@ -30,6 +30,12 @@ package com.pi4j.io.serial.impl;
 import com.pi4j.config.impl.DeviceConfigBuilderBase;
 import com.pi4j.io.serial.*;
 
+/**
+ * <p>DefaultSerialConfigBuilder class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultSerialConfigBuilder
         extends DeviceConfigBuilderBase<SerialConfigBuilder, SerialConfig>
         implements SerialConfigBuilder {
@@ -41,40 +47,51 @@ public class DefaultSerialConfigBuilder
         super();
     }
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.serial.SerialConfigBuilder} object.
+     */
     public static SerialConfigBuilder newInstance() {
         return new DefaultSerialConfigBuilder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public SerialConfigBuilder baud(Integer rate) {
         this.properties.put(SerialConfig.BAUD_KEY, rate.toString());
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SerialConfigBuilder dataBits(DataBits bits) {
         this.properties.put(SerialConfig.DATA_BITS_KEY, Integer.toString(bits.value()));
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SerialConfigBuilder parity(Parity parity) {
         this.properties.put(SerialConfig.PARITY_KEY, parity.name());
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SerialConfigBuilder stopBits(StopBits bits) {
         this.properties.put(SerialConfig.STOP_BITS_KEY, Integer.toString(bits.value()));
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SerialConfigBuilder flowControl(FlowControl control) {
         this.properties.put(SerialConfig.FLOW_CONTROL_KEY, control.name());
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SerialConfig build() {
         SerialConfig config = new DefaultSerialConfig(this.properties);

@@ -31,21 +31,67 @@ package com.pi4j.io.gpio.analog;
 import com.pi4j.io.gpio.Gpio;
 import com.pi4j.io.gpio.analog.binding.AnalogBinding;
 
+/**
+ * <p>Analog interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Analog<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>,
         PROVIDER_TYPE extends AnalogProvider>
         extends Gpio<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
 
+    /**
+     * <p>value.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     Integer value();
 
+    /**
+     * <p>addListener.</p>
+     *
+     * @param listener a {@link com.pi4j.io.gpio.analog.AnalogChangeListener} object.
+     * @return a ANALOG_TYPE object.
+     */
     ANALOG_TYPE addListener(AnalogChangeListener... listener);
+    /**
+     * <p>removeListener.</p>
+     *
+     * @param listener a {@link com.pi4j.io.gpio.analog.AnalogChangeListener} object.
+     * @return a ANALOG_TYPE object.
+     */
     ANALOG_TYPE removeListener(AnalogChangeListener... listener);
 
+    /**
+     * <p>bind.</p>
+     *
+     * @param binding a {@link com.pi4j.io.gpio.analog.binding.AnalogBinding} object.
+     * @return a ANALOG_TYPE object.
+     */
     ANALOG_TYPE bind(AnalogBinding... binding);
+    /**
+     * <p>unbind.</p>
+     *
+     * @param binding a {@link com.pi4j.io.gpio.analog.binding.AnalogBinding} object.
+     * @return a ANALOG_TYPE object.
+     */
     ANALOG_TYPE unbind(AnalogBinding ... binding);
 
+    /**
+     * <p>equals.</p>
+     *
+     * @param value a {@link java.lang.Number} object.
+     * @return a boolean.
+     */
     default boolean equals(Number value) {
         return this.value().intValue() == value.intValue();
     }
+    /**
+     * <p>getValue.</p>
+     *
+     * @return a {@link java.lang.Number} object.
+     */
     default Number getValue() { return value(); };
 }

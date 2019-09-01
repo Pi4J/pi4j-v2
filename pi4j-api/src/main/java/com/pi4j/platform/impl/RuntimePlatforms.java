@@ -41,8 +41,22 @@ import java.util.Collection;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public interface RuntimePlatforms extends Platforms {
+    /**
+     * <p>shutdown.</p>
+     *
+     * @return a {@link com.pi4j.platform.impl.RuntimePlatforms} object.
+     * @throws com.pi4j.exception.ShutdownException if any.
+     */
     RuntimePlatforms shutdown() throws ShutdownException;
+    /**
+     * <p>initialize.</p>
+     *
+     * @param platforms a {@link java.util.Collection} object.
+     * @return a {@link com.pi4j.platform.impl.RuntimePlatforms} object.
+     * @throws com.pi4j.exception.InitializeException if any.
+     */
     RuntimePlatforms initialize(Collection<Platform> platforms) throws InitializeException;
 }

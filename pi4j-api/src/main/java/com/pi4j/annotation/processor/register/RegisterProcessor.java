@@ -30,8 +30,15 @@ package com.pi4j.annotation.processor.register;
 import com.pi4j.annotation.Register;
 import com.pi4j.annotation.processor.FieldProcessor;
 
+/**
+ * <p>RegisterProcessor interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface RegisterProcessor<T> extends FieldProcessor<Register, T> {
 
+    /** {@inheritDoc} */
     @Override
     default Class<Register> annotationType() {
         return Register.class;

@@ -29,8 +29,26 @@ package com.pi4j.io.gpio.analog;
 
 import com.pi4j.io.gpio.GpioConfigBuilder;
 
+/**
+ * <p>AnalogConfigBuilder interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface AnalogConfigBuilder<BUILDER_TYPE extends AnalogConfigBuilder, CONFIG_TYPE extends AnalogConfig>
         extends GpioConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
+    /**
+     * <p>min.</p>
+     *
+     * @param value a {@link java.lang.Integer} object.
+     * @return a BUILDER_TYPE object.
+     */
     BUILDER_TYPE min(Integer value);
+    /**
+     * <p>max.</p>
+     *
+     * @param value a {@link java.lang.Integer} object.
+     * @return a BUILDER_TYPE object.
+     */
     BUILDER_TYPE max(Integer value);
 }

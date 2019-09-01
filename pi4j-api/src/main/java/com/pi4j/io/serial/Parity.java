@@ -27,6 +27,12 @@ package com.pi4j.io.serial;
  * #L%
  */
 
+/**
+ * <p>Parity class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public enum Parity {
 
     NONE(0),
@@ -45,14 +51,31 @@ public enum Parity {
         this.index = index;
     }
 
+    /**
+     * <p>Getter for the field <code>index</code>.</p>
+     *
+     * @return a int.
+     */
     public int getIndex(){
         return this.index;
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @param parity a {@link java.lang.String} object.
+     * @return a {@link com.pi4j.io.serial.Parity} object.
+     */
     public static Parity getInstance(String parity) {
         return Parity.valueOf(parity.toUpperCase());
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @param parity a int.
+     * @return a {@link com.pi4j.io.serial.Parity} object.
+     */
     public static Parity getInstance(int parity){
         for(Parity p : Parity.values()){
             if(p.getIndex() == parity){
@@ -61,6 +84,12 @@ public enum Parity {
         }
         return null;
     }
+    /**
+     * <p>parse.</p>
+     *
+     * @param parity a {@link java.lang.String} object.
+     * @return a {@link com.pi4j.io.serial.Parity} object.
+     */
     public static Parity parse(String parity) {
         if(parity.equalsIgnoreCase("0")) return Parity.NONE;
         if(parity.equalsIgnoreCase("1")) return Parity.ODD;

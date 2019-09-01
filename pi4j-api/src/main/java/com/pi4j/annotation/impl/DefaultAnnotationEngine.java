@@ -52,6 +52,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class DefaultAnnotationEngine implements AnnotationEngine {
 
@@ -59,6 +60,12 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
     private Context context = null;
 
     // static singleton instance
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @return a {@link com.pi4j.annotation.AnnotationEngine} object.
+     */
     public static AnnotationEngine newInstance(Context context){
         return new DefaultAnnotationEngine(context);
     }
@@ -176,6 +183,7 @@ public class DefaultAnnotationEngine implements AnnotationEngine {
 //        }
 //    }
 
+    /** {@inheritDoc} */
     @Override
     public void inject(Object... objects) throws AnnotationException {
 

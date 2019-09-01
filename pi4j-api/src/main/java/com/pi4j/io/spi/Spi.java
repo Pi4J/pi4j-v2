@@ -35,22 +35,46 @@ import com.pi4j.io.IODataWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/**
+ * <p>Spi interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IODataWriter, IODataReader {
+    /** Constant <code>DEFAULT_MODE</code> */
     SpiMode DEFAULT_MODE = SpiMode.MODE_0;
+    /** Constant <code>DEFAULT_BAUD=1000000</code> */
     int DEFAULT_BAUD = 1000000; // 1MHz (range is 500kHz - 32MHz)
 
+    /**
+     * <p>newConfigBuilder.</p>
+     *
+     * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
+     */
     static SpiConfigBuilder newConfigBuilder(){
         return SpiConfigBuilder.newInstance();
     }
 
     /**
      * SPI Device Communication State is OPEN
+     *
      * @return The SPI device communication state
      */
     boolean isOpen();
 
 
+    /**
+     * <p>open.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     void open() throws IOException;
+    /**
+     * <p>close.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     void close() throws IOException;
 
     // ------------------------------------------------------------------------------------
@@ -64,6 +88,8 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
      * @return Returns the read byte (>=0) if OK, otherwise PI_BAD_HANDLE, PI_SER_READ_NO_DATA, or PI_SER_READ_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte"
+     * @param value a byte.
+     * @throws java.io.IOException if any.
      */
     default int transferByte(int handle, byte value) throws IOException{
         byte[] temp = new byte[] { value } ;
@@ -96,6 +122,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      * @param numberOfBytes the number of bytes to transfer/exchange (write & read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
     int transfer(byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException;
 
@@ -113,6 +140,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      * @param numberOfBytes the number of bytes to transfer/exchange (write & read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
     default int transfer(byte[] write, byte[] read, int numberOfBytes) throws IOException{
         return transfer(write, 0, read, 0, numberOfBytes);
@@ -130,6 +158,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      * @param read the array of bytes to store read data in from the SPI device
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
     default int transfer(byte[] write, byte[] read) throws IOException{
         return transfer(write, 0, read, 0, write.length);
@@ -152,6 +181,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      * @param length the number of bytes to transfer/exchange (write & read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
     default int transfer(byte[] buffer, int offset, int length) throws IOException{
         return transfer(buffer, offset, buffer, offset, length);
@@ -170,6 +200,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      * @param length the number of bytes to transfer/exchange (write & read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
     default int transfer(byte[] buffer, int length) throws IOException{
         return transfer(buffer, 0, length);
@@ -185,6 +216,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      *               back from the SPI device
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
     default int transfer(byte[] buffer) throws IOException{
         return transfer(buffer, 0, buffer.length);
@@ -216,6 +248,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      * @param numberOfBytes the number of bytes to transfer/exchange (write & read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
     default int transfer(ByteBuffer write, int writeOffset, ByteBuffer read, int readOffset, int numberOfBytes) throws IOException{
         // perform bounds checking on requested length versus total remaining size available
@@ -272,6 +305,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      * @param numberOfBytes the number of bytes to transfer/exchange (write & read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
     default int transfer(ByteBuffer write, ByteBuffer read, int numberOfBytes) throws IOException{
         // if the 'write' buffer position is already at the buffer limit, then flip the buffer for
@@ -314,6 +348,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      * @param length the number of bytes to transfer/exchange (write & read))
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
      * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
     default int transfer(ByteBuffer buffer, int offset, int length) throws IOException{
         // perform bounds checking on requested length versus total remaining size available

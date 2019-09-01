@@ -36,10 +36,46 @@ import com.pi4j.io.exception.IONotFoundException;
 import com.pi4j.io.exception.IOShutdownException;
 import com.pi4j.registry.Registry;
 
+/**
+ * <p>RuntimeRegistry interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface RuntimeRegistry extends Registry {
+    /**
+     * <p>add.</p>
+     *
+     * @param instance a {@link com.pi4j.io.IO} object.
+     * @return a {@link com.pi4j.registry.impl.RuntimeRegistry} object.
+     * @throws com.pi4j.io.exception.IOAlreadyExistsException if any.
+     * @throws com.pi4j.io.exception.IOInvalidIDException if any.
+     */
     RuntimeRegistry add(IO instance) throws IOAlreadyExistsException, IOInvalidIDException;
+    /**
+     * <p>remove.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws com.pi4j.io.exception.IONotFoundException if any.
+     * @throws com.pi4j.io.exception.IOInvalidIDException if any.
+     * @throws com.pi4j.io.exception.IOShutdownException if any.
+     */
     <T extends IO> T remove(String id) throws IONotFoundException, IOInvalidIDException, IOShutdownException;
 
+    /**
+     * <p>shutdown.</p>
+     *
+     * @return a {@link com.pi4j.registry.impl.RuntimeRegistry} object.
+     * @throws com.pi4j.exception.ShutdownException if any.
+     */
     RuntimeRegistry shutdown() throws ShutdownException;
+    /**
+     * <p>initialize.</p>
+     *
+     * @return a {@link com.pi4j.registry.impl.RuntimeRegistry} object.
+     * @throws com.pi4j.exception.InitializeException if any.
+     */
     RuntimeRegistry initialize() throws InitializeException;
 }

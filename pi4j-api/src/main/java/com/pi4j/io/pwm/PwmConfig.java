@@ -32,12 +32,23 @@ import com.pi4j.io.gpio.GpioConfig;
 
 import java.util.Collection;
 
+/**
+ * <p>PwmConfig interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface PwmConfig extends GpioConfig<PwmConfig>, AddressConfig<PwmConfig> {
 
+    /** Constant <code>PWM_TYPE_KEY="pwm-type"</code> */
     String PWM_TYPE_KEY = "pwm-type";
+    /** Constant <code>FREQUENCY_KEY="frequency"</code> */
     String FREQUENCY_KEY = "frequency";
+    /** Constant <code>DUTY_CYCLE_KEY="duty-cycle"</code> */
     String DUTY_CYCLE_KEY = "duty-cycle";
+    /** Constant <code>SHUTDOWN_VALUE_KEY="shutdown"</code> */
     String SHUTDOWN_VALUE_KEY = "shutdown";
+    /** Constant <code>INITIAL_VALUE_KEY="initial"</code> */
     String INITIAL_VALUE_KEY = "initial";
 
     /**
@@ -158,7 +169,6 @@ public interface PwmConfig extends GpioConfig<PwmConfig>, AddressConfig<PwmConfi
      * is terminated an Pi4J is shutdown.
      *
      * @param dutyCycle duty-cycle value expressed as a percentage (rage: 0-100)
-     * @return this builder instance
      */
     default void setShutdownValue(Number dutyCycle){
         this.shutdownValue(dutyCycle);

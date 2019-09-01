@@ -31,6 +31,12 @@ import com.pi4j.io.pwm.impl.DefaultPwmPresetBuilder;
 
 import java.io.IOException;
 
+/**
+ * <p>PwmPreset interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface PwmPreset {
 
     /**
@@ -70,7 +76,6 @@ public interface PwmPreset {
      *  the time period the signal is LOW and the other half is HIGH.
      *
      * @return duty-cycle value expressed as a percentage (rage: 0-100)
-     * @throws IOException
      */
     Float dutyCycle();
 
@@ -85,7 +90,6 @@ public interface PwmPreset {
      *  the time period the signal is LOW and the other half is HIGH.
      *
      * @return duty-cycle value expressed as a percentage (rage: 0-100)
-     * @throws IOException
      */
     default Float getDutyCycle() {
         return dutyCycle();
@@ -104,7 +108,6 @@ public interface PwmPreset {
      *
      * @return the configured frequency (Hz) that is used when turning the
      *         PWM signal to the 'ON' state when applying this PWM preset.
-     * @throws IOException
      */
     Integer frequency();
 
@@ -121,7 +124,6 @@ public interface PwmPreset {
      *
      * @return the configured frequency (Hz) that is used when turning the
      *         PWM signal to the 'ON' state when applying this PWM preset.
-     * @throws IOException
      */
     default Integer getFrequency() {
         return frequency();

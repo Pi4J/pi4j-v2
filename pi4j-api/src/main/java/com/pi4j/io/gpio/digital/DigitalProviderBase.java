@@ -28,6 +28,12 @@ import com.pi4j.io.gpio.GpioProviderBase;
  * limitations under the License.
  * #L%
  */
+/**
+ * <p>Abstract DigitalProviderBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class DigitalProviderBase<
             PROVIDER_TYPE extends DigitalProvider,
             DIGITAL_TYPE extends Digital,
@@ -35,14 +41,28 @@ public abstract class DigitalProviderBase<
         extends GpioProviderBase<PROVIDER_TYPE, DIGITAL_TYPE, CONFIG_TYPE>
         implements DigitalProvider<PROVIDER_TYPE, DIGITAL_TYPE, CONFIG_TYPE> {
 
+    /**
+     * <p>Constructor for DigitalProviderBase.</p>
+     */
     public DigitalProviderBase(){
         super();
     }
 
+    /**
+     * <p>Constructor for DigitalProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public DigitalProviderBase(String id){
         super(id);
     }
 
+    /**
+     * <p>Constructor for DigitalProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public DigitalProviderBase(String id, String name){
         super(id, name);
     }

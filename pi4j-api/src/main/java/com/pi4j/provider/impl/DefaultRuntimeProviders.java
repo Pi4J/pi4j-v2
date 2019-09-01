@@ -65,6 +65,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class DefaultRuntimeProviders implements RuntimeProviders {
 
@@ -83,31 +84,45 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
     private ProviderGroup<I2CProvider> _i2c = new ProviderGroup<>(this, IOType.I2C);
     private ProviderGroup<SerialProvider> _serial = new ProviderGroup<>(this, IOType.SERIAL);
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<AnalogInputProvider> analogInput() { return _analogInput; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<AnalogOutputProvider> analogOutput() { return _analogOutput; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<DigitalInputProvider> digitalInput() { return _digitalInput; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<DigitalOutputProvider> digitalOutput() { return _digitalOutput; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<PwmProvider> pwm() { return _pwm; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<SpiProvider> spi() { return _spi; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<I2CProvider> i2c() { return _i2c; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<SerialProvider> serial() { return _serial; }
 
     // static singleton instance
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param runtime a {@link com.pi4j.runtime.Runtime} object.
+     * @return a {@link com.pi4j.provider.impl.RuntimeProviders} object.
+     */
     public static RuntimeProviders newInstance(Runtime runtime){
         return new DefaultRuntimeProviders(runtime);
     }
@@ -119,8 +134,9 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Get all providers
-     * @return
      */
     @Override
     public Map<String, Provider> all(){
@@ -128,12 +144,9 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
     }
 
     /**
-     * Get all providers of a specified io class type.
+     * {@inheritDoc}
      *
-     * @param providerClass
-     * @param <T>
-     * @return
-     * @throws ProviderException
+     * Get all providers of a specified io class type.
      */
     @Override
     public <T extends Provider> Map<String, T> all(Class<T> providerClass) {
@@ -163,12 +176,9 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
     }
 
     /**
-     * Get all providers of a specified io class type.
+     * {@inheritDoc}
      *
-     * @param ioType
-     * @param <T>
-     * @return
-     * @throws ProviderException
+     * Get all providers of a specified io class type.
      */
     @Override
     public <T extends Provider> Map<String, T> all(IOType ioType) {
@@ -181,6 +191,7 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
         return Collections.unmodifiableMap(result);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean exists(String providerId) {
 
@@ -191,6 +202,7 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Provider get(String providerId) throws ProviderNotFoundException {
         // return the io instance from the managed io map that contains the given io-id
@@ -454,6 +466,7 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
 //        throw new ProviderNotFoundException();
 //    }
 
+    /** {@inheritDoc} */
     @Override
     public RuntimeProviders shutdown() throws ShutdownException {
         logger.trace("invoked providers 'shutdown();'");
@@ -477,6 +490,7 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public RuntimeProviders initialize(Collection<Provider> providers) throws InitializeException {
 

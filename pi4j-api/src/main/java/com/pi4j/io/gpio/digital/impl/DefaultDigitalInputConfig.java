@@ -35,6 +35,12 @@ import com.pi4j.util.StringUtil;
 
 import java.util.Map;
 
+/**
+ * <p>DefaultDigitalInputConfig class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultDigitalInputConfig
         extends AddressConfigBase<DigitalInputConfig>
         implements DigitalInputConfig {
@@ -52,7 +58,8 @@ public class DefaultDigitalInputConfig
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
      */
     protected DefaultDigitalInputConfig(Map<String,String> properties){
         super(properties);
@@ -73,11 +80,13 @@ public class DefaultDigitalInputConfig
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public PullResistance pull() {
         return this.pullResistance;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Long debounce() { return this.debounce; }
 }

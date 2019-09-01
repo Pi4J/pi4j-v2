@@ -32,6 +32,12 @@ import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiConfigBuilder;
 import com.pi4j.io.spi.SpiMode;
 
+/**
+ * <p>DefaultSpiConfigBuilder class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultSpiConfigBuilder
         extends AddressConfigBuilderBase<SpiConfigBuilder, SpiConfig>
         implements SpiConfigBuilder {
@@ -43,22 +49,30 @@ public class DefaultSpiConfigBuilder
         super();
     }
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
+     */
     public static SpiConfigBuilder newInstance() {
         return new DefaultSpiConfigBuilder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public SpiConfigBuilder baud(Integer rate) {
         this.properties.put(SpiConfig.BAUD_KEY, rate.toString());
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SpiConfigBuilder mode(SpiMode mode) {
         this.properties.put(SpiConfig.MODE_KEY, Integer.toString(mode.getMode()));
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SpiConfig build() {
         SpiConfig config = new DefaultSpiConfig(this.properties);

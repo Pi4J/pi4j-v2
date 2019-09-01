@@ -37,6 +37,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * <p>Abstract DigitalBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>,
         PROVIDER_TYPE extends DigitalProvider>
@@ -50,28 +56,38 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
     // internal bindings collection
     protected List<DigitalBinding> bindings = Collections.synchronizedList(new ArrayList<>());
 
+    /**
+     * <p>Constructor for DigitalBase.</p>
+     *
+     * @param provider a PROVIDER_TYPE object.
+     * @param config a CONFIG_TYPE object.
+     */
     public DigitalBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
         super(provider,config);
     }
 
+    /** {@inheritDoc} */
     @Override
     public DIGITAL_TYPE addListener(DigitalChangeListener... listener) {
         listeners.addAll(Arrays.asList(listener));
         return (DIGITAL_TYPE)this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DIGITAL_TYPE removeListener(DigitalChangeListener... listener) {
         listeners.removeAll(Arrays.asList(listener));
         return (DIGITAL_TYPE)this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DIGITAL_TYPE bind(DigitalBinding ... binding) {
         bindings.addAll(Arrays.asList(binding));
         return (DIGITAL_TYPE)this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DIGITAL_TYPE unbind(DigitalBinding ... binding) {
         bindings.removeAll(Arrays.asList(binding));
@@ -80,6 +96,7 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
 
     /**
      * Dispatch DigitalChangeEvent on digital input state changes
+     *
      * @param event DigitalChangeEvent
      */
     protected void dispatch(DigitalChangeEvent event){
@@ -91,6 +108,7 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public DIGITAL_TYPE shutdown(Context context) throws ShutdownException {
         // remove all listeners

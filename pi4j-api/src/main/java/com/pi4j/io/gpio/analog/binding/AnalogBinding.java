@@ -31,6 +31,17 @@ import com.pi4j.io.IOBinding;
 import com.pi4j.io.gpio.analog.Analog;
 import com.pi4j.io.gpio.analog.AnalogChangeEvent;
 
+/**
+ * <p>AnalogBinding interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface AnalogBinding<IO_TYPE extends Analog> extends IOBinding {
+    /**
+     * <p>process.</p>
+     *
+     * @param event a {@link com.pi4j.io.gpio.analog.AnalogChangeEvent} object.
+     */
     void process(AnalogChangeEvent event);
 }

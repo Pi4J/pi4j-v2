@@ -36,6 +36,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * <p>Abstract DigitalBindingBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class DigitalBindingBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>,
         PROVIDER_TYPE extends DigitalProvider> {
@@ -44,6 +50,7 @@ public abstract class DigitalBindingBase<DIGITAL_TYPE extends Digital<DIGITAL_TY
 
     /**
      * Default Constructor
+     *
      * @param target Variable argument list of digital outputs
      */
     public DigitalBindingBase(Digital<DIGITAL_TYPE, CONFIG_TYPE,PROVIDER_TYPE> ... target){

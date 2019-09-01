@@ -27,6 +27,18 @@ package com.pi4j.config;
  * #L%
  */
 
+/**
+ * <p>AddressConfigBuilder interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface AddressConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
+    /**
+     * <p>address.</p>
+     *
+     * @param address a {@link java.lang.Integer} object.
+     * @return a BUILDER_TYPE object.
+     */
     BUILDER_TYPE address(Integer address);
 }

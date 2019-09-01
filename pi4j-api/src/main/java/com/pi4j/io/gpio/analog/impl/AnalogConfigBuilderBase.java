@@ -32,6 +32,12 @@ import com.pi4j.io.gpio.analog.AnalogConfig;
 import com.pi4j.io.gpio.analog.AnalogConfigBuilder;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 
+/**
+ * <p>Abstract AnalogConfigBuilderBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class AnalogConfigBuilderBase<BUILDER_TYPE extends AnalogConfigBuilder, CONFIG_TYPE extends AnalogConfig>
         extends AddressConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
         implements AnalogConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
@@ -43,12 +49,14 @@ public abstract class AnalogConfigBuilderBase<BUILDER_TYPE extends AnalogConfigB
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public BUILDER_TYPE min(Integer value) {
         this.properties.put(AnalogOutputConfig.RANGE_MIN_KEY, value.toString());
         return (BUILDER_TYPE)this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public BUILDER_TYPE max(Integer value) {
         this.properties.put(AnalogOutputConfig.RANGE_MAX_KEY, value.toString());

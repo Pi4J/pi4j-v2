@@ -29,6 +29,12 @@ package com.pi4j.io.gpio.digital;
 
 
 
+/**
+ * <p>DigitalChangeEvent class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DigitalChangeEvent<DIGITAL_TYPE extends Digital> implements DigitalEvent {
 
     // internal event copy of the changed digital state
@@ -38,7 +44,9 @@ public class DigitalChangeEvent<DIGITAL_TYPE extends Digital> implements Digital
 
     /**
      * Default constructor
+     *
      * @param state the value changed for this event instance
+     * @param source a DIGITAL_TYPE object.
      */
     public DigitalChangeEvent(DIGITAL_TYPE source, DigitalState state){
         this.state = state; // cache a copy of the event instance state
@@ -47,18 +55,21 @@ public class DigitalChangeEvent<DIGITAL_TYPE extends Digital> implements Digital
 
     /**
      * The value change for this event instance
-     * @return
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalState} object.
      */
     public DigitalState state() {
         return this.state;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DIGITAL_TYPE source() {
         return this.source;
     }
 
 
+    /** {@inheritDoc} */
     @Override
     public String toString(){
         StringBuilder result = new StringBuilder();

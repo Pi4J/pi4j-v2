@@ -29,32 +29,54 @@ package com.pi4j.io.gpio.analog.impl;
 
 import com.pi4j.io.gpio.analog.AnalogRange;
 
+/**
+ * <p>DefaultAnalogRange class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultAnalogRange
         implements AnalogRange {
 
     protected Integer min = null;
     protected Integer max = null;
 
+    /**
+     * <p>Constructor for DefaultAnalogRange.</p>
+     *
+     * @param min a {@link java.lang.Integer} object.
+     * @param max a {@link java.lang.Integer} object.
+     */
     public DefaultAnalogRange(Integer min, Integer max){
         super();
         this.min = min;
         this.max = max;
     }
 
+    /**
+     * <p>Constructor for DefaultAnalogRange.</p>
+     *
+     * @param min a {@link java.lang.Integer} object.
+     */
     public DefaultAnalogRange(Integer min){
         super();
         this.min = min;
     }
 
+    /**
+     * <p>Constructor for DefaultAnalogRange.</p>
+     */
     public DefaultAnalogRange(){
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer min() {
         return this.min;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer max() {
         return this.max;

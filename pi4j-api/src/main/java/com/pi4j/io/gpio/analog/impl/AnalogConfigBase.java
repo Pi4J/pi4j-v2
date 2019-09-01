@@ -33,6 +33,12 @@ import com.pi4j.io.gpio.analog.AnalogRange;
 
 import java.util.Map;
 
+/**
+ * <p>Abstract AnalogConfigBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class AnalogConfigBase<CONFIG_TYPE extends AnalogConfig>
         extends AddressConfigBase<CONFIG_TYPE>
         implements AnalogConfig<CONFIG_TYPE> {
@@ -49,7 +55,8 @@ public abstract class AnalogConfigBase<CONFIG_TYPE extends AnalogConfig>
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
      */
     protected AnalogConfigBase(Map<String,String> properties){
         super(properties);
@@ -70,6 +77,7 @@ public abstract class AnalogConfigBase<CONFIG_TYPE extends AnalogConfig>
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogRange range() {
         return this.range;

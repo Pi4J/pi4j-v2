@@ -36,6 +36,7 @@ package com.pi4j.config.exception;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class ConfigException extends RuntimeException {
 
@@ -48,10 +49,21 @@ public class ConfigException extends RuntimeException {
         super(message);
     }
 
+    /**
+     * <p>Constructor for ConfigException.</p>
+     *
+     * @param cause a {@link java.lang.Throwable} object.
+     */
     public ConfigException(Throwable cause){
         super(cause);
     }
 
+    /**
+     * <p>Constructor for ConfigException.</p>
+     *
+     * @param message a {@link java.lang.String} object.
+     * @param cause a {@link java.lang.Throwable} object.
+     */
     public ConfigException(String message, Throwable cause){
         super(message,cause);
     }

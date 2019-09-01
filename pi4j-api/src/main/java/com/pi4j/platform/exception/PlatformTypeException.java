@@ -39,11 +39,15 @@ import com.pi4j.platform.Platform;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class PlatformTypeException extends PlatformException {
 
     /**
      * Default Constructor
+     *
+     * @param platformId a {@link java.lang.String} object.
+     * @param platformClass a {@link java.lang.Class} object.
      */
     public PlatformTypeException(String platformId, Class<? extends Platform> platformClass){
         super("Pi4J platform type mismatch for [" + platformId + "]; platform instance is not of type [" + platformClass.getName() + "]");

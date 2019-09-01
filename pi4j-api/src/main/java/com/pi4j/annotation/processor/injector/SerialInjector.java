@@ -30,8 +30,15 @@ package com.pi4j.annotation.processor.injector;
 import com.pi4j.annotation.processor.injector.impl.IOInjectorBase;
 import com.pi4j.io.serial.Serial;
 
+/**
+ * <p>SerialInjector class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class SerialInjector extends IOInjectorBase<Serial> implements InjectorProcessor<Serial> {
 
+    /** {@inheritDoc} */
     @Override
     public Class<Serial> getTargetType() { return Serial.class; }
 }

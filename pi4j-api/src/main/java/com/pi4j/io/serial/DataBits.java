@@ -27,6 +27,12 @@ package com.pi4j.io.serial;
  * #L%
  */
 
+/**
+ * <p>DataBits class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public enum DataBits {
 
     _5(5),
@@ -40,13 +46,29 @@ public enum DataBits {
         this.dataBits = dataBits;
     }
 
+    /**
+     * <p>getValue.</p>
+     *
+     * @return a int.
+     */
     public int getValue(){
         return this.dataBits;
     }
+    /**
+     * <p>value.</p>
+     *
+     * @return a int.
+     */
     public int value(){
         return this.dataBits;
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @param data_bits a int.
+     * @return a {@link com.pi4j.io.serial.DataBits} object.
+     */
     public static DataBits getInstance(int data_bits){
         for(DataBits db : DataBits.values()){
             if(db.getValue() == data_bits){
@@ -56,6 +78,12 @@ public enum DataBits {
         return null;
     }
 
+    /**
+     * <p>parse.</p>
+     *
+     * @param parity a {@link java.lang.String} object.
+     * @return a {@link com.pi4j.io.serial.DataBits} object.
+     */
     public static DataBits parse(String parity) {
         if(parity.equalsIgnoreCase("5")) return DataBits._5;
         if(parity.equalsIgnoreCase("6")) return DataBits._6;

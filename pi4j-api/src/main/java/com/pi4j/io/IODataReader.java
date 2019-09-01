@@ -46,6 +46,7 @@ import java.util.Objects;
  * Based on previous contributions from:
  *        Daniel Sendula,
  *        <a href="http://raspelikan.blogspot.co.at">RasPelikan</a>
+ * @version $Id: $Id
  */
 public interface IODataReader extends Readable {
 
@@ -58,7 +59,7 @@ public interface IODataReader extends Readable {
      *
      * @return If successful, a zero or positive integer value representing the byte value (0-255)
      *         is returned.  If a read error was encountered, a negative error code may be returned.
-     * @throws IOException In some cases, an IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, an java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not thrown as exceptions.
      */
@@ -78,7 +79,7 @@ public interface IODataReader extends Readable {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -92,7 +93,7 @@ public interface IODataReader extends Readable {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -107,7 +108,7 @@ public interface IODataReader extends Readable {
      * @param buffer the byte array/buffer the read data will be copied/inserted into
      * @return If successful, return the number of bytes read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -137,7 +138,7 @@ public interface IODataReader extends Readable {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -182,7 +183,7 @@ public interface IODataReader extends Readable {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -214,7 +215,7 @@ public interface IODataReader extends Readable {
      *               will be copied (from current position to limit)
      * @return If successful, return the number of bytes read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -243,7 +244,7 @@ public interface IODataReader extends Readable {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes (not characters) read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -287,7 +288,7 @@ public interface IODataReader extends Readable {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes (not characters) read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -304,7 +305,7 @@ public interface IODataReader extends Readable {
      * @param buffer the character array the read data will be copied/inserted into
      * @return If successful, return the number of bytes read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -322,7 +323,7 @@ public interface IODataReader extends Readable {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes (not characters) read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -339,7 +340,7 @@ public interface IODataReader extends Readable {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes (not characters) read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -355,7 +356,7 @@ public interface IODataReader extends Readable {
      * @param buffer the character array the read data will be copied/inserted into
      * @return If successful, return the number of bytes (not characters) read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -387,7 +388,7 @@ public interface IODataReader extends Readable {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes (not characters) read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -445,7 +446,7 @@ public interface IODataReader extends Readable {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes (not characters) read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -473,7 +474,7 @@ public interface IODataReader extends Readable {
      * @param buffer the character array the read data will be copied/inserted into
      * @return If successful, return the number of bytes (not characters) read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -503,7 +504,7 @@ public interface IODataReader extends Readable {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes (not characters) read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -528,7 +529,7 @@ public interface IODataReader extends Readable {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes (not characters) read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
+     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
      *                     with the I/O device or communication path.  Typical read access errors
      *                     are returned as negative return values and not exception.
      */
@@ -537,6 +538,8 @@ public interface IODataReader extends Readable {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Read ASCII character data from the I/O device into the provided character buffer starting
      * at the zero index (first position) up to available space remaining in the buffer.
      * ASCII is the internal character set used to decode the bytes into chars.
@@ -548,13 +551,6 @@ public interface IODataReader extends Readable {
      *        limit, then we will automatically rewind the buffer to
      *        begin writing data from the zero position up to the
      *        buffer's limit.
-     *
-     * @param buffer the character array the read data will be copied/inserted into
-     * @return If successful, return the number of bytes (not characters) read from the I/O device;
-     *         else on a read error, return a negative error code.
-     * @throws IOException In some cases, a IOException may be thrown if there is something wrong
-     *                     with the I/O device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
     default int read(CharBuffer buffer) throws IOException{
         return read(StandardCharsets.US_ASCII, buffer);
@@ -569,7 +565,7 @@ public interface IODataReader extends Readable {
      * Read a single raw byte (8-bit) value from the I/O device.
      *
      * @return The 8-bit byte value
-     * @throws IOException In all error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In all error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
      */
@@ -590,12 +586,12 @@ public interface IODataReader extends Readable {
      * @param offset the offset index in the data read to start copying read data
      * @param length the number of bytes to read
      * @return a new byte array containing the data bytes read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default byte[] readNBytes(int offset, int length) throws IOException, IOReadException {
@@ -621,12 +617,12 @@ public interface IODataReader extends Readable {
      *
      * @param length the number of bytes to read
      * @return a new byte array containing the data bytes read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default byte[] readNBytes(int length) throws IOException, IOReadException {
@@ -644,12 +640,12 @@ public interface IODataReader extends Readable {
      * @param offset the offset index in the data read to start copying read data
      * @param length the number of bytes to read
      * @return a new ByteBuffer containing the data bytes read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default ByteBuffer readByteBuffer(int offset, int length) throws IOException, IOReadException {
@@ -677,12 +673,12 @@ public interface IODataReader extends Readable {
      *
      * @param length the number of bytes to read
      * @return a new ByteBuffer containing the data bytes read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default ByteBuffer readByteBuffer(int length) throws IOException, IOReadException {
@@ -699,12 +695,12 @@ public interface IODataReader extends Readable {
      * @param offset the offset index in the raw bytes read to start from
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character array containing the decoded character data read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default char[] readCharArray(Charset charset, int offset, int numberOfBytes) throws IOException, IOReadException {
@@ -723,12 +719,12 @@ public interface IODataReader extends Readable {
      * @param charset character set to use for byte decoding
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character array containing the decoded character data read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default char[] readCharArray(Charset charset, int numberOfBytes) throws IOException, IOReadException {
@@ -744,12 +740,12 @@ public interface IODataReader extends Readable {
      * @param offset the offset index in the raw bytes read to start from
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character array containing the decoded character data read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default char[] readCharArray(int offset, int numberOfBytes) throws IOException, IOReadException {
@@ -762,12 +758,12 @@ public interface IODataReader extends Readable {
      *
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character array containing the decoded character data read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default char[] readCharArray(int numberOfBytes) throws IOException, IOReadException {
@@ -784,12 +780,12 @@ public interface IODataReader extends Readable {
      * @param offset the offset index in the raw bytes read to start from
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default CharBuffer readCharBuffer(Charset charset, int offset, int numberOfBytes) throws IOException, IOReadException {
@@ -807,12 +803,12 @@ public interface IODataReader extends Readable {
      * @param charset character set to use for byte decoding
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default CharBuffer readCharBuffer(Charset charset, int numberOfBytes) throws IOException, IOReadException {
@@ -828,12 +824,12 @@ public interface IODataReader extends Readable {
      * @param offset the offset index in the raw bytes read to start from
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default CharBuffer readCharBuffer(int offset, int numberOfBytes) throws IOException, IOReadException {
@@ -847,12 +843,12 @@ public interface IODataReader extends Readable {
      *
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default CharBuffer readCharBuffer(int numberOfBytes) throws IOException, IOReadException {
@@ -869,12 +865,12 @@ public interface IODataReader extends Readable {
      * @param offset the offset index in the raw bytes read to start from
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default String readString(Charset charset, int offset, int numberOfBytes) throws IOException, IOReadException {
@@ -891,12 +887,12 @@ public interface IODataReader extends Readable {
      * @param charset character set to use for byte decoding
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default String readString(Charset charset, int numberOfBytes) throws IOException, IOReadException {
@@ -912,12 +908,12 @@ public interface IODataReader extends Readable {
      * @param offset the offset index in the raw bytes read to start from
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default String readString(int offset, int numberOfBytes) throws IOException, IOReadException {
@@ -931,12 +927,12 @@ public interface IODataReader extends Readable {
      *
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I/O device.
-     * @throws IOException In most error conditions, an IOException will be thrown if there is
+     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
      *                     something wrong with the I/O device or communication path or for any
      *                     read access errors encountered.
-     * @throws IOReadException An IOReadException is thrown if a read access error code
+     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
-     * @throws IllegalArgumentException An IllegalArgumentException is thrown if one of the
+     * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
     default String readString(int numberOfBytes) throws IOException, IOReadException {
@@ -950,6 +946,7 @@ public interface IODataReader extends Readable {
 
     /**
      * Get an InputStream to read data from the I/O device.
+     *
      * @return InputStream instance
      */
     default InputStream getInputStream(){
@@ -991,6 +988,7 @@ public interface IODataReader extends Readable {
 
     /**
      * Get an InputStream to read data from the I/O device.
+     *
      * @return InputStream instance
      */
     default InputStream in() {

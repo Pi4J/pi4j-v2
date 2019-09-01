@@ -35,11 +35,23 @@ import com.pi4j.io.exception.IOIllegalValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <p>Abstract AnalogOutputBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOutputConfig, AnalogOutputProvider> implements AnalogOutput {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     protected Integer value = 0;
 
+    /**
+     * <p>Constructor for AnalogOutputBase.</p>
+     *
+     * @param provider a {@link com.pi4j.io.gpio.analog.AnalogOutputProvider} object.
+     * @param config a {@link com.pi4j.io.gpio.analog.AnalogOutputConfig} object.
+     */
     public AnalogOutputBase(AnalogOutputProvider provider, AnalogOutputConfig config){
         super(provider, config);
         if(this.id == null) this.id = "AOUT-" + config.address();
@@ -57,6 +69,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput stepUp(){
         try {
@@ -67,6 +80,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput stepDown(){
         try {
@@ -77,6 +91,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput step(Integer value) throws IOIllegalValueException, IOBoundsException {
 
@@ -93,6 +108,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
     }
 
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput value(Integer value) throws IOIllegalValueException, IOBoundsException {
 
@@ -122,6 +138,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput shutdown(Context context){
         // update the analog value to the shutdown value if a shutdown value is configured
@@ -137,6 +154,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer value() {
         return this.value;

@@ -36,6 +36,7 @@ package com.pi4j.exception;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class LifecycleException extends Pi4JException {
 
@@ -48,10 +49,21 @@ public class LifecycleException extends Pi4JException {
         super(message);
     }
 
+    /**
+     * <p>Constructor for LifecycleException.</p>
+     *
+     * @param cause a {@link java.lang.Throwable} object.
+     */
     public LifecycleException(Throwable cause){
         super(cause);
     }
 
+    /**
+     * <p>Constructor for LifecycleException.</p>
+     *
+     * @param message a {@link java.lang.String} object.
+     * @param cause a {@link java.lang.Throwable} object.
+     */
     public LifecycleException(String message, Throwable cause){
         super(message,cause);
     }

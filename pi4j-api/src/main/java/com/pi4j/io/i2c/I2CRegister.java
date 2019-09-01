@@ -38,12 +38,20 @@ import java.io.IOException;
  * This abstraction allows data to be read or written to a specific device register on the I2C bus.
  *
  * @author Robert Savage
+ * @version $Id: $Id
  */
 public interface I2CRegister extends IODataWriter, IODataReader {
     /**
+     * <p>getAddress.</p>
+     *
      * @return This I2C device register address
      */
     int getAddress();
+    /**
+     * <p>address.</p>
+     *
+     * @return a int.
+     */
     default int address(){
         return getAddress();
     }
@@ -52,8 +60,7 @@ public interface I2CRegister extends IODataWriter, IODataReader {
      * Write a single word value (16-bit) to the I2C device register.
      *
      * @param word 16-bit word value to be written
-     * @return The number of bytes written, possibly zero; typically 2
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     void writeWord(int word) throws IOException;
 
@@ -61,7 +68,8 @@ public interface I2CRegister extends IODataWriter, IODataReader {
      * Read a single word value (16-bit) to the I2C device register.
      *
      * @return If success, then returns 16-bit word value read from I2C register; else a negative error code.
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
+     * @throws com.pi4j.io.exception.IOReadException if any.
      */
     int readWord() throws IOException, IOReadException;
 
@@ -71,7 +79,8 @@ public interface I2CRegister extends IODataWriter, IODataReader {
      *
      * @param word 16-bit word value to be written
      * @return The 16-bit word value read/returned; or a negative value if error
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
+     * @throws com.pi4j.io.exception.IOReadException if any.
      */
     int writeReadWord(int word) throws IOException, IOReadException;
 }

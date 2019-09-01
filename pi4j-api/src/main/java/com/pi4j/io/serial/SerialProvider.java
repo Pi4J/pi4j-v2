@@ -30,8 +30,22 @@ package com.pi4j.io.serial;
 import com.pi4j.provider.Provider;
 
 
+/**
+ * <p>SerialProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface SerialProvider extends Provider<SerialProvider, Serial, SerialConfig> {
 
+    /**
+     * <p>create.</p>
+     *
+     * @param builder a {@link com.pi4j.io.serial.SerialConfigBuilder} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws java.lang.Exception if any.
+     */
     default <T extends Serial> T create(SerialConfigBuilder builder) throws Exception {
         return (T)create(builder.build());
     }

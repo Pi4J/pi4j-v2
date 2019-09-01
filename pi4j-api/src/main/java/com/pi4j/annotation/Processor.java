@@ -33,10 +33,60 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+/**
+ * <p>Processor interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Processor<A extends Annotation, T> {
+    /**
+     * <p>annotationType.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
     Class<A> annotationType();
+    /**
+     * <p>isEligible.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @param instance a {@link java.lang.Object} object.
+     * @param annotation a A object.
+     * @param method a {@link java.lang.reflect.Method} object.
+     * @return a boolean.
+     * @throws java.lang.Exception if any.
+     */
     boolean isEligible(Context context, Object instance, A annotation, Method method) throws Exception;
+    /**
+     * <p>isEligible.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @param instance a {@link java.lang.Object} object.
+     * @param annotation a A object.
+     * @param field a {@link java.lang.reflect.Field} object.
+     * @return a boolean.
+     * @throws java.lang.Exception if any.
+     */
     boolean isEligible(Context context,Object instance, A annotation, Field field) throws Exception;
+    /**
+     * <p>process.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @param instance a {@link java.lang.Object} object.
+     * @param annotation a A object.
+     * @param method a {@link java.lang.reflect.Method} object.
+     * @throws java.lang.Exception if any.
+     */
     void process(Context context, Object instance, A annotation, Method method) throws Exception;
+    /**
+     * <p>process.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @param instance a {@link java.lang.Object} object.
+     * @param annotation a A object.
+     * @param field a {@link java.lang.reflect.Field} object.
+     * @return a T object.
+     * @throws java.lang.Exception if any.
+     */
     T process(Context context, Object instance, A annotation, Field field) throws Exception;
 }
