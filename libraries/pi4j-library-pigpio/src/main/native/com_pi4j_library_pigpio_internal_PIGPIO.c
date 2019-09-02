@@ -4,7 +4,7 @@
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
  * FILENAME      :  com_pi4j_library_pigpio_internal_PIGPIO.c
- *
+ * 
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
  * **********************************************************************
@@ -15,18 +15,19 @@
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
 #include <jni.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <pigpio.h>
 #include "com_pi4j_library_pigpio_internal_PIGPIO.h"
@@ -283,30 +284,14 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiClose
 JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiRead
   (JNIEnv *env, jclass class, jint handle, jbyteArray data, jint length)
 {
-    int i;
-	char *buffer;
-
-	// dynamically allocate buffer size
-    buffer = malloc(length);
-
 	// obtain a pointer to the elements of the array and pin the memory
-    jbyte *body = (*env)->GetByteArrayElements(env, data, 0);
+    jbyte *buffer = (*env)->GetByteArrayElements(env, data, 0);
 
     // perform the actual SPI read operation into the native buffer array
 	jint result = spiRead((unsigned)handle, (char *)buffer, (unsigned)length);
 
-	// ensure actual data bytes were read
-	if(result >= 0){
-        // copy the resulting buffer bytes back into the data array argument
-        for (i = 0; i < result; i++) {
-            body[i] = buffer[i];
-        }
-	}
 	// unpin the reserved memory for 'data'
-	(*env)->ReleaseByteArrayElements(env, data, body, 0);
-
-    // free allocated buffer memory
-    free(buffer);
+	(*env)->ReleaseByteArrayElements(env, data, buffer, 0);
 
     // return the result
 	return result;
@@ -320,28 +305,14 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiRead
 JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiWrite
   (JNIEnv *env, jclass class, jint handle, jbyteArray data, jint length)
 {
-    int i;
-	char *buffer;
-
-	// dynamically allocate buffer size
-    buffer = malloc(length);
-
 	// obtain a pointer to the elements of the array and pin the memory
-    jbyte *body = (*env)->GetByteArrayElements(env, data, 0);
-
-	// copy the bytes from the data array argument into a native unsigned character buffer
-    for (i = 0; i < length; i++) {
-    	buffer[i] = (unsigned char) body[i];
-    }
+    jbyte *buffer = (*env)->GetByteArrayElements(env, data, 0);
 
     // perform the actual SPI write operation into the native buffer array
 	jint result = spiWrite((unsigned)handle, (char *)buffer, (unsigned)length);
 
 	// unpin the reserved memory for 'data'
-	(*env)->ReleaseByteArrayElements(env, data, body, 0);
-
-    // free allocated buffer memory
-    free(buffer);
+	(*env)->ReleaseByteArrayElements(env, data, buffer, 0);
 
     // return the result
 	return result;
@@ -354,43 +325,166 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiWrite
 JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiXfer
   (JNIEnv *env, jclass class, jint handle, jbyteArray writeData, jbyteArray readData, jint length)
 {
-    int i;
-	char *writeBuffer;
-	char *readBuffer;
-
-	// dynamically allocate buffer size
-    writeBuffer = malloc(length);
-    readBuffer = malloc(length);
-
 	// obtain a pointer to the elements of the array and pin the memory
-    jbyte *writeBody = (*env)->GetByteArrayElements(env, writeData, 0);
-    jbyte *readBody = (*env)->GetByteArrayElements(env, readData, 0);
-
-	// copy the bytes from the write data array argument into a native unsigned character write buffer
-    for (i = 0; i < length; i++) {
-    	writeBuffer[i] = (unsigned char) writeBody[i];
-    }
+    jbyte *writeBuffer = (*env)->GetByteArrayElements(env, writeData, 0);
+    jbyte *readBuffer = (*env)->GetByteArrayElements(env, readData, 0);
 
     // perform the actual SPI read operation into the native buffer array
     jint result = spiXfer((unsigned)handle, (char *)writeBuffer, (char *)readBuffer, (unsigned)length);
 
-	// ensure actual data bytes were read
-	if(result >= 0){
-        // copy the resulting buffer bytes back into the data array argument
-        for (i = 0; i < result; i++) {
-            readBody[i] = readBuffer[i];
-        }
-	}
 	// unpin the reserved memory for 'readData' and 'writeData'
-	(*env)->ReleaseByteArrayElements(env, writeData, writeBody, 0);
-	(*env)->ReleaseByteArrayElements(env, readData, readBody, 0);
-
-    // free allocated buffer memory
-    free(writeBuffer);
-    free(readBuffer);
+	(*env)->ReleaseByteArrayElements(env, writeData, writeBuffer, 0);
+	(*env)->ReleaseByteArrayElements(env, readData, readBuffer, 0);
 
     // return the result
 	return result;
 }
 
 
+// *****************************************************************************************************
+// *****************************************************************************************************
+// SERIAL IMPLEMENTATION
+// *****************************************************************************************************
+// *****************************************************************************************************
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    serOpen
+ * Signature: (Ljava/lang/String;II)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serOpen
+  (JNIEnv *env, jclass class, jstring device, jint baud, jint serFlags)
+{
+    // pin the memory and get a pointer to the underlying char arrat for 'device' string parameter
+    const char *device_ptr = (*env)->GetStringUTFChars(env, device, NULL);
+
+    // perform serial port open using PIGPIO library call
+    jint result = serOpen((char *)device_ptr, (unsigned)baud, (unsigned)serFlags);
+
+    // release/unpin memory
+    (*env)->ReleaseStringUTFChars(env, device, device_ptr);
+
+    // return the result
+	return result;
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    serClose
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serClose
+  (JNIEnv *env, jclass class, jint handle)
+{
+    // perform SERIAL port close using PIGPIO library call
+    return serClose((unsigned)handle);
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    serWriteByte
+ * Signature: (IB)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serWriteByte
+  (JNIEnv *env, jclass class, jint handle, jbyte byt)
+{
+    // convert value into unsigned int
+    unsigned b = byt & 0xFF;
+
+    // perform actual SERIAL write byte operation using PIGPIO library call
+    jint result = serWriteByte((unsigned)handle, b);
+    return result;
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    serReadByte
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serReadByte
+  (JNIEnv *env, jclass class, jint handle)
+{
+    // perform actual SERIAL read byte operation using PIGPIO library call
+    return serReadByte((unsigned)handle);
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    serWrite
+ * Signature: (I[BI)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serWrite
+  (JNIEnv *env, jclass class, jint handle, jbyteArray data, jint length)
+{
+	// obtain a pointer to the elements of the array and pin the memory
+    jbyte *buffer = (*env)->GetByteArrayElements(env, data, 0);
+
+    // perform the actual SERIAL write operation into the native buffer array using PIGPIO library call
+	jint result = serWrite((unsigned)handle, (char *)buffer, (unsigned)length);
+
+	// unpin the reserved memory for 'data'
+	(*env)->ReleaseByteArrayElements(env, data, buffer, 0);
+
+    // return the result
+	return result;
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    serRead
+ * Signature: (I[BI)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serRead
+  (JNIEnv *env, jclass class, jint handle, jbyteArray data, jint length)
+{
+	// obtain a pointer to the elements of the array and pin the memory
+    jbyte *buffer = (*env)->GetByteArrayElements(env, data, 0);
+
+    // perform the actual SERIAL read operation into the native buffer array using PIGPIO library call
+	jint result = serRead((unsigned)handle, (char *)buffer, (unsigned)length);
+
+	// unpin the reserved memory for 'data'
+	(*env)->ReleaseByteArrayElements(env, data, buffer, 0);
+
+    // return the result
+	return result;
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    serDataAvailable
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serDataAvailable
+  (JNIEnv *env, jclass class, jint handle)
+{
+    // perform actual SERIAL get available bytes using PIGPIO library call
+    return serDataAvailable((unsigned)handle);
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    serDrain
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serDrain
+  (JNIEnv *env, jclass class, jint handle)
+{
+    // get the number of bytes available
+    int available = serDataAvailable((unsigned)handle);
+
+    // only process further if there are bytes available to drain/purge
+    if(available > 0){
+        // create a temporary buffer
+        char buffer[available];
+
+        // read the bytes available into the temporary buffer
+        available = serRead((unsigned)handle, buffer, (unsigned)available);
+
+        // result number of bytes drained/purged
+        return available;
+    }
+    else {
+        return 0;
+    }
+}

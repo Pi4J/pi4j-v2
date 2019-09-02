@@ -591,6 +591,16 @@ public class PIGPIO {
      */
     public static native int serOpen(String sertty, int baud, int serFlags);
     /**
+     * <p>serOpen.</p>
+     *
+     * @param sertty a {@link java.lang.String} object.
+     * @param baud a int.
+     * @return a int.
+     */
+    public static int serOpen(String sertty, int baud){
+        return serOpen(sertty, baud, 0);
+    }
+    /**
      * <p>serClose.</p>
      *
      * @param handle a int.
@@ -637,6 +647,13 @@ public class PIGPIO {
      * @return a int.
      */
     public static native int serDataAvailable(int handle);
+    /**
+     * <p>serDrain.</p>
+     *
+     * @param handle a int.
+     * @return a int.
+     */
+    public static native int serDrain(int handle);
     /**
      * <p>gpioTrigger.</p>
      *

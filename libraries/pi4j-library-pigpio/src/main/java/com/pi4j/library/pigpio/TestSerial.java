@@ -4,7 +4,7 @@ package com.pi4j.library.pigpio;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
- * FILENAME      :  Main.java
+ * FILENAME      :  TestSerial.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -40,7 +40,7 @@ import java.util.Random;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class Main {
+public class TestSerial {
 
     private static String SERIAL_DEVICE = "/dev/ttyS0";
     private static int BAUD_RATE = 9600;
@@ -48,8 +48,8 @@ public class Main {
     /**
      * <p>main.</p>
      *
-     * @param args an array of {@link java.lang.String} objects.
-     * @throws java.lang.Exception if any.
+     * @param args an array of {@link String} objects.
+     * @throws Exception if any.
      */
     public static void main(String[] args) throws Exception {
         System.out.println("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
