@@ -86,12 +86,14 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      */
     @Override
-    public void initialize() throws IOException {
+    public int gpioInitialise() throws IOException {
+        int result = 0;
+
         logger.trace("[INITIALIZE] -> STARTED");
 
         if(!this.initialized) {
             // initialize the PiGpio native library
-            int result = PIGPIO.gpioInitialise();
+            result = PIGPIO.gpioInitialise();
             validateResult(result);
 
             // initialization successful
@@ -102,6 +104,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
             logger.warn("[INITIALIZE] -- ALREADY INITIALIZED");
         }
         logger.trace("[INITIALIZE] <- FINISHED");
+        return result;
     }
 
     /**
@@ -114,7 +117,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * This function resets the used DMA channels, releases memory, and terminates any running threads.
      */
     @Override
-    public void shutdown() throws IOException {
+    public void gpioTerminate() throws IOException {
         logger.trace("[SHUTDOWN] -> STARTED");
         if(this.initialized) {
             // close all open SPI, SERIAL, I2C handles
@@ -136,10 +139,10 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioVersion">PIGPIO::gpioVersion</a>
      */
     @Override
-    public long gpioVersion() throws IOException {
+    public int gpioVersion() throws IOException {
         logger.trace("[VERSION] -> GET VERSION");
         validateReady();
-        long version = PIGPIO.gpioVersion();
+        int version = PIGPIO.gpioVersion();
         logger.trace("[VERSION] <- RESULT={}", version);
         return version;
     }

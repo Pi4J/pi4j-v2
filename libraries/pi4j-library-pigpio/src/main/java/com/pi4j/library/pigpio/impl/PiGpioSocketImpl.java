@@ -119,11 +119,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioVersion">PIGPIO::gpioVersion</a>
      */
     @Override
-    public long gpioVersion() throws IOException {
+    public int gpioVersion() throws IOException {
         logger.trace("[VERSION] -> GET VERSION");
         validateReady();
         PiGpioPacket result = sendCommand(PIGPV);
-        long version = result.result();
+        int version = result.result();
         logger.trace("[VERSION] <- RESULT={}", version);
         return version;
     }

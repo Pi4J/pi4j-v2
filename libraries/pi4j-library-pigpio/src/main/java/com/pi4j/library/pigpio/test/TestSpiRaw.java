@@ -1,10 +1,10 @@
-package com.pi4j.library.pigpio;
+package com.pi4j.library.pigpio.test;
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
- * FILENAME      :  TestSpi.java
+ * FILENAME      :  TestSpiRaw.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -41,7 +41,7 @@ import java.util.Random;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class TestSpi {
+public class TestSpiRaw {
     /**
      * <p>main.</p>
      *
@@ -54,7 +54,6 @@ public class TestSpi {
 
         int init = PIGPIO.gpioInitialise();
         System.out.println("PIGPIO INITIALIZE: " + init);
-
         if(init < 0){
             System.err.println("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
             System.exit(init);
@@ -76,7 +75,7 @@ public class TestSpi {
             int result = PIGPIO.spiWrite(handle, new byte[]{ (byte)b }, 1);
             if(result < 0) {
                 System.err.println("\nERROR; SPI WRITE FAILED: ERROR CODE: " + result);
-                System.exit(init);
+                System.exit(result);
             }
 
             // READ :: SINGLE RAW BYTE
@@ -136,7 +135,7 @@ public class TestSpi {
             int result = PIGPIO.spiWrite(handle, writeBuffer, len);
             if(result < 0) {
                 System.err.println("\nERROR; SPI WRITE FAILED: ERROR CODE: " + result);
-                System.exit(init);
+                System.exit(result);
             }
 
             // take a breath to allow time for the serial data

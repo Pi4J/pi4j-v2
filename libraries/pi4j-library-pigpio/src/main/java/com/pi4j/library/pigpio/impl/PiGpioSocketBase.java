@@ -93,9 +93,11 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      */
     @Override
-    public void initialize() throws IOException {
+    public int gpioInitialise() throws IOException {
+        int result = 0;
         logger.trace("[INITIALIZE] -> STARTED");
         if(!this.initialized) {
+              result  = gpioVersion();
 //            // add a shutdown hook to perform any required clean up actions
 //            // when this library is instructed to shutdown
 //            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -115,6 +117,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
             logger.warn("[INITIALIZE] -- ALREADY INITIALIZED");
         }
         logger.trace("[INITIALIZE] <- FINISHED");
+        return result;
     }
 
     /**
@@ -127,7 +130,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
      * This function resets the used DMA channels, releases memory, and terminates any running threads.
      */
     @Override
-    public void shutdown() throws IOException {
+    public void gpioTerminate() throws IOException {
         logger.trace("[SHUTDOWN] -> STARTED");
         if(this.initialized) {
             // close all open SPI, SERIAL, I2C handles

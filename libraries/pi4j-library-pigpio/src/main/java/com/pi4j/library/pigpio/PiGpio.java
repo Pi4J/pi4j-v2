@@ -123,7 +123,7 @@ public interface PiGpio extends
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      * @throws java.io.IOException if any.
      */
-    void initialize() throws IOException;
+    int gpioInitialise() throws IOException;
 
     /**
      * Initialises the library.
@@ -137,7 +137,7 @@ public interface PiGpio extends
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      * @throws java.io.IOException if any.
      */
-    default void gpioInitialize() throws IOException { initialize(); } // US spelling variant
+    default int initialize() throws IOException{ return gpioInitialise(); }
 
     /**
      * Initialises the library.
@@ -151,7 +151,7 @@ public interface PiGpio extends
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      * @throws java.io.IOException if any.
      */
-    default void initialise() throws IOException { initialize(); }     // UK spelling variant
+    default int gpioInitialize() throws IOException { return gpioInitialise(); } // US spelling variant
 
     /**
      * Initialises the library.
@@ -165,7 +165,7 @@ public interface PiGpio extends
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      * @throws java.io.IOException if any.
      */
-    default void gpioInitialise() throws IOException { initialize(); }
+    default int initialise() throws IOException { return gpioInitialise(); }     // UK spelling variant
 
     /**
      * Shutdown/Terminate the library.
@@ -176,7 +176,9 @@ public interface PiGpio extends
      *
      * @throws java.io.IOException if any.
      */
-    void shutdown() throws IOException;
+    default void shutdown() throws IOException{
+        gpioTerminate();
+    }
 
     /**
      * Shutdown/Terminate the library.
@@ -187,7 +189,20 @@ public interface PiGpio extends
      *
      * @throws java.io.IOException if any.
      */
-    default void gpioShutdown() throws IOException { shutdown(); }
+    default void terminate() throws IOException{
+        gpioTerminate();
+    }
+
+    /**
+     * Shutdown/Terminate the library.
+     *
+     * Returns nothing.
+     * Call before program exit.
+     * This function resets the used DMA channels, releases memory, and terminates any running threads.
+     *
+     * @throws java.io.IOException if any.
+     */
+    void gpioTerminate() throws IOException;
 
     /**
      * Returns the pigpio library version.
@@ -196,7 +211,7 @@ public interface PiGpio extends
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioVersion">PIGPIO::gpioVersion</a>
      * @throws java.io.IOException if any.
      */
-    long gpioVersion() throws IOException;
+    int gpioVersion() throws IOException;
 
     /**
      * Returns the hardware revision.
