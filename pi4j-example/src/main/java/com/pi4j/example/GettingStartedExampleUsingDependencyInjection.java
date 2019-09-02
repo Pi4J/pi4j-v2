@@ -325,7 +325,7 @@ public class GettingStartedExampleUsingDependencyInjection {
         /**
          * This method invokes the Pi4J example application runtime .
          * @return nothing
-         * @throws Exception
+         * @throws Exception on error
          */
         @Override
         public Void call() throws Exception {
