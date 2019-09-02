@@ -77,7 +77,12 @@ echo "*             BUILDING PIGPIO LIBRARY (DEPENDENCY)                   *"
 echo "*                                                                    *"
 echo "**********************************************************************"
 echo
-./build-pigpio.sh $@
+if [[ -d "pigpio" ]] ; then
+    echo "The 'pigpio' library already exists; if you wish to rebuild, run a CLEAN build."
+else
+    ./build-pigpio.sh $@
+fi
+
 
 # ------------------------------------------------------
 # Pi4J JNI Native Library

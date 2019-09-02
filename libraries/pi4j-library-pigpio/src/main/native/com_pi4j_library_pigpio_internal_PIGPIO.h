@@ -467,47 +467,47 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioGetServo
 // */
 //JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_bbSPIXfer
 //  (JNIEnv *, jclass, jint, jbyteArray, jbyteArray, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    spiOpen
-// * Signature: (III)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiOpen
-//  (JNIEnv *, jclass, jint, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    spiClose
-// * Signature: (I)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiClose
-//  (JNIEnv *, jclass, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    spiRead
-// * Signature: (I[BI)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiRead
-//  (JNIEnv *, jclass, jint, jbyteArray, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    spiWrite
-// * Signature: (I[BI)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiWrite
-//  (JNIEnv *, jclass, jint, jbyteArray, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    spiXfer
-// * Signature: (I[B[BI)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiXfer
-//  (JNIEnv *, jclass, jint, jbyteArray, jbyteArray, jint);
-//
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    spiOpen
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiOpen
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    spiClose
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiClose
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    spiRead
+ * Signature: (I[BI)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiRead
+  (JNIEnv *, jclass, jint, jbyteArray, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    spiWrite
+ * Signature: (I[BI)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiWrite
+  (JNIEnv *, jclass, jint, jbyteArray, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    spiXfer
+ * Signature: (I[B[BI)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiXfer
+  (JNIEnv *, jclass, jint, jbyteArray, jbyteArray, jint);
+
 ///*
 // * Class:     com_pi4j_library_pigpio_internal_PIGPIO
 // * Method:    serOpen
