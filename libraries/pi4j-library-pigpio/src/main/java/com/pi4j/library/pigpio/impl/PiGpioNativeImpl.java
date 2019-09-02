@@ -5,7 +5,7 @@ package com.pi4j.library.pigpio.impl;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
- * FILENAME      :  PiGpioSocketImpl.java
+ * FILENAME      :  PiGpioNativeImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -30,86 +30,103 @@ package com.pi4j.library.pigpio.impl;
  */
 
 import com.pi4j.library.pigpio.*;
+import com.pi4j.library.pigpio.internal.PIGPIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
-import static com.pi4j.library.pigpio.PiGpioCmd.*;
-import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_HOST;
-import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_PORT;
+import static com.pi4j.library.pigpio.PiGpioCmd.HWVER;
+import static com.pi4j.library.pigpio.PiGpioConst.*;
 
 /**
- * <p>PiGpioSocketImpl class.</p>
+ * <p>PiGpioNativeImpl class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
-
+public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * Creates a PiGpio instance using TCP Socket communication for remote I/O access.
-     * Connects to a user specified socket hostname/ip address and port.
+     * Creates a PiGpio instance using direct (native) JNI access to the
+     * libpigpio.so shared library.  This instance may only be used
+     * when running directly on the Raspberry Pi hardware and when the
+     * PiGpio Daemon is not running.  PiGpio does not support accessing
+     * the native shared library while the daemon is running concurrently.
      *
-     * @param host hostname or IP address of the RaspberryPi to connect to via TCP/IP socket.
-     * @param port TCP port number of the RaspberryPi to connect to via TCP/IP socket.
-     * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
-     * @throws java.io.IOException if any.
-     */
-    public static PiGpio newInstance(String host, String port) throws IOException {
-        return new PiGpioSocketImpl(host, Integer.parseInt(port));
-    }
-
-    /**
-     * Creates a PiGpio instance using TCP Socket communication for remote I/O access.
-     * Connects to a user specified socket hostname/ip address and port.
-     *
-     * @param host hostname or IP address of the RaspberryPi to connect to via TCP/IP socket.
-     * @param port TCP port number of the RaspberryPi to connect to via TCP/IP socket.
-     * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
-     * @throws java.io.IOException if any.
-     */
-    public static PiGpio newInstance(String host, int port) throws IOException {
-        return new PiGpioSocketImpl(host, port);
-    }
-
-    /**
-     * Creates a PiGpio instance using TCP Socket communication for remote I/O access.
-     * Connects to a user specified socket hostname/ip address using the default port (8888).
-     *
-     * @param host hostname or IP address of the RaspberryPi to connect to via TCP/IP socket.
-     * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
-     * @throws java.io.IOException if any.
-     */
-    public static PiGpio newInstance(String host) throws IOException {
-        return new PiGpioSocketImpl(host, DEFAULT_PORT);
-    }
-
-    /**
-     * Creates a PiGpio instance using TCP Socket communication for remote I/O access.
-     * Connects to the local system (127.0.0.1) using the default port (8888).
-     *
-     * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
-     * @throws java.io.IOException if any.
+     * @return a {@link PiGpio} object.
+     * @throws IOException if any.
      */
     public static PiGpio newInstance() throws IOException {
-        return new PiGpioSocketImpl(DEFAULT_HOST, DEFAULT_PORT);
+        return new PiGpioNativeImpl();
     }
 
     /**
      * DEFAULT PRIVATE CONSTRUCTOR
-     *
-     * Connects to a user specified socket hostname/ip address and port.
-     *
-     * @param host hostname or IP address of the RaspberryPi to connect to via TCP/IP socket.
-     * @param port TCP port number of the RaspberryPi to connect to via TCP/IP socket.
-     * @throws IOException
+     * @throws IOException if any
      */
-    private PiGpioSocketImpl(String host, int port) throws IOException {
-        super(host, port);
+    private PiGpioNativeImpl() throws IOException {
+        super();
+        this.initialized = false;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Initializes the library.
+     * (The Java implementation of this function does not return a value)
+     *
+     * gpioInitialise must be called before using the other library functions with the following exceptions:
+     * - gpioCfg*
+     * - gpioVersion
+     * - gpioHardwareRevision
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
+     */
+    @Override
+    public void initialize() throws IOException {
+        logger.trace("[INITIALIZE] -> STARTED");
+
+        if(!this.initialized) {
+            // initialize the PiGpio native library
+            int result = PIGPIO.gpioInitialise();
+            validateResult(result);
+
+            // initialization successful
+            this.initialized = true;
+            logger.debug("[INITIALIZE] -- INITIALIZED SUCCESSFULLY");
+        }
+        else{
+            logger.warn("[INITIALIZE] -- ALREADY INITIALIZED");
+        }
+        logger.trace("[INITIALIZE] <- FINISHED");
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Shutdown the library.
+     *
+     * Returns nothing.
+     * Call before program exit.
+     * This function resets the used DMA channels, releases memory, and terminates any running threads.
+     */
+    @Override
+    public void shutdown() throws IOException {
+        logger.trace("[SHUTDOWN] -> STARTED");
+        if(this.initialized) {
+            // close all open SPI, SERIAL, I2C handles
+            closeAllOpenHandles();
+        }
+
+        // terminate PiGPio library
+        PIGPIO.gpioTerminate();
+
+        // clear initialized flag
+        this.initialized = false;
+        logger.trace("[SHUTDOWN] <- FINISHED");
     }
 
     /**
@@ -122,8 +139,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     public long gpioVersion() throws IOException {
         logger.trace("[VERSION] -> GET VERSION");
         validateReady();
-        PiGpioPacket result = sendCommand(PIGPV);
-        long version = result.result();
+        long version = PIGPIO.gpioVersion();
         logger.trace("[VERSION] <- RESULT={}", version);
         return version;
     }
@@ -151,8 +167,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     public long gpioHardwareRevision() throws IOException {
         logger.trace("[HARDWARE] -> GET REVISION");
         validateReady();
-        PiGpioPacket result = sendCommand(HWVER);
-        long revision = result.result();
+        int revision = PIGPIO.gpioHardwareRevision();
         logger.trace("[HARDWARE] <- REVISION: {}", revision);
         if(revision <= 0) throw new IOException("Hardware revision could not be determined.");
         return revision;
@@ -175,8 +190,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[GPIO::PUD-SET] -> PIN: {}; PUD={}({});", pin, pud.name(), pud.value());
         validateReady();
         validatePin(pin);
-        PiGpioPacket result = sendCommand(PUD, pin, pud.value());
-        logger.trace("[GPIO::PUD-SET] <- PIN: {}; PUD={}({}); SUCCESS={}", pud.name(), pud.value(), result.success());
+        int result = PIGPIO.gpioSetPullUpDown(pin, pud.value());
+        logger.trace("[GPIO::PUD-SET] <- PIN: {}; PUD={}({}); SUCCESS={}", pud.name(), pud.value(), (result>=0));
         validateResult(result); // Returns 0 if OK, otherwise PI_BAD_GPIO or PI_BAD_MODE.
     }
 
@@ -191,9 +206,9 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[GPIO::MODE-GET] -> PIN: {};", pin);
         validateReady();
         validatePin(pin);
-        PiGpioPacket result = sendCommand(MODEG, pin);
+        int result = PIGPIO.gpioGetMode(pin);
         validateResult(result); // Returns the GPIO mode if OK, otherwise PI_BAD_GPIO.
-        PiGpioMode mode = PiGpioMode.from(result.result());
+        PiGpioMode mode = PiGpioMode.from(result);
         logger.trace("[GPIO::MODE-GET] <- PIN: {}; MODE={}({})", pin, mode.name(), mode.value());
         return mode;
     }
@@ -212,8 +227,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[GPIO::MODE-SET] -> PIN: {}; MODE={}({});", pin, mode.name(), mode.value());
         validateReady();
         validatePin(pin);
-        PiGpioPacket result = sendCommand(MODES, pin, mode.value());
-        logger.trace("[GPIO::MODE-SET] <- PIN: {}; MODE={}({}); SUCCESS={}", mode.name(), mode.value(), result.success());
+        int result = PIGPIO.gpioSetMode(pin, mode.value());
+        logger.trace("[GPIO::MODE-SET] <- PIN: {}; MODE={}({}); SUCCESS={}", mode.name(), mode.value(), (result>=0));
         validateResult(result); // Returns 0 if OK, otherwise PI_BAD_GPIO or PI_BAD_PUD.
     }
 
@@ -228,9 +243,9 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[GPIO::GET] -> PIN: {}", pin);
         validateReady();
         validatePin(pin);
-        PiGpioPacket result = sendCommand(READ, pin);
+        int result = PIGPIO.gpioRead(pin);
         validateResult(result); // Returns the GPIO level if OK, otherwise PI_BAD_GPIO.
-        PiGpioState state = PiGpioState.from(result.p3()); // result value stored in P3
+        PiGpioState state = PiGpioState.from(result);
         logger.trace("[GPIO::GET] <- PIN: {} is {}({})", pin, state.name(), state.value());
         return state;
     }
@@ -246,8 +261,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[GPIO::SET] -> PIN: {}; {}({});", pin, state.name(), state.value());
         validateReady();
         validatePin(pin);
-        PiGpioPacket result = sendCommand(WRITE, pin, state.value());
-        logger.trace("[GPIO::SET] <- PIN: {}; {}({}); SUCCESS={}",  pin, state.name(), state.value(), result.success());
+        int result = PIGPIO.gpioWrite(pin, state.value());
+        logger.trace("[GPIO::SET] <- PIN: {}; {}({}); SUCCESS={}",  pin, state.name(), state.value(), (result>=0));
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_GPIO or PI_BAD_LEVEL.
     }
 
@@ -276,8 +291,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validatePin(pin);
         validateGpioGlitchFilter(steady);
-        PiGpioPacket result = sendCommand(FG, pin, steady);
-        logger.trace("[GPIO::GLITCH] <- PIN: {}; SUCCESS={}",  pin, result.success());
+        int result = PIGPIO.gpioGlitchFilter(pin, steady);
+        logger.trace("[GPIO::GLITCH] <- PIN: {}; SUCCESS={}", pin, (result>=0));
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO, or PI_BAD_FILTER.
     }
 
@@ -307,8 +322,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validatePin(pin);
         validateGpioNoiseFilter(steady, active);
-        PiGpioPacket result = sendCommand(FN, pin, steady).data(active);
-        logger.trace("[GPIO::NOISE] <- PIN: {}; SUCCESS={}",  pin, result.success());
+        int result = PIGPIO.gpioNoiseFilter(pin, steady, active);
+        logger.trace("[GPIO::NOISE] <- PIN: {}; SUCCESS={}",  pin, (result>=0));
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO, or PI_BAD_FILTER.
     }
 
@@ -334,8 +349,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validateUserPin(pin);
         validateDutyCycle(dutyCycle);
-        PiGpioPacket result = sendCommand(PWM, pin, dutyCycle);
-        logger.trace("[PWM::SET] <- PIN: {}; DUTY-CYCLE={}; SUCCESS={}",  pin, dutyCycle, result.success());
+        int result = PIGPIO.gpioPWM(pin, dutyCycle);
+        logger.trace("[PWM::SET] <- PIN: {}; DUTY-CYCLE={}; SUCCESS={}",  pin, dutyCycle, (result>=0));
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_GPIO or PI_BAD_LEVEL.
     }
 
@@ -356,11 +371,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[PWM::GET] -> PIN: {}", pin);
         validateReady();
         validateUserPin(pin);
-        PiGpioPacket result = sendCommand(GDC, pin);
-        var dutyCycle = result.result();
-        logger.trace("[PWM::GET] <- PIN: {}; DUTY-CYCLE={}; SUCCESS={}",  pin, dutyCycle, result.success());
+        int result = PIGPIO.gpioGetPWMdutycycle(pin);
+        logger.trace("[PWM::GET] <- PIN: {}; DUTY-CYCLE={}; SUCCESS={}",  pin, result, (result>=0));
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO or PI_NOT_PWM_GPIO.
-        return dutyCycle;
+        return result;
     }
 
     /**
@@ -395,11 +409,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validateUserPin(pin);
         //validateDutyCycleRange(range);
-        PiGpioPacket result = sendCommand(PRS, pin, range);
-        var readRange = result.result();
-        logger.trace("[PWM-RANGE::SET] <- PIN: {}; REAL-RANGE={}; SUCCESS={}",  pin, readRange, result.success());
+        int result = PIGPIO.gpioSetPWMrange(pin, range);
+        logger.trace("[PWM-RANGE::SET] <- PIN: {}; REAL-RANGE={}; SUCCESS={}",  pin, result, (result>=0));
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO or PI_BAD_DUTYRANGE.
-        return result.result();
+        return result;
     }
 
     /**
@@ -414,11 +427,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[PWM-RANGE::GET] -> PIN: {}", pin);
         validateReady();
         validateUserPin(pin);
-        PiGpioPacket result = sendCommand(PRG, pin);
-        var range = result.result();
-        logger.trace("[PWM-RANGE::GET] <- PIN: {}; RANGE={}; SUCCESS={}",  pin, range, result.success());
+        int result = PIGPIO.gpioGetPWMrange(pin);
+        logger.trace("[PWM-RANGE::GET] <- PIN: {}; RANGE={}; SUCCESS={}",  pin, result, (result>=0));
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO or PI_BAD_DUTYRANGE.
-        return range;
+        return result;
     }
 
     /**
@@ -435,11 +447,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[PWM-REAL-RANGE::GET] -> PIN: {}", pin);
         validateReady();
         validateUserPin(pin);
-        PiGpioPacket result = sendCommand(PRRG, pin);
-        var range = result.result();
-        logger.trace("[PWM-REAL-RANGE::GET] <- PIN: {}; RANGE={}; SUCCESS={}",  pin, range, result.success());
+        int result = PIGPIO.gpioGetPWMrealRange(pin);
+        logger.trace("[PWM-REAL-RANGE::GET] <- PIN: {}; RANGE={}; SUCCESS={}",  pin, result, (result>=0));
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO or PI_BAD_DUTYRANGE.
-        return range;
+        return result;
     }
 
     /**
@@ -487,11 +498,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validateUserPin(pin);
         // validateFrequency(frequency); TODO :: IMPLEMENT 'validateFrequency()'
-        PiGpioPacket result = sendCommand(PFS, pin, frequency);
-        var actualRange = result.result();
-        logger.trace("[PWM-FREQ::SET] <- PIN: {}; FREQUENCY={}; SUCCESS={}",  pin, frequency, result.success());
+        int result = PIGPIO.gpioSetPWMfrequency(pin, frequency);
+        logger.trace("[PWM-FREQ::SET] <- PIN: {}; FREQUENCY={}; SUCCESS={}",  pin, result, (result>=0));
         validateResult(result);  // Returns the numerically closest frequency if OK, otherwise PI_BAD_USER_GPIO.
-        return actualRange;
+        return result;
     }
 
     /**
@@ -512,11 +522,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[PWM-FREQ::GET] -> PIN: {}", pin);
         validateReady();
         validateUserPin(pin);
-        PiGpioPacket result = sendCommand(PFG, pin);
-        var frequency = result.result();
-        logger.trace("[PWM-FREQ::GET] <- PIN: {}; FREQUENCY={}; SUCCESS={}",  pin, frequency, result.success());
+        int result = PIGPIO.gpioGetPWMfrequency(pin);
+        logger.trace("[PWM-FREQ::GET] <- PIN: {}; FREQUENCY={}; SUCCESS={}",  pin, result, (result>=0));
         validateResult(result);  // Returns the frequency (in hertz) used for the GPIO if OK, otherwise PI_BAD_USER_GPIO.
-        return frequency;
+        return result;
     }
 
     /**
@@ -560,11 +569,16 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validateUserPin(pin);
         // validateHwPwmFrequency(frequency); TODO :: IMPLEMENT 'validateHwPwmFrequency()'
-        PiGpioPacket tx = new PiGpioPacket(HP, pin, frequency).data(dutyCycle);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[HW-PWM::SET] <- PIN: {}; SUCCESS={}",  pin, rx.success());
-        validateResult(rx);  // Returns the numerically closest frequency if OK, otherwise PI_BAD_USER_GPIO.
+        int result = PIGPIO.gpioHardwarePWM(pin, frequency, dutyCycle);
+        logger.trace("[HW-PWM::SET] <- PIN: {}; SUCCESS={}",  pin, (result>=0));
+        validateResult(result);  // Returns the numerically closest frequency if OK, otherwise PI_BAD_USER_GPIO.
     }
+
+    @Override
+    public void gpioNotifications(int pin, boolean enabled) throws IOException {
+        // TODO :: IMPLEMENT GPIO EVENTS
+    }
+
 
     // *****************************************************************************************************
     // *****************************************************************************************************
@@ -613,8 +627,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validateUserPin(pin);
         validatePulseWidth(pulseWidth);
-        PiGpioPacket result = sendCommand(SERVO, pin, pulseWidth);
-        logger.trace("[SERVO::SET] <- PIN: {}; PULSE-WIDTH={}; SUCCESS={}",  pin, pulseWidth, result.success());
+        int result = PIGPIO.gpioServo(pin, pulseWidth);
+        logger.trace("[SERVO::SET] <- PIN: {}; PULSE-WIDTH={}; SUCCESS={}",  pin, pulseWidth, (result>=0));
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO or PI_BAD_PULSEWIDTH.
     }
 
@@ -628,14 +642,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[SERVO::GET] -> PIN: {}", pin);
         validateReady();
         validateUserPin(pin);
-        PiGpioPacket result = sendCommand(GPW, pin);
-        var pulseWidth = result.result();
-        logger.trace("[SERVO::GET] <- PIN: {}; PULSE-WIDTH={}; SUCCESS={}",  pin, pulseWidth, result.success());
+        int result = PIGPIO.gpioGetServoPulsewidth(pin);
+        logger.trace("[SERVO::GET] <- PIN: {}; PULSE-WIDTH={}; SUCCESS={}",  pin, result, (result>=0));
 
         // Returns 0 (off), 500 (most anti-clockwise) to 2500 (most clockwise)
         // if OK, otherwise PI_BAD_USER_GPIO or PI_NOT_SERVO_GPIO.
         validateResult(result);
-        return pulseWidth;
+        return result;
     }
 
 
@@ -657,10 +670,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[DELAY] -> MICROS: {}", micros);
         validateReady();
         validateDelayMicroseconds(micros);
-        PiGpioPacket result = sendCommand(MICS, (int)micros);
-        logger.trace("[DELAY] <- MICROS: {}; SUCCESS={}",  micros, result.success());
+        long result = PIGPIO.gpioDelay(micros);
+        logger.trace("[DELAY] <- MICROS: {}; SUCCESS={}",  micros, (result>=0));
         validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
-        return micros;
+        return result;
     }
 
     /**
@@ -674,8 +687,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[DELAY] -> MILLIS: {}", millis);
         validateReady();
         validateDelayMilliseconds(millis);
-        PiGpioPacket result = sendCommand(MILS, (int)millis);
-        logger.trace("[DELAY] <- MILLIS: {}; SUCCESS={}",  millis, result.success());
+
+        // determine number of microseconds
+        long total_micros = millis * 1000;
+        int seconds =  (int)(total_micros/1000000);
+        int micros = (int)(total_micros%1000000);
+        int result = PIGPIO.gpioSleep(PI_TIME_RELATIVE, seconds, micros);
+        logger.trace("[DELAY] <- MILLIS: {}; SUCCESS={}",  millis, (result>=0));
         validateResult(result); // Upon success nothing is returned. On error a negative status code will be returned.
         return millis;
     }
@@ -706,11 +724,9 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     public long gpioTick() throws IOException {
         logger.trace("[TICK::GET] -> Get current tick");
         validateReady();
-        PiGpioPacket tx = new PiGpioPacket(TICK);
-        PiGpioPacket rx = sendPacket(tx);
-        long tick = Integer.toUnsignedLong(rx.result()); // convert (UInt32) 32-bit unsigned value to long
-        logger.trace("[TICK::GET] <- TICK: {}; SUCCESS={}",  tick, rx.success());
-        return tick;
+        long result = PIGPIO.gpioTick();
+        logger.trace("[TICK::GET] <- TICK: {}; SUCCESS={}",  result, (result>=0));
+        return result;
     }
 
     // *****************************************************************************************************
@@ -739,20 +755,22 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validateI2cBus(bus);
         validateI2cDeviceAddress(device);
-        PiGpioPacket tx = new PiGpioPacket(I2CO, bus, device).data(flags);
-        PiGpioPacket rx = sendPacket(tx);
-        int handle = rx.result();
-        logger.trace("[I2C::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false);
+//        PiGpioPacket tx = new PiGpioPacket(I2CO, bus, device).data(flags);
+//        PiGpioPacket rx = sendPacket(tx);
+//        int handle = rx.result();
+//        logger.trace("[I2C::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+//        validateResult(rx, false);
+//
+//        // if the open was successful, then we need to cache the I2C handle
+//        if(rx.success()) {
+//            System.out.println(">>> " + handle);
+//            i2cHandles.add(handle);
+//        }
+//
+//        // return handle
+//        return handle;
 
-        // if the open was successful, then we need to cache the I2C handle
-        if(rx.success()) {
-            System.out.println(">>> " + handle);
-            i2cHandles.add(handle);
-        }
-
-        // return handle
-        return handle;
+        return -1;
     }
 
     /**
@@ -766,16 +784,18 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::CLOSE] -> HANDLE={}, Close I2C Bus", handle);
         validateReady();
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(I2CC, handle);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false);
+//        PiGpioPacket tx = new PiGpioPacket(I2CC, handle);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+//        validateResult(rx, false);
+//
+//        // if the close was successful, then we need to remove the I2C handle from cache
+//        if(rx.success()) i2cHandles.remove(handle);
+//
+//        // return result
+//        return rx.result();
 
-        // if the close was successful, then we need to remove the I2C handle from cache
-        if(rx.success()) i2cHandles.remove(handle);
-
-        // return result
-        return rx.result();
+        return -1;
     }
 
     /**
@@ -789,11 +809,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::WRITE] -> HANDLE={}; R/W Bit [{}]", handle, bit ? 1 : 0);
         validateReady();
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(I2CWQ, handle, bit ? 1 : 0);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CWQ, handle, bit ? 1 : 0);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+//        validateResult(rx, false);
+//        return rx.result();
+
+        return -1;
     }
 
     /**
@@ -807,11 +829,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
         validateReady();
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(I2CWS, handle, Byte.toUnsignedInt(value));
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CWS, handle, Byte.toUnsignedInt(value));
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+//        validateResult(rx, false);
+//        return rx.result();
+
+        return -1;
     }
 
     /**
@@ -825,11 +849,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::READ] -> [{}]; Byte", handle);
         validateReady();
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(I2CRS, handle);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CRS, handle);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+//        validateResult(rx, false);
+//        return rx.result();
+
+        return -1;
     }
 
     /**
@@ -844,11 +870,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket tx = new PiGpioPacket(I2CWB, handle, register).data(Byte.toUnsignedInt(value));
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CWB, handle, register).data(Byte.toUnsignedInt(value));
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+//        validateResult(rx, false);
+//        return rx.result();
+
+        return -1;
     }
 
     /**
@@ -863,11 +891,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket tx = new PiGpioPacket(I2CWW, handle, register).data(value);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CWW, handle, register).data(value);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+//        validateResult(rx, false);
+//        return rx.result();
+
+        return -1;
     }
 
     /**
@@ -882,11 +912,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket tx = new PiGpioPacket(I2CRB, handle, register);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CRB, handle, register);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+//        validateResult(rx, false);
+//        return rx.result();
+
+        return -1;
     }
 
     /**
@@ -901,11 +933,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket tx = new PiGpioPacket(I2CRW, handle, register);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CRW, handle, register);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+//        validateResult(rx, false);
+//        return rx.result();
+
+        return -1;
     }
 
     /**
@@ -921,11 +955,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket tx = new PiGpioPacket(I2CPC, handle, register).data(value);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CPC, handle, register).data(value);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+//        validateResult(rx, false);
+//        return rx.result();
+
+        return -1;
     }
 
     /**
@@ -942,11 +978,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateHandle(handle);
         validateI2cRegister(register);
         validateI2cBlockLength(length);
-        PiGpioPacket tx = new PiGpioPacket(I2CWK, handle, register).data(data, offset, length);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CWK, handle, register).data(data, offset, length);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+//        validateResult(rx, false);
+//        return rx.result();
+
+        return -1;
     }
 
     /**
@@ -962,15 +1000,17 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket tx = new PiGpioPacket(I2CRK, handle, register);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        if(rx.success()) {
-            int actual = rx.result();
-            if(rx.dataLength() < actual) actual = rx.dataLength();
-            System.arraycopy(rx.data(), 0, buffer, offset, actual);
-        }
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CRK, handle, register);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+//        if(rx.success()) {
+//            int actual = rx.result();
+//            if(rx.dataLength() < actual) actual = rx.dataLength();
+//            System.arraycopy(rx.data(), 0, buffer, offset, actual);
+//        }
+//        return rx.result();
+
+        return -1;
     }
 
     /**
@@ -994,22 +1034,24 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateI2cRegister(register);
         validateI2cBlockLength(writeLength);
 
-        // write/read from I2C device
-        PiGpioPacket tx = new PiGpioPacket(I2CPK, handle, register).data(write, writeOffset, writeLength);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false);
+//        // write/read from I2C device
+//        PiGpioPacket tx = new PiGpioPacket(I2CPK, handle, register).data(write, writeOffset, writeLength);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+//        validateResult(rx, false);
+//
+//        // copy data bytes to provided "read" array/buffer
+//        if(rx.success()) {
+//            int readLength = rx.result();
+//            if(rx.dataLength() < readLength) readLength = rx.dataLength();
+//
+//            // make sure the read array has sufficient space to store the bytes returned
+//            Objects.checkFromIndexSize(readOffset, readLength, read.length);
+//            System.arraycopy(rx.data(), 0, read, readOffset, readLength);
+//        }
+//        return rx.result();
 
-        // copy data bytes to provided "read" array/buffer
-        if(rx.success()) {
-            int readLength = rx.result();
-            if(rx.dataLength() < readLength) readLength = rx.dataLength();
-
-            // make sure the read array has sufficient space to store the bytes returned
-            Objects.checkFromIndexSize(readOffset, readLength, read.length);
-            System.arraycopy(rx.data(), 0, read, readOffset, readLength);
-        }
-        return rx.result();
+        return -1;
     }
 
     /**
@@ -1027,28 +1069,30 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
         validateI2cRegister(register);
-        PiGpioPacket tx = new PiGpioPacket(I2CRI, handle, register).data(length);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false);
+//        PiGpioPacket tx = new PiGpioPacket(I2CRI, handle, register).data(length);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+//        validateResult(rx, false);
+//
+//        logger.trace("[I2C::READ] <- DATA SIZE={}",  rx.result());
+//        logger.trace("[I2C::READ] <- DATA LENGTH={}",  rx.dataLength());
+//        logger.trace("[I2C::READ] <- BUFFER SIZE={}",  rx.data());
+//        logger.trace("[I2C::READ] <- OFFSET={}",  offset);
+//
+//        if(rx.success()) {
+//            try {
+//                int actual = rx.result();
+//                if(rx.dataLength() < actual) actual = rx.dataLength();
+//                System.arraycopy(rx.data(), 0, buffer, offset, actual);
+//            }
+//            catch (ArrayIndexOutOfBoundsException a){
+//                logger.error(a.getMessage(), a);
+//            }
+//
+//        }
+//        return rx.result();
 
-        logger.trace("[I2C::READ] <- DATA SIZE={}",  rx.result());
-        logger.trace("[I2C::READ] <- DATA LENGTH={}",  rx.dataLength());
-        logger.trace("[I2C::READ] <- BUFFER SIZE={}",  rx.data());
-        logger.trace("[I2C::READ] <- OFFSET={}",  offset);
-
-        if(rx.success()) {
-            try {
-                int actual = rx.result();
-                if(rx.dataLength() < actual) actual = rx.dataLength();
-                System.arraycopy(rx.data(), 0, buffer, offset, actual);
-            }
-            catch (ArrayIndexOutOfBoundsException a){
-                logger.error(a.getMessage(), a);
-            }
-
-        }
-        return rx.result();
+        return -1;
     }
 
     /**
@@ -1064,11 +1108,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateHandle(handle);
         validateI2cRegister(register);
         validateI2cBlockLength(data.length);
-        PiGpioPacket tx = new PiGpioPacket(I2CWI, handle, register).data(data, offset, length);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CWI, handle, register).data(data, offset, length);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+//        validateResult(rx, false);
+//        return rx.result();
+
+        return -1;
     }
 
     /**
@@ -1082,16 +1128,18 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::READ] -> [{}]; I2C Raw Read [{} bytes]", handle, length);
         validateReady();
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(I2CRD, handle, length);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false);
-        if(rx.success()) {
-            int actual = rx.result();
-            if(rx.dataLength() < actual) actual = rx.dataLength();
-            System.arraycopy(rx.data(), 0, buffer, offset, actual);
-        }
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CRD, handle, length);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+//        validateResult(rx, false);
+//        if(rx.success()) {
+//            int actual = rx.result();
+//            if(rx.dataLength() < actual) actual = rx.dataLength();
+//            System.arraycopy(rx.data(), 0, buffer, offset, actual);
+//        }
+//        return rx.result();
+
+        return -1;
     }
 
     /**
@@ -1105,11 +1153,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::WRITE] -> [{}]; I2C Raw Write [{} bytes]", handle, data.length);
         validateReady();
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(I2CWD, handle).data(data, offset, length);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+//        PiGpioPacket tx = new PiGpioPacket(I2CWD, handle).data(data, offset, length);
+//        PiGpioPacket rx = sendPacket(tx);
+//        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+//        validateResult(rx, false);
+//        return rx.result();
+
+        return -1;
     }
 
     // *****************************************************************************************************
@@ -1129,14 +1179,16 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     public int serOpen(CharSequence device, int baud, int flags) throws IOException {
         logger.trace("[SERIAL::OPEN] -> Open Serial Port [{}] at Baud Rate [{}]", device, baud);
         validateReady();
-        PiGpioPacket tx = new PiGpioPacket(SERO, baud, flags).data(device);
-        PiGpioPacket rx = sendPacket(tx);
-        int handle = rx.result();
-        logger.trace("[SERIAL::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false);
+
+        // open the serial port/device
+        int result = PIGPIO.serOpen(device.toString(), baud, flags);
+        int handle = result;
+        boolean success = result >=0;
+        logger.trace("[SERIAL::OPEN] <- HANDLE={}; SUCCESS={}",  handle, success);
+        validateResult(result, false);
 
         // if the open was successful, then we need to add the SERIAL handle to cache
-        if(rx.success()) serialHandles.add(handle);
+        if(success) serialHandles.add(handle);
 
         // return the handle
         return handle;
@@ -1153,16 +1205,18 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[SERIAL::CLOSE] -> HANDLE={}, Close Serial Port", handle);
         validateReady();
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(SERC, handle);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[SERIAL::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false);
+
+        // close the serial port/device
+        int result  = PIGPIO.serClose(handle);
+        boolean success = result >=0;
+        logger.trace("[SERIAL::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, success);
+        validateResult(result, false);
 
         // if the close was successful, then we need to remove the SERIAL handle from cache
-        if(rx.success()) serialHandles.remove(handle);
+        if(success) serialHandles.remove(handle);
 
         // return result
-        return rx.result();
+        return result;
     }
 
     /**
@@ -1176,10 +1230,9 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[SERIAL::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
         validateReady();
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(SERWB, handle, Byte.toUnsignedInt(value));
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[SERIAL::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false);
+        int result = PIGPIO.serWriteByte(handle, value);
+        logger.trace("[SERIAL::WRITE] <- HANDLE={}; SUCCESS={}", handle, (result>=0));
+        validateResult(result, false);
         return 0;
     }
 
@@ -1195,11 +1248,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[SERIAL::READ] -> [{}]; Byte", handle);
         validateReady();
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(SERRB, handle);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[SERIAL::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.p3());
-        validateResult(rx, false);
-        return rx.result();
+        int result = PIGPIO.serReadByte(handle);
+        logger.trace("[SERIAL::READ] <- HANDLE={}; SUCCESS={}",  handle, (result>=0));
+        validateResult(result, false);
+        return result;
     }
 
     /**
@@ -1215,11 +1267,20 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         Objects.checkFromIndexSize(offset, length, data.length);
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(SERW, handle).data(data, offset, length);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[SERIAL::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+
+        // if an offset is provided, then we need to create a new temporary array
+        // to receive the data; else use the raw buffer array with an offset of zero
+        byte[] temp;
+        if(offset == 0)
+            temp = data;
+        else
+            temp = Arrays.copyOfRange(data, offset, offset+length);
+
+        // write data array to serial device/port
+        int result = PIGPIO.serWrite(handle, temp, length);
+        logger.trace("[SERIAL::WRITE] <- HANDLE={}; SUCCESS={}", handle, (result>=0));
+        validateResult(result, false);
+        return result;
     }
 
     /**
@@ -1235,16 +1296,31 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(SERR, handle, length);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[SERIAL::READ] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, rx.success(), rx.dataLength());
-        validateResult(rx, false);
-        if(rx.success()) {
-            int actual = rx.result();
-            if(rx.dataLength() < actual) actual = rx.dataLength();
-            System.arraycopy(rx.data(), 0, buffer, offset, actual);
+
+        // if an offset is provided, then we need to create a new temporary array
+        // to receive the data; else use the raw buffer array with an offset of zero
+        byte[] temp;
+        if(offset == 0){
+            temp = buffer;
         }
-        return rx.result();
+        else {
+            temp = new byte[length];
+        }
+
+        // perform the read on the serial device/port
+        int result = PIGPIO.serRead(handle, temp, length);
+        boolean success = result >=0;
+
+        logger.trace("[SERIAL::READ] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, success, result);
+        validateResult(result, false);
+
+        // if an offset was specified, then copy the data bytes read into the
+        // temporary array back to the buffer based on the offset specified
+        if(offset > 0 && result > 0) {
+            System.arraycopy(temp, 0, buffer, offset, result);
+        }
+
+        return result;
     }
 
     /**
@@ -1257,12 +1333,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     public int serDataAvailable(int handle) throws IOException {
         logger.trace("[SERIAL::AVAIL] -> Get number of bytes available to read");
         validateReady();
-        PiGpioPacket tx = new PiGpioPacket(SERDA, handle);
-        PiGpioPacket rx = sendPacket(tx);
-        int available = rx.result();
-        logger.trace("[SERIAL::AVAIL] <- HANDLE={}; SUCCESS={}; AVAILABLE={}",  handle, rx.success(), available);
-        validateResult(rx, false);
-        return available;
+        int result = PIGPIO.serDataAvailable(handle);
+        logger.trace("[SERIAL::AVAIL] <- HANDLE={}; SUCCESS={}; AVAILABLE={}",  handle, (result>=0), result);
+        validateResult(result, false);
+        return result;
     }
 
     /**
@@ -1275,20 +1349,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[SERIAL::DRAIN] -> Drain any remaining bytes in serial RX buffer");
         validateReady();
 
-        // get number of bytes available
-        PiGpioPacket tx = new PiGpioPacket(SERDA, handle);
-        PiGpioPacket rx = sendPacket(tx);
-        validateResult(rx, false);
-        int available = rx.result();
+        // drain data is serial device/port receive buffer
+        int result = PIGPIO.serDrain(handle);
+        validateResult(result, false);
 
         // if any bytes are available, then drain them now
-        if(available > 0){
-            tx = new PiGpioPacket(SERR, handle, available);
-            rx = sendPacket(tx);
-            validateResult(rx, false);
-        }
-        logger.trace("[SERIAL::DRAIN] <- HANDLE={}; SUCCESS={}; DRAINED={}",  handle, rx.success(), rx.result());
-        return available;
+        logger.trace("[SERIAL::DRAIN] <- HANDLE={}; SUCCESS={}; DRAINED={}",  handle, (result>=0), result);
+        return result;
     }
 
     // *****************************************************************************************************
@@ -1360,14 +1427,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     public int spiOpen(int channel, int baud, int flags) throws IOException {
         logger.trace("[SPI::OPEN] -> Open SPI Channel [{}] at Baud Rate [{}]; Flags=[{}]", channel, baud, flags);
         validateReady();
-        PiGpioPacket tx = new PiGpioPacket(SPIO, channel, baud).data(flags);
-        PiGpioPacket rx = sendPacket(tx);
-        int handle = rx.result();
-        logger.trace("[SPI::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false);
+        int handle = PIGPIO.spiOpen(channel, baud, flags);
+        boolean success = handle >=0;
+        logger.trace("[SPI::OPEN] <- HANDLE={}; SUCCESS={}",  handle, success);
+        validateResult(handle, false);
 
         // if the open was successful, then we need to add the SPI handle to cache
-        if(rx.success()) spiHandles.add(handle);
+        if(success) spiHandles.add(handle);
 
         // return handle
         return handle;
@@ -1384,16 +1450,16 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[SPI::CLOSE] -> HANDLE={}, Close Serial Port", handle);
         validateReady();
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(SPIC, handle);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[SPI::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
-        validateResult(rx, false);
+        int result = PIGPIO.spiClose(handle);
+        boolean success = result >=0;
+        logger.trace("[SPI::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, success);
+        validateResult(result, false);
 
         // if the close was successful, then we need to remove the SPI handle from cache
-        if(rx.success()) spiHandles.remove(handle);
+        if(success) spiHandles.remove(handle);
 
         // return result
-        return rx.result();
+        return result;
     }
 
     /**
@@ -1409,11 +1475,19 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         Objects.checkFromIndexSize(offset, length, data.length);
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(SPIW, handle).data(data, offset, length);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[SPI::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
-        validateResult(rx, false);
-        return rx.result();
+
+        // if a write offset is provided, then we need to create a new temporary array to
+        // copy the outbound data; else use the raw write buffer array with an offset of zero
+        byte[] temp;
+        if(offset == 0)
+            temp = data;
+        else
+            temp = Arrays.copyOfRange(data, offset, offset+length);
+
+        int result = PIGPIO.spiWrite(handle, temp, length);
+        logger.trace("[SPI::WRITE] <- HANDLE={}; SUCCESS={}", handle, (result>=0));
+        validateResult(result, false);
+        return result;
     }
 
     /**
@@ -1431,16 +1505,31 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(SPIR, handle, length);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[SPI::READ] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, rx.success(), rx.dataLength());
-        validateResult(rx, false);
-        if(rx.success()) {
-            int actual = rx.result();
-            if(rx.dataLength() < actual) actual = rx.dataLength();
-            System.arraycopy(rx.data(), 0, buffer, offset, actual);
+
+        // if an offset is provided, then we need to create a new temporary array
+        // to receive the data; else use the raw buffer array with an offset of zero
+        byte[] temp;
+        if(offset == 0){
+            temp = buffer;
         }
-        return rx.result();
+        else {
+            temp = new byte[length];
+        }
+
+        // perform the read on the serial device/port
+        int result = PIGPIO.spiRead(handle, temp, length);
+        boolean success = result >= 0;
+
+        logger.trace("[SPI::READ] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, success, result);
+        validateResult(result, false);
+
+        // if an offset was specified, then copy the data bytes read into the
+        // temporary array back to the buffer based on the offset specified
+        if(offset > 0 && result > 0) {
+            System.arraycopy(temp, 0, buffer, offset, result);
+        }
+
+        return result;
     }
 
     /**
@@ -1461,15 +1550,36 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         Objects.checkFromIndexSize(writeOffset, numberOfBytes, write.length);
         Objects.checkFromIndexSize(readOffset, numberOfBytes, read.length);
         validateHandle(handle);
-        PiGpioPacket tx = new PiGpioPacket(SPIX, handle).data(write, writeOffset, numberOfBytes);
-        PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[SPI::XFER] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, rx.success(), rx.dataLength());
-        validateResult(rx, false);
-        if(rx.success()) {
-            int actual = rx.result();
-            if(rx.dataLength() < actual) actual = rx.dataLength();
-            System.arraycopy(rx.data(), 0, read, readOffset, actual);
+
+        // if a read offset is provided, then we need to create a new temporary array
+        // to receive the data; else use the raw buffer array with an offset of zero
+        byte[] readTemp;
+        if(readOffset == 0){
+            readTemp = read;
         }
-        return rx.result();
+        else {
+            readTemp = new byte[numberOfBytes];
+        }
+
+        // if a write offset is provided, then we need to create a new temporary array to
+        // copy the outbound data; else use the raw write buffer array with an offset of zero
+        byte[] writeTemp;
+        if(writeOffset == 0)
+            writeTemp = write;
+        else
+            writeTemp = Arrays.copyOfRange(write, writeOffset, writeOffset+numberOfBytes);
+
+        // perform SPI data transfer
+        int result = PIGPIO.spiXfer(handle, writeTemp, readTemp, numberOfBytes);
+        boolean success = result >= 0;
+        logger.trace("[SPI::XFER] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, success, result);
+        validateResult(result, false);
+
+        // if a read offset was specified, then copy the data bytes read into the
+        // temporary array back to the buffer based on the offset specified
+        if(readOffset > 0 && result > 0) {
+            System.arraycopy(readTemp, 0, read, readOffset, result);
+        }
+        return result;
     }
 }

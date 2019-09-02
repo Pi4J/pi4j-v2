@@ -29,6 +29,7 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
+import com.pi4j.library.pigpio.impl.PiGpioNativeImpl;
 import com.pi4j.library.pigpio.impl.PiGpioSocketImpl;
 
 import java.io.IOException;
@@ -94,6 +95,20 @@ public interface PiGpio extends
      */
     static PiGpio newSocketInstance() throws IOException {
         return PiGpioSocketImpl.newInstance();
+    }
+
+    /**
+     * Creates a PiGpio instance using direct (native) JNI access to the
+     * libpigpio.so shared library.  This instance may only be used
+     * when running directly on the Raspberry Pi hardware and when the
+     * PiGpio Daemon is not running.  PiGpio does not support accessing
+     * the native shared library while the daemon is running concurrently.
+     *
+     * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @throws java.io.IOException if any.
+     */
+    static PiGpio newNativeInstance() throws IOException {
+        return PiGpioNativeImpl.newInstance();
     }
 
     /**
@@ -237,7 +252,7 @@ public interface PiGpio extends
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioDelay">PIGPIO::gpioDelay</a>
      * @throws java.io.IOException if any.
      */
-    int gpioDelay(int micros) throws IOException;
+    long gpioDelay(long micros) throws IOException;
     /**
      * <p>gpioDelayMicroseconds.</p>
      *
@@ -245,7 +260,7 @@ public interface PiGpio extends
      * @return a int.
      * @throws java.io.IOException if any.
      */
-    default int gpioDelayMicroseconds(int micros) throws IOException{
+    default long gpioDelayMicroseconds(long micros) throws IOException{
         return gpioDelay(micros);
     }
 

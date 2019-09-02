@@ -723,46 +723,51 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serDrain
 // */
 //JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioHardwareClock
 //  (JNIEnv *, jclass, jint, jlong);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioHardwarePWM
-// * Signature: (III)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioHardwarePWM
-//  (JNIEnv *, jclass, jint, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioTime
-// * Signature: (III)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTime
-//  (JNIEnv *, jclass, jint, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioSleep
-// * Signature: (III)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSleep
-//  (JNIEnv *, jclass, jint, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioDelay
-// * Signature: (J)J
-// */
-//JNIEXPORT jlong JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioDelay
-//  (JNIEnv *, jclass, jlong);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioTick
-// * Signature: ()J
-// */
-//JNIEXPORT jlong JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTick
-//  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioHardwarePWM
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioHardwarePWM
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioTime
+ * Signature: (I)J
+ *
+ * returns a 64 bit unsigned value where the 'seconds' are placed
+ * in the upper 32 bits and the 'micros' are in the lower 32 bits
+ *
+ * returns a zero value if failed
+ */
+JNIEXPORT jlong JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTime
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioSleep
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSleep
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioDelay
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioDelay
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioTick
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTick
+  (JNIEnv *, jclass);
 
 /*
  * Class:     com_pi4j_library_pigpio_internal_PIGPIO

@@ -54,14 +54,10 @@ import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_PORT;
 public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    protected final Set<Integer> serialHandles = Collections.synchronizedSet(new HashSet<>());
-    protected final Set<Integer> i2cHandles = Collections.synchronizedSet(new HashSet<>());
-    protected final Set<Integer> spiHandles = Collections.synchronizedSet(new HashSet<>());
     protected final PiGpioSocketMonitor monitor;
 
     protected String host = DEFAULT_HOST;
     protected int port = DEFAULT_PORT;
-    protected boolean initialized = false;
     protected boolean connected = false;
     protected Socket socket = null;
 
@@ -134,36 +130,8 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
     public void shutdown() throws IOException {
         logger.trace("[SHUTDOWN] -> STARTED");
         if(this.initialized) {
-
-            // close all open SPI handles
-            spiHandles.forEach((handle) -> {
-                try {
-                    logger.trace("[SHUTDOWN] -- CLOSING OPEN SPI HANDLE: [{}]", handle);
-                    spiClose(handle.intValue());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
-            // close all open SERIAL handles
-            serialHandles.forEach((handle) -> {
-                try {
-                    logger.trace("[SHUTDOWN] -- CLOSING OPEN SERIAL HANDLE: [{}]", handle);
-                    serClose(handle.intValue());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
-            // close all open I2C handles
-            i2cHandles.forEach((handle) -> {
-                try {
-                    logger.trace("[SHUTDOWN] -- CLOSING OPEN I2C HANDLE: [{}]", handle);
-                    i2cClose(handle.intValue());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+            // close all open SPI, SERIAL, I2C handles
+            closeAllOpenHandles();
 
             // shutdown GPIO notifications monitor
             if(monitor != null && monitor.isConnected())
@@ -297,19 +265,10 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
      *
      * @throws java.io.IOException if any.
      */
+    @Override
     protected void validateReady() throws IOException {
-        validateInitialized();
+        super.validateReady();
         validateConnection();
-    }
-
-    /**
-     * <p>validateInitialized.</p>
-     *
-     * @throws java.io.IOException if any.
-     */
-    protected void validateInitialized() throws IOException {
-        if(!this.initialized)
-            throw new IOException("PIGPIO NOT INITIALIZED; make sure you call the PiGpio::initialize() function first.");
     }
 
     /**

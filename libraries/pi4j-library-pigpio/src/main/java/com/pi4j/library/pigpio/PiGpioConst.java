@@ -393,4 +393,10 @@ public interface PiGpioConst {
     /** Constant <code>PI_MAX_MILS_DELAY=60000</code> */
     int PI_MAX_MILS_DELAY           = 60000;   /* 60 seconds */
 
+    // ----------------------------------
+    // TIME TYPES
+    // ----------------------------------
+    int PI_TIME_RELATIVE            = 0;
+    int PI_TIME_ABSOLUTE            = 1;
+
 }

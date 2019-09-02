@@ -220,6 +220,17 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioGetPWMfr
     return gpioGetPWMfrequency((unsigned)user_gpio);
 }
 
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioHardwarePWM
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioHardwarePWM
+  (JNIEnv *env, jclass class, jint user_gpio, jint frequency, jint dutyCycle)
+{
+    return gpioHardwarePWM((unsigned)user_gpio, (unsigned)frequency, (unsigned)dutyCycle);
+}
+
 // *****************************************************************************************************
 // *****************************************************************************************************
 // SERVO IMPLEMENTATION
@@ -487,4 +498,74 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serDrain
     else {
         return 0;
     }
+}
+
+
+
+
+
+
+
+// *****************************************************************************************************
+// *****************************************************************************************************
+// DELAY/SLEEP/TIMER IMPLEMENTATION
+// *****************************************************************************************************
+// *****************************************************************************************************
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioTime
+ * Signature: (III)I
+ */
+JNIEXPORT jlong JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTime
+  (JNIEnv *env, jclass class, jint timetype)
+{
+    int seconds = 0;
+    int micros = 0;
+    int *seconds_ptr = &seconds;
+    int *micros_ptr = &micros;
+
+    jint result = gpioTime((unsigned)timetype, seconds_ptr, micros_ptr);
+
+    if(result < 0){
+        return 0;
+    }
+
+    // return a 64 bit unsigned value where the 'seconds' are placed
+    // in the upper 32 bits and the 'micros' are in the lower 32 bits
+    unsigned long time = (seconds << 32UL) | (micros & 0xFFFFFFFFUL);
+    return time;
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioSleep
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSleep
+  (JNIEnv *env, jclass class, jint timetype, jint seconds, jint micros)
+{
+    return gpioSleep((unsigned)micros, seconds, micros);
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioDelay
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioDelay
+  (JNIEnv *env, jclass class, jlong micros)
+{
+    return gpioDelay((uint32_t)micros);
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioTick
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTick
+  (JNIEnv *env, jclass class)
+{
+    return gpioTick();
 }

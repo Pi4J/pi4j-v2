@@ -30,12 +30,12 @@ package com.pi4j.library.pigpio.impl;
  */
 
 import com.pi4j.library.pigpio.*;
+import com.pi4j.library.pigpio.internal.PIGPIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -50,8 +50,68 @@ import static com.pi4j.library.pigpio.PiGpioConst.*;
 public abstract class PiGpioBase implements PiGpio {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Set<Integer> serialHandles = Collections.synchronizedSet(new HashSet<>());
+    protected final Set<Integer> i2cHandles = Collections.synchronizedSet(new HashSet<>());
+    protected final Set<Integer> spiHandles = Collections.synchronizedSet(new HashSet<>());
     protected List<PiGpioStateChangeListener> stateChangeListeners = new CopyOnWriteArrayList<>();
     protected Map<Integer,List<PiGpioStateChangeListener>> pinChangeListeners = new ConcurrentHashMap<>();
+    protected boolean initialized = false;
+
+
+    /**
+     * Close all open handles
+     * Returns nothing.
+     */
+    protected void closeAllOpenHandles() throws IOException {
+        // close all open SPI handles
+        spiHandles.forEach((handle) -> {
+            try {
+                logger.trace("[SHUTDOWN] -- CLOSING OPEN SPI HANDLE: [{}]", handle);
+                spiClose(handle.intValue());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // close all open SERIAL handles
+        serialHandles.forEach((handle) -> {
+            try {
+                logger.trace("[SHUTDOWN] -- CLOSING OPEN SERIAL HANDLE: [{}]", handle);
+                serClose(handle.intValue());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // close all open I2C handles
+        i2cHandles.forEach((handle) -> {
+            try {
+                logger.trace("[SHUTDOWN] -- CLOSING OPEN I2C HANDLE: [{}]", handle);
+                i2cClose(handle.intValue());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /**
+     * <p>validateReady.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
+    protected void validateReady() throws IOException {
+        validateInitialized();
+    }
+
+    /**
+     * <p>validateInitialized.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
+    protected void validateInitialized() throws IOException {
+        if(!this.initialized)
+            throw new IOException("PIGPIO NOT INITIALIZED; make sure you call the PiGpio::initialize() function first.");
+    }
 
     /**
      * --------------------------------------------------------------------------
@@ -167,7 +227,7 @@ public abstract class PiGpioBase implements PiGpio {
      *
      * @param micros a int.
      */
-    protected void validateDelayMicroseconds(int micros){
+    protected void validateDelayMicroseconds(long micros){
         int min = 0;
         int max = PI_MAX_MICS_DELAY;
         if(micros < min || micros > max)
@@ -475,5 +535,34 @@ public abstract class PiGpioBase implements PiGpio {
                 }
             });
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Returns the hardware revision (as hexadecimal string).
+     *
+     * If the hardware revision can not be found or is not a valid hexadecimal number the function returns 0.
+     * The hardware revision is the last few characters on the Revision line of /proc/cpuinfo.
+     * The revision number can be used to determine the assignment of GPIO to pins (see gpio).
+     *
+     * There are at least three types of board.
+     *  - Type 1 boards have hardware revision numbers of 2 and 3.
+     *  - Type 2 boards have hardware revision numbers of 4, 5, 6, and 15.
+     *  - Type 3 boards have hardware revision numbers of 16 or greater.
+     *
+     *     for "Revision : 0002" the function returns 2.
+     *     for "Revision : 000f" the function returns 15.
+     *     for "Revision : 000g" the function returns 0.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision">PIGPIO::gpioHardwareRevision</a>
+     */
+    @Override
+    public String gpioHardwareRevisionString() throws IOException {
+        logger.trace("[HARDWARE] -> GET REVISION (STRING)");
+        validateReady();
+        long revision = gpioHardwareRevision();
+        String revisionString = Integer.toHexString((int)revision);
+        logger.trace("[HARDWARE] <- REVISION (STRING): {}", revisionString);
+        return revisionString;
     }
 }

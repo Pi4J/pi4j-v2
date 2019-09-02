@@ -60,19 +60,6 @@ public class TestSpi {
             System.exit(init);
         }
 
-//        System.out.println("PIGPIO SET MODE  : " + PIGPIO.gpioSetMode(2, PI_OUTPUT));
-        //System.out.println("PIGPIO READ 0    : " + PIGPIO.gpioRead(2));
-        //System.out.println("PIGPIO WRITE 0-1 : " + PIGPIO.gpioWrite(2, PI_HIGH));
-        //System.out.println("PIGPIO READ 0    : " + PIGPIO.gpioRead(2));
-
-//        PIGPIO.gpioSetPWMfrequency(2, 5000);
-//        PIGPIO.gpioPWM(2, 128);
-
-//        while(System.in.available() == 0){
-//            PIGPIO.gpioWrite(2, PI_HIGH);
-//            PIGPIO.gpioWrite(2, PI_LOW);
-//        }
-
         int handle = PIGPIO.spiOpen(0, 50000, 0);
         System.out.println("PIGPIO SPI OPEN  : " + handle);
         if(handle < 0) {
@@ -83,12 +70,12 @@ public class TestSpi {
         // iterate over BYTE range of values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
         for(int b = 0; b < 256; b++) {
-            System.out.println("[TEST WRITE/READ SINGLE BYTE]");
+            System.out.print("[W/R BYTE]");
             // WRITE :: SINGLE RAW BYTE
-            System.out.println(" (WRITE) >> VALUE = 0x" + Integer.toHexString(b));
+            System.out.print(" (WRITE) 0x" + Integer.toHexString(b));
             int result = PIGPIO.spiWrite(handle, new byte[]{ (byte)b }, 1);
             if(result < 0) {
-                System.err.println("ERROR; SPI WRITE FAILED: ERROR CODE: " + result);
+                System.err.println("\nERROR; SPI WRITE FAILED: ERROR CODE: " + result);
                 System.exit(init);
             }
 
@@ -96,39 +83,39 @@ public class TestSpi {
             byte rx[] = new byte[1];
 
             result = PIGPIO.spiRead(handle, rx, 1);
-            System.out.println(" (READ)  << VALUE = 0x" + StringUtil.toHexString(rx));
+            System.out.print(" (READ) 0x" + StringUtil.toHexString(rx));
             System.out.println();
             if(result < 0) {
-                System.err.println("ERROR; SPI READ FAILED: ERROR CODE: " + result);
+                System.err.println("\nERROR; SPI READ FAILED: ERROR CODE: " + result);
                 System.exit(result);
             }
 
             int expected = b;
             int received = Byte.toUnsignedInt(rx[0]);
             if(received != expected) {
-                System.err.println("ERROR; SPI READ FAILED: BYTE MISMATCH: expected=" + expected + "; received=" + received);
+                System.err.println("\nERROR; SPI READ FAILED: BYTE MISMATCH: expected=" + expected + "; received=" + received);
                 System.exit(0);
             }
         }
 
         for(int b = 0; b < 256; b++) {
-            System.out.println("[TEST XFER SINGLE BYTE] " + Integer.toHexString(b));
+            System.out.print("[XFER BYTE]");
             // WRITE :: SINGLE RAW BYTE
             byte tx[] = new byte[] {(byte)(b)};
             byte rx[] = new byte[] {0};
-            System.out.println(" (WRITE) >> VALUE = 0x" + StringUtil.toHexString(tx));
+            System.out.print(" (WRITE) 0x" + StringUtil.toHexString(tx));
             int result = PIGPIO.spiXfer(handle, tx, rx, 1);
-            System.out.println(" (READ)  << VALUE = 0x" + StringUtil.toHexString(rx));
+            System.out.print(" (READ) 0x" + StringUtil.toHexString(rx));
             System.out.println();
             if(result < 0) {
-                System.err.println("ERROR; SPI XFER FAILED: ERROR CODE: " + result);
+                System.err.println("\nERROR; SPI XFER FAILED: ERROR CODE: " + result);
                 System.exit(result);
             }
             if(b>0) { // ignore first read
                 int expected = b-1;
                 int received = Byte.toUnsignedInt(rx[0]);
                 if (received != expected) {
-                    System.err.println("ERROR; SPI XFER FAILED: BYTE MISMATCH: expected=" + expected + "; received=" + received);
+                    System.err.println("\nERROR; SPI XFER FAILED: BYTE MISMATCH: expected=" + expected + "; received=" + received);
                     System.exit(0);
                 }
             }
@@ -137,7 +124,7 @@ public class TestSpi {
         // iterate over series of test values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
         for(int x = 1; x < 50; x++) {
-            System.out.println("[TEST XFER MULTI-BYTE]");
+            System.out.print("[W/R BUFFER]");
 
             Random r = new Random();
             int len = r.nextInt((20)) + 2; // minimum of 2 bytes
@@ -145,26 +132,30 @@ public class TestSpi {
             r.nextBytes(writeBuffer);
 
             // WRITE :: MULTI-BYTE
-            System.out.println(" (WRITE) >> VALUE = 0x" + StringUtil.toHexString(writeBuffer));
+            System.out.print(" (WRITE) 0x" + StringUtil.toHexString(writeBuffer));
             int result = PIGPIO.spiWrite(handle, writeBuffer, len);
             if(result < 0) {
-                System.err.println("ERROR; SPI WRITE FAILED: ERROR CODE: " + result);
+                System.err.println("\nERROR; SPI WRITE FAILED: ERROR CODE: " + result);
                 System.exit(init);
             }
+
+            // take a breath to allow time for the serial data
+            // to get updated in the serial receive buffer
+            //Thread.sleep(50);
 
             // READ :: MULTI-BYTE
             byte[] readBuffer = new byte[len];
             result = PIGPIO.spiRead(handle, readBuffer, len);
-            System.out.println(" (READ)  << VALUE = 0x" + StringUtil.toHexString(readBuffer));
+            System.out.print(" (READ) 0x" + StringUtil.toHexString(readBuffer));
             System.out.println();
             if(result < 0) {
-                System.err.println("ERROR; SPI READ FAILED: ERROR CODE: " + result);
+                System.err.println("\nERROR; SPI READ FAILED: ERROR CODE: " + result);
                 System.exit(result);
             }
 
             // validate read length
             if(result != len) {
-                System.err.println("ERROR; SPI READ FAILED: LENGTH MISMATCH: " + result);
+                System.err.println("\nERROR; SPI READ FAILED: LENGTH MISMATCH: " + result);
                 System.exit(result);
             }
 
@@ -176,8 +167,8 @@ public class TestSpi {
             expectBuffer.put(writeBuffer[writeBuffer.length-1]);
             expectBuffer.put(Arrays.copyOfRange(writeBuffer, 0, writeBuffer.length-1));
 
-            if(!Arrays.equals(expectBuffer.array(), readBuffer)) {
-                System.err.println("ERROR; SPI READ FAILED: BYTE MISMATCH: expected=" +
+            if(expectBuffer.get(0) != readBuffer[0]) {
+                System.err.println("\nERROR; SPI READ FAILED: BYTE MISMATCH: expected=" +
                         StringUtil.toHexString(expectBuffer) + "; received=" +
                         StringUtil.toHexString(readBuffer));
                 System.exit(0);
