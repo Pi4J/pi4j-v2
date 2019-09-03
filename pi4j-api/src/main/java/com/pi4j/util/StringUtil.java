@@ -29,6 +29,8 @@ package com.pi4j.util;
 
 
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 /**
@@ -509,6 +511,7 @@ public class StringUtil {
     public static void appendHexString(StringBuilder builder, byte byt){
         builder.append(String.format("%02X", byt));
     }
+
     /**
      * <p>toHexString.</p>
      *
@@ -528,6 +531,7 @@ public class StringUtil {
     public static void appendHexString(StringBuilder builder, int byt){
         builder.append(String.format("%02X", (byte)byt));
     }
+
     /**
      * <p>toHexString.</p>
      *
@@ -549,6 +553,53 @@ public class StringUtil {
             builder.append(String.format("%02X ", b));
         }
     }
+
+    /**
+     * <p>toHexString.</p>
+     *
+     * @param data a {@link java.lang.CharSequence} object.
+     * @return a {@link java.lang.String} object.
+     */
+    public static String toHexString(CharSequence data){
+        StringBuilder sb = new StringBuilder();
+        appendHexString(sb, data);
+        return sb.toString().trim();
+    }
+
+    /**
+     * <p>appendHexString.</p>
+     *
+     * @param builder a {@link java.lang.StringBuilder} object.
+     * @param data a {@link java.lang.CharSequence} object.
+     */
+    public static void appendHexString(StringBuilder builder, CharSequence data){
+        appendHexString(builder, data.toString().getBytes(StandardCharsets.US_ASCII));
+    }
+
+    /**
+     * <p>toHexString.</p>
+     *
+     * @param data a {@link java.lang.CharSequence} object.
+     * @param charset character set used to decode string to bytes
+     * @return a {@link java.lang.String} object.
+     */
+    public static String toHexString(CharSequence data, Charset charset){
+        StringBuilder sb = new StringBuilder();
+        appendHexString(sb, data, charset);
+        return sb.toString().trim();
+    }
+
+    /**
+     * <p>appendHexString.</p>
+     *
+     * @param builder a {@link java.lang.StringBuilder} object.
+     * @param data a {@link java.lang.CharSequence} object.
+     * @param charset character set used to decode string to bytes
+     */
+    public static void appendHexString(StringBuilder builder, CharSequence data, Charset charset){
+        appendHexString(builder, data.toString().getBytes(charset));
+    }
+
     /**
      * <p>toHexString.</p>
      *
@@ -570,6 +621,7 @@ public class StringUtil {
     public static void appendHexString(StringBuilder builder, ByteBuffer buffer){
         appendHexString(builder, buffer.array());
     }
+
     /**
      * <p>toHexString.</p>
      *
@@ -593,6 +645,7 @@ public class StringUtil {
     public static void appendHexString(StringBuilder builder, byte[] bytes, int offset, int length){
         appendHexString(builder, Arrays.copyOfRange(bytes, offset, offset+length));
     }
+
     /**
      * <p>toHexString.</p>
      *
@@ -618,6 +671,7 @@ public class StringUtil {
     public static void appendHexString(StringBuilder builder, ByteBuffer buffer, int offset, int length){
         appendHexString(builder, buffer.array(), offset, length);
     }
+
     /**
      * <p>toHexString.</p>
      *
