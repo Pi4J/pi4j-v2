@@ -29,7 +29,7 @@ package com.pi4j.example.serial;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.serial.Serial;
-import com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
+import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.util.Console;
 import com.pi4j.util.StringUtil;
 
@@ -76,27 +76,38 @@ public class SerialExample {
         var config  = Serial.newConfigBuilder()
                 .id("my-serial-port")
                 .name("My Serial Port")
-                .device("")
+                .device("/dev/ttyS0")
                 .use_9600_N81()
                 .build();
 
+        // get a serial I/O provider from the Pi4J context
+        SerialProvider serialProvider = pi4j.provider("pigpio-serial");
+
         // use try-with-resources to auto-close SERIAL when complete
-        try (var serial = pi4j.provider(MockSerialProvider.class).create(config);) {
+        try (var serial = serialProvider.create(config);) {
+            String data = "THIS IS A TEST";
 
             // open serial port communications
             serial.open();
 
             // write data to the SPI channel
-            serial.write("THIS IS A TEST");
+            serial.write(data);
+
+            // take a breath to allow time for the serial data
+            // to get updated in the serial receive buffer
+            Thread.sleep(100);
 
             // read data back from the SPI channel
-            ByteBuffer buffer = serial.readByteBuffer(14);
+            ByteBuffer buffer = serial.readByteBuffer(data.length());
 
             console.println("--------------------------------------");
             console.println("--------------------------------------");
-            console.println("SERIAL [WRITE/READ] RETURNED THE FOLLOWING: ");
-            console.println("[BYTES]  0x" + StringUtil.toHexString(buffer.array()));
-            console.println("[STRING] " + new String(buffer.array()));
+            console.println("SERIAL [WRITE] :");
+            console.println("  [BYTES]  0x" + StringUtil.toHexString(data));
+            console.println("  [STRING] " + data);
+            console.println("SERIAL [READ] :");
+            console.println("  [BYTES]  0x" + StringUtil.toHexString(buffer.array()));
+            console.println("  [STRING] " + new String(buffer.array()));
             console.println("--------------------------------------");
             console.println("--------------------------------------");
 

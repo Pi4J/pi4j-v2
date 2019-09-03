@@ -30,6 +30,8 @@ package com.pi4j.library.pigpio.internal;
  */
 
 
+import com.pi4j.library.pigpio.util.NativeLibraryLoader;
+
 import java.util.concurrent.Callable;
 
 /**
@@ -69,7 +71,8 @@ public class PIGPIO {
     }
 
     static {
-        System.loadLibrary("pi4j-pigpio");
+        // Load the platform library
+        NativeLibraryLoader.load("libpi4j-pigpio.so", "pi4j-pigpio");
     }
 
     /**

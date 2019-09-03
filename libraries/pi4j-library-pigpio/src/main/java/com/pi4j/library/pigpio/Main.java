@@ -30,6 +30,7 @@ package com.pi4j.library.pigpio;
 
 import com.pi4j.library.pigpio.internal.PIGPIO;
 import com.pi4j.library.pigpio.util.StringUtil;
+import org.slf4j.event.Level;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -42,9 +43,6 @@ import java.util.Random;
  */
 public class Main {
 
-    private static String SERIAL_DEVICE = "/dev/ttyS0";
-    private static int BAUD_RATE = 9600;
-
     /**
      * <p>main.</p>
      *
@@ -52,131 +50,32 @@ public class Main {
      * @throws java.lang.Exception if any.
      */
     public static void main(String[] args) throws Exception {
+        String loglevel = "INFO";
+        if(args != null && args.length > 0){
+            Level lvl = Level.valueOf(args[0].toUpperCase());
+            loglevel = lvl.name();
+        }
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loglevel);
+
+        System.out.println();
+        System.out.println();
+        System.out.println("-----------------------------------------------------");
+        System.out.println("-----------------------------------------------------");
+        System.out.println("Pi4J Library :: PIGPIO JNI Wrapper Library");
+        System.out.println("-----------------------------------------------------");
+        System.out.println("-----------------------------------------------------");
         System.out.println("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
         System.out.println("PIGPIO HARDWARE  : " + PIGPIO.gpioHardwareRevision());
-
         int init = PIGPIO.gpioInitialise();
-        System.out.println("PIGPIO INITIALIZE: " + init);
-
         if(init < 0){
             System.err.println("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
-            System.exit(init);
+        } else {
+            System.out.println("PIGPIO INITIALIZED SUCCESSFULLY");
+            PIGPIO.gpioTerminate();
+            System.out.println("PIGPIO TERMINATED");
         }
-
-        int handle = PIGPIO.serOpen(SERIAL_DEVICE, BAUD_RATE, 0);
-        System.out.println("PIGPIO SERIAL OPEN  : " + handle);
-        if(handle < 0) {
-            System.err.println("ERROR; SERIAL OPEN FAILED: ERROR CODE: " + handle);
-            System.exit(handle);
-        }
-
-        System.out.println("SERIAL DATA DRAINED  : " + PIGPIO.serDrain(handle));
-
-        // iterate over BYTE range of values, WRITE the byte then immediately
-        // READ back the byte value and compare to make sure they are the same values.
-        for(int b = 0; b < 256; b++) {
-            System.out.print("[SERIAL W/R BYTE]");
-
-            // WRITE :: SINGLE RAW BYTE
-            System.out.print(" (WRITE) 0x" + Integer.toHexString(b));
-            int result = PIGPIO.serWriteByte(handle, (byte)b);
-            if(result < 0) {
-                System.err.println("\nERROR; SERIAL WRITE FAILED: ERROR CODE: " + result);
-                System.exit(init);
-            }
-
-            // take a breath to allow time for the serial data
-            // to get updated in the serial receive buffer
-            Thread.sleep(5);
-
-            // READ :: NUMBER OF BYTES AVAILABLE TO READ
-            int available = PIGPIO.serDataAvailable(handle);
-            System.out.print(" (AVAIL) " + available);
-            if(available != 1) {
-                System.err.println("\nERROR; SERIAL AVAILABLE FAILED: expected=1; received=" + available);
-                System.exit(init);
-            }
-
-            // READ :: SINGLE RAW BYTE
-            result = PIGPIO.serReadByte(handle);
-            System.out.print(" (READ) 0x" + Integer.toHexString(result));
-            System.out.println();
-            if(result < 0) {
-                System.err.println("\nERROR; SERIAL READ FAILED: ERROR CODE: " + result);
-                System.exit(result);
-            }
-
-            int expected = b;
-            int recevied = result;
-            if(recevied != expected) {
-                System.err.println("\nERROR; SERIAL READ FAILED: BYTE MISMATCH: expected=" + expected + "; received=" + recevied);
-                System.exit(0);
-            }
-        }
-
-        // iterate over series of test values, WRITE the byte then immediately
-        // READ back the byte value and compare to make sure they are the same values.
-        for(int x = 1; x < 50; x++) {
-            System.out.print("[SERIAL W/R BUFFER]");
-
-            Random r = new Random();
-            int len = r.nextInt((20)) + 2; // minimum of 2 bytes
-            byte[] writeBuffer = new byte[len];
-            r.nextBytes(writeBuffer);
-
-            // WRITE :: MULTI-BYTE
-            System.out.print(" (WRITE) 0x" + StringUtil.toHexString(writeBuffer));
-            int result = PIGPIO.serWrite(handle, writeBuffer, len);
-            if(result < 0) {
-                System.err.println("\nERROR; SERIAL WRITE FAILED: ERROR CODE: " + result);
-                System.exit(init);
-            }
-
-            // take a breath to allow time for the serial data
-            // to get updated in the serial receive buffer
-            Thread.sleep(40);
-
-            // READ :: NUMBER OF BYTES AVAILABLE TO READ
-            int available = PIGPIO.serDataAvailable(handle);
-            System.out.print(" (AVAIL) " + available);
-            if(available != len) {
-                System.err.println("\nERROR; SERIAL AVAILABLE FAILED: expected=1; received=" + available);
-                System.exit(init);
-            }
-
-            // READ :: MULTI-BYTE
-            byte[] readBuffer = new byte[available];
-            result = PIGPIO.serRead(handle, readBuffer, available);
-            System.out.print(" (READ) 0x" + StringUtil.toHexString(readBuffer));
-            System.out.println();
-            if(result < 0) {
-                System.err.println("\nERROR; SERIAL READ FAILED: ERROR CODE: " + result);
-                System.exit(result);
-            }
-
-            // validate read length
-            if(result != len) {
-                System.err.println("\nERROR; SERIAL READ FAILED: LENGTH MISMATCH: " + result);
-                System.exit(result);
-            }
-
-            // validate buffer contents
-            if(!Arrays.equals(writeBuffer, readBuffer)) {
-                System.err.println("\nERROR; SERIAL READ FAILED: BYTE MISMATCH: expected=" +
-                        StringUtil.toHexString(writeBuffer) + "; received=" +
-                        StringUtil.toHexString(readBuffer));
-                System.exit(0);
-            }
-        }
-
-        // close SERIAL channel
-        int closed = PIGPIO.serClose(handle);
-        System.out.println("PIGPIO SERIAL CLOSED : " + handle);
-
-
-        PIGPIO.gpioTerminate();
-        System.out.println("PIGPIO TERMINATED");
-
-        System.out.println("ALL SERIAL TESTS COMPLETED SUCCESSFULLY");
+        System.out.println("-----------------------------------------------------");
+        System.out.println();
+        System.out.println();
     }
 }

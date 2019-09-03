@@ -28,11 +28,6 @@ package com.pi4j.example;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.serial.Baud;
-import com.pi4j.io.serial.Serial;
-import com.pi4j.plugin.pigpio.provider.serial.PiGpioSerialProvider;
-
-import java.nio.CharBuffer;
-import java.util.Arrays;
 
 /**
  * <p>Main class.</p>

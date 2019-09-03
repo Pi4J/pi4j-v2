@@ -29,7 +29,7 @@ package com.pi4j.example.spi;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.spi.Spi;
-import com.pi4j.plugin.mock.provider.spi.MockSpiProvider;
+import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.util.Console;
 import com.pi4j.util.StringUtil;
 
@@ -80,23 +80,34 @@ public class SpiExample {
                 .baud(Spi.DEFAULT_BAUD)
                 .build();
 
+        // get a SPI I/O provider from the Pi4J context
+        SpiProvider spiProvider = pi4j.provider("pigpio-spi");
+
         // use try-with-resources to auto-close SPI when complete
-        try (var spi = pi4j.provider(MockSpiProvider.class).create(config);) {
+        try (var spi = spiProvider.create(config);) {
+            String data = "THIS IS A TEST";
 
             // open SPI communications
             spi.open();
 
             // write data to the SPI channel
-            spi.write("THIS IS A TEST");
+            spi.write(data);
+
+            // take a breath to allow time for the SPI
+            // data to get updated in the SPI device
+            Thread.sleep(100);
 
             // read data back from the SPI channel
-            ByteBuffer buffer = spi.readByteBuffer(14);
+            ByteBuffer buffer = spi.readByteBuffer(data.length());
 
             console.println("--------------------------------------");
             console.println("--------------------------------------");
-            console.println("SPI [WRITE/READ] RETURNED THE FOLLOWING: ");
-            console.println("[BYTES]  0x" + StringUtil.toHexString(buffer.array()));
-            console.println("[STRING] " + new String(buffer.array()));
+            console.println("SPI [WRITE] :");
+            console.println("  [BYTES]  0x" + StringUtil.toHexString(data));
+            console.println("  [STRING] " + data);
+            console.println("SPI [READ] :");
+            console.println("  [BYTES]  0x" + StringUtil.toHexString(buffer.array()));
+            console.println("  [STRING] " + new String(buffer.array()));
             console.println("--------------------------------------");
 
             // read data back from the SPI channel
@@ -105,12 +116,11 @@ public class SpiExample {
             spi.transfer(writeBuffer, readBuffer, writeBuffer.capacity());
 
             console.println("--------------------------------------");
-            console.println("SPI [TRANSFER] RETURNED THE FOLLOWING: ");
-            console.println("[BYTES]  0x" + StringUtil.toHexString(readBuffer.array()));
-            console.println("[STRING] " + new String(readBuffer.array()));
+            console.println("SPI [TRANSFER] :");
+            console.println("  [BYTES]  0x" + StringUtil.toHexString(readBuffer.array()));
+            console.println("  [STRING] " + new String(readBuffer.array()));
             console.println("--------------------------------------");
             console.println("--------------------------------------");
-
 
             // SPI channel will be closed when this block goes
             // out of scope by the AutoCloseable interface on SPI
