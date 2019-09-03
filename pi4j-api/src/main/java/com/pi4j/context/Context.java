@@ -125,6 +125,18 @@ public interface Context extends Describable {
     /**
      * <p>provider.</p>
      *
+     * @param providerId a {@link java.lang.String} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     */
+    default <T extends Provider> T provider(String providerId, Class<T> providerClass) throws ProviderNotFoundException {
+        return (T)providers().get(providerId);
+    }
+
+    /**
+     * <p>provider.</p>
+     *
      * @param providerClass a {@link java.lang.Class} object.
      * @param <T> a T object.
      * @return a T object.
