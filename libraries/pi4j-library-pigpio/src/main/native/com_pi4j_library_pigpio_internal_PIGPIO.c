@@ -517,24 +517,34 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serDrain
  * Method:    gpioTime
  * Signature: (III)I
  */
-JNIEXPORT jlong JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTime
-  (JNIEnv *env, jclass class, jint timetype)
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTime
+  (JNIEnv *env, jclass class, jint timetype, jintArray data)
 {
     int seconds = 0;
     int micros = 0;
     int *seconds_ptr = &seconds;
     int *micros_ptr = &micros;
 
+    // get time elements
     jint result = gpioTime((unsigned)timetype, seconds_ptr, micros_ptr);
 
+    // on error; return immediately
     if(result < 0){
-        return 0;
+        return result;
     }
 
-    // return a 64 bit unsigned value where the 'seconds' are placed
-    // in the upper 32 bits and the 'micros' are in the lower 32 bits
-    unsigned long time = (seconds << 32UL) | (micros & 0xFFFFFFFFUL);
-    return time;
+    // pin memory and get array pointer
+    jint *data_ptr = (*env)->GetIntArrayElements(env, data, 0);
+
+    // update array pointer with result time values
+    data_ptr[0] = seconds;
+    data_ptr[1] = micros;
+
+    // unpin memory
+    (*env)->ReleaseIntArrayElements(env, data, data_ptr, 0);
+
+    // return result which should be '0'
+    return result;
 }
 
 /*

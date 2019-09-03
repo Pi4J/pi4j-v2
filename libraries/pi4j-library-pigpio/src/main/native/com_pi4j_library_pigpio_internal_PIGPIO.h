@@ -735,15 +735,10 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioHardware
 /*
  * Class:     com_pi4j_library_pigpio_internal_PIGPIO
  * Method:    gpioTime
- * Signature: (I)J
- *
- * returns a 64 bit unsigned value where the 'seconds' are placed
- * in the upper 32 bits and the 'micros' are in the lower 32 bits
- *
- * returns a zero value if failed
+ * Signature: (I[I)I
  */
-JNIEXPORT jlong JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTime
-  (JNIEnv *, jclass, jint);
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTime
+  (JNIEnv *, jclass, jint, jintArray);
 
 /*
  * Class:     com_pi4j_library_pigpio_internal_PIGPIO
