@@ -579,3 +579,22 @@ JNIEXPORT jlong JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTick
 {
     return gpioTick();
 }
+
+
+// *****************************************************************************************************
+// *****************************************************************************************************
+// CONFIGURATION IMPL
+// *****************************************************************************************************
+// *****************************************************************************************************
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioCfgInterfaces
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioCfgInterfaces
+  (JNIEnv *env, jclass class, jint flags)
+{
+    return gpioCfgInterfaces(flags);
+}
+

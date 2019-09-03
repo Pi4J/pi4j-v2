@@ -923,15 +923,15 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioVersion
 // */
 //JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioCfgSocketPort
 //  (JNIEnv *, jclass, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioCfgInterfaces
-// * Signature: (I)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioCfgInterfaces
-//  (JNIEnv *, jclass, jint);
-//
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioCfgInterfaces
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioCfgInterfaces
+  (JNIEnv *, jclass, jint);
+
 ///*
 // * Class:     com_pi4j_library_pigpio_internal_PIGPIO
 // * Method:    gpioCfgMemAlloc

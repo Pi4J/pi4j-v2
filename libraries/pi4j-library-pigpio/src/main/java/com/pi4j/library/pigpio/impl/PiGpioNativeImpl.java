@@ -29,7 +29,10 @@ package com.pi4j.library.pigpio.impl;
  * #L%
  */
 
-import com.pi4j.library.pigpio.*;
+import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.library.pigpio.PiGpioMode;
+import com.pi4j.library.pigpio.PiGpioPud;
+import com.pi4j.library.pigpio.PiGpioState;
 import com.pi4j.library.pigpio.internal.PIGPIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +41,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.pi4j.library.pigpio.PiGpioCmd.HWVER;
-import static com.pi4j.library.pigpio.PiGpioConst.*;
+import static com.pi4j.library.pigpio.PiGpioConst.PI_TIME_RELATIVE;
 
 /**
  * <p>PiGpioNativeImpl class.</p>
@@ -92,6 +94,11 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         logger.trace("[INITIALIZE] -> STARTED");
 
         if(!this.initialized) {
+
+            // disable socket and pipes interfaces
+            int rslt = PIGPIO.gpioCfgInterfaces(3);
+            System.out.println("CONFIG INTERFACES2: " + rslt);
+
             // initialize the PiGpio native library
             result = PIGPIO.gpioInitialise();
             validateResult(result);

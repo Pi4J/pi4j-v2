@@ -38,9 +38,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_HOST;
 import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_PORT;
@@ -97,7 +94,6 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
         int result = 0;
         logger.trace("[INITIALIZE] -> STARTED");
         if(!this.initialized) {
-              result  = gpioVersion();
 //            // add a shutdown hook to perform any required clean up actions
 //            // when this library is instructed to shutdown
 //            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -111,6 +107,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 //
 //            // set initialized flag
             this.initialized = true;
+            result  = gpioVersion();
             logger.debug("[INITIALIZE] -- INITIALIZED SUCCESSFULLY");
         }
         else{
