@@ -43,7 +43,6 @@ import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderGroup;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.ProviderAlreadyExistsException;
-import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderInitializeException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 import com.pi4j.runtime.Runtime;

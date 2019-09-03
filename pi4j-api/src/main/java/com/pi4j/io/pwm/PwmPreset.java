@@ -29,8 +29,6 @@ package com.pi4j.io.pwm;
 
 import com.pi4j.io.pwm.impl.DefaultPwmPresetBuilder;
 
-import java.io.IOException;
-
 /**
  * <p>PwmPreset interface.</p>
  *
