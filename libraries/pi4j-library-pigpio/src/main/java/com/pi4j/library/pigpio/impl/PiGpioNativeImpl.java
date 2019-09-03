@@ -94,10 +94,8 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         logger.trace("[INITIALIZE] -> STARTED");
 
         if(!this.initialized) {
-
             // disable socket and pipes interfaces
             int rslt = PIGPIO.gpioCfgInterfaces(3);
-            System.out.println("CONFIG INTERFACES2: " + rslt);
 
             // initialize the PiGpio native library
             result = PIGPIO.gpioInitialise();

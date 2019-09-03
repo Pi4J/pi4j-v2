@@ -111,20 +111,24 @@ public class PiGpioPlugin implements Plugin {
     public static String DEFAULT_PIGPIO_HOST = "127.0.0.1";
     /** Constant <code>DEFAULT_PIGPIO_PORT</code> */
     public static Integer DEFAULT_PIGPIO_PORT = 8888;
+    /** Constant <code>DEFAULT_PIGPIO_REMOTE</code> */
+    public static Boolean DEFAULT_PIGPIO_REMOTE = false;
 
     /** {@inheritDoc} */
     @Override
     public void initialize(PluginService service) throws IOException {
 
         // get PIGPIO hostname/ip-address and ip-port
+        Boolean remote = Boolean.parseBoolean(service.context().properties().get("pigpio.remote", DEFAULT_PIGPIO_REMOTE.toString()));
         String host = service.context().properties().get("host", DEFAULT_PIGPIO_HOST);
         int port = service.context().properties().getInteger("pigpio.port", DEFAULT_PIGPIO_PORT);
 
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
-        piGpio = PiGpio.newSocketInstance(host, port);
-
-        // initialize the PIGPIO library
-        piGpio.initialize();
+        if(remote) {
+            piGpio = PiGpio.newSocketInstance(host, port);
+        } else {
+            piGpio = PiGpio.newNativeInstance();
+        }
 
         Provider providers[] = {
                 PiGpioDigitalInputProvider.newInstance(piGpio),
@@ -143,6 +147,6 @@ public class PiGpioPlugin implements Plugin {
     @Override
     public void shutdown(Context context) throws IOException {
         // shutdown the PiGpio library
-        if(piGpio != null) piGpio.shutdown();
+        if(piGpio != null && piGpio.isInitialized()) piGpio.shutdown();
     }
 }

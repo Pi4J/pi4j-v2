@@ -62,6 +62,10 @@ public class PiGpioPwmProviderImpl extends PwmProviderBase implements PiGpioPwmP
     /** {@inheritDoc} */
     @Override
     public Pwm create(PwmConfig config) throws Exception {
+        // initialize the PIGPIO library
+        if(!piGpio.isInitialized()) piGpio.initialize();
+
+        // create new I/O instance based on I/O config
         if(config.pwmType() == PwmType.HARDWARE){
             return new PiGpioPwmHardware(piGpio, this, config);
         }

@@ -112,6 +112,21 @@ public interface PiGpio extends
     }
 
     /**
+     * Get the initialized state of the PiGpio library
+     * @return true or false based on initialized state.
+     */
+    boolean isInitialised();
+
+    /**
+     * Get the initialized state of the PiGpio library
+     * @return true or false based on initialized state.
+     */
+    default boolean isInitialized(){
+        return isInitialised();
+    }
+
+
+    /**
      * Initialises the library.
      *
      * Returns the pigpio version number if OK, otherwise PI_INIT_FAILED.

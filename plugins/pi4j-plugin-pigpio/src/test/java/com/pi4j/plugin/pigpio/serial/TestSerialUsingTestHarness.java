@@ -125,7 +125,6 @@ public class TestSerialUsingTestHarness {
             // initialize the PiGpio library
             piGpio.initialize();
 
-
             // create SERIAL provider instance to test with
             PiGpioSerialProvider provider = new PiGpioSerialProviderImpl(piGpio);
 

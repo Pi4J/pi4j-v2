@@ -1,10 +1,10 @@
-package com.pi4j.library.pigpio;
+package com.pi4j.library.pigpio.test;
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
- * FILENAME      :  Main.java
+ * FILENAME      :  Init.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,12 +28,8 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
-import com.pi4j.library.pigpio.internal.PIGPIO;
-import com.pi4j.library.pigpio.util.StringUtil;
+import com.pi4j.library.pigpio.PiGpio;
 import org.slf4j.event.Level;
-
-import java.util.Arrays;
-import java.util.Random;
 
 /**
  * <p>Main class.</p>
@@ -41,13 +37,13 @@ import java.util.Random;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class Main {
+public class Init {
 
     /**
      * <p>main.</p>
      *
-     * @param args an array of {@link java.lang.String} objects.
-     * @throws java.lang.Exception if any.
+     * @param args an array of {@link String} objects.
+     * @throws Exception if any.
      */
     public static void main(String[] args) throws Exception {
         String loglevel = "INFO";
@@ -57,23 +53,25 @@ public class Main {
         }
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loglevel);
 
+        // create native PiGpio instance
+        PiGpio piGpio = PiGpio.newNativeInstance();
         System.out.println();
         System.out.println();
         System.out.println("-----------------------------------------------------");
         System.out.println("-----------------------------------------------------");
-        System.out.println("Pi4J Library :: PIGPIO JNI Wrapper Library");
+        System.out.println("Pi4J Library :: PIGPIO (Native) JNI Wrapper Library");
         System.out.println("-----------------------------------------------------");
         System.out.println("-----------------------------------------------------");
-        System.out.println("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
-        System.out.println("PIGPIO HARDWARE  : " + PIGPIO.gpioHardwareRevision());
-        int init = PIGPIO.gpioInitialise();
+        int init = piGpio.gpioInitialise();
         if(init < 0){
             System.err.println("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
         } else {
             System.out.println("PIGPIO INITIALIZED SUCCESSFULLY");
-            PIGPIO.gpioTerminate();
-            System.out.println("PIGPIO TERMINATED");
         }
+        System.out.println("PIGPIO VERSION   : " + piGpio.gpioVersion());
+        System.out.println("PIGPIO HARDWARE  : " + Long.toHexString(piGpio.gpioHardwareRevision()));
+        piGpio.gpioTerminate();
+        System.out.println("PIGPIO TERMINATED");
         System.out.println("-----------------------------------------------------");
         System.out.println();
         System.out.println();

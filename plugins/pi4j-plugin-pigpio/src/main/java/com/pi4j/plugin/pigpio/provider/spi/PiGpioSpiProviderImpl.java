@@ -58,6 +58,10 @@ public class PiGpioSpiProviderImpl extends SpiProviderBase implements PiGpioSpiP
     /** {@inheritDoc} */
     @Override
     public Spi create(SpiConfig config) throws Exception {
+        // initialize the PIGPIO library
+        if(!piGpio.isInitialized()) piGpio.initialize();
+
+        // create new I/O instance based on I/O config
         return new PiGpioSpi(piGpio,this, config);
     }
 }

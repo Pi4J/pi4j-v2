@@ -28,6 +28,7 @@ package com.pi4j.example;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.serial.Baud;
+import org.slf4j.event.Level;
 
 /**
  * <p>Main class.</p>
@@ -53,12 +54,21 @@ public class Main {
      * @throws java.lang.Exception if any.
      */
     public static void main(String[] args) throws Exception {
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+
+        // configure default lolling level, accept a log level as the fist program argument
+        String loglevel = "INFO";
+        if(args != null && args.length > 0){
+            Level lvl = Level.valueOf(args[0].toUpperCase());
+            loglevel = lvl.name();
+        }
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loglevel);
+
 
         // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
         // this temporary property is used to tell
         // PIGPIO which remote Raspberry Pi to connect to
-        System.setProperty("pi4j.host", "rpi3bp.savage.lan");
+        //System.setProperty("pi4j.host", "rpi3bp.savage.lan");
+        //System.setProperty("pi4j.pigpio.remote", "true");
 
         // Initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled

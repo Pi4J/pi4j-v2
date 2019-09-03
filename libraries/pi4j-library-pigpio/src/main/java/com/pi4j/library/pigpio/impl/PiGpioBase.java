@@ -56,7 +56,6 @@ public abstract class PiGpioBase implements PiGpio {
     protected Map<Integer,List<PiGpioStateChangeListener>> pinChangeListeners = new ConcurrentHashMap<>();
     protected boolean initialized = false;
 
-
     /**
      * Close all open handles
      * Returns nothing.
@@ -388,6 +387,16 @@ public abstract class PiGpioBase implements PiGpio {
         if(active < 0 || active > 1000000) {
             throw new IOException("PIGPIO ERROR: INVALID GPIO NOISE FILTER -> ACTIVE INTERVAL [" + steady + " us]; Valid range: 0-1000000");
         }
+    }
+
+
+    /**
+     * Get the initialized state of the PiGpio library
+     * @return true or false based on initialized state.
+     */
+    @Override
+    public boolean isInitialised(){
+        return this.initialized;
     }
 
     /** {@inheritDoc} */

@@ -58,6 +58,10 @@ public class PiGpioSerialProviderImpl extends SerialProviderBase implements PiGp
     /** {@inheritDoc} */
     @Override
     public Serial create(SerialConfig config) throws Exception {
+        // initialize the PIGPIO library
+        if(!piGpio.isInitialized()) piGpio.initialize();
+
+        // create new I/O instance based on I/O config
         return new PiGpioSerial(piGpio,this, config);
     }
 }

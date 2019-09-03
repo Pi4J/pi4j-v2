@@ -55,6 +55,7 @@ module pi4j.example {
 
     requires pi4j.plugin.pigpio;
     requires slf4j.simple;
+    requires slf4j.api;
 
     // allow access to classes in the following namespaces for Pi4J annotation processing
     opens com.pi4j.example.gpio.analog;
