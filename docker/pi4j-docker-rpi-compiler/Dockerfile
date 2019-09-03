@@ -20,14 +20,15 @@ RUN apt-get install -qq -y build-essential && \
 # configure the require environment variables for cross-compiling
 ENV PATH="${PATH}:/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin"
 ENV ARCH="arm"
-ENV CCPREFIX="/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-"
 ENV CROSS_PREFIX="/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-"
-ENV CC="arm-linux-gnueabihf-gcc"
+ENV CCPREFIX="${CROSS_PREFIX}"
+#ENV CC="arm-linux-gnueabihf-gcc"
 ENV RPI_CROSS_COMPILE="true"
 ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/bin/"
 ENV BUILD_FOLDER /build
+ENV BUILD_TARGET="all"
 
 # set the working path to the build mounted volume
 WORKDIR ${BUILD_FOLDER}
 
-CMD ["/bin/bash", "-c", "make clean all --always-make -f ${BUILD_FOLDER}/Makefile"]
+CMD ["/bin/bash", "-c", "make clean ${BUILD_TARGET} --always-make -f ${BUILD_FOLDER}/Makefile CROSS_PREFIX=\"${CROSS_PREFIX}\""]

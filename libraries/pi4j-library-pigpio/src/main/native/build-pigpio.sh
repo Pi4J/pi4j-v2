@@ -71,12 +71,18 @@ echo "============================"
 echo
 echo "Compiling PIGPIO library"
 
+echo "-----------------------------------------------------------"
+echo "Compiling 'libpigpio' library <STARTED>"
+echo "PI4J NATIVE COMPILER: $PI4J_NATIVE_COMPILER"
+echo "-----------------------------------------------------------"
 cd $PIGPIO_DIRECTORY
-if [[ -n "$RPI_DOCKER_COMPILE" ]]; then
-  docker run -v $(PWD):/build \
-  raspberrypi-compiler make clean lib --always-make CROSS_PREFIX="/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-"
-elif [[ -n "$RPI_CROSS_COMPILE" ]]; then
-  make clean lib --always-make CROSS_PREFIX="/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-"
+if [[ "$PI4J_NATIVE_COMPILER" == "DOCKER-COMPILER" || "$PI4J_NATIVE_COMPILER" == "docker-compiler"  ]]; then
+  docker run --env BUILD_TARGET=lib -v $(PWD):/build raspberrypi-compiler
+elif [[ "$PI4J_NATIVE_COMPILER" == "CROSS-COMPILER" || "$PI4J_NATIVE_COMPILER" == "cross-compiler" ]]; then
+  make clean lib --always-make CROSS_PREFIX=${CROSS_PREFIX}
 else
   make clean lib --always-make
 fi
+echo "-----------------------------------------------------------"
+echo "Compiling 'libpigpio' <FINISHED>"
+echo "-----------------------------------------------------------"

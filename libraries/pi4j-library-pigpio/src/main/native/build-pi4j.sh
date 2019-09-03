@@ -36,13 +36,17 @@ echo "============================"
 echo "Pi4J JNI Build script"
 echo "============================"
 echo
-echo "Compiling 'pi4j-pigpio' JNI library"
-
-if [[ -n "$RPI_DOCKER_COMPILE" ]]; then
-  docker run -v $(PWD):/build \
-  raspberrypi-compiler make clean all --always-make CROSS_PREFIX="/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-"
-elif [[ -n "$RPI_CROSS_COMPILE" ]]; then
-  make clean all --always-make CROSS_PREFIX="/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-"
+echo "-----------------------------------------------------------"
+echo "Compiling 'pi4j-pigpio' JNI library <STARTED>"
+echo "PI4J NATIVE COMPILER: $PI4J_NATIVE_COMPILER"
+echo "-----------------------------------------------------------"
+if [[ "$PI4J_NATIVE_COMPILER" == "DOCKER-COMPILER" || "$PI4J_NATIVE_COMPILER" == "docker-compiler"  ]]; then
+  docker run -v $(PWD):/build raspberrypi-compiler
+elif [[ "$PI4J_NATIVE_COMPILER" == "CROSS-COMPILER" || "$PI4J_NATIVE_COMPILER" == "cross-compiler" ]]; then
+  make clean all --always-make CROSS_PREFIX=${CROSS_PREFIX}
 else
   make clean all --always-make
 fi
+echo "-----------------------------------------------------------"
+echo "Compiling 'pi4j-pigpio' <FINISHED>"
+echo "-----------------------------------------------------------"

@@ -47,7 +47,7 @@ if [[ ( "$ARCHITECTURE" = "armv7l") || ("$ARCHITECTURE" = "armv6l") ]]; then
    echo "**********************************************************************"
    echo
    # download and install development prerequisites
-   build-prerequisites.sh
+   ./build-prerequisites.sh
 fi
 
 # ------------------------------------------------------

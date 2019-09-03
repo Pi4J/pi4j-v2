@@ -131,7 +131,8 @@
                                 <configuration>
                                     <target>
                                         <exec dir="target/native" executable="/bin/bash" failonerror="true">
-                                            <arg value="build-dc.sh"/>
+                                            <env key="PI4J_NATIVE_COMPILER" value="${pi4j.native.compiler}"/>
+                                            <arg value="build.sh"/>
                                         </exec>
                                     </target>
                                 </configuration>
