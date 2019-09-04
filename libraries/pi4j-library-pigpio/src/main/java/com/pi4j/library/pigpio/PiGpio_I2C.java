@@ -683,9 +683,7 @@ public interface PiGpio_I2C {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
      * @throws java.io.IOException if any.
      */
-    default int i2cBlockProcessCall(int handle, int register, byte[] data, int offset, int length) throws IOException{
-        return i2cBlockProcessCall(handle, register, data, offset, length, data, offset);
-    }
+    int i2cBlockProcessCall(int handle, int register, byte[] data, int offset, int length) throws IOException;
 
     /**
      * This writes data bytes to the specified register of the device associated with the handle and reads a

@@ -340,6 +340,7 @@ public class PIGPIO {
      * @return a int.
      */
     public static native int i2cWriteQuick(int handle, boolean bit);
+
     /**
      * <p>i2cWriteByte.</p>
      *
@@ -347,7 +348,19 @@ public class PIGPIO {
      * @param bVal a byte.
      * @return a int.
      */
-    public static native int i2cWriteByte(int handle, byte bVal);
+    public static native int i2cWriteByte(int handle, int bVal);
+
+    /**
+     * <p>i2cWriteByte.</p>
+     *
+     * @param handle a int.
+     * @param bVal a byte.
+     * @return a int.
+     */
+    public static int i2cWriteByte(int handle, byte bVal){
+        return i2cWriteByte(handle, Byte.toUnsignedInt(bVal));
+    }
+
     /**
      * <p>i2cReadByte.</p>
      *
@@ -355,6 +368,7 @@ public class PIGPIO {
      * @return a int.
      */
     public static native int i2cReadByte(int handle);
+
     /**
      * <p>i2cWriteByteData.</p>
      *
@@ -363,7 +377,20 @@ public class PIGPIO {
      * @param bVal a byte.
      * @return a int.
      */
-    public static native int i2cWriteByteData(int handle, int i2cReg, byte bVal);
+    public static native int i2cWriteByteData(int handle, int i2cReg, int bVal);
+
+    /**
+     * <p>i2cWriteByteData.</p>
+     *
+     * @param handle a int.
+     * @param i2cReg a int.
+     * @param bVal a byte.
+     * @return a int.
+     */
+    public static int i2cWriteByteData(int handle, int i2cReg, byte bVal){
+        return i2cWriteByteData(handle, i2cReg, Byte.toUnsignedInt(bVal));
+    }
+
     /**
      * <p>i2cWriteWordData.</p>
      *
@@ -373,6 +400,7 @@ public class PIGPIO {
      * @return a int.
      */
     public static native int i2cWriteWordData(int handle, int i2cReg, int wVal);
+
     /**
      * <p>i2cReadByteData.</p>
      *
@@ -381,6 +409,7 @@ public class PIGPIO {
      * @return a int.
      */
     public static native int i2cReadByteData(int handle, int i2cReg);
+
     /**
      * <p>i2cReadWordData.</p>
      *
@@ -389,15 +418,29 @@ public class PIGPIO {
      * @return a int.
      */
     public static native int i2cReadWordData(int handle, int i2cReg);
+
     /**
      * <p>i2cProcessCall.</p>
      *
      * @param handle a int.
      * @param i2cReg a int.
-     * @param wVal a byte.
+     * @param wVal a 16 bit value.
      * @return a int.
      */
-    public static native int i2cProcessCall(int handle, int i2cReg, byte wVal);
+    public static native int i2cProcessCall(int handle, int i2cReg, int wVal);
+
+    /**
+     * <p>i2cWriteBlockData.</p>
+     *
+     * @param handle a int.
+     * @param i2cReg a int.
+     * @param buf an array of {@link byte} objects.
+     * @param offset starting position in buffer
+     * @param count a int.
+     * @return a int.
+     */
+    public static native int i2cWriteBlockData(int handle, int i2cReg, byte[] buf, int offset, int count);
+
     /**
      * <p>i2cWriteBlockData.</p>
      *
@@ -407,7 +450,21 @@ public class PIGPIO {
      * @param count a int.
      * @return a int.
      */
-    public static native int i2cWriteBlockData(int handle, int i2cReg, byte[] buf, int count);
+    public static int i2cWriteBlockData(int handle, int i2cReg, byte[] buf, int count){
+        return i2cWriteBlockData(handle, i2cReg, buf, 0, count);
+    }
+
+    /**
+     * <p>i2cReadBlockData.</p>
+     *
+     * @param handle a int.
+     * @param i2cReg a int.
+     * @param buf an array of {@link byte} objects.
+     * @param offset starting position in buffer
+     * @return a int.
+     */
+    public static native int i2cReadBlockData(int handle, int i2cReg, byte[] buf, int offset);
+
     /**
      * <p>i2cReadBlockData.</p>
      *
@@ -416,7 +473,22 @@ public class PIGPIO {
      * @param buf an array of {@link byte} objects.
      * @return a int.
      */
-    public static native int i2cReadBlockData(int handle, int i2cReg, byte[] buf);
+    public static int i2cReadBlockData(int handle, int i2cReg, byte[] buf){
+        return i2cReadBlockData(handle, i2cReg, buf, 0);
+    }
+
+    /**
+     * <p>i2cBlockProcessCall.</p>
+     *
+     * @param handle a int.
+     * @param i2cReg a int.
+     * @param buf an array of {@link byte} objects.
+     * @param offset starting position in buffer
+     * @param count a int.
+     * @return a int.
+     */
+    public static native int i2cBlockProcessCall(int handle, int i2cReg, byte[] buf, int offset, int count);
+
     /**
      * <p>i2cBlockProcessCall.</p>
      *
@@ -426,7 +498,22 @@ public class PIGPIO {
      * @param count a int.
      * @return a int.
      */
-    public static native int i2cBlockProcessCall(int handle, int i2cReg, byte[] buf, int count);
+    public static int i2cBlockProcessCall(int handle, int i2cReg, byte[] buf, int count){
+        return i2cBlockProcessCall(handle, i2cReg, buf, 0 , count);
+    }
+
+    /**
+     * <p>i2cReadI2CBlockData.</p>
+     *
+     * @param handle a int.
+     * @param i2cReg a int.
+     * @param buf an array of {@link byte} objects.
+     * @param offset starting position in buffer
+     * @param count a int.
+     * @return a int.
+     */
+    public static native int i2cReadI2CBlockData(int handle, int i2cReg, byte[] buf, int offset, int count);
+
     /**
      * <p>i2cReadI2CBlockData.</p>
      *
@@ -436,7 +523,22 @@ public class PIGPIO {
      * @param count a int.
      * @return a int.
      */
-    public static native int i2cReadI2CBlockData(int handle, int i2cReg, byte[] buf, int count);
+    public static int i2cReadI2CBlockData(int handle, int i2cReg, byte[] buf, int count){
+        return i2cReadI2CBlockData(handle, i2cReg, buf, 0, count);
+    }
+
+    /**
+     * <p>i2cWriteI2CBlockData.</p>
+     *
+     * @param handle a int.
+     * @param i2cReg a int.
+     * @param buf an array of {@link byte} objects.
+     * @param offset starting position in buffer
+     * @param count a int.
+     * @return a int.
+     */
+    public static native int i2cWriteI2CBlockData(int handle, int i2cReg, byte[] buf, int offset, int count);
+
     /**
      * <p>i2cWriteI2CBlockData.</p>
      *
@@ -446,7 +548,20 @@ public class PIGPIO {
      * @param count a int.
      * @return a int.
      */
-    public static native int i2cWriteI2CBlockData(int handle, int i2cReg, byte[] buf, int count);
+    public static int i2cWriteI2CBlockData(int handle, int i2cReg, byte[] buf, int count){
+        return i2cWriteI2CBlockData(handle, i2cReg, buf, 0, count);
+    }
+
+    /**
+     * <p>i2cReadDevice.</p>
+     *
+     * @param handle a int.
+     * @param buf an array of {@link byte} objects.
+     * @param offset starting position in buffer.
+     * @param count a int.
+     * @return a int.
+     */
+    public static native int i2cReadDevice(int handle, byte[] buf, int offset, int count);
     /**
      * <p>i2cReadDevice.</p>
      *
@@ -455,7 +570,21 @@ public class PIGPIO {
      * @param count a int.
      * @return a int.
      */
-    public static native int i2cReadDevice(int handle, byte[] buf, int count);
+    public static int i2cReadDevice(int handle, byte[] buf, int count){
+        return i2cReadDevice(handle, buf, 0, count);
+    }
+
+    /**
+     * <p>i2cWriteDevice.</p>
+     *
+     * @param handle a int.
+     * @param buf an array of {@link byte} objects.
+     * @param offset starting position in buffer.
+     * @param count a int.
+     * @return a int.
+     */
+    public static native int i2cWriteDevice(int handle, byte[] buf, int offset, int count);
+
     /**
      * <p>i2cWriteDevice.</p>
      *
@@ -464,7 +593,10 @@ public class PIGPIO {
      * @param count a int.
      * @return a int.
      */
-    public static native int i2cWriteDevice(int handle, byte[] buf, int count);
+    public static int i2cWriteDevice(int handle, byte[] buf, int count){
+        return i2cWriteDevice(handle, buf, 0, count);
+    }
+
     /**
      * <p>i2cSwitchCombined.</p>
      *
@@ -556,6 +688,18 @@ public class PIGPIO {
      * @return a int.
      */
     public static native int spiClose(int handle);
+
+    /**
+     * <p>spiRead.</p>
+     *
+     * @param handle a int.
+     * @param buf an array of {@link byte} objects.
+     * @param offset position in buffer to start
+     * @param count a int.
+     * @return a int.
+     */
+    public static native int spiRead(int handle, byte[] buf, int offset, int count);
+
     /**
      * <p>spiRead.</p>
      *
@@ -564,7 +708,21 @@ public class PIGPIO {
      * @param count a int.
      * @return a int.
      */
-    public static native int spiRead(int handle, byte[] buf, int count);
+    public static int spiRead(int handle, byte[] buf, int count){
+        return spiRead(handle ,buf, 0 ,count);
+    }
+
+    /**
+     * <p>spiWrite.</p>
+     *
+     * @param handle a int.
+     * @param buf an array of {@link byte} objects.
+     * @param offset position in buffer to start
+     * @param count a int.
+     * @return a int.
+     */
+    public static native int spiWrite(int handle, byte[] buf, int offset, int count);
+
     /**
      * <p>spiWrite.</p>
      *
@@ -573,7 +731,23 @@ public class PIGPIO {
      * @param count a int.
      * @return a int.
      */
-    public static native int spiWrite(int handle, byte[] buf, int count);
+    public static int spiWrite(int handle, byte[] buf, int count){
+        return spiWrite(handle, buf, 0, count);
+    }
+
+    /**
+     * <p>spiXfer.</p>
+     *
+     * @param handle a int.
+     * @param txBuf an array of {@link byte} objects.
+     * @param txOffset position in txBuf array to start
+     * @param rxBuf an array of {@link byte} objects.
+     * @param rxOffset position in rxBuf array to start
+     * @param count a int.
+     * @return a int.
+     */
+    public static native int spiXfer(int handle, byte[] txBuf, int txOffset, byte[] rxBuf, int rxOffset, int count);
+
     /**
      * <p>spiXfer.</p>
      *
@@ -583,7 +757,10 @@ public class PIGPIO {
      * @param count a int.
      * @return a int.
      */
-    public static native int spiXfer(int handle, byte[] txBuf, byte[] rxBuf, int count);
+    public static int spiXfer(int handle, byte[] txBuf, byte[] rxBuf, int count){
+        return spiXfer(handle, txBuf, 0, rxBuf, 0, count);
+    }
+
     /**
      * <p>serOpen.</p>
      *
@@ -625,6 +802,18 @@ public class PIGPIO {
      * @return a int.
      */
     public static native int serReadByte(int handle);
+
+    /**
+     * <p>serWrite.</p>
+     *
+     * @param handle a int.
+     * @param buf an array of {@link byte} objects.
+     * @param offset position in array to start from
+     * @param count a int.
+     * @return a int.
+     */
+    public static native int serWrite(int handle, byte[] buf, int offset, int count);
+
     /**
      * <p>serWrite.</p>
      *
@@ -633,7 +822,21 @@ public class PIGPIO {
      * @param count a int.
      * @return a int.
      */
-    public static native int serWrite(int handle, byte[] buf, int count);
+    public static int serWrite(int handle, byte[] buf, int count){
+        return serWrite(handle, buf, 0, count);
+    }
+
+    /**
+     * <p>serRead.</p>
+     *
+     * @param handle a int.
+     * @param buf an array of {@link byte} objects.
+     * @param offset position in array to start from
+     * @param count a int.
+     * @return a int.
+     */
+    public static native int serRead(int handle, byte[] buf, int offset, int count);
+
     /**
      * <p>serRead.</p>
      *
@@ -642,7 +845,10 @@ public class PIGPIO {
      * @param count a int.
      * @return a int.
      */
-    public static native int serRead(int handle, byte[] buf, int count);
+    public static int serRead(int handle, byte[] buf, int count){
+        return serRead(handle, buf, 0 , count);
+    }
+
     /**
      * <p>serDataAvailable.</p>
      *

@@ -29,8 +29,9 @@ package com.pi4j.example.i2c;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.i2c.I2C;
-import com.pi4j.plugin.mock.provider.i2c.MockI2CProvider;
+import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.util.Console;
+import com.pi4j.util.StringUtil;
 
 import java.nio.ByteBuffer;
 
@@ -79,8 +80,11 @@ public class I2cDeviceExample {
                 .device(I2C_DEVICE)
                 .build();
 
+        // get a serial I/O provider from the Pi4J context
+        I2CProvider i2CProvider = pi4j.provider("pigpio-i2c");
+
         // use try-with-resources to auto-close I2C when complete
-        try (var i2c = pi4j.provider(MockI2CProvider.class).create(config);) {
+        try (var i2c = i2CProvider.create(config);) {
 
             // we will be reading and writing to register address 0x01
             var register = i2c.register(0x01);
@@ -91,17 +95,23 @@ public class I2cDeviceExample {
             // <-- read a single (8-bit) byte value from the I2C device register
             byte readByte = register.readByte();
 
+            console.println("I2C READ BYTE: 0x" + Integer.toHexString(Byte.toUnsignedInt(readByte)));
+
             // --> write a single (16-bit) word value to the I2C device register
             register.writeWord(0xFFFF);
 
             // <-- read a single (16-bit) word value from the I2C device register
             int readWord = register.readWord();
 
+            console.println("I2C READ WORD: 0x" + Integer.toHexString(readWord));
+
             // --> write an array of data bytes to the I2C device register
             register.write(new byte[] { 0,1,2,3,4,5,6,7,8,9 });
 
             // <-- read a byte array of specified length from the I2C device register
             byte[] readArray = register.readNBytes(10);
+
+            console.println("I2C READ ARRAY: 0x" + StringUtil.toHexString(readArray));
 
             // --> write a buffer of data bytes to the I2C device register
             ByteBuffer buffer = ByteBuffer.allocate(10);
@@ -110,11 +120,15 @@ public class I2cDeviceExample {
             // <-- read ByteBuffer of specified length from the I2C device register
             ByteBuffer readBuffer = register.readByteBuffer(10);
 
+            console.println("I2C READ BUFFER: 0x" + StringUtil.toHexString(readBuffer));
+
             // --> write a string of data to the I2C device register
             register.write("This is a test");
 
             // <-- read string of data of specified length from the I2C device register
             String readString = register.readString(14);
+
+            console.println("I2C READ STRING: " + readString);
         }
 
         // shutdown Pi4J

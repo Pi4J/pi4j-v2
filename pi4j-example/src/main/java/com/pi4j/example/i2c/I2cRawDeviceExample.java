@@ -29,8 +29,9 @@ package com.pi4j.example.i2c;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.i2c.I2C;
-import com.pi4j.plugin.mock.provider.i2c.MockI2CProvider;
+import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.util.Console;
+import com.pi4j.util.StringUtil;
 
 import java.nio.ByteBuffer;
 
@@ -80,8 +81,11 @@ public class I2cRawDeviceExample {
                 .device(I2C_DEVICE)
                 .build();
 
+        // get a serial I/O provider from the Pi4J context
+        I2CProvider i2CProvider = pi4j.provider("pigpio-i2c");
+
         // use try-with-resources to auto-close I2C when complete
-        try (var i2c = pi4j.provider(MockI2CProvider.class).create(config);) {
+        try (var i2c = i2CProvider.create(config);) {
 
             // --> write a single (8-bit) byte value to the raw I2C device (not to a register)
             i2c.write(0x0D);
@@ -89,11 +93,15 @@ public class I2cRawDeviceExample {
             // <-- read a single (8-bit) byte value from the raw I2C device (not to a register)
             byte readByte = i2c.readByte();
 
+            console.println("I2C READ BYTE: 0x" + Integer.toHexString(readByte));
+
             // --> write an array of data bytes to the raw I2C device (not to a register)
             i2c.write(new byte[] { 0,1,2,3,4,5,6,7,8,9 });
 
             // <-- read a byte array of specified length from the raw I2C device (not to a register)
             byte[] readArray = i2c.readNBytes(10);
+
+            console.println("I2C READ ARRAY: 0x" + StringUtil.toHexString(readArray));
 
             // --> write a buffer of data bytes to the raw I2C device (not to a register)
             ByteBuffer buffer = ByteBuffer.allocate(10);
@@ -102,11 +110,15 @@ public class I2cRawDeviceExample {
             // <-- read ByteBuffer of specified length from the raw I2C device (not to a register)
             ByteBuffer readBuffer = i2c.readByteBuffer(10);
 
+            console.println("I2C READ BUFFER: 0x" + StringUtil.toHexString(readBuffer));
+
             // --> write a string of data to the raw I2C device (not to a register)
             i2c.write("This is a test");
 
             // <-- read string of data of specified length from the raw I2C device (not to a register)
             String readString = i2c.readString(14);
+
+            console.println("I2C READ STRING: " + readString);
         }
 
         // shutdown Pi4J

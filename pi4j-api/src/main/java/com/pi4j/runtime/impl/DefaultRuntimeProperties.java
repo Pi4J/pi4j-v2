@@ -75,6 +75,15 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
 
         // first; load any default Pi4J properties defined in the Environment Variables
         try{
+            // iterate the environment variables looking for prefixes matching "PI4J_"
+            var envars = System.getenv();
+            envars.keySet().stream().filter(key -> key.toUpperCase().startsWith("PI4J_")).forEach((key)->{
+                // sanitize keys by making them all lower case and replacing underscores with "." periods.
+                String k = key.substring(5).replace('_', '.').toLowerCase();
+                String v = envars.get(key);
+                put(k, v);
+            });
+
             // use "pi4j." prefix filter to limit the environment variables that we care about
             put(System.getenv(), "pi4j.");
         }
@@ -82,7 +91,7 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
             logger.error(e.getMessage(), e);
         }
 
-        // first; load system-scoped Pi4J properties file
+        // second; load system-scoped Pi4J properties file
         // /etc/pi4j/pi4j.properties
         try {
             Path appFile = Paths.get("/etc/pi4j", PI4J_PROPERTIES_FILE_NAME);
@@ -96,7 +105,7 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
             logger.error(e.getMessage(), e);
         }
 
-        // second; load user-scoped Pi4J properties file
+        // third; load user-scoped Pi4J properties file
         // ~/.pi4j.properties
         try {
             Path appFile = Paths.get(System.getProperty("user.home"), "." + PI4J_PROPERTIES_FILE_NAME);
@@ -110,7 +119,7 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
             logger.error(e.getMessage(), e);
         }
 
-        // third; load an application-scoped Pi4J properties file
+        // fourth; load an application-scoped Pi4J properties file
         // {pwd}/pi4j.properties
         try {
             Path appFile = Paths.get(System.getProperty("user.dir"), PI4J_PROPERTIES_FILE_NAME);
@@ -124,7 +133,7 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
             logger.error(e.getMessage(), e);
         }
 
-        // fourth; load an application-embedded resource Pi4J properties file
+        // fifth; load any application-embedded resource Pi4J properties file
         // {app}/{resources}/pi4j.properties
         try {
             URL resource = getClass().getClassLoader().getResource(PI4J_PROPERTIES_FILE_NAME);

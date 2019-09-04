@@ -78,12 +78,12 @@
                 </executions>
             </plugin>
 
-            <!-- OPTIONALLY DEPLOY THE FINAL JAR (AND ANY OTHER RUNTIME DEPENDENCIES) TO THE RASPBERRY PI -->
-            <!-- (copy the compiled JAR file to the Raspberry Pi platform platform vis SSH/SCP)           -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
+                    <!-- OPTIONALLY DEPLOY THE FINAL JAR (AND ANY OTHER RUNTIME DEPENDENCIES) TO THE RASPBERRY PI -->
+                    <!-- (copy the compiled JAR file to the Raspberry Pi platform platform vis SSH/SCP)           -->
                     <execution>
                         <id>transfer-compiled-pi4j-jar</id>
                         <phase>install</phase>
@@ -112,6 +112,23 @@
                             </tasks>
                         </configuration>
                     </execution>
+
+                    <!-- ATTACH NATIVE LIBRARY ARTIFACT -->
+                    <!-- attach the compiled JNI native library ("libpi4j-pigpio.so") as an artifact -->
+                    <execution>
+                        <id>pi4j-attach-native</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target name="pi4j-attach-native-library" >
+                                <taskdef  resource="net/sf/antcontrib/antcontrib.properties"
+                                          classpathref="maven.plugin.classpath"/>
+                                <attachartifact file="${project.build.directory}/lib/libpi4j-pigpio.so" type="so"/>
+                            </target>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
@@ -135,27 +152,6 @@
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- attach the compiled JNI native library ("libpi4j-pigpio.so") as an artifact -->
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>pi4j-attach-native</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target name="pi4j-attach-native-library" >
-                                <taskdef  resource="net/sf/antcontrib/antcontrib.properties"
-                                          classpathref="maven.plugin.classpath"/>
-                                <attachartifact file="${project.build.directory}/lib/libpi4j-pigpio.so" type="so"/>
-                            </target>
                         </configuration>
                     </execution>
                 </executions>

@@ -4,7 +4,7 @@ package com.pi4j.library.pigpio.test;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
- * FILENAME      :  TestSerialRaw.java
+ * FILENAME      :  TestI2CRaw.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -40,10 +40,10 @@ import java.util.Random;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class TestSerialRaw {
+public class TestI2CRaw {
 
-    private static String SERIAL_DEVICE = "/dev/ttyS0";
-    private static int BAUD_RATE = 9600;
+    private static int I2C_BUS = 1;
+    private static int I2C_DEVICE = 0x04;
 
     /**
      * <p>main.</p>
@@ -57,126 +57,102 @@ public class TestSerialRaw {
 
         int init = PIGPIO.gpioInitialise();
         System.out.println("PIGPIO INITIALIZE: " + init);
-
         if(init < 0){
             System.err.println("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
             System.exit(init);
         }
 
-        int handle = PIGPIO.serOpen(SERIAL_DEVICE, BAUD_RATE, 0);
-        System.out.println("PIGPIO SERIAL OPEN  : " + handle);
+        // open I2C channel/bus/device
+        int handle = PIGPIO.i2cOpen(I2C_BUS, I2C_DEVICE, 0);
+        System.out.println("PIGPIO I2C OPEN  : " + handle);
         if(handle < 0) {
-            System.err.println("ERROR; SERIAL OPEN FAILED: ERROR CODE: " + handle);
+            System.err.println("ERROR; I2C OPEN FAILED: ERROR CODE: " + handle);
             System.exit(handle);
         }
 
-        System.out.println("SERIAL DATA DRAINED  : " + PIGPIO.serDrain(handle));
+        System.out.println();
+        System.out.println("----------------------------------------");
+        System.out.println("TEST I2C SINGLE BYTE RAW READ/WRITE");
+        System.out.println("----------------------------------------");
 
         // iterate over BYTE range of values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
-        for(int b = 0; b < 256; b++) {
-            System.out.print("[SERIAL W/R BYTE]");
+        for(int b = 0; b < 255; b++) {
+            System.out.print("[W/R BYTE]");
 
             // WRITE :: SINGLE RAW BYTE
             System.out.print(" (WRITE) 0x" + Integer.toHexString(b));
-            int result = PIGPIO.serWriteByte(handle, (byte)b);
+            int result = PIGPIO.i2cWriteByte(handle, (byte)b);
             if(result < 0) {
-                System.err.println("\nERROR; SERIAL WRITE FAILED: ERROR CODE: " + result);
-                System.exit(result);
-            }
-
-            // take a breath to allow time for the serial data
-            // to get updated in the serial receive buffer
-            Thread.sleep(5);
-
-            // READ :: NUMBER OF BYTES AVAILABLE TO READ
-            int available = PIGPIO.serDataAvailable(handle);
-            System.out.print(" (AVAIL) " + available);
-            if(available != 1) {
-                System.err.println("\nERROR; SERIAL AVAILABLE FAILED: expected=1; received=" + available);
+                System.err.println("\nERROR; I2C WRITE FAILED: ERROR CODE: " + result);
                 System.exit(result);
             }
 
             // READ :: SINGLE RAW BYTE
-            result = PIGPIO.serReadByte(handle);
-            System.out.print(" (READ) 0x" + Integer.toHexString(result));
-            System.out.println();
+            result = PIGPIO.i2cReadByte(handle);
             if(result < 0) {
-                System.err.println("\nERROR; SERIAL READ FAILED: ERROR CODE: " + result);
+                System.err.println("\nERROR; I2C READ FAILED: ERROR CODE: " + result);
                 System.exit(result);
             }
+            System.out.print(" (READ) 0x" + Integer.toHexString(result));
+            System.out.println();
 
             int expected = b;
-            int recevied = result;
-            if(recevied != expected) {
-                System.err.println("\nERROR; SERIAL READ FAILED: BYTE MISMATCH: expected=" + expected + "; received=" + recevied);
+            int received = result;
+            if(received != expected) {
+                System.err.println("\nERROR; I2C READ FAILED: BYTE MISMATCH: expected=" + expected + "; received=" + received);
                 System.exit(0);
             }
         }
 
         // iterate over series of test values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
-        for(int x = 1; x < 50; x++) {
-            System.out.print("[SERIAL W/R BUFFER]");
+        for(int x = 1; x < 100; x++) {
+            System.out.print("[W/R BUFFER]");
 
             Random r = new Random();
-            int len = r.nextInt((20)) + 4; // minimum of 4 bytes
+            int len = r.nextInt((20)) + 2; // minimum of 2 bytes
             byte[] writeBuffer = new byte[len];
             r.nextBytes(writeBuffer);
 
             // WRITE :: MULTI-BYTE
             System.out.print(" (WRITE) 0x" + StringUtil.toHexString(writeBuffer));
-            int result = PIGPIO.serWrite(handle, writeBuffer, len);
+            int result = PIGPIO.i2cWriteDevice(handle, writeBuffer, len);
             if(result < 0) {
-                System.err.println("\nERROR; SERIAL WRITE FAILED: ERROR CODE: " + result);
-                System.exit(result);
-            }
-
-            // take a breath to allow time for the serial data
-            // to get updated in the serial receive buffer
-            Thread.sleep(40);
-
-            // READ :: NUMBER OF BYTES AVAILABLE TO READ
-            int available = PIGPIO.serDataAvailable(handle);
-            System.out.print(" (AVAIL) " + available);
-            if(available != len) {
-                System.err.println("\nERROR; SERIAL AVAILABLE FAILED: expected=1; received=" + available);
+                System.err.println("\nERROR; I2C WRITE FAILED: ERROR CODE: " + result);
                 System.exit(result);
             }
 
             // READ :: MULTI-BYTE
-            byte[] readBuffer = new byte[available];
-            result = PIGPIO.serRead(handle, readBuffer, available);
+            byte[] readBuffer = new byte[len];
+            result = PIGPIO.i2cReadDevice(handle, readBuffer, len);
             System.out.print(" (READ) 0x" + StringUtil.toHexString(readBuffer));
             System.out.println();
             if(result < 0) {
-                System.err.println("\nERROR; SERIAL READ FAILED: ERROR CODE: " + result);
+                System.err.println("\nERROR; I2C READ FAILED: ERROR CODE: " + result);
                 System.exit(result);
             }
 
             // validate read length
             if(result != len) {
-                System.err.println("\nERROR; SERIAL READ FAILED: LENGTH MISMATCH: " + result);
+                System.err.println("\nERROR; I2C READ FAILED: LENGTH MISMATCH: " + result);
                 System.exit(result);
             }
 
-            // validate buffer contents
+            //validate data read back is same as written
             if(!Arrays.equals(writeBuffer, readBuffer)) {
-                System.err.println("\nERROR; SERIAL READ FAILED: BYTE MISMATCH: expected=" +
+                System.err.println("\nERROR; I2C READ FAILED: BYTE MISMATCH: expected=" +
                         StringUtil.toHexString(writeBuffer) + "; received=" +
                         StringUtil.toHexString(readBuffer));
                 System.exit(0);
             }
         }
 
-        // close SERIAL channel
-        int closed = PIGPIO.serClose(handle);
-        System.out.println("PIGPIO SERIAL CLOSED : " + handle);
-
+        // close I2C channel
+        PIGPIO.i2cClose(handle);
 
         PIGPIO.gpioTerminate();
         System.out.println("PIGPIO TERMINATED");
-
-        System.out.println("ALL SERIAL TESTS COMPLETED SUCCESSFULLY");
+        System.out.println("ALL I2C RAW DEVICE TESTS COMPLETED SUCCESSFULLY");
     }
 }

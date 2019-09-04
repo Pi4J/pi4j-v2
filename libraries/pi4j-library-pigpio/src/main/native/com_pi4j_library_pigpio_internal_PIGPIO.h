@@ -267,151 +267,151 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioGetServo
 // */
 //JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSerialReadClose
 //  (JNIEnv *, jclass, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cOpen
-// * Signature: (III)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cOpen
-//  (JNIEnv *, jclass, jint, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cClose
-// * Signature: (I)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cClose
-//  (JNIEnv *, jclass, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cWriteQuick
-// * Signature: (IZ)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteQuick
-//  (JNIEnv *, jclass, jint, jboolean);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cWriteByte
-// * Signature: (IB)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteByte
-//  (JNIEnv *, jclass, jint, jbyte);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cReadByte
-// * Signature: (I)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cReadByte
-//  (JNIEnv *, jclass, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cWriteByteData
-// * Signature: (IIB)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteByteData
-//  (JNIEnv *, jclass, jint, jint, jbyte);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cWriteWordData
-// * Signature: (III)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteWordData
-//  (JNIEnv *, jclass, jint, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cReadByteData
-// * Signature: (II)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cReadByteData
-//  (JNIEnv *, jclass, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cReadWordData
-// * Signature: (II)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cReadWordData
-//  (JNIEnv *, jclass, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cProcessCall
-// * Signature: (IIB)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cProcessCall
-//  (JNIEnv *, jclass, jint, jint, jbyte);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cWriteBlockData
-// * Signature: (II[BI)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteBlockData
-//  (JNIEnv *, jclass, jint, jint, jbyteArray, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cReadBlockData
-// * Signature: (II[B)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cReadBlockData
-//  (JNIEnv *, jclass, jint, jint, jbyteArray);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cBlockProcessCall
-// * Signature: (II[BI)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cBlockProcessCall
-//  (JNIEnv *, jclass, jint, jint, jbyteArray, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cReadI2CBlockData
-// * Signature: (II[BI)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cReadI2CBlockData
-//  (JNIEnv *, jclass, jint, jint, jbyteArray, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cWriteI2CBlockData
-// * Signature: (II[BI)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteI2CBlockData
-//  (JNIEnv *, jclass, jint, jint, jbyteArray, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cReadDevice
-// * Signature: (I[BI)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cReadDevice
-//  (JNIEnv *, jclass, jint, jbyteArray, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cWriteDevice
-// * Signature: (I[BI)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteDevice
-//  (JNIEnv *, jclass, jint, jbyteArray, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    i2cSwitchCombined
-// * Signature: (I)V
-// */
-//JNIEXPORT void JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cSwitchCombined
-//  (JNIEnv *, jclass, jint);
-//
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cOpen
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cOpen
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cClose
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cClose
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cWriteQuick
+ * Signature: (IZ)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteQuick
+  (JNIEnv *, jclass, jint, jboolean);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cWriteByte
+ * Signature: (IB)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteByte
+  (JNIEnv *, jclass, jint, jbyte);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cReadByte
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cReadByte
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cWriteByteData
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteByteData
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cWriteWordData
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteWordData
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cReadByteData
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cReadByteData
+  (JNIEnv *, jclass, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cReadWordData
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cReadWordData
+  (JNIEnv *, jclass, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cProcessCall
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cProcessCall
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cWriteBlockData
+ * Signature: (II[BII)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteBlockData
+  (JNIEnv *, jclass, jint, jint, jbyteArray, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cReadBlockData
+ * Signature: (II[BI)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cReadBlockData
+  (JNIEnv *, jclass, jint, jint, jbyteArray, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cBlockProcessCall
+ * Signature: (II[BII)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cBlockProcessCall
+  (JNIEnv *, jclass, jint, jint, jbyteArray, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cReadI2CBlockData
+ * Signature: (II[BI)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cReadI2CBlockData
+  (JNIEnv *, jclass, jint, jint, jbyteArray, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cWriteI2CBlockData
+ * Signature: (II[BII)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteI2CBlockData
+  (JNIEnv *, jclass, jint, jint, jbyteArray, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cReadDevice
+ * Signature: (I[BII)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cReadDevice
+  (JNIEnv *, jclass, jint, jbyteArray, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cWriteDevice
+ * Signature: (I[BII)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cWriteDevice
+  (JNIEnv *, jclass, jint, jbyteArray, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    i2cSwitchCombined
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_i2cSwitchCombined
+  (JNIEnv *, jclass, jint);
+
 ///*
 // * Class:     com_pi4j_library_pigpio_internal_PIGPIO
 // * Method:    i2cZip
@@ -487,26 +487,26 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiClose
 /*
  * Class:     com_pi4j_library_pigpio_internal_PIGPIO
  * Method:    spiRead
- * Signature: (I[BI)I
+ * Signature: (I[BII)I
  */
 JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiRead
-  (JNIEnv *, jclass, jint, jbyteArray, jint);
+  (JNIEnv *, jclass, jint, jbyteArray, jint, jint);
 
 /*
  * Class:     com_pi4j_library_pigpio_internal_PIGPIO
  * Method:    spiWrite
- * Signature: (I[BI)I
+ * Signature: (I[BII)I
  */
 JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiWrite
-  (JNIEnv *, jclass, jint, jbyteArray, jint);
+  (JNIEnv *, jclass, jint, jbyteArray, jint, jint);
 
 /*
  * Class:     com_pi4j_library_pigpio_internal_PIGPIO
  * Method:    spiXfer
- * Signature: (I[B[BI)I
+ * Signature: (I[BI[BII)I
  */
 JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_spiXfer
-  (JNIEnv *, jclass, jint, jbyteArray, jbyteArray, jint);
+  (JNIEnv *, jclass, jint, jbyteArray, jint, jbyteArray, jint, jint);
 
 /*
  * Class:     com_pi4j_library_pigpio_internal_PIGPIO
@@ -543,18 +543,18 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serReadByte
 /*
  * Class:     com_pi4j_library_pigpio_internal_PIGPIO
  * Method:    serWrite
- * Signature: (I[BI)I
+ * Signature: (I[BII)I
  */
 JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serWrite
-  (JNIEnv *, jclass, jint, jbyteArray, jint);
+  (JNIEnv *, jclass, jint, jbyteArray, jint, jint);
 
 /*
  * Class:     com_pi4j_library_pigpio_internal_PIGPIO
  * Method:    serRead
- * Signature: (I[BI)I
+ * Signature: (I[BII)I
  */
 JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serRead
-  (JNIEnv *, jclass, jint, jbyteArray, jint);
+  (JNIEnv *, jclass, jint, jbyteArray, jint, jint);
 
 /*
  * Class:     com_pi4j_library_pigpio_internal_PIGPIO

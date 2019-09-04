@@ -747,7 +747,6 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
 
         // if the open was successful, then we need to cache the I2C handle
         if(rx.success()) {
-            System.out.println(">>> " + handle);
             i2cHandles.add(handle);
         }
 
@@ -1015,6 +1014,20 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     /**
      * {@inheritDoc}
      *
+     * This writes data bytes to the specified register of the device associated with the handle and reads a
+     * device specified number of bytes of data in return.
+     *
+     * The SMBus 2.0 documentation states that a minimum of 1 byte may be sent and a minimum of 1 byte may be received.
+     * The total number of bytes sent/received must be 32 or less.
+     */
+    @Override
+    public int i2cBlockProcessCall(int handle, int register, byte[] data, int offset, int length) throws IOException{
+        return i2cBlockProcessCall(handle, register, data, offset, length, data, offset);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * This reads count bytes from the specified register of the device associated with handle .
      * The maximum length of data that can be read is 32 bytes.
      * The minimum length of data that can be read is 1 byte.
@@ -1032,10 +1045,10 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
 
-        logger.trace("[I2C::READ] <- DATA SIZE={}",  rx.result());
-        logger.trace("[I2C::READ] <- DATA LENGTH={}",  rx.dataLength());
-        logger.trace("[I2C::READ] <- BUFFER SIZE={}",  rx.data());
-        logger.trace("[I2C::READ] <- OFFSET={}",  offset);
+//        logger.trace("[I2C::READ] <- DATA SIZE={}",  rx.result());
+//        logger.trace("[I2C::READ] <- DATA LENGTH={}",  rx.dataLength());
+//        logger.trace("[I2C::READ] <- BUFFER SIZE={}",  rx.data());
+//        logger.trace("[I2C::READ] <- OFFSET={}",  offset);
 
         if(rx.success()) {
             try {
