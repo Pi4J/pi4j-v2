@@ -195,47 +195,47 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioGetServo
 // */
 //JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetISRFuncEx
 //  (JNIEnv *, jclass, jint, jint, jint, jobject, jobject);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioNotifyOpen
-// * Signature: ()I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyOpen
-//  (JNIEnv *, jclass);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioNotifyOpenWithSize
-// * Signature: (I)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyOpenWithSize
-//  (JNIEnv *, jclass, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioNotifyBegin
-// * Signature: (IJ)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyBegin
-//  (JNIEnv *, jclass, jint, jlong);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioNotifyPause
-// * Signature: (I)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyPause
-//  (JNIEnv *, jclass, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioNotifyClose
-// * Signature: (I)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyClose
-//  (JNIEnv *, jclass, jint);
-//
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioNotifyOpen
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyOpen
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioNotifyOpenWithSize
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyOpenWithSize
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioNotifyBegin
+ * Signature: (IJ)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyBegin
+  (JNIEnv *, jclass, jint, jlong);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioNotifyPause
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyPause
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioNotifyClose
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyClose
+  (JNIEnv *, jclass, jint);
+
 ///*
 // * Class:     com_pi4j_library_pigpio_internal_PIGPIO
 // * Method:    gpioSerialReadOpen

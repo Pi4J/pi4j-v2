@@ -887,9 +887,66 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serDrain
 }
 
 
+// *****************************************************************************************************
+// *****************************************************************************************************
+// GPIO PIN NOTIFICATIONS (PIPE & SOCKET)
+// *****************************************************************************************************
+// *****************************************************************************************************
 
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioNotifyOpen
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyOpen
+  (JNIEnv *env , jclass class)
+{
+    return gpioNotifyOpen();
+}
 
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioNotifyOpenWithSize
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyOpenWithSize
+  (JNIEnv *env, jclass class, jint bufSize)
+{
+    return gpioNotifyOpenWithSize(bufSize);
+}
 
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioNotifyBegin
+ * Signature: (IJ)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyBegin
+  (JNIEnv *env, jclass class, jint handle, jlong bits)
+{
+    return gpioNotifyBegin((unsigned)handle, (uint32_t)bits);
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioNotifyPause
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyPause
+  (JNIEnv *env, jclass class, jint handle)
+{
+    return gpioNotifyPause((unsigned)handle);
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioNotifyClose
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNotifyClose
+  (JNIEnv *env, jclass class, jint handle)
+{
+    return gpioNotifyClose((unsigned)handle);
+}
 
 
 // *****************************************************************************************************
