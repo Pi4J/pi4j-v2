@@ -30,6 +30,7 @@ package com.pi4j.library.pigpio.internal;
  */
 
 
+import com.pi4j.library.pigpio.PiGpioConst;
 import com.pi4j.library.pigpio.util.NativeLibraryLoader;
 
 import java.util.concurrent.Callable;
@@ -190,44 +191,117 @@ public class PIGPIO {
      * @return a int.
      */
     public static native int gpioGetServoPulsewidth(int user_gpio);
+
     /**
      * <p>gpioSetAlertFunc.</p>
      *
      * @param user_gpio a int.
-     * @param f a {@link java.util.concurrent.Callable} object.
+     * @param f a {@link PiGpioAlertCallback} object.
      * @return a int.
      */
-    public static native int gpioSetAlertFunc(int user_gpio, Callable f);
+    public static native int gpioSetAlertFunc(int user_gpio, PiGpioAlertCallback f);
+
     /**
      * <p>gpioSetAlertFuncEx.</p>
      *
      * @param user_gpio a int.
-     * @param f a {@link java.util.concurrent.Callable} object.
-     * @param userdata a {@link java.lang.Object} object.
+     * @param f a {@link Callable} object.
+     * @param userdata a {@link Object} object.
      * @return a int.
      */
-    public static native int gpioSetAlertFuncEx(int user_gpio, Callable f, Object userdata);
+    public static native int gpioSetAlertFuncEx(int user_gpio, PiGpioAlertCallbackEx f, Object userdata);
+
+    /**
+     * <p>gpioDisableAlertFunc.</p>
+     *
+     * @param user_gpio a int.
+     * @return a int.
+     */
+    public static int gpioDisableAlertFunc(int user_gpio, PiGpioAlertCallback f){
+        return gpioSetAlertFunc(user_gpio, null);
+    }
+
     /**
      * <p>gpioSetISRFunc.</p>
      *
      * @param gpio a int.
      * @param edge a int.
      * @param timeout a int.
-     * @param f a {@link java.util.concurrent.Callable} object.
+     * @param f a {@link PiGpioIsrCallback} object.
      * @return a int.
      */
-    public static native int gpioSetISRFunc(int gpio, int edge, int timeout, Callable f);
+    public static native int gpioSetISRFunc(int gpio, int edge, int timeout, PiGpioIsrCallback f);
+
+    /**
+     * <p>gpioSetISRFunc.</p>
+     *
+     * @param gpio a int.
+     * @param edge a int.
+     * @param f a {@link PiGpioIsrCallback} object.
+     * @return a int.
+     */
+    public static int gpioSetISRFunc(int gpio, int edge, PiGpioIsrCallback f){
+        return gpioSetISRFunc(gpio, edge, 0, f);
+    }
+
+    /**
+     * <p>gpioSetISRFunc.</p>
+     *
+     * @param gpio a int.
+     * @param f a {@link PiGpioIsrCallback} object.
+     * @return a int.
+     */
+    public static int gpioSetISRFunc(int gpio, PiGpioIsrCallback f){
+        return gpioSetISRFunc(gpio, PiGpioConst.PI_EITHER_EDGE, f);
+    }
+
+    /**
+     * <p>gpioDisableISRFunc.</p>
+     *
+     * @param gpio a int.
+     * @return a int.
+     */
+    public static int gpioDisableISRFunc(int gpio){
+        return gpioSetISRFunc(gpio, 0, null);
+    }
+
     /**
      * <p>gpioSetISRFuncEx.</p>
      *
      * @param gpio a int.
      * @param edge a int.
      * @param timeout a int.
-     * @param f a {@link java.util.concurrent.Callable} object.
+     * @param f a {@link PiGpioIsrCallbackEx} object.
      * @param userdata a {@link java.lang.Object} object.
      * @return a int.
      */
-    public static native int gpioSetISRFuncEx(int gpio, int edge, int timeout, Callable f, Object userdata);
+    public static native int gpioSetISRFuncEx(int gpio, int edge, int timeout, PiGpioIsrCallbackEx f, Object userdata);
+
+    /**
+     * <p>gpioSetISRFuncEx.</p>
+     *
+     * @param gpio a int.
+     * @param edge a int.
+     * @param f a {@link PiGpioIsrCallbackEx} object.
+     * @param userdata a {@link java.lang.Object} object.
+     * @return a int.
+     */
+    public static int gpioSetISRFuncEx(int gpio, int edge, PiGpioIsrCallbackEx f, Object userdata){
+        return gpioSetISRFuncEx(gpio, edge, 0, f, userdata);
+    }
+
+    /**
+     * <p>gpioSetISRFuncEx.</p>
+     *
+     * @param gpio a int.
+     * @param f a {@link PiGpioIsrCallbackEx} object.
+     * @param userdata a {@link java.lang.Object} object.
+     * @return a int.
+     */
+    public static int gpioSetISRFuncEx(int gpio, PiGpioIsrCallbackEx f, Object userdata){
+        return gpioSetISRFuncEx(gpio, PiGpioConst.PI_EITHER_EDGE, 0, f, userdata);
+    }
+
     /**
      * <p>gpioNotifyOpen.</p>
      *
@@ -1068,6 +1142,13 @@ public class PIGPIO {
      */
     public static native int gpioVersion();
     /**
+     * <p>gpioGetPad.</p>
+     *
+     * @param pad a int.
+     * @return a int.
+     */
+    public static native int gpioGetPad(int pad);
+    /**
      * <p>gpioSetPad.</p>
      *
      * @param pad a int.
@@ -1087,19 +1168,28 @@ public class PIGPIO {
      * <p>eventSetFunc.</p>
      *
      * @param event a int.
-     * @param f a {@link java.util.concurrent.Callable} object.
+     * @param f a {@link PiGpioEventCallback} object.
      * @return a int.
      */
-    public static native int eventSetFunc(int event, Callable f);
+    public static native int eventSetFunc(int event, PiGpioEventCallback f);
     /**
      * <p>eventSetFuncEx.</p>
      *
      * @param event a int.
-     * @param f a {@link java.util.concurrent.Callable} object.
+     * @param f a {@link PiGpioEventCallbackEx} object.
      * @param userdata a {@link java.lang.Object} object.
      * @return a int.
      */
-    public static native int eventSetFuncEx(int event, Callable f, Object userdata);
+    public static native int eventSetFuncEx(int event, PiGpioEventCallbackEx f, Object userdata);
+    /**
+     * <p>eventSetFunc.</p>
+     *
+     * @param event a int.
+     * @return a int.
+     */
+    public static int eventRemoveFunc(int event){
+        return eventSetFunc(event, null);
+    }
     /**
      * <p>eventTrigger.</p>
      *

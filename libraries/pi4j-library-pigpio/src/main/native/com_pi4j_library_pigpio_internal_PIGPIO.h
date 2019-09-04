@@ -164,37 +164,37 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioServo
 JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioGetServoPulsewidth
   (JNIEnv *, jclass, jint);
 
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioSetAlertFunc
-// * Signature: (ILjava/util/concurrent/Callable;)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetAlertFunc
-//  (JNIEnv *, jclass, jint, jobject);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioSetAlertFuncEx
-// * Signature: (ILjava/util/concurrent/Callable;Ljava/lang/Object;)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetAlertFuncEx
-//  (JNIEnv *, jclass, jint, jobject, jobject);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioSetISRFunc
-// * Signature: (IIILjava/util/concurrent/Callable;)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetISRFunc
-//  (JNIEnv *, jclass, jint, jint, jint, jobject);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioSetISRFuncEx
-// * Signature: (IIILjava/util/concurrent/Callable;Ljava/lang/Object;)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetISRFuncEx
-//  (JNIEnv *, jclass, jint, jint, jint, jobject, jobject);
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioSetAlertFunc
+ * Signature: (ILcom/pi4j/library/pigpio/internal/PiGpioAlertCallback;)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetAlertFunc
+  (JNIEnv *, jclass, jint, jobject);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioSetAlertFuncEx
+ * Signature: (ILcom/pi4j/library/pigpio/internal/PiGpioAlertCallbackEx;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetAlertFuncEx
+  (JNIEnv *, jclass, jint, jobject, jobject);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioSetISRFunc
+ * Signature: (IIILcom/pi4j/library/pigpio/internal/PiGpioAlertCallback;)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetISRFunc
+  (JNIEnv *, jclass, jint, jint, jint, jobject);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioSetISRFuncEx
+ * Signature: (IIILcom/pi4j/library/pigpio/internal/PiGpioAlertCallbackEx;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetISRFuncEx
+  (JNIEnv *, jclass, jint, jint, jint, jobject, jobject);
 
 /*
  * Class:     com_pi4j_library_pigpio_internal_PIGPIO
@@ -572,38 +572,38 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serDataAvail
 JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_serDrain
   (JNIEnv *, jclass, jint);
 
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioTrigger
-// * Signature: (III)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTrigger
-//  (JNIEnv *, jclass, jint, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioSetWatchdog
-// * Signature: (II)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetWatchdog
-//  (JNIEnv *, jclass, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioNoiseFilter
-// * Signature: (III)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNoiseFilter
-//  (JNIEnv *, jclass, jint, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioGlitchFilter
-// * Signature: (II)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioGlitchFilter
-//  (JNIEnv *, jclass, jint, jint);
-//
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioTrigger
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTrigger
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioSetWatchdog
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetWatchdog
+  (JNIEnv *, jclass, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioNoiseFilter
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioNoiseFilter
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioGlitchFilter
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioGlitchFilter
+  (JNIEnv *, jclass, jint, jint);
+
 ///*
 // * Class:     com_pi4j_library_pigpio_internal_PIGPIO
 // * Method:    gpioStoreScript
@@ -780,46 +780,54 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioHardware
 JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioVersion
   (JNIEnv *, jclass);
 
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioSetPad
-// * Signature: (II)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetPad
-//  (JNIEnv *, jclass, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    eventMonitor
-// * Signature: (II)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_eventMonitor
-//  (JNIEnv *, jclass, jint, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    eventSetFunc
-// * Signature: (ILjava/util/concurrent/Callable;)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_eventSetFunc
-//  (JNIEnv *, jclass, jint, jobject);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    eventSetFuncEx
-// * Signature: (ILjava/util/concurrent/Callable;Ljava/lang/Object;)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_eventSetFuncEx
-//  (JNIEnv *, jclass, jint, jobject, jobject);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    eventTrigger
-// * Signature: (I)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_eventTrigger
-//  (JNIEnv *, jclass, jint);
-//
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioGetPad
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioGetPad
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioSetPad
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetPad
+  (JNIEnv *, jclass, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    eventMonitor
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_eventMonitor
+  (JNIEnv *, jclass, jint, jint);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    eventSetFunc
+ * Signature: (ILcom/pi4j/library/pigpio/internal/PiGpioEventCallback;)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_eventSetFunc
+  (JNIEnv *, jclass, jint, jobject);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    eventSetFuncEx
+ * Signature: (ILcom/pi4j/library/pigpio/internal/PiGpioEventCallbackEx;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_eventSetFuncEx
+  (JNIEnv *, jclass, jint, jobject, jobject);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    eventTrigger
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_eventTrigger
+  (JNIEnv *, jclass, jint);
+
 ///*
 // * Class:     com_pi4j_library_pigpio_internal_PIGPIO
 // * Method:    shell

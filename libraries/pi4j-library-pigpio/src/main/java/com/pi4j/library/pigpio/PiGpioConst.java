@@ -349,6 +349,13 @@ public interface PiGpioConst {
     int PI_PUD_UP   = 2;
 
     // ----------------------------------
+    // GPIO ISR EDGE OPTIONS
+    // ----------------------------------
+    int PI_RISING_EDGE  = 0;
+    int PI_FALLING_EDGE = 1;
+    int PI_EITHER_EDGE  = 2;
+
+    // ----------------------------------
     // GPIO PWM
     // ----------------------------------
     /* dutycycle: 0-range */
