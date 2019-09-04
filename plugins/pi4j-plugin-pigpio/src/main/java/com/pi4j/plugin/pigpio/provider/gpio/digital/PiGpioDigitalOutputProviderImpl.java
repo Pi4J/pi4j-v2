@@ -58,6 +58,10 @@ public class PiGpioDigitalOutputProviderImpl extends DigitalOutputProviderBase i
     /** {@inheritDoc} */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) throws Exception {
+        // initialize the PIGPIO library
+        if(!piGpio.isInitialized()) piGpio.initialize();
+
+        // create new I/O instance based on I/O config
         return new PiGpioDigitalOutput(piGpio,this, config);
     }
 }

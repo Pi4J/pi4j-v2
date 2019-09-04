@@ -60,6 +60,10 @@ public class PiGpioDigitalInputProviderImpl extends DigitalInputProviderBase imp
     /** {@inheritDoc} */
     @Override
     public DigitalInput create(DigitalInputConfig config) throws IOException {
+        // initialize the PIGPIO library
+        if(!piGpio.isInitialized()) piGpio.initialize();
+
+        // create new I/O instance based on I/O config
         return new PiGpioDigitalInput(piGpio, this, config);
     }
 }

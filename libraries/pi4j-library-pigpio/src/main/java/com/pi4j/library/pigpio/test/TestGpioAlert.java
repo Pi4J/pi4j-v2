@@ -28,7 +28,7 @@ package com.pi4j.library.pigpio.test;
  * #L%
  */
 
-import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.library.pigpio.*;
 import org.slf4j.event.Level;
 
 /**
@@ -39,7 +39,7 @@ import org.slf4j.event.Level;
  */
 public class TestGpioAlert {
 
-    public static int GPIO_PIN = 2;
+    public static int GPIO_PIN = 21;
 
     /**
      * <p>main.</p>
@@ -55,34 +55,40 @@ public class TestGpioAlert {
         }
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loglevel);
 
-        // create native PiGpio instance
+        System.out.println();
+        System.out.println();
         PiGpio piGpio = PiGpio.newNativeInstance();
-        System.out.println();
-        System.out.println();
+
+        piGpio.gpioInitialise();
         System.out.println("-----------------------------------------------------");
+        System.out.println("PIGPIO INITIALIZED SUCCESSFULLY");
         System.out.println("-----------------------------------------------------");
-        System.out.println("Pi4J Library :: PIGPIO (Native) JNI Wrapper Library");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        int init = piGpio.gpioInitialise();
-        if(init < 0){
-            System.err.println("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
-        } else {
-            System.out.println("PIGPIO INITIALIZED SUCCESSFULLY");
-        }
+
         System.out.println("PIGPIO VERSION   : " + piGpio.gpioVersion());
-        System.out.println("PIGPIO HARDWARE  : " + Long.toHexString(piGpio.gpioHardwareRevision()));
-
-        System.out.println("-----------------------------------------------------");
+        System.out.println("PIGPIO HARDWARE  : " + piGpio.gpioHardwareRevision());
 
 
+        piGpio.gpioSetMode(GPIO_PIN, PiGpioMode.INPUT);
+        piGpio.gpioSetPullUpDown(GPIO_PIN, PiGpioPud.DOWN);
+        piGpio.gpioGlitchFilter(GPIO_PIN, 1000);
 
+        piGpio.addPinListener(GPIO_PIN, new PiGpioStateChangeListener() {
+            @Override
+            public void onChange(PiGpioStateChangeEvent event) {
+                System.out.println("RECEIVED ALERT EVENT! " + event);
+            }
+        });
 
-
+        System.in.read();
+        System.out.println("PIGPIO ALERT CALLBACK REMOVED");
+        piGpio.removeAllPinListeners();
+        //piGpio.removeAllListeners();
+        System.in.read();
 
         System.out.println("-----------------------------------------------------");
         piGpio.gpioTerminate();
         System.out.println("PIGPIO TERMINATED");
+
         System.out.println("-----------------------------------------------------");
         System.out.println();
         System.out.println();

@@ -30,8 +30,8 @@ package com.pi4j.example.gpio.digital;
 import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalInputProvider;
 import com.pi4j.io.gpio.digital.PullResistance;
-import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider;
 import com.pi4j.util.Console;
 
 /**
@@ -43,7 +43,7 @@ import com.pi4j.util.Console;
 public class DigitalInputExample {
 
     /** Constant <code>DIGITAL_INPUT_PIN=0</code> */
-    public static int DIGITAL_INPUT_PIN = 0;
+    public static int DIGITAL_INPUT_PIN = 21;
 
 
     /**
@@ -60,7 +60,7 @@ public class DigitalInputExample {
      */
     public static void main(String[] args) throws Exception {
         // configure logging output
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
         // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
         // this temporary property is used to tell
@@ -90,7 +90,11 @@ public class DigitalInputExample {
                 .address(DIGITAL_INPUT_PIN)
                 .pull(PullResistance.PULL_DOWN)
                 .build();
-        var input = pi4j.provider(PiGpioDigitalInputProvider.class).create(config);
+
+        // get a Digital Input I/O provider from the Pi4J context
+        DigitalInputProvider digitalInputProvider = pi4j.provider("pigpio-digital-input");
+
+        var input = digitalInputProvider.create(config);
 
         // setup a digital output listener to listen for any state changes on the digital input
         input.addListener((DigitalChangeListener) event -> {

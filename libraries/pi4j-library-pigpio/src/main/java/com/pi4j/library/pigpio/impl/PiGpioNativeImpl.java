@@ -29,11 +29,10 @@ package com.pi4j.library.pigpio.impl;
  * #L%
  */
 
-import com.pi4j.library.pigpio.PiGpio;
-import com.pi4j.library.pigpio.PiGpioMode;
-import com.pi4j.library.pigpio.PiGpioPud;
-import com.pi4j.library.pigpio.PiGpioState;
+import com.pi4j.library.pigpio.*;
 import com.pi4j.library.pigpio.internal.PIGPIO;
+import com.pi4j.library.pigpio.internal.PiGpioAlertCallback;
+import com.pi4j.library.pigpio.internal.PiGpioSignalCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,6 +99,21 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
             // initialize the PiGpio native library
             result = PIGPIO.gpioInitialise();
             validateResult(result);
+
+            // creat a terminate handler for received signals
+            PiGpioSignalCallback terminateSignalHandler = signum -> {
+                PIGPIO.gpioTerminate();
+                System.exit(signum);
+            };
+
+            // apply our terminate handler to these default system signals
+            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGHUP, terminateSignalHandler);
+            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGINT, terminateSignalHandler);
+            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGQUIT, terminateSignalHandler);
+            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGKILL, terminateSignalHandler);
+            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGTERM, terminateSignalHandler);
+            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGSTOP, terminateSignalHandler);
+            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGTSTP, terminateSignalHandler);
 
             // initialization successful
             this.initialized = true;
@@ -584,9 +598,22 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
 
     @Override
     public void gpioNotifications(int pin, boolean enabled) throws IOException {
-        // TODO :: IMPLEMENT GPIO EVENTS
+        if(enabled)
+            PIGPIO.gpioSetAlertFunc(pin, gpioAlertCallbackHandler);
+        else
+            PIGPIO.gpioDisableAlertFunc(pin);
     }
 
+    /**
+     * This handler is used internally to dispatch GPI state change events to Java consumers
+     * (*this method is only invoked from native JNI code*)
+     */
+    private PiGpioAlertCallback gpioAlertCallbackHandler = new PiGpioAlertCallback() {
+        @Override
+        public void call(int pin, int state, long tick) {
+            dispatchEvent(new PiGpioStateChangeEvent(pin, PiGpioState.from(state), tick));
+        }
+    };
 
     // *****************************************************************************************************
     // *****************************************************************************************************

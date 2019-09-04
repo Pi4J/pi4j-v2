@@ -247,7 +247,7 @@ public class PiGpioSocketMonitor  {
                                                 if (oldState != newState) {
                                                     // if there is a change detected, then create a new change event and dispatch it
                                                     final PiGpioState state = PiGpioState.from(newState);
-                                                    final PiGpioStateChangeEvent event = new PiGpioStateChangeEvent(i, state, sequence, flags, tick);
+                                                    final PiGpioStateChangeEvent event = new PiGpioStateChangeEvent(i, state, tick);
                                                     logger.trace("[DISPATCH] PiGpioStateChangeEvent(PIN={}; FLAGS={}; TICK={}; STATE=[{}]",
                                                             i, flags, tick, Integer.toBinaryString(newPinState));
                                                     piGpio.dispatchEvent(event);

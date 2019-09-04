@@ -217,7 +217,7 @@ public class PIGPIO {
      * @param user_gpio a int.
      * @return a int.
      */
-    public static int gpioDisableAlertFunc(int user_gpio, PiGpioAlertCallback f){
+    public static int gpioDisableAlertFunc(int user_gpio){
         return gpioSetAlertFunc(user_gpio, null);
     }
 
@@ -1028,19 +1028,19 @@ public class PIGPIO {
      * <p>gpioSetSignalFunc.</p>
      *
      * @param signum a int.
-     * @param f a {@link java.util.concurrent.Callable} object.
+     * @param f a {@link PiGpioSignalCallback} object.
      * @return a int.
      */
-    public static native int gpioSetSignalFunc(int signum, Callable f);
+    public static native int gpioSetSignalFunc(int signum, PiGpioSignalCallback f);
     /**
      * <p>gpioSetSignalFuncEx.</p>
      *
      * @param signum a int.
-     * @param f a {@link java.util.concurrent.Callable} object.
+     * @param f a {@link PiGpioSignalCallbackEx} object.
      * @param userdata a {@link java.lang.Object} object.
      * @return a int.
      */
-    public static native int gpioSetSignalFuncEx(int signum, Callable f, Object userdata);
+    public static native int gpioSetSignalFuncEx(int signum, PiGpioSignalCallbackEx f, Object userdata);
     /**
      * <p>gpioRead_Bits_0_31.</p>
      *

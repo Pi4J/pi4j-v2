@@ -651,23 +651,23 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioGlitchFi
 // */
 //JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioDeleteScript
 //  (JNIEnv *, jclass, jint);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioSetSignalFunc
-// * Signature: (ILjava/util/concurrent/Callable;)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetSignalFunc
-//  (JNIEnv *, jclass, jint, jobject);
-//
-///*
-// * Class:     com_pi4j_library_pigpio_internal_PIGPIO
-// * Method:    gpioSetSignalFuncEx
-// * Signature: (ILjava/util/concurrent/Callable;Ljava/lang/Object;)I
-// */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetSignalFuncEx
-//  (JNIEnv *, jclass, jint, jobject, jobject);
-//
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioSetSignalFunc
+ * Signature: (ILcom/pi4j/library/pigpio/internal/PiGpioSignalCallback;)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetSignalFunc
+  (JNIEnv *, jclass, jint, jobject);
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioSetSignalFuncEx
+ * Signature: (ILcom/pi4j/library/pigpio/internal/PiGpioSignalCallbackEx;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetSignalFuncEx
+  (JNIEnv *, jclass, jint, jobject, jobject);
+
 ///*
 // * Class:     com_pi4j_library_pigpio_internal_PIGPIO
 // * Method:    gpioRead_Bits_0_31

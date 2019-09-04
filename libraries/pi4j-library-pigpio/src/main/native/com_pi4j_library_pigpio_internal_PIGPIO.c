@@ -71,6 +71,11 @@ struct _PiGpioCallback gpioIsrCallbacks[PI_MAX_GPIO+1];
  */
 struct _PiGpioCallback eventCallbacks[PI_MAX_EVENT+1];
 
+/*
+ * Signal Callback Cache for System Signal Events (0-63) <TOTAL 64>
+ */
+struct _PiGpioCallback signalCallbacks[PI_MAX_SIGNUM+1];
+
 
 // *****************************************************************************************************
 // *****************************************************************************************************
@@ -161,7 +166,7 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioInitiali
 JNIEXPORT void JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTerminate
   (JNIEnv *env, jclass class)
 {
-    int gpio;
+    int gpio, event, signum;
 
     // before shutting down, lets clean up a bit
     for(gpio = PI_MIN_GPIO; gpio <= PI_MAX_GPIO; gpio++){
@@ -209,7 +214,230 @@ JNIEXPORT void JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTerminat
         gpioIsrCallbacks[gpio].userdata = NULL;
     }
 
+    // -------------------------
+    // EVENT CALLBACKS
+    // -------------------------
+    for(event = 0; event <= PI_MAX_EVENT; event++){
+
+        // destroy any global references to the callback object instance
+        if(eventCallbacks[event].callback != NULL){
+            (*env)->DeleteGlobalRef(env, eventCallbacks[event].callback);
+        }
+
+        // destroy any global references to the callback userdata instance
+        if(eventCallbacks[event].userdata != NULL){
+            (*env)->DeleteGlobalRef(env, eventCallbacks[event].userdata);
+        }
+
+        // clear the cached callback references for this event number
+        eventCallbacks[event].callback = NULL;
+        eventCallbacks[event].class = NULL;
+        eventCallbacks[event].method = 0;
+        eventCallbacks[event].userdata = NULL;
+    }
+
+    // -------------------------
+    // SIGNAL CALLBACKS
+    // -------------------------
+    for(signum = 0; signum <= PI_MAX_SIGNUM; signum++){
+
+        // destroy any global references to the callback object instance
+        if(signalCallbacks[signum].callback != NULL){
+            (*env)->DeleteGlobalRef(env, signalCallbacks[signum].callback);
+        }
+
+        // destroy any global references to the callback userdata instance
+        if(signalCallbacks[signum].userdata != NULL){
+            (*env)->DeleteGlobalRef(env, signalCallbacks[signum].userdata);
+        }
+
+        // clear the cached callback references for this event number
+        signalCallbacks[signum].callback = NULL;
+        signalCallbacks[signum].class = NULL;
+        signalCallbacks[signum].method = 0;
+        signalCallbacks[signum].userdata = NULL;
+    }
+
+
     return gpioTerminate();
+}
+
+// *****************************************************************************************************
+// *****************************************************************************************************
+// SIGNAL HANDLING (and callback events) IMPLEMENTATION
+// *****************************************************************************************************
+// *****************************************************************************************************
+
+void signalCallbackDelegate(int signum)
+{
+    // attached to JVM thread
+    JNIEnv *env;
+    (*callback_jvm)->AttachCurrentThread(callback_jvm, (void **)&env, NULL);
+
+    // get local references for the callback class and method to invoke based on the GPIO pin number
+    jclass callback_class = signalCallbacks[signum].class;
+    jmethodID callback_method = signalCallbacks[signum].method;
+    jobject callback_userdata = signalCallbacks[signum].userdata;
+
+    // ensure that the JVM exists
+    if(callback_jvm == NULL){
+        printf("NATIVE (PIGPIO::signalCallbackDelegate) ERROR; 'callback_jvm' is NULL.\n");
+        return;
+    }
+
+    // ensure the callback class is available
+    if (callback_class == NULL){
+        printf("NATIVE (PIGPIO::signalCallbackDelegate) ERROR; 'callback_class' is NULL.\n");
+        return;
+    }
+
+    // ensure the callback method is available
+    if (callback_method == NULL){
+        printf("NATIVE (PIGPIO::signalCallbackDelegate) ERROR; 'callback_class::method' is NULL.\n");
+        return;
+    }
+
+    // clear any exceptions on the stack
+    (*env)->ExceptionClear(env);
+
+    // invoke callback to java state method to notify event listeners
+    if(callback_userdata == NULL){
+        (*env)->CallVoidMethod(env, signalCallbacks[signum].callback, callback_method, (jint)signum);
+    }
+    else{
+        (*env)->CallVoidMethod(env, signalCallbacks[signum].callback, callback_method, (jint)signum, callback_userdata);
+    }
+
+    // clear any user caused exceptions on the stack
+    if((*env)->ExceptionCheck(env)){
+    (*env)->ExceptionClear(env);
+    }
+
+    // detach from thread
+    (*callback_jvm)->DetachCurrentThread(callback_jvm);
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioSetSignalFunc
+ * Signature: (ILcom/pi4j/library/pigpio/internal/PiGpioSignalCallback;)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetSignalFunc
+  (JNIEnv *env, jclass class, jint signum, jobject callback)
+{
+    // validate the user requested signal number
+    if(signum > PI_MAX_SIGNUM){
+        printf("NATIVE (PIGPIO::gpioSetSignalFunc) ERROR; INVALID SIGNAL; SUPPORTED SIGNUMS: <0-63>;\n");
+        return PI_BAD_SIGNUM;
+    }
+
+    jint result;
+    if(callback == NULL){
+        // unregister any callbacks for this signal number with the PIGPIO lib
+        result = gpioSetSignalFunc((unsigned)signum, NULL);
+
+        // destroy any global references to the callback object instance
+        if(signalCallbacks[signum].callback != NULL){
+            (*env)->DeleteGlobalRef(env, signalCallbacks[signum].callback);
+        }
+
+        // destroy any global references to the callback userdata instance
+        if(signalCallbacks[signum].userdata != NULL){
+            (*env)->DeleteGlobalRef(env, signalCallbacks[signum].userdata);
+        }
+
+        // clear the cached callback references for this signal number
+        signalCallbacks[signum].callback = NULL;
+        signalCallbacks[signum].class = NULL;
+        signalCallbacks[signum].method = 0;
+        signalCallbacks[signum].userdata = NULL;
+    }
+    else{
+        // convert local to global reference (local will die after this method call)
+        jobject callback_object = (*env)->NewGlobalRef(env, callback);
+
+        // get the callback class; this will help us lookup the required callback method id
+        jclass callback_class = (*env)->GetObjectClass(env, callback_object);
+        if (callback_class == NULL){
+            printf("NATIVE (PIGPIO::gpioSetSignalFunc) ERROR; Java class reference is NULL.\n");
+            return JNI_ERR;
+        }
+
+        // get callable method on callback class of this callback object instance
+        jmethodID callback_method = (*env)->GetMethodID(env, callback_class, "call", "(I)V");
+
+        // cache references to the callback instance, class and method
+        signalCallbacks[signum].class = callback_class;
+        signalCallbacks[signum].method = callback_method;
+        signalCallbacks[signum].callback = callback_object;
+        signalCallbacks[signum].userdata = NULL;
+
+        // now register the native delegate callback with PIGPIO lib
+        result = gpioSetSignalFunc((unsigned)signum, signalCallbackDelegate);
+    }
+    return result;
+}
+
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioSetSignalFuncEx
+ * Signature: (ILcom/pi4j/library/pigpio/internal/PiGpioSignalCallbackEx;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetSignalFuncEx
+  (JNIEnv *env, jclass class, jint signum, jobject callback, jobject userdata)
+{
+    // validate the user requested signal number
+    if(signum > PI_MAX_SIGNUM){
+        printf("NATIVE (PIGPIO::gpioSetSignalFuncEx) ERROR; INVALID SIGNAL; SUPPORTED SIGNUMS: <0-63>;\n");
+        return PI_BAD_SIGNUM;
+    }
+
+    jint result;
+    if(callback == NULL){
+        // unregister any callbacks for this signal number with the PIGPIO lib
+        result = gpioSetSignalFunc((unsigned)signum, NULL);
+
+        // destroy any global references to the callback object instance
+        if(signalCallbacks[signum].callback != NULL){
+            (*env)->DeleteGlobalRef(env, signalCallbacks[signum].callback);
+        }
+
+        // destroy any global references to the callback userdata instance
+        if(signalCallbacks[signum].userdata != NULL){
+            (*env)->DeleteGlobalRef(env, signalCallbacks[signum].userdata);
+        }
+
+        // clear the cached callback references for this signal number
+        signalCallbacks[signum].callback = NULL;
+        signalCallbacks[signum].class = NULL;
+        signalCallbacks[signum].method = 0;
+        signalCallbacks[signum].userdata = NULL;
+    }
+    else{
+        // convert local to global reference (local will die after this method call)
+        jobject callback_object = (*env)->NewGlobalRef(env, callback);
+        jobject callback_userdata = (*env)->NewGlobalRef(env, userdata);
+
+        // get the callback class; this will help us lookup the required callback method id
+        jclass callback_class = (*env)->GetObjectClass(env, callback_object);
+        if (callback_class == NULL){
+            printf("NATIVE (PIGPIO::gpioSetAlertFuncEx) ERROR; Java class reference is NULL.\n");
+            return JNI_ERR;
+        }
+
+        // get callable method on callback class of this callback object instance
+        jmethodID callback_method = (*env)->GetMethodID(env, callback_class, "call", "(ILjava/lang/Object;)V");
+
+        // cache references to the callback instance, class and method
+        signalCallbacks[signum].class = callback_class;
+        signalCallbacks[signum].method = callback_method;
+        signalCallbacks[signum].callback = callback_object;
+        signalCallbacks[signum].userdata = callback_userdata;
+
+        // now register the native delegate callback with PIGPIO lib
+        result = gpioSetSignalFunc((unsigned)signum, signalCallbackDelegate);
+    }
+    return result;
 }
 
 // *****************************************************************************************************

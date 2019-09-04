@@ -29,9 +29,9 @@ package com.pi4j.library.pigpio.test;
  */
 
 import com.pi4j.library.pigpio.PiGpioConst;
+import com.pi4j.library.pigpio.internal.PIGPIO;
 import com.pi4j.library.pigpio.internal.PiGpioAlertCallback;
 import com.pi4j.library.pigpio.internal.PiGpioAlertCallbackEx;
-import com.pi4j.library.pigpio.internal.PIGPIO;
 import org.slf4j.event.Level;
 
 /**

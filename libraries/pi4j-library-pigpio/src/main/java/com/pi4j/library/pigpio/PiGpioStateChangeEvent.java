@@ -39,8 +39,6 @@ public class PiGpioStateChangeEvent {
 
     protected final PiGpioState state;
     protected final int pin;
-    protected final long sequence;
-    protected final long flags;
     protected final long tick;
 
     /**
@@ -48,19 +46,13 @@ public class PiGpioStateChangeEvent {
      *
      * @param state the value changed for this event instance
      * @param pin a int.
-     * @param sequence a long.
-     * @param flags a long.
      * @param tick a long.
      */
     public PiGpioStateChangeEvent(final int pin,
                                   final PiGpioState state,
-                                  final long sequence,
-                                  final long flags,
                                   final long tick){
         this.state = state;
         this.pin = pin;
-        this.sequence = sequence;
-        this.flags = flags;
         this.tick = tick;
     }
 
@@ -83,24 +75,6 @@ public class PiGpioStateChangeEvent {
     }
 
     /**
-     * The sequence number for this event
-     *
-     * @return a long.
-     */
-    public long sequence() {
-        return this.sequence;
-    }
-
-    /**
-     * The flags value for this event
-     *
-     * @return a long.
-     */
-    public long flags() {
-        return this.flags;
-    }
-
-    /**
      * The tick time for this event
      *
      * @return a long.
@@ -117,12 +91,8 @@ public class PiGpioStateChangeEvent {
         result.append(this.pin());
         result.append("] STATE: [");
         result.append(this.state().name());
-        result.append("] (SEQ=");
-        result.append(this.sequence());
-        result.append("; TICK=");
+        result.append("] (TICK=");
         result.append(this.tick());
-        result.append("; FLAGS=");
-        result.append(this.flags());
         result.append(")");
         return result.toString();
     }

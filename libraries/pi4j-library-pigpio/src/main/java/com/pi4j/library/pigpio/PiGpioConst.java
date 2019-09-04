@@ -406,4 +406,14 @@ public interface PiGpioConst {
     int PI_TIME_RELATIVE            = 0;
     int PI_TIME_ABSOLUTE            = 1;
 
+    // ----------------------------------
+    // SIGNAL NUMBERS
+    // ----------------------------------
+    int SIGHUP = 1;
+    int SIGINT = 2;
+    int SIGQUIT = 3;
+    int SIGKILL = 9;
+    int SIGTERM = 15;
+    int SIGSTOP = 19;
+    int SIGTSTP = 20;
 }
