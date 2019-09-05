@@ -41,5 +41,5 @@ public interface DigitalChangeListener extends DigitalListener {
      *
      * @param event a {@link com.pi4j.io.gpio.digital.DigitalChangeEvent} object.
      */
-    void onChange(DigitalChangeEvent event);
+    void onChange(DigitalChangeEvent event) throws Exception;
 }

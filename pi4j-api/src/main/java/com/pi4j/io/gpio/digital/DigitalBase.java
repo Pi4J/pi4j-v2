@@ -101,7 +101,11 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
      */
     protected void dispatch(DigitalChangeEvent event){
         listeners.forEach((listener) -> {
-            listener.onChange(event);
+            try {
+                listener.onChange(event);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
         bindings.forEach((binding) -> {
             binding.process(event);

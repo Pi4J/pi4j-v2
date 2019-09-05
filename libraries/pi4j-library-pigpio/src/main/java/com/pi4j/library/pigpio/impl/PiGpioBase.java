@@ -518,30 +518,33 @@ public abstract class PiGpioBase implements PiGpio {
      *
      * @param event a {@link com.pi4j.library.pigpio.PiGpioStateChangeEvent} object.
      */
-    protected void dispatchEvent(final PiGpioStateChangeEvent event){
-        // dispatch event to each registered listener
-        stateChangeListeners.forEach(listener -> {
-            try {
-                listener.onChange(event);
-            }
-            catch (Exception e){
-                logger.error(e.getMessage(), e);
-            }
-        });
-
-        // dispatch event to each registered pin listener
-        int pin = event.pin();
-
-        if(pinChangeListeners.containsKey(pin)){
-            var listeners = pinChangeListeners.get(pin);
-            listeners.forEach(listener -> {
+    protected void dispatchEvent(final PiGpioStateChangeEvent event) throws Exception{
+        try {
+            // dispatch event to each registered listener
+            stateChangeListeners.forEach(listener -> {
                 try {
                     listener.onChange(event);
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
             });
+
+            // dispatch event to each registered pin listener
+            int pin = event.pin();
+
+            if (pinChangeListeners.containsKey(pin)) {
+                var listeners = pinChangeListeners.get(pin);
+                listeners.forEach(listener -> {
+                    try {
+                        listener.onChange(event);
+                    } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                    }
+                });
+            }
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(), e);
         }
     }
 

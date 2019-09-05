@@ -29,3 +29,4 @@
 ###
 
 docker build -t raspberrypi-compiler .
+docker tag raspberrypi-compiler pi4j/raspberrypi-compiler

@@ -30,5 +30,5 @@ package com.pi4j.library.pigpio.internal;
  */
 
 public interface PiGpioSignalCallbackEx {
-    void call(int signum, Object userdata);
+    void call(int signum, Object userdata) throws Exception;
 }

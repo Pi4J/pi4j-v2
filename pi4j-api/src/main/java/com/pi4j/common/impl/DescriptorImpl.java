@@ -28,8 +28,6 @@ package com.pi4j.common.impl;
  */
 
 import com.pi4j.common.Descriptor;
-import com.pi4j.common.Metadata;
-import com.pi4j.common.Metadatum;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -56,7 +54,7 @@ public class DescriptorImpl implements Descriptor {
     private Integer quantity;
     private Class type;
     private Object value;
-    private Metadata metadata = Metadata.create();
+
     /**
      * <p>Constructor for DescriptorImpl.</p>
      */
@@ -108,27 +106,6 @@ public class DescriptorImpl implements Descriptor {
 
     /** {@inheritDoc} */
     @Override
-    public Descriptor metadata(String key, Object value) {
-        this.metadata.put(key,value);
-        return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Descriptor metadata(String key, Object value, String description) {
-        this.metadata.put(key, value, description);
-        return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Descriptor metadata(Metadata metadata) {
-        this.metadata.put(metadata);
-        return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public Descriptor type(Class type) {
         this.type = type;
         return this;
@@ -175,18 +152,6 @@ public class DescriptorImpl implements Descriptor {
     @Override
     public Object value() {
         return this.value;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Metadatum metadata(String key) {
-        return this.metadata.get(key);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Metadata metadata() {
-        return this.metadata;
     }
 
     /** {@inheritDoc} */
@@ -296,30 +261,7 @@ public class DescriptorImpl implements Descriptor {
 
         stream.println();
 
-//        if(this.properties.size() > 0){
-//            this.properties.forEach((key, value)->{
-//                stream.print(prefix);
-//                stream.print(key.toUpperCase());
-//                stream.print(" = ");
-//                stream.print(value);
-//                stream.println();
-//            });
-//        }
-
-
-        //var children = Collections.synchronizedSet(new LinkedHashSet<>());
-        //children.addAll(this.children);
-
         var children = this.children.stream().collect(Collectors.toSet());
-
-        this.metadata.all().forEach((metadatum)-> {
-
-            children.add(metadatum.describe());
-
-//            children.add(Descriptor.create().name(metadatum.key())
-//                    .value(metadatum.value())
-//                    .description(metadatum.description()));
-        });
 
         // loop over this descriptor's children
         var iterator = children.iterator();

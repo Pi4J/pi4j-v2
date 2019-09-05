@@ -102,6 +102,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
 
             // creat a terminate handler for received signals
             PiGpioSignalCallback terminateSignalHandler = signum -> {
+                logger.trace("------------ HERE");
                 PIGPIO.gpioTerminate();
                 System.exit(signum);
             };
@@ -610,8 +611,13 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      */
     private PiGpioAlertCallback gpioAlertCallbackHandler = new PiGpioAlertCallback() {
         @Override
-        public void call(int pin, int state, long tick) {
-            dispatchEvent(new PiGpioStateChangeEvent(pin, PiGpioState.from(state), tick));
+        public void call(int pin, int state, long tick) throws Exception {
+            try {
+                dispatchEvent(new PiGpioStateChangeEvent(pin, PiGpioState.from(state), tick));
+            }
+            catch (Exception e){
+                logger.error(e.getMessage(), e);
+            }
         }
     };
 

@@ -101,7 +101,6 @@ public interface Identity extends Describable {
         return Descriptor.create()
                 .id(id())
                 .name(name())
-                .description(description())
-                .metadata(metadata());
+                .description(description());
     }
 }

@@ -77,7 +77,7 @@ echo "PI4J NATIVE COMPILER: $PI4J_NATIVE_COMPILER"
 echo "-----------------------------------------------------------"
 cd $PIGPIO_DIRECTORY
 if [[ "$PI4J_NATIVE_COMPILER" == "DOCKER-COMPILER" || "$PI4J_NATIVE_COMPILER" == "docker-compiler"  ]]; then
-  docker run --env BUILD_TARGET=lib -v $(PWD):/build raspberrypi-compiler
+  docker run --env BUILD_TARGET=lib -v $(PWD):/build pi4j/raspberrypi-compiler
 elif [[ "$PI4J_NATIVE_COMPILER" == "CROSS-COMPILER" || "$PI4J_NATIVE_COMPILER" == "cross-compiler" ]]; then
   make clean lib --always-make CROSS_PREFIX=${CROSS_PREFIX}
 else

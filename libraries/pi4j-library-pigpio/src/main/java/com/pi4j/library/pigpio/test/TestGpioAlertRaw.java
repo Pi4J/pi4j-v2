@@ -80,7 +80,7 @@ public class TestGpioAlertRaw {
             PIGPIO.gpioGlitchFilter(GPIO_PIN, 100000);
             PIGPIO.gpioSetAlertFunc(GPIO_PIN, new PiGpioAlertCallback() {
                 @Override
-                public void call(int pin, int state, long tick) {
+                public void call(int pin, int state, long tick) throws Exception {
                     System.out.println("RECEIVED ALERT EVENT! " + pin + " : " + state + " :" + tick);
                 }
             });
@@ -94,7 +94,7 @@ public class TestGpioAlertRaw {
             String testdata = "Hello World!";
             PIGPIO.gpioSetAlertFuncEx(GPIO_PIN, new PiGpioAlertCallbackEx() {
                 @Override
-                public void call(int pin, int state, long tick, Object userdata) {
+                public void call(int pin, int state, long tick, Object userdata) throws Exception {
                     System.out.println("RECEIVED ALERT EVENT! " + pin + " : " + state + " :" + tick + " : " + userdata);
                 }
             }, testdata);

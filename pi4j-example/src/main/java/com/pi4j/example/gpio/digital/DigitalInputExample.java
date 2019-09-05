@@ -98,7 +98,15 @@ public class DigitalInputExample {
 
         // setup a digital output listener to listen for any state changes on the digital input
         input.addListener((DigitalChangeListener) event -> {
-            console.println(event);
+//            try {
+                Integer count = (Integer) event.source().metadata().get("count").value();
+                console.println(event + " === " + count);
+//            }
+//            catch (Exception e){
+//                e.printStackTrace();
+//            }
+            //count++;
+            //event.source().metadata().get("count").value(count);
         });
 
         // lets read the analog output state

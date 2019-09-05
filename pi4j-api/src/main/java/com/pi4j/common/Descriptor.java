@@ -80,30 +80,7 @@ public interface Descriptor {
      * @return a {@link com.pi4j.common.Descriptor} object.
      */
     Descriptor type(Class type);
-    /**
-     * <p>metadata.</p>
-     *
-     * @param key a {@link java.lang.String} object.
-     * @param value a {@link java.lang.Object} object.
-     * @return a {@link com.pi4j.common.Descriptor} object.
-     */
-    Descriptor metadata(String key, Object value);
-    /**
-     * <p>metadata.</p>
-     *
-     * @param key a {@link java.lang.String} object.
-     * @param value a {@link java.lang.Object} object.
-     * @param description a {@link java.lang.String} object.
-     * @return a {@link com.pi4j.common.Descriptor} object.
-     */
-    Descriptor metadata(String key, Object value, String description);
-    /**
-     * <p>metadata.</p>
-     *
-     * @param metadata a {@link com.pi4j.common.Metadata} object.
-     * @return a {@link com.pi4j.common.Descriptor} object.
-     */
-    Descriptor metadata(Metadata metadata);
+
     /**
      * <p>parent.</p>
      *
@@ -111,6 +88,7 @@ public interface Descriptor {
      * @return a {@link com.pi4j.common.Descriptor} object.
      */
     Descriptor parent(Descriptor parent);
+
     /**
      * <p>value.</p>
      *
@@ -161,19 +139,6 @@ public interface Descriptor {
      * @return a {@link java.lang.Class} object.
      */
     Class type();
-    /**
-     * <p>metadata.</p>
-     *
-     * @param key a {@link java.lang.String} object.
-     * @return a {@link com.pi4j.common.Metadatum} object.
-     */
-    Metadatum metadata(String key);
-    /**
-     * <p>metadata.</p>
-     *
-     * @return a {@link com.pi4j.common.Metadata} object.
-     */
-    Metadata metadata();
     /**
      * <p>parent.</p>
      *

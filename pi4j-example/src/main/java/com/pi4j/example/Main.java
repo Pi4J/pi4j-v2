@@ -74,6 +74,8 @@ public class Main {
         // An auto context includes AUTO-DETECT BINDINGS enabled
         // which will load all detected Pi4J extension libraries
         // (Platforms and Providers) in the class path
+        //var pi4j = Pi4J.newAutoContext();
+
         var pi4j = Pi4J.newAutoContext();
 
         System.out.println("--------------------------------------------------------");

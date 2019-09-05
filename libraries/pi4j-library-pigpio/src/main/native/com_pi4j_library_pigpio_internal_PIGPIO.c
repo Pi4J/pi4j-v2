@@ -310,7 +310,8 @@ void signalCallbackDelegate(int signum)
 
     // clear any user caused exceptions on the stack
     if((*env)->ExceptionCheck(env)){
-    (*env)->ExceptionClear(env);
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
     }
 
     // detach from thread
@@ -677,7 +678,8 @@ void gpioAlertCallbackDelegate(int gpio, int level, uint32_t tick)
 
     // clear any user caused exceptions on the stack
     if((*env)->ExceptionCheck(env)){
-    (*env)->ExceptionClear(env);
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
     }
 
     // detach from thread
@@ -855,7 +857,8 @@ void gpioIsrCallbackDelegate(int gpio, int level, uint32_t tick)
 
     // clear any user caused exceptions on the stack
     if((*env)->ExceptionCheck(env)){
-    (*env)->ExceptionClear(env);
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
     }
 
     // detach from thread
@@ -1035,7 +1038,8 @@ void eventCallbackDelegate(int event, uint32_t tick)
 
     // clear any user caused exceptions on the stack
     if((*env)->ExceptionCheck(env)){
-    (*env)->ExceptionClear(env);
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
     }
 
     // detach from thread

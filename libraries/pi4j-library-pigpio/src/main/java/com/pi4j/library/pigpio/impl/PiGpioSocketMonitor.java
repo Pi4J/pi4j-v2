@@ -250,7 +250,12 @@ public class PiGpioSocketMonitor  {
                                                     final PiGpioStateChangeEvent event = new PiGpioStateChangeEvent(i, state, tick);
                                                     logger.trace("[DISPATCH] PiGpioStateChangeEvent(PIN={}; FLAGS={}; TICK={}; STATE=[{}]",
                                                             i, flags, tick, Integer.toBinaryString(newPinState));
-                                                    piGpio.dispatchEvent(event);
+                                                    try {
+                                                        piGpio.dispatchEvent(event);
+                                                    }
+                                                    catch (Exception e){
+                                                        logger.error(e.getMessage(), e);
+                                                    }
                                                 }
                                             }
                                         }

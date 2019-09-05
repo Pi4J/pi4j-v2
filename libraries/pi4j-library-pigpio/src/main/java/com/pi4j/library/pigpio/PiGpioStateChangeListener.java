@@ -41,5 +41,5 @@ public interface PiGpioStateChangeListener {
      *
      * @param event a {@link com.pi4j.library.pigpio.PiGpioStateChangeEvent} object.
      */
-    void onChange(PiGpioStateChangeEvent event);
+    void onChange(PiGpioStateChangeEvent event) throws Exception;
 }

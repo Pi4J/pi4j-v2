@@ -31,6 +31,8 @@ package com.pi4j.library.pigpio.test;
 import com.pi4j.library.pigpio.*;
 import org.slf4j.event.Level;
 
+import java.io.IOException;
+
 /**
  * <p>Main class.</p>
  *
@@ -74,8 +76,9 @@ public class TestGpioAlert {
 
         piGpio.addPinListener(GPIO_PIN, new PiGpioStateChangeListener() {
             @Override
-            public void onChange(PiGpioStateChangeEvent event) {
+            public void onChange(PiGpioStateChangeEvent event) throws Exception {
                 System.out.println("RECEIVED ALERT EVENT! " + event);
+                throw new IOException("TEST");
             }
         });
 
