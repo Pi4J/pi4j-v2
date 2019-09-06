@@ -4,7 +4,7 @@ package com.pi4j.plugin.pigpio;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
+ * PROJECT       :  Pi4J :: PLUGIN   :: PIGPIO I/O Providers
  * FILENAME      :  TestEnv.java
  *
  * This file is part of the Pi4J project. More information about

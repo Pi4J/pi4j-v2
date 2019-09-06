@@ -28,8 +28,8 @@ package com.pi4j.test;/*-
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.io.IOType;
+import com.pi4j.io.binding.AnalogOutputBinding;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.binding.AnalogBindingSync;
 import com.pi4j.test.provider.TestAnalogInputProvider;
 
 /**
@@ -111,7 +111,7 @@ public class Main {
             System.out.println(event.value());
         });
 
-        input.bind(new AnalogBindingSync(output1, output2));
+        input.bind(AnalogOutputBinding.newInstance(output1, output2));
 
 
         System.out.println(input);

@@ -29,12 +29,12 @@ package com.pi4j.plugin.raspberrypi.provider.pwm;
  * #L%
  */
 
+import com.pi4j.io.exception.IOException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmBase;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 
-import java.io.IOException;
 
 /**
  * <p>RpiPwm class.</p>
