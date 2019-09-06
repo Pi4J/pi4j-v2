@@ -39,7 +39,7 @@ import java.util.Map;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class IOConfigBase<CONFIG_TYPE extends Config> extends ConfigBase<CONFIG_TYPE> implements IOConfig<CONFIG_TYPE> {
+public abstract class IOConfigBase<CONFIG_TYPE extends Config> extends ConfigBase<CONFIG_TYPE> implements IOConfig<CONFIG_TYPE> {
 
     // private configuration variables
     protected String provider = null;

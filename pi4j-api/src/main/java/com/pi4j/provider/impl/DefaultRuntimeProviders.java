@@ -198,6 +198,14 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
         if(providers.containsKey(providerId)){
             return true;
         }
+        // additionally attempt to resolve the provider by its class name
+        try {
+            Class providerClass = Class.forName(providerId);
+            if(providerClass != null &&  Provider.class.isAssignableFrom(providerClass)) {
+                return exists(providerClass);
+            }
+        } catch (ClassNotFoundException e){ }
+
         return false;
     }
 
@@ -208,6 +216,14 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
         if(providers.containsKey(providerId)){
             return providers.get(providerId);
         }
+        // additionally attempt to resolve the provider by its class name
+        try {
+            Class providerClass = Class.forName(providerId);
+            if(providerClass != null && Provider.class.isAssignableFrom(providerClass)){
+                return get(providerClass);
+            }
+        } catch (ClassNotFoundException e){}
+
         throw new ProviderNotFoundException(providerId);
     }
 

@@ -28,6 +28,7 @@ package com.pi4j.io;
  */
 
 import com.pi4j.config.ConfigBuilder;
+import com.pi4j.provider.Provider;
 
 /**
  * <p>IOConfigBuilder interface.</p>
@@ -37,4 +38,5 @@ import com.pi4j.config.ConfigBuilder;
  */
 public interface IOConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
     BUILDER_TYPE provider(String provider);
+    BUILDER_TYPE provider(Class<? extends Provider> providerClass);
 }

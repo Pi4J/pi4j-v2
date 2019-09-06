@@ -33,6 +33,7 @@ import com.pi4j.config.DeviceConfigBuilder;
 import com.pi4j.config.impl.DeviceConfigBuilderBase;
 import com.pi4j.io.IOConfig;
 import com.pi4j.io.IOConfigBuilder;
+import com.pi4j.provider.Provider;
 
 /**
  * <p>Abstract AddressConfigBuilderBase class.</p>
@@ -56,6 +57,13 @@ public abstract class IODeviceConfigBuilderBase<BUILDER_TYPE extends ConfigBuild
     @Override
     public BUILDER_TYPE provider(String provider){
         this.properties.put(IOConfig.PROVIDER_KEY, provider);
+        return (BUILDER_TYPE) this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public BUILDER_TYPE provider(Class<? extends Provider> providerClass){
+        this.properties.put(IOConfig.PROVIDER_KEY, providerClass.getName());
         return (BUILDER_TYPE) this;
     }
 }
