@@ -108,6 +108,7 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
                 } else{
                     steadyInterval = this.config.debounce().intValue();
                 }
+                this.piGpio.gpioNoiseFilter(pin, 0, 0);
                 this.piGpio.gpioGlitchFilter(pin, steadyInterval);
             }
 

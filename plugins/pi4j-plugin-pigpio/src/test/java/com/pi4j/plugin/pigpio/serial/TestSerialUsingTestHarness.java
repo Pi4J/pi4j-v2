@@ -36,6 +36,7 @@ import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.serial.Baud;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.plugin.pigpio.TestEnv;
 import com.pi4j.plugin.pigpio.provider.serial.PiGpioSerialProvider;
 import com.pi4j.plugin.pigpio.provider.serial.PiGpioSerialProviderImpl;
 import com.pi4j.test.harness.ArduinoTestHarness;
@@ -82,7 +83,7 @@ public class TestSerialUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            ArduinoTestHarness harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
+            ArduinoTestHarness harness = TestEnv.createTestHarness();
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
@@ -120,7 +121,7 @@ public class TestSerialUsingTestHarness {
 
 
             // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
-            piGpio = PiGpio.newSocketInstance("rpi3bp");
+            piGpio = TestEnv.createPiGpio();
 
             // initialize the PiGpio library
             piGpio.initialize();

@@ -34,6 +34,7 @@ import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.plugin.pigpio.TestEnv;
 import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalOutputProvider;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
@@ -46,7 +47,7 @@ import java.io.IOException;
 @DisplayName("PIGPIO Plugin :: Test Digital Output Pins using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestDigitalOutputUsingTestHarness {
-    public static int PIN_MIN = 0;
+    public static int PIN_MIN = 2;
     public static int PIN_MAX = 27;
 
     private PiGpio piGpio;
@@ -66,7 +67,7 @@ public class TestDigitalOutputUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
+            harness = TestEnv.createTestHarness();
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
@@ -106,7 +107,7 @@ public class TestDigitalOutputUsingTestHarness {
     public void beforeEach() throws Exception {
 
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
-        piGpio = PiGpio.newSocketInstance("rpi3bp");
+        piGpio = TestEnv.createPiGpio();
 
         // initialize the PiGpio library
         piGpio.initialize();

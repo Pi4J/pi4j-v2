@@ -31,6 +31,7 @@ package com.pi4j.plugin.pigpio.i2c;
 
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.plugin.pigpio.TestEnv;
 import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProvider;
 import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProviderImpl;
 import com.pi4j.test.harness.ArduinoTestHarness;
@@ -77,7 +78,7 @@ public class TestI2cRawUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            ArduinoTestHarness harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
+            ArduinoTestHarness harness = TestEnv.createTestHarness();
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
@@ -131,7 +132,7 @@ public class TestI2cRawUsingTestHarness {
                 .build();
 
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
-        piGpio = PiGpio.newSocketInstance("rpi3bp");
+        piGpio = TestEnv.createPiGpio();
 
         // initialize the PiGpio library
         piGpio.initialize();

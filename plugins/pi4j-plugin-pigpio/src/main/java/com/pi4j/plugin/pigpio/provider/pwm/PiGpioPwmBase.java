@@ -29,11 +29,15 @@ package com.pi4j.plugin.pigpio.provider.pwm;
  * #L%
  */
 
+import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmBase;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.library.pigpio.PiGpio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>Abstract PiGpioPwmBase class.</p>
@@ -46,6 +50,7 @@ public abstract class PiGpioPwmBase extends PwmBase implements Pwm {
     protected final PiGpio piGpio;
     protected final int range;
     protected int actualFrequency = -1;
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * <p>Constructor for PiGpioPwmBase.</p>
@@ -75,5 +80,11 @@ public abstract class PiGpioPwmBase extends PwmBase implements Pwm {
     @Override
     public int getActualFrequency() {
         return this.actualFrequency;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Pwm initialize(Context context) throws InitializeException {
+        return super.initialize(context);
     }
 }

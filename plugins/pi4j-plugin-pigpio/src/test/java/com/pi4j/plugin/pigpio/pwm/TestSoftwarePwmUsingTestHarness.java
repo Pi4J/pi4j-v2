@@ -33,6 +33,7 @@ import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.plugin.pigpio.TestEnv;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
@@ -46,13 +47,8 @@ import java.io.IOException;
 @DisplayName("PIGPIO Plugin :: Test PWM (Software-Generated Signals) using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestSoftwarePwmUsingTestHarness {
-    public static int PIN_MIN = 0;
+    public static int PIN_MIN = 2;
     public static int PIN_MAX = 27;
-
-    private static int I2C_BUS = 1;
-    private static int I2C_DEVICE = 0x04;
-    private static int I2C_TEST_HARNESS_BUS    = 0;
-    private static int I2C_TEST_HARNESS_DEVICE = 0x04;
 
     private PiGpio piGpio;
     private Context pi4j;
@@ -71,7 +67,7 @@ public class TestSoftwarePwmUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
+            harness = TestEnv.createTestHarness();
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
@@ -111,7 +107,7 @@ public class TestSoftwarePwmUsingTestHarness {
     public void beforeEach() throws Exception {
 
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
-        piGpio = PiGpio.newSocketInstance("rpi3bp");
+        piGpio = TestEnv.createPiGpio();
 
         // initialize the PiGpio library
         piGpio.initialize();
@@ -230,7 +226,7 @@ public class TestSoftwarePwmUsingTestHarness {
         }
     }
 
-    private boolean measureFrequency(Pwm pwm) throws IOException {
+    private boolean measureFrequency(Pwm pwm) throws Exception {
         int frequency = pwm.actualFrequency();
         TestHarnessFrequency measured = harness.getFrequency(pwm.address());
         float deviation = (measured.frequency - frequency) * 100/(float)frequency;
