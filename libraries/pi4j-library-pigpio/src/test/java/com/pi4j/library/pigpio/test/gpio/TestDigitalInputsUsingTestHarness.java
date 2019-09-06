@@ -33,6 +33,7 @@ import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.library.pigpio.PiGpioPud;
 import com.pi4j.library.pigpio.PiGpioState;
+import com.pi4j.library.pigpio.test.TestEnv;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPin;
@@ -63,9 +64,8 @@ public class TestDigitalInputsUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
-            pigpio = PiGpio.newSocketInstance(System.getProperty("pi4j.pigpio.host", "rpi3bp.savage.lan"),
-                                              System.getProperty("pi4j.pigpio.port", "8888"));
+            harness = TestEnv.createTestHarness();
+            pigpio = TestEnv.createPiGpio();
 
             // initialize test harness and PIGPIO instances
             pigpio.initialize();
@@ -111,7 +111,7 @@ public class TestDigitalInputsUsingTestHarness {
 
         // iterate over pins and perform test on each
         // TODO :: IMPLEMENT CORRECT SET OF TEST PINS
-        for(int pin = 0; pin <= 27; pin++){
+        for(int pin = 2; pin <= 27; pin++){
             testDigitalInputPin(pin);
         }
     }
@@ -128,7 +128,7 @@ public class TestDigitalInputsUsingTestHarness {
 
         // iterate over pins and perform test on each
         // TODO :: IMPLEMENT CORRECT SET OF TEST PINS
-        for(int pin = 0; pin <= 27; pin++){
+        for(int pin = 2; pin <= 27; pin++){
 
             // the following inputs are skipped because they always fail; possible
             // because they are tied to other things that override the software

@@ -31,6 +31,7 @@ package com.pi4j.library.pigpio.test.i2c;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
+import com.pi4j.library.pigpio.test.TestEnv;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
@@ -70,7 +71,7 @@ public class TestI2cUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            ArduinoTestHarness harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
+            ArduinoTestHarness harness = TestEnv.createTestHarness();
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
@@ -114,8 +115,7 @@ public class TestI2cUsingTestHarness {
     @BeforeEach
     public void beforeEach() throws IOException {
         // create test harness and PIGPIO instances
-        pigpio = PiGpio.newSocketInstance(System.getProperty("pi4j.pigpio.host", "rpi3bp.savage.lan"),
-                                          System.getProperty("pi4j.pigpio.port", "8888"));
+        pigpio = TestEnv.createPiGpio();
 
         // initialize test harness and PIGPIO instances
         pigpio.initialize();

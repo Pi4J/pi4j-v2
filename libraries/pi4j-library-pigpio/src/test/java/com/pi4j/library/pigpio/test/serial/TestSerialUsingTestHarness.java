@@ -31,6 +31,7 @@ package com.pi4j.library.pigpio.test.serial;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
+import com.pi4j.library.pigpio.test.TestEnv;
 import com.pi4j.library.pigpio.util.StringUtil;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
@@ -63,7 +64,7 @@ public class TestSerialUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            ArduinoTestHarness harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
+            ArduinoTestHarness harness = TestEnv.createTestHarness();
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
@@ -105,8 +106,7 @@ public class TestSerialUsingTestHarness {
     @BeforeEach
     public void beforeEach() throws IOException {
         // create test harness and PIGPIO instances
-        pigpio = PiGpio.newSocketInstance(System.getProperty("pi4j.pigpio.host", "rpi3bp.savage.lan"),
-                System.getProperty("pi4j.pigpio.port", "8888"));
+        pigpio = TestEnv.createPiGpio();
 
         // initialize test harness and PIGPIO instances
         pigpio.initialize();
@@ -189,19 +189,23 @@ public class TestSerialUsingTestHarness {
             pigpio.serWrite(handle, testData);
 
             // take a breath while buffer catches up
-            Thread.sleep(100);
+            Thread.sleep(50);
 
             // READ :: NUMBER OF BYTES AVAILABLE TO READ
             int available = pigpio.serDataAvailable(handle);
             System.out.println(" (READ)  << AVAIL = " + available);
             Assert.assertEquals("SERIAL READ AVAIL MISMATCH",  testData.length, available);
 
+            // take a breath while buffer catches up
+            Thread.sleep(50);
+
             // READ :: MULTI-BYTE
             byte[] readBuffer = new byte[available];
             int bytesRead = pigpio.serRead(handle, readBuffer, available);
             System.out.println(" (READ)  << BYTES READ = " + bytesRead);
             System.out.println(" (READ)  << VALUE = " + StringUtil.toHexString(readBuffer));
-            //Thread.sleep(50);
+
+            Thread.sleep(50);
 
             Assert.assertArrayEquals("SERIAL MULTI-BYTE VALUE MISMATCH",  testData, readBuffer);
         }
