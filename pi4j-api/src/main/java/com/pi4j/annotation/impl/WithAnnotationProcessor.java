@@ -134,8 +134,8 @@ public class WithAnnotationProcessor {
         WithProvider annotation = field.getAnnotation(WithProvider.class);
 
         // get provider unique identifier from declared annotation (if provided)
-        if(StringUtil.isNullOrEmpty(annotation.id())){
-            id = annotation.id().trim();
+        if(StringUtil.isNotNullOrEmpty(annotation.value())){
+            id = annotation.value().trim();
         }
 
         // get provider class from declared annotation (if provided)

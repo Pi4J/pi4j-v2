@@ -41,6 +41,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>PwmRegistrationProcessor class.</p>
@@ -136,20 +138,31 @@ public class PwmRegistrationProcessor implements RegisterProcessor<Pwm> {
             if (pwmType != null) builder.pwmType(pwmType.value());
         }
 
-        AddPwmPresets pwmPresets = null;
-        if (field.isAnnotationPresent(AddPwmPresets.class)) {
-            pwmPresets = field.getAnnotation(AddPwmPresets.class);
-            AddPwmPreset[] presets  = pwmPresets.value();
-            for(AddPwmPreset preset : presets){
-                PwmPresetBuilder presetBuilder = PwmPreset.newBuilder(preset.name());
-                if(preset.dutyCycle() >= 0)
-                    presetBuilder.dutyCycle(preset.dutyCycle());
-                if(preset.frequency() >= 0)
-                    presetBuilder.frequency(preset.frequency());
 
-                // add applyPreset to PWM config builder
-                builder.preset(presetBuilder.build());
-            }
+        // add presets members
+        List<AddPwmPreset> presets = new ArrayList<>();
+
+        // get single-preset annotations
+        if (field.isAnnotationPresent(AddPwmPreset.class)) {
+            AddPwmPreset presetAnnotation  = field.getAnnotation(AddPwmPreset.class);
+            presets.add(presetAnnotation);
+        }
+        // get multi-preset annotations
+        if (field.isAnnotationPresent(AddPwmPresets.class)) {
+            AddPwmPresets presetsAnnotation  = field.getAnnotation(AddPwmPresets.class);
+            presets.addAll(List.of(presetsAnnotation.value()));
+        }
+
+        // process presets
+        for(AddPwmPreset preset : presets){
+            PwmPresetBuilder presetBuilder = PwmPreset.newBuilder(preset.name());
+            if(preset.dutyCycle() >= 0)
+                presetBuilder.dutyCycle(preset.dutyCycle());
+            if(preset.frequency() >= 0)
+                presetBuilder.frequency(preset.frequency());
+
+            // add applyPreset to PWM config builder
+            builder.preset(presetBuilder.build());
         }
 
         // get designated platform to use to register this IO (if provided)

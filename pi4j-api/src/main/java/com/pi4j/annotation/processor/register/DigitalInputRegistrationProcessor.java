@@ -31,6 +31,7 @@ import com.pi4j.annotation.*;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.WithAnnotationProcessor;
 import com.pi4j.context.Context;
+import com.pi4j.io.binding.DigitalBinding;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
@@ -40,6 +41,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>DigitalInputRegistrationProcessor class.</p>
@@ -125,17 +128,63 @@ public class DigitalInputRegistrationProcessor implements RegisterProcessor<Digi
             provider = WithAnnotationProcessor.getProvider(context, platform, field, DigitalInputProvider.class);
         }
 
+        DigitalInput input = null;
+
         // if a provider was found, then create digital input IO instance using that provider
         if(provider != null){
-            return provider.create(builder.build());
+            input = provider.create(builder.build());
         }
 
         // if no provider was found, then create digital input IO instance using defaults
         else {
             if(platform != null)
-                return platform.provider(DigitalInputProvider.class).create(builder.build());
+                input = platform.provider(DigitalInputProvider.class).create(builder.build());
             else
-                return context.provider(DigitalInputProvider.class).create(builder.build());
+                input = context.provider(DigitalInputProvider.class).create(builder.build());
         }
+
+        // collecting binding members
+        List<AddBinding> bindings = new ArrayList<>();
+
+        // get single-binding annotations
+        if (field.isAnnotationPresent(AddBinding.class)) {
+            AddBinding bindingAnnotation  = field.getAnnotation(AddBinding.class);
+            bindings.add(bindingAnnotation);
+        }
+        // get multi-binding annotations
+        if (field.isAnnotationPresent(AddBindings.class)) {
+            AddBindings bindingsAnnotation  = field.getAnnotation(AddBindings.class);
+            bindings.addAll(List.of(bindingsAnnotation.value()));
+        }
+
+        // process all bindings proposed for this object instance
+        for(AddBinding binding : bindings){
+            String [] ids = binding.value();
+            for(String id : ids) {
+
+                Field f = field.getDeclaringClass().getDeclaredField(id);
+                boolean originalAccess = f.canAccess(instance);
+                if(!originalAccess) f.setAccessible(true);
+                if (f != null) {
+                    Object bndg = f.get(instance);
+
+                    // add IO member to group as long as it supports the required group interface
+                    if (DigitalBinding.class.isInstance(bndg)) {
+                        input.bind((DigitalBinding) bndg);
+                    } else {
+                        throw new AnnotationException("This @AddBinding annotated instance [" + id + "]" +
+                                "does not support the required interface [DigitalBinding] to be added to this Digital Input " +
+                                "<" + field.getDeclaringClass() + "::" + field.getName() + ">");
+                    }
+                } else {
+                    throw new AnnotationException("This @AddBinding annotated instance [" + id + "]" +
+                            "could not be located in the IO registry and could not be bound to this Digital Input " +
+                            "<" + field.getDeclaringClass() + "::" + field.getName() + ">");
+                }
+                if(!originalAccess) f.setAccessible(false);
+            }
+        }
+
+        return input;
     }
 }
