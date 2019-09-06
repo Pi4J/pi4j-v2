@@ -28,8 +28,8 @@ package com.pi4j.example.gpio.digital;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.io.binding.DigitalOutputBinding;
 import com.pi4j.io.gpio.digital.DigitalChangeListener;
-import com.pi4j.io.gpio.digital.binding.DigitalBindingSync;
 import com.pi4j.util.Console;
 
 /**
@@ -93,7 +93,7 @@ public class DigitalInputSyncToOutputExample {
         // bind the digital output state to synchronize with the digital input state
         // this means that anytime a change on the input pin is detected, the digital output
         // pin(s) will be updated to match the state of the digital input
-        input.bind(new DigitalBindingSync(output));
+        input.bind(DigitalOutputBinding.newInstance(output));
 
         // wait (block) for user to exit program using CTRL-C
         console.waitForExit();

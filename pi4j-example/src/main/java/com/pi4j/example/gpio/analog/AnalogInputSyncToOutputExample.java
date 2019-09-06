@@ -28,8 +28,8 @@ package com.pi4j.example.gpio.analog;
  */
 
 import com.pi4j.Pi4J;
+import com.pi4j.io.binding.AnalogOutputBinding;
 import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.binding.AnalogBindingSync;
 import com.pi4j.util.Console;
 
 /**
@@ -90,7 +90,7 @@ public class AnalogInputSyncToOutputExample {
         // bind the analog output state to synchronize with the analog input state
         // this means that anytime a change on the input pin is detected, the analog output
         // pin(s) will be updated to match the state of the analog input
-        input.bind(new AnalogBindingSync(output));
+        input.bind(AnalogOutputBinding.newInstance(output));
 
         // wait (block) for user to exit program using CTRL-C
         console.waitForExit();
