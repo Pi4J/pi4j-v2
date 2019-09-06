@@ -27,8 +27,8 @@ package com.pi4j.io.pwm.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.digital.PullResistance;
+import com.pi4j.io.impl.IOAddressConfigBase;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmPreset;
 import com.pi4j.io.pwm.PwmType;
@@ -46,7 +46,7 @@ import java.util.Map;
  * @version $Id: $Id
  */
 public class DefaultPwmConfig
-        extends AddressConfigBase<PwmConfig>
+        extends IOAddressConfigBase<PwmConfig>
         implements PwmConfig {
 
     // private configuration properties

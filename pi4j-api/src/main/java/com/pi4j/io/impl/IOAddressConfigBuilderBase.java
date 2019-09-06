@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio;
+package com.pi4j.io.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  GpioConfigBuilder.java
+ * FILENAME      :  IOAddressConfigBuilderBase.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,15 +28,34 @@ package com.pi4j.io.gpio;
  */
 
 import com.pi4j.config.AddressConfigBuilder;
+import com.pi4j.config.Config;
+import com.pi4j.config.ConfigBuilder;
+import com.pi4j.config.impl.AddressConfigBuilderBase;
+import com.pi4j.io.IOConfig;
 import com.pi4j.io.IOConfigBuilder;
 
 /**
- * <p>GpioConfigBuilder interface.</p>
+ * <p>Abstract AddressConfigBuilderBase class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface GpioConfigBuilder<BUILDER_TYPE extends GpioConfigBuilder, CONFIG_TYPE extends GpioConfig>
-        extends IOConfigBuilder<BUILDER_TYPE, CONFIG_TYPE>, AddressConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
-    // MARKER INTERFACE
+public abstract class IOAddressConfigBuilderBase<BUILDER_TYPE extends ConfigBuilder, CONFIG_TYPE extends Config>
+        extends AddressConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
+        implements IOConfigBuilder<BUILDER_TYPE, CONFIG_TYPE>,
+        AddressConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
+
+    /**
+     * PRIVATE CONSTRUCTOR
+     */
+    protected IOAddressConfigBuilderBase(){
+        super();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public BUILDER_TYPE provider(String provider){
+        this.properties.put(IOConfig.PROVIDER_KEY, provider);
+        return (BUILDER_TYPE) this;
+    }
 }

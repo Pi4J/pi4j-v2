@@ -27,10 +27,10 @@ package com.pi4j.io.gpio.analog.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBuilderBase;
 import com.pi4j.io.gpio.analog.AnalogConfig;
 import com.pi4j.io.gpio.analog.AnalogConfigBuilder;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
+import com.pi4j.io.impl.IOAddressConfigBuilderBase;
 
 /**
  * <p>Abstract AnalogConfigBuilderBase class.</p>
@@ -39,7 +39,7 @@ import com.pi4j.io.gpio.analog.AnalogOutputConfig;
  * @version $Id: $Id
  */
 public abstract class AnalogConfigBuilderBase<BUILDER_TYPE extends AnalogConfigBuilder, CONFIG_TYPE extends AnalogConfig>
-        extends AddressConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
+        extends IOAddressConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
         implements AnalogConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
 
     /**

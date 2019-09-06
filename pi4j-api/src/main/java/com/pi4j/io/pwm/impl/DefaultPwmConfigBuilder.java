@@ -27,7 +27,7 @@ package com.pi4j.io.pwm.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBuilderBase;
+import com.pi4j.io.impl.IOAddressConfigBuilderBase;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmConfigBuilder;
 import com.pi4j.io.pwm.PwmPreset;
@@ -43,7 +43,7 @@ import java.util.List;
  * @version $Id: $Id
  */
 public class DefaultPwmConfigBuilder
-        extends AddressConfigBuilderBase<PwmConfigBuilder, PwmConfig>
+        extends IOAddressConfigBuilderBase<PwmConfigBuilder, PwmConfig>
         implements PwmConfigBuilder {
 
     protected List<PwmPreset> presets = new ArrayList<>();

@@ -27,10 +27,10 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.PullResistance;
+import com.pi4j.io.impl.IOAddressConfigBase;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
@@ -42,7 +42,7 @@ import java.util.Map;
  * @version $Id: $Id
  */
 public class DefaultDigitalInputConfig
-        extends AddressConfigBase<DigitalInputConfig>
+        extends IOAddressConfigBase<DigitalInputConfig>
         implements DigitalInputConfig {
 
     /**

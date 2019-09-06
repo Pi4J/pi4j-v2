@@ -29,6 +29,8 @@ package com.pi4j.config.impl;
 
 import com.pi4j.config.AddressConfig;
 import com.pi4j.config.AddressConfigBuilder;
+import com.pi4j.config.Config;
+import com.pi4j.config.ConfigBuilder;
 
 /**
  * <p>Abstract AddressConfigBuilderBase class.</p>
@@ -36,7 +38,7 @@ import com.pi4j.config.AddressConfigBuilder;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public abstract class AddressConfigBuilderBase<BUILDER_TYPE extends AddressConfigBuilder, CONFIG_TYPE extends AddressConfig>
+public abstract class AddressConfigBuilderBase<BUILDER_TYPE extends ConfigBuilder, CONFIG_TYPE extends Config>
         extends ConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
         implements AddressConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
 

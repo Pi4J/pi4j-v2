@@ -19,14 +19,6 @@
    - http://www.raspicentral.com
    - http://www.savagehomeautomation.com
 
-   This software compiles against libraries from the WiringPi project.
-   The Wiring Pi project is provided by Gordon Henderson and is available
-   from
-     http://wiringpi.com/
-
-   The WiringPi project is licensed under the GNU LGPLv3 license
-     http://www.gnu.org/licenses/lgpl.html
-
    =========================================================================
    Subject to the terms of the software license, this NOTICE file must be
    included in any Derivative Works that You distribute as a readable copy.

@@ -36,5 +36,9 @@ import com.pi4j.config.Config;
  * @version $Id: $Id
  */
 public interface IOConfig<CONFIG_TYPE> extends Config<CONFIG_TYPE> {
-    // MARKER INTERFACE
+    String PROVIDER_KEY = "provider";
+    String provider();
+    default String getProvider(){
+        return provider();
+    }
 }

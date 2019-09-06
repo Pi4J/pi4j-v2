@@ -28,6 +28,7 @@ package com.pi4j.io.i2c;
  */
 
 import com.pi4j.config.ConfigBuilder;
+import com.pi4j.io.IOConfigBuilder;
 import com.pi4j.io.i2c.impl.DefaultI2CConfigBuilder;
 
 /**
@@ -36,7 +37,9 @@ import com.pi4j.io.i2c.impl.DefaultI2CConfigBuilder;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface I2CConfigBuilder extends ConfigBuilder<I2CConfigBuilder, I2CConfig> {
+public interface I2CConfigBuilder extends
+        IOConfigBuilder<I2CConfigBuilder, I2CConfig>,
+        ConfigBuilder<I2CConfigBuilder, I2CConfig> {
     /**
      * <p>newInstance.</p>
      *

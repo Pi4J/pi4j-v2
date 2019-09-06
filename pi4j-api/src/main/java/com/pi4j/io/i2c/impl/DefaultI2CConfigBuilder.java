@@ -27,9 +27,9 @@ package com.pi4j.io.i2c.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.ConfigBuilderBase;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CConfigBuilder;
+import com.pi4j.io.impl.IOConfigBuilderBase;
 
 /**
  * <p>DefaultI2CConfigBuilder class.</p>
@@ -38,7 +38,7 @@ import com.pi4j.io.i2c.I2CConfigBuilder;
  * @version $Id: $Id
  */
 public class DefaultI2CConfigBuilder
-        extends ConfigBuilderBase<I2CConfigBuilder, I2CConfig>
+        extends IOConfigBuilderBase<I2CConfigBuilder, I2CConfig>
         implements I2CConfigBuilder {
 
     /**

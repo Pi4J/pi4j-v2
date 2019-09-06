@@ -33,7 +33,7 @@ package com.pi4j.config;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface DeviceConfig<CONFIG_TYPE extends DeviceConfig> extends Config<CONFIG_TYPE> {
+public interface DeviceConfig<CONFIG_TYPE extends Config> extends Config<CONFIG_TYPE> {
 
     /** Constant <code>DEVICE_KEY="device"</code> */
     String DEVICE_KEY = "device";

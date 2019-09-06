@@ -27,6 +27,7 @@ package com.pi4j.config.impl;
  * #L%
  */
 
+import com.pi4j.config.Config;
 import com.pi4j.config.ConfigBase;
 import com.pi4j.config.DeviceConfig;
 import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
@@ -39,7 +40,7 @@ import java.util.Map;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public abstract class DeviceConfigBase<CONFIG_TYPE extends DeviceConfig<CONFIG_TYPE>>
+public abstract class DeviceConfigBase<CONFIG_TYPE extends Config<CONFIG_TYPE>>
         extends ConfigBase<CONFIG_TYPE>
         implements DeviceConfig<CONFIG_TYPE> {
 

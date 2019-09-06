@@ -27,10 +27,10 @@ package com.pi4j.io.i2c.impl;
  * #L%
  */
 
-import com.pi4j.config.ConfigBase;
 import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
 import com.pi4j.io.gpio.digital.PullResistance;
 import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.impl.IOConfigBase;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
@@ -42,7 +42,7 @@ import java.util.Map;
  * @version $Id: $Id
  */
 public class DefaultI2CConfig
-        extends ConfigBase<I2CConfig>
+        extends IOConfigBase<I2CConfig>
         implements I2CConfig {
 
     // private configuration properties

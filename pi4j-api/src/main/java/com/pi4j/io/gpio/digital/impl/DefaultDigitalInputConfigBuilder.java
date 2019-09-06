@@ -27,7 +27,6 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBuilderBase;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputConfigBuilder;
 import com.pi4j.io.gpio.digital.PullResistance;
@@ -41,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  * @version $Id: $Id
  */
 public class DefaultDigitalInputConfigBuilder
-        extends AddressConfigBuilderBase<DigitalInputConfigBuilder, DigitalInputConfig>
+        extends DigitalConfigBuilderBase<DigitalInputConfigBuilder, DigitalInputConfig>
         implements DigitalInputConfigBuilder {
 
     /**

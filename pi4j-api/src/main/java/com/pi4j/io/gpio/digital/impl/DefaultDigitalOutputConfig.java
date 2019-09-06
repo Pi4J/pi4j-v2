@@ -27,9 +27,9 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalState;
+import com.pi4j.io.impl.IOAddressConfigBase;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
@@ -41,7 +41,7 @@ import java.util.Map;
  * @version $Id: $Id
  */
 public class DefaultDigitalOutputConfig
-        extends AddressConfigBase<DigitalOutputConfig>
+        extends IOAddressConfigBase<DigitalOutputConfig>
         implements DigitalOutputConfig {
 
     // private configuration properties

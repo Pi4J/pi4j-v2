@@ -27,7 +27,7 @@ package com.pi4j.io.spi.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBase;
+import com.pi4j.io.impl.IOAddressConfigBase;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiMode;
@@ -42,7 +42,7 @@ import java.util.Map;
  * @version $Id: $Id
  */
 public class DefaultSpiConfig
-        extends AddressConfigBase<SpiConfig>
+        extends IOAddressConfigBase<SpiConfig>
         implements SpiConfig {
 
     // private configuration properties

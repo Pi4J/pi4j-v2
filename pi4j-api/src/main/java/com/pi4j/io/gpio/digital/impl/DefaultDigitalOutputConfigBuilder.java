@@ -27,7 +27,6 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBuilderBase;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalState;
@@ -39,7 +38,7 @@ import com.pi4j.io.gpio.digital.DigitalState;
  * @version $Id: $Id
  */
 public class DefaultDigitalOutputConfigBuilder
-        extends AddressConfigBuilderBase<DigitalOutputConfigBuilder, DigitalOutputConfig>
+        extends DigitalConfigBuilderBase<DigitalOutputConfigBuilder, DigitalOutputConfig>
         implements DigitalOutputConfigBuilder {
 
     /**

@@ -54,6 +54,7 @@ import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderInterfaceException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 import com.pi4j.registry.Registry;
+import com.pi4j.util.StringUtil;
 
 /**
  * <p>Context interface.</p>
@@ -365,8 +366,20 @@ public interface Context extends Describable {
      * @throws java.lang.Exception if any.
      */
     default AnalogOutput create(AnalogOutputConfig config) throws Exception{
-        return this.aout().create(config);
+        String providerId = config.provider();
+        if(StringUtil.isNullOrEmpty(providerId)) {
+            return this.aout().create(config);
+        }
+        else{
+            if(this.hasProvider(providerId)){
+                return this.provider(providerId, AnalogOutputProvider.class).create(config);
+            }
+            else{
+                throw new ProviderNotFoundException(providerId);
+            }
+        }
     }
+
     /**
      * <p>create.</p>
      *
@@ -375,8 +388,20 @@ public interface Context extends Describable {
      * @throws java.lang.Exception if any.
      */
     default AnalogInput create(AnalogInputConfig config) throws Exception{
-        return this.ain().create(config);
+        String providerId = config.provider();
+        if(StringUtil.isNullOrEmpty(providerId)) {
+            return this.ain().create(config);
+        }
+        else{
+            if(this.hasProvider(providerId)){
+                return this.provider(providerId, AnalogInputProvider.class).create(config);
+            }
+            else{
+                throw new ProviderNotFoundException(providerId);
+            }
+        }
     }
+
     /**
      * <p>create.</p>
      *
@@ -385,8 +410,20 @@ public interface Context extends Describable {
      * @throws java.lang.Exception if any.
      */
     default DigitalOutput create(DigitalOutputConfig config) throws Exception{
-        return this.dout().create(config);
+        String providerId = config.provider();
+        if(StringUtil.isNullOrEmpty(providerId)) {
+            return this.dout().create(config);
+        }
+        else{
+            if(this.hasProvider(providerId)){
+                return this.provider(providerId, DigitalOutputProvider.class).create(config);
+            }
+            else{
+                throw new ProviderNotFoundException(providerId);
+            }
+        }
     }
+
     /**
      * <p>create.</p>
      *
@@ -395,8 +432,20 @@ public interface Context extends Describable {
      * @throws java.lang.Exception if any.
      */
     default DigitalInput create(DigitalInputConfig config) throws Exception{
-        return this.din().create(config);
+        String providerId = config.provider();
+        if(StringUtil.isNullOrEmpty(providerId)) {
+            return this.din().create(config);
+        }
+        else{
+            if(this.hasProvider(providerId)){
+                return this.provider(providerId, DigitalInputProvider.class).create(config);
+            }
+            else{
+                throw new ProviderNotFoundException(providerId);
+            }
+        }
     }
+
     /**
      * <p>create.</p>
      *
@@ -405,8 +454,20 @@ public interface Context extends Describable {
      * @throws java.lang.Exception if any.
      */
     default Pwm create(PwmConfig config) throws Exception{
-        return this.pwm().create(config);
+        String providerId = config.provider();
+        if(StringUtil.isNullOrEmpty(providerId)) {
+            return this.pwm().create(config);
+        }
+        else{
+            if(this.hasProvider(providerId)){
+                return this.provider(providerId, PwmProvider.class).create(config);
+            }
+            else{
+                throw new ProviderNotFoundException(providerId);
+            }
+        }
     }
+
     /**
      * <p>create.</p>
      *
@@ -415,8 +476,20 @@ public interface Context extends Describable {
      * @throws java.lang.Exception if any.
      */
     default I2C create(I2CConfig config) throws Exception{
-        return this.i2c().create(config);
+        String providerId = config.provider();
+        if(StringUtil.isNullOrEmpty(providerId)) {
+            return this.i2c().create(config);
+        }
+        else{
+            if(this.hasProvider(providerId)){
+                return this.provider(providerId, I2CProvider.class).create(config);
+            }
+            else{
+                throw new ProviderNotFoundException(providerId);
+            }
+        }
     }
+
     /**
      * <p>create.</p>
      *
@@ -425,8 +498,20 @@ public interface Context extends Describable {
      * @throws java.lang.Exception if any.
      */
     default Spi create(SpiConfig config) throws Exception{
-        return this.spi().create(config);
+        String providerId = config.provider();
+        if(StringUtil.isNullOrEmpty(providerId)) {
+            return this.spi().create(config);
+        }
+        else{
+            if(this.hasProvider(providerId)){
+                return this.provider(providerId, SpiProvider.class).create(config);
+            }
+            else{
+                throw new ProviderNotFoundException(providerId);
+            }
+        }
     }
+
     /**
      * <p>create.</p>
      *
@@ -435,7 +520,18 @@ public interface Context extends Describable {
      * @throws java.lang.Exception if any.
      */
     default Serial create(SerialConfig config) throws Exception{
-        return this.serial().create(config);
+        String providerId = config.provider();
+        if(StringUtil.isNullOrEmpty(providerId)) {
+            return this.serial().create(config);
+        }
+        else{
+            if(this.hasProvider(providerId)){
+                return this.provider(providerId, SerialProvider.class).create(config);
+            }
+            else{
+                throw new ProviderNotFoundException(providerId);
+            }
+        }
     }
 
     /**

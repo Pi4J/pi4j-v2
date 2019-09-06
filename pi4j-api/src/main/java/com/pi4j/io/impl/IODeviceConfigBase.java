@@ -1,11 +1,11 @@
-package com.pi4j.io.serial;
+package com.pi4j.io.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DefaultSerialConfig.java
+ * FILENAME      :  IODeviceConfigBase.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,65 +27,49 @@ package com.pi4j.io.serial;
  * #L%
  */
 
+import com.pi4j.config.Config;
+import com.pi4j.config.DeviceConfig;
 import com.pi4j.config.impl.DeviceConfigBase;
 import com.pi4j.io.IOConfig;
 
+import java.util.Map;
+
 /**
- * <p>DefaultSerialConfig class.</p>
+ * <p>ConfigBase class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class DefaultSerialConfig extends DeviceConfigBase<DefaultSerialConfig> implements IOConfig<DefaultSerialConfig> {
+public class IODeviceConfigBase<CONFIG_TYPE extends Config<CONFIG_TYPE>>
+        extends DeviceConfigBase<CONFIG_TYPE>
+        implements IOConfig<CONFIG_TYPE>, DeviceConfig<CONFIG_TYPE> {
 
-    int baud = Serial.DEFAULT_BAUD;
+    // private configuration variables
+    protected String provider = null;
 
     /**
-     * <p>Constructor for DefaultSerialConfig.</p>
+     * PRIVATE CONSTRUCTOR
      */
-    public DefaultSerialConfig(){
-        //super(Serial.DEFAULT_DEVICE);
-        super();
+    protected IODeviceConfigBase(){
     }
 
     /**
-     * <p>Constructor for DefaultSerialConfig.</p>
+     * PRIVATE CONSTRUCTOR
      *
-     * @param device a {@link java.lang.String} object.
+     * @param properties a {@link Map} object.
      */
-    public DefaultSerialConfig(String device) {
-        //super(device);
-    }
+    protected IODeviceConfigBase(Map<String,String> properties){
+        super(properties);
 
-    /**
-     * <p>Constructor for DefaultSerialConfig.</p>
-     *
-     * @param device a {@link java.lang.String} object.
-     * @param baud a int.
-     */
-    public DefaultSerialConfig(String device, int baud) {
-        //super(device);
-        this.baud = baud;
+        // load address property
+        if(properties.containsKey(PROVIDER_KEY)){
+            this.provider = properties.get(PROVIDER_KEY);
+        }
     }
-
-    /**
-     * <p>baud.</p>
-     *
-     * @return a int.
-     */
-    public int baud() { return this.baud; };
-    /**
-     * <p>baud.</p>
-     *
-     * @param baud a int.
-     * @return a {@link com.pi4j.io.serial.DefaultSerialConfig} object.
-     */
-    public DefaultSerialConfig baud(int baud) { this.baud = baud; return this; }
 
     /** {@inheritDoc} */
     @Override
-    public String toString(){
-        return String.format("[device=%s; baud=%d]", device(), baud());
+    public String provider() {
+        return this.provider;
     }
-
 }

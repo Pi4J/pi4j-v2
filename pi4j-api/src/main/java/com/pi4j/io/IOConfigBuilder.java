@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio;
+package com.pi4j.io;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  GpioConfigBuilder.java
+ * FILENAME      :  IOConfigBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,16 +27,14 @@ package com.pi4j.io.gpio;
  * #L%
  */
 
-import com.pi4j.config.AddressConfigBuilder;
-import com.pi4j.io.IOConfigBuilder;
+import com.pi4j.config.ConfigBuilder;
 
 /**
- * <p>GpioConfigBuilder interface.</p>
+ * <p>IOConfigBuilder interface.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface GpioConfigBuilder<BUILDER_TYPE extends GpioConfigBuilder, CONFIG_TYPE extends GpioConfig>
-        extends IOConfigBuilder<BUILDER_TYPE, CONFIG_TYPE>, AddressConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
-    // MARKER INTERFACE
+public interface IOConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
+    BUILDER_TYPE provider(String provider);
 }

@@ -28,6 +28,7 @@ package com.pi4j.io.spi;
  */
 
 import com.pi4j.config.AddressConfigBuilder;
+import com.pi4j.io.IOConfigBuilder;
 import com.pi4j.io.spi.impl.DefaultSpiConfigBuilder;
 
 /**
@@ -36,7 +37,9 @@ import com.pi4j.io.spi.impl.DefaultSpiConfigBuilder;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface SpiConfigBuilder extends AddressConfigBuilder<SpiConfigBuilder, SpiConfig> {
+public interface SpiConfigBuilder extends
+        IOConfigBuilder<SpiConfigBuilder, SpiConfig>,
+        AddressConfigBuilder<SpiConfigBuilder, SpiConfig> {
     /**
      * <p>newInstance.</p>
      *

@@ -27,8 +27,8 @@ package com.pi4j.io.serial.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.DeviceConfigBase;
 import com.pi4j.io.gpio.digital.PullResistance;
+import com.pi4j.io.impl.IODeviceConfigBase;
 import com.pi4j.io.serial.*;
 import com.pi4j.util.StringUtil;
 
@@ -41,7 +41,7 @@ import java.util.Map;
  * @version $Id: $Id
  */
 public class DefaultSerialConfig
-        extends DeviceConfigBase<SerialConfig>
+        extends IODeviceConfigBase<SerialConfig>
         implements SerialConfig {
 
     // private configuration properties

@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio;
+package com.pi4j.io.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  GpioConfigBuilder.java
+ * FILENAME      :  IOConfigBase.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,16 +27,46 @@ package com.pi4j.io.gpio;
  * #L%
  */
 
-import com.pi4j.config.AddressConfigBuilder;
-import com.pi4j.io.IOConfigBuilder;
+import com.pi4j.config.Config;
+import com.pi4j.config.ConfigBase;
+import com.pi4j.io.IOConfig;
+
+import java.util.Map;
 
 /**
- * <p>GpioConfigBuilder interface.</p>
+ * <p>ConfigBase class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface GpioConfigBuilder<BUILDER_TYPE extends GpioConfigBuilder, CONFIG_TYPE extends GpioConfig>
-        extends IOConfigBuilder<BUILDER_TYPE, CONFIG_TYPE>, AddressConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
-    // MARKER INTERFACE
+public class IOConfigBase<CONFIG_TYPE extends Config> extends ConfigBase<CONFIG_TYPE> implements IOConfig<CONFIG_TYPE> {
+
+    // private configuration variables
+    protected String provider = null;
+
+    /**
+     * PRIVATE CONSTRUCTOR
+     */
+    protected IOConfigBase(){
+    }
+
+    /**
+     * PRIVATE CONSTRUCTOR
+     *
+     * @param properties a {@link Map} object.
+     */
+    protected IOConfigBase(Map<String,String> properties){
+        super(properties);
+
+        // load address property
+        if(properties.containsKey(PROVIDER_KEY)){
+            this.provider = properties.get(PROVIDER_KEY);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String provider() {
+        return this.provider;
+    }
 }

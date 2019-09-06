@@ -27,7 +27,7 @@ package com.pi4j.io.spi.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBuilderBase;
+import com.pi4j.io.impl.IOAddressConfigBuilderBase;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiConfigBuilder;
 import com.pi4j.io.spi.SpiMode;
@@ -39,7 +39,7 @@ import com.pi4j.io.spi.SpiMode;
  * @version $Id: $Id
  */
 public class DefaultSpiConfigBuilder
-        extends AddressConfigBuilderBase<SpiConfigBuilder, SpiConfig>
+        extends IOAddressConfigBuilderBase<SpiConfigBuilder, SpiConfig>
         implements SpiConfigBuilder {
 
     /**

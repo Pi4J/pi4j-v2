@@ -27,6 +27,7 @@ package com.pi4j.config.impl;
  * #L%
  */
 
+import com.pi4j.config.Config;
 import com.pi4j.config.ConfigBuilder;
 import com.pi4j.config.DeviceConfig;
 import com.pi4j.config.DeviceConfigBuilder;
@@ -37,7 +38,7 @@ import com.pi4j.config.DeviceConfigBuilder;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public abstract class DeviceConfigBuilderBase<BUILDER_TYPE extends ConfigBuilder, CONFIG_TYPE extends DeviceConfig>
+public abstract class DeviceConfigBuilderBase<BUILDER_TYPE extends ConfigBuilder, CONFIG_TYPE extends Config>
         extends ConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
         implements DeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
 
