@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.analog.binding;
+package com.pi4j.io.binding;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogBindingSync.java
+ * FILENAME      :  AnalogOutputBinding.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,9 +27,7 @@ package com.pi4j.io.gpio.analog.binding;
  * #L%
  */
 
-import com.pi4j.io.exception.IOBoundsException;
-import com.pi4j.io.exception.IOIllegalValueException;
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
+import com.pi4j.io.binding.impl.DefaultAnalogBinding;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 
 /**
@@ -38,28 +36,11 @@ import com.pi4j.io.gpio.analog.AnalogOutput;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class AnalogBindingSync extends AnalogBindingBase implements AnalogBinding<AnalogOutput> {
-
-    /**
-     * Default Constructor
-     *
-     * @param output Variable argument list of analog outputs
-     */
-    public AnalogBindingSync(AnalogOutput ... output){
-        super(output);
+public interface AnalogOutputBinding extends AnalogBinding<AnalogOutputBinding,AnalogOutput> {
+    static AnalogOutputBinding newInstance(){
+        return new DefaultAnalogBinding();
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void process(AnalogChangeEvent event) {
-        outputs.forEach((output)->{
-            try {
-                ((AnalogOutput)output).value(event.value());
-            } catch (IOIllegalValueException e) {
-                e.printStackTrace();
-            } catch (IOBoundsException e) {
-                e.printStackTrace();
-            }
-        });
+    static AnalogOutputBinding newInstance(AnalogOutput ... output){
+        return new DefaultAnalogBinding(output);
     }
 }

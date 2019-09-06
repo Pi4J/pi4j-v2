@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.analog.binding;
+package com.pi4j.io.binding;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogBindingBase.java
+ * FILENAME      :  DigitalOutputBinding.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,33 +27,31 @@ package com.pi4j.io.gpio.analog.binding;
  * #L%
  */
 
-
-import com.pi4j.io.gpio.analog.Analog;
-import com.pi4j.io.gpio.analog.AnalogConfig;
-import com.pi4j.io.gpio.analog.AnalogProvider;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.pi4j.io.binding.impl.DefaultDigitalBinding;
+import com.pi4j.io.gpio.digital.DigitalOutput;
 
 /**
- * <p>Abstract AnalogBindingBase class.</p>
+ * <p>DigitalBindingSync class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public abstract class AnalogBindingBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
-        CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>,
-        PROVIDER_TYPE extends AnalogProvider> {
+public interface DigitalOutputBinding extends
+        DigitalBinding<DigitalOutputBinding,DigitalOutput> {
 
-    protected List<Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>> outputs;
+    static DigitalOutputBinding newInstance(){
+        return new DefaultDigitalBinding();
+    }
+    static DigitalOutputBinding newInstance(DigitalOutput ... target){
+        return new DefaultDigitalBinding(target);
+    }
 
-    /**
-     * Default Constructor
-     *
-     * @param output Variable argument list of analog outputs
-     */
-    public AnalogBindingBase(Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>... output){
-        outputs  = Collections.synchronizedList(Arrays.asList(output));
+    DigitalOutputBinding invertedState(boolean inverted);
+    default DigitalOutputBinding setInvertedState(boolean inverted){
+        return invertedState(inverted);
+    }
+    boolean invertedState();
+    default boolean getInvertedState(){
+        return invertedState();
     }
 }

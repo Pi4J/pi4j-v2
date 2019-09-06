@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.digital.binding;
+package com.pi4j.io.binding;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalBindingBase.java
+ * FILENAME      :  AnalogBinding.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,33 +27,19 @@ package com.pi4j.io.gpio.digital.binding;
  * #L%
  */
 
-
-import com.pi4j.io.gpio.digital.Digital;
-import com.pi4j.io.gpio.digital.DigitalConfig;
-import com.pi4j.io.gpio.digital.DigitalProvider;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.pi4j.io.gpio.analog.AnalogChangeEvent;
 
 /**
- * <p>Abstract DigitalBindingBase class.</p>
+ * <p>AnalogBinding interface.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public abstract class DigitalBindingBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
-        CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>,
-        PROVIDER_TYPE extends DigitalProvider> {
-
-    protected List<Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>> targets;
-
+public interface AnalogBinding<BINDING_TYPE extends Binding, MEMBER_TYPE> extends Binding<BINDING_TYPE, MEMBER_TYPE> {
     /**
-     * Default Constructor
+     * <p>process.</p>
      *
-     * @param target Variable argument list of digital outputs
+     * @param event a {@link com.pi4j.io.gpio.analog.AnalogChangeEvent} object.
      */
-    public DigitalBindingBase(Digital<DIGITAL_TYPE, CONFIG_TYPE,PROVIDER_TYPE> ... target){
-        targets  = Collections.synchronizedList(Arrays.asList(target));
-    }
+    void process(AnalogChangeEvent event);
 }

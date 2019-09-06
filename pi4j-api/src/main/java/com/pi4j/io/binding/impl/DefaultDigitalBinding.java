@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.digital.binding;
+package com.pi4j.io.binding.impl;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalBindingInverseSync.java
+ * FILENAME      :  DefaultDigitalBinding.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,37 +27,60 @@ package com.pi4j.io.gpio.digital.binding;
  * #L%
  */
 
+import com.pi4j.io.binding.DigitalOutputBinding;
 import com.pi4j.io.exception.IOException;
-import com.pi4j.io.gpio.digital.*;
+import com.pi4j.io.gpio.digital.DigitalChangeEvent;
+import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>DigitalBindingInverseSync class.</p>
+ * <p>DigitalBindingSync class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class DigitalBindingInverseSync extends DigitalBindingBase<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider> implements DigitalBinding<DigitalOutput> {
+public class DefaultDigitalBinding
+        extends BindingBase<DigitalOutputBinding, DigitalOutput>
+        implements DigitalOutputBinding {
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private boolean inverted = false;
+
     /**
      * Default Constructor
      *
-     * @param target Variable argument list of analog outputs
+     * @param member Variable argument list of analog outputs
      */
-    public DigitalBindingInverseSync(DigitalOutput ... target){
-        super(target);
+    public DefaultDigitalBinding(DigitalOutput ... member){
+        super(member);
     }
 
     /** {@inheritDoc} */
     @Override
     public void process(DigitalChangeEvent event) {
-        targets.forEach((target)->{
+        members.forEach((target)->{
             try {
-                ((DigitalOutput)target).state(DigitalState.getInverseState(event.state()));
+                if(inverted){
+                    ((DigitalOutput)target).state(DigitalState.getInverseState(event.state()));
+                } else {
+                    ((DigitalOutput)target).state(event.state());
+                }
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
             }
         });
+    }
+
+    @Override
+    public DigitalOutputBinding invertedState(boolean inverted) {
+        this.inverted = inverted;
+        return this;
+    }
+
+    @Override
+    public boolean invertedState() {
+        return this.inverted;
     }
 }

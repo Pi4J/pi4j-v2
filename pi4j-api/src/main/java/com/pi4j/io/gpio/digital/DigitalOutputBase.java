@@ -162,4 +162,18 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
         }
         return super.shutdown(context);
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public DigitalOutput on() throws IOException {
+        // TODO :: REVISIT STATE VS ON/OFF
+        return high();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DigitalOutput off() throws IOException {
+        // TODO :: REVISIT STATE VS ON/OFF
+        return low();
+    }
 }

@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.digital.binding;
+package com.pi4j.io.binding;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalBindingSync.java
+ * FILENAME      :  OnOffBinding.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,13 +27,8 @@ package com.pi4j.io.gpio.digital.binding;
  * #L%
  */
 
-import com.pi4j.io.exception.IOException;
-import com.pi4j.io.gpio.digital.DigitalChangeEvent;
-import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalOutputConfig;
-import com.pi4j.io.gpio.digital.DigitalOutputProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.pi4j.io.OnOff;
+import com.pi4j.io.binding.impl.DefaultOnOffBinding;
 
 /**
  * <p>DigitalBindingSync class.</p>
@@ -41,28 +36,34 @@ import org.slf4j.LoggerFactory;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class DigitalBindingSync extends DigitalBindingBase<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider> implements DigitalBinding<DigitalOutput> {
+public interface OnOffBinding extends
+        DigitalBinding<OnOffBinding,OnOff>,
+        AnalogBinding<OnOffBinding,OnOff> {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    /**
-     * Default Constructor
-     *
-     * @param target Variable argument list of analog outputs
-     */
-    public DigitalBindingSync(DigitalOutput ... target){
-        super(target);
+    static OnOffBinding newInstance(){
+        return new DefaultOnOffBinding();
+    }
+    static OnOffBinding newInstance(OnOff ... target){
+        return new DefaultOnOffBinding(target);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void process(DigitalChangeEvent event) {
-        targets.forEach((target)->{
-            try {
-                ((DigitalOutput)target).state(event.state());
-            } catch (IOException e) {
-                logger.error(e.getMessage(), e);
-            }
-        });
+    OnOffBinding analogValueThresholdOn(int value);
+    default OnOffBinding setAnalogValueThresholdOn(int value){
+        return analogValueThresholdOn(value);
+    }
+
+    OnOffBinding analogValueThresholdOff(int value);
+    default OnOffBinding setAnalogValueThresholdOff(int value){
+        return analogValueThresholdOff(value);
+    }
+
+    int analogValueThresholdOn();
+    default int getAnalogValueThresholdOn(){
+        return analogValueThresholdOn();
+    }
+
+    int analogValueThresholdOff();
+    default int getAnalogValueThresholdOff(){
+        return analogValueThresholdOn();
     }
 }

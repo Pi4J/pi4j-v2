@@ -27,8 +27,10 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
+import com.pi4j.io.OnOffRead;
+import com.pi4j.io.binding.Bindable;
+import com.pi4j.io.binding.DigitalBinding;
 import com.pi4j.io.gpio.Gpio;
-import com.pi4j.io.gpio.digital.binding.DigitalBinding;
 
 /**
  * <p>Digital interface.</p>
@@ -39,7 +41,10 @@ import com.pi4j.io.gpio.digital.binding.DigitalBinding;
 public interface Digital<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>,
         PROVIDER_TYPE extends DigitalProvider>
-        extends Gpio<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
+        extends Gpio<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+        OnOffRead<DIGITAL_TYPE>,
+        Bindable<DIGITAL_TYPE, DigitalBinding>
+{
 
     /**
      * <p>state.</p>
@@ -62,21 +67,6 @@ public interface Digital<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE,
      * @return a DIGITAL_TYPE object.
      */
     DIGITAL_TYPE removeListener(DigitalChangeListener... listener);
-
-    /**
-     * <p>bind.</p>
-     *
-     * @param binding a {@link com.pi4j.io.gpio.digital.binding.DigitalBinding} object.
-     * @return a DIGITAL_TYPE object.
-     */
-    DIGITAL_TYPE bind(DigitalBinding... binding);
-    /**
-     * <p>unbind.</p>
-     *
-     * @param binding a {@link com.pi4j.io.gpio.digital.binding.DigitalBinding} object.
-     * @return a DIGITAL_TYPE object.
-     */
-    DIGITAL_TYPE unbind(DigitalBinding ... binding);
 
     /**
      * <p>equals.</p>

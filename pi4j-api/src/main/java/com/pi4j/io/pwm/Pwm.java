@@ -28,8 +28,9 @@ package com.pi4j.io.pwm;
  */
 
 import com.pi4j.io.IO;
+import com.pi4j.io.OnOff;
+import com.pi4j.io.exception.IOException;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -38,7 +39,7 @@ import java.util.Map;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
+public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider>, OnOff<Pwm> {
 
     /**
      * <p>newConfigBuilder.</p>
@@ -72,6 +73,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @return returns 'true' if the PWM signal is in the ON state; else returns 'false'
      */
+    @Override
     boolean isOn();
 
     /**
@@ -79,6 +81,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @return returns 'true' if the PWM signal is in the OFF state; else returns 'false'
      */
+    @Override
     default boolean isOff(){
         return !isOn();
     }
@@ -87,16 +90,18 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      * Turn the PWM signal [ON] using the configured frequency and duty-cycle.
      *
      * @return returns this PWM instance
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
+    @Override
     Pwm on() throws IOException;
 
     /**
      * Turn the PWM signal [OFF] by applying a zero frequency and zero duty-cycle to the PWM pin.
      *
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      * @return a {@link com.pi4j.io.pwm.Pwm} object.
      */
+    @Override
     Pwm off() throws IOException;
 
     /**
@@ -129,7 +134,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *                   values. (Values above 50% mean the signal will remain HIGH more
      *                   time than LOW.)
      * @return returns this PWM instance
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     default Pwm on(Number dutyCycle) throws IOException{
         if(dutyCycle.floatValue() > 0) {
@@ -161,7 +166,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *                   properties to determine what frequency the PWM generator actually
      *                   applied.
      * @return returns this PWM instance
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     default Pwm on(Number dutyCycle, int frequency) throws IOException{
         if(dutyCycle.floatValue() > 0 && frequency  > 0) {
@@ -185,7 +190,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *  the time period the signal is LOW and the other half is HIGH.
      *
      * @return duty-cycle value expressed as a percentage (rage: 0-100)
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     float getDutyCycle() throws IOException;
 
@@ -200,7 +205,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *  the time period the signal is LOW and the other half is HIGH.
      *
      * @return duty-cycle value expressed as a percentage (rage: 0-100)
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     default float dutyCycle() throws IOException { return getDutyCycle();}
 
@@ -218,7 +223,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *  the time period the signal is LOW and the other half is HIGH.
      *
      * @param dutyCycle duty-cycle value expressed as a percentage (rage: 0-100)
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     void setDutyCycle(Number dutyCycle) throws IOException;
 
@@ -237,7 +242,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @param dutyCycle duty-cycle value expressed as a percentage (rage: 0-100)
      * @return returns this PWM instance
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     default Pwm dutyCycle(Number dutyCycle) throws IOException { setDutyCycle(dutyCycle); return this; }
 
@@ -254,7 +259,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @return the configured frequency (Hz) that is used when turning the
      *         PWM signal to the 'ON' state.
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     int getFrequency() throws IOException;
 
@@ -271,7 +276,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @return the configured frequency (Hz) that is used when turning the
      *         PWM signal to the 'ON' state.
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     default int frequency() throws IOException { return getFrequency();}
 
@@ -286,7 +291,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @return the actual frequency (Hz) applied by the PWM generator when the
      *         PWM signal is set to the 'ON' state.
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     int getActualFrequency() throws IOException;
 
@@ -301,7 +306,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @return the actual frequency (Hz) applied by the PWM generator when the
      *         PWM signal is set to the 'ON' state.
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     default int actualFrequency() throws IOException { return getActualFrequency();}
 
@@ -315,7 +320,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *  PWM signal.
      *
      * @param frequency the number of cycles per second (Hertz)
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     void setFrequency(int frequency) throws IOException;
 
@@ -330,7 +335,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @param frequency the number of cycles per second (Hertz)
      * @return returns this PWM instance
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     default Pwm frequency(int frequency) throws IOException { setFrequency(frequency); return this; }
 
@@ -393,7 +398,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider> {
      *
      * @param name preset name string
      * @return the deleted PWM Preset instance
-     * @throws java.io.IOException if fails to communicate with the PWM pin
+     * @throws IOException if fails to communicate with the PWM pin
      */
     Pwm applyPreset(String name) throws IOException;
 }

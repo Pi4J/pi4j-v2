@@ -29,8 +29,9 @@ package com.pi4j.io.gpio.digital;
 
 import com.pi4j.context.Context;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.io.binding.Bindable;
+import com.pi4j.io.binding.DigitalBinding;
 import com.pi4j.io.gpio.GpioBase;
-import com.pi4j.io.gpio.digital.binding.DigitalBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +48,9 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
         CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>,
         PROVIDER_TYPE extends DigitalProvider>
         extends GpioBase<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>
-        implements Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
+        implements Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+        Bindable<DIGITAL_TYPE, DigitalBinding>
+{
 
 
     // internal listeners collection
@@ -123,5 +126,12 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
 
         // return this instance
         return (DIGITAL_TYPE) this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isOn() {
+        // TODO :: REVISIT STATE VS ON/OFF
+        return state().isHigh();
     }
 }

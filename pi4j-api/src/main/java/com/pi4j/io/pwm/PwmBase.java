@@ -31,8 +31,8 @@ import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.IOBase;
+import com.pi4j.io.exception.IOException;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -115,7 +115,11 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
         // apply an initial value if configured
         if(this.config.initialValue() != null){
             try {
-                this.on(this.config.initialValue());
+                if(this.config.initialValue() <= 0){
+                    this.off();
+                } else {
+                    this.on(this.config.initialValue());
+                }
             } catch (IOException e) {
                 throw new InitializeException(e);
             }

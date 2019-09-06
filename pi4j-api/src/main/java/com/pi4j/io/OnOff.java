@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.digital.binding;
+package com.pi4j.io;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalBinding.java
+ * FILENAME      :  OnOff.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,21 +27,14 @@ package com.pi4j.io.gpio.digital.binding;
  * #L%
  */
 
-import com.pi4j.io.IOBinding;
-import com.pi4j.io.gpio.digital.Digital;
-import com.pi4j.io.gpio.digital.DigitalChangeEvent;
+import com.pi4j.io.exception.IOException;
 
-/**
- * <p>DigitalBinding interface.</p>
- *
- * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- * @version $Id: $Id
- */
-public interface DigitalBinding<DIGITAL_TYPE extends Digital> extends IOBinding {
-    /**
-     * <p>process.</p>
-     *
-     * @param event a {@link com.pi4j.io.gpio.digital.DigitalChangeEvent} object.
-     */
-    void process(DigitalChangeEvent event);
+public interface OnOff<T> extends OnOffRead<T>, OnOffWrite<T> {
+    default T toggle() throws IOException {
+        if (isOn()) {
+            return off();
+        } else {
+            return on();
+        }
+    }
 }

@@ -28,6 +28,7 @@ package com.pi4j.io.gpio.digital;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.io.OnOff;
 import com.pi4j.io.Output;
 import com.pi4j.io.exception.IOException;
 
@@ -41,7 +42,9 @@ import java.util.concurrent.TimeUnit;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider>, Output {
+public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider>,
+        Output,
+        OnOff<DigitalOutput> {
 
     /**
      * <p>newConfigBuilder.</p>

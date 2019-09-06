@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.analog.binding;
+package com.pi4j.io.binding.impl;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogBinding.java
+ * FILENAME      :  AnalogBindingBase.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,21 +27,34 @@ package com.pi4j.io.gpio.analog.binding;
  * #L%
  */
 
-import com.pi4j.io.IOBinding;
+
 import com.pi4j.io.gpio.analog.Analog;
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
+import com.pi4j.io.gpio.analog.AnalogConfig;
+import com.pi4j.io.gpio.analog.AnalogProvider;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * <p>AnalogBinding interface.</p>
+ * <p>Abstract AnalogBindingBase class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface AnalogBinding<IO_TYPE extends Analog> extends IOBinding {
+public abstract class AnalogBindingBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+        CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>,
+        PROVIDER_TYPE extends AnalogProvider>
+        extends BindingBase {
+
+    protected List<Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>> outputs;
+
     /**
-     * <p>process.</p>
+     * Default Constructor
      *
-     * @param event a {@link com.pi4j.io.gpio.analog.AnalogChangeEvent} object.
+     * @param output Variable argument list of analog outputs
      */
-    void process(AnalogChangeEvent event);
+    public AnalogBindingBase(Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>... output){
+        outputs  = Collections.synchronizedList(Arrays.asList(output));
+    }
 }

@@ -28,8 +28,9 @@ package com.pi4j.io.gpio.analog;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.io.binding.AnalogBinding;
+import com.pi4j.io.binding.Bindable;
 import com.pi4j.io.gpio.GpioBase;
-import com.pi4j.io.gpio.analog.binding.AnalogBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,11 +43,13 @@ import java.util.List;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public abstract class AnalogBase<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+public abstract class AnalogBase<ANALOG_TYPE
+        extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>,
         PROVIDER_TYPE extends AnalogProvider>
         extends GpioBase<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>
-        implements Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
+        implements Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+        Bindable<ANALOG_TYPE, AnalogBinding> {
 
     // internal listeners collection
     protected List<AnalogChangeListener> listeners = Collections.synchronizedList(new ArrayList<>());
