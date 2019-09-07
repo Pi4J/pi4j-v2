@@ -92,39 +92,33 @@ public class PwmRegistrationProcessor implements RegisterProcessor<Pwm> {
         Address address = field.getAnnotation(Address.class);
         builder.address(address.value());
 
-        Name name = null;
         if (field.isAnnotationPresent(Name.class)) {
-            name = field.getAnnotation(Name.class);
+            Name name = field.getAnnotation(Name.class);
             if (name != null) builder.name(name.value());
         }
 
-        Description description = null;
         if (field.isAnnotationPresent(Description.class)) {
-            description = field.getAnnotation(Description.class);
+            Description description = field.getAnnotation(Description.class);
             if (description != null) builder.description(description.value());
         }
 
-        ShutdownValue shutdownValue = null;
         if (field.isAnnotationPresent(ShutdownValue.class)) {
-            shutdownValue = field.getAnnotation(ShutdownValue.class);
+            ShutdownValue shutdownValue = field.getAnnotation(ShutdownValue.class);
             if (shutdownValue != null) builder.shutdown(shutdownValue.value());
         }
 
-        InitialValue initialValue = null;
         if (field.isAnnotationPresent(InitialValue.class)) {
-            initialValue = field.getAnnotation(InitialValue.class);
+            InitialValue initialValue = field.getAnnotation(InitialValue.class);
             if (initialValue != null) builder.initial(initialValue.value());
         }
 
-        Frequency frequency = null;
         if (field.isAnnotationPresent(Frequency.class)) {
-            frequency = field.getAnnotation(Frequency.class);
+            Frequency frequency = field.getAnnotation(Frequency.class);
             if (frequency != null) builder.frequency(frequency.value());
         }
 
-        DutyCycle dutyCycle = null;
         if (field.isAnnotationPresent(DutyCycle.class)) {
-            dutyCycle = field.getAnnotation(DutyCycle.class);
+            DutyCycle dutyCycle = field.getAnnotation(DutyCycle.class);
             if (dutyCycle != null){
                 if(dutyCycle.value() >= 0) {
                     builder.dutyCycle(dutyCycle.value());
@@ -132,12 +126,15 @@ public class PwmRegistrationProcessor implements RegisterProcessor<Pwm> {
             }
         }
 
-        WithPwmType pwmType = null;
-        if (field.isAnnotationPresent(WithPwmType.class)) {
-            pwmType = field.getAnnotation(WithPwmType.class);
-            if (pwmType != null) builder.pwmType(pwmType.value());
+        if (field.isAnnotationPresent(InheritProperties.class)) {
+            InheritProperties inheritProperties = field.getAnnotation(InheritProperties.class);
+            if (inheritProperties != null) builder.inheritProperties(inheritProperties.value());
         }
 
+        if (field.isAnnotationPresent(WithPwmType.class)) {
+            WithPwmType pwmType = field.getAnnotation(WithPwmType.class);
+            if (pwmType != null) builder.pwmType(pwmType.value());
+        }
 
         // add presets members
         List<AddPwmPreset> presets = new ArrayList<>();

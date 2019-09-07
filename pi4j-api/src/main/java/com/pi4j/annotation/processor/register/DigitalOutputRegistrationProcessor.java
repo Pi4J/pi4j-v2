@@ -89,28 +89,29 @@ public class DigitalOutputRegistrationProcessor implements RegisterProcessor<Dig
         Address address = field.getAnnotation(Address.class);
         builder.address(address.value());
 
-        Name name = null;
         if (field.isAnnotationPresent(Name.class)) {
-            name = field.getAnnotation(Name.class);
+            Name name = field.getAnnotation(Name.class);
             if (name != null) builder.name(name.value());
         }
 
-        Description description = null;
         if (field.isAnnotationPresent(Description.class)) {
-            description = field.getAnnotation(Description.class);
+            Description description = field.getAnnotation(Description.class);
             if (description != null) builder.description(description.value());
         }
 
-        ShutdownState shutdownState = null;
         if (field.isAnnotationPresent(ShutdownState.class)) {
-            shutdownState = field.getAnnotation(ShutdownState.class);
+            ShutdownState shutdownState = field.getAnnotation(ShutdownState.class);
             if (shutdownState != null) builder.shutdown(shutdownState.value());
         }
 
-        InitialState initialState = null;
         if (field.isAnnotationPresent(InitialState.class)) {
-            initialState = field.getAnnotation(InitialState.class);
+            InitialState initialState = field.getAnnotation(InitialState.class);
             if (initialState != null) builder.initial(initialState.value());
+        }
+
+        if (field.isAnnotationPresent(InheritProperties.class)) {
+            InheritProperties inheritProperties = field.getAnnotation(InheritProperties.class);
+            if (inheritProperties != null) builder.inheritProperties(inheritProperties.value());
         }
 
         // get designated platform to use to register this IO (if provided)

@@ -89,16 +89,19 @@ public class I2CRegistrationProcessor implements RegisterProcessor<I2C> {
         builder.bus(address.bus());
         builder.device(address.device());
 
-        Name name = null;
         if (field.isAnnotationPresent(Name.class)) {
-            name = field.getAnnotation(Name.class);
+            Name name = field.getAnnotation(Name.class);
             if (name != null) builder.name(name.value());
         }
 
-        Description description = null;
         if (field.isAnnotationPresent(Description.class)) {
-            description = field.getAnnotation(Description.class);
+            Description description = field.getAnnotation(Description.class);
             if (description != null) builder.description(description.value());
+        }
+
+        if (field.isAnnotationPresent(InheritProperties.class)) {
+            InheritProperties inheritProperties = field.getAnnotation(InheritProperties.class);
+            if (inheritProperties != null) builder.inheritProperties(inheritProperties.value());
         }
 
         // get designated platform to use to register this IO (if provided)

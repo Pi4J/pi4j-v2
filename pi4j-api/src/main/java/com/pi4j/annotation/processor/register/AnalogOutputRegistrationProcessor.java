@@ -89,41 +89,40 @@ public class AnalogOutputRegistrationProcessor implements RegisterProcessor<Anal
         Address address = field.getAnnotation(Address.class);
         builder.address(address.value());
 
-        Name name = null;
         if (field.isAnnotationPresent(Name.class)) {
-            name = field.getAnnotation(Name.class);
+            Name name = field.getAnnotation(Name.class);
             if (name != null) builder.name(name.value());
         }
 
-        Description description = null;
         if (field.isAnnotationPresent(Description.class)) {
-            description = field.getAnnotation(Description.class);
+            Description description = field.getAnnotation(Description.class);
             if (description != null) builder.description(description.value());
         }
 
-        Range range = null;
         if (field.isAnnotationPresent(Range.class)) {
-            range = field.getAnnotation(Range.class);
+            Range range = field.getAnnotation(Range.class);
             if (range != null) builder.min(range.min());
             if (range != null) builder.max(range.max());
         }
 
-        ShutdownValue shutdownValue = null;
         if (field.isAnnotationPresent(ShutdownValue.class)) {
-            shutdownValue = field.getAnnotation(ShutdownValue.class);
+            ShutdownValue shutdownValue = field.getAnnotation(ShutdownValue.class);
             if (shutdownValue != null) builder.shutdown(shutdownValue.value());
         }
 
-        InitialValue initialValue = null;
         if (field.isAnnotationPresent(InitialValue.class)) {
-            initialValue = field.getAnnotation(InitialValue.class);
+            InitialValue initialValue = field.getAnnotation(InitialValue.class);
             if (initialValue != null) builder.initial((int)Math.round(initialValue.value()));
         }
 
-        StepValue stepValue = null;
         if (field.isAnnotationPresent(StepValue.class)) {
-            stepValue = field.getAnnotation(StepValue.class);
+            StepValue stepValue = field.getAnnotation(StepValue.class);
             if (stepValue != null) builder.step(stepValue.value());
+        }
+
+        if (field.isAnnotationPresent(InheritProperties.class)) {
+            InheritProperties inheritProperties = field.getAnnotation(InheritProperties.class);
+            if (inheritProperties != null) builder.inheritProperties(inheritProperties.value());
         }
 
         // get designated platform to use to register this IO (if provided)

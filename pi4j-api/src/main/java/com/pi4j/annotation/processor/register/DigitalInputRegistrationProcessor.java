@@ -92,28 +92,29 @@ public class DigitalInputRegistrationProcessor implements RegisterProcessor<Digi
         Address address = field.getAnnotation(Address.class);
         builder.address(address.value());
 
-        Name name = null;
         if (field.isAnnotationPresent(Name.class)) {
-            name = field.getAnnotation(Name.class);
+            Name name = field.getAnnotation(Name.class);
             if (name != null) builder.name(name.value());
         }
 
-        Description description = null;
         if (field.isAnnotationPresent(Description.class)) {
-            description = field.getAnnotation(Description.class);
+            Description description = field.getAnnotation(Description.class);
             if (description != null) builder.description(description.value());
         }
 
-        Pull pull = null;
         if (field.isAnnotationPresent(Pull.class)) {
-            pull = field.getAnnotation(Pull.class);
+            Pull pull = field.getAnnotation(Pull.class);
             if (pull != null) builder.pull(pull.value());
         }
 
-        Debounce debounce = null;
         if (field.isAnnotationPresent(Debounce.class)) {
-            debounce = field.getAnnotation(Debounce.class);
+            Debounce debounce = field.getAnnotation(Debounce.class);
             if (debounce != null) builder.debounce(debounce.value(), debounce.unit());
+        }
+
+        if (field.isAnnotationPresent(InheritProperties.class)) {
+            InheritProperties inheritProperties = field.getAnnotation(InheritProperties.class);
+            if (inheritProperties != null) builder.inheritProperties(inheritProperties.value());
         }
 
         // get designated platform to use to register this IO (if provided)
