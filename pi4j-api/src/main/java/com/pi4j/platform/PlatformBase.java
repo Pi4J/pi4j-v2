@@ -27,16 +27,21 @@ package com.pi4j.platform;
  * #L%
  */
 
+import com.pi4j.config.Config;
+import com.pi4j.config.ConfigBuilder;
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.extension.ExtensionBase;
+import com.pi4j.io.IO;
 import com.pi4j.io.IOType;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderInterfaceException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 import com.pi4j.provider.impl.ProviderProxyHandler;
+import com.pi4j.util.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +113,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
 
         if(!providerClass.isInterface()){
             logger.warn("Provider type [" + providerClass.getName() + "] requested; this is not an 'Interface'" +
-                    " and make not return a valid provider or may not be able to cast to the concrete class.");
+                    " and may not return a valid provider or may not be able to cast to the concrete class.");
         }
 
         for(Provider p : providers.values()){
@@ -136,10 +141,64 @@ public abstract class PlatformBase<PLATFORM extends Platform>
 
     /** {@inheritDoc} */
     @Override
-    public <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException {
-        if(providers.containsKey(ioType))
-            return (T)providers.get(ioType);
-        throw new ProviderNotFoundException(ioType);
+    public <T extends IO>T create(String id) throws Exception {
+        if(this.context == null) throw new Pi4JException("Unable to create IO instance; this platform has not been 'iniitalized()' with a Pi4J context.");
+        Map<String,String> keys = PropertiesUtil.subKeys(this.context.properties().all(), id);
+        Provider provider = null;
+
+        // create by explicit IO provider
+        if(keys.containsKey("provider")){
+            String providerId = keys.get("provider");
+            provider = providers().get(providerId);
+            if(provider == null) {
+                throw new ProviderNotFoundException(providerId);
+            }
+        }
+
+        // create by IO TYPE
+        // (use platform provider if one if available for this IO type)
+        else if(keys.containsKey("type")){
+            String type = keys.get("type");
+            IOType ioType = IOType.valueOf(type);
+            provider = provider(ioType);
+            if(provider == null) {
+                throw new ProviderNotFoundException(type);
+            }
+        }
+
+        // create IO instance
+        ConfigBuilder builder = provider.type().newConfigBuilder();
+        builder.load(keys);
+        return (T)provider.create((Config) builder.build());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public <T extends IO>T create(String id, IOType ioType) throws Exception {
+        if(this.context == null) throw new Pi4JException("Unable to create IO instance; this platform has not been 'iniitalized()' with a Pi4J context.");
+        Map<String,String> keys = PropertiesUtil.subKeys(this.context.properties().all(), id);
+        Provider provider = null;
+
+        // create by explicit IO provider
+        if(keys.containsKey("provider")){
+            String providerId = keys.get("provider");
+            provider = providers().get(providerId);
+            if(provider == null) {
+                throw new ProviderNotFoundException(providerId);
+            }
+        }
+
+        // create by IO TYPE
+        // (use platform provider if one if available for this IO type)
+        provider = provider(ioType);
+        if(provider == null) {
+            throw new ProviderNotFoundException(ioType);
+        }
+
+        // create IO instance
+        ConfigBuilder builder = provider.type().newConfigBuilder();
+        builder.load(keys);
+        return (T)provider.create((Config) builder.build());
     }
 
     /** {@inheritDoc} */

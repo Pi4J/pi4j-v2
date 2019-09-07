@@ -78,9 +78,31 @@ public class Main {
 
         var pi4j = Pi4J.newAutoContext();
 
-        System.out.println("--------------------------------------------------------");
-        pi4j.describe().print(System.out);
-        System.out.println("--------------------------------------------------------");
+
+//        DigitalOutputConfigBuilder builder = DigitalOutput.newConfigBuilder();
+//        builder.provider(PiGpioDigitalInputProvider.class);
+//        builder.address(0);
+//        var c = builder.build();
+//
+//        try {
+//            Class c1 = Class.forName("com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider");
+//            //ClassLoader classLoader = c1.getClassLoader();
+//            //Class c2 = Class.forName("java.lang.String", true, classLoader);
+//            System.out.println("Class = " + c1.getName());
+//            System.out.println("Provider = " + Provider.class.isAssignableFrom(c1));
+//        } catch (ClassNotFoundException e){
+//            System.out.println("No Class");
+//        }
+
+
+        System.out.println(pi4j.hasProvider("com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider"));
+
+        pi4j.provider("com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider").describe().print(System.out);
+
+
+//        System.out.println("--------------------------------------------------------");
+//        pi4j.describe().print(System.out);
+//        System.out.println("--------------------------------------------------------");
 
         // shutdown Pi4J
         pi4j.shutdown();

@@ -30,20 +30,17 @@ package com.pi4j.platform;
 import com.pi4j.common.Descriptor;
 import com.pi4j.context.Context;
 import com.pi4j.extension.Extension;
+import com.pi4j.internal.IOCreator;
+import com.pi4j.internal.ProviderProvider;
+import com.pi4j.io.IO;
+import com.pi4j.io.IOConfig;
 import com.pi4j.io.IOType;
-import com.pi4j.io.gpio.analog.AnalogInputProvider;
-import com.pi4j.io.gpio.analog.AnalogOutputProvider;
-import com.pi4j.io.gpio.digital.DigitalInputProvider;
-import com.pi4j.io.gpio.digital.DigitalOutputProvider;
-import com.pi4j.io.i2c.I2CProvider;
-import com.pi4j.io.pwm.PwmProvider;
-import com.pi4j.io.serial.SerialProvider;
-import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.Provider;
-import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderInterfaceException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
+import com.pi4j.provider.impl.ProviderProxyHandler;
 
+import java.lang.reflect.Proxy;
 import java.util.Map;
 
 /**
@@ -52,7 +49,7 @@ import java.util.Map;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface Platform extends Extension<Platform> {
+public interface Platform extends IOCreator, ProviderProvider, Extension<Platform> {
 
     /**
      * <p>weight.</p>
@@ -60,13 +57,20 @@ public interface Platform extends Extension<Platform> {
      * @return a int.
      */
     int weight();
+
     /**
+     *
      * <p>enabled.</p>
      *
      * @param context a {@link com.pi4j.context.Context} object.
      * @return a boolean.
      */
     boolean enabled(Context context);
+
+
+    // ------------------------------------------------------------------------
+    // PROVIDER ACCESSOR METHODS
+    // ------------------------------------------------------------------------
 
     /**
      * <p>providers.</p>
@@ -75,34 +79,73 @@ public interface Platform extends Extension<Platform> {
      */
     Map<IOType, Provider> providers();
 
-    /**
-     * <p>provider.</p>
-     *
-     * @param providerClass a {@link java.lang.Class} object.
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
-     * @throws com.pi4j.provider.exception.ProviderInterfaceException if any.
-     */
-    <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderInterfaceException;
+    /** {@inheritDoc} */
+    @Override
+    default <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderInterfaceException {
+        for(Provider p : providers().values()){
+            if(providerClass.isAssignableFrom(p.getClass())){
+                return (T)p;
+            }
+            // check for Proxied provider instances, if a Proxy, then also check the underlying handlers source class
+            if (Proxy.isProxyClass(p.getClass())) {
+                if(Proxy.getInvocationHandler(p).getClass().isAssignableFrom(ProviderProxyHandler.class)){
+                    ProviderProxyHandler pp = (ProviderProxyHandler) Proxy.getInvocationHandler(p);
+                    if(providerClass.isAssignableFrom(pp.provider().getClass())){
+                        return (T) p;
+                    }
+                }
+            }
+        }
+        if(providerClass.isInterface()){
+            throw new ProviderNotFoundException(providerClass);
+        } else {
+            throw new ProviderInterfaceException(providerClass);
+        }
+    }
 
-    /**
-     * <p>provider.</p>
-     *
-     * @param ioType a {@link com.pi4j.io.IOType} object.
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
-     */
-    <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException;
+    /** {@inheritDoc} */
+    @Override
+    default <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException {
+        if(providers().containsKey(ioType))
+            return (T)providers().get(ioType);
+        throw new ProviderNotFoundException(ioType);
+    }
 
-    /**
-     * <p>hasProvider.</p>
-     *
-     * @param providerClass a {@link java.lang.Class} object.
-     * @param <T> a T object.
-     * @return a boolean.
-     */
+
+    /** {@inheritDoc} */
+    @Override
+    default <T extends Provider> T provider(String providerId, Class<T> providerClass) throws ProviderNotFoundException{
+        for(Provider provider : providers().values()){
+            if(provider.id().equalsIgnoreCase(providerId) && providerClass.isInstance(provider)){
+                return (T)provider;
+            }
+        }
+        throw new ProviderNotFoundException(providerId, providerClass);
+    }
+
+    /** {@inheritDoc} */
+    default <T extends Provider> T provider(String providerId) throws ProviderNotFoundException {
+        for(Provider provider : providers().values()){
+            if(provider.id().equalsIgnoreCase(providerId)){
+                return (T)provider;
+            }
+        }
+        throw new ProviderNotFoundException(providerId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    default boolean hasProvider(String providerId) {
+        for(Provider provider : providers().values()){
+            if(provider.id().equalsIgnoreCase(providerId)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     default <T extends Provider> boolean hasProvider(Class<T> providerClass) {
         try {
             return provider(providerClass) != null;
@@ -112,13 +155,8 @@ public interface Platform extends Extension<Platform> {
         }
     }
 
-    /**
-     * <p>hasProvider.</p>
-     *
-     * @param ioType a {@link com.pi4j.io.IOType} object.
-     * @param <T> a T object.
-     * @return a boolean.
-     */
+    /** {@inheritDoc} */
+    @Override
     default <T extends Provider> boolean hasProvider(IOType ioType) {
         try {
             return provider(ioType) != null;
@@ -128,138 +166,40 @@ public interface Platform extends Extension<Platform> {
         }
     }
 
-    /**
-     * <p>analogInput.</p>
-     *
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderException if any.
-     */
-    default <T extends AnalogInputProvider> T analogInput() throws ProviderException{
-        return this.provider(IOType.ANALOG_INPUT);
+    // ------------------------------------------------------------------------
+    // I/O INSTANCE ACCESSOR/CREATOR METHODS
+    // ------------------------------------------------------------------------
+
+    @Override
+    default <I extends IO>I create(IOConfig config, IOType ioType) throws Exception{
+
+        // get default provider (defined by IO type) for this platform
+        // (this is the platform defined provider for this particular IO type)
+        if(hasProvider(ioType)){
+            Provider provider = this.provider(ioType);
+            if(provider == null) {
+                throw new ProviderNotFoundException(ioType);
+            }
+            // create IO instance
+            return (I)provider.create(config);
+        } else {
+            throw new ProviderNotFoundException(ioType);
+        }
     }
 
-    /**
-     * <p>analogOutput.</p>
-     *
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderException if any.
-     */
-    default <T extends AnalogOutputProvider> T analogOutput() throws ProviderException{
-        return this.provider(IOType.ANALOG_OUTPUT);
-    }
+    /** {@inheritDoc} */
+    @Override
+    <T extends IO>T create(String id) throws Exception;
 
-    /**
-     * <p>digitalInput.</p>
-     *
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderException if any.
-     */
-    default <T extends DigitalInputProvider> T digitalInput() throws ProviderException{
-        return this.provider(IOType.DIGITAL_INPUT);
-    }
+    /** {@inheritDoc} */
+    @Override
+    <T extends IO>T create(String id, IOType ioType) throws Exception;
 
-    /**
-     * <p>digitalOutput.</p>
-     *
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderException if any.
-     */
-    default <T extends DigitalOutputProvider> T digitalOutput() throws ProviderException{
-        return this.provider(IOType.DIGITAL_OUTPUT);
-    }
+    // ------------------------------------------------------------------------
+    // DESCRIPTOR
+    // ------------------------------------------------------------------------
 
-    /**
-     * <p>ain.</p>
-     *
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderException if any.
-     */
-    default <T extends AnalogInputProvider> T ain() throws ProviderException{
-        return analogInput();
-    }
-
-    /**
-     * <p>aout.</p>
-     *
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderException if any.
-     */
-    default <T extends AnalogOutputProvider> T aout() throws ProviderException{
-        return analogOutput();
-    }
-
-    /**
-     * <p>din.</p>
-     *
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderException if any.
-     */
-    default <T extends DigitalInputProvider> T din() throws ProviderException{
-        return digitalInput();
-    }
-
-    /**
-     * <p>dout.</p>
-     *
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderException if any.
-     */
-    default <T extends DigitalOutputProvider> T dout() throws ProviderException{
-        return digitalOutput();
-    }
-
-    /**
-     * <p>pwm.</p>
-     *
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderException if any.
-     */
-    default <T extends PwmProvider> T pwm() throws ProviderException{
-        return this.provider(IOType.PWM);
-    }
-
-    /**
-     * <p>spi.</p>
-     *
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderException if any.
-     */
-    default <T extends SpiProvider> T spi() throws ProviderException{
-        return this.provider(IOType.SPI);
-    }
-
-    /**
-     * <p>i2c.</p>
-     *
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderException if any.
-     */
-    default <T extends I2CProvider> T i2c() throws ProviderException{
-        return this.provider(IOType.I2C);
-    }
-
-    /**
-     * <p>serial.</p>
-     *
-     * @param <T> a T object.
-     * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderException if any.
-     */
-    default <T extends SerialProvider> T serial() throws ProviderException{
-        return this.provider(IOType.SERIAL);
-    }
-
+    /** {@inheritDoc} */
     /**
      * <p>describe.</p>
      *

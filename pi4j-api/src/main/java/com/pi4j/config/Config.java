@@ -27,6 +27,8 @@ package com.pi4j.config;
  * #L%
  */
 
+import java.util.Map;
+
 /**
  * <p>Config interface.</p>
  *
@@ -41,6 +43,21 @@ public interface Config<CONFIG_TYPE> {
     /** Constant <code>DESCRIPTION_KEY="description"</code> */
     String DESCRIPTION_KEY = "description";
 
+    String INHERIT_KEY = "inherit";
+
+    /**
+     * <p>inheritProperties</p>
+     *
+     * @return a {@link java.lang.Boolean} object.
+     */
+    Boolean inheritProperties();
+
+    /**
+     * Underlying raw configuration properties.
+     * @return a {@link java.util.Map<String,String>} of raw property keys and string values.
+     */
+    Map<String,String> properties();
+
     /**
      * <p>id.</p>
      *
@@ -54,13 +71,6 @@ public interface Config<CONFIG_TYPE> {
      * @return a {@link java.lang.String} object.
      */
     String name();
-    /**
-     * <p>name.</p>
-     *
-     * @param name a {@link java.lang.String} object.
-     * @return a CONFIG_TYPE object.
-     */
-    CONFIG_TYPE name(String name);
 
     /**
      * <p>description.</p>
@@ -68,13 +78,6 @@ public interface Config<CONFIG_TYPE> {
      * @return a {@link java.lang.String} object.
      */
     String description();
-    /**
-     * <p>description.</p>
-     *
-     * @param description a {@link java.lang.String} object.
-     * @return a CONFIG_TYPE object.
-     */
-    CONFIG_TYPE description(String description);
 
     /**
      * <p>validate.</p>
@@ -104,21 +107,5 @@ public interface Config<CONFIG_TYPE> {
      */
     default String getDescription(){
         return this.description();
-    }
-    /**
-     * <p>setName.</p>
-     *
-     * @param name a {@link java.lang.String} object.
-     */
-    default void setName(String name){
-        this.name(name);
-    }
-    /**
-     * <p>setDescription.</p>
-     *
-     * @param description a {@link java.lang.String} object.
-     */
-    default void setDescription(String description){
-        this.description(description);
     }
 }

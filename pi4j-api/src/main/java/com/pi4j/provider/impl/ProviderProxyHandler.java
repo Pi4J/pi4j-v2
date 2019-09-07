@@ -27,12 +27,16 @@ package com.pi4j.provider.impl;
  * #L%
  */
 
+import com.pi4j.config.ConfigBuilder;
 import com.pi4j.io.IO;
 import com.pi4j.io.IOConfig;
+import com.pi4j.io.IOType;
 import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.provider.Provider;
 import com.pi4j.runtime.Runtime;
+import com.pi4j.util.PropertiesUtil;
 import com.pi4j.util.ReflectionUtil;
+import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,10 +44,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <p>ProviderProxyHandler class.</p>
@@ -91,12 +92,37 @@ public class ProviderProxyHandler implements InvocationHandler {
 
         // we need to intercept the "create(IOConfig config)" method with the single IOConfig type argument
         if(args != null && args.length == 1 && args[0] instanceof IOConfig) {
-            IOConfig config = (IOConfig) args[0];
-            //System.out.println("-->> PROVIDER [" +  provider.id() + "] CREATE IO INSTANCE: " + config.id());
+            IOConfig ioConfig = (IOConfig) args[0];
+            //System.out.println("-->> PROVIDER [" +  provider.id() + "] CREATE IO INSTANCE: " + ioConfig.id());
+
+            // if the configuration object allow inherited properties, then
+            // we can augment the config with additional properties now
+            if(ioConfig.inheritProperties() && StringUtil.isNotNullOrEmpty(ioConfig.id())){
+
+                // get additional properties that may be applicable/eligible for this IO instance
+                Map<String,String> inheritedProperties = PropertiesUtil.subKeys(
+                        this.runtime.context().properties().all(), ioConfig.id());
+
+                // if there are any additional properties, then we will create a new IO config
+                // based on the existing IO config properties and these supplemental properties
+                if(!inheritedProperties.isEmpty()) {
+                    IOType ioType = IOType.getByConfigClass(ioConfig.getClass());
+
+                    // create a new IO builder using the existing IO config properties
+                    // augment the build with additional properties from the context config properties
+                    ConfigBuilder ioBuilder = ioType.newConfigBuilder();
+                    ioBuilder.load(inheritedProperties);   // load "inheritedProperties" first
+                    ioBuilder.load(ioConfig.properties()); // load "original" IO properties last, so that these will override
+
+                    // replace the existing IO config object with the newly created one
+                    ioConfig = (IOConfig)ioBuilder.build();
+                    args[0]  = ioConfig;
+                }
+            }
 
             // check to see if this IO instance is already registered in the IO Registry
-            if(runtime.registry().exists(config.id()))
-                throw new IOAlreadyExistsException(config.id());
+            if(runtime.registry().exists(ioConfig.id()))
+                throw new IOAlreadyExistsException(ioConfig.id());
 
             // delegate method invocation to real provider instance to create real IO instance
             IO instance = (IO)method.invoke(provider, args);

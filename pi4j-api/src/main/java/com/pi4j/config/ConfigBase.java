@@ -30,6 +30,8 @@ package com.pi4j.config;
 import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
 import com.pi4j.util.StringUtil;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -44,6 +46,8 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
     protected String id = null;
     protected String name = null;
     protected String description = null;
+    protected Map<String,String> properties = new HashMap<>();
+    protected Boolean inheritProperties = true;
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -57,6 +61,8 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
      * @param properties a {@link java.util.Map} object.
      */
     protected ConfigBase(Map<String,String> properties){
+        // add all properties to this config object
+        this.properties.putAll(properties);
 
         // load required 'id' property
         if(properties.containsKey(ID_KEY))
@@ -69,6 +75,21 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
         // load optional 'description' property
         if(properties.containsKey(DESCRIPTION_KEY))
             this.description = properties.get(DESCRIPTION_KEY);
+
+        // load optional 'inherit' property
+        if(properties.containsKey(INHERIT_KEY))
+            this.inheritProperties = Boolean.valueOf(properties.get(INHERIT_KEY));
+    }
+
+    @Override
+    public Boolean inheritProperties() {
+        return this.inheritProperties;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Map<String, String> properties() {
+        return Collections.unmodifiableMap(this.properties);
     }
 
     /** {@inheritDoc} */
@@ -85,22 +106,8 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
 
     /** {@inheritDoc} */
     @Override
-    public CONFIG_TYPE name(String name){
-        this.name = name;
-        return (CONFIG_TYPE) this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public String description() {
         return this.description;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CONFIG_TYPE description(String description){
-        this.description = description;
-        return (CONFIG_TYPE) this;
     }
 
     /** {@inheritDoc} */

@@ -27,8 +27,6 @@ package com.pi4j.io;
  * #L%
  */
 
-import com.pi4j.config.Config;
-import com.pi4j.config.ConfigBuilder;
 import com.pi4j.io.gpio.analog.*;
 import com.pi4j.io.gpio.digital.*;
 import com.pi4j.io.i2c.I2CConfig;
@@ -67,13 +65,13 @@ public enum IOType {
 
     private Class<? extends Provider> providerClass;
     private Class<? extends IO> ioClass;
-    private Class<? extends Config> configClass;
-    private Class<? extends ConfigBuilder> configBuilderClass;
+    private Class<? extends IOConfig> configClass;
+    private Class<? extends IOConfigBuilder> configBuilderClass;
 
     IOType(Class<? extends Provider> providerClass,
            Class<? extends IO> ioClass,
-           Class<? extends Config> configClass,
-           Class<? extends ConfigBuilder> configBuilderClass) {
+           Class<? extends IOConfig> configClass,
+           Class<? extends IOConfigBuilder> configBuilderClass) {
         this.providerClass = providerClass;
         this.ioClass = ioClass;
         this.configClass = configClass;
@@ -101,7 +99,7 @@ public enum IOType {
      *
      * @return a {@link java.lang.Class} object.
      */
-    public Class<? extends Config> getConfigClass() {
+    public Class<? extends IOConfig> getConfigClass() {
         return configClass;
     }
 
@@ -110,11 +108,11 @@ public enum IOType {
      *
      * @return a {@link java.lang.Class} object.
      */
-    public Class<? extends ConfigBuilder> getConfigBuilderClass() {
+    public Class<? extends IOConfigBuilder> getConfigBuilderClass() {
         return configBuilderClass;
     }
 
-    public <CB extends ConfigBuilder>CB newConfigBuilder() throws Exception {
+    public <CB extends IOConfigBuilder>CB newConfigBuilder() throws Exception {
         Method newInstance = getConfigBuilderClass().getMethod("newInstance");
         return (CB)newInstance.invoke(null);
     }
@@ -165,7 +163,7 @@ public enum IOType {
      * @param type a {@link com.pi4j.io.IOType} object.
      * @return a {@link java.lang.Class} object.
      */
-    public static Class<? extends Config> getConfigClass(IOType type){
+    public static Class<? extends IOConfig> getConfigClass(IOType type){
         for(var typeInstance : IOType.values()){
             if(typeInstance.equals(type)){
                 return typeInstance.getConfigClass();
@@ -245,7 +243,7 @@ public enum IOType {
      * @param configClass a {@link java.lang.Class} object.
      * @return a {@link com.pi4j.io.IOType} object.
      */
-    public static IOType getByConfigClass(Class<? extends Config> configClass){
+    public static IOType getByConfigClass(Class<? extends IOConfig> configClass){
         for(var type : IOType.values()){
             if(type.getConfigClass().isAssignableFrom(configClass)){
                 return type;

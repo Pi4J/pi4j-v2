@@ -72,6 +72,24 @@ public class ProviderNotFoundException extends ProviderException {
     /**
      * Alternate Constructor
      *
+     * @param providerId a {@link java.lang.String} object.
+     */
+    public ProviderNotFoundException(String providerId, IOType ioType){
+        super("Pi4J provider [" + providerId + "] of type [" + ioType + "] could not be found.  Please include this 'provider' JAR in the classpath.");
+    }
+
+    /**
+     * Alternate Constructor
+     *
+     * @param providerId a {@link java.lang.String} object.
+     */
+    public ProviderNotFoundException(String providerId, Class<? extends Provider> providerClass){
+        super("Pi4J provider [" + providerId + "] of class [" + providerClass.getName() + "] could not be found.  Please include this 'provider' JAR in the classpath.");
+    }
+
+    /**
+     * Alternate Constructor
+     *
      * @param providerClass a {@link java.lang.Class} object.
      */
     public ProviderNotFoundException(Class<? extends Provider> providerClass){

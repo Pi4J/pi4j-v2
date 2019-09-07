@@ -301,49 +301,49 @@ public interface Providers extends Describable {
      *
      * @return a {@link com.pi4j.provider.ProviderGroup} object.
      */
-    default ProviderGroup<AnalogInputProvider> getAnalogInput() { return analogInput(); }
+    default ProviderGroup<AnalogInputProvider> getAnalogInputProviders() { return analogInput(); }
     /**
      * <p>getAnalogOutput.</p>
      *
      * @return a {@link com.pi4j.provider.ProviderGroup} object.
      */
-    default ProviderGroup<AnalogOutputProvider> getAnalogOutput() { return analogOutput(); }
+    default ProviderGroup<AnalogOutputProvider> getAnalogOutputProviders() { return analogOutput(); }
     /**
      * <p>getDigitalInput.</p>
      *
      * @return a {@link com.pi4j.provider.ProviderGroup} object.
      */
-    default ProviderGroup<DigitalInputProvider> getDigitalInput() { return digitalInput(); }
+    default ProviderGroup<DigitalInputProvider> getDigitalInputProviders() { return digitalInput(); }
     /**
      * <p>getDigitalOutput.</p>
      *
      * @return a {@link com.pi4j.provider.ProviderGroup} object.
      */
-    default ProviderGroup<DigitalOutputProvider> getDigitalOutput() { return digitalOutput(); }
+    default ProviderGroup<DigitalOutputProvider> getDigitalOutputProviders() { return digitalOutput(); }
     /**
      * <p>getPwm.</p>
      *
      * @return a {@link com.pi4j.provider.ProviderGroup} object.
      */
-    default ProviderGroup<PwmProvider> getPwm() { return pwm(); }
+    default ProviderGroup<PwmProvider> getPwmProviders() { return pwm(); }
     /**
      * <p>getSpi.</p>
      *
      * @return a {@link com.pi4j.provider.ProviderGroup} object.
      */
-    default ProviderGroup<SpiProvider> getSpi() { return spi(); }
+    default ProviderGroup<SpiProvider> getSpiProviders() { return spi(); }
     /**
      * <p>getI2C.</p>
      *
      * @return a {@link com.pi4j.provider.ProviderGroup} object.
      */
-    default ProviderGroup<I2CProvider> getI2C() { return i2c(); }
+    default ProviderGroup<I2CProvider> getI2CProviders() { return i2c(); }
     /**
      * <p>getSerial.</p>
      *
      * @return a {@link com.pi4j.provider.ProviderGroup} object.
      */
-    default ProviderGroup<SerialProvider> getSerial() { return serial(); }
+    default ProviderGroup<SerialProvider> getSerialProviders() { return serial(); }
     /**
      * <p>getAll.</p>
      *
