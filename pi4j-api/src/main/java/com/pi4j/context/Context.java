@@ -30,7 +30,10 @@ package com.pi4j.context;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
+import com.pi4j.config.Config;
+import com.pi4j.config.ConfigBuilder;
 import com.pi4j.exception.LifecycleException;
+import com.pi4j.io.IO;
 import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.*;
 import com.pi4j.io.gpio.digital.*;
@@ -58,7 +61,10 @@ import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderInterfaceException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 import com.pi4j.registry.Registry;
+import com.pi4j.util.PropertiesUtil;
 import com.pi4j.util.StringUtil;
+
+import java.util.Map;
 
 /**
  * <p>Context interface.</p>
@@ -624,6 +630,107 @@ public interface Context extends Describable {
      */
     default Serial create(SerialConfigBuilder config) throws Exception{
         return create(config.build());
+    }
+
+
+
+
+    default <I extends IO>I create(IOType type, Config config) throws Exception{
+        return (I)provider(type).create(config);
+    }
+
+    default <I extends IO>I create(IOType type, ConfigBuilder builder) throws Exception{
+        return (I)provider(type).create((Config) builder.build());
+    }
+
+//    default <T extends IO>T create(String id, Properties properties) throws Exception {
+//
+//        Map<String,String> keys = PropertiesUtil.subKeys(properties, id);
+//
+//        System.out.println(keys);
+//
+//        if(keys.containsKey("type")){
+//            String type = keys.get("type");
+//            DigitalInputConfig config = DigitalInputConfig.newBuilder().load(keys).build();
+//            return (T)create(config);
+//        }
+//        throw new Pi4JException("Invalid properties to create IO instance [" + id + "]");
+//    }
+
+
+//    default <T extends IO>T create(String id, Map<String,String> properties) throws Exception {
+//
+//        Map<String,String> keys = PropertiesUtil.subKeys(properties, id);
+//
+//        System.out.println(keys);
+//
+//        if(keys.containsKey("type")){
+//            String type = keys.get("type");
+//            DigitalInputConfig config = DigitalInputConfig.newBuilder().load(keys).build();
+//            return (T)create(config);
+//        }
+//        throw new Pi4JException("Invalid properties to create IO instance [" + id + "]");
+//    }
+
+    default <T extends IO>T create(String key) throws Exception {
+        return create(key, this.properties().all());
+    }
+
+    default <T extends IO>T create(IOType type, String id) throws Exception {
+        return create(type, id, this.properties().all());
+    }
+
+    default <T extends IO>T create(String key, Map<String,String> properties) throws Exception {
+
+        Map<String,String> keys = PropertiesUtil.subKeys(properties, key);
+        Provider provider = null;
+
+        // create by IO provider
+        if(keys.containsKey("provider")){
+            String providerId = keys.get("provider");
+            provider = providers().get(providerId);
+            if(provider == null) {
+                throw new ProviderNotFoundException(providerId);
+            }
+        }
+
+        // create by IO TYPE
+        else if(keys.containsKey("type")){
+            String type = keys.get("type");
+            IOType ioType = IOType.valueOf(type);
+            provider = providers().get(type);
+            if(provider == null) {
+                throw new ProviderNotFoundException(type);
+            }
+        }
+
+        // create IO instance
+        ConfigBuilder builder = provider.type().newConfigBuilder();
+        builder.load(keys);
+        return (T)provider.create((Config) builder.build());
+    }
+
+    default <T extends IO>T create(IOType type, String key, Map<String,String> properties) throws Exception {
+
+        Map<String,String> keys = PropertiesUtil.subKeys(properties, key);
+        Provider provider = null;
+
+        // create by IO provider
+        if(keys.containsKey("provider")){
+            String providerId = keys.get("provider");
+            provider = providers().get(providerId, type);
+        } else {
+            provider = providers().get(type);
+        }
+
+        if(provider == null) {
+            throw new ProviderNotFoundException(type);
+        }
+
+        // create IO instance
+        ConfigBuilder builder =  type.newConfigBuilder();
+        builder.load(keys);
+        return (T)provider.create((Config) builder.build());
     }
 
     /**

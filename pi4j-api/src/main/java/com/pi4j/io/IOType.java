@@ -28,19 +28,25 @@ package com.pi4j.io;
  */
 
 import com.pi4j.config.Config;
+import com.pi4j.config.ConfigBuilder;
 import com.pi4j.io.gpio.analog.*;
 import com.pi4j.io.gpio.digital.*;
 import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.i2c.I2CConfigBuilder;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
+import com.pi4j.io.pwm.PwmConfigBuilder;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
+import com.pi4j.io.serial.SerialConfigBuilder;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.Provider;
+
+import java.lang.reflect.Method;
 
 /**
  * <p>IOType class.</p>
@@ -50,23 +56,28 @@ import com.pi4j.provider.Provider;
  */
 public enum IOType {
 
-    ANALOG_INPUT(AnalogInputProvider.class, AnalogInput.class, AnalogInputConfig.class),
-    ANALOG_OUTPUT(AnalogOutputProvider.class, AnalogOutput.class, AnalogOutputConfig.class),
-    DIGITAL_INPUT(DigitalInputProvider.class, DigitalInput.class, DigitalInputConfig.class),
-    DIGITAL_OUTPUT(DigitalOutputProvider.class, DigitalOutput.class, DigitalOutputConfig.class),
-    PWM(PwmProvider.class, Pwm.class, PwmConfig.class),
-    I2C(I2CProvider.class, com.pi4j.io.i2c.I2C.class, I2CConfig.class),
-    SPI(SpiProvider.class, Spi.class, I2CConfig.class),
-    SERIAL(SerialProvider.class, Serial.class, SerialConfig.class);
+    ANALOG_INPUT(AnalogInputProvider.class, AnalogInput.class, AnalogInputConfig.class, AnalogInputConfigBuilder.class),
+    ANALOG_OUTPUT(AnalogOutputProvider.class, AnalogOutput.class, AnalogOutputConfig.class, AnalogOutputConfigBuilder.class),
+    DIGITAL_INPUT(DigitalInputProvider.class, DigitalInput.class, DigitalInputConfig.class, DigitalInputConfigBuilder.class),
+    DIGITAL_OUTPUT(DigitalOutputProvider.class, DigitalOutput.class, DigitalOutputConfig.class, DigitalOutputConfigBuilder.class),
+    PWM(PwmProvider.class, Pwm.class, PwmConfig.class, PwmConfigBuilder.class),
+    I2C(I2CProvider.class, com.pi4j.io.i2c.I2C.class, I2CConfig.class, I2CConfigBuilder.class),
+    SPI(SpiProvider.class, Spi.class, I2CConfig.class, I2CConfigBuilder.class),
+    SERIAL(SerialProvider.class, Serial.class, SerialConfig.class, SerialConfigBuilder.class);
 
     private Class<? extends Provider> providerClass;
     private Class<? extends IO> ioClass;
     private Class<? extends Config> configClass;
+    private Class<? extends ConfigBuilder> configBuilderClass;
 
-    IOType(Class<? extends Provider> providerClass, Class<? extends IO> ioClass, Class<? extends Config> configClass) {
+    IOType(Class<? extends Provider> providerClass,
+           Class<? extends IO> ioClass,
+           Class<? extends Config> configClass,
+           Class<? extends ConfigBuilder> configBuilderClass) {
         this.providerClass = providerClass;
         this.ioClass = ioClass;
         this.configClass = configClass;
+        this.configBuilderClass = configBuilderClass;
     }
 
     /**
@@ -92,6 +103,20 @@ public enum IOType {
      */
     public Class<? extends Config> getConfigClass() {
         return configClass;
+    }
+
+    /**
+     * <p>Getter for the field <code>configBuilderClass</code>.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
+    public Class<? extends ConfigBuilder> getConfigBuilderClass() {
+        return configBuilderClass;
+    }
+
+    public <CB extends ConfigBuilder>CB newConfigBuilder() throws Exception {
+        Method newInstance = getConfigBuilderClass().getMethod("newInstance");
+        return (CB)newInstance.invoke(null);
     }
 
     /**
