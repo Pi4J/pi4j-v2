@@ -56,7 +56,7 @@ public interface DigitalInputProvider extends DigitalProvider<DigitalInputProvid
      * @throws java.lang.Exception if any.
      */
     default <T extends DigitalInput> T create(Integer address) throws Exception {
-        var config = DigitalInput.newConfigBuilder()
+        var config = DigitalInput.newConfigBuilder(context())
                 .address(address)
                 .build();
         return (T)create(config);
@@ -72,7 +72,7 @@ public interface DigitalInputProvider extends DigitalProvider<DigitalInputProvid
      * @throws java.lang.Exception if any.
      */
     default <T extends DigitalInput> T create(Integer address, String id) throws Exception {
-        var config = DigitalInput.newConfigBuilder()
+        var config = DigitalInput.newConfigBuilder(context())
                 .address(address)
                 .id(id)
                 .build();
@@ -90,7 +90,7 @@ public interface DigitalInputProvider extends DigitalProvider<DigitalInputProvid
      * @throws java.lang.Exception if any.
      */
     default <T extends DigitalInput> T create(Integer address, String id, String name) throws Exception {
-        var config = DigitalInput.newConfigBuilder()
+        var config = DigitalInput.newConfigBuilder(context())
                 .address(address)
                 .id(id)
                 .name(name)
@@ -110,7 +110,7 @@ public interface DigitalInputProvider extends DigitalProvider<DigitalInputProvid
      * @throws java.lang.Exception if any.
      */
     default <T extends DigitalInput> T create(Integer address, String id, String name, String description) throws Exception {
-        var config = DigitalInput.newConfigBuilder()
+        var config = DigitalInput.newConfigBuilder(context())
                 .address(address)
                 .id(id)
                 .name(name)

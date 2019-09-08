@@ -27,6 +27,7 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.impl.DefaultAnalogOutputConfigBuilder;
 
 /**
@@ -63,7 +64,7 @@ public interface AnalogOutputConfigBuilder extends AnalogConfigBuilder<AnalogOut
      *
      * @return a {@link com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder} object.
      */
-    static AnalogOutputConfigBuilder newInstance()  {
-        return DefaultAnalogOutputConfigBuilder.newInstance();
+    static AnalogOutputConfigBuilder newInstance(Context context)  {
+        return DefaultAnalogOutputConfigBuilder.newInstance(context);
     }
 }

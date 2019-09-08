@@ -27,6 +27,7 @@ package com.pi4j.io.i2c;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 import com.pi4j.io.IODataReader;
 import com.pi4j.io.IODataWriter;
@@ -53,8 +54,8 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
      *
      * @return a {@link com.pi4j.io.i2c.I2CConfigBuilder} object.
      */
-    static I2CConfigBuilder newConfigBuilder(){
-        return I2CConfigBuilder.newInstance();
+    static I2CConfigBuilder newConfigBuilder(Context context){
+        return I2CConfigBuilder.newInstance(context);
     }
 
     /**

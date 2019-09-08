@@ -27,6 +27,7 @@ package com.pi4j.io.serial.impl;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.impl.IODeviceConfigBuilderBase;
 import com.pi4j.io.serial.*;
 
@@ -43,8 +44,8 @@ public class DefaultSerialConfigBuilder
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected DefaultSerialConfigBuilder(){
-        super();
+    protected DefaultSerialConfigBuilder(Context context){
+        super(context);
     }
 
     /**
@@ -52,8 +53,8 @@ public class DefaultSerialConfigBuilder
      *
      * @return a {@link com.pi4j.io.serial.SerialConfigBuilder} object.
      */
-    public static SerialConfigBuilder newInstance() {
-        return new DefaultSerialConfigBuilder();
+    public static SerialConfigBuilder newInstance(Context context) {
+        return new DefaultSerialConfigBuilder(context);
     }
 
     /** {@inheritDoc} */
@@ -94,7 +95,7 @@ public class DefaultSerialConfigBuilder
     /** {@inheritDoc} */
     @Override
     public SerialConfig build() {
-        SerialConfig config = new DefaultSerialConfig(this.properties);
+        SerialConfig config = new DefaultSerialConfig(getResolvedProperties());
         return config;
     }
 }

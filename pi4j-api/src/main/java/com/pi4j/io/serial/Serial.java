@@ -27,6 +27,7 @@ package com.pi4j.io.serial;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 import com.pi4j.io.IODataReader;
 import com.pi4j.io.IODataWriter;
@@ -57,8 +58,8 @@ public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCl
      *
      * @return a {@link com.pi4j.io.serial.SerialConfigBuilder} object.
      */
-    static SerialConfigBuilder newConfigBuilder(){
-        return SerialConfigBuilder.newInstance();
+    static SerialConfigBuilder newConfigBuilder(Context context){
+        return SerialConfigBuilder.newInstance(context);
     }
 
     /**

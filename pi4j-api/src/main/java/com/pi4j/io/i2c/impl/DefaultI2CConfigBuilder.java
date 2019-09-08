@@ -27,6 +27,7 @@ package com.pi4j.io.i2c.impl;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CConfigBuilder;
 import com.pi4j.io.impl.IOConfigBuilderBase;
@@ -44,8 +45,8 @@ public class DefaultI2CConfigBuilder
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected DefaultI2CConfigBuilder(){
-        super();
+    protected DefaultI2CConfigBuilder(Context context){
+        super(context);
     }
 
     /**
@@ -53,14 +54,14 @@ public class DefaultI2CConfigBuilder
      *
      * @return a {@link com.pi4j.io.i2c.I2CConfigBuilder} object.
      */
-    public static I2CConfigBuilder newInstance() {
-        return new DefaultI2CConfigBuilder();
+    public static I2CConfigBuilder newInstance(Context context) {
+        return new DefaultI2CConfigBuilder(context);
     }
 
     /** {@inheritDoc} */
     @Override
     public I2CConfig build() {
-        I2CConfig config = new DefaultI2CConfig(properties);
+        I2CConfig config = new DefaultI2CConfig(getResolvedProperties());
         return config;
     }
 

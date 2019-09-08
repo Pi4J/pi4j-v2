@@ -81,7 +81,7 @@ public class AnalogOutputExample {
         var pi4j = Pi4J.newAutoContext();
 
         // create Analog Output configuration
-        var config = AnalogOutput.newConfigBuilder()
+        var config = AnalogOutput.newConfigBuilder(pi4j)
                .id(ANALOG_OUTPUT_PIN_ID)
                .name(ANALOG_OUTPUT_PIN_NAME)
                .address(ANALOG_OUTPUT_PIN)

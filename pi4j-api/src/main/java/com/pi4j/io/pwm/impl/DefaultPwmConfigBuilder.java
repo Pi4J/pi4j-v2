@@ -27,6 +27,7 @@ package com.pi4j.io.pwm.impl;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.impl.IOAddressConfigBuilderBase;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmConfigBuilder;
@@ -51,8 +52,8 @@ public class DefaultPwmConfigBuilder
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected DefaultPwmConfigBuilder(){
-        super();
+    protected DefaultPwmConfigBuilder(Context context){
+        super(context);
     }
 
     /**
@@ -60,8 +61,8 @@ public class DefaultPwmConfigBuilder
      *
      * @return a {@link com.pi4j.io.pwm.PwmConfigBuilder} object.
      */
-    public static PwmConfigBuilder newInstance() {
-        return new DefaultPwmConfigBuilder();
+    public static PwmConfigBuilder newInstance(Context context) {
+        return new DefaultPwmConfigBuilder(context);
     }
 
     /** {@inheritDoc} */
@@ -127,7 +128,7 @@ public class DefaultPwmConfigBuilder
     /** {@inheritDoc} */
     @Override
     public PwmConfig build() {
-        PwmConfig config = new DefaultPwmConfig(this.properties, this.presets);
+        PwmConfig config = new DefaultPwmConfig(getResolvedProperties(), this.presets);
         return config;
     }
 }

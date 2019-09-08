@@ -112,7 +112,7 @@ public class TestSerialUsingTestHarness {
             harness.close();
 
             // create SERIAL config
-            var config  = Serial.newConfigBuilder()
+            var config  = Serial.newConfigBuilder(pi4j)
                     .id("my-serial-port")
                     .name("My Serial Port")
                     .device(SERIAL_DEVICE)

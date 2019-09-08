@@ -27,6 +27,7 @@ package com.pi4j.io;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.*;
 import com.pi4j.io.gpio.digital.*;
 import com.pi4j.io.i2c.I2CConfig;
@@ -112,9 +113,9 @@ public enum IOType {
         return configBuilderClass;
     }
 
-    public <CB extends IOConfigBuilder>CB newConfigBuilder() throws Exception {
-        Method newInstance = getConfigBuilderClass().getMethod("newInstance");
-        return (CB)newInstance.invoke(null);
+    public <CB extends IOConfigBuilder>CB newConfigBuilder(Context context) throws Exception {
+        Method newInstance = getConfigBuilderClass().getMethod("newInstance", Context.class);
+        return (CB)newInstance.invoke(null, context);
     }
 
     /**

@@ -173,7 +173,7 @@ public class TestHardwarePwmUsingTestHarness {
     public void testUnsupportedPin() throws Exception {
 
         // create PWM instance config
-        var config = Pwm.newConfigBuilder()
+        var config = Pwm.newConfigBuilder(pi4j)
                 .address(2)
                 .pwmType(PwmType.HARDWARE)
                 .build();
@@ -216,7 +216,7 @@ public class TestHardwarePwmUsingTestHarness {
         for(int p : pins) {
 
             // create PWM instance config
-            var config = Pwm.newConfigBuilder()
+            var config = Pwm.newConfigBuilder(pi4j)
                     .id("my-pwm-pin-" + p)
                     .name("My Test PWM Pin #" + p)
                     .address(p)

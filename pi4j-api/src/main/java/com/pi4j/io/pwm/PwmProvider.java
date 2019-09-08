@@ -58,7 +58,7 @@ public interface PwmProvider extends Provider<PwmProvider, Pwm, PwmConfig> {
      * @throws java.lang.Exception if any.
      */
     default <T extends Pwm> T create(Integer address) throws Exception {
-        var config = Pwm.newConfigBuilder()
+        var config = Pwm.newConfigBuilder(context())
                 .address(address)
                 .build();
         return (T)create(config);
@@ -74,7 +74,7 @@ public interface PwmProvider extends Provider<PwmProvider, Pwm, PwmConfig> {
      * @throws java.lang.Exception if any.
      */
     default <T extends Pwm> T create(Integer address, String id) throws Exception {
-        var config = Pwm.newConfigBuilder()
+        var config = Pwm.newConfigBuilder(context())
                 .address(address)
                 .id(id)
                 .build();
@@ -92,7 +92,7 @@ public interface PwmProvider extends Provider<PwmProvider, Pwm, PwmConfig> {
      * @throws java.lang.Exception if any.
      */
     default <T extends Pwm> T create(Integer address, String id, String name) throws Exception {
-        var config = Pwm.newConfigBuilder()
+        var config = Pwm.newConfigBuilder(context())
                 .address(address)
                 .id(id)
                 .name(name)
@@ -112,7 +112,7 @@ public interface PwmProvider extends Provider<PwmProvider, Pwm, PwmConfig> {
      * @throws java.lang.Exception if any.
      */
     default <T extends Pwm> T create(Integer address, String id, String name, String description) throws Exception {
-        var config = Pwm.newConfigBuilder()
+        var config = Pwm.newConfigBuilder(context())
                 .address(address)
                 .id(id)
                 .name(name)

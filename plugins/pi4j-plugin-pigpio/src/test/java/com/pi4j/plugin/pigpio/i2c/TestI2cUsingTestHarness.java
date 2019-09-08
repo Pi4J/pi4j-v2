@@ -118,7 +118,7 @@ public class TestI2cUsingTestHarness {
     public void beforeEach() throws Exception {
 
         // create I2C config
-        var config  = I2C.newConfigBuilder()
+        var config  = I2C.newConfigBuilder(null)
                 .id("my-i2c-bus")
                 .name("My I2C Bus")
                 .bus(I2C_BUS)

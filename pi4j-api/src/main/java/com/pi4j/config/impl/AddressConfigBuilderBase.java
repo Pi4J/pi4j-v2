@@ -31,6 +31,7 @@ import com.pi4j.config.AddressConfig;
 import com.pi4j.config.AddressConfigBuilder;
 import com.pi4j.config.Config;
 import com.pi4j.config.ConfigBuilder;
+import com.pi4j.context.Context;
 
 /**
  * <p>Abstract AddressConfigBuilderBase class.</p>
@@ -45,8 +46,8 @@ public abstract class AddressConfigBuilderBase<BUILDER_TYPE extends ConfigBuilde
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected AddressConfigBuilderBase(){
-        super();
+    protected AddressConfigBuilderBase(Context context){
+        super(context);
     }
 
     /** {@inheritDoc} */

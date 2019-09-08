@@ -28,6 +28,7 @@ package com.pi4j.io.spi;
  */
 
 
+import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 import com.pi4j.io.IODataReader;
 import com.pi4j.io.IODataWriter;
@@ -52,8 +53,8 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      *
      * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
      */
-    static SpiConfigBuilder newConfigBuilder(){
-        return SpiConfigBuilder.newInstance();
+    static SpiConfigBuilder newConfigBuilder(Context context){
+        return SpiConfigBuilder.newInstance(context);
     }
 
     /**

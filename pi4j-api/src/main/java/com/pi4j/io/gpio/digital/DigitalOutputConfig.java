@@ -27,6 +27,8 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
+import com.pi4j.context.Context;
+
 /**
  * <p>DigitalOutputConfig interface.</p>
  *
@@ -89,7 +91,7 @@ public interface DigitalOutputConfig extends DigitalConfig<DigitalOutputConfig> 
      *
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder} object.
      */
-    static DigitalOutputConfigBuilder newBuilder()  {
-        return DigitalOutputConfigBuilder.newInstance();
+    static DigitalOutputConfigBuilder newBuilder(Context context)  {
+        return DigitalOutputConfigBuilder.newInstance(context);
     }
 }

@@ -28,6 +28,8 @@ package com.pi4j.io.gpio.digital;
  */
 
 
+import com.pi4j.context.Context;
+
 /**
  * <p>DigitalInputConfig interface.</p>
  *
@@ -74,7 +76,7 @@ public interface DigitalInputConfig extends DigitalConfig<DigitalInputConfig> {
      *
      * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
      */
-    static DigitalInputConfigBuilder newBuilder()  {
-        return DigitalInputConfigBuilder.newInstance();
+    static DigitalInputConfigBuilder newBuilder(Context context)  {
+        return DigitalInputConfigBuilder.newInstance(context);
     }
 }

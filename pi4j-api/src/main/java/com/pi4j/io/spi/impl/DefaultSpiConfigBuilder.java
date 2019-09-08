@@ -27,6 +27,7 @@ package com.pi4j.io.spi.impl;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.impl.IOAddressConfigBuilderBase;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiConfigBuilder;
@@ -45,8 +46,8 @@ public class DefaultSpiConfigBuilder
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected DefaultSpiConfigBuilder(){
-        super();
+    protected DefaultSpiConfigBuilder(Context context){
+        super(context);
     }
 
     /**
@@ -54,8 +55,8 @@ public class DefaultSpiConfigBuilder
      *
      * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
      */
-    public static SpiConfigBuilder newInstance() {
-        return new DefaultSpiConfigBuilder();
+    public static SpiConfigBuilder newInstance(Context context) {
+        return new DefaultSpiConfigBuilder(context);
     }
 
     /** {@inheritDoc} */

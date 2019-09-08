@@ -38,9 +38,9 @@ import com.pi4j.internal.ProviderProvider;
 import com.pi4j.io.IO;
 import com.pi4j.io.IOConfig;
 import com.pi4j.io.IOType;
+import com.pi4j.io.exception.IOException;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
-import com.pi4j.platform.exception.PlatformNotFoundException;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.ProviderInterfaceException;
@@ -190,127 +190,122 @@ public interface Context extends Describable, IOCreator, ProviderProvider {
     // ------------------------------------------------------------------------
 
     @Override
-    default <I extends IO>I create(IOConfig config, IOType type) throws Exception{
-        Provider provider = null;
+    default <I extends IO>I create(IOConfig config, IOType ioType) throws Exception{
 
-        // create by explicitly configured IO provider from IO config
+        // create by explicitly configured IO <PLATFORM> from IO config
         String platformId = config.platform();
         if(StringUtil.isNotNullOrEmpty(platformId)) {
+            // resolve the platform and use it to create the IO instance
             Platform platform = this.platforms().get(platformId);
-            if(platform == null) {
-                throw new PlatformNotFoundException(platformId);
-            }
-            else{
-                // use the resolved platform to create the IO instance
-                return platform.create(config, type);
-            }
+            return platform.create(config, ioType);
         }
 
-        // create by explicitly configured IO provider defined in inherited properties
-        if(config.inheritProperties()) {
-            String platformKey = config.id() + "." + IOConfig.PLATFORM_KEY;
-            if (this.properties().has(platformKey)) {
-                platformId = this.properties().get(platformKey);
-                Platform platform = this.platforms().get(platformId);
-                if (platform == null) {
-                    throw new PlatformNotFoundException(platformId);
-                }
-                else{
-                    // use the resolved platform to create the IO instance
-                    return platform.create(config, type);
-                }
-            }
-        }
-
-        // create by explicitly configured IO provider from IO config
+        // create by explicitly configured IO <PROVIDER> from IO config
         String providerId = config.provider();
         if(StringUtil.isNotNullOrEmpty(providerId)) {
-            provider = this.providers().get(providerId, type);
-            if(provider == null) {
-                throw new ProviderNotFoundException(providerId, type);
-            }
-        }
-
-        // create by explicitly configured IO provider defined in inherited properties
-        else if(config.inheritProperties()) {
-            String providerKey = config.id() + "." + IOConfig.PROVIDER_KEY;
-            if (this.properties().has(providerKey)) {
-                providerId = this.properties().get(providerKey);
-                provider = this.providers().get(providerId, type);
-                if (provider == null) {
-                    throw new ProviderNotFoundException(providerId, type);
-                }
-            }
+            // resolve the provider and use it to create the IO instance
+            Provider provider = this.providers().get(providerId, ioType);
+            return (I)provider.create(config);
         }
 
         // get implicitly defined provider (defined by IO type)
         // (this is the default or platform defined provider for this particular IO type)
-        if(provider == null){
-            provider = this.provider(type);
-            if(provider == null) {
-                throw new ProviderNotFoundException(type);
-            }
+        if(ioType != null) {
+            // resolve the provider and use it to create the IO instance
+            Provider provider = this.provider(ioType);
+            return (I)provider.create(config);
         }
 
-        // create IO instance
-        return (I)provider.create(config);
+        // unable to resolve the IO type and thus unable to create I/O instance
+        throw new IOException("This IO instance [" + config.id() +
+                "] could not be created because it does not define one of the following: 'PLATFORM', 'PROVIDER', or 'I/O TYPE'.");
     }
 
+    @Override
     default <T extends IO>T create(String id) throws Exception {
-        Map<String,String> keys = PropertiesUtil.subKeys(this.properties().all(), id);
         Provider provider = null;
 
-        // create by explicit IO provider
-        if(keys.containsKey("provider")){
-            String providerId = keys.get("provider");
-            provider = providers().get(providerId);
-            if(provider == null) {
-                throw new ProviderNotFoundException(providerId);
-            }
+        // resolve inheritable properties from the context based on the provided 'id' for this IO instance
+        Map<String,String> inheritedProperties = PropertiesUtil.subKeys(this.properties().all(), id);
+
+        // create by explicitly configured IO <PLATFORM> from IO inheritable properties
+        if(inheritedProperties.containsKey("platform")){
+            // resolve the platform and use it to create the IO instance
+            String platformId = inheritedProperties.get("platform");
+            Platform platform = this.platforms().get(platformId);
+            return platform.create(id);
+        }
+
+        // create by explicitly configured IO <PROVIDER> from IO config
+        if(inheritedProperties.containsKey("provider")){
+            String providerId = inheritedProperties.get("provider");
+            // resolve the provider and use it to create the IO instance
+            provider = this.providers().get(providerId);
         }
 
         // create by IO TYPE
         // (use platform provider if one if available for this IO type)
-        else if(keys.containsKey("type")){
-            String type = keys.get("type");
-            IOType ioType = IOType.valueOf(type);
+        if(provider == null && inheritedProperties.containsKey("type")){
+            IOType ioType = IOType.valueOf(inheritedProperties.get("type"));
             provider = provider(ioType);
-            if(provider == null) {
-                throw new ProviderNotFoundException(type);
-            }
         }
 
-        // create IO instance
-        ConfigBuilder builder = provider.type().newConfigBuilder();
+        // validate resolved provider
+        if(provider == null) {
+            // unable to resolve the IO type and thus unable to create I/O instance
+            throw new IOException("This IO instance [" + id +
+                    "] could not be created because it does not define one of the following: 'PLATFORM', 'PROVIDER', or 'I/O TYPE'.");
+        }
+
+        // create IO instance using the provided ID and resolved inherited properties
+        ConfigBuilder builder = provider.type().newConfigBuilder(this);
         builder.id(id);
-        builder.load(keys);
+        builder.load(inheritedProperties);
         return (T)provider.create((Config) builder.build());
     }
 
+    @Override
     default <T extends IO>T create(String id, IOType ioType) throws Exception {
-        Map<String,String> keys = PropertiesUtil.subKeys(this.properties().all(), id);
         Provider provider = null;
 
-        // create by explicit IO provider
-        if(keys.containsKey("provider")){
-            String providerId = keys.get("provider");
-            provider = providers().get(providerId);
-            if(provider == null) {
-                throw new ProviderNotFoundException(providerId);
+        // resolve inheritable properties from the context based on the provided 'id' for this IO instance
+        Map<String,String> inheritedProperties = PropertiesUtil.subKeys(this.properties().all(), id);
+
+        // create by explicitly configured IO <PLATFORM> from IO inheritable properties
+        if(inheritedProperties.containsKey("platform")){
+            // resolve the platform and use it to create the IO instance
+            String platformId = inheritedProperties.get("platform");
+            Platform platform = this.platforms().get(platformId);
+            return platform.create(id, ioType);
+        }
+
+        // create by explicitly configured IO <PROVIDER> from IO config
+        if(inheritedProperties.containsKey("provider")){
+            String providerId = inheritedProperties.get("provider");
+            // resolve the provider and use it to create the IO instance
+            provider = this.providers().get(providerId, ioType);
+
+            // validate IO type from resolved provider
+            if(!ioType.isType(provider.type())){
+                throw new IOException("This IO instance [" + id +
+                        "] could not be created because the resolved provider [" + providerId +
+                        "] does not match the required I/O TYPE [" + ioType.name() + "]");
             }
         }
 
         // create by IO TYPE
         // (use platform provider if one if available for this IO type)
         provider = provider(ioType);
+
+        // validate resolved provider
         if(provider == null) {
             throw new ProviderNotFoundException(ioType);
         }
 
         // create IO instance
-        ConfigBuilder builder = provider.type().newConfigBuilder();
+        ConfigBuilder builder = provider.type().newConfigBuilder(this);
         builder.id(id);
-        builder.load(keys);
+        builder.load(inheritedProperties);
         return (T)provider.create((Config) builder.build());
     }
 

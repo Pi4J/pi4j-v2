@@ -31,6 +31,7 @@ import com.pi4j.config.AddressConfigBuilder;
 import com.pi4j.config.Config;
 import com.pi4j.config.ConfigBuilder;
 import com.pi4j.config.impl.AddressConfigBuilderBase;
+import com.pi4j.context.Context;
 import com.pi4j.io.IOConfig;
 import com.pi4j.io.IOConfigBuilder;
 import com.pi4j.platform.Platform;
@@ -50,8 +51,8 @@ public abstract class IOAddressConfigBuilderBase<BUILDER_TYPE extends ConfigBuil
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected IOAddressConfigBuilderBase(){
-        super();
+    protected IOAddressConfigBuilderBase(Context context){
+        super(context);
     }
 
     /** {@inheritDoc} */

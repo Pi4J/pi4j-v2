@@ -27,6 +27,7 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputConfigBuilder;
 import com.pi4j.io.gpio.digital.PullResistance;
@@ -46,8 +47,8 @@ public class DefaultDigitalInputConfigBuilder
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected DefaultDigitalInputConfigBuilder(){
-        super();
+    protected DefaultDigitalInputConfigBuilder(Context context){
+        super(context);
     }
 
     /**
@@ -55,14 +56,14 @@ public class DefaultDigitalInputConfigBuilder
      *
      * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
      */
-    public static DigitalInputConfigBuilder newInstance() {
-        return new DefaultDigitalInputConfigBuilder();
+    public static DigitalInputConfigBuilder newInstance(Context context) {
+        return new DefaultDigitalInputConfigBuilder(context);
     }
 
     /** {@inheritDoc} */
     @Override
     public DigitalInputConfig build() {
-        DigitalInputConfig config = new DefaultDigitalInputConfig(properties);
+        DigitalInputConfig config = new DefaultDigitalInputConfig(getResolvedProperties());
         return config;
     }
 

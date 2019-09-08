@@ -140,7 +140,7 @@ public class TestDigitalOutputUsingTestHarness {
             harness.setInputPin(p, true);
 
             // create Digital Output instance config
-            var config = DigitalOutput.newConfigBuilder()
+            var config = DigitalOutput.newConfigBuilder(pi4j)
                     .id("my-dout-pin-" + p)
                     .name("My Digital Output Pin #" + p)
                     .address(p)

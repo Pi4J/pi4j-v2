@@ -85,7 +85,7 @@ public class DigitalOutputFromProperties {
         properties.put("name", "DIGI4");
 
         // create a digital output instance using the default digital output provider
-        var config = DigitalOutput.newConfigBuilder()
+        var config = DigitalOutput.newConfigBuilder(pi4j)
                 .load(properties)
                 .build();
         var output = pi4j.dout().create(config);

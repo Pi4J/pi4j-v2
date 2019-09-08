@@ -27,6 +27,7 @@ package com.pi4j.io.serial;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.IODeviceConfigBuilder;
 import com.pi4j.io.serial.impl.DefaultSerialConfigBuilder;
 
@@ -43,8 +44,8 @@ public interface SerialConfigBuilder extends
      *
      * @return a {@link com.pi4j.io.serial.SerialConfigBuilder} object.
      */
-    static SerialConfigBuilder newInstance()  {
-        return DefaultSerialConfigBuilder.newInstance();
+    static SerialConfigBuilder newInstance(Context context)  {
+        return DefaultSerialConfigBuilder.newInstance(context);
     }
 
     /**

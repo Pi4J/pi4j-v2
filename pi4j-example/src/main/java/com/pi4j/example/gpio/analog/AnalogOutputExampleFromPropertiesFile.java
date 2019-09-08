@@ -94,7 +94,7 @@ public class AnalogOutputExampleFromPropertiesFile {
         var pi4j = Pi4J.newAutoContext();
 
         // build the analog output config using the loaded properties, but include a prefix filter
-        var config = AnalogOutput.newConfigBuilder()
+        var config = AnalogOutput.newConfigBuilder(pi4j)
                 .load(prop, "my-analog-example")
                 .build();
         var output = pi4j.analogOutput().create(config);

@@ -27,6 +27,7 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalState;
@@ -44,8 +45,8 @@ public class DefaultDigitalOutputConfigBuilder
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected DefaultDigitalOutputConfigBuilder(){
-        super();
+    protected DefaultDigitalOutputConfigBuilder(Context context){
+        super(context);
     }
 
     /**
@@ -53,8 +54,8 @@ public class DefaultDigitalOutputConfigBuilder
      *
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder} object.
      */
-    public static DigitalOutputConfigBuilder newInstance() {
-        return new DefaultDigitalOutputConfigBuilder();
+    public static DigitalOutputConfigBuilder newInstance(Context context) {
+        return new DefaultDigitalOutputConfigBuilder(context);
     }
 
     /** {@inheritDoc} */
@@ -74,7 +75,7 @@ public class DefaultDigitalOutputConfigBuilder
     /** {@inheritDoc} */
     @Override
     public DigitalOutputConfig build() {
-        DigitalOutputConfig config = new DefaultDigitalOutputConfig(properties);
+        DigitalOutputConfig config = new DefaultDigitalOutputConfig(getResolvedProperties());
         return config;
     }
 }

@@ -111,7 +111,7 @@ public class TestSpiUsingTestHarness {
             harness.close();
 
             // create SPI config
-            var config  = Spi.newConfigBuilder()
+            var config  = Spi.newConfigBuilder(pi4j)
                     .id("my-spi")
                     .name("My SPI")
                     .address(SPI_CHANNEL)

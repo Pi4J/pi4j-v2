@@ -55,7 +55,7 @@ public interface DigitalOutputProvider extends DigitalProvider<DigitalOutputProv
      * @throws java.lang.Exception if any.
      */
     default <T extends DigitalOutput> T create(Integer address) throws Exception {
-        var config = DigitalOutput.newConfigBuilder()
+        var config = DigitalOutput.newConfigBuilder(context())
                 .address(address)
                 .build();
         return (T)create(config);
@@ -71,7 +71,7 @@ public interface DigitalOutputProvider extends DigitalProvider<DigitalOutputProv
      * @throws java.lang.Exception if any.
      */
     default <T extends DigitalOutput> T create(Integer address, String id) throws Exception {
-        var config = DigitalOutput.newConfigBuilder()
+        var config = DigitalOutput.newConfigBuilder(context())
                 .id(id)
                 .address(address)
                 .build();
@@ -89,7 +89,7 @@ public interface DigitalOutputProvider extends DigitalProvider<DigitalOutputProv
      * @throws java.lang.Exception if any.
      */
     default <T extends DigitalOutput> T create(Integer address, String id, String name) throws Exception {
-        var config = DigitalOutput.newConfigBuilder()
+        var config = DigitalOutput.newConfigBuilder(context())
                 .address(address)
                 .id(id)
                 .name(name)
@@ -109,7 +109,7 @@ public interface DigitalOutputProvider extends DigitalProvider<DigitalOutputProv
      * @throws java.lang.Exception if any.
      */
     default <T extends DigitalOutput> T create(Integer address, String id, String name, String description) throws Exception {
-        var config = DigitalOutput.newConfigBuilder()
+        var config = DigitalOutput.newConfigBuilder(context())
                 .address(address)
                 .id(id)
                 .name(name)

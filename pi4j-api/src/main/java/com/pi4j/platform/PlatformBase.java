@@ -31,12 +31,12 @@ import com.pi4j.config.Config;
 import com.pi4j.config.ConfigBuilder;
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
-import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.extension.ExtensionBase;
 import com.pi4j.io.IO;
 import com.pi4j.io.IOConfig;
 import com.pi4j.io.IOType;
+import com.pi4j.io.exception.IOException;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderInterfaceException;
@@ -144,39 +144,19 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     /** {@inheritDoc} */
     @Override
     public <I extends IO>I create(IOConfig config, IOType ioType) throws Exception{
-        Provider provider = null;
 
-        // create by explicitly configured IO provider from IO config
+        // create by explicitly configured IO <PROVIDER> from IO config
         String providerId = config.provider();
         if(StringUtil.isNotNullOrEmpty(providerId)) {
-            provider = this.providers().get(providerId);
-            if(provider == null) {
-                throw new ProviderNotFoundException(providerId, ioType);
-            }
-
-            // create IO instance
+            // resolve the provider and use it to create the IO instance
+            Provider provider = this.provider(providerId);
             return (I)provider.create(config);
-        }
-
-        // create by explicitly configured IO provider defined in inherited properties
-        if(config.inheritProperties()) {
-            String providerKey = config.id() + "." + IOConfig.PROVIDER_KEY;
-            if (this.context.properties().has(providerKey)) {
-                providerId = this.context.properties().get(providerKey);
-                provider = this.providers().get(providerId);
-                if (provider == null) {
-                    throw new ProviderNotFoundException(providerId, ioType);
-                }
-
-                // create IO instance
-                return (I) provider.create(config);
-            }
         }
 
         // get implicitly defined provider (defined by IO type) for this platform
         // (this is the platform defined provider for this particular IO type)
         if(hasProvider(ioType)){
-            provider = this.provider(ioType);
+            Provider provider = this.provider(ioType);
             if(provider == null) {
                 throw new ProviderNotFoundException(ioType);
             }
@@ -190,62 +170,80 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     /** {@inheritDoc} */
     @Override
     public <T extends IO>T create(String id) throws Exception {
-        if(this.context == null) throw new Pi4JException("Unable to create IO instance; this platform has not been 'iniitalized()' with a Pi4J context.");
-        Map<String,String> keys = PropertiesUtil.subKeys(this.context.properties().all(), id);
         Provider provider = null;
 
-        // create by explicit IO provider
-        if(keys.containsKey("provider")){
-            String providerId = keys.get("provider");
-            provider = providers().get(providerId);
-            if(provider == null) {
-                throw new ProviderNotFoundException(providerId);
-            }
+        // validate context
+        if(this.context == null) throw new IOException("Unable to create IO instance; this platform has not been 'initialized()' with a Pi4J context.");
+
+        // resolve inheritable properties from the context based on the provided 'id' for this IO instance
+        Map<String,String> inheritedProperties = PropertiesUtil.subKeys(this.context.properties().all(), id);
+
+        // create by explicitly configured IO <PROVIDER> from IO config
+        if(inheritedProperties.containsKey("provider")){
+            String providerId = inheritedProperties.get("provider");
+            // resolve the provider and use it to create the IO instance
+            provider = this.provider(providerId);
         }
 
         // create by IO TYPE
         // (use platform provider if one if available for this IO type)
-        else if(keys.containsKey("type")){
-            String type = keys.get("type");
-            IOType ioType = IOType.valueOf(type);
+        if(provider == null && inheritedProperties.containsKey("type")){
+            IOType ioType = IOType.valueOf(inheritedProperties.get("type"));
             provider = provider(ioType);
-            if(provider == null) {
-                throw new ProviderNotFoundException(type);
-            }
+        }
+
+        // validate resolved provider
+        if(provider == null) {
+            // unable to resolve the IO type and thus unable to create I/O instance
+            throw new IOException("This IO instance [" + id +
+                    "] could not be created because it does not define one of the following: 'PROVIDER', or 'I/O TYPE'.");
         }
 
         // create IO instance
-        ConfigBuilder builder = provider.type().newConfigBuilder();
-        builder.load(keys);
+        ConfigBuilder builder = provider.type().newConfigBuilder(this.context);
+        builder.id(id);
+        builder.load(inheritedProperties);
         return (T)provider.create((Config) builder.build());
     }
 
     /** {@inheritDoc} */
     @Override
     public <T extends IO>T create(String id, IOType ioType) throws Exception {
-        if(this.context == null) throw new Pi4JException("Unable to create IO instance; this platform has not been 'iniitalized()' with a Pi4J context.");
-        Map<String,String> keys = PropertiesUtil.subKeys(this.context.properties().all(), id);
         Provider provider = null;
 
-        // create by explicit IO provider
-        if(keys.containsKey("provider")){
-            String providerId = keys.get("provider");
-            provider = providers().get(providerId);
-            if(provider == null) {
-                throw new ProviderNotFoundException(providerId);
+        // validate context
+        if(this.context == null) throw new IOException("Unable to create IO instance; this platform has not been 'initialized()' with a Pi4J context.");
+
+        // resolve inheritable properties from the context based on the provided 'id' for this IO instance
+        Map<String,String> inheritedProperties = PropertiesUtil.subKeys(this.context.properties().all(), id);
+
+        // create by explicitly configured IO <PROVIDER> from IO config
+        if(inheritedProperties.containsKey("provider")){
+            String providerId = inheritedProperties.get("provider");
+            // resolve the provider and use it to create the IO instance
+            provider = this.provider(providerId);
+
+            // validate IO type from resolved provider
+            if(!ioType.isType(provider.type())){
+                throw new IOException("This IO instance [" + id +
+                        "] could not be created because the resolved provider [" + providerId +
+                        "] does not match the required I/O TYPE [" + ioType.name() + "]");
             }
         }
 
         // create by IO TYPE
         // (use platform provider if one if available for this IO type)
         provider = provider(ioType);
+
+        // validate resolved provider
         if(provider == null) {
             throw new ProviderNotFoundException(ioType);
         }
 
         // create IO instance
-        ConfigBuilder builder = provider.type().newConfigBuilder();
-        builder.load(keys);
+        ConfigBuilder builder = provider.type().newConfigBuilder(this.context);
+        builder.id(id);
+        builder.load(inheritedProperties);
         return (T)provider.create((Config) builder.build());
     }
 

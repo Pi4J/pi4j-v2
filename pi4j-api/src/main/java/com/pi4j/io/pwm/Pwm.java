@@ -27,6 +27,7 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 import com.pi4j.io.OnOff;
 import com.pi4j.io.exception.IOException;
@@ -46,8 +47,8 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider>, OnOff<Pwm> {
      *
      * @return a {@link com.pi4j.io.pwm.PwmConfigBuilder} object.
      */
-    static PwmConfigBuilder newConfigBuilder(){
-        return PwmConfigBuilder.newInstance();
+    static PwmConfigBuilder newConfigBuilder(Context context){
+        return PwmConfigBuilder.newInstance(context);
     }
 
     /**

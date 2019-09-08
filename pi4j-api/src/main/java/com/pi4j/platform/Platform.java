@@ -125,22 +125,52 @@ public interface Platform extends IOCreator, ProviderProvider, Extension<Platfor
 
     /** {@inheritDoc} */
     default <T extends Provider> T provider(String providerId) throws ProviderNotFoundException {
-        for(Provider provider : providers().values()){
-            if(provider.id().equalsIgnoreCase(providerId)){
-                return (T)provider;
-            }
+
+        // first attempt to resolve by direct unique identifier
+        if(providers().containsKey(providerId)){
+            return (T)providers().get(providerId);
         }
+
+        // additionally attempt to resolve the provider by its class name
+        try {
+            Class providerClass = Class.forName(providerId);
+            if(providerClass != null && Provider.class.isAssignableFrom(providerClass)){
+                // iterate over providers looking for a matching class/interface
+                for(Provider provider : providers().values()) {
+                    if (providerClass.isInstance(provider)) {
+                        return (T) provider;
+                    }
+                }
+            }
+        } catch (ClassNotFoundException e){}
+
+        // unable to resolve provider by 'id' or class name
         throw new ProviderNotFoundException(providerId);
     }
 
     /** {@inheritDoc} */
     @Override
     default boolean hasProvider(String providerId) {
-        for(Provider provider : providers().values()){
-            if(provider.id().equalsIgnoreCase(providerId)){
-                return true;
-            }
+
+        // first attempt to resolve by direct unique identifier
+        if(providers().containsKey(providerId)){
+            return true;
         }
+
+        // additionally attempt to resolve the provider by its class name
+        try {
+            Class providerClass = Class.forName(providerId);
+            if(providerClass != null && Provider.class.isAssignableFrom(providerClass)){
+                // iterate over providers looking for a matching class/interface
+                for(Provider provider : providers().values()) {
+                    if (providerClass.isInstance(provider)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (ClassNotFoundException e){}
+
+        // unable to resolve provider by 'id' or class name
         return false;
     }
 

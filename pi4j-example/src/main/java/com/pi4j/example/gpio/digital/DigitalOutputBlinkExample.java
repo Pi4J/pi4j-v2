@@ -78,7 +78,7 @@ public class DigitalOutputBlinkExample {
         DigitalOutputProvider provider = platform.provider(IOType.DIGITAL_OUTPUT);
 
         // create I/O instance configuration using the config builder
-        DigitalOutputConfig config = DigitalOutputConfig.newBuilder().address(3).build();
+        DigitalOutputConfig config = DigitalOutputConfig.newBuilder(pi4j).address(3).build();
 
         // use factory to create/register  I/O instance
         DigitalOutput output = provider.create(config);

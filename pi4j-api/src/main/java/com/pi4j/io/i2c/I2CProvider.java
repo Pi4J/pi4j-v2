@@ -59,7 +59,7 @@ public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
      * @throws java.lang.Exception if any.
      */
     default <T extends I2C> T create(Integer bus, Integer device) throws Exception {
-        var config = I2C.newConfigBuilder()
+        var config = I2C.newConfigBuilder(context())
                 .bus(bus)
                 .device(device)
                 .build();
@@ -77,7 +77,7 @@ public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
      * @throws java.lang.Exception if any.
      */
     default <T extends I2C> T create(Integer bus, Integer device, String id) throws Exception {
-        var config = I2C.newConfigBuilder()
+        var config = I2C.newConfigBuilder(context())
                 .bus(bus)
                 .device(device)
                 .id(id)
@@ -97,7 +97,7 @@ public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
      * @throws java.lang.Exception if any.
      */
     default <T extends I2C> T create(Integer bus, Integer device, String id, String name) throws Exception {
-        var config = I2C.newConfigBuilder()
+        var config = I2C.newConfigBuilder(context())
                 .bus(bus)
                 .device(device)
                 .id(id)
@@ -119,7 +119,7 @@ public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
      * @throws java.lang.Exception if any.
      */
     default <T extends I2C> T create(Integer bus, Integer device, String id, String name, String description) throws Exception {
-        var config = I2C.newConfigBuilder()
+        var config = I2C.newConfigBuilder(context())
                 .bus(bus)
                 .device(device)
                 .id(id)

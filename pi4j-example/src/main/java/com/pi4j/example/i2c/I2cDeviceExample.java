@@ -73,7 +73,7 @@ public class I2cDeviceExample {
         var pi4j = Pi4J.newAutoContext();
 
         // create I2C config
-        var config  = I2C.newConfigBuilder()
+        var config  = I2C.newConfigBuilder(pi4j)
                 .id("my-i2c-bus")
                 .name("My I2C Bus")
                 .bus(I2C_BUS)

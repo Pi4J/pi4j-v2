@@ -71,7 +71,7 @@ public class PwmPresetsExample {
         var pi4j = Pi4J.newAutoContext();
 
         // create PWM instance config
-        var config = Pwm.newConfigBuilder()
+        var config = Pwm.newConfigBuilder(pi4j)
                 .id("my-pwm-pin")
                 .name("My Test PWM Pin")
                 .address(PWM_PIN)

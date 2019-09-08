@@ -27,6 +27,7 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.impl.DefaultDigitalInputConfigBuilder;
 
 import java.util.concurrent.TimeUnit;
@@ -67,7 +68,7 @@ public interface DigitalInputConfigBuilder extends DigitalConfigBuilder<DigitalI
      *
      * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
      */
-    static DigitalInputConfigBuilder newInstance()  {
-        return DefaultDigitalInputConfigBuilder.newInstance();
+    static DigitalInputConfigBuilder newInstance(Context context)  {
+        return DefaultDigitalInputConfigBuilder.newInstance(context);
     }
 }

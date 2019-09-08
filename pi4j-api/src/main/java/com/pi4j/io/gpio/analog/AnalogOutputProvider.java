@@ -48,7 +48,7 @@ public interface AnalogOutputProvider extends AnalogProvider<AnalogOutputProvide
      * @throws java.lang.Exception if any.
      */
     default <T extends AnalogOutput> T create(Integer address) throws Exception {
-        var builder = AnalogOutputConfigBuilder.newInstance();
+        var builder = AnalogOutputConfigBuilder.newInstance(context());
         builder.address(address);
         return (T)create(builder.build());
     }
@@ -63,7 +63,7 @@ public interface AnalogOutputProvider extends AnalogProvider<AnalogOutputProvide
      * @throws java.lang.Exception if any.
      */
     default <T extends AnalogOutput> T create(Integer address, String id) throws Exception {
-        var builder = AnalogOutputConfigBuilder.newInstance();
+        var builder = AnalogOutputConfigBuilder.newInstance(context());
         builder.id(id).address(address).id(id);
         return (T)create(builder.build());
     }
@@ -79,7 +79,7 @@ public interface AnalogOutputProvider extends AnalogProvider<AnalogOutputProvide
      * @throws java.lang.Exception if any.
      */
     default <T extends AnalogOutput> T create(Integer address, String id, String name) throws Exception {
-        var builder = AnalogOutputConfigBuilder.newInstance();
+        var builder = AnalogOutputConfigBuilder.newInstance(context());
         builder.id(id).address(address).id(id).name(name);
         return (T)create(builder.build());
     }
@@ -96,7 +96,7 @@ public interface AnalogOutputProvider extends AnalogProvider<AnalogOutputProvide
      * @throws java.lang.Exception if any.
      */
     default <T extends AnalogOutput> T create(Integer address, String id, String name, String description) throws Exception {
-        var builder = AnalogOutputConfigBuilder.newInstance();
+        var builder = AnalogOutputConfigBuilder.newInstance(context());
         builder.id(id).address(address).id(id).name(name).description(description);
         return (T)create(builder.build());
     }

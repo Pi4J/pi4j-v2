@@ -27,6 +27,7 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.GpioConfigBuilder;
 import com.pi4j.io.pwm.impl.DefaultPwmConfigBuilder;
 
@@ -42,8 +43,8 @@ public interface PwmConfigBuilder extends GpioConfigBuilder<PwmConfigBuilder, Pw
      *
      * @return a {@link com.pi4j.io.pwm.PwmConfigBuilder} object.
      */
-    static PwmConfigBuilder newInstance()  {
-        return DefaultPwmConfigBuilder.newInstance();
+    static PwmConfigBuilder newInstance(Context context)  {
+        return DefaultPwmConfigBuilder.newInstance(context);
     }
 
     /**

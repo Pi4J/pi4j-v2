@@ -49,7 +49,6 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
         extends ExtensionBase<PROVIDER_TYPE>
         implements Provider<PROVIDER_TYPE, IO_TYPE, CONFIG_TYPE> {
 
-
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     protected Context context;
 
@@ -102,5 +101,11 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
             }
         });
         return (PROVIDER_TYPE)this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Context context(){
+        return this.context;
     }
 }

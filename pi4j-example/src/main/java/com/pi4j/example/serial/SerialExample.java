@@ -74,7 +74,7 @@ public class SerialExample {
         var pi4j = Pi4J.newAutoContext();
 
         // create SERIAL config
-        var config  = Serial.newConfigBuilder()
+        var config  = Serial.newConfigBuilder(pi4j)
                 .id("my-serial-port")
                 .name("My Serial Port")
                 .device("/dev/ttyS0")

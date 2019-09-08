@@ -179,7 +179,7 @@ public class TestSoftwarePwmUsingTestHarness {
         for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
             // create PWM instance config
-            var config = Pwm.newConfigBuilder()
+            var config = Pwm.newConfigBuilder(pi4j)
                     .id("my-pwm-pin-" + p)
                     .name("My Test PWM Pin #" + p)
                     .address(p)

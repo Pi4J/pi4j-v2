@@ -99,7 +99,7 @@ public class GettingStartedExample2 {
         AnalogInput ain1 = pi4j.ain().create(1, "my-custom-name-1");
 
         // create I/O config
-        var config = AnalogInput.newConfigBuilder()
+        var config = AnalogInput.newConfigBuilder(pi4j)
                 .address(2)
                 .name("my-custom-name-2")
                 .build();

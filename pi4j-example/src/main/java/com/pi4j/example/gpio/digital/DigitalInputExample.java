@@ -85,7 +85,7 @@ public class DigitalInputExample {
 
         // create a digital input instance using the default digital input provider
         // we will use the PULL_DOWN argument to set the pin pull-down resistance on this GPIO pin
-        var config = DigitalInput.newConfigBuilder()
+        var config = DigitalInput.newConfigBuilder(pi4j)
                 //.id("my-digital-input")
                 .address(DIGITAL_INPUT_PIN)
                 .pull(PullResistance.PULL_DOWN)

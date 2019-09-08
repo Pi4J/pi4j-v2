@@ -28,8 +28,8 @@ package com.pi4j.io.spi;
  */
 
 import com.pi4j.config.AddressConfig;
+import com.pi4j.context.Context;
 import com.pi4j.io.IOConfig;
-import com.pi4j.io.i2c.I2CConfigBuilder;
 
 /**
  * <p>SpiConfig interface.</p>
@@ -48,8 +48,8 @@ public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig>
      *
      * @return a {@link com.pi4j.io.i2c.I2CConfigBuilder} object.
      */
-    static I2CConfigBuilder newBuilder()  {
-        return I2CConfigBuilder.newInstance();
+    static SpiConfigBuilder newBuilder(Context context)  {
+        return SpiConfigBuilder.newInstance(context);
     }
 
     /**

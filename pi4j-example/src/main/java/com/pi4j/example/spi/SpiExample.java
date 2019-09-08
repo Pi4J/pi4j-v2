@@ -74,7 +74,7 @@ public class SpiExample {
         var pi4j = Pi4J.newAutoContext();
 
         // create SPI config
-        var config  = Spi.newConfigBuilder()
+        var config  = Spi.newConfigBuilder(pi4j)
                 .id("my-spi-device")
                 .name("My SPI Device")
                 .address(SPI_CHANNEL)

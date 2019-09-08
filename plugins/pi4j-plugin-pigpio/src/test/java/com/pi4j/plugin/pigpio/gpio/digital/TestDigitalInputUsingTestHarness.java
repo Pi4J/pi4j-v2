@@ -140,7 +140,7 @@ public class TestDigitalInputUsingTestHarness {
         for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
             // create Digital Input instance config
-            var config = DigitalInput.newConfigBuilder()
+            var config = DigitalInput.newConfigBuilder(pi4j)
                     .id("my-din-pin-" + p)
                     .name("My Digital Input Pin #" + p)
                     .address(p)
@@ -178,7 +178,7 @@ public class TestDigitalInputUsingTestHarness {
         for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
             // create Digital Input instance config
-            var config = DigitalInput.newConfigBuilder()
+            var config = DigitalInput.newConfigBuilder(pi4j)
                     .id("my-din-pin-" + p)
                     .name("My Digital Input Pin #" + p)
                     .address(p)
@@ -208,7 +208,7 @@ public class TestDigitalInputUsingTestHarness {
         for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
             // create Digital Input instance config
-            var config = DigitalInput.newConfigBuilder()
+            var config = DigitalInput.newConfigBuilder(pi4j)
                     .id("my-din-pin-" + p)
                     .name("My Digital Input Pin #" + p)
                     .address(p)
@@ -245,7 +245,7 @@ public class TestDigitalInputUsingTestHarness {
             if(p == 3) continue; // RPi I2C PINS have on-board pull-up resistors
 
             // create Digital Input instance config
-            var config = DigitalInput.newConfigBuilder()
+            var config = DigitalInput.newConfigBuilder(pi4j)
                     .id("my-din-pin-" + p)
                     .name("My Digital Input Pin #" + p)
                     .address(p)

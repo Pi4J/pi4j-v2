@@ -65,10 +65,6 @@ public class AnalogInputRegistrationProcessor implements RegisterProcessor<Analo
     @Override
     public AnalogInput process(Context context, Object instance, Register annotation, Field field) throws Exception {
 
-        // validate that the 'ID' (value) attribute is not empty on this field annotation
-        if (StringUtil.isNullOrEmpty(annotation.value()))
-            throw new AnnotationException("Missing required 'value <ID>' attribute");
-
         // make sure the field instance is null; we can only register our own dynamically created I/O instances
         if(field.get(instance) != null)
             throw new AnnotationException("This @Register annotated instance is not null; it must be NULL " +
@@ -76,8 +72,12 @@ public class AnalogInputRegistrationProcessor implements RegisterProcessor<Analo
                     "use the '@Inject(id)' annotation instead.");
 
         // create I/O config builder
-        var builder = AnalogInputConfigBuilder.newInstance();
-        if (annotation.value() != null) builder.id((annotation).value());
+        var builder = AnalogInputConfigBuilder.newInstance(context);
+        if (StringUtil.isNotNullOrEmpty(annotation.value())) {
+            builder.id((annotation).value());
+        } else {
+            builder.id(field.getName());
+        }
 
         // process all supported optional configuration annotations for this I/O type
         IOConfigAnnotations.processIOConfigAnnotations(builder, field);

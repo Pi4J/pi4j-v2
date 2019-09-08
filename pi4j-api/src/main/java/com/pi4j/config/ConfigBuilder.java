@@ -48,6 +48,9 @@ public interface ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends Builder<CONFIG
      * @return a BUILDER_TYPE object.
      */
     BUILDER_TYPE id(String id);
+
+    String id();
+
     /**
      * <p>name.</p>
      *

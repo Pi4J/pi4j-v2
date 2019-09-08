@@ -27,6 +27,7 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.Output;
 import com.pi4j.io.exception.IOBoundsException;
 import com.pi4j.io.exception.IOIllegalValueException;
@@ -44,8 +45,8 @@ public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig, A
      *
      * @return a {@link com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder} object.
      */
-    static AnalogOutputConfigBuilder newConfigBuilder(){
-        return AnalogOutputConfigBuilder.newInstance();
+    static AnalogOutputConfigBuilder newConfigBuilder(Context context){
+        return AnalogOutputConfigBuilder.newInstance(context);
     }
 
     /**

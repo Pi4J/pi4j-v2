@@ -27,6 +27,7 @@ package com.pi4j.io.gpio.analog.impl;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 import com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder;
 
@@ -43,8 +44,8 @@ public class DefaultAnalogOutputConfigBuilder
     /**
      * PRIVATE CONSTRUCTOR
      */
-    private DefaultAnalogOutputConfigBuilder(){
-        super();
+    private DefaultAnalogOutputConfigBuilder(Context context){
+        super(context);
     }
 
     /**
@@ -52,8 +53,8 @@ public class DefaultAnalogOutputConfigBuilder
      *
      * @return a {@link com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder} object.
      */
-    public static AnalogOutputConfigBuilder newInstance() {
-        return new DefaultAnalogOutputConfigBuilder();
+    public static AnalogOutputConfigBuilder newInstance(Context context) {
+        return new DefaultAnalogOutputConfigBuilder(context);
     }
 
     /** {@inheritDoc} */
@@ -73,7 +74,7 @@ public class DefaultAnalogOutputConfigBuilder
     /** {@inheritDoc} */
     @Override
     public AnalogOutputConfig build() {
-        AnalogOutputConfig config = new DefaultAnalogOutputConfig(properties);
+        AnalogOutputConfig config = new DefaultAnalogOutputConfig(getResolvedProperties());
         return config;
     }
 

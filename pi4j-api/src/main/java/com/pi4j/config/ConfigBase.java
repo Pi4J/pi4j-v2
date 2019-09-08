@@ -48,6 +48,7 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
     protected String description = null;
     protected Map<String,String> properties = new HashMap<>();
     protected Boolean inheritProperties = true;
+    protected boolean inheritedPropertiesLoaded = false;
 
     /**
      * PRIVATE CONSTRUCTOR
