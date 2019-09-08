@@ -27,7 +27,6 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
-import com.pi4j.io.IOConfigBuilder;
 import com.pi4j.io.gpio.GpioConfigBuilder;
 import com.pi4j.io.pwm.impl.DefaultPwmConfigBuilder;
 
@@ -37,9 +36,7 @@ import com.pi4j.io.pwm.impl.DefaultPwmConfigBuilder;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface PwmConfigBuilder extends
-        IOConfigBuilder<PwmConfigBuilder, PwmConfig>,
-        GpioConfigBuilder<PwmConfigBuilder, PwmConfig> {
+public interface PwmConfigBuilder extends GpioConfigBuilder<PwmConfigBuilder, PwmConfig> {
     /**
      * <p>newInstance.</p>
      *

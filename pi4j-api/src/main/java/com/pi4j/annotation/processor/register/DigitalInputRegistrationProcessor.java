@@ -29,13 +29,11 @@ package com.pi4j.annotation.processor.register;
 
 import com.pi4j.annotation.*;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.impl.WithAnnotationProcessor;
+import com.pi4j.annotation.impl.IOConfigAnnotations;
 import com.pi4j.context.Context;
 import com.pi4j.io.binding.DigitalBinding;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfigBuilder;
-import com.pi4j.io.gpio.digital.DigitalInputProvider;
-import com.pi4j.platform.Platform;
 import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,23 +82,11 @@ public class DigitalInputRegistrationProcessor implements RegisterProcessor<Digi
         var builder = DigitalInputConfigBuilder.newInstance();
         if (annotation.value() != null) builder.id((annotation).value());
 
-        // test for required additional annotations
-        if (!field.isAnnotationPresent(Address.class))
-            throw new AnnotationException("Missing required '@Address' annotation for this I/O type.");
+        // process all supported optional configuration annotations for this I/O type
+        IOConfigAnnotations.processIOConfigAnnotations(builder, field);
 
-        // all supported additional annotations for configuring the digital output
-        Address address = field.getAnnotation(Address.class);
-        builder.address(address.value());
-
-        if (field.isAnnotationPresent(Name.class)) {
-            Name name = field.getAnnotation(Name.class);
-            if (name != null) builder.name(name.value());
-        }
-
-        if (field.isAnnotationPresent(Description.class)) {
-            Description description = field.getAnnotation(Description.class);
-            if (description != null) builder.description(description.value());
-        }
+        // process additional optional configuration annotations that
+        // may be unique to this particular I/O instance type
 
         if (field.isAnnotationPresent(Pull.class)) {
             Pull pull = field.getAnnotation(Pull.class);
@@ -112,37 +98,8 @@ public class DigitalInputRegistrationProcessor implements RegisterProcessor<Digi
             if (debounce != null) builder.debounce(debounce.value(), debounce.unit());
         }
 
-        if (field.isAnnotationPresent(InheritProperties.class)) {
-            InheritProperties inheritProperties = field.getAnnotation(InheritProperties.class);
-            if (inheritProperties != null) builder.inheritProperties(inheritProperties.value());
-        }
-
-        // get designated platform to use to register this IO (if provided)
-        Platform platform = null;
-        if (field.isAnnotationPresent(WithPlatform.class)) {
-            platform = WithAnnotationProcessor.getPlatform(context, field);
-        }
-
-        // get designated provider to use to register this IO (if provided)
-        DigitalInputProvider provider = null;
-        if (field.isAnnotationPresent(WithProvider.class)) {
-            provider = WithAnnotationProcessor.getProvider(context, platform, field, DigitalInputProvider.class);
-        }
-
-        DigitalInput input = null;
-
-        // if a provider was found, then create digital input IO instance using that provider
-        if(provider != null){
-            input = provider.create(builder.build());
-        }
-
-        // if no provider was found, then create digital input IO instance using defaults
-        else {
-            if(platform != null)
-                input = platform.provider(DigitalInputProvider.class).create(builder.build());
-            else
-                input = context.provider(DigitalInputProvider.class).create(builder.build());
-        }
+        // use the Pi4J context to create this IO instance
+        DigitalInput input = context.create(builder.build());
 
         // collecting binding members
         List<AddBinding> bindings = new ArrayList<>();

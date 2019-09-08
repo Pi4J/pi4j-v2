@@ -46,6 +46,7 @@ public class IODeviceConfigBase<CONFIG_TYPE extends Config<CONFIG_TYPE>>
 
     // private configuration variables
     protected String provider = null;
+    protected String platform = null;
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -61,10 +62,20 @@ public class IODeviceConfigBase<CONFIG_TYPE extends Config<CONFIG_TYPE>>
     protected IODeviceConfigBase(Map<String,String> properties){
         super(properties);
 
-        // load address property
+        // load provider property
         if(properties.containsKey(PROVIDER_KEY)){
             this.provider = properties.get(PROVIDER_KEY);
         }
+        // load platform property
+        if(properties.containsKey(PLATFORM_KEY)){
+            this.platform = properties.get(PLATFORM_KEY);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String platform() {
+        return this.platform;
     }
 
     /** {@inheritDoc} */

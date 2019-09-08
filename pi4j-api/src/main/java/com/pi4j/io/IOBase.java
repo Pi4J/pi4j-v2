@@ -53,12 +53,6 @@ public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig, P
         return this.provider;
     }
 
-//    @Override
-//    public IO_TYPE provider(Provider provider){
-//        this.provider = provider;
-//        return (IO_TYPE)this;
-//    }
-
     /**
      * <p>Constructor for IOBase.</p>
      *

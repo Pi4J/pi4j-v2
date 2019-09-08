@@ -40,6 +40,7 @@ import com.pi4j.io.IOConfig;
 import com.pi4j.io.IOType;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
+import com.pi4j.platform.exception.PlatformNotFoundException;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.ProviderInterfaceException;
@@ -192,12 +193,53 @@ public interface Context extends Describable, IOCreator, ProviderProvider {
     default <I extends IO>I create(IOConfig config, IOType type) throws Exception{
         Provider provider = null;
 
-        // get explicitly defined provider (if defined)
+        // create by explicitly configured IO provider from IO config
+        String platformId = config.platform();
+        if(StringUtil.isNotNullOrEmpty(platformId)) {
+            Platform platform = this.platforms().get(platformId);
+            if(platform == null) {
+                throw new PlatformNotFoundException(platformId);
+            }
+            else{
+                // use the resolved platform to create the IO instance
+                return platform.create(config, type);
+            }
+        }
+
+        // create by explicitly configured IO provider defined in inherited properties
+        if(config.inheritProperties()) {
+            String platformKey = config.id() + "." + IOConfig.PLATFORM_KEY;
+            if (this.properties().has(platformKey)) {
+                platformId = this.properties().get(platformKey);
+                Platform platform = this.platforms().get(platformId);
+                if (platform == null) {
+                    throw new PlatformNotFoundException(platformId);
+                }
+                else{
+                    // use the resolved platform to create the IO instance
+                    return platform.create(config, type);
+                }
+            }
+        }
+
+        // create by explicitly configured IO provider from IO config
         String providerId = config.provider();
         if(StringUtil.isNotNullOrEmpty(providerId)) {
             provider = this.providers().get(providerId, type);
             if(provider == null) {
                 throw new ProviderNotFoundException(providerId, type);
+            }
+        }
+
+        // create by explicitly configured IO provider defined in inherited properties
+        else if(config.inheritProperties()) {
+            String providerKey = config.id() + "." + IOConfig.PROVIDER_KEY;
+            if (this.properties().has(providerKey)) {
+                providerId = this.properties().get(providerKey);
+                provider = this.providers().get(providerId, type);
+                if (provider == null) {
+                    throw new ProviderNotFoundException(providerId, type);
+                }
             }
         }
 
@@ -240,6 +282,7 @@ public interface Context extends Describable, IOCreator, ProviderProvider {
 
         // create IO instance
         ConfigBuilder builder = provider.type().newConfigBuilder();
+        builder.id(id);
         builder.load(keys);
         return (T)provider.create((Config) builder.build());
     }
@@ -266,6 +309,7 @@ public interface Context extends Describable, IOCreator, ProviderProvider {
 
         // create IO instance
         ConfigBuilder builder = provider.type().newConfigBuilder();
+        builder.id(id);
         builder.load(keys);
         return (T)provider.create((Config) builder.build());
     }

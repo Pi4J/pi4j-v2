@@ -128,8 +128,11 @@ public interface Platforms extends Describable {
     default <T extends Platform> T get(String platformId, Class<T> platformClass) throws PlatformNotFoundException, PlatformTypeException {
         // return the platform instance from the managed platform map that contains the given platform-id and platform-class
         var platform = get(platformId);
-        if(platformClass.isAssignableFrom(platform.getClass())){
-            return (T)platform;
+        if(platformClass == null) {
+            return (T) platform;
+        }
+        if (platformClass.isAssignableFrom(platform.getClass())) {
+            return (T) platform;
         }
         throw new PlatformTypeException(platformId, platformClass);
     }

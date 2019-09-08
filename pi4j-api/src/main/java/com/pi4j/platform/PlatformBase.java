@@ -35,6 +35,7 @@ import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.extension.ExtensionBase;
 import com.pi4j.io.IO;
+import com.pi4j.io.IOConfig;
 import com.pi4j.io.IOType;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
@@ -42,6 +43,7 @@ import com.pi4j.provider.exception.ProviderInterfaceException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 import com.pi4j.provider.impl.ProviderProxyHandler;
 import com.pi4j.util.PropertiesUtil;
+import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,6 +138,52 @@ public abstract class PlatformBase<PLATFORM extends Platform>
             throw new ProviderNotFoundException(providerClass);
         } else {
             throw new ProviderInterfaceException(providerClass);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public <I extends IO>I create(IOConfig config, IOType ioType) throws Exception{
+        Provider provider = null;
+
+        // create by explicitly configured IO provider from IO config
+        String providerId = config.provider();
+        if(StringUtil.isNotNullOrEmpty(providerId)) {
+            provider = this.providers().get(providerId);
+            if(provider == null) {
+                throw new ProviderNotFoundException(providerId, ioType);
+            }
+
+            // create IO instance
+            return (I)provider.create(config);
+        }
+
+        // create by explicitly configured IO provider defined in inherited properties
+        if(config.inheritProperties()) {
+            String providerKey = config.id() + "." + IOConfig.PROVIDER_KEY;
+            if (this.context.properties().has(providerKey)) {
+                providerId = this.context.properties().get(providerKey);
+                provider = this.providers().get(providerId);
+                if (provider == null) {
+                    throw new ProviderNotFoundException(providerId, ioType);
+                }
+
+                // create IO instance
+                return (I) provider.create(config);
+            }
+        }
+
+        // get implicitly defined provider (defined by IO type) for this platform
+        // (this is the platform defined provider for this particular IO type)
+        if(hasProvider(ioType)){
+            provider = this.provider(ioType);
+            if(provider == null) {
+                throw new ProviderNotFoundException(ioType);
+            }
+            // create IO instance
+            return (I)provider.create(config);
+        } else {
+            throw new ProviderNotFoundException(ioType);
         }
     }
 

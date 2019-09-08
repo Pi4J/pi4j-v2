@@ -171,21 +171,7 @@ public interface Platform extends IOCreator, ProviderProvider, Extension<Platfor
     // ------------------------------------------------------------------------
 
     @Override
-    default <I extends IO>I create(IOConfig config, IOType ioType) throws Exception{
-
-        // get default provider (defined by IO type) for this platform
-        // (this is the platform defined provider for this particular IO type)
-        if(hasProvider(ioType)){
-            Provider provider = this.provider(ioType);
-            if(provider == null) {
-                throw new ProviderNotFoundException(ioType);
-            }
-            // create IO instance
-            return (I)provider.create(config);
-        } else {
-            throw new ProviderNotFoundException(ioType);
-        }
-    }
+    <I extends IO>I create(IOConfig config, IOType ioType) throws Exception;
 
     /** {@inheritDoc} */
     @Override

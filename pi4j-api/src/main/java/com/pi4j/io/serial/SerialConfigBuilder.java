@@ -27,8 +27,7 @@ package com.pi4j.io.serial;
  * #L%
  */
 
-import com.pi4j.config.DeviceConfigBuilder;
-import com.pi4j.io.IOConfigBuilder;
+import com.pi4j.io.IODeviceConfigBuilder;
 import com.pi4j.io.serial.impl.DefaultSerialConfigBuilder;
 
 /**
@@ -38,8 +37,7 @@ import com.pi4j.io.serial.impl.DefaultSerialConfigBuilder;
  * @version $Id: $Id
  */
 public interface SerialConfigBuilder extends
-        IOConfigBuilder<SerialConfigBuilder, SerialConfig>,
-        DeviceConfigBuilder<SerialConfigBuilder, SerialConfig> {
+        IODeviceConfigBuilder<SerialConfigBuilder, SerialConfig> {
     /**
      * <p>newInstance.</p>
      *

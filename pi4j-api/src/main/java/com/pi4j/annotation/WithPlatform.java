@@ -41,6 +41,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 public @interface WithPlatform {
-    String id() default "";
+    String value() default "";
     Class type() default void.class;
 }

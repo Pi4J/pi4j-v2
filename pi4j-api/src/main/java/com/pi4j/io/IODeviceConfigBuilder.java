@@ -5,7 +5,7 @@ package com.pi4j.io;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  IO.java
+ * FILENAME      :  IODeviceConfigBuilder.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,55 +27,21 @@ package com.pi4j.io;
  * #L%
  */
 
-import com.pi4j.common.Describable;
-import com.pi4j.common.Identity;
-import com.pi4j.common.Lifecycle;
+import com.pi4j.config.DeviceConfigBuilder;
+import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 
 /**
- * <p>IO interface.</p>
+ * <p>IOConfigBuilder interface.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface IO<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig, PROVIDER_TYPE extends Provider>
-        extends Describable, Lifecycle, Identity {
-
-    /**
-     * <p>config.</p>
-     *
-     * @return a CONFIG_TYPE object.
-     */
-    CONFIG_TYPE config();
-
-    /**
-     * <p>type.</p>
-     *
-     * @return a {@link com.pi4j.io.IOType} object.
-     */
-    default IOType type() { return IOType.getByIOClass(this.getClass()); }
-
-    // TODO :: RECONCILE IDENTITY PROPERTIES BETWEEN IO INSTANCE AND UNDERLYING CONFIG; PROBABLY NEED TO REMOVE THESE SETTERS
-    /**
-     * <p>name.</p>
-     *
-     * @param name a {@link java.lang.String} object.
-     * @return a IO_TYPE object.
-     */
-    IO_TYPE name(String name);
-
-    /**
-     * <p>description.</p>
-     *
-     * @param description a {@link java.lang.String} object.
-     * @return a IO_TYPE object.
-     */
-    IO_TYPE description(String description);
-
-    /**
-     * <p>provider.</p>
-     *
-     * @return a PROVIDER_TYPE object.
-     */
-    PROVIDER_TYPE provider();
+public interface IODeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE>
+        extends IOConfigBuilder<BUILDER_TYPE, CONFIG_TYPE>,
+                DeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
+    BUILDER_TYPE provider(String provider);
+    BUILDER_TYPE provider(Class<? extends Provider> providerClass);
+    BUILDER_TYPE platform(String platform);
+    BUILDER_TYPE platform(Class<? extends Platform> platformClass);
 }
