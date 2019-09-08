@@ -91,7 +91,6 @@ public abstract class ConfigBuilderBase<BUILDER_TYPE extends ConfigBuilder, CONF
 
     /** {@inheritDoc} */
     public BUILDER_TYPE inheritProperties(Boolean allow){
-        this.properties.put(Config.INHERIT_KEY, allow.toString());
         this.inheritProperties = allow;
         return (BUILDER_TYPE) this;
     }

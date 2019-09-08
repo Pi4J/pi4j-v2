@@ -43,15 +43,6 @@ public interface Config<CONFIG_TYPE> {
     /** Constant <code>DESCRIPTION_KEY="description"</code> */
     String DESCRIPTION_KEY = "description";
 
-    String INHERIT_KEY = "inherit";
-
-    /**
-     * <p>inheritProperties</p>
-     *
-     * @return a {@link java.lang.Boolean} object.
-     */
-    Boolean inheritProperties();
-
     /**
      * Underlying raw configuration properties.
      * @return a {@link java.util.Map<String,String>} of raw property keys and string values.

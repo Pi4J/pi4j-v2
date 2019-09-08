@@ -47,8 +47,6 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
     protected String name = null;
     protected String description = null;
     protected Map<String,String> properties = new HashMap<>();
-    protected Boolean inheritProperties = true;
-    protected boolean inheritedPropertiesLoaded = false;
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -76,15 +74,6 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
         // load optional 'description' property
         if(properties.containsKey(DESCRIPTION_KEY))
             this.description = properties.get(DESCRIPTION_KEY);
-
-        // load optional 'inherit' property
-        if(properties.containsKey(INHERIT_KEY))
-            this.inheritProperties = Boolean.valueOf(properties.get(INHERIT_KEY));
-    }
-
-    @Override
-    public Boolean inheritProperties() {
-        return this.inheritProperties;
     }
 
     /** {@inheritDoc} */
