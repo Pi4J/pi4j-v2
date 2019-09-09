@@ -54,6 +54,7 @@ public class DefaultContextBuilder implements ContextBuilder {
     // auto detection flags
     protected boolean autoDetectPlatforms = false;
     protected boolean autoDetectProviders = false;
+    protected boolean autoInject = false;
 
     // default platform identifier
     protected String defaultPlatformId = null;
@@ -135,6 +136,20 @@ public class DefaultContextBuilder implements ContextBuilder {
     @Override
     public ContextBuilder noAutoDetectProviders() {
         this.autoDetectProviders = false;
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public ContextBuilder autoInject() {
+        this.autoInject = true;
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public ContextBuilder noAutoInject() {
+        this.autoInject = false;
         return this;
     }
 
@@ -239,6 +254,9 @@ public class DefaultContextBuilder implements ContextBuilder {
             public boolean autoDetectPlatforms() {
                 return builder.autoDetectPlatforms;
             }
+
+            @Override
+            public boolean autoInject() { return builder.autoInject; }
 
             @Override
             public boolean autoDetectProviders() {

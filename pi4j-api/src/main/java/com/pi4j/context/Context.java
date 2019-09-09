@@ -312,7 +312,7 @@ public interface Context extends Describable, IOCreator, ProviderProvider {
         Provider provider = null;
 
         // resolve inheritable properties from the context based on the provided 'id' for this IO instance
-        Map<String,String> inheritedProperties = PropertiesUtil.subKeys(this.properties().all(), id);
+        Map<String,String> inheritedProperties = PropertiesUtil.subProperties(this.properties().all(), id);
 
         // create by explicitly configured IO <PLATFORM> from IO inheritable properties
         if(inheritedProperties.containsKey("platform")){
@@ -332,7 +332,7 @@ public interface Context extends Describable, IOCreator, ProviderProvider {
         // create by IO TYPE
         // (use platform provider if one if available for this IO type)
         if(provider == null && inheritedProperties.containsKey("type")){
-            IOType ioType = IOType.valueOf(inheritedProperties.get("type"));
+            IOType ioType = IOType.parse(inheritedProperties.get("type"));
             provider = provider(ioType);
         }
 
@@ -355,7 +355,7 @@ public interface Context extends Describable, IOCreator, ProviderProvider {
         Provider provider = null;
 
         // resolve inheritable properties from the context based on the provided 'id' for this IO instance
-        Map<String,String> inheritedProperties = PropertiesUtil.subKeys(this.properties().all(), id);
+        Map<String,String> inheritedProperties = PropertiesUtil.subProperties(this.properties().all(), id);
 
         // create by explicitly configured IO <PLATFORM> from IO inheritable properties
         if(inheritedProperties.containsKey("platform")){

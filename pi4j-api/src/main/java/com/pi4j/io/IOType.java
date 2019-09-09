@@ -28,6 +28,7 @@ package com.pi4j.io;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.io.exception.IOException;
 import com.pi4j.io.gpio.analog.*;
 import com.pi4j.io.gpio.digital.*;
 import com.pi4j.io.i2c.I2CConfig;
@@ -252,4 +253,96 @@ public enum IOType {
         }
         return null;
     }
+
+    /**
+     * <p>parse.</p>
+     *
+     * @param ioType a {@link java.lang.String} object.
+     * @return a {@link com.pi4j.io.IOType} object.
+     */
+    public static IOType parse(String ioType) throws IOException {
+
+        try {
+            IOType iot = IOType.valueOf(ioType);
+            if (iot != null) return iot;
+        }
+        catch (Exception e){}
+
+        // lower case the string for comparisons
+        ioType = ioType.toLowerCase();
+
+        // ANALOG INPUT
+        if(ioType.startsWith("analog.i")) return ANALOG_INPUT;
+        if(ioType.startsWith("analog-i")) return ANALOG_INPUT;
+        if(ioType.startsWith("analog_i")) return ANALOG_INPUT;
+        if(ioType.startsWith("analog i")) return ANALOG_INPUT;
+        if(ioType.equalsIgnoreCase("ain")) return ANALOG_INPUT;
+
+        // ANALOG OUTPUT
+        if(ioType.startsWith("analog.o")) return ANALOG_OUTPUT;
+        if(ioType.startsWith("analog-o")) return ANALOG_OUTPUT;
+        if(ioType.startsWith("analog_o")) return ANALOG_OUTPUT;
+        if(ioType.startsWith("analog o")) return ANALOG_OUTPUT;
+        if(ioType.equalsIgnoreCase("aout")) return ANALOG_OUTPUT;
+
+        // DIGITAL INPUT
+        if(ioType.startsWith("digital.i")) return DIGITAL_INPUT;
+        if(ioType.startsWith("digital-i")) return DIGITAL_INPUT;
+        if(ioType.startsWith("digital_i")) return DIGITAL_INPUT;
+        if(ioType.startsWith("digital i")) return DIGITAL_INPUT;
+        if(ioType.equalsIgnoreCase("din")) return DIGITAL_INPUT;
+
+        // DIGITAL OUTPUT
+        if(ioType.startsWith("digital.o")) return DIGITAL_OUTPUT;
+        if(ioType.startsWith("digital-o")) return DIGITAL_OUTPUT;
+        if(ioType.startsWith("digital_o")) return DIGITAL_OUTPUT;
+        if(ioType.startsWith("digital o")) return DIGITAL_OUTPUT;
+        if(ioType.equalsIgnoreCase("dout")) return DIGITAL_OUTPUT;
+
+        // PWM
+        if(ioType.equalsIgnoreCase("pwm")) return PWM;
+        if(ioType.equalsIgnoreCase("p.w.m")) return PWM;
+        if(ioType.equalsIgnoreCase("p-w-m")) return PWM;
+        if(ioType.equalsIgnoreCase("p_w_m")) return PWM;
+        if(ioType.startsWith("pulse.width")) return PWM;
+        if(ioType.startsWith("pulse-width")) return PWM;
+        if(ioType.startsWith("pulse_width")) return PWM;
+        if(ioType.startsWith("pulse width")) return PWM;
+
+        // I2C
+        if(ioType.equalsIgnoreCase("i²c")) return I2C;
+        if(ioType.equalsIgnoreCase("i2c")) return I2C;
+        if(ioType.equalsIgnoreCase("i.2.c")) return I2C;
+        if(ioType.equalsIgnoreCase("i-2-c")) return I2C;
+        if(ioType.equalsIgnoreCase("i_2_c")) return I2C;
+        if(ioType.equalsIgnoreCase("i 2 c")) return I2C;
+        if(ioType.equalsIgnoreCase("inter.integrated.circuit")) return I2C;
+        if(ioType.equalsIgnoreCase("inter-integrated-circuit")) return I2C;
+        if(ioType.equalsIgnoreCase("inter_integrated_circuit")) return I2C;
+        if(ioType.equalsIgnoreCase("inter integrated circuit")) return I2C;
+
+        // SPI
+        if(ioType.equalsIgnoreCase("spi")) return SPI;
+        if(ioType.equalsIgnoreCase("serial.peripheral.interface")) return SPI;
+        if(ioType.equalsIgnoreCase("serial-peripheral-interface")) return SPI;
+        if(ioType.equalsIgnoreCase("serial_peripheral_interface")) return SPI;
+        if(ioType.equalsIgnoreCase("serial peripheral interface")) return SPI;
+
+        // SERIAL
+        if(ioType.equalsIgnoreCase("serial")) return SERIAL;
+        if(ioType.equalsIgnoreCase("uart")) return SERIAL;
+        if(ioType.equalsIgnoreCase("rs232")) return SERIAL;
+
+
+        throw new IOException("Unknown IO TYPE: " + ioType);
+    }
 }
+
+//    ANALOG_INPUT(AnalogInputProvider.class, AnalogInput.class, AnalogInputConfig.class, AnalogInputConfigBuilder.class),
+//    ANALOG_OUTPUT(AnalogOutputProvider.class, AnalogOutput.class, AnalogOutputConfig.class, AnalogOutputConfigBuilder.class),
+//    DIGITAL_INPUT(DigitalInputProvider.class, DigitalInput.class, DigitalInputConfig.class, DigitalInputConfigBuilder.class),
+//    DIGITAL_OUTPUT(DigitalOutputProvider.class, DigitalOutput.class, DigitalOutputConfig.class, DigitalOutputConfigBuilder.class),
+//    PWM(PwmProvider.class, Pwm.class, PwmConfig.class, PwmConfigBuilder.class),
+//    I2C(I2CProvider.class, com.pi4j.io.i2c.I2C.class, I2CConfig.class, I2CConfigBuilder.class),
+//    SPI(SpiProvider.class, Spi.class, I2CConfig.class, I2CConfigBuilder.class),
+//    SERIAL(SerialProvider.class, Serial.class, SerialConfig.class, SerialConfigBuilder.class);

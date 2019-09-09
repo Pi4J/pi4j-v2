@@ -112,6 +112,32 @@ public interface ContextBuilder extends Builder<Context> {
     ContextBuilder noAutoDetectProviders();
 
     /**
+     * <p>autoInject.</p>
+     *
+     * @return a {@link com.pi4j.context.ContextBuilder} object.
+     */
+    ContextBuilder autoInject();
+    /**
+     * <p>noAutoInject.</p>
+     *
+     * @return a {@link com.pi4j.context.ContextBuilder} object.
+     */
+    ContextBuilder noAutoInject();
+
+    /**
+     * <p>setAutoInject.</p>
+     *
+     * @param autoInject a boolean.
+     * @return a {@link com.pi4j.context.ContextBuilder} object.
+     */
+    default ContextBuilder setAutoInject(boolean autoInject){
+        if(autoInject)
+            return autoInject();
+        else
+            return noAutoInject();
+    }
+
+    /**
      * <p>toConfig.</p>
      *
      * @return a {@link com.pi4j.context.ContextConfig} object.

@@ -187,7 +187,7 @@ public abstract class ConfigBuilderBase<BUILDER_TYPE extends ConfigBuilder, CONF
 
             // get property candidates from context properties that may
             // be applicable/eligible for this IO instance (by 'id')
-            Map<String,String> candidateProperties = PropertiesUtil.subKeys(context.properties().all(), id());
+            Map<String,String> candidateProperties = PropertiesUtil.subProperties(context.properties().all(), id());
 
             // make sure there are eligible candidate and then iterate over the candidates
             // and check each one to make sure the property is not already defined for this

@@ -176,7 +176,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
         if(this.context == null) throw new IOException("Unable to create IO instance; this platform has not been 'initialized()' with a Pi4J context.");
 
         // resolve inheritable properties from the context based on the provided 'id' for this IO instance
-        Map<String,String> inheritedProperties = PropertiesUtil.subKeys(this.context.properties().all(), id);
+        Map<String,String> inheritedProperties = PropertiesUtil.subProperties(this.context.properties().all(), id);
 
         // create by explicitly configured IO <PROVIDER> from IO config
         if(inheritedProperties.containsKey("provider")){
@@ -188,7 +188,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
         // create by IO TYPE
         // (use platform provider if one if available for this IO type)
         if(provider == null && inheritedProperties.containsKey("type")){
-            IOType ioType = IOType.valueOf(inheritedProperties.get("type"));
+            IOType ioType = IOType.parse(inheritedProperties.get("type"));
             provider = provider(ioType);
         }
 
@@ -215,7 +215,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
         if(this.context == null) throw new IOException("Unable to create IO instance; this platform has not been 'initialized()' with a Pi4J context.");
 
         // resolve inheritable properties from the context based on the provided 'id' for this IO instance
-        Map<String,String> inheritedProperties = PropertiesUtil.subKeys(this.context.properties().all(), id);
+        Map<String,String> inheritedProperties = PropertiesUtil.subProperties(this.context.properties().all(), id);
 
         // create by explicitly configured IO <PROVIDER> from IO config
         if(inheritedProperties.containsKey("provider")){

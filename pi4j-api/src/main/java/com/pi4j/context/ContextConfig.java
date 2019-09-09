@@ -77,6 +77,24 @@ public interface ContextConfig {
      */
     default boolean isAutoDetectPlatforms() { return autoDetectPlatforms(); };
     /**
+     * <p>autoInject.</p>
+     *
+     * @return a boolean.
+     */
+    boolean autoInject();
+    /**
+     * <p>getAutoInject.</p>
+     *
+     * @return a boolean.
+     */
+    default boolean getAutoInject() { return autoInject(); };
+    /**
+     * <p>isAutoInject.</p>
+     *
+     * @return a boolean.
+     */
+    default boolean isAutoInject() { return autoInject(); };
+    /**
      * <p>defaultPlatform.</p>
      *
      * @return a {@link java.lang.String} object.

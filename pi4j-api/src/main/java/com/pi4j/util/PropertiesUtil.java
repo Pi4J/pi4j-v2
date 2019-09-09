@@ -27,31 +27,31 @@ package com.pi4j.util;
  * #L%
  */
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 public class PropertiesUtil {
 
-    public static Map<String,String> subKeys(Properties properties, String prefix){
-        final Map<String,String> result = new HashMap<>();
+//    public static Map<String,String> subKeys(Properties properties, String prefix){
+//        final Map<String,String> result = new HashMap<>();
+//
+//        // if a filter was not provided, then load properties without a filter
+//        if(StringUtil.isNullOrEmpty(prefix)) return result;
+//
+//        // normalize prefix
+//        final String pfx = (prefix.endsWith(".")) ? prefix : prefix + ".";
+//
+//        // iterate the properties object and assign any key with the prefix filter to this config
+//        properties.keySet().stream().filter(key -> key.toString().startsWith(pfx)).forEach((key)->{
+//            result.put(key.toString().substring(prefix.length()+1), properties.get(key).toString());
+//        });
+//        return result;
+//    }
 
+    public static Map<String,String> subProperties(Map<String,String> properties, String prefix){
         // if a filter was not provided, then load properties without a filter
-        if(StringUtil.isNullOrEmpty(prefix)) return result;
-
-        // normalize prefix
-        final String pfx = (prefix.endsWith(".")) ? prefix : prefix + ".";
-
-        // iterate the properties object and assign any key with the prefix filter to this config
-        properties.keySet().stream().filter(key -> key.toString().startsWith(pfx)).forEach((key)->{
-            result.put(key.toString().substring(prefix.length()+1), properties.get(key).toString());
-        });
-        return result;
-    }
-
-    public static Map<String,String> subKeys(Map<String,String> properties, String prefix){
-        // if a filter was not provided, then load properties without a filter
-        if(StringUtil.isNullOrEmpty(prefix)) return properties;
+        if(StringUtil.isNullOrEmpty(prefix)) return Collections.emptyMap();
 
         // normalize prefix
         final String pfx = (prefix.endsWith(".")) ? prefix : prefix + ".";
@@ -60,6 +60,21 @@ public class PropertiesUtil {
         // iterate the properties object and assign any key with the prefix filter to this config
         properties.keySet().stream().filter(key -> key.startsWith(pfx)).forEach((key)->{
             result.put(key.substring(prefix.length()+1), properties.get(key));
+        });
+        return result;
+    }
+
+    public static Map<String,String> keysEndsWith(Map<String,String> properties, String suffix){
+        // if a filter was not provided, then load properties without a filter
+        if(StringUtil.isNullOrEmpty(suffix)) return Collections.emptyMap();
+
+        // normalize suffix
+        final String sfx = (suffix.startsWith(".")) ? suffix : "." + suffix;
+        final Map<String,String> result = new HashMap<>();
+
+        // iterate the properties object and assign any key with the prefix filter to this config
+        properties.keySet().stream().filter(key -> key.endsWith(sfx)).forEach((key)->{
+            result.put(key.substring(0, key.length() - suffix.length() - 1), properties.get(key));
         });
         return result;
     }

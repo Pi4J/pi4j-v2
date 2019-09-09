@@ -47,6 +47,7 @@ import com.pi4j.registry.impl.DefaultRuntimeRegistry;
 import com.pi4j.registry.impl.RuntimeRegistry;
 import com.pi4j.runtime.Runtime;
 import com.pi4j.runtime.RuntimeProperties;
+import com.pi4j.util.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -236,6 +237,31 @@ public class DefaultRuntime implements Runtime {
 
             // initialize all platforms
             this.platforms.initialize(platforms);
+
+            // now auto-load any defined I/O injection instances available in the context config
+            try {
+                // ensure that the auto-injection option is enabled for this context
+                if(this.context().config().autoInject()) {
+
+                    // get potential injection candidates
+                    Map<String,String> candidates = PropertiesUtil.keysEndsWith(this.context().properties().all(), "inject");
+
+                    // iterate over injection candidate and determine if it is configured/enabled for injection and perform injection
+                    for (String candidateKey : candidates.keySet()) {
+                        try {
+                            boolean candidateInject =  Boolean.parseBoolean(candidates.getOrDefault(candidateKey, "false"));
+                            if(candidateInject) {
+                                this.context().create(candidateKey);
+                            }
+                        } catch (Exception e) {
+                            logger.error("FAILED TO AUTO-INJECT [{}]; {}'", candidateKey, e.getMessage(), e);
+                            throw new InitializeException(e);
+                        }
+                    }
+                }
+            } catch (Exception e){
+                logger.error(e.getMessage(), e);
+            }
 
         } catch (Exception e) {
             logger.error("failed to 'initialize(); '", e);
