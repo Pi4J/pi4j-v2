@@ -1,4 +1,4 @@
-package com.pi4j.plugin.pigpio.pwm;
+package com.pi4j.plugin.pigpio.test.pwm;
 
 /*-
  * #%L
@@ -35,7 +35,7 @@ import com.pi4j.io.exception.IOException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmType;
 import com.pi4j.library.pigpio.PiGpio;
-import com.pi4j.plugin.pigpio.TestEnv;
+import com.pi4j.plugin.pigpio.test.TestEnv;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
@@ -57,7 +57,7 @@ public class TestHardwarePwmUsingTestHarness {
     @BeforeAll
     public static void initialize() {
         // configure logging output
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        //System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");

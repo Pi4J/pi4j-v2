@@ -28,8 +28,14 @@ import com.pi4j.extension.Extension;
  */
 module pi4j.example {
 
-    // Pi4J API Module
+    // Pi4J MODULES
     requires pi4j.api;
+    requires pi4j.plugin.pigpio;
+
+    // SLF4J MODULES
+    requires org.slf4j;
+    requires org.slf4j.simple;
+
     uses Extension;
     uses com.pi4j.provider.Provider;
 
@@ -52,10 +58,6 @@ module pi4j.example {
     uses com.pi4j.plugin.mock.provider.spi.MockSpiProvider;
     uses com.pi4j.plugin.mock.provider.serial.MockSerial;
     uses com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
-
-    requires pi4j.plugin.pigpio;
-    requires slf4j.simple;
-    requires slf4j.api;
 
     // allow access to classes in the following namespaces for Pi4J annotation processing
     opens com.pi4j.example.gpio.analog;

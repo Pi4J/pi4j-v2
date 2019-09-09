@@ -27,10 +27,13 @@ import com.pi4j.extension.Extension;
  * #L%
  */
 module pi4j.test {
-    requires slf4j.simple;
 
     // Pi4J API
     requires pi4j.api;
+
+    // SLF4J MODULES
+    requires org.slf4j;
+    requires org.slf4j.simple;
 
     uses Extension;
     uses com.pi4j.provider.Provider;
@@ -54,7 +57,6 @@ module pi4j.test {
     uses com.pi4j.plugin.mock.provider.spi.MockSpiProvider;
     uses com.pi4j.plugin.mock.provider.serial.MockSerial;
     uses com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
-
 
     exports com.pi4j.test.platform;
     exports com.pi4j.test.provider;

@@ -29,7 +29,7 @@
 module pi4j.library.pigpio {
 
     // SLF4J
-    requires slf4j.api;
+    requires org.slf4j;
 
     // EXPORTS
     exports  com.pi4j.library.pigpio;

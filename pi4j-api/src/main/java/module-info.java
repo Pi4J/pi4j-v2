@@ -91,5 +91,5 @@ module pi4j.api {
                     com.pi4j.annotation.processor.event.InitializedEventProcessor,
                     com.pi4j.annotation.processor.event.ShutdownEventProcessor;
 
-    requires slf4j.api;
+    requires org.slf4j;
 }

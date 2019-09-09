@@ -1,4 +1,4 @@
-package com.pi4j.plugin.pigpio.gpio.digital;
+package com.pi4j.plugin.pigpio.test.gpio.digital;
 
 /*-
  * #%L
@@ -34,7 +34,7 @@ import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.library.pigpio.PiGpio;
-import com.pi4j.plugin.pigpio.TestEnv;
+import com.pi4j.plugin.pigpio.test.TestEnv;
 import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalOutputProvider;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
@@ -57,7 +57,7 @@ public class TestDigitalOutputUsingTestHarness {
     @BeforeAll
     public static void initialize() {
         // configure logging output
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        //System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");

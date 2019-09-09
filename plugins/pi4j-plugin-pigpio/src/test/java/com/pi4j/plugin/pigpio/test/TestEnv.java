@@ -1,4 +1,4 @@
-package com.pi4j.plugin.pigpio;
+package com.pi4j.plugin.pigpio.test;
 
 /*-
  * #%L

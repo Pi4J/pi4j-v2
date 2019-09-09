@@ -53,7 +53,7 @@ public class RegistryGetIoInstancesByProvider {
     @Before
     public void beforeTest() throws Exception {
 
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
+        System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
 
         // Initialize Pi4J with a manually configured context
         // Disable AUTO-DETECT loading to prevent automatic

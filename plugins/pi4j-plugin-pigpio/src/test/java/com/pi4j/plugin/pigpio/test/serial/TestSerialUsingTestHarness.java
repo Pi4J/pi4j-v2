@@ -1,11 +1,11 @@
-package com.pi4j.plugin.pigpio.spi;
+package com.pi4j.plugin.pigpio.test.serial;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PLUGIN   :: PIGPIO I/O Providers
- * FILENAME      :  TestSpiUsingTestHarness.java
+ * FILENAME      :  TestSerialUsingTestHarness.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -33,11 +33,12 @@ import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.io.spi.Spi;
+import com.pi4j.io.serial.Baud;
+import com.pi4j.io.serial.Serial;
 import com.pi4j.library.pigpio.PiGpio;
-import com.pi4j.plugin.pigpio.TestEnv;
-import com.pi4j.plugin.pigpio.provider.spi.PiGpioSpiProvider;
-import com.pi4j.plugin.pigpio.provider.spi.PiGpioSpiProviderImpl;
+import com.pi4j.plugin.pigpio.test.TestEnv;
+import com.pi4j.plugin.pigpio.provider.serial.PiGpioSerialProvider;
+import com.pi4j.plugin.pigpio.provider.serial.PiGpioSerialProviderImpl;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
@@ -50,13 +51,13 @@ import java.nio.ByteBuffer;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@DisplayName("PIGPIO Plugin :: Test SPI Communication using Test Harness")
+@DisplayName("PIGPIO Plugin :: Test Serial Communication using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TestSpiUsingTestHarness {
+public class TestSerialUsingTestHarness {
 
-    private static int SPI_CHANNEL = 0;
-    private static int BAUD_RATE = 100000;
-    private static int TEST_HARNESS_SPI_CHANNEL = 10;
+    private static String SERIAL_DEVICE = "/dev/ttyS0";
+    private static int BAUD_RATE = Baud._38400.value();
+    private static int TEST_HARNESS_UART = 3;
 
     private static byte SAMPLE_BYTE = 0x0d;
     private static int SAMPLE_WORD = 0xFFFA;
@@ -67,16 +68,16 @@ public class TestSpiUsingTestHarness {
 
     private static PiGpio piGpio;
     private static Context pi4j;
-    private static Spi spi;
+    private static Serial serial;
 
     @BeforeAll
     public static void initialize() {
         // configure logging output
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        //System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestSpiUsingTestHarness.class.getName() + ")");
+        System.out.println("INITIALIZE TEST (" + TestSerialUsingTestHarness.class.getName() + ")");
         System.out.println("************************************************************************");
         System.out.println();
 
@@ -102,21 +103,22 @@ public class TestSpiUsingTestHarness {
             System.out.println();
             System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
 
-            // enable the SPI Echo (Loopback) function on the test harness for these tests
-            harness.enableSpiEcho(TEST_HARNESS_SPI_CHANNEL);
+            // enable the Serial Echo (Loopback) function on the test harness for these tests
+            harness.enableSerialEcho(TEST_HARNESS_UART,  BAUD_RATE);
             System.out.println();
-            System.out.println("ENABLE SPI CHANNEL [" + TEST_HARNESS_SPI_CHANNEL + "] ON TEST HARNESS; BAUD=" + BAUD_RATE);
+            System.out.println("ENABLE SERIAL UART [" + TEST_HARNESS_UART + "] ON TEST HARNESS; BAUD=" + BAUD_RATE);
 
             // close connection to test harness
             harness.close();
 
-            // create SPI config
-            var config  = Spi.newConfigBuilder(pi4j)
-                    .id("my-spi")
-                    .name("My SPI")
-                    .address(SPI_CHANNEL)
-                    .baud(BAUD_RATE)
+            // create SERIAL config
+            var config  = Serial.newConfigBuilder(pi4j)
+                    .id("my-serial-port")
+                    .name("My Serial Port")
+                    .device(SERIAL_DEVICE)
+                    .baud8N1(BAUD_RATE)
                     .build();
+
 
             // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
             piGpio = TestEnv.createPiGpio();
@@ -124,15 +126,15 @@ public class TestSpiUsingTestHarness {
             // initialize the PiGpio library
             piGpio.initialize();
 
-
-            // create SPI provider instance to test with
-            PiGpioSpiProvider provider = new PiGpioSpiProviderImpl(piGpio);
+            // create SERIAL provider instance to test with
+            PiGpioSerialProvider provider = new PiGpioSerialProviderImpl(piGpio);
 
             // initialize Pi4J instance with this single provider
             pi4j = Pi4J.newContextBuilder().add(provider).build();
 
-            // create SPI instance
-            spi = pi4j.create(config);
+            // create serial instance
+            serial = pi4j.create(config);
+
         } catch (IOException e){
             e.printStackTrace();
         } catch (Pi4JException e) {
@@ -146,12 +148,13 @@ public class TestSpiUsingTestHarness {
     public static void terminate() throws IOException, LifecycleException {
         System.out.println();
         System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestSpiUsingTestHarness.class.getName() + ") ");
+        System.out.println("TERMINATE TEST (" + TestSerialUsingTestHarness.class.getName() + ") ");
         System.out.println("************************************************************************");
         System.out.println();
 
-        // close down SPI channel
-        spi.close();;
+        // close down serial
+        //if(serial.isOpen())
+        serial.close();;
 
         // shutdown the PiGpio library
         piGpio.shutdown();
@@ -170,80 +173,81 @@ public class TestSpiUsingTestHarness {
     }
 
     @Test
-    @DisplayName("SPI :: Verify SPI Instance")
+    @DisplayName("SERIAL :: Verify SERIAL Instance")
     @Order(1)
-    public void testSpiInstance() throws Exception {
-        // ensure that the SPI instance is not null;
-        assertNotNull(spi);
+    public void testSerialInstance() throws Exception {
+        // ensure that the SERIAL instance is not null;
+        assertNotNull(serial);
 
         // ensure connection is open
-        assertTrue("SPI INSTANCE IS NOT OPEN", spi.isOpen());
+        assertTrue("SERIAL INSTANCE IS NOT OPEN", serial.isOpen());
     }
 
     @Test
-    @DisplayName("SPI :: Test BYTE (WRITE)")
+    @DisplayName("SERIAL :: Test BYTE (WRITE)")
     @Order(2)
-    public void testSpiSingleByteWrite() throws Exception {
-        // write a single byte to the SPI device
-        spi.write(SAMPLE_BYTE);
+    public void testSerialSingleByteWrite() throws Exception {
+        // write a single byte to the serial device
+        serial.write(SAMPLE_BYTE);
     }
 
     @Test
-    @DisplayName("SPI :: Test BYTE (READ)")
+    @DisplayName("SERIAL :: Test BYTE (READ)")
     @Order(3)
-    public void testSpiSingleByteRead() throws Exception {
-        // read single byte from the SPI device
-        Assert.assertEquals(SAMPLE_BYTE, spi.readByte());
+    public void testSerialSingleByteRead() throws Exception {
+        // read single byte from the serial device
+        Assert.assertEquals(SAMPLE_BYTE, serial.readByte());
     }
 
     @Test
-    @DisplayName("SPI :: Test BYTE-ARRAY (WRITE)")
+    @DisplayName("SERIAL :: Test BYTE-ARRAY (WRITE)")
     @Order(4)
-    public void testSpiByteArrayWrite() throws Exception {
-        // write an array of data bytes to the SPI device
-        spi.write(SAMPLE_BYTE_ARRAY);
+    public void testSerialByteArrayWrite() throws Exception {
+        // write an array of data bytes to the serial device
+        serial.write(SAMPLE_BYTE_ARRAY);
     }
 
     @Test
-    @DisplayName("SPI :: Test BYTE-ARRAY (READ)")
+    @DisplayName("SERIAL :: Test BYTE-ARRAY (READ)")
     @Order(5)
-    public void testSpiByteArrayRead() throws Exception {
-        // read an array of data bytes from the SPI device
-        byte[] byteArray = spi.readNBytes(SAMPLE_BYTE_ARRAY.length);
-        Assert.assertEquals(SAMPLE_BYTE_ARRAY[SAMPLE_BYTE_ARRAY.length-1], byteArray[0]);
+    public void testSerialByteArrayRead() throws Exception {
+        // read an array of data bytes from the serial device
+        byte[] byteArray = serial.readNBytes(SAMPLE_BYTE_ARRAY.length);
+        Assert.assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
     }
 
     @Test
-    @DisplayName("SPI :: Test BYTE-BUFFER (WRITE)")
+    @DisplayName("SERIAL :: Test BYTE-BUFFER (WRITE)")
     @Order(6)
-    public void testSpiByteBufferWrite() throws Exception {
-        // write a buffer of data bytes to the SPI device
-        spi.write(SAMPLE_BUFFER);
+    public void testSerialByteBufferWrite() throws Exception {
+        // write a buffer of data bytes to the serial device
+        serial.write(SAMPLE_BUFFER);
     }
 
     @Test
-    @DisplayName("SPI :: Test BYTE-BUFFER (READ)")
+    @DisplayName("SERIAL :: Test BYTE-BUFFER (READ)")
     @Order(7)
-    public void testSpiByteBufferRead() throws Exception {
-        // read a buffer of data bytes from the SPI device
-        ByteBuffer buffer = spi.readByteBuffer(SAMPLE_BUFFER.capacity());
-        Assert.assertEquals(SAMPLE_BUFFER.get(SAMPLE_BUFFER.capacity()-1), buffer.get(0));
+    public void testSerialByteBufferRead() throws Exception {
+        // read a buffer of data bytes from the serial device
+        ByteBuffer buffer = serial.readByteBuffer(SAMPLE_BUFFER.capacity());
+        Assert.assertArrayEquals(SAMPLE_BUFFER.array(), buffer.array());
     }
 
     @Test
-    @DisplayName("SPI :: Test ASCII STRING (WRITE)")
+    @DisplayName("SERIAL :: Test ASCII STRING (WRITE)")
     @Order(8)
-    public void testSpiAsciiStringWrite() throws Exception {
-        // write a string of data to the SPI device
-        spi.write(SAMPLE_STRING);
+    public void testSerialAsciiStringWrite() throws Exception {
+        // write a string of data to the serial device
+        serial.write(SAMPLE_STRING);
     }
 
     @Test
-    @DisplayName("SPI :: Test ASCII STRING (READ)")
+    @DisplayName("SERIAL :: Test ASCII STRING (READ)")
     @Order(9)
-    public void testSpiAsciiStringRead() throws Exception {
-        // read a string of data from the SPI device
-        String testString = spi.readString(SAMPLE_STRING.length());
-        Assert.assertEquals(SAMPLE_STRING.substring(SAMPLE_STRING.length()-1), testString.substring(0, 1));
+    public void testSerialAsciiStringRead() throws Exception {
+        // read a string of data from the serial device
+        String testString = serial.readString(SAMPLE_STRING.length());
+        Assert.assertEquals(SAMPLE_STRING, testString);
     }
+
 }

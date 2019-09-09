@@ -57,7 +57,7 @@ public class DependencyInjectionNamedProviderTest {
 
     @Before
     public void beforeTest() throws Pi4JException {
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+        System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
         // Initialize Pi4J with a default context
         // enable the AUTO-DETECT (Platforms & Providers) flag

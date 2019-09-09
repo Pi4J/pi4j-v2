@@ -1,4 +1,4 @@
-package com.pi4j.plugin.pigpio.i2c;
+package com.pi4j.plugin.pigpio.test.i2c;
 
 /*-
  * #%L
@@ -33,7 +33,7 @@ import com.pi4j.io.exception.IOReadException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CRegister;
 import com.pi4j.library.pigpio.PiGpio;
-import com.pi4j.plugin.pigpio.TestEnv;
+import com.pi4j.plugin.pigpio.test.TestEnv;
 import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProvider;
 import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProviderImpl;
 import com.pi4j.test.harness.ArduinoTestHarness;
@@ -63,7 +63,7 @@ public class TestI2cUsingTestHarness {
     @BeforeAll
     public static void initialize() {
         // configure logging output
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        //System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");

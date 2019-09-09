@@ -29,7 +29,7 @@
 module pi4j.plugin.pigpio {
     requires pi4j.api;
     requires pi4j.library.pigpio;
-    requires slf4j.api;
+    requires org.slf4j;
 
     uses com.pi4j.extension.Plugin;
 

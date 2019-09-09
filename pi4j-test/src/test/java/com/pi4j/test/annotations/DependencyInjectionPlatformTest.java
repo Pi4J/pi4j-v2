@@ -45,7 +45,7 @@ public class DependencyInjectionPlatformTest {
 //
 //    @Before
 //    public void beforeTest() throws Pi4JException {
-//        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+//        System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 //
 //        // initialize Pi4J with an auto context
 //        // An auto context includes AUTO-DETECT BINDINGS enabled
