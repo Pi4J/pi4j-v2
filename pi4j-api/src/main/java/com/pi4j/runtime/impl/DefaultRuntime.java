@@ -75,8 +75,8 @@ public class DefaultRuntime implements Runtime {
     private final List<Plugin> plugins = new ArrayList<>();
     private boolean isShutdown = false;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private final EventManager<Runtime, ShutdownListener> shutdownEventManager;
-    private final EventManager<Runtime, InitializedListener> initializedEventManager;
+    private final EventManager<Runtime, ShutdownListener, ShutdownEvent> shutdownEventManager;
+    private final EventManager<Runtime, InitializedListener, InitializedEvent> initializedEventManager;
 
     /**
      * <p>newInstance.</p>
@@ -99,8 +99,10 @@ public class DefaultRuntime implements Runtime {
         this.registry = DefaultRuntimeRegistry.newInstance(this);
         this.providers = DefaultRuntimeProviders.newInstance(this);
         this.platforms = DefaultRuntimePlatforms.newInstance(this);
-        this.shutdownEventManager = new EventManager(this);
-        this.initializedEventManager = new EventManager(this);
+        this.shutdownEventManager = new EventManager(this,
+                (EventDelegate<ShutdownListener, ShutdownEvent>) (listener, event) -> listener.onShutdown(event));
+        this.initializedEventManager = new EventManager(this,
+                (EventDelegate<InitializedListener, InitializedEvent>) (listener, event) -> listener.onInitialized(event));
 
         logger.debug("Pi4J runtime context successfully created & initialized.'");
 

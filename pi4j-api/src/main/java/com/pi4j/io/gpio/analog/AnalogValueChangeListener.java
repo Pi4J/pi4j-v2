@@ -35,11 +35,5 @@ package com.pi4j.io.gpio.analog;
  * @version $Id: $Id
  */
 public interface AnalogValueChangeListener extends AnalogListener<AnalogValueChangeEvent> {
-    @Override
-    default void onEvent(AnalogValueChangeEvent event) {
-        // relay raw event to unique handler
-        onAnalogValueChange(event);
-    }
-
     void onAnalogValueChange(AnalogValueChangeEvent event);
 }

@@ -27,12 +27,6 @@ package com.pi4j.event;
  * #L%
  */
 
-public interface InitializedListener extends Listener<InitializedEvent> {
-    @Override
-    default void onEvent(InitializedEvent event) {
-        // relay raw event to initialized handler
-        onInitialized(event);
-    }
-
+public interface InitializedListener extends Listener {
     void onInitialized(InitializedEvent event);
 }

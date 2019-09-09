@@ -28,15 +28,13 @@ package com.pi4j.io.gpio.analog;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.event.EventDelegate;
 import com.pi4j.event.EventManager;
 import com.pi4j.io.binding.AnalogBinding;
 import com.pi4j.io.binding.Bindable;
+import com.pi4j.io.binding.BindingDelegate;
+import com.pi4j.io.binding.BindingManager;
 import com.pi4j.io.gpio.GpioBase;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * <p>Abstract AnalogBase class.</p>
@@ -53,10 +51,10 @@ public abstract class AnalogBase<ANALOG_TYPE
         Bindable<ANALOG_TYPE, AnalogBinding> {
 
     // internal listeners collection
-    protected final EventManager<ANALOG_TYPE, AnalogValueChangeListener> valueChangeEventManager = new EventManager(this);
+    protected final EventManager<ANALOG_TYPE, AnalogValueChangeListener, AnalogValueChangeEvent> valueChangeEventManager;
 
     // internal bindings collection
-    protected List<AnalogBinding> bindings = Collections.synchronizedList(new ArrayList<>());
+    protected BindingManager<ANALOG_TYPE, AnalogBinding, AnalogValueChangeEvent> bindings;
 
     /**
      * <p>Constructor for AnalogBase.</p>
@@ -65,7 +63,19 @@ public abstract class AnalogBase<ANALOG_TYPE
      * @param config a CONFIG_TYPE object.
      */
     public AnalogBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
+
         super(provider, config);
+
+        // create an event manager for analog value change events
+        valueChangeEventManager  = new EventManager(this,
+            (EventDelegate<AnalogValueChangeListener, AnalogValueChangeEvent>)
+                    (listener, event) -> listener.onAnalogValueChange(event));
+
+
+        // create a binding manager for digital state change events
+        bindings = new BindingManager(this,
+            (BindingDelegate<AnalogBinding, AnalogValueChangeEvent>)
+                (binding, event) -> binding.process(event));
     }
 
     /** {@inheritDoc} */
@@ -85,15 +95,13 @@ public abstract class AnalogBase<ANALOG_TYPE
     /** {@inheritDoc} */
     @Override
     public ANALOG_TYPE bind(AnalogBinding... binding) {
-        bindings.addAll(Arrays.asList(binding));
-        return (ANALOG_TYPE)this;
+        return bindings.bind(binding);
     }
 
     /** {@inheritDoc} */
     @Override
     public ANALOG_TYPE unbind(AnalogBinding ... binding) {
-        bindings.removeAll(Arrays.asList(binding));
-        return (ANALOG_TYPE)this;
+        return bindings.unbind(binding);
     }
 
     /**
@@ -103,13 +111,7 @@ public abstract class AnalogBase<ANALOG_TYPE
      */
     protected void dispatch(AnalogValueChangeEvent event){
         valueChangeEventManager.dispatch(event);
-        bindings.forEach((binding) -> {
-            try {
-                binding.process(event);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        bindings.process(event);
     }
 
     /** {@inheritDoc} */

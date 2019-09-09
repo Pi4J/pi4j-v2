@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.digital;
+package com.pi4j.io.binding;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalStateChangeListener.java
+ * FILENAME      :  BindingDelegate.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,13 +27,6 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-
-/**
- * <p>DigitalChangeListener interface.</p>
- *
- * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- * @version $Id: $Id
- */
-public interface DigitalStateChangeListener extends DigitalListener<DigitalStateChangeEvent> {
-    void onDigitalStateChange(DigitalStateChangeEvent event);
+public interface BindingDelegate<BINDING_TYPE, EVENT_TYPE> {
+    void process(BINDING_TYPE binding, EVENT_TYPE event);
 }

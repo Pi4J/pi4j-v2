@@ -28,16 +28,14 @@ package com.pi4j.io.gpio.digital;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.event.EventDelegate;
 import com.pi4j.event.EventManager;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.binding.Bindable;
+import com.pi4j.io.binding.BindingDelegate;
+import com.pi4j.io.binding.BindingManager;
 import com.pi4j.io.binding.DigitalBinding;
 import com.pi4j.io.gpio.GpioBase;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * <p>Abstract DigitalBase class.</p>
@@ -53,10 +51,10 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
         Bindable<DIGITAL_TYPE, DigitalBinding>
 {
     // internal listeners collection
-    protected final EventManager<DIGITAL_TYPE, DigitalStateChangeListener> stateChangeEventManager = new EventManager(this);
+    protected final EventManager<DIGITAL_TYPE, DigitalStateChangeListener, DigitalStateChangeEvent> stateChangeEventManager;
 
     // internal bindings collection
-    protected List<DigitalBinding> bindings = Collections.synchronizedList(new ArrayList<>());
+    protected BindingManager<DIGITAL_TYPE, DigitalBinding, DigitalStateChangeEvent> bindings;
 
     /**
      * <p>Constructor for DigitalBase.</p>
@@ -66,6 +64,15 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
      */
     public DigitalBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
         super(provider,config);
+
+        // create an event manager for digital state change events
+        stateChangeEventManager  = new EventManager(this,
+                (EventDelegate<DigitalStateChangeListener, DigitalStateChangeEvent>)
+                        (listener, event) -> listener.onDigitalStateChange(event));
+
+        // create a binding manager for digital state change events
+        bindings = new BindingManager(this, (BindingDelegate<DigitalBinding, DigitalStateChangeEvent>)
+                (binding, event) -> binding.process(event));
     }
 
     /** {@inheritDoc} */
@@ -85,15 +92,18 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
     /** {@inheritDoc} */
     @Override
     public DIGITAL_TYPE bind(DigitalBinding ... binding) {
-        bindings.addAll(Arrays.asList(binding));
-        return (DIGITAL_TYPE)this;
+        return bindings.bind(binding);
+
+        //bindings.addAll(Arrays.asList(binding));
+        //return (DIGITAL_TYPE)this;
     }
 
     /** {@inheritDoc} */
     @Override
     public DIGITAL_TYPE unbind(DigitalBinding ... binding) {
-        bindings.removeAll(Arrays.asList(binding));
-        return (DIGITAL_TYPE)this;
+        return bindings.unbind(binding);
+        //bindings.removeAll(Arrays.asList(binding));
+        //return (DIGITAL_TYPE)this;
     }
 
     /**
@@ -103,13 +113,7 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
      */
     protected void dispatch(DigitalStateChangeEvent event){
         stateChangeEventManager.dispatch(event);
-        bindings.forEach((binding) -> {
-            try {
-                binding.process(event);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        bindings.process(event);
     }
 
     /** {@inheritDoc} */

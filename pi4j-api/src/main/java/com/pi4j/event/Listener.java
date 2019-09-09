@@ -33,6 +33,6 @@ package com.pi4j.event;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface Listener<EVENT_TYPE extends Event> {
-    void onEvent(EVENT_TYPE event);
+public interface Listener {
+    // MARKET INTERFACE
 }

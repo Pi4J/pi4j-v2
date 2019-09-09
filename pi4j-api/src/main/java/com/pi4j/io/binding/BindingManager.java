@@ -1,11 +1,11 @@
-package com.pi4j.event;
+package com.pi4j.io.binding;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  EventManager.java
+ * FILENAME      :  BindingManager.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -34,41 +34,43 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class EventManager<SOURCE_TYPE, LISTENER_TYPE extends Listener, EVENT_TYPE> {
+public class BindingManager<SOURCE_TYPE, BINDING_TYPE extends Binding, EVENT_TYPE> implements Bindable<SOURCE_TYPE, BINDING_TYPE> {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private final SOURCE_TYPE source;
-    private final Set<LISTENER_TYPE> listeners = new CopyOnWriteArraySet<>();
-    private final EventDelegate<LISTENER_TYPE,EVENT_TYPE> delegate;
+    protected Set<BINDING_TYPE> bindings = new CopyOnWriteArraySet();
+    protected final BindingDelegate<BINDING_TYPE,EVENT_TYPE> delegate;
 
-    public EventManager(SOURCE_TYPE source, EventDelegate<LISTENER_TYPE,EVENT_TYPE> delegate){
+    public BindingManager(SOURCE_TYPE source, BindingDelegate<BINDING_TYPE,EVENT_TYPE> delegate){
         this.source = source;
         this.delegate = delegate;
     }
 
-    public SOURCE_TYPE add(LISTENER_TYPE ... listener){
-        listeners.addAll(List.of(listener));
-        return this.source;
-    }
-
-    public SOURCE_TYPE remove(LISTENER_TYPE ... listener){
-        listeners.removeAll(List.of(listener));
-        return this.source;
-    }
-
     public SOURCE_TYPE clear(){
-        this.listeners.clear();
+        this.bindings.clear();
         return this.source;
     }
 
-    public SOURCE_TYPE dispatch(EVENT_TYPE event){
-        listeners.forEach(listener->{
+    public SOURCE_TYPE process(EVENT_TYPE event){
+        bindings.forEach(binding->{
             try {
-                delegate.dispatch(listener, event);
+                delegate.process(binding, event);
             }
             catch (Exception e){
                 logger.error(e.getMessage(), e);
             }
         });
+        return this.source;
+    }
+
+    @Override
+    public SOURCE_TYPE bind(BINDING_TYPE... binding) {
+        bindings.addAll(List.of(binding));
+        return this.source;
+    }
+
+    @Override
+    public SOURCE_TYPE unbind(BINDING_TYPE... binding) {
+        bindings.removeAll(List.of(binding));
         return this.source;
     }
 }

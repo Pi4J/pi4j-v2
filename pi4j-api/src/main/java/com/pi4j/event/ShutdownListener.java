@@ -27,12 +27,6 @@ package com.pi4j.event;
  * #L%
  */
 
-public interface ShutdownListener extends Listener<ShutdownEvent> {
-    @Override
-    default void onEvent(ShutdownEvent event) {
-        // relay raw event to shutdown handler
-        onShutdown(event);
-    }
-
+public interface ShutdownListener extends Listener {
     void onShutdown(ShutdownEvent event);
 }
