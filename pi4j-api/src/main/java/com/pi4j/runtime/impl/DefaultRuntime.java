@@ -31,6 +31,7 @@ import com.pi4j.annotation.AnnotationEngine;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.impl.DefaultAnnotationEngine;
 import com.pi4j.context.Context;
+import com.pi4j.event.*;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
@@ -52,6 +53,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * <p>DefaultRuntime class.</p>
@@ -61,15 +65,18 @@ import java.util.*;
  */
 public class DefaultRuntime implements Runtime {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private Context context = null;
-    private AnnotationEngine annotationEngine = null;
-    private RuntimeRegistry registry = null;
-    private RuntimeProviders providers = null;
-    private RuntimePlatforms platforms = null;
-    private RuntimeProperties properties = null;
-    private List<Plugin> plugins = new ArrayList<>();
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Context context;
+    private final AnnotationEngine annotationEngine;
+    private final RuntimeRegistry registry;
+    private final RuntimeProviders providers;
+    private final RuntimePlatforms platforms;
+    private final RuntimeProperties properties;
+    private final List<Plugin> plugins = new ArrayList<>();
     private boolean isShutdown = false;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final EventManager<Runtime, ShutdownListener> shutdownEventManager;
+    private final EventManager<Runtime, InitializedListener> initializedEventManager;
 
     /**
      * <p>newInstance.</p>
@@ -92,6 +99,8 @@ public class DefaultRuntime implements Runtime {
         this.registry = DefaultRuntimeRegistry.newInstance(this);
         this.providers = DefaultRuntimeProviders.newInstance(this);
         this.platforms = DefaultRuntimePlatforms.newInstance(this);
+        this.shutdownEventManager = new EventManager(this);
+        this.initializedEventManager = new EventManager(this);
 
         logger.debug("Pi4J runtime context successfully created & initialized.'");
 
@@ -100,7 +109,7 @@ public class DefaultRuntime implements Runtime {
         java.lang.Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 // shutdown Pi4J
-                shutdown();
+                if(!isShutdown) shutdown();
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -148,6 +157,9 @@ public class DefaultRuntime implements Runtime {
             isShutdown = true;
             logger.trace("invoked 'shutdown();'");
             try {
+                // remove shutdown monitoring thread
+                //java.lang.Runtime.getRuntime().removeShutdownHook(this.shutdownThread);
+
                 // remove all I/O instances
                 this.registry.shutdown();
 
@@ -165,16 +177,42 @@ public class DefaultRuntime implements Runtime {
                         logger.error(e.getMessage(), e);
                     }
                 }
+
+                // shutdown executor threads
+                if(!executor.isShutdown()) {
+                    executor.shutdown();
+                }
             } catch (Exception e) {
                 logger.error("failed to 'shutdown(); '", e);
                 throw new ShutdownException(e);
             }
 
             logger.debug("Pi4J context/runtime successfully shutdown.'");
+
+            // notify shutdown event listeners
+            shutdownEventManager.dispatch(new ShutdownEvent(this.context));
+
+            // remove all shutdown event listeners
+            this.shutdownEventManager.clear();
+
         } else{
             logger.debug("Pi4J context/runtime is already shutdown.'");
         }
+
         return this;
+    }
+
+    @Override
+    public Future<Context> asyncShutdown() {
+        return executor.submit(() -> {
+            try {
+                shutdown();
+            }
+            catch (Exception e){
+                logger.error(e.getMessage(), e);
+            }
+            return context;
+        });
     }
 
     /** {@inheritDoc} */
@@ -270,6 +308,56 @@ public class DefaultRuntime implements Runtime {
 
         logger.debug("Pi4J context/runtime successfully initialized.'");
 
+        // notify initialized event listeners
+        notifyInitListeners();
+
         return this;
+    }
+
+    private Future<Context> notifyInitListeners() {
+        return executor.submit(() -> {
+            try {
+                // wait .5 seconds before dispatching event
+                // (allows time to register event listeners)
+                Thread.sleep(500);
+
+                // dispatch event now
+                initializedEventManager.dispatch(new InitializedEvent(this.context));
+            }
+            catch (Exception e){
+                logger.error(e.getMessage(), e);
+            }
+            return context;
+        });
+    }
+
+    @Override
+    public Runtime addListener(ShutdownListener... listener) {
+        return shutdownEventManager.add(listener);
+    }
+
+    @Override
+    public Runtime removeListener(ShutdownListener... listener) {
+        return shutdownEventManager.remove(listener);
+    }
+
+    @Override
+    public Runtime removeAllShutdownListeners() {
+        return shutdownEventManager.clear();
+    }
+
+    @Override
+    public Runtime removeAllInitializedListeners() {
+        return initializedEventManager.clear();
+    }
+
+    @Override
+    public Runtime addListener(InitializedListener... listener) {
+        return initializedEventManager.add(listener);
+    }
+
+    @Override
+    public Runtime removeListener(InitializedListener... listener) {
+        return initializedEventManager.remove(listener);
     }
 }

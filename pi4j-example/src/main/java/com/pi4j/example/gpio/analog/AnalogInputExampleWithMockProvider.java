@@ -28,7 +28,7 @@ package com.pi4j.example.gpio.analog;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.io.gpio.analog.AnalogChangeListener;
+import com.pi4j.io.gpio.analog.AnalogValueChangeListener;
 import com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInput;
 import com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInputProvider;
 import com.pi4j.util.Console;
@@ -95,7 +95,7 @@ public class AnalogInputExampleWithMockProvider {
         console.println();
 
         // setup an analog output listener to listen for any value changes on the analog input
-        input.addListener((AnalogChangeListener) event -> {
+        input.addListener((AnalogValueChangeListener) event -> {
             console.print("--> ");
             console.println(event);
         });

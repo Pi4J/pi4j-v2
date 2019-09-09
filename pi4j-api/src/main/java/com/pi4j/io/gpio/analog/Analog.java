@@ -55,17 +55,17 @@ public interface Analog<ANALOG_TYPE
     /**
      * <p>addListener.</p>
      *
-     * @param listener a {@link com.pi4j.io.gpio.analog.AnalogChangeListener} object.
+     * @param listener a {@link AnalogValueChangeListener} object.
      * @return a ANALOG_TYPE object.
      */
-    ANALOG_TYPE addListener(AnalogChangeListener... listener);
+    ANALOG_TYPE addListener(AnalogValueChangeListener... listener);
     /**
      * <p>removeListener.</p>
      *
-     * @param listener a {@link com.pi4j.io.gpio.analog.AnalogChangeListener} object.
+     * @param listener a {@link AnalogValueChangeListener} object.
      * @return a ANALOG_TYPE object.
      */
-    ANALOG_TYPE removeListener(AnalogChangeListener... listener);
+    ANALOG_TYPE removeListener(AnalogValueChangeListener... listener);
 
     /**
      * <p>equals.</p>

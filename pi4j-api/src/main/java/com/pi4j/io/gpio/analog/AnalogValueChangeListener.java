@@ -1,11 +1,11 @@
-package com.pi4j.annotation;
+package com.pi4j.io.gpio.analog;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  OnEvent.java
+ * FILENAME      :  AnalogValueChangeListener.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,19 @@ package com.pi4j.annotation;
  * #L%
  */
 
-import java.lang.annotation.*;
 
 /**
- * <p>OnEvent class.</p>
+ * <p>AnalogChangeListener interface.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-@Inherited
-public @interface OnEvent {
-    String value() default "";
+public interface AnalogValueChangeListener extends AnalogListener<AnalogValueChangeEvent> {
+    @Override
+    default void onEvent(AnalogValueChangeEvent event) {
+        // relay raw event to unique handler
+        onAnalogValueChange(event);
+    }
+
+    void onAnalogValueChange(AnalogValueChangeEvent event);
 }

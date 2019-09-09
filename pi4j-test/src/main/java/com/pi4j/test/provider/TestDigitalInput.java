@@ -71,7 +71,7 @@ public class TestDigitalInput extends DigitalInputBase implements DigitalInput {
             this.state = state;
 
             // dispatch value change event
-            this.dispatch(new DigitalChangeEvent(this, this.state()));
+            this.dispatch(new DigitalStateChangeEvent(this, this.state()));
         }
         return this;
     }

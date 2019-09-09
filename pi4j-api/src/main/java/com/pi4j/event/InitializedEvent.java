@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.analog;
+package com.pi4j.event;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogChangeListener.java
+ * FILENAME      :  InitializedEvent.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,18 +27,11 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
+import com.pi4j.context.Context;
 
-/**
- * <p>AnalogChangeListener interface.</p>
- *
- * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- * @version $Id: $Id
- */
-public interface AnalogChangeListener extends AnalogListener {
-    /**
-     * <p>onChange.</p>
-     *
-     * @param event a {@link com.pi4j.io.gpio.analog.AnalogChangeEvent} object.
-     */
-    void onChange(AnalogChangeEvent event);
+public class InitializedEvent implements Event {
+    protected final Context context;
+    public InitializedEvent(Context context){
+        this.context = context;
+    }
 }

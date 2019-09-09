@@ -29,7 +29,7 @@ package com.pi4j.example.gpio.analog;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.binding.AnalogOutputBinding;
-import com.pi4j.io.gpio.analog.AnalogChangeListener;
+import com.pi4j.io.gpio.analog.AnalogValueChangeListener;
 import com.pi4j.util.Console;
 
 /**
@@ -83,7 +83,7 @@ public class AnalogInputSyncToOutputExample {
 
         // setup a analog output listener to listen for any state changes on the analog output
         // we will just print out the detected state changes
-        output.addListener((AnalogChangeListener) event -> {
+        output.addListener((AnalogValueChangeListener) event -> {
             console.println(event);
         });
 

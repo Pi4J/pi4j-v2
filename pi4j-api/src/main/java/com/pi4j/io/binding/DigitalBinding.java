@@ -27,7 +27,7 @@ package com.pi4j.io.binding;
  * #L%
  */
 
-import com.pi4j.io.gpio.digital.DigitalChangeEvent;
+import com.pi4j.io.gpio.digital.DigitalStateChangeEvent;
 
 /**
  * <p>DigitalBinding interface.</p>
@@ -39,7 +39,7 @@ public interface DigitalBinding<BINDING_TYPE extends Binding, MEMBER_TYPE> exten
     /**
      * <p>process.</p>
      *
-     * @param event a {@link com.pi4j.io.gpio.digital.DigitalChangeEvent} object.
+     * @param event a {@link DigitalStateChangeEvent} object.
      */
-    void process(DigitalChangeEvent event);
+    void process(DigitalStateChangeEvent event);
 }

@@ -29,11 +29,15 @@ package com.pi4j.runtime;
 
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.context.Context;
+import com.pi4j.event.InitializedEventProducer;
+import com.pi4j.event.ShutdownEventProducer;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.platform.impl.RuntimePlatforms;
 import com.pi4j.provider.impl.RuntimeProviders;
 import com.pi4j.registry.impl.RuntimeRegistry;
+
+import java.util.concurrent.Future;
 
 /**
  * <p>Runtime interface.</p>
@@ -41,7 +45,7 @@ import com.pi4j.registry.impl.RuntimeRegistry;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface Runtime {
+public interface Runtime extends InitializedEventProducer<Runtime>, ShutdownEventProducer<Runtime> {
     /**
      * <p>registry.</p>
      *
@@ -88,6 +92,9 @@ public interface Runtime {
      * @throws com.pi4j.exception.ShutdownException if any.
      */
     Runtime shutdown() throws ShutdownException;
+
+    Future<Context> asyncShutdown();
+
     /**
      * <p>initialize.</p>
      *

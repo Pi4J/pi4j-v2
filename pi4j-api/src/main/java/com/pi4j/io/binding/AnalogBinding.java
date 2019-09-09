@@ -27,7 +27,7 @@ package com.pi4j.io.binding;
  * #L%
  */
 
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
+import com.pi4j.io.gpio.analog.AnalogValueChangeEvent;
 
 /**
  * <p>AnalogBinding interface.</p>
@@ -39,7 +39,7 @@ public interface AnalogBinding<BINDING_TYPE extends Binding, MEMBER_TYPE> extend
     /**
      * <p>process.</p>
      *
-     * @param event a {@link com.pi4j.io.gpio.analog.AnalogChangeEvent} object.
+     * @param event a {@link AnalogValueChangeEvent} object.
      */
-    void process(AnalogChangeEvent event);
+    void process(AnalogValueChangeEvent event);
 }

@@ -77,7 +77,7 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
      * to registered Pi4J 'DigitalChangeEvent' event listeners on this digital pin.
      */
     private PiGpioStateChangeListener piGpioPinListener =
-            event -> dispatch(new DigitalChangeEvent(PiGpioDigitalInput.this, DigitalState.getState(event.state().value())));
+            event -> dispatch(new DigitalStateChangeEvent(PiGpioDigitalInput.this, DigitalState.getState(event.state().value())));
 
     /** {@inheritDoc} */
     @Override

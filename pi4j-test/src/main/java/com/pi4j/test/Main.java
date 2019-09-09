@@ -29,7 +29,7 @@ import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.io.IOType;
 import com.pi4j.io.binding.AnalogOutputBinding;
-import com.pi4j.io.gpio.analog.AnalogChangeListener;
+import com.pi4j.io.gpio.analog.AnalogValueChangeListener;
 import com.pi4j.test.provider.TestAnalogInputProvider;
 
 /**
@@ -91,20 +91,20 @@ public class Main {
         var output1 = pi4j.aout().create(99);
         var output2 = pi4j.aout().create(100);
 
-        input.addListener((AnalogChangeListener) event -> {
+        input.addListener((AnalogValueChangeListener) event -> {
             System.out.print("ANALOG INPUT [");
             System.out.print(event.source().address());
             System.out.print("] VALUE CHANGE: ");
             System.out.println(event.value());
         });
 
-        output1.addListener((AnalogChangeListener) event -> {
+        output1.addListener((AnalogValueChangeListener) event -> {
             System.out.print("ANALOG OUTPUT [");
             System.out.print(event.source().address());
             System.out.print("] VALUE CHANGE: ");
             System.out.println(event.value());
         });
-        output2.addListener((AnalogChangeListener) event -> {
+        output2.addListener((AnalogValueChangeListener) event -> {
             System.out.print("ANALOG OUTPUT [");
             System.out.print(event.source().address());
             System.out.print("] VALUE CHANGE: ");

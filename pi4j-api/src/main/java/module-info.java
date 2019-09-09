@@ -1,5 +1,3 @@
-import com.pi4j.annotation.processor.register.*;
-
 /*-
  * #%L
  * **********************************************************************
@@ -74,20 +72,24 @@ module pi4j.api {
                     com.pi4j.annotation.processor.injector.RegistryInjector,
                     com.pi4j.annotation.processor.injector.SerialInjector,
                     com.pi4j.annotation.processor.injector.SpiInjector,
-                    AnalogChangeListenerRegistrationProcessor,
-                    AnalogInputRegistrationProcessor,
-                    AnalogOutputRegistrationProcessor,
-                    BindingRegistrationProcessor,
-                    DigitalChangeListenerRegistrationProcessor,
-                    DigitalInputRegistrationProcessor,
-                    DigitalOutputRegistrationProcessor,
-                    I2CRegistrationProcessor,
-                    OnOffGroupRegistrationProcessor,
-                    PlatformRegistrationProcessor,
-                    ProviderRegistrationProcessor,
-                    PwmRegistrationProcessor,
-                    com.pi4j.annotation.processor.event.AnalogChangeEventProcessor,
-                    com.pi4j.annotation.processor.event.DigitalChangeEventProcessor;
+                    com.pi4j.annotation.processor.register.AnalogInputRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.AnalogOutputRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.AnalogValueChangeListenerRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.BindingRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.DigitalStateChangeListenerRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.DigitalInputRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.DigitalOutputRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.I2CRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.OnOffGroupRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.PlatformRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.ProviderRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.PwmRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.InitializedListenerRegistrationProcessor,
+                    com.pi4j.annotation.processor.register.ShutdownListenerRegistrationProcessor,
+                    com.pi4j.annotation.processor.event.AnalogValueChangeEventProcessor,
+                    com.pi4j.annotation.processor.event.DigitalStateChangeEventProcessor,
+                    com.pi4j.annotation.processor.event.InitializedEventProcessor,
+                    com.pi4j.annotation.processor.event.ShutdownEventProcessor;
 
     requires slf4j.api;
 }

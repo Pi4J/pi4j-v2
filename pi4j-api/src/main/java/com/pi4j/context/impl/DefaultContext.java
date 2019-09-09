@@ -31,6 +31,8 @@ import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
 import com.pi4j.context.ContextProperties;
+import com.pi4j.event.InitializedListener;
+import com.pi4j.event.ShutdownListener;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
@@ -44,6 +46,8 @@ import com.pi4j.runtime.Runtime;
 import com.pi4j.runtime.impl.DefaultRuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.Future;
 
 /**
  * <p>DefaultContext class.</p>
@@ -139,6 +143,47 @@ public class DefaultContext implements Context {
     public Context shutdown() throws ShutdownException {
         // shutdown the runtime
         this.runtime.shutdown();
+        return this;
+    }
+
+    @Override
+    public Future<Context> asyncShutdown() {
+        return this.runtime.asyncShutdown();
+    }
+
+    @Override
+    public Context addListener(ShutdownListener... listener) {
+        runtime.addListener(listener);
+        return this;
+    }
+
+    @Override
+    public Context removeListener(ShutdownListener... listener) {
+        runtime.removeListener(listener);
+        return this;
+    }
+
+    @Override
+    public Context removeAllShutdownListeners() {
+        runtime.removeAllShutdownListeners();
+        return this;
+    }
+
+    @Override
+    public Context removeAllInitializedListeners() {
+        this.runtime.removeAllInitializedListeners();
+        return this;
+    }
+
+    @Override
+    public Context addListener(InitializedListener... listener) {
+        this.runtime.addListener(listener);
+        return this;
+    }
+
+    @Override
+    public Context removeListener(InitializedListener... listener) {
+        this.runtime.removeListener(listener);
         return this;
     }
 }

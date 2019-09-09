@@ -28,9 +28,9 @@ package com.pi4j.example.gpio.digital;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
+import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
 import com.pi4j.io.gpio.digital.PullResistance;
 import com.pi4j.util.Console;
 
@@ -97,7 +97,7 @@ public class DigitalInputExample {
         var input = digitalInputProvider.create(config);
 
         // setup a digital output listener to listen for any state changes on the digital input
-        input.addListener((DigitalChangeListener) event -> {
+        input.addListener((DigitalStateChangeListener) event -> {
 //            try {
                 Integer count = (Integer) event.source().metadata().get("count").value();
                 console.println(event + " === " + count);

@@ -77,7 +77,7 @@ public class MockAnalogInput extends AnalogInputBase implements AnalogInput {
             this.value = value;
 
             // dispatch value change event
-            this.dispatch(new AnalogChangeEvent(this, this.value(), oldValue));
+            this.dispatch(new AnalogValueChangeEvent(this, this.value(), oldValue));
         }
         return this;
     }

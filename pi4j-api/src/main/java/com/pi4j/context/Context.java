@@ -32,6 +32,8 @@ import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
 import com.pi4j.config.Config;
 import com.pi4j.config.ConfigBuilder;
+import com.pi4j.event.InitializedEventProducer;
+import com.pi4j.event.ShutdownEventProducer;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.internal.IOCreator;
 import com.pi4j.internal.ProviderProvider;
@@ -53,6 +55,7 @@ import com.pi4j.util.PropertiesUtil;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
  * <p>Context interface.</p>
@@ -60,7 +63,11 @@ import java.util.Map;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface Context extends Describable, IOCreator, ProviderProvider {
+public interface Context extends Describable,
+                                 IOCreator,
+                                 ProviderProvider,
+                                 InitializedEventProducer<Context>,
+                                 ShutdownEventProducer<Context> {
 
     /**
      * <p>config.</p>
@@ -100,6 +107,13 @@ public interface Context extends Describable, IOCreator, ProviderProvider {
      * @throws com.pi4j.exception.LifecycleException if any.
      */
     Context shutdown() throws LifecycleException;
+
+    /**
+     *
+     * @return
+     */
+    Future<Context> asyncShutdown();
+
     /**
      * <p>inject.</p>
      *

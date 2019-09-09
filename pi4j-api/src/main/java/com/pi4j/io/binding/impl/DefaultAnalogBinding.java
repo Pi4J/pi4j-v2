@@ -30,8 +30,8 @@ package com.pi4j.io.binding.impl;
 import com.pi4j.io.binding.AnalogOutputBinding;
 import com.pi4j.io.exception.IOBoundsException;
 import com.pi4j.io.exception.IOIllegalValueException;
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
 import com.pi4j.io.gpio.analog.AnalogOutput;
+import com.pi4j.io.gpio.analog.AnalogValueChangeEvent;
 
 /**
  * <p>AnalogBindingSync class.</p>
@@ -54,7 +54,7 @@ public class DefaultAnalogBinding
 
     /** {@inheritDoc} */
     @Override
-    public void process(AnalogChangeEvent event) {
+    public void process(AnalogValueChangeEvent event) {
         members.forEach((output)->{
             try {
                 ((AnalogOutput)output).value(event.value());

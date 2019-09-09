@@ -27,8 +27,6 @@ package com.pi4j.annotation;
  * #L%
  */
 
-import com.pi4j.io.gpio.digital.DigitalState;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

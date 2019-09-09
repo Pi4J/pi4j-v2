@@ -30,9 +30,9 @@ package com.pi4j.example.gpio.analog;
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
-import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.AnalogOutput;
+import com.pi4j.io.gpio.analog.AnalogValueChangeEvent;
+import com.pi4j.io.gpio.analog.AnalogValueChangeListener;
 import com.pi4j.util.Console;
 
 import java.util.concurrent.Callable;
@@ -82,12 +82,12 @@ public class AnalogOutputExampleUsingDependencyInjection {
 
         // register an analog output listener to listen for any state changes on the analog output
         @Register(ANALOG_OUTPUT_PIN_ID)
-        private AnalogChangeListener analogChangeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
+        private AnalogValueChangeListener analogChangeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
 
         // setup an analog output event listener to listen for any value changes on the analog output
         // using a custom method with a single event parameter
         @OnEvent(ANALOG_OUTPUT_PIN_ID)
-        private void onAnalogOutputChange(AnalogChangeEvent event){
+        private void onAnalogOutputChange(AnalogValueChangeEvent event){
             System.out.println(" (LISTENER #2) :: " + event);
         }
 

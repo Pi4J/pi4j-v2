@@ -1,11 +1,11 @@
-package com.pi4j.annotation;
+package com.pi4j.event;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  OnEvent.java
+ * FILENAME      :  InitializedEventProducer.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,8 @@ package com.pi4j.annotation;
  * #L%
  */
 
-import java.lang.annotation.*;
-
-/**
- * <p>OnEvent class.</p>
- *
- * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
- * @version $Id: $Id
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-@Inherited
-public @interface OnEvent {
-    String value() default "";
+public interface InitializedEventProducer<T> extends EventProducer {
+    T removeAllInitializedListeners();
+    T addListener(InitializedListener ... listener);
+    T removeListener(InitializedListener ... listener);
 }

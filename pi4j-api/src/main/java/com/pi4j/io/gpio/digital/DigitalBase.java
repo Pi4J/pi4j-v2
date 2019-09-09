@@ -28,6 +28,7 @@ package com.pi4j.io.gpio.digital;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.event.EventManager;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.binding.Bindable;
 import com.pi4j.io.binding.DigitalBinding;
@@ -51,10 +52,8 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
         implements Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         Bindable<DIGITAL_TYPE, DigitalBinding>
 {
-
-
     // internal listeners collection
-    protected List<DigitalChangeListener> listeners = Collections.synchronizedList(new ArrayList<>());
+    protected final EventManager<DIGITAL_TYPE, DigitalStateChangeListener> stateChangeEventManager = new EventManager(this);
 
     // internal bindings collection
     protected List<DigitalBinding> bindings = Collections.synchronizedList(new ArrayList<>());
@@ -71,15 +70,15 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
 
     /** {@inheritDoc} */
     @Override
-    public DIGITAL_TYPE addListener(DigitalChangeListener... listener) {
-        listeners.addAll(Arrays.asList(listener));
+    public DIGITAL_TYPE addListener(DigitalStateChangeListener... listener) {
+        stateChangeEventManager.add(listener);
         return (DIGITAL_TYPE)this;
     }
 
     /** {@inheritDoc} */
     @Override
-    public DIGITAL_TYPE removeListener(DigitalChangeListener... listener) {
-        listeners.removeAll(Arrays.asList(listener));
+    public DIGITAL_TYPE removeListener(DigitalStateChangeListener... listener) {
+        stateChangeEventManager.remove(listener);
         return (DIGITAL_TYPE)this;
     }
 
@@ -102,16 +101,14 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
      *
      * @param event DigitalChangeEvent
      */
-    protected void dispatch(DigitalChangeEvent event){
-        listeners.forEach((listener) -> {
+    protected void dispatch(DigitalStateChangeEvent event){
+        stateChangeEventManager.dispatch(event);
+        bindings.forEach((binding) -> {
             try {
-                listener.onChange(event);
+                binding.process(event);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
-        bindings.forEach((binding) -> {
-            binding.process(event);
         });
     }
 
@@ -119,7 +116,7 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
     @Override
     public DIGITAL_TYPE shutdown(Context context) throws ShutdownException {
         // remove all listeners
-        listeners.clear();
+        stateChangeEventManager.clear();
 
         // remove all bindings
         bindings.clear();

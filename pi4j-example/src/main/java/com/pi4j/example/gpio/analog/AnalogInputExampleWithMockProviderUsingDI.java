@@ -30,7 +30,7 @@ package com.pi4j.example.gpio.analog;
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.analog.AnalogChangeListener;
+import com.pi4j.io.gpio.analog.AnalogValueChangeListener;
 import com.pi4j.plugin.mock.platform.MockPlatform;
 import com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInput;
 import com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInputProvider;
@@ -84,7 +84,7 @@ public class AnalogInputExampleWithMockProviderUsingDI {
 
         // register an analog input listener to listen for any value changes on the analog input pin
         @Register(ANALOG_INPUT_PIN_ID)
-        private AnalogChangeListener changeListener = event -> System.out.println("--> " + event);
+        private AnalogValueChangeListener changeListener = event -> System.out.println("--> " + event);
 
         @Override
         public Void call() throws Exception {

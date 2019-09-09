@@ -30,8 +30,8 @@ package com.pi4j.io.binding.impl;
 import com.pi4j.io.OnOff;
 import com.pi4j.io.binding.OnOffBinding;
 import com.pi4j.io.exception.IOException;
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
-import com.pi4j.io.gpio.digital.DigitalChangeEvent;
+import com.pi4j.io.gpio.analog.AnalogValueChangeEvent;
+import com.pi4j.io.gpio.digital.DigitalStateChangeEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +60,7 @@ public class DefaultOnOffBinding
 
     /** {@inheritDoc} */
     @Override
-    public void process(DigitalChangeEvent event) {
+    public void process(DigitalStateChangeEvent event) {
         boolean on = event.source().isOn();
         members.forEach((target)->{
             try {
@@ -77,7 +77,7 @@ public class DefaultOnOffBinding
 
     /** {@inheritDoc} */
     @Override
-    public void process(AnalogChangeEvent event) {
+    public void process(AnalogValueChangeEvent event) {
         Boolean state = null;
 
         // ignore change event if ON and OFF thresholds are the same

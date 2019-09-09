@@ -29,10 +29,10 @@ package com.pi4j.example.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.IOType;
-import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
+import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
 import com.pi4j.platform.Platform;
 
 import java.util.concurrent.TimeUnit;
@@ -84,7 +84,7 @@ public class DigitalOutputBlinkExample {
         DigitalOutput output = provider.create(config);
 
         // setup a digital output listener to listen for any state changes on the digital output
-        output.addListener((DigitalChangeListener) event -> {
+        output.addListener((DigitalStateChangeListener) event -> {
             System.out.println(event);
         });
 

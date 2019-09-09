@@ -5,7 +5,7 @@ package com.pi4j.annotation.processor.register;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DigitalChangeListenerRegistrationProcessor.java
+ * FILENAME      :  DigitalStateChangeListenerRegistrationProcessor.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -31,7 +31,7 @@ import com.pi4j.annotation.Register;
 import com.pi4j.context.Context;
 import com.pi4j.io.exception.IONotFoundException;
 import com.pi4j.io.gpio.digital.Digital;
-import com.pi4j.io.gpio.digital.DigitalChangeListener;
+import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ import java.lang.reflect.Field;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class DigitalChangeListenerRegistrationProcessor implements RegisterProcessor<DigitalChangeListener> {
+public class DigitalStateChangeListenerRegistrationProcessor implements RegisterProcessor<DigitalStateChangeListener> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -52,7 +52,7 @@ public class DigitalChangeListenerRegistrationProcessor implements RegisterProce
     public boolean isEligible(Context context, Object instance, Register annotation, Field field) throws Exception {
 
         // make sure this field is of type 'DigitalChangeListener'
-        if(!DigitalChangeListener.class.isAssignableFrom(field.getType()))
+        if(!DigitalStateChangeListener.class.isAssignableFrom(field.getType()))
             return false;
 
         // make sure the field instance is not null; the 'DigitalChangeListener' must have an instance already defined
@@ -66,9 +66,9 @@ public class DigitalChangeListenerRegistrationProcessor implements RegisterProce
 
     /** {@inheritDoc} */
     @Override
-    public DigitalChangeListener process(Context context, Object instance, Register annotation, Field field) throws Exception {
+    public DigitalStateChangeListener process(Context context, Object instance, Register annotation, Field field) throws Exception {
 
-        DigitalChangeListener listener = (DigitalChangeListener) field.get(instance);
+        DigitalStateChangeListener listener = (DigitalStateChangeListener) field.get(instance);
         if(listener != null) {
 
             // test to determine if the I/O instance exists in the registry by 'ID'

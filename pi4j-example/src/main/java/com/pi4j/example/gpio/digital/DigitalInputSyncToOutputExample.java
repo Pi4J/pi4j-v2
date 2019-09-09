@@ -29,7 +29,7 @@ package com.pi4j.example.gpio.digital;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.binding.DigitalOutputBinding;
-import com.pi4j.io.gpio.digital.DigitalChangeListener;
+import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
 import com.pi4j.util.Console;
 
 /**
@@ -83,7 +83,7 @@ public class DigitalInputSyncToOutputExample {
 
         // setup a digital output listener to listen for any state changes on the digital output
         // we will just print out the detected state changes
-        output.addListener((DigitalChangeListener) event -> {
+        output.addListener((DigitalStateChangeListener) event -> {
             console.print("DIGITAL OUTPUT [");
             console.print(event.source().address());
             console.print("] STATE CHANGE: ");

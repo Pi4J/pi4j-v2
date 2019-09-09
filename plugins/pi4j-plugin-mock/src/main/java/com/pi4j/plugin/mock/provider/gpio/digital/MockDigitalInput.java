@@ -67,7 +67,7 @@ public class MockDigitalInput extends DigitalInputBase implements DigitalInput {
     public MockDigitalInput mockState(DigitalState state){
         if(!this.state.equals(state)) {
             this.state = state;
-            this.dispatch(new DigitalChangeEvent(this, this.state));
+            this.dispatch(new DigitalStateChangeEvent(this, this.state));
         }
         return this;
     }

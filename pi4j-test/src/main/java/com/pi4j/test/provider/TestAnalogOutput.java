@@ -34,10 +34,10 @@ import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.binding.AnalogBinding;
 import com.pi4j.io.exception.IOBoundsException;
 import com.pi4j.io.exception.IOIllegalValueException;
-import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
+import com.pi4j.io.gpio.analog.AnalogValueChangeListener;
 
 /**
  * <p>TestAnalogOutput class.</p>
@@ -79,13 +79,13 @@ public class TestAnalogOutput implements AnalogOutput {
 
     /** {@inheritDoc} */
     @Override
-    public AnalogOutput addListener(AnalogChangeListener... listener) {
+    public AnalogOutput addListener(AnalogValueChangeListener... listener) {
         return null;
     }
 
     /** {@inheritDoc} */
     @Override
-    public AnalogOutput removeListener(AnalogChangeListener... listener) {
+    public AnalogOutput removeListener(AnalogValueChangeListener... listener) {
         return null;
     }
 

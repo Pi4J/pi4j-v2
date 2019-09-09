@@ -1,11 +1,11 @@
-package com.pi4j.io.gpio.analog;
+package com.pi4j.io.gpio.digital;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogChangeEvent.java
+ * FILENAME      :  DigitalStateChangeEvent.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,67 +28,57 @@ package com.pi4j.io.gpio.analog;
  */
 
 
+
 /**
- * <p>AnalogChangeEvent class.</p>
+ * <p>DigitalChangeEvent class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class AnalogChangeEvent<ANALOG_TYPE extends Analog> implements AnalogEvent {
+public class DigitalStateChangeEvent<DIGITAL_TYPE extends Digital> implements DigitalEvent {
 
-    // internal event copy of the changed analog values and analog I/O source
-    protected Integer oldValue;
-    protected Integer value;
-    protected ANALOG_TYPE source;
+    // internal event copy of the changed digital state
+    protected DigitalState state;
+
+    protected DIGITAL_TYPE source;
 
     /**
      * Default constructor
      *
-     * @param newValue the value changed for this event instance
-     * @param source a ANALOG_TYPE object.
-     * @param oldValue a {@link java.lang.Integer} object.
+     * @param state the value changed for this event instance
+     * @param source a DIGITAL_TYPE object.
      */
-    public AnalogChangeEvent(ANALOG_TYPE source, Integer newValue, Integer oldValue){
-        this.value = newValue; // cache a copy of the event instance new value
-        this.oldValue = oldValue; // cache a copy of the event instance old value
-        this.source = source; // cache analog I/O source
+    public DigitalStateChangeEvent(DIGITAL_TYPE source, DigitalState state){
+        this.state = state; // cache a copy of the event instance state
+        this.source = source; // cache digital I/O source
     }
 
     /**
-     * The old/prior value change for this event instance
+     * The value change for this event instance
      *
-     * @return a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalState} object.
      */
-    public Integer oldValue() {
-        return this.oldValue;
-    }
-
-    /**
-     * The current/new value change for this event instance
-     *
-     * @return a {@link java.lang.Integer} object.
-     */
-    public Integer value() {
-        return this.value;
+    public DigitalState state() {
+        return this.state;
     }
 
     /** {@inheritDoc} */
     @Override
-    public ANALOG_TYPE source() {
+    public DIGITAL_TYPE source() {
         return this.source;
     }
+
 
     /** {@inheritDoc} */
     @Override
     public String toString(){
-
         StringBuilder result = new StringBuilder();
-        result.append("<<ANALOG CHANGE EVENT>> [");
+        result.append("<<DIGITAL CHANGE EVENT>> [");
         result.append(source());
-        result.append("] VALUE: [");
-        result.append(this.oldValue().toString());
+        result.append("] STATE: [");
+        result.append(DigitalState.getInverseState(this.state()));
         result.append(" -> ");
-        result.append(this.value().toString());
+        result.append(this.state());
         result.append("]");
         return result.toString();
     }

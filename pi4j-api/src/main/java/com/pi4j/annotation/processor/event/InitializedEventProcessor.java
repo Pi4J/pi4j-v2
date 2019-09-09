@@ -1,11 +1,11 @@
-package com.pi4j.io.binding.impl;
+package com.pi4j.annotation.processor.event;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  DefaultDigitalBinding.java
+ * FILENAME      :  InitializedEventProcessor.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,60 +27,50 @@ package com.pi4j.io.binding.impl;
  * #L%
  */
 
-import com.pi4j.io.binding.DigitalOutputBinding;
-import com.pi4j.io.exception.IOException;
-import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalState;
-import com.pi4j.io.gpio.digital.DigitalStateChangeEvent;
+import com.pi4j.annotation.OnEvent;
+import com.pi4j.context.Context;
+import com.pi4j.event.InitializedEvent;
+import com.pi4j.event.InitializedListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
- * <p>DigitalBindingSync class.</p>
+ * <p>InitializedEventProcessor class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class DefaultDigitalBinding
-        extends BindingBase<DigitalOutputBinding, DigitalOutput>
-        implements DigitalOutputBinding {
+public class InitializedEventProcessor implements OnEventProcessor {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private boolean inverted = false;
 
-    /**
-     * Default Constructor
-     *
-     * @param member Variable argument list of analog outputs
-     */
-    public DefaultDigitalBinding(DigitalOutput ... member){
-        super(member);
+    /** {@inheritDoc} */
+    @Override
+    public Class getEventType() {
+        return InitializedEvent.class;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void process(DigitalStateChangeEvent event) {
-        members.forEach((target)->{
+    public void process(Context context, Object instance, OnEvent annotation, Method method) throws Exception {
+
+        // register a digital change event listener on this I/O instance
+        context.addListener((InitializedListener) event -> {
             try {
-                if(inverted){
-                    ((DigitalOutput)target).state(DigitalState.getInverseState(event.state()));
-                } else {
-                    ((DigitalOutput)target).state(event.state());
-                }
-            } catch (IOException e) {
+                boolean accessible = method.canAccess(instance);
+                if(!accessible) method.trySetAccessible();
+                method.invoke(instance, event);
+                if(!accessible) method.setAccessible(false);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                logger.error(e.getMessage(), e);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
                 logger.error(e.getMessage(), e);
             }
         });
-    }
-
-    @Override
-    public DigitalOutputBinding invertedState(boolean inverted) {
-        this.inverted = inverted;
-        return this;
-    }
-
-    @Override
-    public boolean invertedState() {
-        return this.inverted;
     }
 }

@@ -5,7 +5,7 @@ package com.pi4j.annotation.processor.register;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogChangeListenerRegistrationProcessor.java
+ * FILENAME      :  InitializedListenerRegistrationProcessor.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -29,21 +29,19 @@ package com.pi4j.annotation.processor.register;
 
 import com.pi4j.annotation.Register;
 import com.pi4j.context.Context;
-import com.pi4j.io.exception.IONotFoundException;
-import com.pi4j.io.gpio.analog.Analog;
-import com.pi4j.io.gpio.analog.AnalogChangeListener;
+import com.pi4j.event.InitializedListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
 /**
- * <p>AnalogChangeListenerRegistrationProcessor class.</p>
+ * <p>InitializedListenerRegistrationProcessor class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class AnalogChangeListenerRegistrationProcessor implements RegisterProcessor<AnalogChangeListener> {
+public class InitializedListenerRegistrationProcessor implements RegisterProcessor<InitializedListener> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -51,11 +49,11 @@ public class AnalogChangeListenerRegistrationProcessor implements RegisterProces
     @Override
     public boolean isEligible(Context context, Object instance, Register annotation, Field field) throws Exception {
 
-        // make sure this field is of type 'AnalogChangeListener'
-        if(!AnalogChangeListener.class.isAssignableFrom(field.getType()))
+        // make sure this field is of type 'DigitalChangeListener'
+        if(!InitializedListener.class.isAssignableFrom(field.getType()))
             return false;
 
-        // make sure the field instance is not null; the 'AnalogChangeListener' must have an instance already defined
+        // make sure the field instance is not null; the 'InitializedListener' must have an instance already defined
         if(field.get(instance) == null){
             return false;
         }
@@ -66,20 +64,12 @@ public class AnalogChangeListenerRegistrationProcessor implements RegisterProces
 
     /** {@inheritDoc} */
     @Override
-    public AnalogChangeListener process(Context context, Object instance, Register annotation, Field field) throws Exception {
+    public InitializedListener process(Context context, Object instance, Register annotation, Field field) throws Exception {
 
-        AnalogChangeListener listener = (AnalogChangeListener) field.get(instance);
+        InitializedListener listener = (InitializedListener) field.get(instance);
         if(listener != null) {
-
-            // test to determine if the I/O instance exists in the registry by 'ID'
-            if(!context.registry().exists(annotation.value(), Analog.class))
-                throw new IONotFoundException(annotation.value());
-
-            // get I/O instance from registry
-            Analog io = context.registry().get(annotation.value(), Analog.class);
-
-            // add the obtained annotated listener instance to the I/O instance
-            io.addListener(listener);
+            // add the obtained annotated listener instance to the Pi4J context
+            context.addListener(listener);
         }
 
         // in this case we don't want to assign the annotated instance value, so we return null

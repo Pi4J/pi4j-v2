@@ -1,11 +1,11 @@
-package com.pi4j.annotation;
+package com.pi4j.io.gpio.digital;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  OnEvent.java
+ * FILENAME      :  DigitalStateChangeListener.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,17 +27,19 @@ package com.pi4j.annotation;
  * #L%
  */
 
-import java.lang.annotation.*;
 
 /**
- * <p>OnEvent class.</p>
+ * <p>DigitalChangeListener interface.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-@Inherited
-public @interface OnEvent {
-    String value() default "";
+public interface DigitalStateChangeListener extends DigitalListener<DigitalStateChangeEvent> {
+    @Override
+    default void onEvent(DigitalStateChangeEvent event) {
+        // relay raw event to unique handler
+        onDigitalStateChange(event);
+    }
+
+    void onDigitalStateChange(DigitalStateChangeEvent event);
 }

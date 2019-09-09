@@ -30,9 +30,9 @@ package com.pi4j.example.gpio.digital;
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.digital.DigitalChangeEvent;
-import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalStateChangeEvent;
+import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
 import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider;
 import com.pi4j.util.Console;
 
@@ -85,12 +85,12 @@ public class DigitalInputExampleUsingDependencyInjection {
 
         // register a digital input listener to listen for any value changes on the digital input pin
         @Register(DIGITAL_INPUT_PIN_ID)
-        private DigitalChangeListener changeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
+        private DigitalStateChangeListener changeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
 
         // setup a digital input event listener to listen for any value changes on the digital input
         // using a custom method with a single event parameter
         @OnEvent(DIGITAL_INPUT_PIN_ID)
-        private void onDigitalInputChange(DigitalChangeEvent event){
+        private void onDigitalInputChange(DigitalStateChangeEvent event){
             System.out.println(" (LISTENER #2) :: " + event);
         }
 

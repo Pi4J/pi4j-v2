@@ -30,10 +30,10 @@ package com.pi4j.example.gpio.digital;
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.digital.DigitalChangeEvent;
-import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
+import com.pi4j.io.gpio.digital.DigitalStateChangeEvent;
+import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
 import com.pi4j.util.Console;
 
 import java.util.concurrent.Callable;
@@ -78,12 +78,12 @@ public class DigitalOutputExampleUsingDependencyInjection {
 
         // register a digital output listener to listen for any state changes on the digital output
         @Register(DIGITAL_OUTPUT_PIN_ID)
-        private DigitalChangeListener digitalChangeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
+        private DigitalStateChangeListener digitalChangeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
 
         // setup a digital output event listener to listen for any state changes on the digital output
         // using a custom method with a single event parameter
         @OnEvent(DIGITAL_OUTPUT_PIN_ID)
-        private void onDigitalOutputChange(DigitalChangeEvent event){
+        private void onDigitalOutputChange(DigitalStateChangeEvent event){
             System.out.println(" (LISTENER #2) :: " + event);
         }
 

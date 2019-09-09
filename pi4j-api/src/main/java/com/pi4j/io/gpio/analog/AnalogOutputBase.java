@@ -133,7 +133,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
             this.value = value;
 
             // dispatch value change event
-            this.dispatch(new AnalogChangeEvent<AnalogOutputBase>(this, this.value(), oldValue));
+            this.dispatch(new AnalogValueChangeEvent<AnalogOutputBase>(this, this.value(), oldValue));
         }
         return this;
     }

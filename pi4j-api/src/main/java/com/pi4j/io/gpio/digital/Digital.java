@@ -56,17 +56,17 @@ public interface Digital<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE,
     /**
      * <p>addListener.</p>
      *
-     * @param listener a {@link com.pi4j.io.gpio.digital.DigitalChangeListener} object.
+     * @param listener a {@link DigitalStateChangeListener} object.
      * @return a DIGITAL_TYPE object.
      */
-    DIGITAL_TYPE addListener(DigitalChangeListener... listener);
+    DIGITAL_TYPE addListener(DigitalStateChangeListener... listener);
     /**
      * <p>removeListener.</p>
      *
-     * @param listener a {@link com.pi4j.io.gpio.digital.DigitalChangeListener} object.
+     * @param listener a {@link DigitalStateChangeListener} object.
      * @return a DIGITAL_TYPE object.
      */
-    DIGITAL_TYPE removeListener(DigitalChangeListener... listener);
+    DIGITAL_TYPE removeListener(DigitalStateChangeListener... listener);
 
     /**
      * <p>equals.</p>

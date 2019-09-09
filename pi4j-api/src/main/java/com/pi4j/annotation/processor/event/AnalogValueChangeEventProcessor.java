@@ -5,7 +5,7 @@ package com.pi4j.annotation.processor.event;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (API)
- * FILENAME      :  AnalogChangeEventProcessor.java
+ * FILENAME      :  AnalogValueChangeEventProcessor.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -31,8 +31,8 @@ import com.pi4j.annotation.OnEvent;
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.Analog;
-import com.pi4j.io.gpio.analog.AnalogChangeEvent;
-import com.pi4j.io.gpio.analog.AnalogChangeListener;
+import com.pi4j.io.gpio.analog.AnalogValueChangeEvent;
+import com.pi4j.io.gpio.analog.AnalogValueChangeListener;
 import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,14 +46,14 @@ import java.lang.reflect.Method;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class AnalogChangeEventProcessor implements OnEventProcessor {
+public class AnalogValueChangeEventProcessor implements OnEventProcessor {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /** {@inheritDoc} */
     @Override
     public Class getEventType() {
-        return AnalogChangeEvent.class;
+        return AnalogValueChangeEvent.class;
     }
 
     /** {@inheritDoc} */
@@ -67,7 +67,7 @@ public class AnalogChangeEventProcessor implements OnEventProcessor {
         Analog analog = context.registry().get(annotation.value(), Analog.class);
 
         // register an analog change event listener on this I/O instance
-        analog.addListener((AnalogChangeListener) event -> {
+        analog.addListener((AnalogValueChangeListener) event -> {
             try {
                 boolean accessible = method.canAccess(instance);
                 if(!accessible) method.trySetAccessible();

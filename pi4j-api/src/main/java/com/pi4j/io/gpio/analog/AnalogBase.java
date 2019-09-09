@@ -28,6 +28,7 @@ package com.pi4j.io.gpio.analog;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.event.EventManager;
 import com.pi4j.io.binding.AnalogBinding;
 import com.pi4j.io.binding.Bindable;
 import com.pi4j.io.gpio.GpioBase;
@@ -52,7 +53,7 @@ public abstract class AnalogBase<ANALOG_TYPE
         Bindable<ANALOG_TYPE, AnalogBinding> {
 
     // internal listeners collection
-    protected List<AnalogChangeListener> listeners = Collections.synchronizedList(new ArrayList<>());
+    protected final EventManager<ANALOG_TYPE, AnalogValueChangeListener> valueChangeEventManager = new EventManager(this);
 
     // internal bindings collection
     protected List<AnalogBinding> bindings = Collections.synchronizedList(new ArrayList<>());
@@ -69,15 +70,15 @@ public abstract class AnalogBase<ANALOG_TYPE
 
     /** {@inheritDoc} */
     @Override
-    public ANALOG_TYPE addListener(AnalogChangeListener... listener) {
-        listeners.addAll(Arrays.asList(listener));
+    public ANALOG_TYPE addListener(AnalogValueChangeListener... listener) {
+        valueChangeEventManager.add(listener);
         return (ANALOG_TYPE)this;
     }
 
     /** {@inheritDoc} */
     @Override
-    public ANALOG_TYPE removeListener(AnalogChangeListener... listener) {
-        listeners.removeAll(Arrays.asList(listener));
+    public ANALOG_TYPE removeListener(AnalogValueChangeListener... listener) {
+        valueChangeEventManager.add(listener);
         return (ANALOG_TYPE)this;
     }
 
@@ -100,12 +101,14 @@ public abstract class AnalogBase<ANALOG_TYPE
      *
      * @param event AnalogInputEvent
      */
-    protected void dispatch(AnalogChangeEvent event){
-        listeners.forEach((listener) -> {
-            listener.onChange(event);
-        });
+    protected void dispatch(AnalogValueChangeEvent event){
+        valueChangeEventManager.dispatch(event);
         bindings.forEach((binding) -> {
-            binding.process(event);
+            try {
+                binding.process(event);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -113,7 +116,7 @@ public abstract class AnalogBase<ANALOG_TYPE
     @Override
     public ANALOG_TYPE shutdown(Context context){
         // remove all listeners
-        listeners.clear();
+        valueChangeEventManager.clear();
 
         // remove all bindings
         bindings.clear();
