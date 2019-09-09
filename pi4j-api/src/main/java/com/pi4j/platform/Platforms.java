@@ -137,6 +137,15 @@ public interface Platforms extends Describable {
         throw new PlatformTypeException(platformId, platformClass);
     }
 
+    default boolean exists(Class<? extends Platform> platformClass) throws PlatformNotFoundException {
+        // determine if the requested platform exists by ID and CLASS TYPE
+        try {
+            return get(platformClass) != null;
+        } catch (PlatformException e) {
+            return false;
+        }
+    }
+
     /**
      * <p>get.</p>
      *

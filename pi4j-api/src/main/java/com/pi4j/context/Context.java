@@ -39,8 +39,11 @@ import com.pi4j.io.IO;
 import com.pi4j.io.IOConfig;
 import com.pi4j.io.IOType;
 import com.pi4j.io.exception.IOException;
+import com.pi4j.io.exception.IOInvalidIDException;
+import com.pi4j.io.exception.IONotFoundException;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
+import com.pi4j.platform.exception.PlatformNotFoundException;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.ProviderInterfaceException;
@@ -121,6 +124,89 @@ public interface Context extends Describable, IOCreator, ProviderProvider {
         return platforms().getDefault();
     }
 
+    /**
+     * <p>platform.</p>
+     *
+     * @param <P> a P object.
+     * @return a P object.
+     */
+    default <P extends Platform> P getPlatform(){
+        return this.platform();
+    }
+
+    /**
+     * <p>platform.</p>
+     *
+     * @param <P> a P object.
+     * @return a P object.
+     */
+    default <P extends Platform> P getDefaultPlatform(){
+        return this.platform();
+    }
+
+    /**
+     * <p>platform.</p>
+     *
+     * @param <P> a P object.
+     * @return a P object.
+     */
+    default <P extends Platform> P defaultPlatform(){
+        return this.platform();
+    }
+
+    /**
+     * <p>platform.</p>
+     *
+     * @param <P> a P object.
+     * @return a P object.
+     */
+    default <P extends Platform> P platform(String id) throws PlatformNotFoundException {
+        return (P)this.platforms().get(id);
+    }
+
+    /**
+     * <p>platform.</p>
+     *
+     * @param <P> a P object.
+     * @return a P object.
+     */
+    default <P extends Platform> P getPlatform(String id) throws PlatformNotFoundException {
+        return this.platform(id);
+    }
+
+    /**
+     * <p>platform.</p>
+     *
+     * @return a P object.
+     */
+    default boolean hasPlatform(String id) throws PlatformNotFoundException {
+        return this.platforms().exists(id);
+    }
+
+    /**
+     * <p>platform.</p>
+     *
+     * @param <P> a P object.
+     * @return a P object.
+     */
+    default <P extends Platform> P platform(Class<P> platformClass) throws PlatformNotFoundException {
+        return (P)this.platforms().get(platformClass);
+    }
+
+    /**
+     * <p>platform.</p>
+     *
+     * @param <P> a P object.
+     * @return a P object.
+     */
+    default <P extends Platform> P getPlatform(Class<P> platformClass) throws PlatformNotFoundException {
+        return platform(platformClass);
+    }
+
+    default boolean hasPlatform(Class<? extends Platform> platformClass) throws PlatformNotFoundException {
+
+        return platforms().exists(platformClass);
+    }
 
     // ------------------------------------------------------------------------
     // PROVIDER ACCESSOR METHODS
@@ -307,6 +393,30 @@ public interface Context extends Describable, IOCreator, ProviderProvider {
         builder.id(id);
         builder.load(inheritedProperties);
         return (T)provider.create((Config) builder.build());
+    }
+
+    // ------------------------------------------------------------------------
+    // I/O INSTANCE ACCESSORS
+    // ------------------------------------------------------------------------
+
+    default boolean hasIO(String id) throws IOInvalidIDException, IONotFoundException {
+        return registry().exists(id);
+    }
+
+    default <T extends IO> T io(String id) throws IOInvalidIDException, IONotFoundException {
+        return registry().get(id);
+    }
+
+    default <T extends IO> T io(String id, Class<T> ioClass) throws IOInvalidIDException, IONotFoundException {
+        return registry().get(id, ioClass);
+    }
+
+    default <T extends IO> T getIO(String id) throws IOInvalidIDException, IONotFoundException {
+        return io(id);
+    }
+
+    default <T extends IO> T getIO(String id, Class<T> ioClass) throws IOInvalidIDException, IONotFoundException {
+        return io(id, ioClass);
     }
 
     // ------------------------------------------------------------------------
