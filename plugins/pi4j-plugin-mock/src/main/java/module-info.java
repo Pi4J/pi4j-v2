@@ -26,8 +26,8 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.plugin.mock {
-    requires pi4j.api;
+module com.pi4j.plugin.mock {
+    requires com.pi4j;
 
     uses com.pi4j.extension.Plugin;
 

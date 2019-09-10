@@ -28,8 +28,8 @@ import com.pi4j.plugin.raspberrypi.RaspberryPiPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.plugin.raspberrypi {
-    requires pi4j.api;
+module com.pi4j.plugin.raspberrypi {
+    requires com.pi4j;
 
     exports com.pi4j.plugin.raspberrypi;
     exports com.pi4j.plugin.raspberrypi.platform;

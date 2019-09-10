@@ -24,7 +24,7 @@
  * limitations under the License.
  * #L%
  */
-module pi4j.api {
+module com.pi4j {
     exports com.pi4j;
     exports com.pi4j.annotation;
     exports com.pi4j.annotation.exception;

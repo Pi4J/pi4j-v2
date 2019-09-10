@@ -28,8 +28,8 @@ import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module pi4j.plugin.linuxfs {
-    requires pi4j.api;
+module com.pi4j.plugin.linuxfs {
+    requires com.pi4j;
     requires jsch;
 
     exports com.pi4j.plugin.linuxfs;

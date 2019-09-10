@@ -24,7 +24,7 @@
  * limitations under the License.
  * #L%
  */
-module pi4j.test.harness {
+module com.pi4j.test.harness {
 
     // REQUIRES
     requires org.slf4j;
