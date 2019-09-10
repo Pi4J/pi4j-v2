@@ -68,7 +68,7 @@ public class Main {
         // this temporary property is used to tell
         // PIGPIO which remote Raspberry Pi to connect to
         //System.setProperty("pi4j.host", "rpi3bp.savage.lan");
-        //System.setProperty("pi4j.pigpio.remote", "true");
+        //System.setProperty("pi4j.remote", "true");
 
         // Initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled

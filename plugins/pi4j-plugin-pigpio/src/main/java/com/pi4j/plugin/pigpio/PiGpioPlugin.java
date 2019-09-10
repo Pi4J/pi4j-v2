@@ -119,17 +119,50 @@ public class PiGpioPlugin implements Plugin {
     public void initialize(PluginService service) throws IOException {
 
         // get PIGPIO hostname/ip-address and ip-port
-        Boolean remote = Boolean.parseBoolean(service.context().properties().get("pigpio.remote", DEFAULT_PIGPIO_REMOTE.toString()));
-        String host = service.context().properties().get("host", DEFAULT_PIGPIO_HOST);
-        int port = service.context().properties().getInteger("pigpio.port", DEFAULT_PIGPIO_PORT);
+        Boolean remote = DEFAULT_PIGPIO_REMOTE;
+        String host = DEFAULT_PIGPIO_HOST;
+        int port = DEFAULT_PIGPIO_PORT;
 
-        // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
+        // get the universal 'remote' setting for Pi4J context
+        if(service.context().properties().has("remote")){
+            remote = Boolean.parseBoolean(service.context().properties().get("remote", remote.toString()));
+        }
+
+        // if there is an overriding 'pigpio.remote', then use that instead
+        if(service.context().properties().has("pipgio.remote")){
+            remote = Boolean.parseBoolean(service.context().properties().get("pigpio.remote", remote.toString()));
+        }
+
+        // create an instance of PIGPIO (either remote or local?)
         if(remote) {
+            // get the universal 'host' setting for Pi4J context
+            if(service.context().properties().has("host")){
+                host = service.context().properties().get("host", host);
+            }
+
+            // if there is an overriding 'pigpio.host', then use that instead
+            if(service.context().properties().has("pipgio.host")){
+                host = service.context().properties().get("pigpio.host", host);
+            }
+
+            // get the universal 'port' setting for Pi4J context
+            if(service.context().properties().has("port")){
+                port = Integer.parseInt(service.context().properties().get("port",Integer.toString(port)));
+            }
+
+            // if there is an overriding 'pigpio.port', then use that instead
+            if(service.context().properties().has("pipgio.port")){
+                port = Integer.parseInt(service.context().properties().get("pipgio.port",Integer.toString(port)));
+            }
+
+            // create remote socket connected instance of PIGPIO
             piGpio = PiGpio.newSocketInstance(host, port);
         } else {
+            // create a local/native binding instance of PIGPIO
             piGpio = PiGpio.newNativeInstance();
         }
 
+        // create new instances of the PIGPIO plugin I/O providers using the newly created PIGPIO lib reference
         Provider providers[] = {
                 PiGpioDigitalInputProvider.newInstance(piGpio),
                 PiGpioDigitalOutputProvider.newInstance(piGpio),
