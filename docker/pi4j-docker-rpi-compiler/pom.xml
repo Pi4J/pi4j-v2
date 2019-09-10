@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>pi4j-docker</artifactId>
+        <groupId>com.pi4j</groupId>
+        <version>2.0-SNAPSHOT</version>
+        <relativePath>../pi4j-docker</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- MAVEN ARTIFACT INFORMATION -->
+    <artifactId>pi4j-docker-rpi-compiler</artifactId>
+    <name>Pi4J :: DOCKER   :: RPi Compiler Docker Image</name>
+    <description>Raspberry Pi Cross-Compiler Docker Image</description>
+    <packaging>pom</packaging>
+
+    <!-- BUILD INSTRUCTIONS -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <configuration>
+                    <repository>pi4j/raspberrypi-compiler</repository>
+                    <!--<tag>${project.version}</tag>-->
+                    <verbose>true</verbose>
+                    <contextDirectory>${project.basedir}</contextDirectory>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Specification-Title>${project.name}</Specification-Title>
+                            <Specification-Version>${project.version}</Specification-Version>
+                            <Implementation-Title>${project.groupId}.${project.artifactId}</Implementation-Title>
+                            <Implementation-Build-Time>${maven.build.timestamp}</Implementation-Build-Time>
+                            <X-Docker-Repo>pi4j/raspberrypi-compiler:${project.version}</X-Docker-Repo>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>build-docker-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>push-version</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>push</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

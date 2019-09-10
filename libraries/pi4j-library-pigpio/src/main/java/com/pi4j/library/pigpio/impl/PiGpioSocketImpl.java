@@ -4,7 +4,7 @@ package com.pi4j.library.pigpio.impl;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
  * FILENAME      :  PiGpioSocketImpl.java
  *
  * This file is part of the Pi4J project. More information about
@@ -40,6 +40,12 @@ import static com.pi4j.library.pigpio.PiGpioCmd.*;
 import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_HOST;
 import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_PORT;
 
+/**
+ * <p>PiGpioSocketImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -50,7 +56,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * @param host hostname or IP address of the RaspberryPi to connect to via TCP/IP socket.
      * @param port TCP port number of the RaspberryPi to connect to via TCP/IP socket.
-     * @throws IOException
+     * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @throws java.io.IOException if any.
      */
     public static PiGpio newInstance(String host, String port) throws IOException {
         return new PiGpioSocketImpl(host, Integer.parseInt(port));
@@ -62,7 +69,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * @param host hostname or IP address of the RaspberryPi to connect to via TCP/IP socket.
      * @param port TCP port number of the RaspberryPi to connect to via TCP/IP socket.
-     * @throws IOException
+     * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @throws java.io.IOException if any.
      */
     public static PiGpio newInstance(String host, int port) throws IOException {
         return new PiGpioSocketImpl(host, port);
@@ -73,7 +81,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * Connects to a user specified socket hostname/ip address using the default port (8888).
      *
      * @param host hostname or IP address of the RaspberryPi to connect to via TCP/IP socket.
-     * @throws IOException
+     * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @throws java.io.IOException if any.
      */
     public static PiGpio newInstance(String host) throws IOException {
         return new PiGpioSocketImpl(host, DEFAULT_PORT);
@@ -83,7 +92,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * Creates a PiGpio instance using TCP Socket communication for remote I/O access.
      * Connects to the local system (127.0.0.1) using the default port (8888).
      *
-     * @throws IOException
+     * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @throws java.io.IOException if any.
      */
     public static PiGpio newInstance() throws IOException {
         return new PiGpioSocketImpl(DEFAULT_HOST, DEFAULT_PORT);
@@ -103,54 +113,24 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * Initialises the library.
+     * {@inheritDoc}
      *
-     * Returns the pigpio version number if OK, otherwise PI_INIT_FAILED.
-     * gpioInitialise must be called before using the other library functions with the following exceptions:
-     * - gpioCfg*
-     * - gpioVersion
-     * - gpioHardwareRevision
-     *
-     * @return result value
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise"
-     */
-    @Override
-    public long gpioInitialise() {
-        // TODO :: SETUP NOTIFICATIONS
-        return 0;
-    }
-
-    /**
-     * Terminates the library.
-     *
-     * Returns nothing.
-     * Call before program exit.
-     * This function resets the used DMA channels, releases memory, and terminates any running threads.
-     */
-    @Override
-    public void gpioTerminate() throws IOException {
-        // TODO :: REMOVE ALL NOTIFICATIONS
-        socket.close();
-    }
-
-    /**
      * Returns the pigpio library version.
-     *
-     * @return pigpio version.
-     * @throws IOException
-     * @throws InterruptedException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioVersion"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioVersion">PIGPIO::gpioVersion</a>
      */
     @Override
-    public long gpioVersion() throws IOException {
-        logger.trace("[PIGPIO] -> GET VERSION");
+    public int gpioVersion() throws IOException {
+        logger.trace("[VERSION] -> GET VERSION");
+        validateReady();
         PiGpioPacket result = sendCommand(PIGPV);
-        long version = result.result();
-        logger.trace("[PIGPIO] <- VERSION: {}", version);
+        int version = result.result();
+        logger.trace("[VERSION] <- RESULT={}", version);
         return version;
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the hardware revision.
      *
      * If the hardware revision can not be found or is not a valid hexadecimal number the function returns 0.
@@ -165,49 +145,17 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *     for "Revision : 0002" the function returns 2.
      *     for "Revision : 000f" the function returns 15.
      *     for "Revision : 000g" the function returns 0.
-     *
-     * @return hardware revision as raw 32-bit UINT
-     * @throws IOException
-     * @seel "http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision">PIGPIO::gpioHardwareRevision</a>
      */
     @Override
     public long gpioHardwareRevision() throws IOException {
         logger.trace("[HARDWARE] -> GET REVISION");
+        validateReady();
         PiGpioPacket result = sendCommand(HWVER);
         long revision = result.result();
         logger.trace("[HARDWARE] <- REVISION: {}", revision);
         if(revision <= 0) throw new IOException("Hardware revision could not be determined.");
         return revision;
-    }
-
-    /**
-     * Returns the hardware revision (as hexadecimal string).
-     *
-     * If the hardware revision can not be found or is not a valid hexadecimal number the function returns 0.
-     * The hardware revision is the last few characters on the Revision line of /proc/cpuinfo.
-     * The revision number can be used to determine the assignment of GPIO to pins (see gpio).
-     *
-     * There are at least three types of board.
-     *  - Type 1 boards have hardware revision numbers of 2 and 3.
-     *  - Type 2 boards have hardware revision numbers of 4, 5, 6, and 15.
-     *  - Type 3 boards have hardware revision numbers of 16 or greater.
-     *
-     *     for "Revision : 0002" the function returns 2.
-     *     for "Revision : 000f" the function returns 15.
-     *     for "Revision : 000g" the function returns 0.
-     *
-     * @return hardware revision in hexadecimal string
-     * @throws IOException
-     * @seel "http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision"
-     */
-    @Override
-    public String gpioHardwareRevisionString() throws IOException {
-        logger.trace("[HARDWARE] -> GET REVISION (STRING)");
-        PiGpioPacket result = sendCommand(HWVER);
-        long revision = result.result();
-        String revisionString = Integer.toHexString((int)revision);
-        logger.trace("[HARDWARE] <- REVISION (STRING): {}", revisionString);
-        return revisionString;
     }
 
     // *****************************************************************************************************
@@ -217,16 +165,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     // *****************************************************************************************************
 
     /**
-     * Sets or clears resistor pull ups or downs on the GPIO.
+     * {@inheritDoc}
      *
-     * @param pin gpio pin address
-     * @param pud pull-up, pull-down, pull-off
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPullUpDown"
+     * Sets or clears resistor pull ups or downs on the GPIO.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPullUpDown">PIGPIO::gpioSetPullUpDown</a>
      */
     @Override
     public void gpioSetPullUpDown(int pin, PiGpioPud pud) throws IOException {
         logger.trace("[GPIO::PUD-SET] -> PIN: {}; PUD={}({});", pin, pud.name(), pud.value());
+        validateReady();
         validatePin(pin);
         PiGpioPacket result = sendCommand(PUD, pin, pud.value());
         logger.trace("[GPIO::PUD-SET] <- PIN: {}; PUD={}({}); SUCCESS={}", pud.name(), pud.value(), result.success());
@@ -234,16 +181,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * Gets the GPIO mode.
+     * {@inheritDoc}
      *
-     * @param pin
-     * @return pin mode
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetMode"
+     * Gets the GPIO mode.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetMode">PIGPIO::gpioGetMode</a>
      */
     @Override
     public PiGpioMode gpioGetMode(int pin) throws IOException {
         logger.trace("[GPIO::MODE-GET] -> PIN: {};", pin);
+        validateReady();
         validatePin(pin);
         PiGpioPacket result = sendCommand(MODEG, pin);
         validateResult(result); // Returns the GPIO mode if OK, otherwise PI_BAD_GPIO.
@@ -253,19 +199,18 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Sets the GPIO mode, typically input or output.
      *
      * gpio: 0-53
      * mode: 0-7
-     *
-     * @param pin
-     * @param mode
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetMode"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetMode">PIGPIO::gpioSetMode</a>
      */
     @Override
     public void gpioSetMode(int pin, PiGpioMode mode) throws IOException {
         logger.trace("[GPIO::MODE-SET] -> PIN: {}; MODE={}({});", pin, mode.name(), mode.value());
+        validateReady();
         validatePin(pin);
         PiGpioPacket result = sendCommand(MODES, pin, mode.value());
         logger.trace("[GPIO::MODE-SET] <- PIN: {}; MODE={}({}); SUCCESS={}", mode.name(), mode.value(), result.success());
@@ -273,15 +218,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Reads the GPIO level, on (HIGH) or off (LOW).
-     * @param pin gpio pin address
-     * @return
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioRead"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioRead">PIGPIO::gpioRead</a>
      */
     @Override
     public PiGpioState gpioRead(int pin) throws IOException {
         logger.trace("[GPIO::GET] -> PIN: {}", pin);
+        validateReady();
         validatePin(pin);
         PiGpioPacket result = sendCommand(READ, pin);
         validateResult(result); // Returns the GPIO level if OK, otherwise PI_BAD_GPIO.
@@ -291,21 +236,82 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * Sets the GPIO level, on (HIGH) or off (LOW).
+     * {@inheritDoc}
      *
-     * @param pin gpio pin address
-     * @param state HIGH or LOW
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite"
+     * Sets the GPIO level, on (HIGH) or off (LOW).
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite">PIGPIO::gpioWrite</a>
      */
     @Override
     public void gpioWrite(int pin, PiGpioState state) throws IOException {
         logger.trace("[GPIO::SET] -> PIN: {}; {}({});", pin, state.name(), state.value());
+        validateReady();
         validatePin(pin);
         PiGpioPacket result = sendCommand(WRITE, pin, state.value());
         logger.trace("[GPIO::SET] <- PIN: {}; {}({}); SUCCESS={}",  pin, state.name(), state.value(), result.success());
         validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_GPIO or PI_BAD_LEVEL.
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Sets a glitch filter on a GPIO.  (AKA Debounce)
+     *
+     * Level changes on the GPIO are not reported unless the level has been stable for at
+     * least 'steady' microseconds. The level is then reported. Level changes of less
+     * than 'steady' microseconds are ignored.
+     *
+     * This filter affects the GPIO samples returned to callbacks set up with:
+     *  - gpioSetAlertFunc
+     *  - gpioSetAlertFuncEx
+     *  - gpioSetGetSamplesFunc
+     *  - gpioSetGetSamplesFuncEx.
+     *
+     * It does not affect interrupts set up with gpioSetISRFunc, gpioSetISRFuncEx, or
+     * levels read by gpioRead, gpioRead_Bits_0_31, or gpioRead_Bits_32_53.
+     * Each (stable) edge will be timestamped steady microseconds after it was first detected.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter">PIGPIO::gpioGlitchFilter</a>
+     */
+    public void gpioGlitchFilter(int pin, int steady) throws IOException {
+        logger.trace("[GPIO::GLITCH] -> PIN: {}; INTERVAL: {};", pin, steady);
+        validateReady();
+        validatePin(pin);
+        validateGpioGlitchFilter(steady);
+        PiGpioPacket result = sendCommand(FG, pin, steady);
+        logger.trace("[GPIO::GLITCH] <- PIN: {}; SUCCESS={}",  pin, result.success());
+        validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO, or PI_BAD_FILTER.
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Sets a noise filter on a GPIO.
+     *
+     * Level changes on the GPIO are ignored until a level which has been stable for 'steady'
+     * microseconds is detected. Level changes on the GPIO are then reported for 'active'
+     * microseconds after which the process repeats.
+     *
+     * This filter affects the GPIO samples returned to callbacks set up with:
+     *  - gpioSetAlertFunc
+     *  - gpioSetAlertFuncEx
+     *  - gpioSetGetSamplesFunc
+     *  - gpioSetGetSamplesFuncEx.     *
+     * It does not affect interrupts set up with gpioSetISRFunc, gpioSetISRFuncEx, or
+     * levels read by gpioRead, gpioRead_Bits_0_31, or gpioRead_Bits_32_53.
+     *
+     * Level changes before and after the active period may be reported.
+     * Your software must be designed to cope with such reports.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter">PIGPIO::gpioGlitchFilter</a>
+     */
+    public void gpioNoiseFilter(int pin, int steady, int active) throws IOException{
+        logger.trace("[GPIO::NOISE] -> PIN: {}; INTERVAL: {};", pin, steady);
+        validateReady();
+        validatePin(pin);
+        validateGpioNoiseFilter(steady, active);
+        PiGpioPacket result = sendCommand(FN, pin, steady).data(active);
+        logger.trace("[GPIO::NOISE] <- PIN: {}; SUCCESS={}",  pin, result.success());
+        validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO, or PI_BAD_FILTER.
+    }
+
 
     // *****************************************************************************************************
     // *****************************************************************************************************
@@ -314,18 +320,18 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     // *****************************************************************************************************
 
     /**
+     * {@inheritDoc}
+     *
      * Starts PWM on the GPIO, dutycycle between 0 (off) and range (fully on). Range defaults to 255.
      *
      * This and the servo functionality use the DMA and PWM or PCM peripherals to control and schedule
      * the pulse lengths and duty cycles.
-     *
-     * @param pin user_gpio: 0-31
-     * @param dutyCycle dutycycle: 0-range
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioPWM"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioPWM">PIGPIO::gpioPWM</a>
      */
     @Override
     public void gpioPWM(int pin, int dutyCycle) throws IOException {
         logger.trace("[PWM::SET] -> PIN: {}; DUTY-CYCLE={};", pin, dutyCycle);
+        validateReady();
         validateUserPin(pin);
         validateDutyCycle(dutyCycle);
         PiGpioPacket result = sendCommand(PWM, pin, dutyCycle);
@@ -334,6 +340,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the PWM dutycycle setting for the GPIO.
      *
      * For normal PWM the dutycycle will be out of the defined range for the GPIO (see gpioGetPWMrange).
@@ -341,14 +349,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * If hardware PWM is active on the GPIO the reported dutycycle will be out of a 1000000 (1M).
      *
      * Normal PWM range defaults to 255.
-     *
-     * @param pin user_gpio: 0-31
-     * @return Returns between 0 (off) and range (fully on) if OK.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMdutycycle"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMdutycycle">PIGPIO::gpioGetPWMdutycycle</a>
      */
     @Override
     public int gpioGetPWMdutycycle(int pin) throws IOException {
         logger.trace("[PWM::GET] -> PIN: {}", pin);
+        validateReady();
         validateUserPin(pin);
         PiGpioPacket result = sendCommand(GDC, pin);
         var dutyCycle = result.result();
@@ -358,6 +364,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Selects the dutycycle range to be used for the GPIO. Subsequent calls to gpioPWM will use a dutycycle
      * between 0 (off) and range (fully on.  If PWM is currently active on the GPIO its dutycycle will be
      * scaled to reflect the new range.
@@ -379,14 +387,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *   gpioSetPWMrange(24, 2000); // Now 2000 is fully on
      *                              //     1000 is half on
      *                              //      500 is quarter on, etc.
-     * @param pin user_gpio: 0-31
-     * @param range range: 25-40000
-     * @return Returns the real range for the given GPIO's frequency if OK.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange">PIGPIO::gpioSetPWMrange</a>
      */
     @Override
     public int gpioSetPWMrange(int pin, int range) throws IOException {
         logger.trace("[PWM-RANGE::SET] -> PIN: {}; RANGE={}", pin, range);
+        validateReady();
         validateUserPin(pin);
         //validateDutyCycleRange(range);
         PiGpioPacket result = sendCommand(PRS, pin, range);
@@ -397,16 +403,16 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the duty-cycle range used for the GPIO if OK.
      * If a hardware clock or hardware PWM is active on the GPIO the reported range will be 1000000 (1M).
-     *
-     * @param pin user_gpio: 0-31
-     * @return duty-cycle range
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrange"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrange">PIGPIO::gpioGetPWMrange</a>
      */
     @Override
     public int gpioGetPWMrange(int pin) throws IOException {
         logger.trace("[PWM-RANGE::GET] -> PIN: {}", pin);
+        validateReady();
         validateUserPin(pin);
         PiGpioPacket result = sendCommand(PRG, pin);
         var range = result.result();
@@ -416,18 +422,18 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the real range used for the GPIO if OK.
      * If a hardware clock is active on the GPIO the reported real range will be 1000000 (1M).
      * If hardware PWM is active on the GPIO the reported real range will be approximately 250M
      * divided by the set PWM frequency.
-     *
-     * @param pin user_gpio: 0-31
-     * @return real range used for the GPIO if OK.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrealRange"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrealRange">PIGPIO::gpioGetPWMrealRange</a>
      */
     @Override
     public int gpioGetPWMrealRange(int pin) throws IOException {
         logger.trace("[PWM-REAL-RANGE::GET] -> PIN: {}", pin);
+        validateReady();
         validateUserPin(pin);
         PiGpioPacket result = sendCommand(PRRG, pin);
         var range = result.result();
@@ -437,6 +443,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Sets the frequency in hertz to be used for the GPIO.
      *
      * If PWM is currently active on the GPIO it will be switched off and then back on at the new frequency.
@@ -471,15 +479,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *    gpioSetPWMfrequency(23, 0); // Set GPIO23 to lowest frequency.
      *    gpioSetPWMfrequency(24, 500); // Set GPIO24 to 500Hz.
      *    gpioSetPWMfrequency(25, 100000); // Set GPIO25 to highest frequency.
-     *
-     * @param pin user_gpio: 0-31
-     * @param frequency frequency: >=0
-     * @return Returns the numerically closest frequency if OK
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange">PIGPIO::gpioSetPWMrange</a>
      */
     @Override
     public int gpioSetPWMfrequency(int pin, int frequency) throws IOException {
         logger.trace("[PWM-FREQ::SET] -> PIN: {}; FREQUENCY={}", pin, frequency);
+        validateReady();
         validateUserPin(pin);
         // validateFrequency(frequency); TODO :: IMPLEMENT 'validateFrequency()'
         PiGpioPacket result = sendCommand(PFS, pin, frequency);
@@ -490,6 +495,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the frequency (in hertz) used for the GPIO
      *
      * For normal PWM the frequency will be that defined for the GPIO by gpioSetPWMfrequency.
@@ -498,14 +505,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *
      * Example:
      *    f = gpioGetPWMfrequency(23); // Get frequency used for GPIO23.
-     *
-     * @param pin user_gpio: 0-31
-     * @return Returns the frequency (in hertz) used for the GPIO if OK.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMfrequency"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMfrequency">PIGPIO::gpioGetPWMfrequency</a>
      */
     @Override
     public int gpioGetPWMfrequency(int pin) throws IOException {
         logger.trace("[PWM-FREQ::GET] -> PIN: {}", pin);
+        validateReady();
         validateUserPin(pin);
         PiGpioPacket result = sendCommand(PFG, pin);
         var frequency = result.result();
@@ -515,6 +520,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Starts hardware PWM on a GPIO at the specified frequency and duty-cycle.
      * Frequencies above 30MHz are unlikely to work.
      *
@@ -546,15 +553,11 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      * There will only be a million steps for a frequency of 250 (375 for the BCM2711). Lower
      * frequencies will have more steps and higher frequencies will have fewer steps.
      * dutyCycle is automatically scaled to take this into account.
-     *
-     * @param pin a supported hardware PWM pin
-     * @param frequency  0 (off) or 1-125M (1-187.5M for the BCM2711)
-     * @param dutyCycle  0 (off) to 1000000 (1M)(fully on)
-     * @return  Returns 0 if OK, otherwise PI_BAD_GPIO, PI_NOT_HPWM_GPIO, PI_BAD_HPWM_DUTY, PI_BAD_HPWM_FREQ, or PI_HPWM_ILLEGAL.
      */
     @Override
     public void gpioHardwarePWM(int pin, int frequency, int dutyCycle) throws IOException {
         logger.trace("[HW-PWM::SET] -> PIN: {}; FREQUENCY={}; DUTY-CYCLE={}", pin, frequency, dutyCycle);
+        validateReady();
         validateUserPin(pin);
         // validateHwPwmFrequency(frequency); TODO :: IMPLEMENT 'validateHwPwmFrequency()'
         PiGpioPacket tx = new PiGpioPacket(HP, pin, frequency).data(dutyCycle);
@@ -565,21 +568,94 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
 
     // *****************************************************************************************************
     // *****************************************************************************************************
+    // SERVO IMPLEMENTATION
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+
+    /**
+     * {@inheritDoc}
+     *
+     * Starts servo pulses on the GPIO, 0 (off), 500 (most anti-clockwise) to 2500 (most clockwise).
+     *
+     * The range supported by servos varies and should probably be determined by experiment. A value
+     * of 1500 should always be safe and represents the mid-point of rotation. You can DAMAGE a servo
+     * if you command it to move beyond its limits.
+     *
+     * The following causes an on pulse of 1500 microseconds duration to be transmitted on GPIO 17 at
+     * a rate of 50 times per second. This will command a servo connected to GPIO 17 to rotate to its
+     * mid-point.
+     *
+     * Example:
+     *  - gpioServo(17, 1000); // Move servo to safe position anti-clockwise.
+     *  - gpioServo(23, 1500); // Move servo to centre position.
+     *  - gpioServo(25, 2000); // Move servo to safe position clockwise.
+     *
+     * OTHER UPDATE RATES:
+     * This function updates servos at 50Hz. If you wish to use a different
+     * update frequency you will have to use the PWM functions.
+     *
+     *    PWM Hz      50     100    200    400    500
+     *    1E6/Hz   20000   10000   5000   2500   2000
+     *
+     * Firstly set the desired PWM frequency using gpioSetPWMfrequency.
+     * Then set the PWM range using gpioSetPWMrange to 1E6/frequency. Doing this
+     * allows you to use units of microseconds when setting the servo pulsewidth.
+     *
+     * E.g. If you want to update a servo connected to GPIO25 at 400Hz*
+     *  - gpioSetPWMfrequency(25, 400);
+     *  - gpioSetPWMrange(25, 2500);
+     *
+     * Thereafter use the PWM command to move the servo, e.g. gpioPWM(25, 1500) will set a 1500 us pulse.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioServo">PIGPIO::gpioServo</a>
+     */
+    public void gpioServo(int pin, int pulseWidth) throws IOException{
+        logger.trace("[SERVO::SET] -> PIN: {}; PULSE-WIDTH={};", pin, pulseWidth);
+        validateReady();
+        validateUserPin(pin);
+        validatePulseWidth(pulseWidth);
+        PiGpioPacket result = sendCommand(SERVO, pin, pulseWidth);
+        logger.trace("[SERVO::SET] <- PIN: {}; PULSE-WIDTH={}; SUCCESS={}",  pin, pulseWidth, result.success());
+        validateResult(result);  // Returns 0 if OK, otherwise PI_BAD_USER_GPIO or PI_BAD_PULSEWIDTH.
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Returns the servo pulse-width setting for the GPIO.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetServoPulsewidth">PIGPIO::gpioGetServoPulsewidth</a>
+     */
+    public int gpioGetServoPulsewidth(int pin) throws IOException{
+        logger.trace("[SERVO::GET] -> PIN: {}", pin);
+        validateReady();
+        validateUserPin(pin);
+        PiGpioPacket result = sendCommand(GPW, pin);
+        var pulseWidth = result.result();
+        logger.trace("[SERVO::GET] <- PIN: {}; PULSE-WIDTH={}; SUCCESS={}",  pin, pulseWidth, result.success());
+
+        // Returns 0 (off), 500 (most anti-clockwise) to 2500 (most clockwise)
+        // if OK, otherwise PI_BAD_USER_GPIO or PI_NOT_SERVO_GPIO.
+        validateResult(result);
+        return pulseWidth;
+    }
+
+
+    // *****************************************************************************************************
+    // *****************************************************************************************************
     // DELAY/SLEEP/TIMER IMPLEMENTATION
     // *****************************************************************************************************
     // *****************************************************************************************************
 
     /**
+     * {@inheritDoc}
+     *
      * Delays for at least the number of microseconds specified by micros.
      * (Delays of 100 microseconds or less use busy waits.)
-     *
-     * @param micros micros: the number of microseconds to sleep
-     * @return Returns the actual length of the delay in microseconds.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioDelay"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioDelay">PIGPIO::gpioDelay</a>
      */
     @Override
-    public int gpioDelay(int micros) throws IOException {
+    public long gpioDelay(long micros) throws IOException {
         logger.trace("[DELAY] -> MICROS: {}", micros);
+        validateReady();
         validateDelayMicroseconds(micros);
         PiGpioPacket result = sendCommand(MICS, (int)micros);
         logger.trace("[DELAY] <- MICROS: {}; SUCCESS={}",  micros, result.success());
@@ -588,15 +664,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * Delays for at least the number of milliseconds specified by micros. (between 1 and 60000 <1 minute>)
+     * {@inheritDoc}
      *
-     * @param millis millis: the number of milliseconds to sleep (between 1 and 60000 <1 minute>)
-     * @return Returns the actual length of the delay in milliseconds.
-     * @see "http://abyz.me.uk/rpi/pigpio/pigs.html#MILS"
+     * Delays for at least the number of milliseconds specified by micros. (between 1 and 60000 [1 minute])
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/pigs.html#MILS">PIGPIO::MILS</a>
      */
     @Override
     public int gpioDelayMilliseconds(int millis) throws IOException{
         logger.trace("[DELAY] -> MILLIS: {}", millis);
+        validateReady();
         validateDelayMilliseconds(millis);
         PiGpioPacket result = sendCommand(MILS, (int)millis);
         logger.trace("[DELAY] <- MILLIS: {}; SUCCESS={}",  millis, result.success());
@@ -605,6 +681,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the current system tick.
      * Tick is the number of microseconds since system boot.
      *
@@ -622,13 +700,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *   endTick = gpioTick();
      *   diffTick = endTick - startTick;
      *   printf("some processing took %d microseconds", diffTick);
-     *
-     * @return Returns the current system tick.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioTick"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioTick">PIGPIO::gpioTick</a>
      */
     @Override
     public long gpioTick() throws IOException {
         logger.trace("[TICK::GET] -> Get current tick");
+        validateReady();
         PiGpioPacket tx = new PiGpioPacket(TICK);
         PiGpioPacket rx = sendPacket(tx);
         long tick = Integer.toUnsignedLong(rx.result()); // convert (UInt32) 32-bit unsigned value to long
@@ -643,6 +720,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     // *****************************************************************************************************
 
     /**
+     * {@inheritDoc}
+     *
      * Opens a I2C device on a I2C bus for communications.
      * This returns a handle for the device at the address on the I2C bus.
      * Physically buses 0 and 1 are available on the Pi.
@@ -652,17 +731,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      *         SDA   SCL
      * I2C0     0     1
      * I2C1     2     3
-     *
-     * @param bus the I2C bus address to open/access for reading and writing. (>=0)
-     * @param device the I2C device address to open/access for reading and writing. (0-0x7F)
-     * @param flags no flags are currently defined. This parameter should be set to zero.
-     * @return Returns a handle (>=0) if OK, otherwise PI_BAD_I2C_BUS, PI_BAD_I2C_ADDR, PI_BAD_FLAGS, PI_NO_HANDLE, or PI_I2C_OPEN_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cOpen"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cOpen">PIGPIO::i2cOpen</a>
      */
     @Override
     public int i2cOpen(int bus, int device, int flags) throws IOException {
         logger.trace("[I2C::OPEN] -> Open I2C Bus [{}] and Device [{}]", bus, device);
+        validateReady();
         validateI2cBus(bus);
         validateI2cDeviceAddress(device);
         PiGpioPacket tx = new PiGpioPacket(I2CO, bus, device).data(flags);
@@ -670,40 +744,49 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         int handle = rx.result();
         logger.trace("[I2C::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
+
+        // if the open was successful, then we need to cache the I2C handle
+        if(rx.success()) {
+            i2cHandles.add(handle);
+        }
+
+        // return handle
         return handle;
     }
 
     /**
-     * This closes the I2C device associated with the handle.
+     * {@inheritDoc}
      *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cClose"
+     * This closes the I2C device associated with the handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cClose">PIGPIO::i2cClose</a>
      */
     @Override
     public int i2cClose(int handle) throws IOException {
         logger.trace("[I2C::CLOSE] -> HANDLE={}, Close I2C Bus", handle);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CC, handle);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
+
+        // if the close was successful, then we need to remove the I2C handle from cache
+        if(rx.success()) i2cHandles.remove(handle);
+
+        // return result
         return rx.result();
     }
 
     /**
-     * This sends a single bit (in the Rd/Wr bit) to the device associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param bit 0-1, the value to write
-     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteQuick"
+     * This sends a single bit (in the Rd/Wr bit) to the device associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteQuick">PIGPIO::i2cWriteQuick</a>
      */
     @Override
     public int i2cWriteQuick(int handle, boolean bit) throws IOException {
         logger.trace("[I2C::WRITE] -> HANDLE={}; R/W Bit [{}]", handle, bit ? 1 : 0);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CWQ, handle, bit ? 1 : 0);
         PiGpioPacket rx = sendPacket(tx);
@@ -713,17 +796,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This sends a single byte to the device associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param value raw byte value (0-0xFF) to write to I2C device
-     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByte"
+     * This sends a single byte to the device associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByte">PIGPIO::i2cWriteByte</a>
      */
     @Override
     public int i2cWriteByte(int handle, byte value) throws IOException {
         logger.trace("[I2C::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CWS, handle, Byte.toUnsignedInt(value));
         PiGpioPacket rx = sendPacket(tx);
@@ -733,16 +814,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This reads a single byte from the device associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @return Returns the byte read (>=0) if OK, otherwise PI_BAD_HANDLE, or PI_I2C_READ_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByte"
+     * This reads a single byte from the device associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByte">PIGPIO::i2cReadByte</a>
      */
     @Override
     public int i2cReadByte(int handle) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Byte", handle);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CRS, handle);
         PiGpioPacket rx = sendPacket(tx);
@@ -752,18 +832,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This writes a single byte to the specified register of the device associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param register i2cReg: 0-255, the register to write
-     * @param value raw byte value (0-0xFF) to write to I2C device
-     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByteData"
+     * This writes a single byte to the specified register of the device associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByteData">PIGPIO::i2cWriteByteData</a>
      */
     @Override
     public int i2cWriteByteData(int handle, int register, byte value) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Byte [{}]", handle ,register, Byte.toUnsignedInt(value));
+        validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CWB, handle, register).data(Byte.toUnsignedInt(value));
@@ -774,18 +851,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This writes a single 16 bit word to the specified register of the device associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param register the I2C register address to write to. (0-255)
-     * @param value raw word (2-byte) value (0-0xFFFF) to write to I2C device
-     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteWordData"
+     * This writes a single 16 bit word to the specified register of the device associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteWordData">PIGPIO::i2cWriteWordData</a>
      */
     @Override
     public int i2cWriteWordData(int handle, int register, int value) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
+        validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CWW, handle, register).data(value);
@@ -796,17 +870,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This reads a single byte from the specified register of the device associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param register the I2C register address to read from. (0-255)
-     * @return Returns the byte read (>=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByteData"
+     * This reads a single byte from the specified register of the device associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByteData">PIGPIO::i2cReadByteData</a>
      */
     @Override
     public int i2cReadByteData(int handle, int register) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Byte", handle ,register);
+        validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRB, handle, register);
@@ -817,17 +889,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This reads a single 16 bit word from the specified register of the device associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param register the I2C register address to read from. (0-255)
-     * @return Returns the word (2-byte value) read (>=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadWordData"
+     * This reads a single 16 bit word from the specified register of the device associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadWordData">PIGPIO::i2cReadWordData</a>
      */
     @Override
     public int i2cReadWordData(int handle, int register) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Word", handle ,register);
+        validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRW, handle, register);
@@ -838,19 +908,16 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * This writes 16 bits of data to the specified register of the device associated with
      * handle and reads 16 bits of data in return. (in a single transaction)
-     *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param register the I2C register address to write to and read from. (0-255)
-     * @param value raw word (2-byte) value (0-0xFFFF) to write to I2C device
-     * @return Returns the word read (>=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cProcessCall"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cProcessCall">PIGPIO::i2cProcessCall</a>
      */
     @Override
     public int i2cProcessCall(int handle, int register, int value) throws IOException {
         logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
+        validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CPC, handle, register).data(value);
@@ -861,20 +928,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This writes up to 32 bytes to the specified register of the device associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param register the I2C register address to write to. (0-255)
-     * @param data the array of bytes to write
-     * @param offset the starting offset position in the provided buffer to start writing from.
-     * @param length the number of bytes to write (maximum 32 bytes supported)
-     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData"
+     * This writes up to 32 bytes to the specified register of the device associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
      */
     @Override
     public int i2cWriteBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, data.length);
+        validateReady();
         Objects.checkFromIndexSize(offset, length, data.length);
         validateHandle(handle);
         validateI2cRegister(register);
@@ -887,20 +949,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * This reads a block of up to 32 bytes from the specified register of the device associated with handle.
      * The amount of returned data is set by the device.
-     *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param register the I2C register address to read from. (0-255)
-     * @param buffer a byte array to receive the read data
-     * @param offset the starting offset position in the provided buffer to start copying the data bytes read.
-     * @param length the maximum number of bytes to read
-     * @return Returns the number of bytes read (>=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
      */
     @Override
     public int i2cReadBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Block", handle ,register);
+        validateReady();
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
         validateI2cRegister(register);
@@ -908,35 +965,29 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         if(rx.success()) {
-            System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+            int actual = rx.result();
+            if(rx.dataLength() < actual) actual = rx.dataLength();
+            System.arraycopy(rx.data(), 0, buffer, offset, actual);
         }
         return rx.result();
     }
 
     /**
+     * {@inheritDoc}
+     *
      * This writes data bytes to the specified register of the device associated with handle and reads a
      * device specified number of bytes of data in return.
      *
      * The SMBus 2.0 documentation states that a minimum of 1 byte may be sent and a minimum of 1 byte may be received.
      * The total number of bytes sent/received must be 32 or less.
-     *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param register the I2C register address to read from. (0-255)
-     * @param write a byte array containing data to write
-     * @param writeOffset the starting offset position in the provided byte array to start writing from.
-     * @param writeLength the number of bytes to write (maximum 32 bytes supported)
-     * @param read a byte array to receive the read data; note the size must be pre-allocated and must be at
-     *             is determined by the actual I2C device  (a pre-allocated array/buffer of 32 bytes is safe)
-     * @param readOffset the starting offset position in the provided read array/buffer to start copying the data bytes read.
-     * @return Returns the number of bytes read (>=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
      */
     @Override
     public int i2cBlockProcessCall(int handle, int register,
                                    byte[] write, int writeOffset, int writeLength,
                                    byte[] read, int readOffset) throws IOException {
         logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, writeLength);
+        validateReady();
         Objects.checkFromIndexSize(writeOffset, writeLength, write.length);
         validateHandle(handle);
         validateI2cRegister(register);
@@ -951,6 +1002,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         // copy data bytes to provided "read" array/buffer
         if(rx.success()) {
             int readLength = rx.result();
+            if(rx.dataLength() < readLength) readLength = rx.dataLength();
+
             // make sure the read array has sufficient space to store the bytes returned
             Objects.checkFromIndexSize(readOffset, readLength, read.length);
             System.arraycopy(rx.data(), 0, read, readOffset, readLength);
@@ -959,22 +1012,31 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * This writes data bytes to the specified register of the device associated with the handle and reads a
+     * device specified number of bytes of data in return.
+     *
+     * The SMBus 2.0 documentation states that a minimum of 1 byte may be sent and a minimum of 1 byte may be received.
+     * The total number of bytes sent/received must be 32 or less.
+     */
+    @Override
+    public int i2cBlockProcessCall(int handle, int register, byte[] data, int offset, int length) throws IOException{
+        return i2cBlockProcessCall(handle, register, data, offset, length, data, offset);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * This reads count bytes from the specified register of the device associated with handle .
      * The maximum length of data that can be read is 32 bytes.
      * The minimum length of data that can be read is 1 byte.
-     *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param register the I2C register address to read from. (0-255)
-     * @param buffer a byte array (pre-allocated) to receive the read data
-     * @param offset the starting offset position in the provided buffer to start copying the data bytes read.
-     * @param length the maximum number of bytes to read (1-32)
-     * @return Returns the number of bytes read (>0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadI2CBlockData"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadI2CBlockData">PIGPIO::i2cReadI2CBlockData</a>
      */
     @Override
     public int i2cReadI2CBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException{
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, length);
+        validateReady();
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
         validateI2cRegister(register);
@@ -983,17 +1045,19 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
 
-        logger.trace("[I2C::READ] <- DATA SIZE={}",  rx.result());
-        logger.trace("[I2C::READ] <- DATA LENGTH={}",  rx.dataLength());
-        logger.trace("[I2C::READ] <- BUFFER SIZE={}",  rx.data());
-        logger.trace("[I2C::READ] <- OFFSET={}",  offset);
+//        logger.trace("[I2C::READ] <- DATA SIZE={}",  rx.result());
+//        logger.trace("[I2C::READ] <- DATA LENGTH={}",  rx.dataLength());
+//        logger.trace("[I2C::READ] <- BUFFER SIZE={}",  rx.data());
+//        logger.trace("[I2C::READ] <- OFFSET={}",  offset);
 
         if(rx.success()) {
             try {
-                System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+                int actual = rx.result();
+                if(rx.dataLength() < actual) actual = rx.dataLength();
+                System.arraycopy(rx.data(), 0, buffer, offset, actual);
             }
             catch (ArrayIndexOutOfBoundsException a){
-                a.printStackTrace();
+                logger.error(a.getMessage(), a);
             }
 
         }
@@ -1001,20 +1065,15 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This writes 1 to 32 bytes to the specified register of the device associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param register the I2C register address to write to. (0-255)
-     * @param data a byte array containing the data to write to the I2C device register
-     * @param offset the starting offset position in the provided buffer to start writing from.
-     * @param length the maximum number of bytes to read (1-32)
-     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData"
+     * This writes 1 to 32 bytes to the specified register of the device associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
      */
     @Override
     public int i2cWriteI2CBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, data.length);
+        validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         validateI2cBlockLength(data.length);
@@ -1026,44 +1085,38 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This reads count bytes from the raw device into byte buffer array.
+     * {@inheritDoc}
      *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param buffer a byte array (pre-allocated) to receive the read data
-     * @param offset the starting offset position in the provided buffer to start copying the data bytes read.
-     * @param length the maximum number of bytes to read (1-32)
-     * @return Returns number of bytes read (>0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadDevice"
+     * This reads count bytes from the raw device into byte buffer array.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadDevice">PIGPIO::i2cReadDevice</a>
      */
     @Override
     public int i2cReadDevice(int handle, byte[] buffer, int offset, int length) throws IOException {
         logger.trace("[I2C::READ] -> [{}]; I2C Raw Read [{} bytes]", handle, length);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CRD, handle, length);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
         if(rx.success()) {
-            System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+            int actual = rx.result();
+            if(rx.dataLength() < actual) actual = rx.dataLength();
+            System.arraycopy(rx.data(), 0, buffer, offset, actual);
         }
         return rx.result();
     }
 
     /**
-     * This writes the length of bytes from the provided data array to the raw I2C device.
+     * {@inheritDoc}
      *
-     * @param handle the open I2C device handle; (>=0, as returned by a call to i2cOpen)
-     * @param data the array of bytes to write
-     * @param offset the starting offset position in the provided array/buffer to start writing from.
-     * @param length the number of bytes to write (maximum 32 bytes supported)
-     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
-     * @throws IOException
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice"
+     * This writes the length of bytes from the provided data array to the raw I2C device.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
      */
     @Override
     public int i2cWriteDevice(int handle, byte[] data, int offset, int length) throws IOException {
         logger.trace("[I2C::WRITE] -> [{}]; I2C Raw Write [{} bytes]", handle, data.length);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CWD, handle).data(data, offset, length);
         PiGpioPacket rx = sendPacket(tx);
@@ -1079,57 +1132,62 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     // *****************************************************************************************************
 
     /**
+     * {@inheritDoc}
+     *
      * This function opens a serial device at a specified baud rate and with specified flags.
      * The device name must start with "/dev/tty" or "/dev/serial".
-     *
-     * @param device the serial device to open (Example: "/dev/ttyAMA0")
-     * @param baud  the baud rate in bits per second, see below
-     *              The baud rate must be one of 50, 75, 110, 134, 150, 200, 300, 600, 1200,
-     *              1800, 2400, 4800, 9600, 19200, 38400, 57600, 115200, or 230400.
-     * @param flags  No flags are currently defined. This parameter should be set to zero.
-     * @return Returns a handle (>=0) if OK, otherwise PI_NO_HANDLE, or PI_SER_OPEN_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serOpen"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serOpen">PIGPIO::serOpen</a>
      */
     @Override
     public int serOpen(CharSequence device, int baud, int flags) throws IOException {
         logger.trace("[SERIAL::OPEN] -> Open Serial Port [{}] at Baud Rate [{}]", device, baud);
+        validateReady();
         PiGpioPacket tx = new PiGpioPacket(SERO, baud, flags).data(device);
         PiGpioPacket rx = sendPacket(tx);
         int handle = rx.result();
         logger.trace("[SERIAL::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
+
+        // if the open was successful, then we need to add the SERIAL handle to cache
+        if(rx.success()) serialHandles.add(handle);
+
+        // return the handle
         return handle;
     }
 
     /**
-     * This function closes the serial device associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
-     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serClose"
+     * This function closes the serial device associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serClose">PIGPIO::serClose</a>
      */
     @Override
     public int serClose(int handle) throws IOException {
         logger.trace("[SERIAL::CLOSE] -> HANDLE={}, Close Serial Port", handle);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SERC, handle);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[SERIAL::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
         validateResult(rx, false);
+
+        // if the close was successful, then we need to remove the SERIAL handle from cache
+        if(rx.success()) serialHandles.remove(handle);
+
+        // return result
         return rx.result();
     }
 
     /**
-     * This function writes a single byte "value" to the serial port associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
-     * @param value byte value to write to serial port
-     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWriteByte"
+     * This function writes a single byte "value" to the serial port associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWriteByte">PIGPIO::serWriteByte</a>
      */
     @Override
     public int serWriteByte(int handle, byte value) throws IOException {
         logger.trace("[SERIAL::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SERWB, handle, Byte.toUnsignedInt(value));
         PiGpioPacket rx = sendPacket(tx);
@@ -1139,16 +1197,16 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * This function reads a byte from the serial port associated with handle.
      * If no data is ready PI_SER_READ_NO_DATA is returned.
-     *
-     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
-     * @return Returns the read byte (>=0) if OK, otherwise PI_BAD_HANDLE, PI_SER_READ_NO_DATA, or PI_SER_READ_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte">PIGPIO::serReadByte</a>
      */
     @Override
     public int serReadByte(int handle) throws IOException {
         logger.trace("[SERIAL::READ] -> [{}]; Byte", handle);
+        validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SERRB, handle);
         PiGpioPacket rx = sendPacket(tx);
@@ -1158,42 +1216,36 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This function writes multiple bytes from the buffer array ('data') to the the serial
-     * port associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
-     * @param data the array of bytes to write
-     * @param offset the starting offset position in the provided buffer to start writing from.
-     * @param length the number of bytes to write
-     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serWrite"
+     * This function writes multiple bytes from the buffer array ('data') to the serial
+     * port associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
      */
     @Override
     public int serWrite(int handle, byte[] data, int offset, int length) throws IOException {
         logger.trace("[SERIAL::WRITE] -> [{}]; Serial Write [{} bytes]", handle, data.length);
+        validateReady();
         Objects.checkFromIndexSize(offset, length, data.length);
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SERW, handle).data(data, offset, length);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        logger.trace("[SERIAL::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
         validateResult(rx, false);
         return rx.result();
     }
 
     /**
-     * This function reads up count bytes from the the serial port associated with handle and
-     * writes them to the buffer parameter.   If no data is ready, zero is returned.
+     * {@inheritDoc}
      *
-     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
-     * @param buffer a byte array to receive the read data
-     * @param offset the starting offset position in the provided buffer to start copying the data bytes read.
-     * @param length the maximum number of bytes to read
-     * @return Returns the number of bytes read (>0=) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_READ_NO_DATA.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serRead"
+     * This function reads up count bytes from the serial port associated with handle and
+     * writes them to the buffer parameter.   If no data is ready, zero is returned.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serRead">PIGPIO::serRead</a>
      */
     @Override
     public int serRead(int handle, byte[] buffer, int offset, int length) throws IOException {
         logger.trace("[SERIAL::READ] -> [{}]; Serial Read [{} bytes]", handle, length);
+        validateReady();
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(SERR, handle, length);
@@ -1201,21 +1253,23 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         logger.trace("[SERIAL::READ] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, rx.success(), rx.dataLength());
         validateResult(rx, false);
         if(rx.success()) {
-            System.arraycopy(rx.data(), 0, buffer, offset, rx.result());
+            int actual = rx.result();
+            if(rx.dataLength() < actual) actual = rx.dataLength();
+            System.arraycopy(rx.data(), 0, buffer, offset, actual);
         }
         return rx.result();
     }
 
     /**
-     * This function returns the number of bytes available to be read from the device associated with handle.
+     * {@inheritDoc}
      *
-     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
-     * @return Returns the number of bytes of data available (>=0) if OK, otherwise PI_BAD_HANDLE.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serDataAvailable"
+     * This function returns the number of bytes available to be read from the device associated with handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serDataAvailable">PIGPIO::serDataAvailable</a>
      */
     @Override
     public int serDataAvailable(int handle) throws IOException {
         logger.trace("[SERIAL::AVAIL] -> Get number of bytes available to read");
+        validateReady();
         PiGpioPacket tx = new PiGpioPacket(SERDA, handle);
         PiGpioPacket rx = sendPacket(tx);
         int available = rx.result();
@@ -1225,14 +1279,14 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     }
 
     /**
-     * This function will drain the current serial receive buffer of any lingering bytes.
+     * {@inheritDoc}
      *
-     * @param handle the open serial device handle; (>=0, as returned by a call to serOpen)
-     * @return Returns the number of bytes of data drained (>=0) if OK, otherwise PI_BAD_HANDLE.
+     * This function will drain the current serial receive buffer of any lingering bytes.
      */
     @Override
     public int serDrain(int handle) throws IOException{
         logger.trace("[SERIAL::DRAIN] -> Drain any remaining bytes in serial RX buffer");
+        validateReady();
 
         // get number of bytes available
         PiGpioPacket tx = new PiGpioPacket(SERDA, handle);
@@ -1248,5 +1302,187 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         }
         logger.trace("[SERIAL::DRAIN] <- HANDLE={}; SUCCESS={}; DRAINED={}",  handle, rx.success(), rx.result());
         return available;
+    }
+
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+    // SPI IMPLEMENTATION
+    // *****************************************************************************************************
+    // *****************************************************************************************************
+
+    /**
+     * {@inheritDoc}
+     *
+     * This function opens a SPI device channel at a specified baud rate and with specified flags.
+     * Data will be transferred at baud bits per second.
+     * The flags may be used to modify the default behaviour of 4-wire operation, mode 0, active low chip select.
+     *
+     * The Pi has two SPI peripherals: main and auxiliary.
+     * The main SPI has two chip selects (channels), the auxiliary has three.
+     * The auxiliary SPI is available on all models but the A and B.
+     *
+     * The GPIO pins used are given in the following table.
+     *
+     *             MISO    MOSI   SCLK   CE0   CE1   CE2
+     *             -------------------------------------
+     *   Main SPI    9      10     11      8	 7	   -
+     *   Aux SPI    19      20     21     18	17    16
+     *
+     *
+     *  spiChan  : 0-1 (0-2 for the auxiliary SPI)
+     *  baud     : 32K-125M (values above 30M are unlikely to work)
+     *  spiFlags : see below
+     *
+     * spiFlags consists of the least significant 22 bits.
+     * -----------------------------------------------------------------
+     * 21 20 19 18 17 16 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
+     *  b  b  b  b  b  b  R  T  n  n  n  n  W  A u2 u1 u0 p2 p1 p0  m  m
+     * -----------------------------------------------------------------
+     *
+     * [mm] defines the SPI mode.
+     *      (Warning: modes 1 and 3 do not appear to work on the auxiliary SPI.)
+     *
+     *      Mode POL  PHA
+     *      -------------
+     *       0    0    0
+     *       1    0    1
+     *       2    1    0
+     *       3    1    1
+     *
+     * [px] is 0 if CEx is active low (default) and 1 for active high.
+     * [ux] is 0 if the CEx GPIO is reserved for SPI (default) and 1 otherwise.
+     * [A] is 0 for the main SPI, 1 for the auxiliary SPI.
+     * [W] is 0 if the device is not 3-wire, 1 if the device is 3-wire. Main SPI only.
+     * [nnnn] defines the number of bytes (0-15) to write before switching the MOSI line to MISO to read data. This field is ignored if W is not set. Main SPI only.
+     * [T] is 1 if the least significant bit is transmitted on MOSI first, the default (0) shifts the most significant bit out first. Auxiliary SPI only.
+     * [R] is 1 if the least significant bit is received on MISO first, the default (0) receives the most significant bit first. Auxiliary SPI only.
+     * [bbbbbb] defines the word size in bits (0-32). The default (0) sets 8 bits per word. Auxiliary SPI only.
+     *
+     * The spiRead, spiWrite, and spiXfer functions transfer data packed into 1, 2, or 4 bytes according to the word size in bits.
+     *  - For bits 1-8 there will be one byte per word.
+     *  - For bits 9-16 there will be two bytes per word.
+     *  - For bits 17-32 there will be four bytes per word.
+     *
+     * Multi-byte transfers are made in least significant byte first order.
+     * E.g. to transfer 32 11-bit words buf should contain 64 bytes and count should be 64.
+     * E.g. to transfer the 14 bit value 0x1ABC send the bytes 0xBC followed by 0x1A.
+     * The other bits in flags should be set to zero.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiOpen">PIGPIO::spiOpen</a>
+     */
+    @Override
+    public int spiOpen(int channel, int baud, int flags) throws IOException {
+        logger.trace("[SPI::OPEN] -> Open SPI Channel [{}] at Baud Rate [{}]; Flags=[{}]", channel, baud, flags);
+        validateReady();
+        PiGpioPacket tx = new PiGpioPacket(SPIO, channel, baud).data(flags);
+        PiGpioPacket rx = sendPacket(tx);
+        int handle = rx.result();
+        logger.trace("[SPI::OPEN] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx, false);
+
+        // if the open was successful, then we need to add the SPI handle to cache
+        if(rx.success()) spiHandles.add(handle);
+
+        // return handle
+        return handle;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * This functions closes the SPI device identified by the handle.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiClose">PIGPIO::spiClose</a>
+     */
+    @Override
+    public int spiClose(int handle) throws IOException {
+        logger.trace("[SPI::CLOSE] -> HANDLE={}, Close Serial Port", handle);
+        validateReady();
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SPIC, handle);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[SPI::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        validateResult(rx, false);
+
+        // if the close was successful, then we need to remove the SPI handle from cache
+        if(rx.success()) spiHandles.remove(handle);
+
+        // return result
+        return rx.result();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * This function writes multiple bytes from the byte array ('data') to the SPI
+     * device associated with the handle from the given offset index to the specified length.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
+     */
+    @Override
+    public int spiWrite(int handle, byte[] data, int offset, int length) throws IOException {
+        logger.trace("[SPI::WRITE] -> [{}]; Serial Write [{} bytes]", handle, data.length);
+        validateReady();
+        Objects.checkFromIndexSize(offset, length, data.length);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SPIW, handle).data(data, offset, length);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[SPI::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        validateResult(rx, false);
+        return rx.result();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * This function reads a number of bytes specified by the 'length' parameter from the
+     * SPI device associated with the handle and copies them to the 'buffer' byte array parameter.
+     * The 'offset' parameter determines where to start copying/inserting read data in the byte array.
+     * If no data is ready, zero is returned; otherwise, the number of bytes read is returned.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiRead">PIGPIO::spiRead</a>
+     */
+    @Override
+    public int spiRead(int handle, byte[] buffer, int offset, int length) throws IOException {
+        logger.trace("[SPI::READ] -> [{}]; Serial Read [{} bytes]", handle, length);
+        validateReady();
+        Objects.checkFromIndexSize(offset, length, buffer.length);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SPIR, handle, length);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[SPI::READ] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, rx.success(), rx.dataLength());
+        validateResult(rx, false);
+        if(rx.success()) {
+            int actual = rx.result();
+            if(rx.dataLength() < actual) actual = rx.dataLength();
+            System.arraycopy(rx.data(), 0, buffer, offset, actual);
+        }
+        return rx.result();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * This function transfers (writes/reads simultaneously) multiple bytes with the SPI
+     * device associated with the handle.  Write data is taken from the 'write' byte array
+     * from the given 'writeOffset' index to the specified length ('numberOfBytes').  Data
+     * read from the SPI device is then copied to the 'read' byte array at the given 'readOffset'
+     * using the same length.  Both the 'write' and 'read' byte arrays must be at least the size
+     * of the defined 'numberOfBytes' + their corresponding offsets.
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
+     */
+    @Override
+    public int spiXfer(int handle, byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException {
+        logger.trace("[SPI::XFER] -> [{}]; Serial Transfer [{} bytes]", handle, numberOfBytes);
+        validateReady();
+        Objects.checkFromIndexSize(writeOffset, numberOfBytes, write.length);
+        Objects.checkFromIndexSize(readOffset, numberOfBytes, read.length);
+        validateHandle(handle);
+        PiGpioPacket tx = new PiGpioPacket(SPIX, handle).data(write, writeOffset, numberOfBytes);
+        PiGpioPacket rx = sendPacket(tx);
+        logger.trace("[SPI::XFER] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, rx.success(), rx.dataLength());
+        validateResult(rx, false);
+        if(rx.success()) {
+            int actual = rx.result();
+            if(rx.dataLength() < actual) actual = rx.dataLength();
+            System.arraycopy(rx.data(), 0, read, readOffset, actual);
+        }
+        return rx.result();
     }
 }

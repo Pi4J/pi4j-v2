@@ -28,13 +28,32 @@ package com.pi4j.io.gpio.digital;
  */
 
 
+import com.pi4j.context.Context;
 import com.pi4j.io.Input;
 
+/**
+ * <p>DigitalInput interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig, DigitalInputProvider>, Input {
+    /** Constant <code>DEFAULT_DEBOUNCE=10000</code> */
+    long DEFAULT_DEBOUNCE = 10000;
 
-    static DigitalInputConfigBuilder newConfigBuilder(){
-        return DigitalInputConfigBuilder.newInstance();
+    /**
+     * <p>newConfigBuilder.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
+     */
+    static DigitalInputConfigBuilder newConfigBuilder(Context context){
+        return DigitalInputConfigBuilder.newInstance(context);
     }
 
+    /**
+     * <p>pull.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.PullResistance} object.
+     */
     default PullResistance pull() { return config().pull(); }
 }

@@ -27,6 +27,18 @@ package com.pi4j.config;
  * #L%
  */
 
+/**
+ * <p>DeviceConfigBuilder interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface DeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
+    /**
+     * <p>device.</p>
+     *
+     * @param device a {@link java.lang.String} object.
+     * @return a BUILDER_TYPE object.
+     */
     BUILDER_TYPE device(String device);
 }

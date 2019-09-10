@@ -38,6 +38,7 @@ import com.pi4j.extension.exception.ExtensionException;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class PlatformException extends ExtensionException {
 
@@ -50,10 +51,21 @@ public class PlatformException extends ExtensionException {
         super(message);
     }
 
+    /**
+     * <p>Constructor for PlatformException.</p>
+     *
+     * @param cause a {@link java.lang.Throwable} object.
+     */
     public PlatformException(Throwable cause){
         super(cause);
     }
 
+    /**
+     * <p>Constructor for PlatformException.</p>
+     *
+     * @param message a {@link java.lang.String} object.
+     * @param cause a {@link java.lang.Throwable} object.
+     */
     public PlatformException(String message, Throwable cause){
         super(message,cause);
     }

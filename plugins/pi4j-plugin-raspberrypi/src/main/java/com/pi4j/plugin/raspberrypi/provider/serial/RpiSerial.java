@@ -36,32 +36,49 @@ import com.pi4j.io.serial.SerialProvider;
 
 import java.io.IOException;
 
+/**
+ * <p>RpiSerial class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class RpiSerial extends SerialBase implements Serial {
 
+    /**
+     * <p>Constructor for RpiSerial.</p>
+     *
+     * @param provider a {@link com.pi4j.io.serial.SerialProvider} object.
+     * @param config a {@link com.pi4j.io.serial.SerialConfig} object.
+     */
     public RpiSerial(SerialProvider provider, SerialConfig config){
         super(provider, config);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte b) throws IOException {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int write(byte[] data, int offset, int length) throws IOException {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int read() throws IOException {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int read(byte[] buffer, int offset, int length) throws IOException {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int available() throws IOException {
         return 0;

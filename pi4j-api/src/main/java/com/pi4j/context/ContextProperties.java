@@ -33,14 +33,49 @@ import com.pi4j.util.StringUtil;
 
 import java.util.Map;
 
+/**
+ * <p>ContextProperties interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface ContextProperties extends Describable {
 
+    /**
+     * <p>has.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     boolean has(String key);
+    /**
+     * <p>get.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     String get(String key);
 
+    /**
+     * <p>all.</p>
+     *
+     * @return a {@link java.util.Map} object.
+     */
     Map<String,String> all();
+    /**
+     * <p>count.</p>
+     *
+     * @return a int.
+     */
     int count();
 
+    /**
+     * <p>get.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @param defaultValue a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     default String get(String key, String defaultValue){
         String value = get(key);
         if(StringUtil.isNotNullOrEmpty(value)) {
@@ -49,19 +84,43 @@ public interface ContextProperties extends Describable {
         return defaultValue;
     }
 
+    /**
+     * <p>exists.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     default boolean exists(String key){
         return has(key);
     }
 
+    /**
+     * <p>getInteger.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @return a {@link java.lang.Integer} object.
+     */
     default Integer getInteger(String key){
         return getInteger(key, null);
     }
 
+    /**
+     * <p>getInteger.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @param defaultValue a {@link java.lang.Integer} object.
+     * @return a {@link java.lang.Integer} object.
+     */
     default Integer getInteger(String key, Integer defaultValue){
         if(has(key)) return StringUtil.parseInteger(get(key), defaultValue);
         return defaultValue;
     }
 
+    /**
+     * <p>describe.</p>
+     *
+     * @return a {@link com.pi4j.common.Descriptor} object.
+     */
     default Descriptor describe() {
         Descriptor descriptor = Descriptor.create()
                 .category("PROPERTIES")

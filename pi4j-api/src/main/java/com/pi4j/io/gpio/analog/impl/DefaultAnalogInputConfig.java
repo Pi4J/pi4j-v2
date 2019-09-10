@@ -32,6 +32,12 @@ import com.pi4j.util.StringUtil;
 
 import java.util.Map;
 
+/**
+ * <p>DefaultAnalogInputConfig class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultAnalogInputConfig
         extends AnalogConfigBase<AnalogInputConfig>
         implements AnalogInputConfig {
@@ -45,7 +51,8 @@ public class DefaultAnalogInputConfig
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
      */
     protected DefaultAnalogInputConfig(Map<String,String> properties){
         super(properties);

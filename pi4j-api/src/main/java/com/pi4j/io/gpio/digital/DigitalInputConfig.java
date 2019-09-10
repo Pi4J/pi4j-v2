@@ -28,16 +28,55 @@ package com.pi4j.io.gpio.digital;
  */
 
 
+import com.pi4j.context.Context;
+
+/**
+ * <p>DigitalInputConfig interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface DigitalInputConfig extends DigitalConfig<DigitalInputConfig> {
 
+    /** Constant <code>PULL_RESISTANCE_KEY="pull"</code> */
     String PULL_RESISTANCE_KEY = "pull";
+    /** Constant <code>DEBOUNCE_RESISTANCE_KEY="debounce"</code> */
+    String DEBOUNCE_RESISTANCE_KEY = "debounce";
 
+    /**
+     * <p>pull.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.PullResistance} object.
+     */
     PullResistance pull();
+    /**
+     * <p>getPull.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.PullResistance} object.
+     */
     default PullResistance getPull(){
         return pull();
     }
 
-    static DigitalInputConfigBuilder newBuilder()  {
-        return DigitalInputConfigBuilder.newInstance();
+    /**
+     * <p>debounce.</p>
+     *
+     * @return a {@link java.lang.Long} object.
+     */
+    Long debounce();
+    /**
+     * <p>getDebounce.</p>
+     *
+     * @return a {@link java.lang.Long} object.
+     */
+    default Long getDebounce(){ return debounce(); }
+
+    /**
+     * <p>newBuilder.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
+     */
+    static DigitalInputConfigBuilder newBuilder(Context context)  {
+        return DigitalInputConfigBuilder.newInstance(context);
     }
 }

@@ -38,11 +38,19 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+/**
+ * <p>ProviderGroupInjector class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class ProviderGroupInjector implements InjectorProcessor<ProviderGroup> {
 
+    /** {@inheritDoc} */
     @Override
     public Class<ProviderGroup> getTargetType() { return ProviderGroup.class; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup process(Context context, Object instance, Inject annotation, Field field) throws Exception {
 

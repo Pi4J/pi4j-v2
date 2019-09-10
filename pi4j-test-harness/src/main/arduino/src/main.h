@@ -45,6 +45,8 @@
 // include Pi4J utility classes
 #include "util/Utils.h"
 
+static BitOrder bitOrder = MSBFIRST;
+
 // ------------------------------------------------------------------------------------------------------------------------------
 // DEFINE FUNTION PROTOTYPES
 // ------------------------------------------------------------------------------------------------------------------------------
@@ -58,11 +60,10 @@ void receiveI2CData(int byteCount);
 void sendI2CData();
 void receiveI2CDataRaw(int byteCount);
 void sendI2CDataRaw();
-
+void processSpi();
 
 // create priped interface for interactive console (muxed serial ports)
-StreamPipe console_pipe(&CONSOLE_INTERFACE, &DEBUG_INTERFACE);
-
+//StreamPipe console_pipe(&CONSOLE_INTERFACE, &DEBUG_INTERFACE);
 
 // ------------------------------------------------------------------------------------------------------------------------------
 // DEFINE RUNTIME COMPONENTS
@@ -107,5 +108,18 @@ struct I2cCache {
 I2cCache i2cCache;
 
 HardwareSerial* serialEcho = nullptr;
+
+struct SpiState {
+    bool enabled = false;
+    uint8_t select = 0;
+    uint8_t bus = 0;
+    uint32_t rx = 0;
+    uint32_t tx = 0;
+    bool pending = false;
+    uint32_t rxCounter = 0;
+    uint32_t txCounter = 0;
+};
+
+SpiState spi;
 
 #endif //PI4J_MAIN_H

@@ -39,32 +39,53 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+/**
+ * <p>Abstract ProviderBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CONFIG_TYPE extends Config>
         extends ExtensionBase<PROVIDER_TYPE>
         implements Provider<PROVIDER_TYPE, IO_TYPE, CONFIG_TYPE> {
 
-
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     protected Context context;
 
+    /**
+     * <p>Constructor for ProviderBase.</p>
+     */
     public ProviderBase(){
         super();
     }
 
+    /**
+     * <p>Constructor for ProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public ProviderBase(String id){
         super(id);
     }
 
+    /**
+     * <p>Constructor for ProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public ProviderBase(String id, String name){
         super(id, name);
     }
 
+    /** {@inheritDoc} */
     @Override
     public PROVIDER_TYPE initialize(Context context) throws InitializeException {
         this.context = context;
         return (PROVIDER_TYPE)this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PROVIDER_TYPE shutdown(Context context) throws ShutdownException {
 
@@ -80,5 +101,11 @@ public abstract class ProviderBase<PROVIDER_TYPE extends Provider, IO_TYPE exten
             }
         });
         return (PROVIDER_TYPE)this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Context context(){
+        return this.context;
     }
 }

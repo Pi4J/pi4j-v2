@@ -27,24 +27,29 @@ package com.pi4j.annotation.processor.register;
  * #L%
  */
 
-import com.pi4j.annotation.*;
+import com.pi4j.annotation.Register;
 import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.impl.WithAnnotationProcessor;
+import com.pi4j.annotation.impl.IOConfigAnnotations;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogInputConfigBuilder;
-import com.pi4j.io.gpio.analog.AnalogInputProvider;
-import com.pi4j.platform.Platform;
 import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
+/**
+ * <p>AnalogInputRegistrationProcessor class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class AnalogInputRegistrationProcessor implements RegisterProcessor<AnalogInput> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /** {@inheritDoc} */
     @Override
     public boolean isEligible(Context context, Object instance, Register annotation, Field field) throws Exception {
 
@@ -56,12 +61,9 @@ public class AnalogInputRegistrationProcessor implements RegisterProcessor<Analo
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogInput process(Context context, Object instance, Register annotation, Field field) throws Exception {
-
-        // validate that the 'ID' (value) attribute is not empty on this field annotation
-        if (StringUtil.isNullOrEmpty(annotation.value()))
-            throw new AnnotationException("Missing required 'value <ID>' attribute");
 
         // make sure the field instance is null; we can only register our own dynamically created I/O instances
         if(field.get(instance) != null)
@@ -70,59 +72,17 @@ public class AnalogInputRegistrationProcessor implements RegisterProcessor<Analo
                     "use the '@Inject(id)' annotation instead.");
 
         // create I/O config builder
-        var builder = AnalogInputConfigBuilder.newInstance();
-        if (annotation.value() != null) builder.id((annotation).value());
-
-        // test for required additional annotations
-        if (!field.isAnnotationPresent(Address.class))
-            throw new AnnotationException("Missing required '@Address' annotation for this I/O type.");
-
-        // all supported additional annotations for configuring the digital output
-        Address address = field.getAnnotation(Address.class);
-        builder.address(address.value());
-
-        Name name = null;
-        if (field.isAnnotationPresent(Name.class)) {
-            name = field.getAnnotation(Name.class);
-            if (name != null) builder.name(name.value());
+        var builder = AnalogInputConfigBuilder.newInstance(context);
+        if (StringUtil.isNotNullOrEmpty(annotation.value())) {
+            builder.id((annotation).value());
+        } else {
+            builder.id(field.getName());
         }
 
-        Description description = null;
-        if (field.isAnnotationPresent(Description.class)) {
-            description = field.getAnnotation(Description.class);
-            if (description != null) builder.description(description.value());
-        }
+        // process all supported optional configuration annotations for this I/O type
+        IOConfigAnnotations.processIOConfigAnnotations(builder, field);
 
-        Range range = null;
-        if (field.isAnnotationPresent(Range.class)) {
-            range = field.getAnnotation(Range.class);
-            if (range != null) builder.min(range.min());
-            if (range != null) builder.max(range.max());
-        }
-
-        // get designated platform to use to register this IO (if provided)
-        Platform platform = null;
-        if (field.isAnnotationPresent(WithPlatform.class)) {
-            platform = WithAnnotationProcessor.getPlatform(context, field);
-        }
-
-        // get designated provider to use to register this IO (if provided)
-        AnalogInputProvider provider = null;
-        if (field.isAnnotationPresent(WithProvider.class)) {
-            provider = WithAnnotationProcessor.getProvider(context, platform, field, AnalogInputProvider.class);
-        }
-
-        // if a provider was found, then create analog input IO instance using that provider
-        if(provider != null){
-            return provider.create(builder.build());
-        }
-
-        // if no provider was found, then create analog input IO instance using defaults
-        else {
-            if(platform != null)
-                return platform.provider(AnalogInputProvider.class).create(builder.build());
-            else
-                return context.provider(AnalogInputProvider.class).create(builder.build());
-        }
+        // use the Pi4J context to create this IO instance
+        return context.create(builder.build());
     }
 }

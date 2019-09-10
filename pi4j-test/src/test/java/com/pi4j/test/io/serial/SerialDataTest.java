@@ -65,7 +65,7 @@ public class SerialDataTest {
                 .build();
 
         // create serial instance
-        serial = pi4j.create(Serial.newConfigBuilder()
+        serial = pi4j.create(Serial.newConfigBuilder(pi4j)
                 .id("my-i2c-bus")
                 .device(SERIAL_DEVICE)
                 .build());

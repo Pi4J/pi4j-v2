@@ -6,6 +6,7 @@
         <artifactId>pi4j-parent</artifactId>
         <groupId>com.pi4j</groupId>
         <version>2.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -18,19 +19,51 @@
         <dependency>
             <groupId>com.fazecast</groupId>
             <artifactId>jSerialComm</artifactId>
-            <version>2.5.1</version>
+            <version>${jSerialComm.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.5</version>
+            <version>${gson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20190722</version>
+            <version>${json.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- JAVA COMPILER -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
+            <!-- INCLUDE SOURCE JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+
+            <!-- INCLUDE JAVADOC JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
     <profiles>
         <!-- EXCLUDE HARDWARE INTEGRATION TESTS BY DEFAULT -->
@@ -41,6 +74,7 @@
             </activation>
             <build>
                 <plugins>
+                    <!-- MAVEN RUN JUNIT5 TESTS -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
@@ -54,11 +88,12 @@
             </build>
         </profile>
 
-        <!-- INLCUDE HARDWARE INTEGRATION TESTS WHEN USING THIS BUILD PROFILE -->
+        <!-- INCLUDE HARDWARE INTEGRATION TESTS WHEN USING THIS BUILD PROFILE -->
         <profile>
             <id>test-hardware</id>
             <build>
                 <plugins>
+                    <!-- MAVEN RUN JUNIT5 TESTS -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>

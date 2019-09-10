@@ -35,13 +35,23 @@ import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
 
 import java.io.IOException;
 
+/**
+ * <p>MockDigitalInputProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class MockDigitalInputProviderImpl extends DigitalInputProviderBase implements MockDigitalInputProvider {
 
+    /**
+     * <p>Constructor for MockDigitalInputProviderImpl.</p>
+     */
     public MockDigitalInputProviderImpl(){
         this.id = ID;
         this.name = NAME;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalInput create(DigitalInputConfig config) throws IOException {
         return new MockDigitalInput(this, config);

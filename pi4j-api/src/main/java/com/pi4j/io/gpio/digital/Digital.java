@@ -27,52 +27,141 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
+import com.pi4j.io.OnOffRead;
+import com.pi4j.io.binding.Bindable;
+import com.pi4j.io.binding.DigitalBinding;
 import com.pi4j.io.gpio.Gpio;
-import com.pi4j.io.gpio.digital.binding.DigitalBinding;
 
+/**
+ * <p>Digital interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Digital<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>,
         PROVIDER_TYPE extends DigitalProvider>
-        extends Gpio<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
+        extends Gpio<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+        OnOffRead<DIGITAL_TYPE>,
+        Bindable<DIGITAL_TYPE, DigitalBinding>
+{
 
+    /**
+     * <p>state.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalState} object.
+     */
     DigitalState state();
 
-    DIGITAL_TYPE addListener(DigitalChangeListener... listener);
-    DIGITAL_TYPE removeListener(DigitalChangeListener... listener);
+    /**
+     * <p>addListener.</p>
+     *
+     * @param listener a {@link DigitalStateChangeListener} object.
+     * @return a DIGITAL_TYPE object.
+     */
+    DIGITAL_TYPE addListener(DigitalStateChangeListener... listener);
+    /**
+     * <p>removeListener.</p>
+     *
+     * @param listener a {@link DigitalStateChangeListener} object.
+     * @return a DIGITAL_TYPE object.
+     */
+    DIGITAL_TYPE removeListener(DigitalStateChangeListener... listener);
 
-    DIGITAL_TYPE bind(DigitalBinding... binding);
-    DIGITAL_TYPE unbind(DigitalBinding ... binding);
-
+    /**
+     * <p>equals.</p>
+     *
+     * @param state a {@link com.pi4j.io.gpio.digital.DigitalState} object.
+     * @return a boolean.
+     */
     default boolean equals(DigitalState state){
         return this.state().equals(state);
     }
+    /**
+     * <p>equals.</p>
+     *
+     * @param state a {@link java.lang.Number} object.
+     * @return a boolean.
+     */
     default boolean equals(Number state){
         return equals(DigitalState.getState(state));
     }
+    /**
+     * <p>equals.</p>
+     *
+     * @param state a boolean.
+     * @return a boolean.
+     */
     default boolean equals(boolean state){
         return equals(DigitalState.getState(state));
     }
+    /**
+     * <p>equals.</p>
+     *
+     * @param state a byte.
+     * @return a boolean.
+     */
     default boolean equals(byte state){
         return equals(DigitalState.getState(state));
     }
+    /**
+     * <p>equals.</p>
+     *
+     * @param state a short.
+     * @return a boolean.
+     */
     default boolean equals(short state){
         return equals(DigitalState.getState(state));
     }
+    /**
+     * <p>equals.</p>
+     *
+     * @param state a int.
+     * @return a boolean.
+     */
     default boolean equals(int state){
         return equals(DigitalState.getState(state));
     }
+    /**
+     * <p>equals.</p>
+     *
+     * @param state a long.
+     * @return a boolean.
+     */
     default boolean equals(long state){
         return equals(DigitalState.getState(state));
     }
+    /**
+     * <p>equals.</p>
+     *
+     * @param state a float.
+     * @return a boolean.
+     */
     default boolean equals(float state){
         return equals(DigitalState.getState(state));
     }
+    /**
+     * <p>equals.</p>
+     *
+     * @param state a double.
+     * @return a boolean.
+     */
     default boolean equals(double state){
         return equals(DigitalState.getState(state));
     }
+    /**
+     * <p>isHigh.</p>
+     *
+     * @return a boolean.
+     */
     default boolean isHigh(){
         return this.state().isHigh();
     }
+    /**
+     * <p>isLow.</p>
+     *
+     * @return a boolean.
+     */
     default boolean isLow(){
         return this.state().isLow();
     }

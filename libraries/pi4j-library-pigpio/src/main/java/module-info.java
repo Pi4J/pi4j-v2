@@ -2,7 +2,7 @@
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
  * FILENAME      :  module-info.java
  *
  * This file is part of the Pi4J project. More information about
@@ -29,7 +29,7 @@
 module pi4j.library.pigpio {
 
     // SLF4J
-    requires slf4j.api;
+    requires org.slf4j;
 
     // EXPORTS
     exports  com.pi4j.library.pigpio;

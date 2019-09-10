@@ -4,7 +4,7 @@ package com.pi4j.library.pigpio.test.serial;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
  * FILENAME      :  TestSerialUsingTestHarness.java
  *
  * This file is part of the Pi4J project. More information about
@@ -31,6 +31,8 @@ package com.pi4j.library.pigpio.test.serial;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
+import com.pi4j.library.pigpio.test.TestEnv;
+import com.pi4j.library.pigpio.util.StringUtil;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
@@ -38,7 +40,6 @@ import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
-import java.util.Formatter;
 import java.util.Random;
 
 @DisplayName("PIGPIO Library :: Test Serial Communication")
@@ -53,7 +54,7 @@ public class TestSerialUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        //System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
@@ -63,7 +64,7 @@ public class TestSerialUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            ArduinoTestHarness harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142301"));
+            ArduinoTestHarness harness = TestEnv.createTestHarness();
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
@@ -86,8 +87,8 @@ public class TestSerialUsingTestHarness {
             // enable the Serial Echo (Loopback) function on the test harness for these tests
             harness.enableSerialEcho(TEST_HARNESS_UART,  BAUD_RATE);
 
-            // terminate connection to test harness
-            harness.terminate();
+            // close connection to test harness
+            harness.close();
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -105,8 +106,7 @@ public class TestSerialUsingTestHarness {
     @BeforeEach
     public void beforeEach() throws IOException {
         // create test harness and PIGPIO instances
-        pigpio = PiGpio.newSocketInstance(System.getProperty("pi4j.pigpio.host", "rpi3bp.savage.lan"),
-                System.getProperty("pi4j.pigpio.port", "8888"));
+        pigpio = TestEnv.createPiGpio();
 
         // initialize test harness and PIGPIO instances
         pigpio.initialize();
@@ -125,8 +125,8 @@ public class TestSerialUsingTestHarness {
         // CLOSE SERIAL PORT
         pigpio.serClose(handle);
 
-        // terminate test harness and PIGPIO instances
-        pigpio.terminate();
+        // shutdown test harness and PIGPIO instances
+        pigpio.shutdown();
     }
 
     @Test
@@ -185,36 +185,29 @@ public class TestSerialUsingTestHarness {
             r.nextBytes(testData);
 
             // WRITE :: MULTI-BYTE
-            System.out.println(" (WRITE) >> VALUE = " + byteToHex(testData));
+            System.out.println(" (WRITE) >> VALUE = " + StringUtil.toHexString(testData));
             pigpio.serWrite(handle, testData);
 
             // take a breath while buffer catches up
-            Thread.sleep(100);
+            Thread.sleep(50);
 
             // READ :: NUMBER OF BYTES AVAILABLE TO READ
             int available = pigpio.serDataAvailable(handle);
             System.out.println(" (READ)  << AVAIL = " + available);
             Assert.assertEquals("SERIAL READ AVAIL MISMATCH",  testData.length, available);
 
+            // take a breath while buffer catches up
+            Thread.sleep(50);
+
             // READ :: MULTI-BYTE
             byte[] readBuffer = new byte[available];
             int bytesRead = pigpio.serRead(handle, readBuffer, available);
             System.out.println(" (READ)  << BYTES READ = " + bytesRead);
-            System.out.println(" (READ)  << VALUE = " + byteToHex(readBuffer));
-            //Thread.sleep(50);
+            System.out.println(" (READ)  << VALUE = " + StringUtil.toHexString(readBuffer));
+
+            Thread.sleep(50);
 
             Assert.assertArrayEquals("SERIAL MULTI-BYTE VALUE MISMATCH",  testData, readBuffer);
         }
-    }
-
-    private String byteToHex(final byte[] hash)
-    {
-        Formatter formatter = new Formatter();
-        for (byte b : hash) {
-            formatter.format("%02x ", b);
-        }
-        String result = "[0x" + formatter.toString().trim() + "]";
-        formatter.close();
-        return result;
     }
 }

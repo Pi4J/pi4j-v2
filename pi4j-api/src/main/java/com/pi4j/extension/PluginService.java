@@ -31,8 +31,31 @@ import com.pi4j.context.Context;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 
+/**
+ * <p>PluginService interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface PluginService {
+    /**
+     * <p>context.</p>
+     *
+     * @return a {@link com.pi4j.context.Context} object.
+     */
     Context context();
+    /**
+     * <p>register.</p>
+     *
+     * @param provider a {@link com.pi4j.provider.Provider} object.
+     * @return a {@link com.pi4j.extension.PluginService} object.
+     */
     PluginService register(Provider ... provider);
+    /**
+     * <p>register.</p>
+     *
+     * @param platform a {@link com.pi4j.platform.Platform} object.
+     * @return a {@link com.pi4j.extension.PluginService} object.
+     */
     PluginService register(Platform... platform);
 }

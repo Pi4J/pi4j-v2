@@ -27,10 +27,23 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
+import com.pi4j.context.Context;
+
+/**
+ * <p>AnalogInputConfig interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface AnalogInputConfig
         extends AnalogConfig<AnalogInputConfig> {
 
-    static AnalogInputConfigBuilder newBuilder()  {
-        return AnalogInputConfigBuilder.newInstance();
+    /**
+     * <p>newBuilder.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogInputConfigBuilder} object.
+     */
+    static AnalogInputConfigBuilder newBuilder(Context context)  {
+        return AnalogInputConfigBuilder.newInstance(context);
     }
 }

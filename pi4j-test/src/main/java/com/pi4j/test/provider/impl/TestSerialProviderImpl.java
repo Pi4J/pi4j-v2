@@ -32,18 +32,39 @@ import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProviderBase;
 import com.pi4j.test.provider.TestSerialProvider;
 
+/**
+ * <p>TestSerialProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class TestSerialProviderImpl extends SerialProviderBase implements TestSerialProvider {
 
+    /**
+     * <p>Constructor for TestSerialProviderImpl.</p>
+     */
     public TestSerialProviderImpl(){ super(); }
 
+    /**
+     * <p>Constructor for TestSerialProviderImpl.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public TestSerialProviderImpl(String id){
         super(id);
     }
 
+    /**
+     * <p>Constructor for TestSerialProviderImpl.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public TestSerialProviderImpl(String id, String name){
         super(id, name);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Serial create(SerialConfig config) throws Exception {
         return null;

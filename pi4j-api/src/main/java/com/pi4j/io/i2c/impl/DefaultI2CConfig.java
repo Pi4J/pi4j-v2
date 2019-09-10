@@ -27,16 +27,22 @@ package com.pi4j.io.i2c.impl;
  * #L%
  */
 
-import com.pi4j.config.ConfigBase;
 import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
 import com.pi4j.io.gpio.digital.PullResistance;
 import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.impl.IOConfigBase;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
 
+/**
+ * <p>DefaultI2CConfig class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultI2CConfig
-        extends ConfigBase<I2CConfig>
+        extends IOConfigBase<I2CConfig>
         implements I2CConfig {
 
     // private configuration properties
@@ -55,7 +61,8 @@ public class DefaultI2CConfig
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
      */
     protected DefaultI2CConfig(Map<String,String> properties){
         super(properties);
@@ -80,11 +87,13 @@ public class DefaultI2CConfig
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer bus() {
         return this.bus;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer device() {
         return this.device;

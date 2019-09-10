@@ -29,30 +29,62 @@ package com.pi4j.plugin.pigpio.provider.pwm;
  * #L%
  */
 
+import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmBase;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.library.pigpio.PiGpio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * <p>Abstract PiGpioPwmBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class PiGpioPwmBase extends PwmBase implements Pwm {
 
     protected final PiGpio piGpio;
     protected final int range;
     protected int actualFrequency = -1;
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * <p>Constructor for PiGpioPwmBase.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @param provider a {@link com.pi4j.io.pwm.PwmProvider} object.
+     * @param config a {@link com.pi4j.io.pwm.PwmConfig} object.
+     * @param range a int.
+     */
     public PiGpioPwmBase(PiGpio piGpio, PwmProvider provider, PwmConfig config, int range){
         super(provider, config);
         this.piGpio = piGpio;
         this.range = range;
     }
 
+    /**
+     * <p>calculateActualDutyCycle.</p>
+     *
+     * @param dutyCycle a float.
+     * @return a int.
+     */
     protected int calculateActualDutyCycle(float dutyCycle){
         return Math.round((this.range * dutyCycle) / 100);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getActualFrequency() {
         return this.actualFrequency;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Pwm initialize(Context context) throws InitializeException {
+        return super.initialize(context);
     }
 }

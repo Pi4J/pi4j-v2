@@ -36,9 +36,11 @@ package com.pi4j.config.exception;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class ConfigEmptyException extends ConfigException {
 
+    /** Constant <code>MESSAGE="Configuration is missing or empty."</code> */
     public static String MESSAGE =  "Configuration is missing or empty.";
 
     /**
@@ -48,6 +50,11 @@ public class ConfigEmptyException extends ConfigException {
         super(MESSAGE);
     }
 
+    /**
+     * <p>Constructor for ConfigEmptyException.</p>
+     *
+     * @param cause a {@link java.lang.Throwable} object.
+     */
     public ConfigEmptyException(Throwable cause){
         super(MESSAGE, cause);
     }

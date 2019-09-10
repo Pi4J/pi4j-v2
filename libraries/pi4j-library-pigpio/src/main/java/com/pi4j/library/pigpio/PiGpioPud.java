@@ -4,7 +4,7 @@ package com.pi4j.library.pigpio;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
  * FILENAME      :  PiGpioPud.java
  *
  * This file is part of the Pi4J project. More information about
@@ -31,6 +31,12 @@ package com.pi4j.library.pigpio;
 
 import static com.pi4j.library.pigpio.PiGpioConst.*;
 
+/**
+ * <p>PiGpioPud class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public enum PiGpioPud {
     UNKNOWN(-1),
     OFF  (PI_PUD_OFF),
@@ -43,10 +49,21 @@ public enum PiGpioPud {
         this.value  =value;
     }
 
+    /**
+     * <p>value.</p>
+     *
+     * @return a int.
+     */
     public int value(){
         return this.value;
     }
 
+    /**
+     * <p>from.</p>
+     *
+     * @param value a {@link java.lang.Number} object.
+     * @return a {@link com.pi4j.library.pigpio.PiGpioPud} object.
+     */
     public static PiGpioPud from(Number value){
         for(PiGpioPud c : PiGpioPud.values()){
             if(c.value() == value.intValue()) return c;

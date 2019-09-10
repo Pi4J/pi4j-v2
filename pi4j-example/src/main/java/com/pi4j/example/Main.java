@@ -28,112 +28,81 @@ package com.pi4j.example;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.serial.Baud;
-import com.pi4j.io.serial.Serial;
-import com.pi4j.plugin.pigpio.provider.serial.PiGpioSerialProvider;
+import org.slf4j.event.Level;
 
-import java.nio.CharBuffer;
-import java.util.Arrays;
-
+/**
+ * <p>Main class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class Main {
 
     private static String SERIAL_DEVICE = "/dev/ttyS0";
     private static int BAUD_RATE = Baud._38400.value();
 
+    /**
+     * <p>Constructor for Main.</p>
+     */
     public Main() {
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
+
+        // configure default lolling level, accept a log level as the fist program argument
+        String loglevel = "INFO";
+        if(args != null && args.length > 0){
+            Level lvl = Level.valueOf(args[0].toUpperCase());
+            loglevel = lvl.name();
+        }
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loglevel);
+
 
         // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
         // this temporary property is used to tell
         // PIGPIO which remote Raspberry Pi to connect to
-        System.setProperty("pi4j.host", "rpi3bp.savage.lan");
+        //System.setProperty("pi4j.host", "rpi3bp.savage.lan");
+        //System.setProperty("pi4j.pigpio.remote", "true");
 
         // Initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled
         // which will load all detected Pi4J extension libraries
         // (Platforms and Providers) in the class path
+        //var pi4j = Pi4J.newAutoContext();
+
         var pi4j = Pi4J.newAutoContext();
 
-        // create SERIAL config
-        var config  = Serial.newConfigBuilder()
-                .id("my-serial-port")
-                .name("My Serial Port")
-                .device(SERIAL_DEVICE)
-                .baud8N1(BAUD_RATE)
-                .build();
 
-        var prov = pi4j.provider(PiGpioSerialProvider.class);
-        var serial = prov.create(config);
-
-        System.out.println("--------------------------------------------------------");
-
-        serial.write("HELLO");
-        CharBuffer b = CharBuffer.allocate(10);
-        b.put("1234567890");
-        serial.read(b.array(), 4, 65);
-        System.out.println("CHAR ARRAY : " + Arrays.toString(b.array()));
-        System.out.println(b.rewind().toString());
-
-        System.out.println("--------------------------------------------------------");
-
-        serial.write("HELLO");
-        char[] ca = new char[]{ '0','1','2','3','4', '5', '6', '7', '8', '9' };
-
-        CharBuffer c = CharBuffer.wrap(ca);
-        //c.put("123456789");
-        //c.append("Z");
-        c.put("-R-");
-        //c.rewind();
-
-        System.out.println(c.remaining());
-        serial.read(c);
-        System.out.println("CHAR BUFFER : " + Arrays.toString(c.array()));
-        System.out.println(c.rewind().toString());
-
-        System.out.println("--------------------------------------------------------");
-
-
-
-        serial.close();
-
-
-//        Serial serial = Serial.instance("/dev/ttyUSB1");
-//        serial.open();
-//        serial.send("TEST DATA");
-//        serial.close();
+//        DigitalOutputConfigBuilder builder = DigitalOutput.newConfigBuilder();
+//        builder.provider(PiGpioDigitalInputProvider.class);
+//        builder.address(0);
+//        var c = builder.build();
 //
-//        var din1 = pi4j.din().create(11);
-//        var ain1 = pi4j.ain().create(21);
-//
-//        var input = pi4j.ain().create(98);
-//        var output1 = pi4j.aout().create(99);
-//        var output2 = pi4j.aout().create(100);
-//
-//        input.addListener((AnalogChangeListener) event -> {
-//            System.out.print(event);
-//        });
-//
-//        output1.addListener((AnalogChangeListener) event -> {
-//            System.out.println(event);
-//        });
-//        output2.addListener((AnalogChangeListener) event -> {
-//            System.out.println(event);
-//        });
-//
-//        input.bind(new AnalogBindingSync(output1, output2));
+//        try {
+//            Class c1 = Class.forName("com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider");
+//            //ClassLoader classLoader = c1.getClassLoader();
+//            //Class c2 = Class.forName("java.lang.String", true, classLoader);
+//            System.out.println("Class = " + c1.getName());
+//            System.out.println("Provider = " + Provider.class.isAssignableFrom(c1));
+//        } catch (ClassNotFoundException e){
+//            System.out.println("No Class");
+//        }
 
 
-        //((TestAnalogInput)input).test(21).test(22).test(23);
+        System.out.println(pi4j.hasProvider("com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider"));
+
+        pi4j.provider("com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider").describe().print(System.out);
 
 
-//        output1.value(12);
-//        output1.setValue(78);
-//        output1.value(0x01);
-
-
-        //AnalogOutput aout1 = AnalogOutput.in
-//        DigitalOutput dout1 = DigitalOutput;
+//        System.out.println("--------------------------------------------------------");
+//        pi4j.describe().print(System.out);
+//        System.out.println("--------------------------------------------------------");
 
         // shutdown Pi4J
         pi4j.shutdown();

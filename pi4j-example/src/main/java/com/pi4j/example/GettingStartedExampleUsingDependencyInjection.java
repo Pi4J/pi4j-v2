@@ -40,6 +40,12 @@ import com.pi4j.util.Console;
 
 import java.util.concurrent.Callable;
 
+/**
+ * <p>GettingStartedExampleUsingDependencyInjection class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class GettingStartedExampleUsingDependencyInjection {
 
     // ************************************************************
@@ -57,6 +63,12 @@ public class GettingStartedExampleUsingDependencyInjection {
     //
     // ************************************************************
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // Pi4J cannot perform dependency injection on static classes
@@ -313,7 +325,7 @@ public class GettingStartedExampleUsingDependencyInjection {
         /**
          * This method invokes the Pi4J example application runtime .
          * @return nothing
-         * @throws Exception
+         * @throws Exception on error
          */
         @Override
         public Void call() throws Exception {

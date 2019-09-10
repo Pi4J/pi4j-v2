@@ -28,7 +28,6 @@ package com.pi4j.annotation.processor.injector.impl;
  */
 
 import com.pi4j.annotation.Inject;
-import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.annotation.processor.injector.InjectorProcessor;
 import com.pi4j.context.Context;
 import com.pi4j.io.IO;
@@ -36,16 +35,22 @@ import com.pi4j.util.StringUtil;
 
 import java.lang.reflect.Field;
 
+/**
+ * <p>Abstract IOInjectorBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class IOInjectorBase<T extends IO> implements InjectorProcessor<T> {
 
+    /** {@inheritDoc} */
     @Override
     public T process(Context context, Object instance, Inject annotation, Field field) throws Exception {
-
-        // test for required peer annotations
-        if(StringUtil.isNullOrEmpty(annotation.value()))
-            throw new AnnotationException("Missing required 'value(id)' annotation attribute for this field.");
-
         // get target I/O instance from the Pi4J registry
-        return context.registry().get(annotation.value(), getTargetType());
+        String id = annotation.value();  // use the annotation value if one was provided; else use the field's name
+        if(StringUtil.isNullOrEmpty(id)){
+            id = field.getName();
+        }
+        return context.registry().get(id, getTargetType());
     }
 }

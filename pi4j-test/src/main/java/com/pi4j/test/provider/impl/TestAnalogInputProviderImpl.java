@@ -33,18 +33,39 @@ import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
 import com.pi4j.test.provider.TestAnalogInput;
 import com.pi4j.test.provider.TestAnalogInputProvider;
 
+/**
+ * <p>TestAnalogInputProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class TestAnalogInputProviderImpl extends AnalogInputProviderBase implements TestAnalogInputProvider {
 
+    /**
+     * <p>Constructor for TestAnalogInputProviderImpl.</p>
+     */
     public TestAnalogInputProviderImpl(){ super(); }
 
+    /**
+     * <p>Constructor for TestAnalogInputProviderImpl.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public TestAnalogInputProviderImpl(String id){
         super(id);
     }
 
+    /**
+     * <p>Constructor for TestAnalogInputProviderImpl.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public TestAnalogInputProviderImpl(String id, String name){
         super(id, name);
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogInput create(AnalogInputConfig config) throws Exception {
         return new TestAnalogInput(this, config);

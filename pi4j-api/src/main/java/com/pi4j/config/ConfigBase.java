@@ -30,14 +30,23 @@ package com.pi4j.config;
 import com.pi4j.config.exception.ConfigMissingRequiredKeyException;
 import com.pi4j.util.StringUtil;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <p>ConfigBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYPE> {
 
     // private configuration variables
     protected String id = null;
     protected String name = null;
     protected String description = null;
+    protected Map<String,String> properties = new HashMap<>();
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -47,9 +56,12 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
      */
     protected ConfigBase(Map<String,String> properties){
+        // add all properties to this config object
+        this.properties.putAll(properties);
 
         // load required 'id' property
         if(properties.containsKey(ID_KEY))
@@ -64,33 +76,31 @@ public class ConfigBase<CONFIG_TYPE extends Config> implements Config<CONFIG_TYP
             this.description = properties.get(DESCRIPTION_KEY);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public Map<String, String> properties() {
+        return Collections.unmodifiableMap(this.properties);
+    }
+
+    /** {@inheritDoc} */
     @Override
     public String id() {
         return this.id;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String name() {
         return this.name;
     }
 
-    @Override
-    public CONFIG_TYPE name(String name){
-        this.name = name;
-        return (CONFIG_TYPE) this;
-    }
-
+    /** {@inheritDoc} */
     @Override
     public String description() {
         return this.description;
     }
 
-    @Override
-    public CONFIG_TYPE description(String description){
-        this.description = description;
-        return (CONFIG_TYPE) this;
-    }
-
+    /** {@inheritDoc} */
     @Override
     public void validate() {
         if(StringUtil.isNullOrEmpty(this.id)){

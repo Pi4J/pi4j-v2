@@ -34,11 +34,19 @@ import com.pi4j.provider.exception.ProviderNotFoundException;
 
 import java.lang.reflect.Field;
 
+/**
+ * <p>ProviderInjector class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class ProviderInjector implements InjectorProcessor<Provider> {
 
+    /** {@inheritDoc} */
     @Override
     public Class<Provider> getTargetType() { return Provider.class; }
 
+    /** {@inheritDoc} */
     @Override
     public Provider process(Context context, Object instance, Inject annotation, Field field) throws Exception {
 

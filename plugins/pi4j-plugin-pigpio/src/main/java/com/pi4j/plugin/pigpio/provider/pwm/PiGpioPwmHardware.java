@@ -31,26 +31,47 @@ package com.pi4j.plugin.pigpio.provider.pwm;
 
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
+import com.pi4j.io.exception.IOException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 
+/**
+ * <p>PiGpioPwmHardware class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    private boolean initializing = false;
 
     // fixed range for hardware PWM
+    /** Constant <code>RANGE=1000000</code> */
     public static int RANGE = 1000000;
 
+    /**
+     * <p>Constructor for PiGpioPwmHardware.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @param provider a {@link com.pi4j.io.pwm.PwmProvider} object.
+     * @param config a {@link com.pi4j.io.pwm.PwmConfig} object.
+     * @throws java.io.IOException if any.
+     */
     public PiGpioPwmHardware(PiGpio piGpio, PwmProvider provider, PwmConfig config) throws IOException {
         super(piGpio, provider, config, RANGE);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm initialize(Context context) throws InitializeException {
         try {
+            initializing = true;
 
             // TODO :: SET PIN ALT MODES FOR HARDWARE PWM ON COMPUTE MODULE
             //  12  PWM channel 0  All models but A and B
@@ -69,9 +90,9 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
             else if(this.address() == 18 || this.address() == 19) {
                 piGpio.gpioSetMode(this.address(), PiGpioMode.ALT0);
             }
-    //        else{
-    //            throw new IOException("<PIGPIO> UNSUPPORTED HARDWARE PWM PIN: " + this.address());
-    //        }
+//            else{
+//                throw new IOException("<PIGPIO> UNSUPPORTED HARDWARE PWM PIN: " + this.address());
+//            }
 
             // set pin mode to output
             piGpio.gpioSetMode(this.address(), PiGpioMode.OUTPUT);
@@ -86,9 +107,6 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
                 this.frequency = this.actualFrequency;
             }
 
-            // initialize
-            super.initialize(context);
-
             // get current duty-cycle from config or set to default 50%
             if (config.dutyCycle() != null) {
                 this.dutyCycle = config.dutyCycle();
@@ -96,37 +114,63 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
                 // get updated duty-cycle value from PiGpio
                 this.dutyCycle = 50;  // default duty-cycle is 50% of total range
             }
-        }
-        catch (IOException e){
-            throw  new InitializeException(e);
-        }
 
+            // initialize
+            super.initialize(context);
+
+            // done initializing
+            initializing = false;
+        }
+        catch (Exception e){
+            initializing = false;
+            throw new InitializeException(e);
+        }
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public Pwm on() throws IOException{
-        // set PWM frequency & duty-cycle; enable PWM signal
-        piGpio.gpioHardwarePWM(this.address(), this.frequency, calculateActualDutyCycle(this.dutyCycle));
+    public Pwm on() throws IOException {
+        try {
+            // set PWM frequency & duty-cycle; enable PWM signal
+            piGpio.gpioHardwarePWM(this.address(), this.frequency, calculateActualDutyCycle(this.dutyCycle));
 
-        // get actual PWM frequency
-        this.actualFrequency = piGpio.gpioGetPWMfrequency(this.address());
+            // get actual PWM frequency
+            this.actualFrequency = piGpio.gpioGetPWMfrequency(this.address());
 
-        // update tracking state
-        this.onState = (this.frequency > 0 && this.dutyCycle > 0);
+            // update tracking state
+            this.onState = (this.frequency > 0 && this.dutyCycle > 0);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(), e);
+            throw new IOException(e);
+        }
 
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm off() throws IOException{
+        try {
+            // This is a hack to get the hardware PWM signal to stop if an initial
+            // value was configured.  It seems PIPGIO must actually perform a
+            // change value to apply a "ZERO" frequency & duty-cycle after
+            // the library is first initialized and the PWM was not active
+            if(initializing) {
+                piGpio.gpioHardwarePWM(this.address(), 1, 1);
+            }
 
-        // set PWM duty-cycle and enable PWM
-        piGpio.gpioHardwarePWM(this.address(), 0, 0);
+            // set PWM duty-cycle and enable PWM
+            piGpio.gpioHardwarePWM(this.address(), 0, 0);
 
-        // update tracking state
-        this.onState = false;
-
+            // update tracking state
+            this.onState = false;
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(), e);
+            throw new IOException(e);
+        }
         return this;
     }
 }

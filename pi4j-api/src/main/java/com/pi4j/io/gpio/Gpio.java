@@ -30,10 +30,26 @@ package com.pi4j.io.gpio;
 import com.pi4j.io.IO;
 import com.pi4j.provider.Provider;
 
+/**
+ * <p>Gpio interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Gpio<IO_TYPE extends IO<IO_TYPE,CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends GpioConfig,
         PROVIDER_TYPE extends Provider>
           extends IO<IO_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
+    /**
+     * <p>address.</p>
+     *
+     * @return a {@link java.lang.Number} object.
+     */
     default Number address() { return config().address(); }
+    /**
+     * <p>getAddress.</p>
+     *
+     * @return a {@link java.lang.Number} object.
+     */
     default Number getAddress() { return address(); };
 }

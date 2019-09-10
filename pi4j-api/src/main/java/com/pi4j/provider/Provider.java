@@ -29,23 +29,75 @@ package com.pi4j.provider;
 
 import com.pi4j.common.Descriptor;
 import com.pi4j.config.Config;
+import com.pi4j.config.ConfigBuilder;
+import com.pi4j.context.Context;
 import com.pi4j.extension.Extension;
 import com.pi4j.io.IO;
 import com.pi4j.io.IOType;
+import com.pi4j.io.exception.IOException;
+import com.pi4j.util.PropertiesUtil;
 
+import java.util.Map;
+
+/**
+ * <p>Provider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Provider<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CONFIG_TYPE extends Config> extends Extension<PROVIDER_TYPE> {
 
+    Context context();
+
+    /**
+     * <p>create.</p>
+     *
+     * @param config a CONFIG_TYPE object.
+     * @return a IO_TYPE object.
+     * @throws java.lang.Exception if any.
+     */
     IO_TYPE create(CONFIG_TYPE config) throws Exception;
 
+    /**
+     * <p>type.</p>
+     *
+     * @return a {@link com.pi4j.io.IOType} object.
+     */
     default IOType type() { return IOType.getByProviderClass(this.getClass()); };
+    /**
+     * <p>getType.</p>
+     *
+     * @return a {@link com.pi4j.io.IOType} object.
+     */
     default IOType getType() { return type(); }
+    /**
+     * <p>isType.</p>
+     *
+     * @param type a {@link com.pi4j.io.IOType} object.
+     * @return a boolean.
+     */
     default boolean isType(IOType type) { return this.type().isType(type); }
 
+    /** {@inheritDoc} */
     @Override
     default Descriptor describe() {
         Descriptor descriptor = Extension.super.describe();
         //descriptor.category(this.type().name());
         descriptor.category("PROVIDER");
         return descriptor;
+    }
+
+    default IO_TYPE create(String id) throws Exception {
+        // validate context
+        if(context() == null) throw new IOException("Unable to create IO instance; this provider has not been 'initialized()' with a Pi4J context.");
+
+        // resolve inheritable properties from the context based on the provided 'id' for this IO instance
+        Map<String,String> inheritedProperties = PropertiesUtil.subProperties(context().properties().all(), id);
+
+        // create IO instance
+        ConfigBuilder builder = type().newConfigBuilder(context());
+        builder.id(id);
+        builder.load(inheritedProperties);
+        return (IO_TYPE)create((CONFIG_TYPE) builder.build());
     }
 }

@@ -32,10 +32,22 @@ import com.pi4j.runtime.RuntimeProperties;
 
 import java.util.Map;
 
+/**
+ * <p>DefaultContextProperties class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultContextProperties implements ContextProperties {
 
     private final RuntimeProperties properties;
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param properties a {@link com.pi4j.runtime.RuntimeProperties} object.
+     * @return a {@link com.pi4j.context.ContextProperties} object.
+     */
     public static ContextProperties newInstance(RuntimeProperties properties){
         return new DefaultContextProperties(properties);
     }
@@ -44,21 +56,25 @@ public class DefaultContextProperties implements ContextProperties {
         this.properties = properties;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean has(String key) {
         return this.properties.has(key);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String get(String key) {
         return this.properties.get(key);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Map<String, String> all() {
         return this.properties.all();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int count() {
         return this.properties.count();

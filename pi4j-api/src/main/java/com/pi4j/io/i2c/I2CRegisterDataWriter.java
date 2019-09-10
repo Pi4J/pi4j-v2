@@ -44,6 +44,7 @@ import java.util.Collection;
  * Based on previous contributions from:
  *        Daniel Sendula,
  *        <a href="http://raspelikan.blogspot.co.at">RasPelikan</a>
+ * @version $Id: $Id
  */
 public interface I2CRegisterDataWriter {
 
@@ -57,7 +58,8 @@ public interface I2CRegisterDataWriter {
      *
      * @param register the register address to write to
      * @param b byte to be written
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
+     * @return a int.
      */
     int writeRegister(int register, byte b) throws IOException;
 
@@ -67,7 +69,8 @@ public interface I2CRegisterDataWriter {
      *
      * @param register the register address to write to
      * @param b byte to be written; the provided Integer wll be cast to a Byte.
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
+     * @return a int.
      */
     default int writeRegister(int register, int b) throws IOException{
         return writeRegister(register, (byte)b);
@@ -82,7 +85,8 @@ public interface I2CRegisterDataWriter {
      *
      * @param register the register address to write to
      * @param word 16-bit word value to be written
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
+     * @return a int.
      */
     default int writeRegisterWord(int register, int word) throws IOException{
         byte[] buffer = new byte[] { (byte)(word >> 8), (byte)word };
@@ -102,7 +106,7 @@ public interface I2CRegisterDataWriter {
      * @param offset offset in data buffer to start at
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     int writeRegister(int register, byte[] data, int offset, int length) throws IOException;
 
@@ -114,7 +118,7 @@ public interface I2CRegisterDataWriter {
      * @param data data array of bytes to be written
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, byte[] data, int length) throws IOException{
         return writeRegister(register, data, 0, length);
@@ -126,7 +130,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param data data to be written to the i2c device in one go
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, byte ... data) throws IOException {
         return writeRegister(register, data, 0, data.length);
@@ -138,7 +142,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param data data to be written to the i2c device in one go
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, byte[] ... data) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -154,7 +158,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param data data to be written to the i2c device in one go
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, Collection<byte[]> data) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -185,7 +189,7 @@ public interface I2CRegisterDataWriter {
      * @param offset offset in buffer
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException{
         // perform bounds checking on requested length versus total remaining size available
@@ -194,16 +198,6 @@ public interface I2CRegisterDataWriter {
         }
         return writeRegister(register, buffer.array(), offset, length);
     }
-
-    /**
-     * Write a buffer of byte values starting with the first byte in the array
-     * up to the provided length to a specific I2C device register.
-     *
-     * @param buffer byte buffer of data to be written
-     * @param length number of bytes to be written
-     * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
-     */
 
     /**
      * Write a buffer of byte values starting from the first byte in the buffer
@@ -218,10 +212,10 @@ public interface I2CRegisterDataWriter {
      *        data from the zero position up to the buffer's limit.
      *
      * @param register the register address to write to
-     * @param buffer byte buffer of data to be written to the i2c device in one go
+     * @param buffer byte buffer of data to be written
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, ByteBuffer buffer, int length) throws IOException{
         // if the buffer position is already at the buffer limit, then flip the buffer for
@@ -233,7 +227,6 @@ public interface I2CRegisterDataWriter {
 
         // write contents from the buffer starting at the current position up the the specified length
         return writeRegister(register, buffer, buffer.position(), length);
-
     }
 
     /**
@@ -250,7 +243,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param buffer byte buffer of data to be written to the i2c device in one go
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, ByteBuffer buffer) throws IOException{
         // if the buffer position is already at the buffer limit, then flip the buffer for
@@ -275,7 +268,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param buffer byte buffer of data to be written to the i2c device in one go
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, ByteBuffer ... buffer) throws IOException{
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -301,7 +294,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param stream stream of data to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, InputStream stream) throws IOException{
         return writeRegister(register, stream.readAllBytes());
@@ -315,7 +308,7 @@ public interface I2CRegisterDataWriter {
      * @param stream stream of data to be written
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int write(int register, InputStream stream, int length) throws IOException{
         return writeRegister(register, stream.readNBytes(length));
@@ -327,7 +320,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param stream stream of data to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, InputStream ... stream) throws IOException{
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -349,7 +342,7 @@ public interface I2CRegisterDataWriter {
      * @param charset character set to use for byte encoding
      * @param data string data (US_ASCII) to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, Charset charset, CharSequence data) throws IOException{
         return writeRegister(register, data.toString().getBytes(charset));
@@ -363,7 +356,7 @@ public interface I2CRegisterDataWriter {
      * @param charset character set to use for byte encoding
      * @param data string data (US_ASCII) to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, Charset charset, CharSequence ... data) throws IOException{
         StringBuilder builder = new StringBuilder();
@@ -381,7 +374,7 @@ public interface I2CRegisterDataWriter {
      * @param charset character set to use for byte encoding
      * @param data collection of character sequences of data to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, Charset charset, Collection<CharSequence> ... data) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -399,7 +392,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param data string data (US_ASCII) to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, CharSequence data) throws IOException{
         return writeRegister(register, StandardCharsets.US_ASCII, data);
@@ -411,7 +404,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param data string data (US_ASCII) to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, CharSequence ... data) throws IOException{
         return writeRegister(register, StandardCharsets.US_ASCII, data);
@@ -423,7 +416,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param data collection of character sequences of data to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, Collection<CharSequence> ... data) throws IOException {
         return writeRegister(register, StandardCharsets.US_ASCII, data);
@@ -442,7 +435,7 @@ public interface I2CRegisterDataWriter {
      * @param offset offset in data character array to start at
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, char[] data, int offset, int length) throws IOException {
         return writeRegister(register, StandardCharsets.US_ASCII, data, offset, length);
@@ -456,7 +449,7 @@ public interface I2CRegisterDataWriter {
      * @param data ASCII character array used for data write
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, char[] data, int length) throws IOException {
         return writeRegister(register, StandardCharsets.US_ASCII, data, length);
@@ -468,7 +461,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param data ASCII character array used for data write
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, char ... data) throws IOException{
         return writeRegister(register, StandardCharsets.US_ASCII, data);
@@ -484,7 +477,7 @@ public interface I2CRegisterDataWriter {
      * @param offset offset in data character array to start at
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, Charset charset, char[] data, int offset, int length) throws IOException {
         ByteBuffer bb = charset.encode(CharBuffer.wrap(data, offset, length));
@@ -500,7 +493,7 @@ public interface I2CRegisterDataWriter {
      * @param data ASCII character array used for data write
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, Charset charset, char[] data, int length) throws IOException {
         ByteBuffer bb = charset.encode(CharBuffer.wrap(data, 0, length));
@@ -514,7 +507,7 @@ public interface I2CRegisterDataWriter {
      * @param data character array (1 or more chars) to be written
      * @param charset character set to use for byte encoding
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, Charset charset, char ... data) throws IOException{
         ByteBuffer bb = charset.encode(CharBuffer.wrap(data));
@@ -528,7 +521,8 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param data collection of character sequences of data to be written
      * @return The number of bytes written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
+     * @param charset a {@link java.nio.charset.Charset} object.
      */
     default int writeRegister(int register, Charset charset, Collection<char[]> data) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -552,7 +546,7 @@ public interface I2CRegisterDataWriter {
      * @param offset offset in data character array to start at
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, CharBuffer data, int offset, int length) throws IOException {
         return writeRegister(register, StandardCharsets.US_ASCII, data, offset, length);
@@ -566,7 +560,7 @@ public interface I2CRegisterDataWriter {
      * @param data ASCII character array used for data write
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, CharBuffer data, int length) throws IOException {
         return writeRegister(register, StandardCharsets.US_ASCII, data, length);
@@ -578,7 +572,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param data ASCII character array used for data write
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, CharBuffer data) throws IOException {
         return writeRegister(register, StandardCharsets.US_ASCII, data);
@@ -590,7 +584,7 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param data ASCII character array used for data write
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, CharBuffer ... data) throws IOException {
         return writeRegister(register, StandardCharsets.US_ASCII, data);
@@ -614,7 +608,7 @@ public interface I2CRegisterDataWriter {
      * @param offset offset in data character array to start at
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, Charset charset, CharBuffer buffer, int offset, int length) throws IOException {
         // perform bounds checking on requested length versus total remaining size available
@@ -644,7 +638,7 @@ public interface I2CRegisterDataWriter {
      * @param buffer character buffer used for data write
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, Charset charset, CharBuffer buffer, int length) throws IOException {
         // if the buffer position is already at the buffer limit, then flip the buffer for
@@ -674,7 +668,7 @@ public interface I2CRegisterDataWriter {
      * @param charset character set to use for byte encoding
      * @param buffer character array used for data write
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, Charset charset, CharBuffer buffer) throws IOException {
         // if the buffer position is already at the buffer limit, then flip the buffer for
@@ -701,7 +695,7 @@ public interface I2CRegisterDataWriter {
      * @param charset character set to use for byte encoding
      * @param data ASCII character array used for data write
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws IOException thrown on write error
+     * @throws java.io.IOException thrown on write error
      */
     default int writeRegister(int register, Charset charset, CharBuffer ... data) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();

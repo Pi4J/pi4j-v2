@@ -33,14 +33,22 @@ import com.pi4j.provider.Providers;
 
 import java.lang.reflect.Field;
 
+/**
+ * <p>ProvidersInjector class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class ProvidersInjector implements InjectorProcessor<Providers> {
 
+    /** {@inheritDoc} */
     @Override
     public Providers process(Context context, Object instance, Inject annotation, Field field) throws Exception {
         // return providers instance
         return context.providers();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class<Providers> getTargetType() {
         return Providers.class;

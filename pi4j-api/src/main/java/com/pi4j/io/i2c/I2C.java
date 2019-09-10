@@ -27,6 +27,7 @@ package com.pi4j.io.i2c;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 import com.pi4j.io.IODataReader;
 import com.pi4j.io.IODataWriter;
@@ -40,6 +41,7 @@ import com.pi4j.io.IODataWriter;
  * Based on previous contributions from:
  *        Daniel Sendula,
  *        <a href="http://raspelikan.blogspot.co.at">RasPelikan</a>
+ * @version $Id: $Id
  */
 public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
         IODataWriter,
@@ -47,12 +49,18 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
         I2CRegisterDataReaderWriter,
         AutoCloseable {
 
-    static I2CConfigBuilder newConfigBuilder(){
-        return I2CConfigBuilder.newInstance();
+    /**
+     * <p>newConfigBuilder.</p>
+     *
+     * @return a {@link com.pi4j.io.i2c.I2CConfigBuilder} object.
+     */
+    static I2CConfigBuilder newConfigBuilder(Context context){
+        return I2CConfigBuilder.newInstance(context);
     }
 
     /**
      * I2C Device Address
+     *
      * @return The I2C device address for which this instance is constructed for.
      */
     default int device(){
@@ -61,6 +69,7 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
 
     /**
      * I2C Bus Address
+     *
      * @return The I2C bus address for which this instance is constructed for.
      */
     default int bus(){
@@ -69,12 +78,14 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
 
     /**
      * I2C Device Communication State is OPEN
+     *
      * @return The I2C device communication state
      */
     boolean isOpen();
 
     /**
      * I2C Bus Address
+     *
      * @return The I2C bus address for which this instance is constructed for.
      */
     default int getBus(){
@@ -83,6 +94,7 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
 
     /**
      * I2C Device Address
+     *
      * @return The I2C device address for which this instance is constructed for.
      */
     default int getDevice(){
@@ -91,14 +103,16 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
 
     /**
      * Get an encapsulated interface for reading and writing to a specific I2C device register
-     * @param address
-     * @return
+     *
+     * @param address a int.
+     * @return a {@link com.pi4j.io.i2c.I2CRegister} object.
      */
     I2CRegister getRegister(int address);
 
     /**
      * I2C Device Register
      * Get an encapsulated interface for reading and writing to a specific I2C device register
+     *
      * @param address the (16-bit) device register address
      * @return an instance of I2CRegister for the provided register address
      */

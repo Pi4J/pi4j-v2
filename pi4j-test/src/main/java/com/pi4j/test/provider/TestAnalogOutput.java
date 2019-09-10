@@ -31,106 +31,131 @@ import com.pi4j.common.Metadata;
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.io.binding.AnalogBinding;
 import com.pi4j.io.exception.IOBoundsException;
 import com.pi4j.io.exception.IOIllegalValueException;
-import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
-import com.pi4j.io.gpio.analog.binding.AnalogBinding;
+import com.pi4j.io.gpio.analog.AnalogValueChangeListener;
 
+/**
+ * <p>TestAnalogOutput class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class TestAnalogOutput implements AnalogOutput {
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput value(Integer value) throws IOIllegalValueException, IOBoundsException {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput stepUp() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput stepDown() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput step(Integer value) throws IOIllegalValueException, IOBoundsException {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer value() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public AnalogOutput addListener(AnalogChangeListener... listener) {
+    public AnalogOutput addListener(AnalogValueChangeListener... listener) {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public AnalogOutput removeListener(AnalogChangeListener... listener) {
+    public AnalogOutput removeListener(AnalogValueChangeListener... listener) {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput bind(AnalogBinding... binding) {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput unbind(AnalogBinding... binding) {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutputConfig config() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput name(String name) {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutput description(String description) {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogOutputProvider provider() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String id() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String name() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String description() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Metadata metadata() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object initialize(Context context) throws InitializeException {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object shutdown(Context context) throws ShutdownException {
         return null;

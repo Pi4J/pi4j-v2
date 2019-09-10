@@ -4,7 +4,7 @@ package com.pi4j.library.pigpio;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
  * FILENAME      :  PiGpioError.java
  *
  * This file is part of the Pi4J project. More information about
@@ -29,6 +29,12 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
+/**
+ * <p>PiGpioError class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public enum PiGpioError {
     UNKNOWN(0),
     PI_INIT_FAILED       (-1),  // gpioInitialise failed
@@ -193,10 +199,20 @@ public enum PiGpioError {
         this.value  =value;
     }
 
+    /**
+     * <p>value.</p>
+     *
+     * @return a int.
+     */
     public int value(){
         return this.value;
     }
 
+    /**
+     * <p>message.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String message(){
         switch (this){
             case UNKNOWN             : return "Unknown";
@@ -350,6 +366,12 @@ public enum PiGpioError {
         return "Not listed";
     }
 
+    /**
+     * <p>from.</p>
+     *
+     * @param value a {@link java.lang.Number} object.
+     * @return a {@link com.pi4j.library.pigpio.PiGpioError} object.
+     */
     public static PiGpioError from(Number value){
         for(PiGpioError c : PiGpioError.values()){
             if(c.value() == value.intValue()) return c;

@@ -29,9 +29,15 @@ package com.pi4j.annotation;
 
 import java.lang.annotation.*;
 
+/**
+ * <p>OnEvent class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Inherited
 public @interface OnEvent {
-    String value();
+    String value() default "";
 }

@@ -27,7 +27,7 @@ package com.pi4j.io.exception;
  * #L%
  */
 
-    /**
+/**
  * <p>
  * This exception is thrown if a platform assignment is attempted when a
  * platform instance has already been assigned.
@@ -36,6 +36,7 @@ package com.pi4j.io.exception;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class IOIllegalValueException extends IOException {
 

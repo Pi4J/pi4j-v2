@@ -29,8 +29,16 @@ package com.pi4j.plugin.linuxfs;
  * #L%
  */
 
+/**
+ * <p>LinuxFs class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class LinuxFs {
+    /** Constant <code>NAME="LinuxFS"</code> */
     public static final String NAME = "LinuxFS";
+    /** Constant <code>ID="linuxfs"</code> */
     public static final String ID = "linuxfs";
 
 //    // Analog Input (GPIO) Provider name and unique ID
@@ -38,15 +46,21 @@ public class LinuxFs {
 //    public static final String ANALOG_INPUT_PROVIDER_ID = ID + "-analog-input";
 
     // Analog Output (GPIO) Provider name and unique ID
+    /** Constant <code>ANALOG_OUTPUT_PROVIDER_NAME="NAME +  Analog Output (GPIO) Provider"</code> */
     public static final String ANALOG_OUTPUT_PROVIDER_NAME = NAME + " Analog Output (GPIO) Provider";
+    /** Constant <code>ANALOG_OUTPUT_PROVIDER_ID="ID + -analog-output"</code> */
     public static final String ANALOG_OUTPUT_PROVIDER_ID = ID + "-analog-output";
 
     // Digital Input (GPIO) Provider name and unique ID
+    /** Constant <code>DIGITAL_INPUT_PROVIDER_NAME="NAME +   Digital Input (GPIO) Provider"</code> */
     public static final String DIGITAL_INPUT_PROVIDER_NAME = NAME +  " Digital Input (GPIO) Provider";
+    /** Constant <code>DIGITAL_INPUT_PROVIDER_ID="ID + -digital-input"</code> */
     public static final String DIGITAL_INPUT_PROVIDER_ID = ID + "-digital-input";
 
     // Digital Output (GPIO) Provider name and unique ID
+    /** Constant <code>DIGITAL_OUTPUT_PROVIDER_NAME="NAME +   Digital Output (GPIO) Provider"</code> */
     public static final String DIGITAL_OUTPUT_PROVIDER_NAME = NAME +  " Digital Output (GPIO) Provider";
+    /** Constant <code>DIGITAL_OUTPUT_PROVIDER_ID="ID + -digital-output"</code> */
     public static final String DIGITAL_OUTPUT_PROVIDER_ID = ID + "-digital-output";
 
 //    // PWM Provider name and unique ID

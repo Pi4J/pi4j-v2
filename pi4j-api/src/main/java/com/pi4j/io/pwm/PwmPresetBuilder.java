@@ -30,9 +30,19 @@ package com.pi4j.io.pwm;
 import com.pi4j.config.Builder;
 import com.pi4j.io.pwm.impl.DefaultPwmPresetBuilder;
 
-import java.io.IOException;
-
+/**
+ * <p>PwmPresetBuilder interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface PwmPresetBuilder extends Builder<PwmPreset> {
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link com.pi4j.io.pwm.PwmPresetBuilder} object.
+     */
     static PwmPresetBuilder newInstance(String name)  {
         return DefaultPwmPresetBuilder.newInstance(name);
     }
@@ -49,7 +59,6 @@ public interface PwmPresetBuilder extends Builder<PwmPreset> {
      *
      * @param dutyCycle duty-cycle value expressed as a percentage (rage: 0-100)
      * @return this builder instance
-     * @throws IOException
      */
     PwmPresetBuilder dutyCycle(Number dutyCycle);
 
@@ -66,7 +75,6 @@ public interface PwmPresetBuilder extends Builder<PwmPreset> {
      *
      * @param frequency the number of cycles per second (Hertz)
      * @return this builder instance
-     * @throws IOException
      */
     PwmPresetBuilder frequency(Integer frequency);
 }

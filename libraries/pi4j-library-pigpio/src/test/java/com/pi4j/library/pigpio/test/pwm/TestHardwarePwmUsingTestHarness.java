@@ -4,7 +4,7 @@ package com.pi4j.library.pigpio.test.pwm;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
  * FILENAME      :  TestHardwarePwmUsingTestHarness.java
  *
  * This file is part of the Pi4J project. More information about
@@ -31,8 +31,11 @@ package com.pi4j.library.pigpio.test.pwm;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
+import com.pi4j.library.pigpio.test.TestEnv;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
+import com.pi4j.test.harness.TestHarnessInfo;
+import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
@@ -52,7 +55,7 @@ public class TestHardwarePwmUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        //System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
@@ -62,25 +65,25 @@ public class TestHardwarePwmUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142301"));
+            harness = TestEnv.createTestHarness();
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
 
-//            // get test harness info
-//            TestHarnessInfo info = harness.getInfo();
-//            System.out.println("... we are connected to test harness:");
-//            System.out.println("----------------------------------------");
-//            System.out.println("NAME       : " + info.name);
-//            System.out.println("VERSION    : " + info.version);
-//            System.out.println("DATE       : " + info.date);
-//            System.out.println("COPYRIGHT  : " + info.copyright);
-//            System.out.println("----------------------------------------");
-//
-//            // reset all pins on test harness before proceeding with this test
-//            TestHarnessPins reset = harness.reset();
-//            System.out.println();
-//            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+            // get test harness info
+            TestHarnessInfo info = harness.getInfo();
+            System.out.println("... we are connected to test harness:");
+            System.out.println("----------------------------------------");
+            System.out.println("NAME       : " + info.name);
+            System.out.println("VERSION    : " + info.version);
+            System.out.println("DATE       : " + info.date);
+            System.out.println("COPYRIGHT  : " + info.copyright);
+            System.out.println("----------------------------------------");
+
+            // reset all pins on test harness before proceeding with this test
+            TestHarnessPins reset = harness.reset();
+            System.out.println();
+            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
 
         } catch (IOException e){
             e.printStackTrace();
@@ -95,28 +98,26 @@ public class TestHardwarePwmUsingTestHarness {
         System.out.println("************************************************************************");
         System.out.println();
 
-        // terminate connection to test harness
-        harness.terminate();
+        // shutdown connection to test harness
+        harness.shutdown();
     }
 
     @BeforeEach
     public void beforeEach() throws IOException {
         // create test harness and PIGPIO instances
-        pigpio = PiGpio.newSocketInstance(System.getProperty("pi4j.pigpio.host", "rpi3bp.savage.lan"),
-                System.getProperty("pi4j.pigpio.port", "8888"));
+        pigpio = TestEnv.createPiGpio();
 
         // initialize test harness and PIGPIO instances
         pigpio.initialize();
 
         // reset I/O
-        //harness.reset();
+        harness.reset();
     }
 
     @AfterEach
     public void afterEach() throws IOException {
-
-        // terminate test harness and PIGPIO instances
-        //pigpio.terminate();
+        // shutdown PIGPIO instances
+        pigpio.shutdown();
     }
 
     @Test

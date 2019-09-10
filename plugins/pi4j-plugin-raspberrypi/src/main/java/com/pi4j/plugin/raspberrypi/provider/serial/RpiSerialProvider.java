@@ -32,9 +32,22 @@ package com.pi4j.plugin.raspberrypi.provider.serial;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.plugin.raspberrypi.RaspberryPi;
 
+/**
+ * <p>RpiSerialProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface RpiSerialProvider extends SerialProvider {
+    /** Constant <code>NAME="RaspberryPi.SERIAL_PROVIDER_NAME"</code> */
     String NAME = RaspberryPi.SERIAL_PROVIDER_NAME;
+    /** Constant <code>ID="RaspberryPi.SERIAL_PROVIDER_ID"</code> */
     String ID = RaspberryPi.SERIAL_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.plugin.raspberrypi.provider.serial.RpiSerialProvider} object.
+     */
     static RpiSerialProvider newInstance() {
         return new RpiSerialProviderImpl();
     }

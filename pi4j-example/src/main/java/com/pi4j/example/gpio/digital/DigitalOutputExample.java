@@ -28,19 +28,35 @@ package com.pi4j.example.gpio.digital;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalState;
+import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
 import com.pi4j.util.Console;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * <p>DigitalOutputExample class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DigitalOutputExample {
 
+    /** Constant <code>DIGITAL_OUTPUT_PIN=4</code> */
     public static int DIGITAL_OUTPUT_PIN = 4;
 
+    /**
+     * <p>Constructor for DigitalOutputExample.</p>
+     */
     public DigitalOutputExample() {
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // create Pi4J console wrapper/helper
@@ -64,7 +80,7 @@ public class DigitalOutputExample {
         output.config().shutdownState(DigitalState.HIGH);
 
         // setup a digital output listener to listen for any state changes on the digital output
-        output.addListener((DigitalChangeListener) event -> {
+        output.addListener((DigitalStateChangeListener) event -> {
             System.out.println(event);
         });
 

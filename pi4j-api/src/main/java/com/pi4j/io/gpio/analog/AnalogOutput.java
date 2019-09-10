@@ -27,19 +27,65 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.Output;
 import com.pi4j.io.exception.IOBoundsException;
 import com.pi4j.io.exception.IOIllegalValueException;
 
+/**
+ * <p>AnalogOutput interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig, AnalogOutputProvider>, Output {
 
-    static AnalogOutputConfigBuilder newConfigBuilder(){
-        return AnalogOutputConfigBuilder.newInstance();
+    /**
+     * <p>newConfigBuilder.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder} object.
+     */
+    static AnalogOutputConfigBuilder newConfigBuilder(Context context){
+        return AnalogOutputConfigBuilder.newInstance(context);
     }
 
+    /**
+     * <p>value.</p>
+     *
+     * @param value a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogOutput} object.
+     * @throws com.pi4j.io.exception.IOIllegalValueException if any.
+     * @throws com.pi4j.io.exception.IOBoundsException if any.
+     */
     AnalogOutput value(Integer value) throws IOIllegalValueException, IOBoundsException;
+    /**
+     * <p>stepUp.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogOutput} object.
+     */
     AnalogOutput stepUp();
+    /**
+     * <p>stepDown.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogOutput} object.
+     */
     AnalogOutput stepDown();
+    /**
+     * <p>step.</p>
+     *
+     * @param value a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogOutput} object.
+     * @throws com.pi4j.io.exception.IOIllegalValueException if any.
+     * @throws com.pi4j.io.exception.IOBoundsException if any.
+     */
     AnalogOutput step(Integer value) throws IOIllegalValueException, IOBoundsException;
+    /**
+     * <p>setValue.</p>
+     *
+     * @param value a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.io.gpio.analog.AnalogOutput} object.
+     * @throws com.pi4j.io.exception.IOIllegalValueException if any.
+     * @throws com.pi4j.io.exception.IOBoundsException if any.
+     */
     default AnalogOutput setValue(Integer value) throws IOIllegalValueException, IOBoundsException { return value(value); };
 }

@@ -32,9 +32,22 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.plugin.linuxfs.LinuxFs;
 
+/**
+ * <p>LinuxFsDigitalOutputProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface LinuxFsDigitalOutputProvider extends DigitalOutputProvider {
+    /** Constant <code>NAME="LinuxFs.DIGITAL_OUTPUT_PROVIDER_NAME"</code> */
     String NAME = LinuxFs.DIGITAL_OUTPUT_PROVIDER_NAME;
+    /** Constant <code>ID="LinuxFs.DIGITAL_OUTPUT_PROVIDER_ID"</code> */
     String ID = LinuxFs.DIGITAL_OUTPUT_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalOutputProvider} object.
+     */
     static LinuxFsDigitalOutputProvider newInstance() {
         return new LinuxFsDigitalOutputProviderImpl();
     }

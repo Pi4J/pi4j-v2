@@ -39,18 +39,30 @@ import com.pi4j.util.Console;
 
 import java.util.concurrent.Callable;
 
+/**
+ * <p>I2cExampleUsingDependencyInjection class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class I2cExampleUsingDependencyInjection {
 
     private static final int I2C_BUS = 1;
     private static final int I2C_DEVICE = 0x04;
     private static final int I2C_DEVICE_REGISTER = 0x01;
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
 //        // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
 //        // this temporary property is used to tell
 //        // PIGPIO which remote Raspberry Pi to connect to
-//        System.setProperty("pi4j.host", "rpi3bp.savage.lan");
+        System.setProperty("pi4j.host", "rpi3bp.savage.lan");
 
         // Pi4J cannot perform dependency injection on static classes
         // we will create a container instance to run our example

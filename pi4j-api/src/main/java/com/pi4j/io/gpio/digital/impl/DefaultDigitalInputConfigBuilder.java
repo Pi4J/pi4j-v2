@@ -27,35 +27,65 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBuilderBase;
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputConfigBuilder;
 import com.pi4j.io.gpio.digital.PullResistance;
 
+import java.util.concurrent.TimeUnit;
+
+/**
+ * <p>DefaultDigitalInputConfigBuilder class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultDigitalInputConfigBuilder
-        extends AddressConfigBuilderBase<DigitalInputConfigBuilder, DigitalInputConfig>
+        extends DigitalConfigBuilderBase<DigitalInputConfigBuilder, DigitalInputConfig>
         implements DigitalInputConfigBuilder {
 
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected DefaultDigitalInputConfigBuilder(){
-        super();
+    protected DefaultDigitalInputConfigBuilder(Context context){
+        super(context);
     }
 
-    public static DigitalInputConfigBuilder newInstance() {
-        return new DefaultDigitalInputConfigBuilder();
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
+     */
+    public static DigitalInputConfigBuilder newInstance(Context context) {
+        return new DefaultDigitalInputConfigBuilder(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalInputConfig build() {
-        DigitalInputConfig config = new DefaultDigitalInputConfig(properties);
+        DigitalInputConfig config = new DefaultDigitalInputConfig(getResolvedProperties());
         return config;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalInputConfigBuilder pull(PullResistance value) {
         this.properties.put(DigitalInputConfig.PULL_RESISTANCE_KEY, value.toString());
         return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DigitalInputConfigBuilder debounce(Long microseconds) {
+        if(microseconds != null) {
+            this.properties.put(DigitalInputConfig.DEBOUNCE_RESISTANCE_KEY, microseconds.toString());
+        }
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DigitalInputConfigBuilder debounce(Long interval, TimeUnit units) {
+        return debounce(units.toMicros(interval));
     }
 }

@@ -27,8 +27,8 @@ package com.pi4j.io.pwm.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.digital.PullResistance;
+import com.pi4j.io.impl.IOAddressConfigBase;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmPreset;
 import com.pi4j.io.pwm.PwmType;
@@ -39,8 +39,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <p>DefaultPwmConfig class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultPwmConfig
-        extends AddressConfigBase<PwmConfig>
+        extends IOAddressConfigBase<PwmConfig>
         implements PwmConfig {
 
     // private configuration properties
@@ -63,7 +69,9 @@ public class DefaultPwmConfig
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
+     * @param presets a {@link java.util.Collection} object.
      */
     protected DefaultPwmConfig(Map<String,String> properties, Collection<PwmPreset> presets){
         this(properties);
@@ -72,7 +80,8 @@ public class DefaultPwmConfig
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
      */
     protected DefaultPwmConfig(Map<String,String> properties){
         super(properties);
@@ -116,26 +125,31 @@ public class DefaultPwmConfig
             this.dutyCycle = 0f;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float dutyCycle() {
         return this.dutyCycle;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer frequency() {
         return this.frequency;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PwmType pwmType() {
         return this.pwmType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float shutdownValue(){
         return this.shutdownValue;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PwmConfig shutdownValue(Number dutyCycle){
 
@@ -148,11 +162,13 @@ public class DefaultPwmConfig
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float initialValue() {
         return this.initialValue;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Collection<PwmPreset> presets(){
         return this.presets;

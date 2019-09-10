@@ -31,23 +31,42 @@ package com.pi4j.plugin.pigpio.provider.pwm;
 
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
+import com.pi4j.io.exception.IOException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 
+/**
+ * <p>PiGpioPwmSoftware class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // fixed range for software PWM
+    /** Constant <code>RANGE=255</code> */
     public static int RANGE = 255;
 
+    /**
+     * <p>Constructor for PiGpioPwmSoftware.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @param provider a {@link com.pi4j.io.pwm.PwmProvider} object.
+     * @param config a {@link com.pi4j.io.pwm.PwmConfig} object.
+     * @throws java.io.IOException if any.
+     */
     public PiGpioPwmSoftware(PiGpio piGpio, PwmProvider provider, PwmConfig config) throws IOException {
         super(piGpio, provider, config, RANGE);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm initialize(Context context) throws InitializeException {
         try {
@@ -78,37 +97,47 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
                 this.dutyCycle = 50;  // default duty-cycle is 50% of total range
             }
         }
-        catch (IOException e){
-            throw  new InitializeException(e);
+        catch (Exception e){
+            throw new InitializeException(e);
         }
 
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm on() throws IOException{
+        try {
+            // set PWM frequency; return actual frequency
+            this.actualFrequency = piGpio.gpioSetPWMfrequency(this.address(), frequency);
 
-        // set PWM frequency; return actual frequency
-        this.actualFrequency = piGpio.gpioSetPWMfrequency(this.address(), frequency);
+            // set PWM duty-cycle and enable PWM
+            piGpio.gpioPWM(this.address(), calculateActualDutyCycle(this.dutyCycle));
 
-        // set PWM duty-cycle and enable PWM
-        piGpio.gpioPWM(this.address(), calculateActualDutyCycle(this.dutyCycle));
-
-        // update tracking state
-        this.onState = (this.frequency > 0 && this.dutyCycle > 0);
-
+            // update tracking state
+            this.onState = (this.frequency > 0 && this.dutyCycle > 0);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(), e);
+            throw new IOException(e);
+        }
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm off() throws IOException{
+        try {
+            // set PWM duty-cycle and enable PWM
+            piGpio.gpioPWM(this.address(), 0);
 
-        // set PWM duty-cycle and enable PWM
-        piGpio.gpioPWM(this.address(), 0);
-
-        // update tracking state
-        this.onState = false;
-
+            // update tracking state
+            this.onState = false;
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(), e);
+            throw new IOException(e);
+        }
         return this;
     }
 }

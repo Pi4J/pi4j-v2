@@ -27,15 +27,21 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBase;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalState;
+import com.pi4j.io.impl.IOAddressConfigBase;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
 
+/**
+ * <p>DefaultDigitalOutputConfig class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultDigitalOutputConfig
-        extends AddressConfigBase<DigitalOutputConfig>
+        extends IOAddressConfigBase<DigitalOutputConfig>
         implements DigitalOutputConfig {
 
     // private configuration properties
@@ -51,7 +57,8 @@ public class DefaultDigitalOutputConfig
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
      */
     protected DefaultDigitalOutputConfig(Map<String,String> properties){
         super(properties);
@@ -72,17 +79,20 @@ public class DefaultDigitalOutputConfig
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalState shutdownState(){
         return this.shutdownState;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DefaultDigitalOutputConfig shutdownState(DigitalState state){
         this.shutdownState = state;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalState initialState() {
         return this.initialState;

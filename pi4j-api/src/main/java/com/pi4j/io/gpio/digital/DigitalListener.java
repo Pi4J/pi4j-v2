@@ -29,6 +29,12 @@ package com.pi4j.io.gpio.digital;
 
 import com.pi4j.event.Listener;
 
-public interface DigitalListener extends Listener {
+/**
+ * <p>DigitalListener interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
+public interface DigitalListener<EVENT_TYPE extends DigitalEvent> extends Listener {
     // MARKER INTERFACE
 }

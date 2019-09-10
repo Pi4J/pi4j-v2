@@ -65,7 +65,7 @@ public class DependencyInjectionDigitalInputTest {
 
     @Before
     public void beforeTest() throws Pi4JException {
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+        System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
         TestDigitalInputProvider provider = TestDigitalInputProvider.newInstance("test-digital-input-provider");
         TestPlatform platform = new TestPlatform();

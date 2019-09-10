@@ -27,11 +27,20 @@ package com.pi4j.test.harness;
  * #L%
  */
 
+/**
+ * <p>TestHarnessError class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class TestHarnessError extends TestHarnessResponse {
 
     public int errno;
     public String msg;
 
+    /**
+     * <p>Constructor for TestHarnessError.</p>
+     */
     public TestHarnessError() {
         // no-args constructor
     }

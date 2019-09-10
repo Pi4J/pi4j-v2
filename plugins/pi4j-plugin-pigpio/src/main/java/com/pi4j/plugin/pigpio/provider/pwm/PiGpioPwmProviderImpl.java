@@ -37,18 +37,35 @@ import com.pi4j.library.pigpio.PiGpio;
 
 import java.io.IOException;
 
+/**
+ * <p>PiGpioPwmProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioPwmProviderImpl extends PwmProviderBase implements PiGpioPwmProvider {
 
     final PiGpio piGpio;
 
+    /**
+     * <p>Constructor for PiGpioPwmProviderImpl.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @throws java.io.IOException if any.
+     */
     public PiGpioPwmProviderImpl(PiGpio piGpio) throws IOException {
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm create(PwmConfig config) throws Exception {
+        // initialize the PIGPIO library
+        if(!piGpio.isInitialized()) piGpio.initialize();
+
+        // create new I/O instance based on I/O config
         if(config.pwmType() == PwmType.HARDWARE){
             return new PiGpioPwmHardware(piGpio, this, config);
         }

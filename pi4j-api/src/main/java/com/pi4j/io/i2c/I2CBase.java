@@ -34,10 +34,22 @@ import com.pi4j.io.i2c.impl.DefaultI2CRegister;
 
 import java.io.IOException;
 
+/**
+ * <p>Abstract I2CBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class I2CBase extends IOBase<I2C, I2CConfig, I2CProvider> implements I2C {
 
     protected boolean isOpen = false;
 
+    /**
+     * <p>Constructor for I2CBase.</p>
+     *
+     * @param provider a {@link com.pi4j.io.i2c.I2CProvider} object.
+     * @param config a {@link com.pi4j.io.i2c.I2CConfig} object.
+     */
     public I2CBase(I2CProvider provider, I2CConfig config) {
         super(provider, config);
         this.name = config.name();
@@ -46,25 +58,28 @@ public abstract class I2CBase extends IOBase<I2C, I2CConfig, I2CProvider> implem
         this.isOpen = true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isOpen() {
         return this.isOpen;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
         this.isOpen = false;
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Get an encapsulated interface for reading and writing to a specific I2C device register
-     * @param address
-     * @return
      */
     public I2CRegister getRegister(int address){
         return new DefaultI2CRegister(this, address);
     }
 
+    /** {@inheritDoc} */
     @Override
     public I2C shutdown(Context context) throws ShutdownException {
         // if this I2C device is still open, then we need to close it since we are shutting down

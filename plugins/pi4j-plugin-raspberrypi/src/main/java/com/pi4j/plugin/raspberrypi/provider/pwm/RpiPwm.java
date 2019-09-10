@@ -29,25 +29,39 @@ package com.pi4j.plugin.raspberrypi.provider.pwm;
  * #L%
  */
 
+import com.pi4j.io.exception.IOException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmBase;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProvider;
 
-import java.io.IOException;
 
+/**
+ * <p>RpiPwm class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class RpiPwm extends PwmBase implements Pwm {
 
+    /**
+     * <p>Constructor for RpiPwm.</p>
+     *
+     * @param provider a {@link com.pi4j.io.pwm.PwmProvider} object.
+     * @param config a {@link com.pi4j.io.pwm.PwmConfig} object.
+     */
     public RpiPwm(PwmProvider provider, PwmConfig config){
         super(provider, config);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm on() throws IOException {
         this.onState = true;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm off() throws IOException {
         this.onState = false;

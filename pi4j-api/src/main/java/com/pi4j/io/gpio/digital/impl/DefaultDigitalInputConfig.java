@@ -27,15 +27,22 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBase;
+import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.PullResistance;
+import com.pi4j.io.impl.IOAddressConfigBase;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
 
+/**
+ * <p>DefaultDigitalInputConfig class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultDigitalInputConfig
-        extends AddressConfigBase<DigitalInputConfig>
+        extends IOAddressConfigBase<DigitalInputConfig>
         implements DigitalInputConfig {
 
     /**
@@ -47,10 +54,12 @@ public class DefaultDigitalInputConfig
 
     // private configuration properties
     protected PullResistance pullResistance = PullResistance.OFF;
+    protected Long debounce = DigitalInput.DEFAULT_DEBOUNCE;
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
      */
     protected DefaultDigitalInputConfig(Map<String,String> properties){
         super(properties);
@@ -64,10 +73,20 @@ public class DefaultDigitalInputConfig
         if(properties.containsKey(PULL_RESISTANCE_KEY)){
             this.pullResistance = PullResistance.parse(properties.get(PULL_RESISTANCE_KEY));
         }
+
+        // load optional pull resistance from properties
+        if(properties.containsKey(DEBOUNCE_RESISTANCE_KEY)){
+            this.debounce = Long.parseLong(properties.get(DEBOUNCE_RESISTANCE_KEY));
+        }
     }
 
+    /** {@inheritDoc} */
     @Override
     public PullResistance pull() {
         return this.pullResistance;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public Long debounce() { return this.debounce; }
 }

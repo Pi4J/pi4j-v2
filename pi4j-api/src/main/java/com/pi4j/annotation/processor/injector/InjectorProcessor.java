@@ -33,15 +33,28 @@ import com.pi4j.context.Context;
 
 import java.lang.reflect.Field;
 
+/**
+ * <p>InjectorProcessor interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface InjectorProcessor<T> extends FieldProcessor<Inject, T> {
 
+    /**
+     * <p>getTargetType.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
     Class<T> getTargetType();
 
+    /** {@inheritDoc} */
     @Override
     default Class<Inject> annotationType() {
         return Inject.class;
     }
 
+    /** {@inheritDoc} */
     @Override
     default boolean isEligible(Context context, Object instance, Inject annotation, Field field) throws Exception {
 

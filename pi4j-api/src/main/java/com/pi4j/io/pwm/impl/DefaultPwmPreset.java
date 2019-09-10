@@ -29,18 +29,37 @@ package com.pi4j.io.pwm.impl;
 
 import com.pi4j.io.pwm.PwmPreset;
 
+/**
+ * <p>DefaultPwmPreset class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultPwmPreset  implements PwmPreset {
 
     protected final String name;
     protected final Float dutyCycle;
     protected final Integer frequency;
 
+    /**
+     * <p>Constructor for DefaultPwmPreset.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param dutyCycle a {@link java.lang.Number} object.
+     */
     public DefaultPwmPreset(String name, Number dutyCycle){
         this.name = name.toLowerCase().trim();
         this.dutyCycle = dutyCycle.floatValue();
         this.frequency = null;
     }
 
+    /**
+     * <p>Constructor for DefaultPwmPreset.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param dutyCycle a {@link java.lang.Number} object.
+     * @param frequency a {@link java.lang.Integer} object.
+     */
     public DefaultPwmPreset(String name, Number dutyCycle, Integer frequency){
         this.name = name.toLowerCase().trim();
 
@@ -56,16 +75,19 @@ public class DefaultPwmPreset  implements PwmPreset {
         this.frequency = frequency;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String name() {
         return this.name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float dutyCycle() {
         return this.dutyCycle;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer frequency() {
         return this.frequency;

@@ -30,11 +30,23 @@ package com.pi4j.io.gpio;
 import com.pi4j.io.IOBase;
 import com.pi4j.provider.Provider;
 
+/**
+ * <p>Abstract GpioBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class GpioBase<IO_TYPE extends Gpio<IO_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends GpioConfig<CONFIG_TYPE>, PROVIDER_TYPE extends Provider>
         extends IOBase<IO_TYPE, CONFIG_TYPE, PROVIDER_TYPE>
         implements Gpio<IO_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
 
+    /**
+     * <p>Constructor for GpioBase.</p>
+     *
+     * @param provider a PROVIDER_TYPE object.
+     * @param config a CONFIG_TYPE object.
+     */
     public GpioBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
         super(provider, config);
         this.name = config.name();
@@ -42,6 +54,7 @@ public abstract class GpioBase<IO_TYPE extends Gpio<IO_TYPE, CONFIG_TYPE, PROVID
         this.description = config.description();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString(){
         StringBuilder result = new StringBuilder();

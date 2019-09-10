@@ -35,13 +35,23 @@ import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
 
 import java.io.IOException;
 
+/**
+ * <p>RpiDigitalInputProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class RpiDigitalInputProviderImpl extends DigitalInputProviderBase implements RpiDigitalInputProvider {
 
+    /**
+     * <p>Constructor for RpiDigitalInputProviderImpl.</p>
+     */
     public RpiDigitalInputProviderImpl(){
         this.id = ID;
         this.name = NAME;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalInput create(DigitalInputConfig config) throws IOException {
         return new RpiDigitalInput(this, config);

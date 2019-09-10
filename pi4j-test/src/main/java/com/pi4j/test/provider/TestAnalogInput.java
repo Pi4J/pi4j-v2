@@ -29,19 +29,38 @@ package com.pi4j.test.provider;
 
 import com.pi4j.io.gpio.analog.*;
 
+/**
+ * <p>TestAnalogInput class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class TestAnalogInput extends AnalogInputBase implements AnalogInput {
 
     private Integer value = 0;
 
+    /** {@inheritDoc} */
     @Override
     public Integer value() {
         return this.value;
     }
 
+    /**
+     * <p>Constructor for TestAnalogInput.</p>
+     *
+     * @param provider a {@link com.pi4j.io.gpio.analog.AnalogInputProvider} object.
+     * @param config a {@link com.pi4j.io.gpio.analog.AnalogInputConfig} object.
+     */
     public TestAnalogInput(AnalogInputProvider provider, AnalogInputConfig config){
         super(provider, config);
     }
 
+    /**
+     * <p>test.</p>
+     *
+     * @param value a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.test.provider.TestAnalogInput} object.
+     */
     public TestAnalogInput test(Integer value){
 
 
@@ -56,7 +75,7 @@ public class TestAnalogInput extends AnalogInputBase implements AnalogInput {
             this.value = value;
 
             // dispatch value change event
-            this.dispatch(new AnalogChangeEvent(this, this.value(), oldValue));
+            this.dispatch(new AnalogValueChangeEvent(this, this.value(), oldValue));
         }
         return this;
     }

@@ -31,9 +31,27 @@ import com.pi4j.context.Context;
 
 import java.io.IOException;
 
+/**
+ * <p>Plugin interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Plugin  {
+    /**
+     * <p>initialize.</p>
+     *
+     * @param service a {@link com.pi4j.extension.PluginService} object.
+     * @throws java.io.IOException if any.
+     */
     void initialize(PluginService service) throws IOException;
 
+    /**
+     * <p>shutdown.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @throws java.io.IOException if any.
+     */
     default void shutdown(Context context) throws IOException{
         // do nothing <optional override>
     }

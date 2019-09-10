@@ -33,13 +33,23 @@ import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProviderBase;
 
+/**
+ * <p>RpiI2CProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class RpiI2CProviderImpl extends I2CProviderBase implements RpiI2CProvider {
 
+    /**
+     * <p>Constructor for RpiI2CProviderImpl.</p>
+     */
     public RpiI2CProviderImpl(){
         this.id = ID;
         this.name = NAME;
     }
 
+    /** {@inheritDoc} */
     @Override
     public I2C create(I2CConfig config) throws Exception {
         return new RpiI2C(this, config);

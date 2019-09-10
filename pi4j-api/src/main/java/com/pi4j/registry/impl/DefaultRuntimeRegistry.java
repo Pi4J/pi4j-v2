@@ -39,6 +39,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * <p>DefaultRuntimeRegistry class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultRuntimeRegistry implements RuntimeRegistry {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -46,6 +52,12 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
     private Map<String, IO> instances = new ConcurrentHashMap<>();
 
     // static singleton instance
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param runtime a {@link com.pi4j.runtime.Runtime} object.
+     * @return a {@link com.pi4j.registry.impl.RuntimeRegistry} object.
+     */
     public static RuntimeRegistry newInstance(Runtime runtime){
         return new DefaultRuntimeRegistry(runtime);
     }
@@ -58,6 +70,7 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         this.runtime = runtime;
     }
 
+    /** {@inheritDoc} */
     @Override
     public RuntimeRegistry add(IO instance) throws IOInvalidIDException, IOAlreadyExistsException {
 
@@ -73,6 +86,7 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends IO> T get(String id, Class<T> type) throws IOInvalidIDException, IONotFoundException {
         String _id = validateId(id);
@@ -84,6 +98,7 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         return (T)instances.get(_id);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends IO> T get(String id) throws IOInvalidIDException, IONotFoundException {
         String _id = validateId(id);
@@ -95,6 +110,7 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         return (T)instances.get(_id);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends IO> T remove(String id) throws IONotFoundException, IOInvalidIDException, IOShutdownException {
         String _id = validateId(id);
@@ -121,6 +137,7 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         return (T)shutdownInstance;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean exists(String id) {
         String _id = null;
@@ -134,11 +151,13 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Map<String, ? extends IO> all() {
         return Collections.unmodifiableMap(this.instances);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean exists(String id, Class<? extends IO> type){
         String _id = null;
@@ -169,6 +188,7 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         return validatedId;
     }
 
+    /** {@inheritDoc} */
     @Override
     public RuntimeRegistry shutdown() {
         all().values().forEach(instance->{
@@ -181,6 +201,7 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public RuntimeRegistry initialize() throws InitializeException {
         // NOTHING TO INITIALIZE

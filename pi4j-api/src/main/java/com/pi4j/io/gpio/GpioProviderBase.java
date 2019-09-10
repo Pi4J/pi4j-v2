@@ -29,6 +29,12 @@ import com.pi4j.provider.ProviderBase;
  * limitations under the License.
  * #L%
  */
+/**
+ * <p>Abstract GpioProviderBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class GpioProviderBase<
             PROVIDER_TYPE extends GpioProvider,
             IO_TYPE extends IO,
@@ -36,14 +42,28 @@ public abstract class GpioProviderBase<
         extends ProviderBase<PROVIDER_TYPE, IO_TYPE, CONFIG_TYPE>
         implements GpioProvider<PROVIDER_TYPE, IO_TYPE, CONFIG_TYPE> {
 
+    /**
+     * <p>Constructor for GpioProviderBase.</p>
+     */
     public GpioProviderBase(){
         super();
     }
 
+    /**
+     * <p>Constructor for GpioProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public GpioProviderBase(String id){
         super(id);
     }
 
+    /**
+     * <p>Constructor for GpioProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public GpioProviderBase(String id, String name){
         super(id, name);
     }

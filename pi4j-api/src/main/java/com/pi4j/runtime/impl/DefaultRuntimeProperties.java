@@ -45,14 +45,27 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+/**
+ * <p>DefaultRuntimeProperties class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultRuntimeProperties implements RuntimeProperties {
 
+    /** Constant <code>PI4J_PROPERTIES_FILE_NAME="pi4j.properties"</code> */
     public static String PI4J_PROPERTIES_FILE_NAME = "pi4j.properties";
 
     protected Map<String,String> properties = Collections.synchronizedMap(new HashMap<>());
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // static singleton instance
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param context a {@link com.pi4j.context.Context} object.
+     * @return a {@link com.pi4j.runtime.RuntimeProperties} object.
+     */
     public static RuntimeProperties newInstance(Context context){
         return new DefaultRuntimeProperties(context);
     }
@@ -62,6 +75,15 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
 
         // first; load any default Pi4J properties defined in the Environment Variables
         try{
+            // iterate the environment variables looking for prefixes matching "PI4J_"
+            var envars = System.getenv();
+            envars.keySet().stream().filter(key -> key.toUpperCase().startsWith("PI4J_")).forEach((key)->{
+                // sanitize keys by making them all lower case and replacing underscores with "." periods.
+                String k = key.substring(5).replace('_', '.').toLowerCase();
+                String v = envars.get(key);
+                put(k, v);
+            });
+
             // use "pi4j." prefix filter to limit the environment variables that we care about
             put(System.getenv(), "pi4j.");
         }
@@ -69,7 +91,7 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
             logger.error(e.getMessage(), e);
         }
 
-        // first; load system-scoped Pi4J properties file
+        // second; load system-scoped Pi4J properties file
         // /etc/pi4j/pi4j.properties
         try {
             Path appFile = Paths.get("/etc/pi4j", PI4J_PROPERTIES_FILE_NAME);
@@ -83,7 +105,7 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
             logger.error(e.getMessage(), e);
         }
 
-        // second; load user-scoped Pi4J properties file
+        // third; load user-scoped Pi4J properties file
         // ~/.pi4j.properties
         try {
             Path appFile = Paths.get(System.getProperty("user.home"), "." + PI4J_PROPERTIES_FILE_NAME);
@@ -97,7 +119,7 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
             logger.error(e.getMessage(), e);
         }
 
-        // third; load an application-scoped Pi4J properties file
+        // fourth; load an application-scoped Pi4J properties file
         // {pwd}/pi4j.properties
         try {
             Path appFile = Paths.get(System.getProperty("user.dir"), PI4J_PROPERTIES_FILE_NAME);
@@ -111,7 +133,7 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
             logger.error(e.getMessage(), e);
         }
 
-        // fourth; load an application-embedded resource Pi4J properties file
+        // fifth; load any application-embedded resource Pi4J properties file
         // {app}/{resources}/pi4j.properties
         try {
             URL resource = getClass().getClassLoader().getResource(PI4J_PROPERTIES_FILE_NAME);
@@ -142,15 +164,23 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
         this.put(context.config().properties());
     }
 
+    /**
+     * <p>sanitizeKey.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     protected String sanitizeKey(String key){
         return key.trim().toLowerCase();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean has(String key) {
         return properties.containsKey(sanitizeKey(key));
     }
 
+    /** {@inheritDoc} */
     @Override
     public String get(String key) {
         String k = sanitizeKey(key);
@@ -162,11 +192,13 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void put(String key, String value) {
         properties.put(sanitizeKey(key), value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void put(Properties properties) {
         properties.forEach((key,value)->{
@@ -174,6 +206,7 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void put(Map<String, String> values) {
         values.forEach((key,value)->{
@@ -181,6 +214,7 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void put(Map.Entry<String, String>... value) {
         for(Map.Entry e : value){
@@ -188,17 +222,20 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Map<String, String> all() {
         return Collections.unmodifiableMap(this.properties);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int count() {
         return this.properties.size();
     }
 
 
+    /** {@inheritDoc} */
     protected void put(Properties properties, String prefixFilter){
         // convert java.util.Properties to a Map<String,String> object
         Map<String, String> entries = properties.keySet().stream()
@@ -206,6 +243,7 @@ public class DefaultRuntimeProperties implements RuntimeProperties {
         put(entries, prefixFilter);
     }
 
+    /** {@inheritDoc} */
     protected void put(Map<String,String> properties, String prefixFilter){
 
         // if a filter was not provided, then load properties without a filter

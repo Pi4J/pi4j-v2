@@ -27,6 +27,12 @@ package com.pi4j.test.harness;
  * #L%
  */
 
+/**
+ * <p>TestHarnessInfo class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class TestHarnessInfo extends TestHarnessResponse {
 
     public String name;
@@ -34,6 +40,9 @@ public class TestHarnessInfo extends TestHarnessResponse {
     public String date;
     public String copyright;
 
+    /**
+     * <p>Constructor for TestHarnessInfo.</p>
+     */
     public TestHarnessInfo() {
         // no-args constructor
     }

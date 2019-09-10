@@ -4,7 +4,7 @@ package com.pi4j.library.pigpio.test.i2c;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
  * FILENAME      :  TestI2cUsingTestHarness.java
  *
  * This file is part of the Pi4J project. More information about
@@ -31,6 +31,7 @@ package com.pi4j.library.pigpio.test.i2c;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
+import com.pi4j.library.pigpio.test.TestEnv;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
@@ -60,7 +61,7 @@ public class TestI2cUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        //System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
@@ -70,7 +71,7 @@ public class TestI2cUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            ArduinoTestHarness harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142301"));
+            ArduinoTestHarness harness = TestEnv.createTestHarness();
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
@@ -95,7 +96,8 @@ public class TestI2cUsingTestHarness {
             System.out.println();
             System.out.println("ENABLE I2C BUS [" + I2C_BUS + "] ON TEST HARNESS;");
 
-            harness.terminate();
+            // close connection to  test harness
+            harness.close();
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -113,8 +115,7 @@ public class TestI2cUsingTestHarness {
     @BeforeEach
     public void beforeEach() throws IOException {
         // create test harness and PIGPIO instances
-        pigpio = PiGpio.newSocketInstance(System.getProperty("pi4j.pigpio.host", "rpi3bp.savage.lan"),
-                                          System.getProperty("pi4j.pigpio.port", "8888"));
+        pigpio = TestEnv.createPiGpio();
 
         // initialize test harness and PIGPIO instances
         pigpio.initialize();
@@ -133,8 +134,8 @@ public class TestI2cUsingTestHarness {
         // CLOSE I2C
         pigpio.i2cClose(handle);
 
-        // terminate test harness and PIGPIO instances
-        pigpio.terminate();
+        // shutdown test harness and PIGPIO instances
+        pigpio.shutdown();
     }
 
     @Test

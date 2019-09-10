@@ -27,6 +27,12 @@ package com.pi4j.io.serial;
  * #L%
  */
 
+/**
+ * <p>FlowControl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public enum FlowControl {
 
     NONE(0),
@@ -39,14 +45,31 @@ public enum FlowControl {
         this.index = index;
     }
 
+    /**
+     * <p>Getter for the field <code>index</code>.</p>
+     *
+     * @return a int.
+     */
     public int getIndex(){
         return this.index;
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @param flow_control a {@link java.lang.String} object.
+     * @return a {@link com.pi4j.io.serial.FlowControl} object.
+     */
     public static FlowControl getInstance(String flow_control) {
         return FlowControl.valueOf(flow_control.toUpperCase());
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @param control a int.
+     * @return a {@link com.pi4j.io.serial.FlowControl} object.
+     */
     public static FlowControl getInstance(int control){
         for(FlowControl fc : FlowControl.values()){
             if(fc.getIndex() == control){
@@ -56,6 +79,12 @@ public enum FlowControl {
         return null;
     }
 
+    /**
+     * <p>parse.</p>
+     *
+     * @param parity a {@link java.lang.String} object.
+     * @return a {@link com.pi4j.io.serial.FlowControl} object.
+     */
     public static FlowControl parse(String parity) {
         if(parity.equalsIgnoreCase("0")) return FlowControl.NONE;
         if(parity.equalsIgnoreCase("1")) return FlowControl.HARDWARE;

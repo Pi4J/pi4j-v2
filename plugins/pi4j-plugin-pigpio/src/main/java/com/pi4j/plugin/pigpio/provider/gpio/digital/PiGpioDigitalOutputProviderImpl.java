@@ -34,18 +34,34 @@ import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
 import com.pi4j.library.pigpio.PiGpio;
 
+/**
+ * <p>PiGpioDigitalOutputProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioDigitalOutputProviderImpl extends DigitalOutputProviderBase implements PiGpioDigitalOutputProvider {
 
     protected final PiGpio piGpio;
 
+    /**
+     * <p>Constructor for PiGpioDigitalOutputProviderImpl.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     */
     public PiGpioDigitalOutputProviderImpl(PiGpio piGpio){
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) throws Exception {
+        // initialize the PIGPIO library
+        if(!piGpio.isInitialized()) piGpio.initialize();
+
+        // create new I/O instance based on I/O config
         return new PiGpioDigitalOutput(piGpio,this, config);
     }
 }

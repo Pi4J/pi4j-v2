@@ -27,36 +27,57 @@ package com.pi4j.io.spi;
  * #L%
  */
 
-import com.pi4j.config.impl.DeviceConfigBase;
+import com.pi4j.config.AddressConfig;
+import com.pi4j.context.Context;
 import com.pi4j.io.IOConfig;
 
-public class SpiConfig extends DeviceConfigBase<SpiConfig> implements IOConfig<SpiConfig> {
+/**
+ * <p>SpiConfig interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
+public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig> {
+    /** Constant <code>BAUD_KEY="baud"</code> */
+    String BAUD_KEY = "baud";
+    /** Constant <code>MODE_KEY="mode"</code> */
+    String MODE_KEY = "mode";
 
-    SpiMode mode = Spi.DEFAULT_SPI_MODE;
-    int speed = Spi.DEFAULT_SPI_SPEED;
-
-    public SpiConfig(){
-        super();
+    /**
+     * <p>newBuilder.</p>
+     *
+     * @return a {@link com.pi4j.io.i2c.I2CConfigBuilder} object.
+     */
+    static SpiConfigBuilder newBuilder(Context context)  {
+        return SpiConfigBuilder.newInstance(context);
     }
 
-    public SpiConfig(String device) {
-        //super(device);
+    /**
+     * <p>baud.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
+    Integer baud();
+    /**
+     * <p>getBaud.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
+    default Integer getBaud() { return baud(); }
+
+    /**
+     * <p>mode.</p>
+     *
+     * @return a {@link com.pi4j.io.spi.SpiMode} object.
+     */
+    SpiMode mode();
+    /**
+     * <p>getMode.</p>
+     *
+     * @return a {@link com.pi4j.io.spi.SpiMode} object.
+     */
+    default SpiMode getMode() {
+        return mode();
     }
 
-    public SpiConfig(String device, int speed) {
-        //super(device);
-        this.speed = speed;
-    }
-
-    public SpiConfig(String device, int speed, SpiMode mode) {
-        //super(device);
-        this.speed = speed;
-        this.mode = mode;
-    }
-
-    public SpiMode mode() { return this.mode; };
-    public SpiConfig mode(SpiMode mode) { this.mode = mode; return this; }
-
-    public int speed() { return this.speed; };
-    public SpiConfig speed(int speed) { this.speed = speed; return this; }
 }

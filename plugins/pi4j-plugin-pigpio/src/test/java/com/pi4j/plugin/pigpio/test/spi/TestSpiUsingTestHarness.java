@@ -1,0 +1,249 @@
+package com.pi4j.plugin.pigpio.test.spi;
+
+/*-
+ * #%L
+ * **********************************************************************
+ * ORGANIZATION  :  Pi4J
+ * PROJECT       :  Pi4J :: PLUGIN   :: PIGPIO I/O Providers
+ * FILENAME      :  TestSpiUsingTestHarness.java
+ *
+ * This file is part of the Pi4J project. More information about
+ * this project can be found here:  https://pi4j.com/
+ * **********************************************************************
+ * %%
+ * Copyright (C) 2012 - 2019 Pi4J
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * #L%
+ */
+
+import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
+import com.pi4j.exception.LifecycleException;
+import com.pi4j.exception.Pi4JException;
+import com.pi4j.io.spi.Spi;
+import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.plugin.pigpio.test.TestEnv;
+import com.pi4j.plugin.pigpio.provider.spi.PiGpioSpiProvider;
+import com.pi4j.plugin.pigpio.provider.spi.PiGpioSpiProviderImpl;
+import com.pi4j.test.harness.ArduinoTestHarness;
+import com.pi4j.test.harness.TestHarnessInfo;
+import com.pi4j.test.harness.TestHarnessPins;
+import org.junit.Assert;
+import org.junit.jupiter.api.*;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+@DisplayName("PIGPIO Plugin :: Test SPI Communication using Test Harness")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class TestSpiUsingTestHarness {
+
+    private static int SPI_CHANNEL = 0;
+    private static int BAUD_RATE = 100000;
+    private static int TEST_HARNESS_SPI_CHANNEL = 10;
+
+    private static byte SAMPLE_BYTE = 0x0d;
+    private static int SAMPLE_WORD = 0xFFFA;
+    private static byte[] SAMPLE_BYTE_ARRAY = new byte[] { 0,1,2,3,4,5,6,7,8,9 };
+    private static byte[] SAMPLE_BUFFER_ARRAY = new byte[] { 10,11,12,13,14,15,16,17,18,19 };
+    private static ByteBuffer SAMPLE_BUFFER = ByteBuffer.wrap(SAMPLE_BUFFER_ARRAY);
+    private static String SAMPLE_STRING = "Hello World!";
+
+    private static PiGpio piGpio;
+    private static Context pi4j;
+    private static Spi spi;
+
+    @BeforeAll
+    public static void initialize() {
+        // configure logging output
+        //System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+
+        System.out.println();
+        System.out.println("************************************************************************");
+        System.out.println("INITIALIZE TEST (" + TestSpiUsingTestHarness.class.getName() + ")");
+        System.out.println("************************************************************************");
+        System.out.println();
+
+        try {
+            // create test harness and PIGPIO instances
+            ArduinoTestHarness harness = TestEnv.createTestHarness();
+
+            // initialize test harness and PIGPIO instances
+            harness.initialize();
+
+            // get test harness info
+            TestHarnessInfo info = harness.getInfo();
+            System.out.println("... we are connected to test harness:");
+            System.out.println("----------------------------------------");
+            System.out.println("NAME       : " + info.name);
+            System.out.println("VERSION    : " + info.version);
+            System.out.println("DATE       : " + info.date);
+            System.out.println("COPYRIGHT  : " + info.copyright);
+            System.out.println("----------------------------------------");
+
+            // reset all pins on test harness before proceeding with this test
+            TestHarnessPins reset = harness.reset();
+            System.out.println();
+            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+
+            // enable the SPI Echo (Loopback) function on the test harness for these tests
+            harness.enableSpiEcho(TEST_HARNESS_SPI_CHANNEL);
+            System.out.println();
+            System.out.println("ENABLE SPI CHANNEL [" + TEST_HARNESS_SPI_CHANNEL + "] ON TEST HARNESS; BAUD=" + BAUD_RATE);
+
+            // close connection to test harness
+            harness.close();
+
+            // create SPI config
+            var config  = Spi.newConfigBuilder(pi4j)
+                    .id("my-spi")
+                    .name("My SPI")
+                    .address(SPI_CHANNEL)
+                    .baud(BAUD_RATE)
+                    .build();
+
+            // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
+            piGpio = TestEnv.createPiGpio();
+
+            // initialize the PiGpio library
+            piGpio.initialize();
+
+
+            // create SPI provider instance to test with
+            PiGpioSpiProvider provider = new PiGpioSpiProviderImpl(piGpio);
+
+            // initialize Pi4J instance with this single provider
+            pi4j = Pi4J.newContextBuilder().add(provider).build();
+
+            // create SPI instance
+            spi = pi4j.create(config);
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (Pi4JException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @AfterAll
+    public static void terminate() throws IOException, LifecycleException {
+        System.out.println();
+        System.out.println("************************************************************************");
+        System.out.println("TERMINATE TEST (" + TestSpiUsingTestHarness.class.getName() + ") ");
+        System.out.println("************************************************************************");
+        System.out.println();
+
+        // close down SPI channel
+        spi.close();;
+
+        // shutdown the PiGpio library
+        piGpio.shutdown();
+
+        // shutdown Pi4J
+        pi4j.shutdown();
+    }
+
+    @BeforeEach
+    public void beforeEach() throws Exception {
+
+    }
+
+    @AfterEach
+    public void afterEach() throws Exception {
+    }
+
+    @Test
+    @DisplayName("SPI :: Verify SPI Instance")
+    @Order(1)
+    public void testSpiInstance() throws Exception {
+        // ensure that the SPI instance is not null;
+        assertNotNull(spi);
+
+        // ensure connection is open
+        assertTrue("SPI INSTANCE IS NOT OPEN", spi.isOpen());
+    }
+
+    @Test
+    @DisplayName("SPI :: Test BYTE (WRITE)")
+    @Order(2)
+    public void testSpiSingleByteWrite() throws Exception {
+        // write a single byte to the SPI device
+        spi.write(SAMPLE_BYTE);
+    }
+
+    @Test
+    @DisplayName("SPI :: Test BYTE (READ)")
+    @Order(3)
+    public void testSpiSingleByteRead() throws Exception {
+        // read single byte from the SPI device
+        Assert.assertEquals(SAMPLE_BYTE, spi.readByte());
+    }
+
+    @Test
+    @DisplayName("SPI :: Test BYTE-ARRAY (WRITE)")
+    @Order(4)
+    public void testSpiByteArrayWrite() throws Exception {
+        // write an array of data bytes to the SPI device
+        spi.write(SAMPLE_BYTE_ARRAY);
+    }
+
+    @Test
+    @DisplayName("SPI :: Test BYTE-ARRAY (READ)")
+    @Order(5)
+    public void testSpiByteArrayRead() throws Exception {
+        // read an array of data bytes from the SPI device
+        byte[] byteArray = spi.readNBytes(SAMPLE_BYTE_ARRAY.length);
+        Assert.assertEquals(SAMPLE_BYTE_ARRAY[SAMPLE_BYTE_ARRAY.length-1], byteArray[0]);
+    }
+
+    @Test
+    @DisplayName("SPI :: Test BYTE-BUFFER (WRITE)")
+    @Order(6)
+    public void testSpiByteBufferWrite() throws Exception {
+        // write a buffer of data bytes to the SPI device
+        spi.write(SAMPLE_BUFFER);
+    }
+
+    @Test
+    @DisplayName("SPI :: Test BYTE-BUFFER (READ)")
+    @Order(7)
+    public void testSpiByteBufferRead() throws Exception {
+        // read a buffer of data bytes from the SPI device
+        ByteBuffer buffer = spi.readByteBuffer(SAMPLE_BUFFER.capacity());
+        Assert.assertEquals(SAMPLE_BUFFER.get(SAMPLE_BUFFER.capacity()-1), buffer.get(0));
+    }
+
+    @Test
+    @DisplayName("SPI :: Test ASCII STRING (WRITE)")
+    @Order(8)
+    public void testSpiAsciiStringWrite() throws Exception {
+        // write a string of data to the SPI device
+        spi.write(SAMPLE_STRING);
+    }
+
+    @Test
+    @DisplayName("SPI :: Test ASCII STRING (READ)")
+    @Order(9)
+    public void testSpiAsciiStringRead() throws Exception {
+        // read a string of data from the SPI device
+        String testString = spi.readString(SAMPLE_STRING.length());
+        Assert.assertEquals(SAMPLE_STRING.substring(SAMPLE_STRING.length()-1), testString.substring(0, 1));
+    }
+}

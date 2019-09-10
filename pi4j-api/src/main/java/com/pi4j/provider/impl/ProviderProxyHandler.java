@@ -45,20 +45,38 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * <p>ProviderProxyHandler class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class ProviderProxyHandler implements InvocationHandler {
     private Runtime runtime = null;
     private Provider provider = null;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * <p>Constructor for ProviderProxyHandler.</p>
+     *
+     * @param runtime a {@link com.pi4j.runtime.Runtime} object.
+     * @param provider a {@link com.pi4j.provider.Provider} object.
+     */
     public ProviderProxyHandler(Runtime runtime, Provider provider){
         this.runtime = runtime;
         this.provider = provider;
     }
 
+    /**
+     * <p>provider.</p>
+     *
+     * @return a {@link com.pi4j.provider.Provider} object.
+     */
     public Provider provider() {
         return this.provider;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
@@ -73,12 +91,12 @@ public class ProviderProxyHandler implements InvocationHandler {
 
         // we need to intercept the "create(IOConfig config)" method with the single IOConfig type argument
         if(args != null && args.length == 1 && args[0] instanceof IOConfig) {
-            IOConfig config = (IOConfig) args[0];
-            //System.out.println("-->> PROVIDER [" +  provider.id() + "] CREATE IO INSTANCE: " + config.id());
+            IOConfig ioConfig = (IOConfig) args[0];
+            //System.out.println("-->> PROVIDER [" +  provider.id() + "] CREATE IO INSTANCE: " + ioConfig.id());
 
             // check to see if this IO instance is already registered in the IO Registry
-            if(runtime.registry().exists(config.id()))
-                throw new IOAlreadyExistsException(config.id());
+            if(runtime.registry().exists(ioConfig.id()))
+                throw new IOAlreadyExistsException(ioConfig.id());
 
             // delegate method invocation to real provider instance to create real IO instance
             IO instance = (IO)method.invoke(provider, args);

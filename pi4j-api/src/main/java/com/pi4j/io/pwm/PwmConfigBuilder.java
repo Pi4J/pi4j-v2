@@ -27,12 +27,24 @@ package com.pi4j.io.pwm;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.GpioConfigBuilder;
 import com.pi4j.io.pwm.impl.DefaultPwmConfigBuilder;
 
+/**
+ * <p>PwmConfigBuilder interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface PwmConfigBuilder extends GpioConfigBuilder<PwmConfigBuilder, PwmConfig> {
-    static PwmConfigBuilder newInstance()  {
-        return DefaultPwmConfigBuilder.newInstance();
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.io.pwm.PwmConfigBuilder} object.
+     */
+    static PwmConfigBuilder newInstance(Context context)  {
+        return DefaultPwmConfigBuilder.newInstance(context);
     }
 
     /**
@@ -73,6 +85,7 @@ public interface PwmConfigBuilder extends GpioConfigBuilder<PwmConfigBuilder, Pw
      * to determine what support is available and what limitations may apply.
      *
      * @return this builder instance
+     * @param pwmType a {@link com.pi4j.io.pwm.PwmType} object.
      */
     PwmConfigBuilder pwmType(PwmType pwmType);
 

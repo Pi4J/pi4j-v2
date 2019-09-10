@@ -28,8 +28,6 @@ package com.pi4j.common.impl;
  */
 
 import com.pi4j.common.Descriptor;
-import com.pi4j.common.Metadata;
-import com.pi4j.common.Metadatum;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -38,6 +36,12 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * <p>DescriptorImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DescriptorImpl implements Descriptor {
 
     private Set<Descriptor> children = Collections.synchronizedSet(new LinkedHashSet());
@@ -50,127 +54,119 @@ public class DescriptorImpl implements Descriptor {
     private Integer quantity;
     private Class type;
     private Object value;
-    private Metadata metadata = Metadata.create();
+
+    /**
+     * <p>Constructor for DescriptorImpl.</p>
+     */
     public DescriptorImpl(){
         this.parent = null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Descriptor id(String id) {
         this.id = id;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Descriptor name(String name) {
         this.name = name;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Descriptor description(String description) {
         this.description = description;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Descriptor category(String category) {
         this.category = category;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Descriptor quantity(Integer quantity) {
         this.quantity = quantity;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Descriptor value(Object value) {
         this.value = value;
         return this;
     }
 
-    @Override
-    public Descriptor metadata(String key, Object value) {
-        this.metadata.put(key,value);
-        return this;
-    }
-
-    @Override
-    public Descriptor metadata(String key, Object value, String description) {
-        this.metadata.put(key, value, description);
-        return this;
-    }
-
-    @Override
-    public Descriptor metadata(Metadata metadata) {
-        this.metadata.put(metadata);
-        return this;
-    }
-
+    /** {@inheritDoc} */
     @Override
     public Descriptor type(Class type) {
         this.type = type;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Descriptor parent(Descriptor parent) {
         this.parent = parent;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String id() {
         return this.id;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String name() {
         return this.name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String description() {
         return this.description;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String category() {
         return this.category;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer quantity() {
         return this.quantity;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object value() {
         return this.value;
     }
 
-    @Override
-    public Metadatum metadata(String key) {
-        return this.metadata.get(key);
-    }
-
-    @Override
-    public Metadata metadata() {
-        return this.metadata;
-    }
-
+    /** {@inheritDoc} */
     @Override
     public Class type() {
         return this.type;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Descriptor parent() {
         return this.parent;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Descriptor add(Descriptor descriptor) {
         if(descriptor != null) {
@@ -179,18 +175,34 @@ public class DescriptorImpl implements Descriptor {
         return this;
     }
 
+    /**
+     * <p>size.</p>
+     *
+     * @return a int.
+     */
     public int size(){
         return children.size();
     }
 
+    /**
+     * <p>isEmpty.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isEmpty(){
         return children.isEmpty();
     }
 
+    /**
+     * <p>isNotEmpty.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isNotEmpty(){
         return !children.isEmpty();
     }
 
+    /** {@inheritDoc} */
     public void print(PrintStream stream){
         print(stream, "", new ArrayList<>());
     }
@@ -249,30 +261,7 @@ public class DescriptorImpl implements Descriptor {
 
         stream.println();
 
-//        if(this.properties.size() > 0){
-//            this.properties.forEach((key, value)->{
-//                stream.print(prefix);
-//                stream.print(key.toUpperCase());
-//                stream.print(" = ");
-//                stream.print(value);
-//                stream.println();
-//            });
-//        }
-
-
-        //var children = Collections.synchronizedSet(new LinkedHashSet<>());
-        //children.addAll(this.children);
-
         var children = this.children.stream().collect(Collectors.toSet());
-
-        this.metadata.all().forEach((metadatum)-> {
-
-            children.add(metadatum.describe());
-
-//            children.add(Descriptor.create().name(metadatum.key())
-//                    .value(metadatum.value())
-//                    .description(metadatum.description()));
-        });
 
         // loop over this descriptor's children
         var iterator = children.iterator();

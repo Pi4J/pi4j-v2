@@ -29,6 +29,12 @@ package com.pi4j.annotation;
 
 import java.lang.annotation.*;
 
+/**
+ * <p>AddPwmPreset class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 @Repeatable(AddPwmPresets.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})

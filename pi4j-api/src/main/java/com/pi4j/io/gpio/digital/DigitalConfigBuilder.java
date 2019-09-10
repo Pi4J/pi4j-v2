@@ -29,6 +29,12 @@ package com.pi4j.io.gpio.digital;
 
 import com.pi4j.io.gpio.GpioConfigBuilder;
 
+/**
+ * <p>DigitalConfigBuilder interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface DigitalConfigBuilder<BUILDER_TYPE extends DigitalConfigBuilder, CONFIG_TYPE extends DigitalConfig>
         extends GpioConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
     // MARKER INTERFACE

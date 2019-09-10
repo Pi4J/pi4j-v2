@@ -36,18 +36,28 @@ package com.pi4j.config.exception;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class ConfigMissingRequiredKeyException extends ConfigException {
 
+    /** Constant <code>MESSAGE="Configuration is missing a required key"{trunked}</code> */
     public static String MESSAGE =  "Configuration is missing a required key: ";
 
     /**
      * Default Constructor
+     *
+     * @param key a {@link java.lang.String} object.
      */
     public ConfigMissingRequiredKeyException(String key){
         super(MESSAGE + key);
     }
 
+    /**
+     * <p>Constructor for ConfigMissingRequiredKeyException.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @param cause a {@link java.lang.Throwable} object.
+     */
     public ConfigMissingRequiredKeyException(String key, Throwable cause){
         super(MESSAGE + key, cause);
     }

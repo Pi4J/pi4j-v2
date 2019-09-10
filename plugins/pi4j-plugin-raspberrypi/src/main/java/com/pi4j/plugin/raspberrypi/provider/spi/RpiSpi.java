@@ -35,59 +35,70 @@ import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 
+/**
+ * <p>RpiSpi class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class RpiSpi extends SpiBase implements Spi {
 
+    /**
+     * <p>Constructor for RpiSpi.</p>
+     *
+     * @param provider a {@link com.pi4j.io.spi.SpiProvider} object.
+     * @param config a {@link com.pi4j.io.spi.SpiConfig} object.
+     */
     public RpiSpi(SpiProvider provider, SpiConfig config){
         super(provider, config);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public String write(String data, Charset charset) throws IOException {
-        return null;
+    public boolean isOpen() {
+        return false;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public String write(String data, String charset) throws IOException {
-        return null;
+    public void open() throws IOException {
+
     }
 
+    /** {@inheritDoc} */
     @Override
-    public ByteBuffer write(ByteBuffer data) throws IOException {
-        return null;
+    public void close() throws IOException {
+
     }
 
+    /** {@inheritDoc} */
     @Override
-    public byte[] write(InputStream input) throws IOException {
-        return new byte[0];
-    }
-
-    @Override
-    public int write(InputStream input, OutputStream output) throws IOException {
+    public int transfer(byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public byte[] write(byte[] data, int start, int length) throws IOException {
-        return new byte[0];
+    public int read() throws IOException {
+        return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public byte[] write(byte... data) throws IOException {
-        return new byte[0];
+    public int read(byte[] buffer, int offset, int length) throws IOException {
+        return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public short[] write(short[] data, int start, int length) throws IOException {
-        return new short[0];
+    public int write(byte b) throws IOException {
+        return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public short[] write(short... data) throws IOException {
-        return new short[0];
+    public int write(byte[] data, int offset, int length) throws IOException {
+        return 0;
     }
 }

@@ -48,13 +48,19 @@ import java.util.Map;
  * </p>
  *
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
- * @author Robert Savage (<a
- *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class DefaultProviders implements Providers {
 
     private RuntimeProviders providers = null;
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param providers a {@link com.pi4j.provider.impl.RuntimeProviders} object.
+     * @return a {@link com.pi4j.provider.Providers} object.
+     */
     public static Providers newInstance(RuntimeProviders providers){
         return new DefaultProviders(providers);
     }
@@ -65,66 +71,79 @@ public class DefaultProviders implements Providers {
         this.providers = providers;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<AnalogInputProvider> analogInput() {
         return providers.analogInput();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<AnalogOutputProvider> analogOutput() {
         return providers.analogOutput();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<DigitalInputProvider> digitalInput() {
         return providers.digitalInput();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<DigitalOutputProvider> digitalOutput() {
         return providers.digitalOutput();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<PwmProvider> pwm() {
         return providers.pwm();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<SpiProvider> spi() {
         return providers.spi();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<I2CProvider> i2c() {
         return providers.i2c();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<SerialProvider> serial() {
         return providers.serial();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Map<String, Provider> all() {
         return providers.all();
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Provider> Map<String, T> all(Class<T> providerClass) throws ProviderNotFoundException {
         return providers.all(providerClass);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Provider> Map<String, T> all(IOType ioType) throws ProviderNotFoundException {
         return providers.all(ioType);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean exists(String providerId) {
         return providers.exists(providerId);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T extends Provider> T get(String providerId) throws ProviderNotFoundException {
         return providers.get(providerId);

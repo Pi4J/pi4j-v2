@@ -34,6 +34,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * <p>PluginStore class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PluginStore {
     public Set<Provider> providers = Collections.synchronizedSet(new HashSet<>());
     public Set<Platform> platforms = Collections.synchronizedSet(new HashSet<>());

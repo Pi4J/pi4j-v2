@@ -27,18 +27,38 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
+/**
+ * <p>Abstract DigitalOutputProviderBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class DigitalOutputProviderBase
         extends DigitalProviderBase<DigitalOutputProvider, DigitalOutput, DigitalOutputConfig>
         implements DigitalOutputProvider {
 
+    /**
+     * <p>Constructor for DigitalOutputProviderBase.</p>
+     */
     public DigitalOutputProviderBase(){
         super();
     }
 
+    /**
+     * <p>Constructor for DigitalOutputProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public DigitalOutputProviderBase(String id){
         super(id);
     }
 
+    /**
+     * <p>Constructor for DigitalOutputProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public DigitalOutputProviderBase(String id, String name){
         super(id, name);
     }

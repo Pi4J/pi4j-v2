@@ -28,24 +28,58 @@ package com.pi4j.io.gpio.analog;
  */
 
 
+import com.pi4j.io.binding.AnalogBinding;
+import com.pi4j.io.binding.Bindable;
 import com.pi4j.io.gpio.Gpio;
-import com.pi4j.io.gpio.analog.binding.AnalogBinding;
 
-public interface Analog<ANALOG_TYPE extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
-        CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>,
-        PROVIDER_TYPE extends AnalogProvider>
-        extends Gpio<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
-
+/**
+ * <p>Analog interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
+public interface Analog<ANALOG_TYPE
+            extends Analog<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+                CONFIG_TYPE extends AnalogConfig<CONFIG_TYPE>,
+                PROVIDER_TYPE extends AnalogProvider>
+        extends Gpio<ANALOG_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+                Bindable<ANALOG_TYPE, AnalogBinding>
+{
+    /**
+     * <p>value.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     Integer value();
 
-    ANALOG_TYPE addListener(AnalogChangeListener... listener);
-    ANALOG_TYPE removeListener(AnalogChangeListener... listener);
+    /**
+     * <p>addListener.</p>
+     *
+     * @param listener a {@link AnalogValueChangeListener} object.
+     * @return a ANALOG_TYPE object.
+     */
+    ANALOG_TYPE addListener(AnalogValueChangeListener... listener);
+    /**
+     * <p>removeListener.</p>
+     *
+     * @param listener a {@link AnalogValueChangeListener} object.
+     * @return a ANALOG_TYPE object.
+     */
+    ANALOG_TYPE removeListener(AnalogValueChangeListener... listener);
 
-    ANALOG_TYPE bind(AnalogBinding... binding);
-    ANALOG_TYPE unbind(AnalogBinding ... binding);
-
+    /**
+     * <p>equals.</p>
+     *
+     * @param value a {@link java.lang.Number} object.
+     * @return a boolean.
+     */
     default boolean equals(Number value) {
         return this.value().intValue() == value.intValue();
     }
+    /**
+     * <p>getValue.</p>
+     *
+     * @return a {@link java.lang.Number} object.
+     */
     default Number getValue() { return value(); };
 }

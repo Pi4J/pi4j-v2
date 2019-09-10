@@ -53,10 +53,35 @@
         </resources>
 
         <plugins>
+            <!-- JAVA COMPILER -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
+            <!-- MAVEN RUN JUNIT5 TESTS -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+
+            <!-- INCLUDE SOURCE JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+
+            <!-- INCLUDE JAVADOC JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+
+            <!-- DEFAULT JAR EXECUTABLE CLASS -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>${exec-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -70,6 +95,45 @@
                     </arguments>
                 </configuration>
             </plugin>
+
+            <!-- OPTIONALLY DEPLOY THE FINAL JAR TO THE RASPBERRY PI -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+
+                    <!-- copy the compiled JAR file to the Raspberry Pi platform platform -->
+                    <execution>
+                        <id>transfer-compiled-pi4j-jar</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath" />
+                                <if>
+                                    <equals arg1="${pi4j.dev.transfer}" arg2="true" />
+                                    <then>
+                                        <!-- ensure the target directory exists on the Raspberry Pi -->
+                                        <sshexec host="${pi4j.dev.host}" port="${pi4j.dev.port}" username="${pi4j.dev.user}"
+                                                 password="${pi4j.dev.password}" trust="true" failonerror="false"
+                                                 verbose="false" command="mkdir --parents ${pi4j.dev.directory}" />
+
+                                        <!-- copy the JAR file to the Raspberry Pi -->
+                                        <scp file="${project.build.directory}/${project.build.finalName}.jar"
+                                             todir="${pi4j.dev.user}:${pi4j.dev.password}@${pi4j.dev.host}:${pi4j.dev.directory}"
+                                             port="${pi4j.dev.port}" trust="true" verbose="false" failonerror="true">
+                                        </scp>
+                                    </then>
+                                </if>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 

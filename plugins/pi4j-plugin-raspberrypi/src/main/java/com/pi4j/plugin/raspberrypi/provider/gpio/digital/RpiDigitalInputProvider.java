@@ -32,9 +32,22 @@ package com.pi4j.plugin.raspberrypi.provider.gpio.digital;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
 import com.pi4j.plugin.raspberrypi.RaspberryPi;
 
+/**
+ * <p>RpiDigitalInputProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface RpiDigitalInputProvider extends DigitalInputProvider {
+    /** Constant <code>NAME="RaspberryPi.DIGITAL_INPUT_PROVIDER_NAME"</code> */
     String NAME = RaspberryPi.DIGITAL_INPUT_PROVIDER_NAME;
+    /** Constant <code>ID="RaspberryPi.DIGITAL_INPUT_PROVIDER_ID"</code> */
     String ID = RaspberryPi.DIGITAL_INPUT_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.plugin.raspberrypi.provider.gpio.digital.RpiDigitalInputProvider} object.
+     */
     static RpiDigitalInputProvider newInstance() {
         return new RpiDigitalInputProviderImpl();
     }

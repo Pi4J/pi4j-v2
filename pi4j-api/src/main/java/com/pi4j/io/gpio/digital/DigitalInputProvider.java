@@ -27,29 +27,70 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
+/**
+ * <p>DigitalInputProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface DigitalInputProvider extends DigitalProvider<DigitalInputProvider, DigitalInput, DigitalInputConfig> {
 
+    /**
+     * <p>create.</p>
+     *
+     * @param builder a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws java.lang.Exception if any.
+     */
     default <T extends DigitalInput> T create(DigitalInputConfigBuilder builder) throws Exception {
         return (T)create(builder.build());
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param address a {@link java.lang.Integer} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws java.lang.Exception if any.
+     */
     default <T extends DigitalInput> T create(Integer address) throws Exception {
-        var config = DigitalInput.newConfigBuilder()
+        var config = DigitalInput.newConfigBuilder(context())
                 .address(address)
                 .build();
         return (T)create(config);
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param address a {@link java.lang.Integer} object.
+     * @param id a {@link java.lang.String} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws java.lang.Exception if any.
+     */
     default <T extends DigitalInput> T create(Integer address, String id) throws Exception {
-        var config = DigitalInput.newConfigBuilder()
+        var config = DigitalInput.newConfigBuilder(context())
                 .address(address)
                 .id(id)
                 .build();
         return (T)create(config);
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param address a {@link java.lang.Integer} object.
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws java.lang.Exception if any.
+     */
     default <T extends DigitalInput> T create(Integer address, String id, String name) throws Exception {
-        var config = DigitalInput.newConfigBuilder()
+        var config = DigitalInput.newConfigBuilder(context())
                 .address(address)
                 .id(id)
                 .name(name)
@@ -57,8 +98,19 @@ public interface DigitalInputProvider extends DigitalProvider<DigitalInputProvid
         return (T)create(config);
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param address a {@link java.lang.Integer} object.
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param description a {@link java.lang.String} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws java.lang.Exception if any.
+     */
     default <T extends DigitalInput> T create(Integer address, String id, String name, String description) throws Exception {
-        var config = DigitalInput.newConfigBuilder()
+        var config = DigitalInput.newConfigBuilder(context())
                 .address(address)
                 .id(id)
                 .name(name)

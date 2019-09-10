@@ -27,28 +27,37 @@ package com.pi4j.io.gpio.analog.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.AddressConfigBuilderBase;
+import com.pi4j.context.Context;
 import com.pi4j.io.gpio.analog.AnalogConfig;
 import com.pi4j.io.gpio.analog.AnalogConfigBuilder;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
+import com.pi4j.io.impl.IOAddressConfigBuilderBase;
 
+/**
+ * <p>Abstract AnalogConfigBuilderBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class AnalogConfigBuilderBase<BUILDER_TYPE extends AnalogConfigBuilder, CONFIG_TYPE extends AnalogConfig>
-        extends AddressConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
+        extends IOAddressConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
         implements AnalogConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
 
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected AnalogConfigBuilderBase(){
-        super();
+    protected AnalogConfigBuilderBase(Context context){
+        super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public BUILDER_TYPE min(Integer value) {
         this.properties.put(AnalogOutputConfig.RANGE_MIN_KEY, value.toString());
         return (BUILDER_TYPE)this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public BUILDER_TYPE max(Integer value) {
         this.properties.put(AnalogOutputConfig.RANGE_MAX_KEY, value.toString());

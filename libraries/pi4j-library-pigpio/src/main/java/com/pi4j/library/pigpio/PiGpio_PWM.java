@@ -4,7 +4,7 @@ package com.pi4j.library.pigpio;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
  * FILENAME      :  PiGpio_PWM.java
  *
  * This file is part of the Pi4J project. More information about
@@ -31,6 +31,12 @@ package com.pi4j.library.pigpio;
 
 import java.io.IOException;
 
+/**
+ * <p>PiGpio_PWM interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface PiGpio_PWM {
 
     /**
@@ -41,9 +47,22 @@ public interface PiGpio_PWM {
      *
      * @param pin user_gpio: 0-31
      * @param dutyCycle dutycycle: 0-range
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioPWM"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioPWM">PIGPIO::gpioPWM</a>
+     * @throws java.io.IOException if any.
      */
     void gpioPWM(int pin, int dutyCycle) throws IOException;
+
+    /**
+     * Starts PWM on the GPIO, duty-cycle between 0 (off) and range (fully on). Range defaults to 255.
+     *
+     * This and the servo functionality use the DMA and PWM or PCM peripherals to control and schedule
+     * the pulse lengths and duty cycles.
+     *
+     * @param pin user_gpio: 0-31
+     * @param dutyCycle dutycycle: 0-range
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioPWM">PIGPIO::gpioPWM</a>
+     * @throws java.io.IOException if any.
+     */
     default void gpioSetPWMdutycycle(int pin, int dutyCycle) throws IOException{
         gpioPWM(pin,dutyCycle);
     }
@@ -60,7 +79,8 @@ public interface PiGpio_PWM {
      *
      * @param pin user_gpio: 0-31
      * @return Returns between 0 (off) and range (fully on) if OK.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMdutycycle"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMdutycycle">PIGPIO::gpioGetPWMdutycycle</a>
+     * @throws java.io.IOException if any.
      */
     int gpioGetPWMdutycycle(int pin) throws IOException;
 
@@ -87,10 +107,12 @@ public interface PiGpio_PWM {
      *   gpioSetPWMrange(24, 2000); // Now 2000 is fully on
      *                              //     1000 is half on
      *                              //      500 is quarter on, etc.
+     *
      * @param pin user_gpio: 0-31
      * @param range range: 25-40000
      * @return real range for the given GPIO's frequency if OK.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange">PIGPIO::gpioSetPWMrange</a>
+     * @throws java.io.IOException if any.
      */
     int gpioSetPWMrange(int pin, int range) throws IOException;
 
@@ -100,7 +122,8 @@ public interface PiGpio_PWM {
      *
      * @param pin user_gpio: 0-31
      * @return duty-cycle range
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrange"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrange">PIGPIO::gpioGetPWMrange</a>
+     * @throws java.io.IOException if any.
      */
     int gpioGetPWMrange(int pin) throws IOException;
 
@@ -112,7 +135,8 @@ public interface PiGpio_PWM {
      *
      * @param pin user_gpio: 0-31
      * @return real range used for the GPIO if OK.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrealRange"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrealRange">PIGPIO::gpioGetPWMrealRange</a>
+     * @throws java.io.IOException if any.
      */
     int gpioGetPWMrealRange(int pin) throws IOException;
 
@@ -153,9 +177,10 @@ public interface PiGpio_PWM {
      *    gpioSetPWMfrequency(25, 100000); // Set GPIO25 to highest frequency.
      *
      * @param pin user_gpio: 0-31
-     * @param frequency frequency: >=0
+     * @param frequency frequency: $gt;=0
      * @return Returns the numerically closest frequency if OK
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange">PIGPIO::gpioSetPWMrange</a>
+     * @throws java.io.IOException if any.
      */
     int gpioSetPWMfrequency(int pin, int frequency) throws IOException;
 
@@ -172,7 +197,8 @@ public interface PiGpio_PWM {
      *
      * @param pin user_gpio: 0-31
      * @return Returns the frequency (in hertz) used for the GPIO if OK.
-     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMfrequency"
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMfrequency">PIGPIO::gpioGetPWMfrequency</a>
+     * @throws java.io.IOException if any.
      */
     int gpioGetPWMfrequency(int pin) throws IOException;
 
@@ -213,6 +239,7 @@ public interface PiGpio_PWM {
      * @param pin a supported hardware PWM pin
      * @param frequency  0 (off) or 1-125M (1-187.5M for the BCM2711)
      * @param dutyCycle  0 (off) to 1000000 (1M)(fully on)
+     * @throws java.io.IOException if any.
      */
     void gpioHardwarePWM(int pin, int frequency, int dutyCycle) throws IOException;
 }

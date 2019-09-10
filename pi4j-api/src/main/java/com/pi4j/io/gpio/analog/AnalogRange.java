@@ -27,20 +27,47 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
+/**
+ * <p>AnalogRange interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface AnalogRange{
+    /**
+     * <p>min.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     Integer min();
+    /**
+     * <p>max.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     Integer max();
 
+    /**
+     * <p>getMin.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     default Integer getMin() {
         return this.min();
     }
 
+    /**
+     * <p>getMax.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     default Integer getMax() {
         return this.max();
     }
 
     /**
      * Bounds check the provided value against the range (min, max)
+     *
      * @param value value to test
      * @return 'true' if the provided value is inside the defined range
      */
@@ -60,6 +87,12 @@ public interface AnalogRange{
         return true;
     }
 
+    /**
+     * <p>sanitize.</p>
+     *
+     * @param value a {@link java.lang.Integer} object.
+     * @return a {@link java.lang.Integer} object.
+     */
     default Integer sanitize(Integer value){
 
         if(value == null)

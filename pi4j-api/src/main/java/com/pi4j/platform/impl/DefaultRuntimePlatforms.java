@@ -52,6 +52,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class DefaultRuntimePlatforms implements RuntimePlatforms {
 
@@ -62,6 +63,13 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
     // all detected/available providers
     private Map<String, Platform> platforms = new ConcurrentHashMap<>();
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param runtime a {@link com.pi4j.runtime.Runtime} object.
+     * @return a {@link com.pi4j.platform.impl.RuntimePlatforms} object.
+     * @throws com.pi4j.platform.exception.PlatformNotFoundException if any.
+     */
     public static RuntimePlatforms newInstance(Runtime runtime) throws PlatformNotFoundException {
         return new DefaultRuntimePlatforms(runtime);
     }
@@ -73,8 +81,9 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Get all platforms
-     * @return
      */
     @Override
     public Map<String, Platform> all(){
@@ -82,6 +91,7 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
     }
 
 
+    /** {@inheritDoc} */
     @Override
     public boolean exists(String platformId) {
         // return true if the managed platform map contains the given platform-id
@@ -92,6 +102,7 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
     }
 
 
+    /** {@inheritDoc} */
     @Override
     public Platform get(String platformId) throws PlatformNotFoundException {
         // return the platform instance from the managed platform map that contains the given platform-id
@@ -102,11 +113,13 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
     }
 
 
+    /** {@inheritDoc} */
     @Override
     public Platform defaultPlatform() {
         return this.defaultPlatform;
     }
 
+    /** {@inheritDoc} */
     @Override
     public RuntimePlatforms shutdown() throws ShutdownException {
         logger.trace("invoked 'shutdown();'");
@@ -131,6 +144,7 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public RuntimePlatforms initialize(Collection<Platform> platforms) throws InitializeException {
 

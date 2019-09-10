@@ -35,13 +35,23 @@ import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
 
 import java.io.IOException;
 
+/**
+ * <p>MockAnalogInputProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class MockAnalogInputProviderImpl extends AnalogInputProviderBase implements MockAnalogInputProvider {
 
+    /**
+     * <p>Constructor for MockAnalogInputProviderImpl.</p>
+     */
     public MockAnalogInputProviderImpl(){
         this.id = ID;
         this.name = NAME;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AnalogInput create(AnalogInputConfig config) throws IOException {
         return new MockAnalogInput(this, config);

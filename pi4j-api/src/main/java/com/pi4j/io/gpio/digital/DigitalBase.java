@@ -28,78 +28,111 @@ package com.pi4j.io.gpio.digital;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.event.EventDelegate;
+import com.pi4j.event.EventManager;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.io.binding.Bindable;
+import com.pi4j.io.binding.BindingDelegate;
+import com.pi4j.io.binding.BindingManager;
+import com.pi4j.io.binding.DigitalBinding;
 import com.pi4j.io.gpio.GpioBase;
-import com.pi4j.io.gpio.digital.binding.DigitalBinding;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
+/**
+ * <p>Abstract DigitalBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
         CONFIG_TYPE extends DigitalConfig<CONFIG_TYPE>,
         PROVIDER_TYPE extends DigitalProvider>
         extends GpioBase<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>
-        implements Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE> {
-
-
+        implements Digital<DIGITAL_TYPE, CONFIG_TYPE, PROVIDER_TYPE>,
+        Bindable<DIGITAL_TYPE, DigitalBinding>
+{
     // internal listeners collection
-    protected List<DigitalChangeListener> listeners = Collections.synchronizedList(new ArrayList<>());
+    protected final EventManager<DIGITAL_TYPE, DigitalStateChangeListener, DigitalStateChangeEvent> stateChangeEventManager;
 
     // internal bindings collection
-    protected List<DigitalBinding> bindings = Collections.synchronizedList(new ArrayList<>());
+    protected BindingManager<DIGITAL_TYPE, DigitalBinding, DigitalStateChangeEvent> bindings;
 
+    /**
+     * <p>Constructor for DigitalBase.</p>
+     *
+     * @param provider a PROVIDER_TYPE object.
+     * @param config a CONFIG_TYPE object.
+     */
     public DigitalBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
         super(provider,config);
+
+        // create an event manager for digital state change events
+        stateChangeEventManager  = new EventManager(this,
+                (EventDelegate<DigitalStateChangeListener, DigitalStateChangeEvent>)
+                        (listener, event) -> listener.onDigitalStateChange(event));
+
+        // create a binding manager for digital state change events
+        bindings = new BindingManager(this, (BindingDelegate<DigitalBinding, DigitalStateChangeEvent>)
+                (binding, event) -> binding.process(event));
     }
 
+    /** {@inheritDoc} */
     @Override
-    public DIGITAL_TYPE addListener(DigitalChangeListener... listener) {
-        listeners.addAll(Arrays.asList(listener));
+    public DIGITAL_TYPE addListener(DigitalStateChangeListener... listener) {
+        stateChangeEventManager.add(listener);
         return (DIGITAL_TYPE)this;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public DIGITAL_TYPE removeListener(DigitalChangeListener... listener) {
-        listeners.removeAll(Arrays.asList(listener));
+    public DIGITAL_TYPE removeListener(DigitalStateChangeListener... listener) {
+        stateChangeEventManager.remove(listener);
         return (DIGITAL_TYPE)this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DIGITAL_TYPE bind(DigitalBinding ... binding) {
-        bindings.addAll(Arrays.asList(binding));
-        return (DIGITAL_TYPE)this;
+        return bindings.bind(binding);
+
+        //bindings.addAll(Arrays.asList(binding));
+        //return (DIGITAL_TYPE)this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DIGITAL_TYPE unbind(DigitalBinding ... binding) {
-        bindings.removeAll(Arrays.asList(binding));
-        return (DIGITAL_TYPE)this;
+        return bindings.unbind(binding);
+        //bindings.removeAll(Arrays.asList(binding));
+        //return (DIGITAL_TYPE)this;
     }
 
     /**
      * Dispatch DigitalChangeEvent on digital input state changes
+     *
      * @param event DigitalChangeEvent
      */
-    protected void dispatch(DigitalChangeEvent event){
-        listeners.forEach((listener) -> {
-            listener.onChange(event);
-        });
-        bindings.forEach((binding) -> {
-            binding.process(event);
-        });
+    protected void dispatch(DigitalStateChangeEvent event){
+        stateChangeEventManager.dispatch(event);
+        bindings.process(event);
     }
 
+    /** {@inheritDoc} */
     @Override
     public DIGITAL_TYPE shutdown(Context context) throws ShutdownException {
         // remove all listeners
-        listeners.clear();
+        stateChangeEventManager.clear();
 
         // remove all bindings
         bindings.clear();
 
         // return this instance
         return (DIGITAL_TYPE) this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isOn() {
+        // TODO :: REVISIT STATE VS ON/OFF
+        return state().isHigh();
     }
 }

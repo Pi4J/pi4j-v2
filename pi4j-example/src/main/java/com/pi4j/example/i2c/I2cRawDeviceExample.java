@@ -29,17 +29,31 @@ package com.pi4j.example.i2c;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.i2c.I2C;
+import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.util.Console;
+import com.pi4j.util.StringUtil;
 
 import java.nio.ByteBuffer;
 
+/**
+ * <p>I2cRawDeviceExample class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class I2cRawDeviceExample {
 
     private static int I2C_BUS = 1;
     private static int I2C_DEVICE = 0x04;
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        //System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
         // this temporary property is used to tell
@@ -60,15 +74,18 @@ public class I2cRawDeviceExample {
         var pi4j = Pi4J.newAutoContext();
 
         // create I2C config
-        var config  = I2C.newConfigBuilder()
+        var config  = I2C.newConfigBuilder(pi4j)
                 .id("my-i2c-bus")
                 .name("My I2C Bus")
                 .bus(I2C_BUS)
                 .device(I2C_DEVICE)
                 .build();
 
+        // get a serial I/O provider from the Pi4J context
+        I2CProvider i2CProvider = pi4j.provider("pigpio-i2c");
+
         // use try-with-resources to auto-close I2C when complete
-        try (var i2c = pi4j.i2c().create(config);) {
+        try (var i2c = i2CProvider.create(config);) {
 
             // --> write a single (8-bit) byte value to the raw I2C device (not to a register)
             i2c.write(0x0D);
@@ -76,11 +93,15 @@ public class I2cRawDeviceExample {
             // <-- read a single (8-bit) byte value from the raw I2C device (not to a register)
             byte readByte = i2c.readByte();
 
+            console.println("I2C READ BYTE: 0x" + Integer.toHexString(readByte));
+
             // --> write an array of data bytes to the raw I2C device (not to a register)
             i2c.write(new byte[] { 0,1,2,3,4,5,6,7,8,9 });
 
             // <-- read a byte array of specified length from the raw I2C device (not to a register)
             byte[] readArray = i2c.readNBytes(10);
+
+            console.println("I2C READ ARRAY: 0x" + StringUtil.toHexString(readArray));
 
             // --> write a buffer of data bytes to the raw I2C device (not to a register)
             ByteBuffer buffer = ByteBuffer.allocate(10);
@@ -89,14 +110,19 @@ public class I2cRawDeviceExample {
             // <-- read ByteBuffer of specified length from the raw I2C device (not to a register)
             ByteBuffer readBuffer = i2c.readByteBuffer(10);
 
+            console.println("I2C READ BUFFER: 0x" + StringUtil.toHexString(readBuffer));
+
             // --> write a string of data to the raw I2C device (not to a register)
             i2c.write("This is a test");
 
             // <-- read string of data of specified length from the raw I2C device (not to a register)
             String readString = i2c.readString(14);
+
+            console.println("I2C READ STRING: " + readString);
         }
 
         // shutdown Pi4J
+        console.println();
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");
         pi4j.shutdown();
     }

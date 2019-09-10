@@ -27,26 +27,44 @@ package com.pi4j.io.serial;
  * #L%
  */
 
+import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 import com.pi4j.io.IODataReader;
 import com.pi4j.io.IODataWriter;
 
 import java.io.IOException;
 
+/**
+ * <p>Serial interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCloseable, IODataWriter, IODataReader {
 
+    /** Constant <code>DEFAULT_BAUD=9600</code> */
     int DEFAULT_BAUD = 9600;
+    /** Constant <code>DEFAULT_DATA_BITS</code> */
     DataBits DEFAULT_DATA_BITS = DataBits._8;
+    /** Constant <code>DEFAULT_PARITY</code> */
     Parity DEFAULT_PARITY = Parity.NONE;
+    /** Constant <code>DEFAULT_STOP_BITS</code> */
     StopBits DEFAULT_STOP_BITS = StopBits._1;
+    /** Constant <code>DEFAULT_FLOW_CONTROL</code> */
     FlowControl DEFAULT_FLOW_CONTROL = FlowControl.NONE;
 
-    static SerialConfigBuilder newConfigBuilder(){
-        return SerialConfigBuilder.newInstance();
+    /**
+     * <p>newConfigBuilder.</p>
+     *
+     * @return a {@link com.pi4j.io.serial.SerialConfigBuilder} object.
+     */
+    static SerialConfigBuilder newConfigBuilder(Context context){
+        return SerialConfigBuilder.newInstance(context);
     }
 
     /**
      * Serial Device Communication State is OPEN
+     *
      * @return The Serial device communication state
      */
     boolean isOpen();
@@ -54,14 +72,17 @@ public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCl
 
     /**
      * Get the number of data bytes available in the serial receive buffer
-     * @return
+     *
+     * @return a int.
+     * @throws java.io.IOException if any.
      */
     int available() throws IOException;
 
     /**
      * This function will drain the current serial receive buffer of any lingering bytes.
      *
-     * @return Returns the number of bytes of data drained (>=0) if OK, otherwise a negative error code.
+     * @return Returns the number of bytes of data drained (&gt;=0) if OK, otherwise a negative error code.
+     * @throws java.io.IOException if any.
      */
     default int drain() throws IOException{
         // get number of bytes available
@@ -75,6 +96,16 @@ public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCl
         }
     }
 
+    /**
+     * <p>open.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     void open() throws IOException;
+    /**
+     * <p>close.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     void close() throws IOException;
 }

@@ -28,24 +28,43 @@ package com.pi4j.example.gpio.analog;
  */
 
 import com.pi4j.Pi4J;
-import com.pi4j.io.gpio.analog.AnalogChangeListener;
 import com.pi4j.io.gpio.analog.AnalogOutput;
+import com.pi4j.io.gpio.analog.AnalogValueChangeListener;
 import com.pi4j.util.Console;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * <p>AnalogOutputExampleFromPropertiesFile class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class AnalogOutputExampleFromPropertiesFile {
 
+    /** Constant <code>ANALOG_OUTPUT_PIN_ID="my.unique.analog.output.pin.id"</code> */
     public static String ANALOG_OUTPUT_PIN_ID = "my.unique.analog.output.pin.id";
+    /** Constant <code>ANALOG_OUTPUT_PIN_NAME="My Unique Output Pin"</code> */
     public static String ANALOG_OUTPUT_PIN_NAME = "My Unique Output Pin";
+    /** Constant <code>ANALOG_OUTPUT_PIN=4</code> */
     public static int ANALOG_OUTPUT_PIN = 4;
+    /** Constant <code>SHUTDOWN_ANALOG_VALUE=-1</code> */
     public static int SHUTDOWN_ANALOG_VALUE = -1;
 
+    /**
+     * <p>Constructor for AnalogOutputExampleFromPropertiesFile.</p>
+     */
     public AnalogOutputExampleFromPropertiesFile() {
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // create Pi4J console wrapper/helper
@@ -75,13 +94,13 @@ public class AnalogOutputExampleFromPropertiesFile {
         var pi4j = Pi4J.newAutoContext();
 
         // build the analog output config using the loaded properties, but include a prefix filter
-        var config = AnalogOutput.newConfigBuilder()
+        var config = AnalogOutput.newConfigBuilder(pi4j)
                 .load(prop, "my-analog-example")
                 .build();
         var output = pi4j.analogOutput().create(config);
 
         // setup a analog output listener to listen for any state changes on the analog output
-        output.addListener((AnalogChangeListener) event -> {
+        output.addListener((AnalogValueChangeListener) event -> {
             System.out.println(event);
         });
 

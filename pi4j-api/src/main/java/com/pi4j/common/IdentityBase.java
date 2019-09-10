@@ -29,6 +29,12 @@ package com.pi4j.common;
 
 import com.pi4j.extension.Extension;
 
+/**
+ * <p>Abstract IdentityBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class IdentityBase<T> implements Extension<T> {
 
     protected String id;
@@ -36,42 +42,67 @@ public abstract class IdentityBase<T> implements Extension<T> {
     protected String description;
     protected Metadata metadata = Metadata.create();
 
+    /**
+     * <p>Constructor for IdentityBase.</p>
+     */
     public IdentityBase(){
         this.id = getClass().getName();
         this.name = this.getClass().getSimpleName();
         this.description = this.getClass().getName();
     }
 
+    /**
+     * <p>Constructor for IdentityBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public IdentityBase(String id){
         this();
         this.id = id;
     }
 
+    /**
+     * <p>Constructor for IdentityBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public IdentityBase(String id, String name){
         this(id);
         this.name = name;
     }
 
+    /**
+     * <p>Constructor for IdentityBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param description a {@link java.lang.String} object.
+     */
     public IdentityBase(String id, String name, String description){
         this(id, name);
         this.description = description;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String id() {
         return this.id;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String name() {
         return this.name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String description() {
         return this.description;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Metadata metadata() {
         return this.metadata;

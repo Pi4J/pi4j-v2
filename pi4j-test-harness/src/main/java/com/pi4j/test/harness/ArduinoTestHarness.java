@@ -38,12 +38,24 @@ import java.util.List;
 import java.util.Scanner;
 
 
+/**
+ * <p>ArduinoTestHarness class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class ArduinoTestHarness {
 
     protected String comport;
     protected SerialPort com = null;
     protected Gson gson = new Gson();
 
+    /**
+     * <p>Constructor for ArduinoTestHarness.</p>
+     *
+     * @param comport a {@link java.lang.String} object.
+     * @throws java.io.IOException if any.
+     */
     public ArduinoTestHarness(String comport) throws IOException {
 
         // set local reference
@@ -63,38 +75,84 @@ public class ArduinoTestHarness {
         com.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 50, 0);
     }
 
+    /**
+     * <p>reset.</p>
+     *
+     * @return a {@link com.pi4j.test.harness.TestHarnessPins} object.
+     * @throws java.io.IOException if any.
+     */
     public TestHarnessPins reset() throws IOException {
         send("reset");
         TestHarnessPins response = read(TestHarnessPins.class);
         return response;
     }
 
+    /**
+     * <p>reboot.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     public void reboot() throws IOException {
         send("reboot");
     }
 
+    /**
+     * <p>getInfo.</p>
+     *
+     * @return a {@link com.pi4j.test.harness.TestHarnessInfo} object.
+     * @throws java.io.IOException if any.
+     */
     public TestHarnessInfo getInfo() throws IOException {
         send("info");
         TestHarnessInfo response = read(TestHarnessInfo.class);
         return response;
     }
 
+    /**
+     * <p>disablePin.</p>
+     *
+     * @param pin a int.
+     * @return a {@link com.pi4j.test.harness.TestHarnessPin} object.
+     * @throws java.io.IOException if any.
+     */
     public TestHarnessPin disablePin(int pin) throws IOException {
         send("pin " + pin + " disable");
         TestHarnessPin response = read(TestHarnessPin.class);
         return response;
     }
 
+    /**
+     * <p>getPin.</p>
+     *
+     * @param pin a int.
+     * @return a {@link com.pi4j.test.harness.TestHarnessPin} object.
+     * @throws java.io.IOException if any.
+     */
     public TestHarnessPin getPin(int pin) throws IOException {
         send("pin " + pin);
         TestHarnessPin response = read(TestHarnessPin.class);
         return response;
     }
 
+    /**
+     * <p>setInputPin.</p>
+     *
+     * @param pin a int.
+     * @return a {@link com.pi4j.test.harness.TestHarnessPin} object.
+     * @throws java.io.IOException if any.
+     */
     public TestHarnessPin setInputPin(int pin) throws IOException {
         return setInputPin(pin, false);
     }
 
+    /**
+     * <p>setInputPin.</p>
+     *
+     * @param pin a int.
+     * @param pullUp a boolean.
+     * @return a {@link com.pi4j.test.harness.TestHarnessPin} object.
+     * @throws java.io.IOException if any.
+     */
     public TestHarnessPin setInputPin(int pin, boolean pullUp) throws IOException {
         String mode = (pullUp)? "input_pullup" : "input";
         send(String.format("pin %d %s", pin, mode));
@@ -102,10 +160,25 @@ public class ArduinoTestHarness {
         return response;
     }
 
+    /**
+     * <p>setOutputPin.</p>
+     *
+     * @param pin a int.
+     * @return a {@link com.pi4j.test.harness.TestHarnessPin} object.
+     * @throws java.io.IOException if any.
+     */
     public TestHarnessPin setOutputPin(int pin) throws IOException {
         return setOutputPin(pin, false);
     }
 
+    /**
+     * <p>setOutputPin.</p>
+     *
+     * @param pin a int.
+     * @param state a boolean.
+     * @return a {@link com.pi4j.test.harness.TestHarnessPin} object.
+     * @throws java.io.IOException if any.
+     */
     public TestHarnessPin setOutputPin(int pin, boolean state) throws IOException {
         String stateString = (state)? "high" : "low";
         send(String.format("pin %d output %s", pin, stateString));
@@ -113,29 +186,79 @@ public class ArduinoTestHarness {
         return response;
     }
 
-
-    public TestHarnessResponse enableI2C(int bus, int device) throws IOException {
-        return enableI2C(bus, device, false);
-    }
-
-    public TestHarnessResponse enableI2C(int bus, int device, boolean rawMode) throws IOException {
-        send(String.format("i2c %d %d %b", bus, device, rawMode));
-        TestHarnessResponse response = read(TestHarnessResponse.class);
-        return response;
-    }
-
+    /**
+     * <p>getFrequency.</p>
+     *
+     * @param pin a int.
+     * @return a {@link com.pi4j.test.harness.TestHarnessFrequency} object.
+     * @throws java.io.IOException if any.
+     */
     public TestHarnessFrequency getFrequency(int pin) throws IOException {
         send("frequency " + pin);
         TestHarnessFrequency response = read(TestHarnessFrequency.class);
         return response;
     }
 
+    /**
+     * <p>enableI2C.</p>
+     *
+     * @param bus a int.
+     * @param device a int.
+     * @return a {@link com.pi4j.test.harness.TestHarnessResponse} object.
+     * @throws java.io.IOException if any.
+     */
+    public TestHarnessResponse enableI2C(int bus, int device) throws IOException {
+        return enableI2C(bus, device, false);
+    }
+
+    /**
+     * <p>enableI2C.</p>
+     *
+     * @param bus a int.
+     * @param device a int.
+     * @param rawMode a boolean.
+     * @return a {@link com.pi4j.test.harness.TestHarnessResponse} object.
+     * @throws java.io.IOException if any.
+     */
+    public TestHarnessResponse enableI2C(int bus, int device, boolean rawMode) throws IOException {
+        send(String.format("i2c %d %d %b", bus, device, rawMode));
+        TestHarnessResponse response = read(TestHarnessResponse.class);
+        return response;
+    }
+
+    /**
+     * <p>enableSerialEcho.</p>
+     *
+     * @param port a int.
+     * @param baudRate a int.
+     * @return a {@link com.pi4j.test.harness.TestHarnessResponse} object.
+     * @throws java.io.IOException if any.
+     */
     public TestHarnessResponse enableSerialEcho(int port, int baudRate) throws IOException {
         send(String.format("serial %d %d", port, baudRate));
         TestHarnessResponse response = read(TestHarnessResponse.class);
         return response;
     }
 
+    /**
+     * <p>enableSpiEcho.</p>
+     *
+     * @param channel a int.
+     * @return a {@link com.pi4j.test.harness.TestHarnessResponse} object.
+     * @throws java.io.IOException if any.
+     */
+    public TestHarnessResponse enableSpiEcho(int channel) throws IOException {
+        send(String.format("spi %d", channel));
+        TestHarnessResponse response = read(TestHarnessResponse.class);
+        return response;
+    }
+
+    /**
+     * <p>send.</p>
+     *
+     * @param command a {@link java.lang.String} object.
+     * @throws java.io.IOException if any.
+     */
     public void send(String command) throws IOException {
 
         // validate serial port is connected
@@ -144,12 +267,24 @@ public class ArduinoTestHarness {
         // drain any previous data
         drain();
 
+        com.getOutputStream().write(0x0D); // <CR>
+        com.getOutputStream().write(0x0A); // <LF>
+        com.getOutputStream().write(0x0D); // <CR>
+        com.getOutputStream().write(0x0A); // <LF>
         com.getOutputStream().write(command.getBytes(StandardCharsets.US_ASCII));
         com.getOutputStream().write(0x0D); // <CR>
         com.getOutputStream().write(0x0A); // <LF>
         com.getOutputStream().flush();
     }
 
+    /**
+     * <p>read.</p>
+     *
+     * @param type a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws java.io.IOException if any.
+     */
     protected <T extends TestHarnessResponse> T read(Class<T> type) throws IOException {
 
 
@@ -184,6 +319,12 @@ public class ArduinoTestHarness {
         return null;
     }
 
+    /**
+     * <p>read.</p>
+     *
+     * @return a {@link java.util.List} object.
+     * @throws java.io.IOException if any.
+     */
     protected List<TestHarnessResponse> read() throws IOException {
         List<TestHarnessResponse> responses = new ArrayList<>();
 
@@ -250,6 +391,21 @@ public class ArduinoTestHarness {
                        responses.add(response);
                        break;
                    }
+                   case "i2c": {
+                       TestHarnessResponse response = gson.fromJson(received, TestHarnessResponse.class);
+                       responses.add(response);
+                       break;
+                   }
+                   case "serial": {
+                       TestHarnessResponse response = gson.fromJson(received, TestHarnessResponse.class);
+                       responses.add(response);
+                       break;
+                   }
+                   case "spi": {
+                       TestHarnessResponse response = gson.fromJson(received, TestHarnessResponse.class);
+                       responses.add(response);
+                       break;
+                   }
                    default:{
                        TestHarnessResponse response = gson.fromJson(received, TestHarnessResponse.class);
                        responses.add(response);
@@ -262,6 +418,11 @@ public class ArduinoTestHarness {
         return responses;
     }
 
+    /**
+     * <p>drain.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     protected void drain() throws IOException {
 
         // validate serial port is connected
@@ -274,16 +435,39 @@ public class ArduinoTestHarness {
         }
     }
 
-    public void terminate() throws IOException {
+    /**
+     * <p>close.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
+    public void close() throws IOException {
 
         // validate serial port is connected
         if(!com.isOpen()) throw new IOException("Serial port is not open;");
 
-        // close port when done
+        // close serial communications port
         com.closePort();
     }
 
+    /**
+     * <p>shutdown.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
+    public void shutdown() throws IOException {
 
+        // reset all pin states
+        reset();
+
+        // close serial communications port
+        if(com.isOpen()) com.closePort();
+    }
+
+    /**
+     * <p>initialize.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     public void initialize() throws IOException {
 
         // validate serial port is connected

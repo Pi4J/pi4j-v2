@@ -41,6 +41,12 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * <p>DefaultContextBuilder class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultContextBuilder implements ContextBuilder {
 
     protected Logger logger = LoggerFactory.getLogger(DefaultContextBuilder.class);
@@ -48,6 +54,7 @@ public class DefaultContextBuilder implements ContextBuilder {
     // auto detection flags
     protected boolean autoDetectPlatforms = false;
     protected boolean autoDetectProviders = false;
+    protected boolean autoInject = false;
 
     // default platform identifier
     protected String defaultPlatformId = null;
@@ -66,10 +73,16 @@ public class DefaultContextBuilder implements ContextBuilder {
         // forbid object construction
     }
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.context.ContextBuilder} object.
+     */
     public static ContextBuilder newInstance(){
         return new DefaultContextBuilder();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder add(Platform... platform) {
         if(platform != null && platform.length > 0)
@@ -77,6 +90,7 @@ public class DefaultContextBuilder implements ContextBuilder {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder add(Provider... provider) {
         if(provider != null && provider.length > 0)
@@ -84,47 +98,69 @@ public class DefaultContextBuilder implements ContextBuilder {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String defaultPlatform() {
         return this.defaultPlatformId;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder defaultPlatform(String platformId) {
         this.defaultPlatformId = platformId;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder autoDetectPlatforms() {
         this.autoDetectPlatforms = true;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder noAutoDetectPlatforms() {
         this.autoDetectPlatforms = false;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder autoDetectProviders() {
         this.autoDetectProviders = true;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder noAutoDetectProviders() {
         this.autoDetectProviders = false;
         return this;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public ContextBuilder autoInject() {
+        this.autoInject = true;
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public ContextBuilder noAutoInject() {
+        this.autoInject = false;
+        return this;
+    }
+
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder property(String key, String value){
         this.properties.put(key, value);
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder property(Map.Entry<String,String> ... value){
         for(Map.Entry e : value){
@@ -133,6 +169,7 @@ public class DefaultContextBuilder implements ContextBuilder {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder properties(Properties properties, String prefixFilter){
         // convert java.util.Properties to a Map<String,String> object
@@ -141,12 +178,14 @@ public class DefaultContextBuilder implements ContextBuilder {
         return properties(entries, prefixFilter);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder properties(Map<String,String> properties) {
         this.properties.putAll(properties);
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder properties(Map<String,String> properties, String prefixFilter){
 
@@ -163,6 +202,7 @@ public class DefaultContextBuilder implements ContextBuilder {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder properties(InputStream stream, String prefixFilter) throws IOException{
         Properties prop = new Properties();
@@ -170,6 +210,7 @@ public class DefaultContextBuilder implements ContextBuilder {
         return properties(prop, prefixFilter);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder properties(Reader reader, String prefixFilter) throws IOException{
         Properties prop = new Properties();
@@ -177,6 +218,7 @@ public class DefaultContextBuilder implements ContextBuilder {
         return properties(prop, prefixFilter);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ContextBuilder properties(File file, String prefixFilter) throws IOException{
         Properties prop = new Properties();
@@ -185,6 +227,7 @@ public class DefaultContextBuilder implements ContextBuilder {
     }
 
 
+    /** {@inheritDoc} */
     @Override
     public ContextConfig toConfig() {
         // set instance reference
@@ -213,6 +256,9 @@ public class DefaultContextBuilder implements ContextBuilder {
             }
 
             @Override
+            public boolean autoInject() { return builder.autoInject; }
+
+            @Override
             public boolean autoDetectProviders() {
                 return builder.autoDetectProviders;
             }
@@ -224,6 +270,7 @@ public class DefaultContextBuilder implements ContextBuilder {
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public Context build() throws Pi4JException {
         logger.trace("invoked 'build()'");

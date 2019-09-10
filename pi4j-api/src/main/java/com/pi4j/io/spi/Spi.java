@@ -28,121 +28,350 @@ package com.pi4j.io.spi;
  */
 
 
+import com.pi4j.context.Context;
 import com.pi4j.io.IO;
+import com.pi4j.io.IODataReader;
+import com.pi4j.io.IODataWriter;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 
-public interface Spi extends IO<Spi, SpiConfig, SpiProvider> {
+/**
+ * <p>Spi interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
+public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IODataWriter, IODataReader {
+    /** Constant <code>DEFAULT_MODE</code> */
+    SpiMode DEFAULT_MODE = SpiMode.MODE_0;
+    /** Constant <code>DEFAULT_BAUD=1000000</code> */
+    int DEFAULT_BAUD = 1000000; // 1MHz (range is 500kHz - 32MHz)
 
-    SpiMode DEFAULT_SPI_MODE = SpiMode.MODE_0;
-    int DEFAULT_SPI_SPEED = 1000000; // 1MHz (range is 500kHz - 32MHz)
-    int MAX_SUPPORTED_BYTES = 2048;
+    /**
+     * <p>newConfigBuilder.</p>
+     *
+     * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
+     */
+    static SpiConfigBuilder newConfigBuilder(Context context){
+        return SpiConfigBuilder.newInstance(context);
+    }
 
-//    static SpiConfigBuilder newConfigBuilder(){
-//        return SpiConfigBuilder.newInstance();
-//    }
+    /**
+     * SPI Device Communication State is OPEN
+     *
+     * @return The SPI device communication state
+     */
+    boolean isOpen();
 
 
     /**
-     * Attempts to read/write data through this SPI device
+     * <p>open.</p>
      *
-     * @param data
-     *            bytes (encoded in string) to write to the SPI device
-     * @param charset
-     *            character encoding for bytes in string
-     * @return resulting bytes read from the SPI device after the write operation
+     * @throws java.io.IOException if any.
      */
-    public String write(String data, Charset charset) throws IOException;
+    void open() throws IOException;
+    /**
+     * <p>close.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
+    void close() throws IOException;
+
+    // ------------------------------------------------------------------------------------
+    // XFER :: BYTE
+    // ------------------------------------------------------------------------------------
 
     /**
-     * Attempts to read/write data through this SPI device
+     * This function reads a byte from the serial port associated with the handle.
+     * If no data is ready PI_SER_READ_NO_DATA is returned.
      *
-     * @param data
-     *            bytes (encoded in string) to write to the SPI device
-     * @param charset
-     *            character encoding for bytes in string
-     * @return resulting bytes read from the SPI device after the write operation
+     * @param handle the open serial device handle; (&gt;=0, as returned by a call to serOpen)
+     * @return Returns the read byte (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_SER_READ_NO_DATA, or PI_SER_READ_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte"
+     * @param value a byte.
+     * @throws java.io.IOException if any.
      */
-    public String write(String data, String charset) throws IOException;
+    default int transferByte(int handle, byte value) throws IOException{
+        byte[] temp = new byte[] { value } ;
+        int result = transfer(temp);
+        if(result <= 0) return result;
+
+        // we must convert the raw byte to an unsigned int for the return value
+        // otherwise, anything higher than 0x80 may result in a negative int value
+        return Byte.toUnsignedInt(temp[0]);
+    }
+
+    // ------------------------------------------------------------------------------------
+    // XFER :: BYTE ARRAY
+    // ------------------------------------------------------------------------------------
 
     /**
-     * Attempts to read/write data through this SPI device
+     * This function transfers (writes/reads simultaneously) multiple bytes with the SPI
+     * device associated with the handle.  Write data is taken from the 'write' byte array
+     * from the given 'writeOffset' index to the specified length ('numberOfBytes').  Data
+     * read from the SPI device is then copied to the 'read' byte array at the given 'readOffset'
+     * using the same length ('numberOfBytes').  Both the 'write' and 'read' byte arrays must
+     * be at least the size of the defined 'numberOfBytes' + their corresponding offsets.
      *
-     * @param data
-     *            bytes to write to the SPI device
-     * @return resulting bytes read from the SPI device after the write operation
+     * @param write the array of bytes to write to the SPI device
+     * @param writeOffset the starting offset position in the provided 'write' buffer to
+     *                    start writing to the SPI device from.
+     * @param read the array of bytes to store read data in from the SPI device
+     * @param readOffset the starting offset position in the provided 'read' buffer to place
+     *                   data bytes read from the SPI device.
+     * @param numberOfBytes the number of bytes to transfer/exchange (read &amp; read))
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
-    public ByteBuffer write(ByteBuffer data) throws IOException;
+    int transfer(byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException;
 
     /**
-     * Attempts to read/write data through this SPI device
+     * This function transfers (writes/reads simultaneously) multiple bytes with the SPI
+     * device associated with the handle.  Write data is taken from the 'write' byte array
+     * from the zero index (first byte) to the specified length ('numberOfBytes').  Data
+     * read from the SPI device is then copied to the 'read' byte array starting at the zero
+     * index (first byte) using the same length ('numberOfBytes').  Both the 'write' and 'read'
+     * byte arrays must be at least the size of the defined 'numberOfBytes' + their corresponding
+     * offsets.
      *
-     * @param input
-     *            input stream to read from to get
-     *            bytes to write to the SPI device
-     * @return resulting bytes read from the SPI device after the write operation
+     * @param write the array of bytes to write to the SPI device
+     * @param read the array of bytes to store read data in from the SPI device
+     * @param numberOfBytes the number of bytes to transfer/exchange (read &amp; read))
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
-    public byte[] write(InputStream input) throws IOException;
+    default int transfer(byte[] write, byte[] read, int numberOfBytes) throws IOException{
+        return transfer(write, 0, read, 0, numberOfBytes);
+    }
 
     /**
-     * Attempts to read/write data through this SPI device
+     * This function transfers (writes/reads simultaneously) multiple bytes with the SPI
+     * device associated with the handle.  Write data is taken from the entire contents of
+     * the  'write' byte array (from the zero index (first byte) to the array size).  Data
+     * read from the SPI device is then copied to the 'read' byte array starting at the zero
+     * index (first byte) using the same length of the number of bytes in the 'write' array.
+     * The 'read' byte array must be at least the size of the defined 'write' byte array.
      *
-     * @param input
-     *            input stream to read from to get
-     *            bytes to write to the SPI device
-     * @param output
-     *            output stream to write bytes
-     *            read from the SPI device
-     * @return number of resulting bytes read from the SPI device and written to the output stream
+     * @param write the array of bytes to write to the SPI device
+     * @param read the array of bytes to store read data in from the SPI device
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
-    public int write(InputStream input, OutputStream output) throws IOException;
+    default int transfer(byte[] write, byte[] read) throws IOException{
+        return transfer(write, 0, read, 0, write.length);
+    }
 
     /**
-     * Attempts to read/write data through this SPI device
+     * This function transfers (writes/reads simultaneously) multiple bytes with the SPI
+     * device associated with the handle.  Write data is taken from the 'buffer' byte array
+     * from the given 'offset' index to the specified 'length' (number of bytes).  Data
+     * read back from the SPI device is then copied to the same 'buffer' byte array starting
+     * at the given 'offset' using the same 'length' (number of bytes).  The 'buffer' byte
+     * array must be at least the size of the defined 'length' + 'offset'.
      *
-     * @param data
-     *            bytes to write to the SPI device
-     * @param start
-     *            start index position in the data buffer to start writing from
-     * @param length
-     *            length of bytes to write from the data buffer
-     * @return resulting bytes read from the SPI device after the write operation
+     * @param buffer the array of bytes to write to the SPI device and to store read data
+     *               back from the SPI device
+     * @param offset the starting offset position in the provided buffer to
+     *               start writing to the SPI device from and the position
+     *               used as the starting offset position to place data bytes
+     *               read back from the SPI device.
+     * @param length the number of bytes to transfer/exchange (read &amp; read))
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
-    public byte[] write(byte[] data, int start, int length) throws IOException;
+    default int transfer(byte[] buffer, int offset, int length) throws IOException{
+        return transfer(buffer, offset, buffer, offset, length);
+    }
 
     /**
-     * Attempts to read/write data through this SPI device
+     * This function transfers (writes/reads simultaneously) multiple bytes with the SPI
+     * device associated with the handle.  Write data is taken from the 'buffer' byte array
+     * from the zero index (first byte) to the specified length (number of bytes).  Data
+     * read from the SPI device is then copied back to the same 'buffer' byte array starting
+     * at the zero index (first byte) using the same length.  The 'buffer' byte array must
+     * be at least the size of the defined 'length'.
      *
-     * @param data
-     *            bytes to write to the SPI device
-     * @return resulting bytes read from the SPI device after the write operation
+     * @param buffer the array of bytes to write to the SPI device and to store read data
+     *               back from the SPI device
+     * @param length the number of bytes to transfer/exchange (read &amp; read))
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
-    public byte[] write(byte... data) throws IOException;
+    default int transfer(byte[] buffer, int length) throws IOException{
+        return transfer(buffer, 0, length);
+    }
 
     /**
-     * Attempts to read/write data through this SPI device
+     * This function transfers (writes/reads simultaneously) multiple bytes with the SPI
+     * device associated with the handle.  Write data is taken from the entire 'buffer' byte array
+     * contents.  Data read back from the SPI device is then copied back to the same 'buffer'
+     * byte array starting at the zero index (first byte).
      *
-     * @param data
-     *            bytes to write to the SPI device
-     * @param start
-     *            start index position in the data buffer to start writing from
-     * @param length
-     *            length of bytes to write from the data buffer
-     * @return resulting bytes read from the SPI device after the write operation
+     * @param buffer the array of bytes to write to the SPI device and to store read data
+     *               back from the SPI device
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
-    public short[] write(short[] data, int start, int length) throws IOException;
+    default int transfer(byte[] buffer) throws IOException{
+        return transfer(buffer, 0, buffer.length);
+    }
 
     /**
-     * Attempts to read/write data through this SPI device
+     * This function transfers (writes/reads simultaneously) multiple bytes with the SPI
+     * device associated with the handle.  Write data is taken from the 'write' byte buffer
+     * from the given 'writeOffset' index to the specified length ('numberOfBytes').  Data
+     * read from the SPI device is then copied to the 'read' byte buffer at the given 'readOffset'
+     * using the same length ('numberOfBytes').  Both the 'write' and 'read' byte buffers must
+     * at least have the available capacity of the defined 'numberOfBytes' + their corresponding
+     * offsets.
      *
-     * @param data
-     *            bytes to write to the SPI device (Note: short value should not exceed 255.)
-     * @return resulting bytes read from the SPI device after the write operation
+     * NOTE:  The buffer's internal position tracking is not
+     *        used but rather only the explicit offset and
+     *        length provided.  If the requested length is
+     *        greater than the buffers capacity (minus offset)
+     *        then the specified length will be ignored and
+     *        this function will only read the number of
+     *        bytes up to the buffers' available space.
+     *
+     * @param write the ByteBuffer to write to the SPI device
+     * @param writeOffset the starting offset position in the provided 'write' buffer to
+     *                    start writing to the SPI device from.
+     * @param read the ByteBuffer to store read data in from the SPI device
+     * @param readOffset the starting offset position in the provided 'read' buffer to place
+     *                   data bytes read from the SPI device.
+     * @param numberOfBytes the number of bytes to transfer/exchange (read &amp; read))
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
      */
-    public short[] write(short... data) throws IOException;
+    default int transfer(ByteBuffer write, int writeOffset, ByteBuffer read, int readOffset, int numberOfBytes) throws IOException{
+        // perform bounds checking on requested length versus total remaining size available
+        if(numberOfBytes > (write.capacity()-writeOffset)){
+            numberOfBytes = write.capacity()-writeOffset;
+        }
 
+        // create a temporary byte array to read in the length of data bytes
+        byte[] temp = new byte[numberOfBytes];
+        int actualLength =transfer(write.array(), 0 , temp, 0, numberOfBytes);
+
+        // return any error codes ( < 0)
+        if(actualLength < 0) return actualLength;
+
+        // perform bounds checking on number of bytes read versus the length requested
+        if(actualLength < numberOfBytes) numberOfBytes = actualLength;
+
+        // copy the data from the temporary byte array into the return buffer at the given offset
+        read.position(readOffset);
+        read.put(temp, 0, numberOfBytes);
+
+        // return actual number of bytes read
+        return numberOfBytes;
+    }
+
+    /**
+     * This function transfers (writes/reads simultaneously) multiple bytes with the SPI
+     * device associated with the handle.  Write data is taken from the 'write' byte buffer
+     * from the buffer's current position up to the specified length ('numberOfBytes').  Data
+     * read from the SPI device is then copied to the 'read' byte buffer starting at the buffer's
+     * current position using the same length ('numberOfBytes').  Both the 'write' and 'read'
+     * byte buffers must at least have the available capacity of the defined 'numberOfBytes' +
+     * their corresponding current positions.
+     *
+     * NOTE:  The contents from the 'write' byte buffer is read
+     *        from the current position index up to the length
+     *        requested or up to the buffer's remaining limit;
+     *        whichever is is lower .  If the buffer's current
+     *        position is already at the buffer's limit, then we
+     *        will automatically flip the buffer to begin reading
+     *        data from the zero position up to the buffer's limit     *
+     *
+     * NOTE:  The data bytes read from the SPI device are copied/
+     *        inserted into the 'read' byte buffer starting at the current
+     *        position index up to the length requested or up to the
+     *        buffer's remaining limit; whichever is is lower .  If
+     *        the buffer's current position is already at the buffer's
+     *        limit, then we will automatically rewind the buffer to
+     *        begin writing data from the zero position up to the
+     *        buffer's limit.
+     *
+     * @param write the ByteBuffer to write to the SPI device
+     * @param read the ByteBuffer to store read data in from the SPI device
+     * @param numberOfBytes the number of bytes to transfer/exchange (read &amp; read))
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
+     */
+    default int transfer(ByteBuffer write, ByteBuffer read, int numberOfBytes) throws IOException{
+        // if the 'write' buffer position is already at the buffer limit, then flip the buffer for
+        //reading data from the buffer at the starting position to write to the I/O device
+        if(write.position() == write.limit()) write.flip();
+
+        // if the 'read' buffer position is already at the buffer limit, then rewind the buffer for
+        // writing new data into the buffer read from the I/O device
+        if(read.position() == read.limit()) read.rewind();
+
+        // bounds check the requested length; only allow reading up to the remaining space in the buffer
+        if(numberOfBytes > write.remaining()) numberOfBytes = write.remaining();
+
+        // write contents from the buffer starting at the current position up to the specified length
+        return transfer(write, write.position(), read, read.position(), numberOfBytes);
+    }
+
+    /**
+     * This function transfers (writes/reads simultaneously) multiple bytes with the SPI
+     * device associated with the handle.  Write data is taken from the byte buffer
+     * from the given 'offset' index to the specified length (number of bytes).  Data
+     * read from the SPI device is then copied to the byte buffer at the given 'offset'
+     * using the same length (number of bytes). The byte buffer must at least have the
+     * available capacity of the defined 'length' + 'offset'.
+     *
+     * NOTE:  The buffer's internal position tracking is not
+     *        used but rather only the explicit offset and
+     *        length provided.  If the requested length is
+     *        greater than the buffers capacity (minus offset)
+     *        then the specified length will be ignored and
+     *        this function will only read the number of
+     *        bytes up to the buffers' available space.
+     *
+     * @param buffer the byte buffer to write to the SPI device and to store read data
+     *               back from the SPI device
+     * @param offset the starting offset position in the provided buffer to
+     *               start writing to the SPI device from and the position
+     *               used as the starting offset position to place data bytes
+     *               read back from the SPI device.
+     * @param length the number of bytes to transfer/exchange (read &amp; read))
+     * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
+     * @see "http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite"
+     * @throws java.io.IOException if any.
+     */
+    default int transfer(ByteBuffer buffer, int offset, int length) throws IOException{
+        // perform bounds checking on requested length versus total remaining size available
+        if(length > (buffer.capacity()-offset)){
+            length = buffer.capacity()-offset;
+        }
+
+        // create a temporary byte array to read in the length of data bytes
+        byte[] temp = new byte[length];
+        int actualLength =transfer(buffer.array(), 0 , temp, 0, length);
+
+        // return any error codes ( < 0)
+        if(actualLength < 0) return actualLength;
+
+        // perform bounds checking on number of bytes read versus the length requested
+        if(actualLength < length) length = actualLength;
+
+        // copy the data from the temporary byte array into the return buffer at the given offset
+        buffer.position(offset);
+        buffer.put(temp, 0, length);
+
+        // return actual number of bytes read
+        return length;
+    }
 }

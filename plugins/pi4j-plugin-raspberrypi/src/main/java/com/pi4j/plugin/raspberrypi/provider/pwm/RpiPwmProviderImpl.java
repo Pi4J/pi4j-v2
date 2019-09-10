@@ -33,13 +33,23 @@ import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProviderBase;
 
+/**
+ * <p>RpiPwmProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class RpiPwmProviderImpl extends PwmProviderBase implements RpiPwmProvider {
 
+    /**
+     * <p>Constructor for RpiPwmProviderImpl.</p>
+     */
     public RpiPwmProviderImpl(){
         this.id = ID;
         this.name = NAME;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pwm create(PwmConfig config) throws Exception {
         return new RpiPwm(this, config);

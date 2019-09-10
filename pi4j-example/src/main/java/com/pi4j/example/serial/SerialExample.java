@@ -29,19 +29,36 @@ package com.pi4j.example.serial;
 
 import com.pi4j.Pi4J;
 import com.pi4j.io.serial.Serial;
+import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.util.Console;
+import com.pi4j.util.StringUtil;
 
+import java.nio.ByteBuffer;
+
+/**
+ * <p>SerialExample class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class SerialExample {
 
     private static int I2C_BUS = 1;
     private static int I2C_DEVICE = 0x04;
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
         // this temporary property is used to tell
         // PIGPIO which remote Raspberry Pi to connect to
         System.setProperty("pi4j.host", "rpi3bp.savage.lan");
+        System.setProperty("pi4j.pigpio.remote", "true");
 
         // create Pi4J console wrapper/helper
         // (This is a utility class to abstract some of the boilerplate stdin/stdout code)
@@ -50,9 +67,6 @@ public class SerialExample {
         // print program title/header
         console.title("<-- The Pi4J Project -->", "Basic Serial Communications Example");
 
-        // allow for user to exit program using CTRL-C
-        console.promptForExit();
-
         // Initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled
         // which will load all detected Pi4J extension libraries
@@ -60,27 +74,47 @@ public class SerialExample {
         var pi4j = Pi4J.newAutoContext();
 
         // create SERIAL config
-        var config  = Serial.newConfigBuilder()
+        var config  = Serial.newConfigBuilder(pi4j)
                 .id("my-serial-port")
                 .name("My Serial Port")
-                .device("")
+                .device("/dev/ttyS0")
                 .use_9600_N81()
                 .build();
 
+        // get a serial I/O provider from the Pi4J context
+        SerialProvider serialProvider = pi4j.provider("pigpio-serial");
+
         // use try-with-resources to auto-close SERIAL when complete
-        try (var serial = pi4j.serial().create(config);) {
+        try (var serial = serialProvider.create(config);) {
+            String data = "THIS IS A TEST";
 
             // open serial port communications
             serial.open();
 
+            // write data to the SPI channel
+            serial.write(data);
+
+            // take a breath to allow time for the serial data
+            // to get updated in the serial receive buffer
+            Thread.sleep(100);
+
+            // read data back from the SPI channel
+            ByteBuffer buffer = serial.readByteBuffer(data.length());
+
+            console.println("--------------------------------------");
+            console.println("--------------------------------------");
+            console.println("SERIAL [WRITE] :");
+            console.println("  [BYTES]  0x" + StringUtil.toHexString(data));
+            console.println("  [STRING] " + data);
+            console.println("SERIAL [READ] :");
+            console.println("  [BYTES]  0x" + StringUtil.toHexString(buffer.array()));
+            console.println("  [STRING] " + new String(buffer.array()));
+            console.println("--------------------------------------");
+            console.println("--------------------------------------");
 
             // serial port will be closed when this block goes
             // out of scope by the AutoCloseable interface on Serial
         }
-
-        // create a digital input instance using the default digital input provider
-        // wait (block) for user to exit program using CTRL-C
-        console.waitForExit();
 
         // shutdown Pi4J
         console.println("ATTEMPTING TO SHUTDOWN/TERMINATE THIS PROGRAM");

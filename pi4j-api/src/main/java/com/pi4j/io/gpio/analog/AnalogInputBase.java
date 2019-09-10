@@ -27,7 +27,19 @@ package com.pi4j.io.gpio.analog;
  * #L%
  */
 
+/**
+ * <p>Abstract AnalogInputBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class AnalogInputBase extends AnalogBase<AnalogInput, AnalogInputConfig, AnalogInputProvider> implements AnalogInput {
+    /**
+     * <p>Constructor for AnalogInputBase.</p>
+     *
+     * @param provider a {@link com.pi4j.io.gpio.analog.AnalogInputProvider} object.
+     * @param config a {@link com.pi4j.io.gpio.analog.AnalogInputConfig} object.
+     */
     public AnalogInputBase(AnalogInputProvider provider, AnalogInputConfig config){
         super(provider, config);
         if(this.id == null) this.id = "AIN-" + config.address();

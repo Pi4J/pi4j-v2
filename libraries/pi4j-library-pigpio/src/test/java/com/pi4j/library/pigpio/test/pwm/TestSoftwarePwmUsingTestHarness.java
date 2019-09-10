@@ -4,7 +4,7 @@ package com.pi4j.library.pigpio.test.pwm;
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: PIGPIO Library
+ * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library
  * FILENAME      :  TestSoftwarePwmUsingTestHarness.java
  *
  * This file is part of the Pi4J project. More information about
@@ -31,6 +31,7 @@ package com.pi4j.library.pigpio.test.pwm;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
+import com.pi4j.library.pigpio.test.TestEnv;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
 import com.pi4j.test.harness.TestHarnessInfo;
@@ -50,7 +51,7 @@ public class TestSoftwarePwmUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        //System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         System.out.println();
         System.out.println("************************************************************************");
@@ -60,7 +61,7 @@ public class TestSoftwarePwmUsingTestHarness {
 
         try {
             // create test harness and PIGPIO instances
-            harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142301"));
+            harness = TestEnv.createTestHarness();
 
             // initialize test harness and PIGPIO instances
             harness.initialize();
@@ -93,15 +94,14 @@ public class TestSoftwarePwmUsingTestHarness {
         System.out.println("************************************************************************");
         System.out.println();
 
-        // terminate connection to test harness
-        harness.terminate();
+        // shutdown connection to test harness
+        harness.shutdown();
     }
 
     @BeforeEach
     public void beforeEach() throws IOException {
         // create test harness and PIGPIO instances
-        pigpio = PiGpio.newSocketInstance(System.getProperty("pi4j.pigpio.host", "rpi3bp.savage.lan"),
-                System.getProperty("pi4j.pigpio.port", "8888"));
+        pigpio = TestEnv.createPiGpio();
 
         // initialize test harness and PIGPIO instances
         pigpio.initialize();
@@ -112,9 +112,8 @@ public class TestSoftwarePwmUsingTestHarness {
 
     @AfterEach
     public void afterEach() throws IOException {
-
-        // terminate test harness and PIGPIO instances
-        pigpio.terminate();
+        // shutdown test harness and PIGPIO instances
+        pigpio.shutdown();
     }
 
     @Test
@@ -168,7 +167,7 @@ public class TestSoftwarePwmUsingTestHarness {
         System.out.println("TEST PWM SIGNALS AT " + frequency + " HZ");
         System.out.println("----------------------------------------");
 
-        for(int p = 2; p < 20; p++) {
+        for(int p = 2; p <= 27; p++) {
 
             // set pin to output pin
             pigpio.gpioSetMode(p, PiGpioMode.OUTPUT);

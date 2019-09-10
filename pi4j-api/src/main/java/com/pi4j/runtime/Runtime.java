@@ -29,20 +29,77 @@ package com.pi4j.runtime;
 
 import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.context.Context;
+import com.pi4j.event.InitializedEventProducer;
+import com.pi4j.event.ShutdownEventProducer;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.platform.impl.RuntimePlatforms;
 import com.pi4j.provider.impl.RuntimeProviders;
 import com.pi4j.registry.impl.RuntimeRegistry;
 
-public interface Runtime {
+import java.util.concurrent.Future;
+
+/**
+ * <p>Runtime interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
+public interface Runtime extends InitializedEventProducer<Runtime>, ShutdownEventProducer<Runtime> {
+    /**
+     * <p>registry.</p>
+     *
+     * @return a {@link com.pi4j.registry.impl.RuntimeRegistry} object.
+     */
     RuntimeRegistry registry();
+    /**
+     * <p>providers.</p>
+     *
+     * @return a {@link com.pi4j.provider.impl.RuntimeProviders} object.
+     */
     RuntimeProviders providers();
+    /**
+     * <p>platforms.</p>
+     *
+     * @return a {@link com.pi4j.platform.impl.RuntimePlatforms} object.
+     */
     RuntimePlatforms platforms();
+    /**
+     * <p>properties.</p>
+     *
+     * @return a {@link com.pi4j.runtime.RuntimeProperties} object.
+     */
     RuntimeProperties properties();
+    /**
+     * <p>context.</p>
+     *
+     * @return a {@link com.pi4j.context.Context} object.
+     */
     Context context();
 
+    /**
+     * <p>inject.</p>
+     *
+     * @param objects a {@link java.lang.Object} object.
+     * @return a {@link com.pi4j.runtime.Runtime} object.
+     * @throws com.pi4j.annotation.exception.AnnotationException if any.
+     */
     Runtime inject(Object... objects) throws AnnotationException;
+    /**
+     * <p>shutdown.</p>
+     *
+     * @return a {@link com.pi4j.runtime.Runtime} object.
+     * @throws com.pi4j.exception.ShutdownException if any.
+     */
     Runtime shutdown() throws ShutdownException;
+
+    Future<Context> asyncShutdown();
+
+    /**
+     * <p>initialize.</p>
+     *
+     * @return a {@link com.pi4j.runtime.Runtime} object.
+     * @throws com.pi4j.exception.InitializeException if any.
+     */
     Runtime initialize() throws InitializeException;
 }

@@ -34,18 +34,34 @@ import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProviderBase;
 import com.pi4j.library.pigpio.PiGpio;
 
+/**
+ * <p>PiGpioSerialProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class PiGpioSerialProviderImpl extends SerialProviderBase implements PiGpioSerialProvider {
 
     final PiGpio piGpio;
 
+    /**
+     * <p>Constructor for PiGpioSerialProviderImpl.</p>
+     *
+     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     */
     public PiGpioSerialProviderImpl(PiGpio piGpio){
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Serial create(SerialConfig config) throws Exception {
+        // initialize the PIGPIO library
+        if(!piGpio.isInitialized()) piGpio.initialize();
+
+        // create new I/O instance based on I/O config
         return new PiGpioSerial(piGpio,this, config);
     }
 }

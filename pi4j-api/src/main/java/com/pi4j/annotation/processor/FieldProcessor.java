@@ -33,13 +33,21 @@ import com.pi4j.context.Context;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
+/**
+ * <p>FieldProcessor interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface FieldProcessor<A extends Annotation, T> extends Processor<A, T> {
+    /** {@inheritDoc} */
     @Override
     default boolean isEligible(Context context, Object instance, A annotation, Method method) throws Exception {
         // this annotation processor only supports 'Field' based annotated instances
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     default void process(Context context, Object instance, A annotation, Method method) throws Exception {
         // this annotation processor only supports 'Field' based annotated instances

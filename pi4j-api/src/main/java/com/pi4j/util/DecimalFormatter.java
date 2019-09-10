@@ -30,11 +30,25 @@ package com.pi4j.util;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
+/**
+ * <p>DecimalFormatter class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DecimalFormatter {
 
+    /** Constant <code>otherSymbols</code> */
     protected static DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
+    /** Constant <code>df</code> */
     protected static DecimalFormat df = new DecimalFormat("#.##################", otherSymbols);
 
+    /**
+     * <p>format.</p>
+     *
+     * @param value a {@link java.lang.Number} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String format(Number value){
         return df.format(value);
     }

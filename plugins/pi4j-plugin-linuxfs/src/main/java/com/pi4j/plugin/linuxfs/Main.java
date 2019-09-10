@@ -35,8 +35,20 @@ import com.pi4j.plugin.linuxfs.provider.gpio.LinuxCmd;
 import java.io.InputStream;
 import java.util.Arrays;
 
+/**
+ * <p>Main class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class Main {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
 
@@ -49,6 +61,15 @@ public class Main {
         System.out.println(output);
     }
 
+    /**
+     * <p>sftp.</p>
+     *
+     * @param user a {@link java.lang.String} object.
+     * @param host a {@link java.lang.String} object.
+     * @param password a {@link java.lang.String} object.
+     * @param command1 a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String sftp(String user, String host, String password, String command1) {
         String CommandOutput = null;
         try {
@@ -133,6 +154,15 @@ public class Main {
         return CommandOutput;
     }
 
+    /**
+     * <p>connectAndExecute.</p>
+     *
+     * @param user a {@link java.lang.String} object.
+     * @param host a {@link java.lang.String} object.
+     * @param password a {@link java.lang.String} object.
+     * @param command1 a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String connectAndExecute(String user, String host, String password, String command1) {
         String CommandOutput = null;
         try {

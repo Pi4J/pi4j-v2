@@ -29,19 +29,38 @@ package com.pi4j.test.provider;
 
 import com.pi4j.io.gpio.digital.*;
 
+/**
+ * <p>TestDigitalInput class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class TestDigitalInput extends DigitalInputBase implements DigitalInput {
 
     private DigitalState state = DigitalState.UNKNOWN;
 
+    /** {@inheritDoc} */
     @Override
     public DigitalState state() {
         return this.state;
     }
 
+    /**
+     * <p>Constructor for TestDigitalInput.</p>
+     *
+     * @param provider a {@link com.pi4j.io.gpio.digital.DigitalInputProvider} object.
+     * @param config a {@link com.pi4j.io.gpio.digital.DigitalInputConfig} object.
+     */
     public TestDigitalInput(DigitalInputProvider provider, DigitalInputConfig config){
         super(provider, config);
     }
 
+    /**
+     * <p>test.</p>
+     *
+     * @param state a {@link com.pi4j.io.gpio.digital.DigitalState} object.
+     * @return a {@link com.pi4j.test.provider.TestDigitalInput} object.
+     */
     public TestDigitalInput test(DigitalState state){
 
         // check to see of there is a state change; if there is then we need
@@ -52,7 +71,7 @@ public class TestDigitalInput extends DigitalInputBase implements DigitalInput {
             this.state = state;
 
             // dispatch value change event
-            this.dispatch(new DigitalChangeEvent(this, this.state()));
+            this.dispatch(new DigitalStateChangeEvent(this, this.state()));
         }
         return this;
     }

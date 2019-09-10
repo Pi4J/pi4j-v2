@@ -30,6 +30,12 @@ package com.pi4j.io.gpio;
 import com.pi4j.io.IO;
 import com.pi4j.provider.Provider;
 
+/**
+ * <p>GpioProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface GpioProvider<PROVIDER_TYPE extends GpioProvider,
         IO_TYPE extends IO,
         CONFIG_TYPE extends GpioConfig>

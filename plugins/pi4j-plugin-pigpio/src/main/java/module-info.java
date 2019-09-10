@@ -29,16 +29,15 @@
 module pi4j.plugin.pigpio {
     requires pi4j.api;
     requires pi4j.library.pigpio;
-    requires slf4j.api;
+    requires org.slf4j;
 
     uses com.pi4j.extension.Plugin;
 
     exports com.pi4j.plugin.pigpio;
     exports com.pi4j.plugin.pigpio.provider.gpio.digital;
-    //exports com.pi4j.plugin.pigpio.provider.gpio.analog;
     exports com.pi4j.plugin.pigpio.provider.pwm;
     exports com.pi4j.plugin.pigpio.provider.serial;
-    //exports com.pi4j.plugin.pigpio.provider.spi;
+    exports com.pi4j.plugin.pigpio.provider.spi;
     exports com.pi4j.plugin.pigpio.provider.i2c;
 
     provides com.pi4j.extension.Plugin

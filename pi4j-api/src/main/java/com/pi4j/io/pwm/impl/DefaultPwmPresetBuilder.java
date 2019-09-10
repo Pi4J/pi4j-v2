@@ -30,6 +30,12 @@ package com.pi4j.io.pwm.impl;
 import com.pi4j.io.pwm.PwmPreset;
 import com.pi4j.io.pwm.PwmPresetBuilder;
 
+/**
+ * <p>DefaultPwmPresetBuilder class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultPwmPresetBuilder implements PwmPresetBuilder{
     protected Float dutyCycle = null;
     protected Integer frequency = null;
@@ -37,21 +43,26 @@ public class DefaultPwmPresetBuilder implements PwmPresetBuilder{
 
     /**
      * PRIVATE CONSTRUCTOR
+     *
+     * @param name a {@link java.lang.String} object.
      */
     protected DefaultPwmPresetBuilder(String name){
         super(); this.name = name;
     }
 
+    /** {@inheritDoc} */
     public static PwmPresetBuilder newInstance(String name) {
         return new DefaultPwmPresetBuilder(name);
     }
 
+    /** {@inheritDoc} */
     @Override
     public PwmPresetBuilder frequency(Integer frequency) {
         this.frequency = frequency;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PwmPresetBuilder dutyCycle(Number dutyCycle) {
         float dc = dutyCycle.floatValue();
@@ -63,6 +74,7 @@ public class DefaultPwmPresetBuilder implements PwmPresetBuilder{
         this.dutyCycle = dc;
         return this;
     }
+    /** {@inheritDoc} */
     @Override
     public PwmPreset build() {
         return new DefaultPwmPreset(this.name, this.dutyCycle, this.frequency);

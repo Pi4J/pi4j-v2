@@ -37,10 +37,13 @@
 
 // create data buffer and command processor
 char serial_command_buffer_[32];
-SerialCommands processor(&console_pipe, serial_command_buffer_, sizeof(serial_command_buffer_), "\r\n", " ");
+//SerialCommands processor(&console_pipe, serial_command_buffer_, sizeof(serial_command_buffer_), "\r\n", " ");
+SerialCommands processor(&CONSOLE_INTERFACE, serial_command_buffer_, sizeof(serial_command_buffer_), "\r\n", " ");
 
 // include Pi4J interactive commands
 #include "command/Commands.h"
+
+
 
 /**
  * FIRMWARE STARTUP
@@ -50,10 +53,11 @@ void setup() {
     // define default UART baud rate for serial interfaces
     // @see: https://www.arduino.cc/en/serial/begin
     CONSOLE_INTERFACE.begin(CONSOLE_BAUD_RATE);
-    DEBUG_INTERFACE.begin(DEBUG_BAUD_RATE);
+    //DEBUG_INTERFACE.begin(DEBUG_BAUD_RATE);
 
     // initialize the interactive diagnostics console using the piped console serial ports
-    console.init(&console_pipe);
+    //console.init(&console_pipe);
+    console.init(&CONSOLE_INTERFACE);
 
     // this is an artificial delay to see this data in the debug console when using Arduino/PlatformIO IDE
     for(int d = FIRMWARE_BOOT_DELAY; d > 0; d--){
@@ -111,6 +115,10 @@ void reset(){
     Wire.end();
     Wire1.end();
 
+    // terminate all SPI channels
+    SPI.end(4);
+    SPI.end(10);
+
     // termiante all SERIAL communication pins
     if(serialEcho != nullptr){
         serialEcho->end();
@@ -151,12 +159,43 @@ void reset(){
     console.println();
 }
 
+
+void processSpi() {
+    // only process if SPI is enabled
+    if(!spi.enabled) return;
+
+    // are we ready to receive data?
+    if((SPI0->SPI_SR & SPI_SR_RDRF) != 0){
+        // recevie data
+        spi.rxCounter++;
+        spi.rx = SPI0->SPI_RDR;
+        spi.tx = spi.rx;
+        // Serial.print("[RX]- 0x");
+        // Serial.print(spi.rx);
+        // Serial.print(" - ");        
+        // Serial.println(spi.rxCounter);
+        spi.pending = true;
+    }
+
+    // are we ready to transmit data?
+    if((SPI0->SPI_SR & SPI_SR_TDRE) != 0 && spi.pending){
+        // transmit data
+        spi.txCounter++;
+        SPI0->SPI_TDR = spi.tx;
+        // Serial.print("[TX]- 0x");
+        // Serial.print(spi.tx);   
+        // Serial.print(" - ");        
+        // Serial.println(spi.txCounter);
+        spi.pending = false;
+    }
+}
+
 /**
  * SERVICE LOOP
  */
 void loop() {
     processor.ReadSerial();
-    console_pipe.loop();
+    //console_pipe.loop();
 
     // for(int p = 0; p < GPIO_MAX_PINS; p++){
     //     if(pins[p].enabled &&
@@ -180,6 +219,7 @@ void loop() {
     //     }    
     // }
 
+    // SERIAL ECHO ROUTINE
     if(serialEcho != nullptr){
         if (serialEcho->available()){
             int byt = serialEcho->read();
@@ -188,6 +228,9 @@ void loop() {
             serialEcho->write(byt);  // ECHO DATA BACK TO CALLER
         }
     }
+
+    // SPI ECHO ROUTINE
+    processSpi();
 }
 
 /**
@@ -321,3 +364,4 @@ void receiveI2CData(int byteCount){
     //     serializeJson(doc, console);
     //     console.println();
 }
+

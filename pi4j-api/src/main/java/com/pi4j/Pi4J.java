@@ -33,6 +33,12 @@ import com.pi4j.exception.Pi4JException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <p>Pi4J class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class Pi4J {
     private static Logger logger = LoggerFactory.getLogger(Pi4J.class);
 
@@ -60,6 +66,7 @@ public class Pi4J {
      * in the application's class-path.
      *
      * @return Context
+     * @throws com.pi4j.exception.Pi4JException if any.
      */
     public static Context newAutoContext() throws Pi4JException {
         return newContextBuilder().autoDetect().build();
@@ -74,6 +81,7 @@ public class Pi4J {
      * context via the use of '@Register' annotations.
      *
      * @return Context
+     * @throws com.pi4j.exception.Pi4JException if any.
      */
     public static Context newContext() throws Pi4JException {
         return newContextBuilder().build();

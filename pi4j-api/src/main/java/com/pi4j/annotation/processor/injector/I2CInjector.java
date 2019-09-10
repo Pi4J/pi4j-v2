@@ -30,8 +30,15 @@ package com.pi4j.annotation.processor.injector;
 import com.pi4j.annotation.processor.injector.impl.IOInjectorBase;
 import com.pi4j.io.i2c.I2C;
 
+/**
+ * <p>I2CInjector class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class I2CInjector extends IOInjectorBase<I2C> implements InjectorProcessor<I2C> {
 
+    /** {@inheritDoc} */
     @Override
     public Class<I2C> getTargetType() { return I2C.class; }
 }

@@ -43,7 +43,6 @@ import com.pi4j.provider.Provider;
 import com.pi4j.provider.ProviderGroup;
 import com.pi4j.provider.Providers;
 import com.pi4j.provider.exception.ProviderAlreadyExistsException;
-import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderInitializeException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 import com.pi4j.runtime.Runtime;
@@ -65,6 +64,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public class DefaultRuntimeProviders implements RuntimeProviders {
 
@@ -83,31 +83,45 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
     private ProviderGroup<I2CProvider> _i2c = new ProviderGroup<>(this, IOType.I2C);
     private ProviderGroup<SerialProvider> _serial = new ProviderGroup<>(this, IOType.SERIAL);
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<AnalogInputProvider> analogInput() { return _analogInput; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<AnalogOutputProvider> analogOutput() { return _analogOutput; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<DigitalInputProvider> digitalInput() { return _digitalInput; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<DigitalOutputProvider> digitalOutput() { return _digitalOutput; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<PwmProvider> pwm() { return _pwm; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<SpiProvider> spi() { return _spi; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<I2CProvider> i2c() { return _i2c; }
 
+    /** {@inheritDoc} */
     @Override
     public ProviderGroup<SerialProvider> serial() { return _serial; }
 
     // static singleton instance
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param runtime a {@link com.pi4j.runtime.Runtime} object.
+     * @return a {@link com.pi4j.provider.impl.RuntimeProviders} object.
+     */
     public static RuntimeProviders newInstance(Runtime runtime){
         return new DefaultRuntimeProviders(runtime);
     }
@@ -119,8 +133,9 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Get all providers
-     * @return
      */
     @Override
     public Map<String, Provider> all(){
@@ -128,12 +143,9 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
     }
 
     /**
-     * Get all providers of a specified io class type.
+     * {@inheritDoc}
      *
-     * @param providerClass
-     * @param <T>
-     * @return
-     * @throws ProviderException
+     * Get all providers of a specified io class type.
      */
     @Override
     public <T extends Provider> Map<String, T> all(Class<T> providerClass) {
@@ -163,12 +175,9 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
     }
 
     /**
-     * Get all providers of a specified io class type.
+     * {@inheritDoc}
      *
-     * @param ioType
-     * @param <T>
-     * @return
-     * @throws ProviderException
+     * Get all providers of a specified io class type.
      */
     @Override
     public <T extends Provider> Map<String, T> all(IOType ioType) {
@@ -181,6 +190,7 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
         return Collections.unmodifiableMap(result);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean exists(String providerId) {
 
@@ -188,15 +198,44 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
         if(providers.containsKey(providerId)){
             return true;
         }
+        // additionally attempt to resolve the provider by its class name
+        try {
+            Class providerClass = Class.forName(providerId);
+            if (providerClass != null && Provider.class.isAssignableFrom(providerClass)) {
+                for(Provider provider : providers.values()){
+                    if(providerClass.isInstance(provider)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (ClassNotFoundException e){}
+
+        // provider not found by 'id' or class name
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Provider get(String providerId) throws ProviderNotFoundException {
+
         // return the io instance from the managed io map that contains the given io-id
         if(providers.containsKey(providerId)){
             return providers.get(providerId);
         }
+
+        // additionally attempt to resolve the provider by its class name
+        try {
+            Class providerClass = Class.forName(providerId);
+            if (providerClass != null && Provider.class.isAssignableFrom(providerClass)) {
+                for(Provider provider : providers.values()){
+                    if(providerClass.isInstance(provider)) {
+                        return provider;
+                    }
+                }
+            }
+        } catch (ClassNotFoundException e){}
+
+        // provider not found by 'id' or class name
         throw new ProviderNotFoundException(providerId);
     }
 
@@ -236,11 +275,6 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
 
                 logger.debug("added io to managed provider map [id={}; name={}; class={}]",
                         providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
-// TODO :: Remove Default Provider impl from Providers
-//                // add a default io based on io ranking score
-//                if (!hasDefault(providerInstance.getClass())) {
-//                    setDefault(providerInstance.id());
-//                }
             }
         }
 
@@ -300,160 +334,7 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
         }
     }
 
-//    @Override
-//    public <T extends Provider> Map<ProviderType, T> defaults() throws ProviderException {
-//        var defaults = new ConcurrentHashMap<ProviderType, T>();
-//        for(var providerId : defaultProviders.values()){
-//            Provider provider = get(providerId);
-//            defaults.put(provider.type(), (T) provider);
-//        }
-//        return defaults;
-//    }
-//
-//    @Override
-//    public <T extends Provider> T getDefault(Class<T> providerClass) throws ProviderException {
-//
-//        // ensure providers have been initialized
-//        if(!initialized) throw new ProvidersNotInitializedException();
-//
-//        // iterate the managed default set of providers looking for a default io with a matching io-class
-//        for(var instance : defaults().values()){
-//            if(providerClass.isAssignableFrom(instance.getClass())){
-//                return (T) instance;
-//            }
-//        }
-//
-//        throw new ProviderNotFoundException(providerClass);
-//    }
-//
-//    @Override
-//    public <T extends Provider> T getDefault(ProviderType providerType) throws ProviderException {
-//
-//        // ensure providers have been initialized
-//        if(!initialized) throw new ProvidersNotInitializedException();
-//
-//        // iterate the managed default set of providers looking for a default io with a matching io-type
-//        if(defaultProviders.containsKey(providerType)){
-//            var providerId = defaultProviders.get(providerType);
-//            return get(providerId, providerType);
-//        }
-//
-//        throw new ProviderNotFoundException(providerType);
-//    }
-//
-//    @Override
-//    public <T extends Provider> boolean hasDefault(Class<T> providerClass) throws ProviderException {
-//
-//        // ensure providers have been initialized
-//        if(!initialized) throw new ProvidersNotInitializedException();
-//
-//        try {
-//            return getDefault(providerClass) != null;
-//        }
-//        catch (ProviderNotFoundException e){
-//            return false;
-//        }
-//    }
-//
-//    @Override
-//    public <T extends Provider> boolean hasDefault(ProviderType providerType) throws ProviderException {
-//
-//        // ensure providers have been initialized
-//        if(!initialized) throw new ProvidersNotInitializedException();
-//
-//        try {
-//            return getDefault(providerType) != null;
-//        }
-//        catch (ProviderNotFoundException e){
-//            return false;
-//        }
-//    }
-//
-//    @Override
-//    public void setDefault(String providerId) throws ProviderException {
-//
-//        // ensure providers have been initialized
-//        if(!initialized) throw new ProvidersNotInitializedException();
-//
-//        // ensure requested io id is detected
-//        if(!providers.containsKey(providerId)){
-//            throw new ProviderNotFoundException();
-//        }
-//
-//        logger.trace("invoked 'setDefault()' for io [id={}]", providerId);
-//
-//        // get io instance and check to see if the default has already been assigned
-//        var provider = providers.get(providerId);
-////        if(defaultProviders.containsKey(io.type())){
-////            throw new ProviderAlreadyAssignedException(defaultProviders.get(io.type()));
-////        }
-//
-//        // assign new io instance by io class
-//        defaultProviders.put(provider.type(), providerId);
-//
-//        logger.debug("set default io for io type [{}] to [id={}; name={}; class={}]",
-//                provider.type(), provider.id(), provider.name(), provider.getClass().getName());
-//    }
-//
-//    @Override
-//    public void removeDefault(String providerId) throws ProviderException {
-//
-//        // ensure providers have been initialized
-//        if(!initialized) throw new ProvidersNotInitializedException();
-//
-//        logger.trace("invoked 'removeDefault()' for io [id={}]", providerId);
-//
-//        // ensure requested io id is detected
-//        var it = defaultProviders.entrySet().iterator();
-//        while (it.hasNext()) {
-//            Map.Entry<ProviderType, String> instance = (Map.Entry<ProviderType, String>) it.next();
-//            ProviderType instanceType = instance.getKey();
-//            String instanceId = instance.getValue();
-//            if(instanceId.equals(providerId)){
-//                defaultProviders.remove(instanceType);
-//                logger.debug("removed default io for [type={}; id={}]", instanceType, instanceId);
-//                return;
-//            }
-//        }
-//        throw new ProviderNotFoundException();
-//    }
-//
-//    @Override
-//    public void removeDefault(ProviderType providerType) throws ProviderException {
-//
-//        // ensure providers have been initialized
-//        if(!initialized) throw new ProvidersNotInitializedException();
-//
-//        logger.trace("invoked 'removeDefault()' for io [type={}]", providerType);
-//
-//        // ensure requested io id is detected
-//        if(!defaultProviders.containsKey(providerType))
-//            throw new ProviderNotFoundException();
-//
-//        // remove default io type
-//        var providerId = defaultProviders.remove(providerType.toString());
-//        logger.debug("removed default io for [type={}; id={}]", providerType, providerId);
-//    }
-//
-//    @Override
-//    public <T extends Provider> void removeDefault(Class<T> providerClass) throws ProviderException {
-//
-//        // ensure providers have been initialized
-//        if(!initialized) throw new ProvidersNotInitializedException();
-//
-//        logger.trace("invoked 'removeDefault()' for io [class={}]", providerClass.getName());
-//
-//        // ensure requested io id is detected
-//        for(var provider : defaults().values()){
-//            if(providerClass.isAssignableFrom(provider.getClass())){
-//                removeDefault(provider.id());
-//                return;
-//            }
-//        }
-//
-//        throw new ProviderNotFoundException();
-//    }
-
+    /** {@inheritDoc} */
     @Override
     public RuntimeProviders shutdown() throws ShutdownException {
         logger.trace("invoked providers 'shutdown();'");
@@ -477,6 +358,7 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public RuntimeProviders initialize(Collection<Provider> providers) throws InitializeException {
 

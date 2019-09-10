@@ -27,7 +27,7 @@
 module pi4j.test.harness {
 
     // REQUIRES
-    requires slf4j.api;
+    requires org.slf4j;
     requires com.fazecast.jSerialComm;
     requires org.json;
     requires gson;

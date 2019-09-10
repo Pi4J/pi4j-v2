@@ -27,15 +27,21 @@ package com.pi4j.io.serial.impl;
  * #L%
  */
 
-import com.pi4j.config.impl.DeviceConfigBase;
 import com.pi4j.io.gpio.digital.PullResistance;
+import com.pi4j.io.impl.IODeviceConfigBase;
 import com.pi4j.io.serial.*;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
 
+/**
+ * <p>DefaultSerialConfig class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DefaultSerialConfig
-        extends DeviceConfigBase<SerialConfig>
+        extends IODeviceConfigBase<SerialConfig>
         implements SerialConfig {
 
     // private configuration properties
@@ -50,7 +56,8 @@ public class DefaultSerialConfig
 
     /**
      * PRIVATE CONSTRUCTOR
-     * @param properties
+     *
+     * @param properties a {@link java.util.Map} object.
      */
     protected DefaultSerialConfig(Map<String,String> properties){
         super(properties);
@@ -96,26 +103,31 @@ public class DefaultSerialConfig
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Integer baud() {
         return this.baud;
     }
 
+    /** {@inheritDoc} */
     @Override
     public StopBits stopBits() {
         return this.stopBits;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DataBits dataBits() {
         return this.dataBits;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Parity parity() {
         return this.parity;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FlowControl flowControl() {
         return this.flowControl;

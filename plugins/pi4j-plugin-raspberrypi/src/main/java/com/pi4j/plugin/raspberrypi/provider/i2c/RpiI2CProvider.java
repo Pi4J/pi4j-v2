@@ -32,9 +32,22 @@ package com.pi4j.plugin.raspberrypi.provider.i2c;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.plugin.raspberrypi.RaspberryPi;
 
+/**
+ * <p>RpiI2CProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface RpiI2CProvider extends I2CProvider {
+    /** Constant <code>NAME="RaspberryPi.I2C_PROVIDER_NAME"</code> */
     String NAME = RaspberryPi.I2C_PROVIDER_NAME;
+    /** Constant <code>ID="RaspberryPi.I2C_PROVIDER_ID"</code> */
     String ID = RaspberryPi.I2C_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.plugin.raspberrypi.provider.i2c.RpiI2CProvider} object.
+     */
     static RpiI2CProvider newInstance() {
         return new RpiI2CProviderImpl();
     }

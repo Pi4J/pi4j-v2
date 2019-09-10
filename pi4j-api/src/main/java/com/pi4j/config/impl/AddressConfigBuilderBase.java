@@ -29,18 +29,28 @@ package com.pi4j.config.impl;
 
 import com.pi4j.config.AddressConfig;
 import com.pi4j.config.AddressConfigBuilder;
+import com.pi4j.config.Config;
+import com.pi4j.config.ConfigBuilder;
+import com.pi4j.context.Context;
 
-public abstract class AddressConfigBuilderBase<BUILDER_TYPE extends AddressConfigBuilder, CONFIG_TYPE extends AddressConfig>
+/**
+ * <p>Abstract AddressConfigBuilderBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
+public abstract class AddressConfigBuilderBase<BUILDER_TYPE extends ConfigBuilder, CONFIG_TYPE extends Config>
         extends ConfigBuilderBase<BUILDER_TYPE, CONFIG_TYPE>
         implements AddressConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
 
     /**
      * PRIVATE CONSTRUCTOR
      */
-    protected AddressConfigBuilderBase(){
-        super();
+    protected AddressConfigBuilderBase(Context context){
+        super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public BUILDER_TYPE address(Integer address){
         this.properties.put(AddressConfig.ADDRESS_KEY, address.toString());

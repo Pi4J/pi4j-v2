@@ -35,13 +35,23 @@ import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
 
 import java.io.IOException;
 
+/**
+ * <p>LinuxFsDigitalInputProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class LinuxFsDigitalInputProviderImpl extends DigitalInputProviderBase implements LinuxFsDigitalInputProvider {
 
+    /**
+     * <p>Constructor for LinuxFsDigitalInputProviderImpl.</p>
+     */
     public LinuxFsDigitalInputProviderImpl(){
         this.id = ID;
         this.name = NAME;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalInput create(DigitalInputConfig config) throws IOException {
         return new LinuxFsDigitalInput(this, config);

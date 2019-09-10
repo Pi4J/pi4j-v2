@@ -28,19 +28,34 @@ package com.pi4j.test;/*-
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.io.IOType;
-import com.pi4j.io.gpio.analog.AnalogChangeListener;
-import com.pi4j.io.gpio.analog.binding.AnalogBindingSync;
+import com.pi4j.io.binding.AnalogOutputBinding;
+import com.pi4j.io.gpio.analog.AnalogValueChangeListener;
 import com.pi4j.test.provider.TestAnalogInputProvider;
 
+/**
+ * <p>Main class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class Main {
 
+    /**
+     * <p>Constructor for Main.</p>
+     */
     public Main() {
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
 
         // set logging
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        //System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         // Initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled
@@ -76,27 +91,27 @@ public class Main {
         var output1 = pi4j.aout().create(99);
         var output2 = pi4j.aout().create(100);
 
-        input.addListener((AnalogChangeListener) event -> {
+        input.addListener((AnalogValueChangeListener) event -> {
             System.out.print("ANALOG INPUT [");
             System.out.print(event.source().address());
             System.out.print("] VALUE CHANGE: ");
             System.out.println(event.value());
         });
 
-        output1.addListener((AnalogChangeListener) event -> {
+        output1.addListener((AnalogValueChangeListener) event -> {
             System.out.print("ANALOG OUTPUT [");
             System.out.print(event.source().address());
             System.out.print("] VALUE CHANGE: ");
             System.out.println(event.value());
         });
-        output2.addListener((AnalogChangeListener) event -> {
+        output2.addListener((AnalogValueChangeListener) event -> {
             System.out.print("ANALOG OUTPUT [");
             System.out.print(event.source().address());
             System.out.print("] VALUE CHANGE: ");
             System.out.println(event.value());
         });
 
-        input.bind(new AnalogBindingSync(output1, output2));
+        input.bind(AnalogOutputBinding.newInstance(output1, output2));
 
 
         System.out.println(input);

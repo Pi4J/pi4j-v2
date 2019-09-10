@@ -33,13 +33,23 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
 
+/**
+ * <p>LinuxFsDigitalOutputProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase implements LinuxFsDigitalOutputProvider {
 
+    /**
+     * <p>Constructor for LinuxFsDigitalOutputProviderImpl.</p>
+     */
     public LinuxFsDigitalOutputProviderImpl(){
         this.id = ID;
         this.name = NAME;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) throws Exception {
 

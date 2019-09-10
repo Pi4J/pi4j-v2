@@ -28,6 +28,12 @@ import com.pi4j.io.gpio.GpioProviderBase;
  * limitations under the License.
  * #L%
  */
+/**
+ * <p>Abstract AnalogProviderBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class AnalogProviderBase<
             PROVIDER_TYPE extends AnalogProvider,
             ANALOG_TYPE extends Analog,
@@ -35,14 +41,28 @@ public abstract class AnalogProviderBase<
         extends GpioProviderBase<PROVIDER_TYPE, ANALOG_TYPE, CONFIG_TYPE>
         implements AnalogProvider<PROVIDER_TYPE, ANALOG_TYPE, CONFIG_TYPE> {
 
+    /**
+     * <p>Constructor for AnalogProviderBase.</p>
+     */
     public AnalogProviderBase(){
     }
 
+    /**
+     * <p>Constructor for AnalogProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public AnalogProviderBase(String id){
         this();
         this.id = id;
     }
 
+    /**
+     * <p>Constructor for AnalogProviderBase.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public AnalogProviderBase(String id, String name){
         this(id);
         this.name = name;

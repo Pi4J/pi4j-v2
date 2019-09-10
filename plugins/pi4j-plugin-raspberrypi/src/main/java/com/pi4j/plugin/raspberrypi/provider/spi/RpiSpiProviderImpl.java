@@ -33,13 +33,23 @@ import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProviderBase;
 
+/**
+ * <p>RpiSpiProviderImpl class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class RpiSpiProviderImpl extends SpiProviderBase implements RpiSpiProvider {
 
+    /**
+     * <p>Constructor for RpiSpiProviderImpl.</p>
+     */
     public RpiSpiProviderImpl(){
         this.id = ID;
         this.name = NAME;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Spi create(SpiConfig config) throws Exception {
         return new RpiSpi(this, config);

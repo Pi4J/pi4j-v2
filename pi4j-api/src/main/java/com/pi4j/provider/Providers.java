@@ -54,44 +54,102 @@ import java.util.Map;
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
  */
 public interface Providers extends Describable {
 
+    /**
+     * <p>analogInput.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
     ProviderGroup<AnalogInputProvider> analogInput();
+    /**
+     * <p>analogOutput.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
     ProviderGroup<AnalogOutputProvider> analogOutput();
+    /**
+     * <p>digitalInput.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
     ProviderGroup<DigitalInputProvider> digitalInput();
+    /**
+     * <p>digitalOutput.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
     ProviderGroup<DigitalOutputProvider> digitalOutput();
+    /**
+     * <p>pwm.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
     ProviderGroup<PwmProvider> pwm();
+    /**
+     * <p>spi.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
     ProviderGroup<SpiProvider> spi();
+    /**
+     * <p>i2c.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
     ProviderGroup<I2CProvider> i2c();
+    /**
+     * <p>serial.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
     ProviderGroup<SerialProvider> serial();
 
     /**
      * Get all providers
-     * @return
+     *
+     * @return a {@link java.util.Map} object.
      */
     Map<String, Provider> all();
 
     /**
      * Get all providers of a specified io class/interface.
      *
-     * @param providerClass
-     * @param <T>
-     * @return
+     * @param providerClass a {@link java.lang.Class} object.
+     * @param <T> providers extending the {@link com.pi4j.provider.Provider} interface
+     * @return a {@link java.util.Map} object.
+     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
      */
     <T extends Provider> Map<String, T> all(Class<T> providerClass) throws ProviderNotFoundException;
 
     /**
      * Get all providers of a specified io type.
      *
-     * @param ioType
-     * @param <T>
-     * @return
+     * @param ioType a {@link com.pi4j.io.IOType} object.
+     * @param <T> providers extending the {@link com.pi4j.provider.Provider} interface
+     * @return a {@link java.util.Map} object.
+     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
      */
     <T extends Provider> Map<String, T> all(IOType ioType) throws ProviderNotFoundException;
 
+    /**
+     * <p>exists.</p>
+     *
+     * @param providerId a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     boolean exists(String providerId);
 
+    /**
+     * <p>exists.</p>
+     *
+     * @param providerId a {@link java.lang.String} object.
+     * @param providerClass a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a boolean.
+     */
     default <T extends Provider> boolean exists(String providerId, Class<T> providerClass) {
         // determine if the requested provider exists by ID and PROVIDER CLASS/TYPE
         try {
@@ -101,6 +159,14 @@ public interface Providers extends Describable {
         }
     }
 
+    /**
+     * <p>exists.</p>
+     *
+     * @param providerId a {@link java.lang.String} object.
+     * @param ioType a {@link com.pi4j.io.IOType} object.
+     * @param <T> a T object.
+     * @return a boolean.
+     */
     default <T extends Provider> boolean exists(String providerId, IOType ioType) {
         // determine if the requested provider exists by ID and IO TYPE
         try {
@@ -110,6 +176,13 @@ public interface Providers extends Describable {
         }
     }
 
+    /**
+     * <p>exists.</p>
+     *
+     * @param ioType a {@link com.pi4j.io.IOType} object.
+     * @param <T> a T object.
+     * @return a boolean.
+     */
     default <T extends Provider> boolean exists(IOType ioType){
         // return the provider instance from the managed provider map that contains the given provider-class
         try {
@@ -120,6 +193,13 @@ public interface Providers extends Describable {
         }
     }
 
+    /**
+     * <p>exists.</p>
+     *
+     * @param providerClass a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a boolean.
+     */
     default <T extends Provider> boolean exists(Class<T> providerClass) {
         // return the provider instance from the managed provider map that contains the given provider-class
         try {
@@ -130,8 +210,26 @@ public interface Providers extends Describable {
         }
     }
 
+    /**
+     * <p>get.</p>
+     *
+     * @param providerId a {@link java.lang.String} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     */
     <T extends Provider> T get(String providerId) throws ProviderNotFoundException;
 
+    /**
+     * <p>get.</p>
+     *
+     * @param providerId a {@link java.lang.String} object.
+     * @param providerClass a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     * @throws com.pi4j.provider.exception.ProviderTypeException if any.
+     */
     default <T extends Provider> T get(String providerId, Class<T> providerClass) throws ProviderNotFoundException, ProviderTypeException {
         // object the IO instance by unique instance identifier and validate the IO instance class/interface
         var provider = get(providerId);
@@ -141,6 +239,16 @@ public interface Providers extends Describable {
         throw new ProviderTypeException(provider, providerClass);
     }
 
+    /**
+     * <p>get.</p>
+     *
+     * @param providerId a {@link java.lang.String} object.
+     * @param ioType a {@link com.pi4j.io.IOType} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     * @throws com.pi4j.provider.exception.ProviderIOTypeException if any.
+     */
     default <T extends Provider> T get(String providerId, IOType ioType) throws ProviderNotFoundException, ProviderIOTypeException {
         // object the IO instance by unique instance identifier and validate the IO instance IO type
         var provider = get(providerId);
@@ -150,6 +258,14 @@ public interface Providers extends Describable {
         throw new ProviderIOTypeException(provider, ioType);
     }
 
+    /**
+     * <p>get.</p>
+     *
+     * @param providerClass a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     */
     default <T extends Provider> T get(Class<T> providerClass) throws ProviderNotFoundException {
         // return the provider instance from the managed provider map that contains the given provider-class
         var subset = all(providerClass);
@@ -160,6 +276,14 @@ public interface Providers extends Describable {
         return (T)subset.values().iterator().next();
     }
 
+    /**
+     * <p>get.</p>
+     *
+     * @param ioType a {@link com.pi4j.io.IOType} object.
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     */
     default <T extends Provider> T get(IOType ioType) throws ProviderNotFoundException {
         // return the provider instance from the managed provider map that contains the given provider-class
         var subset = all(ioType);
@@ -172,22 +296,88 @@ public interface Providers extends Describable {
 
 
     // DEFAULT METHODS
-    default ProviderGroup<AnalogInputProvider> getAnalogInput() { return analogInput(); }
-    default ProviderGroup<AnalogOutputProvider> getAnalogOutput() { return analogOutput(); }
-    default ProviderGroup<DigitalInputProvider> getDigitalInput() { return digitalInput(); }
-    default ProviderGroup<DigitalOutputProvider> getDigitalOutput() { return digitalOutput(); }
-    default ProviderGroup<PwmProvider> getPwm() { return pwm(); }
-    default ProviderGroup<SpiProvider> getSpi() { return spi(); }
-    default ProviderGroup<I2CProvider> getI2C() { return i2c(); }
-    default ProviderGroup<SerialProvider> getSerial() { return serial(); }
+    /**
+     * <p>getAnalogInput.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
+    default ProviderGroup<AnalogInputProvider> getAnalogInputProviders() { return analogInput(); }
+    /**
+     * <p>getAnalogOutput.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
+    default ProviderGroup<AnalogOutputProvider> getAnalogOutputProviders() { return analogOutput(); }
+    /**
+     * <p>getDigitalInput.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
+    default ProviderGroup<DigitalInputProvider> getDigitalInputProviders() { return digitalInput(); }
+    /**
+     * <p>getDigitalOutput.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
+    default ProviderGroup<DigitalOutputProvider> getDigitalOutputProviders() { return digitalOutput(); }
+    /**
+     * <p>getPwm.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
+    default ProviderGroup<PwmProvider> getPwmProviders() { return pwm(); }
+    /**
+     * <p>getSpi.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
+    default ProviderGroup<SpiProvider> getSpiProviders() { return spi(); }
+    /**
+     * <p>getI2C.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
+    default ProviderGroup<I2CProvider> getI2CProviders() { return i2c(); }
+    /**
+     * <p>getSerial.</p>
+     *
+     * @return a {@link com.pi4j.provider.ProviderGroup} object.
+     */
+    default ProviderGroup<SerialProvider> getSerialProviders() { return serial(); }
+    /**
+     * <p>getAll.</p>
+     *
+     * @return a {@link java.util.Map} object.
+     */
     default Map<String, Provider> getAll() { return all(); }
+    /**
+     * <p>getAll.</p>
+     *
+     * @param providerClass a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a {@link java.util.Map} object.
+     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     */
     default <T extends Provider> Map<String, T> getAll(Class<T> providerClass) throws ProviderNotFoundException {
         return all(providerClass);
     }
+    /**
+     * <p>getAll.</p>
+     *
+     * @param ioType a {@link com.pi4j.io.IOType} object.
+     * @param <T> a T object.
+     * @return a {@link java.util.Map} object.
+     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     */
     default <T extends Provider> Map<String, T> getAll(IOType ioType) throws ProviderNotFoundException {
         return all(ioType);
     }
 
+    /**
+     * <p>describe.</p>
+     *
+     * @return a {@link com.pi4j.common.Descriptor} object.
+     */
     default Descriptor describe() {
         var providers = all();
 

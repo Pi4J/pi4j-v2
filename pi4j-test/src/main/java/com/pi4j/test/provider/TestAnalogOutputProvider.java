@@ -30,13 +30,37 @@ package com.pi4j.test.provider;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.test.provider.impl.TestAnalogOutputProviderImpl;
 
+/**
+ * <p>TestAnalogOutputProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface TestAnalogOutputProvider extends AnalogOutputProvider {
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.test.provider.TestAnalogOutputProvider} object.
+     */
     static TestAnalogOutputProvider newInstance(){
         return new TestAnalogOutputProviderImpl();
     }
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @return a {@link com.pi4j.test.provider.TestAnalogOutputProvider} object.
+     */
     static TestAnalogOutputProvider newInstance(String id){
         return new TestAnalogOutputProviderImpl(id);
     }
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link com.pi4j.test.provider.TestAnalogOutputProvider} object.
+     */
     static TestAnalogOutputProvider newInstance(String id, String name){
         return new TestAnalogOutputProviderImpl(id, name);
     }

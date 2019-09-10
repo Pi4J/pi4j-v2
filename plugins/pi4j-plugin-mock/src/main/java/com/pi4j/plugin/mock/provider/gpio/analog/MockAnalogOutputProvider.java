@@ -32,9 +32,22 @@ package com.pi4j.plugin.mock.provider.gpio.analog;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.plugin.mock.Mock;
 
+/**
+ * <p>MockAnalogOutputProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public interface MockAnalogOutputProvider extends AnalogOutputProvider {
+    /** Constant <code>NAME="Mock.ANALOG_OUTPUT_PROVIDER_NAME"</code> */
     String NAME = Mock.ANALOG_OUTPUT_PROVIDER_NAME;
+    /** Constant <code>ID="Mock.ANALOG_OUTPUT_PROVIDER_ID"</code> */
     String ID = Mock.ANALOG_OUTPUT_PROVIDER_ID;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogOutputProvider} object.
+     */
     static MockAnalogOutputProvider newInstance() {
         return new MockAnalogOutputProviderImpl();
     }

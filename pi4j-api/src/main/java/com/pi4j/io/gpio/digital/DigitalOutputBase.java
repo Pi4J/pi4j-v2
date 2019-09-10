@@ -36,14 +36,27 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * <p>Abstract DigitalOutputBase class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider> implements DigitalOutput {
 
     protected DigitalState state = DigitalState.UNKNOWN;
 
+    /**
+     * <p>Constructor for DigitalOutputBase.</p>
+     *
+     * @param provider a {@link com.pi4j.io.gpio.digital.DigitalOutputProvider} object.
+     * @param config a {@link com.pi4j.io.gpio.digital.DigitalOutputConfig} object.
+     */
     public DigitalOutputBase(DigitalOutputProvider provider, DigitalOutputConfig config){
         super(provider, config);
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutput initialize(Context context) throws InitializeException {
         super.initialize(context);
@@ -59,16 +72,18 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutput state(DigitalState state) throws IOException {
 
         if(!this.equals(state)){
             this.state = state;
-            this.dispatch(new DigitalChangeEvent<DigitalOutputBase>(this, this.state));
+            this.dispatch(new DigitalStateChangeEvent<DigitalOutputBase>(this, this.state));
         }
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback) throws IOException {
         int millis = 0;
@@ -107,29 +122,34 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Future<?> pulseAsync(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback) {
         // TODO :: IMPLEMENT DIGITAL OUTPUT PULSE ASYNC
         throw new UnsupportedOperationException("PULSE ASYNC has not yet been implemented!");
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutput blink(int delay, int duration, TimeUnit unit, DigitalState state, Callable<Void> callback) {
         // TODO :: IMPLEMENT DIGITAL OUTPUT BLINK
         throw new UnsupportedOperationException("BLINK has not yet been implemented!");
     }
 
+    /** {@inheritDoc} */
     @Override
     public Future<?> blinkAsync(int delay, int duration, TimeUnit unit, DigitalState state, Callable<Void> callback) {
         // TODO :: IMPLEMENT DIGITAL OUTPUT BLINK ASYNC
         throw new UnsupportedOperationException("BLINK ASYNC has not yet been implemented!");
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalState state() {
         return this.state;
     }
 
+    /** {@inheritDoc} */
     @Override
     public DigitalOutput shutdown(Context context) throws ShutdownException {
         // set pin state to shutdown state if a shutdown state is configured
@@ -141,5 +161,19 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
             }
         }
         return super.shutdown(context);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DigitalOutput on() throws IOException {
+        // TODO :: REVISIT STATE VS ON/OFF
+        return high();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DigitalOutput off() throws IOException {
+        // TODO :: REVISIT STATE VS ON/OFF
+        return low();
     }
 }

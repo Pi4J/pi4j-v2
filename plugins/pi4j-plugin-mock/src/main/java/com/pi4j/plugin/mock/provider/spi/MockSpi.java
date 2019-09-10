@@ -33,61 +33,149 @@ import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiBase;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
+import com.pi4j.plugin.mock.Mock;
+import com.pi4j.util.StringUtil;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.ArrayDeque;
+import java.util.Objects;
 
+/**
+ * <p>MockSpi class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class MockSpi extends SpiBase implements Spi {
 
-    public MockSpi(SpiProvider provider, SpiConfig config){
+    protected ArrayDeque<Byte> raw = new ArrayDeque<>();
+
+    /**
+     * <p>Constructor for MockSpi.</p>
+     *
+     * @param provider a {@link com.pi4j.io.spi.SpiProvider} object.
+     * @param config a {@link com.pi4j.io.spi.SpiConfig} object.
+     */
+    public MockSpi(SpiProvider provider, SpiConfig config) {
         super(provider, config);
+        System.out.print(" [");
+        System.out.print(Mock.SPI_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: OPEN(CHANNEL=" + config.address() + "; BAUD=" + config.baud() + ")");
+        System.out.println();
+    }
+    /** {@inheritDoc} */
+    @Override
+    public void close() throws IOException {
+        System.out.print(" [");
+        System.out.print(Mock.SPI_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: CLOSE(CHANNEL=" + config.address() + "; BAUD=" + config.baud() + ")");
+        System.out.println();
+        super.close();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public String write(String data, Charset charset) throws IOException {
-        return null;
+    public int transfer(byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException {
+        int readIndex = readOffset;
+        // simply just echo out the write data back to the read buffer
+        for(int n = writeOffset; n < numberOfBytes - writeOffset; n++){
+            read[readIndex] = write[n];
+            readIndex++;
+        }
+        // return number of byte returned
+        return readIndex - readOffset;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public String write(String data, String charset) throws IOException {
-        return null;
-    }
-
-    @Override
-    public ByteBuffer write(ByteBuffer data) throws IOException {
-        return null;
-    }
-
-    @Override
-    public byte[] write(InputStream input) throws IOException {
-        return new byte[0];
-    }
-
-    @Override
-    public int write(InputStream input, OutputStream output) throws IOException {
+    public int write(byte b) throws IOException {
+        raw.add(b);
+        System.out.print(" [");
+        System.out.print(Mock.SPI_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: WRITE(0x");
+        System.out.print(StringUtil.toHexString(b));
+        System.out.println(")");
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public byte[] write(byte[] data, int start, int length) throws IOException {
-        return new byte[0];
+    public int write(byte[] data, int offset, int length) throws IOException {
+        Objects.checkFromIndexSize(offset, length, data.length);
+        for(int p = offset; p-offset < length; p++){
+            raw.add(data[p]); // add to internal buffer
+        }
+        System.out.print(" [");
+        System.out.print(Mock.SPI_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: WRITE(0x");
+        System.out.print(StringUtil.toHexString(data, offset, length));
+        System.out.println(")");
+        return length;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public byte[] write(byte... data) throws IOException {
-        return new byte[0];
+    public int write(Charset charset, CharSequence data) throws IOException {
+        byte[] buffer = data.toString().getBytes(charset);
+        for(int p = 0; p < buffer.length; p++){
+            raw.add(buffer[p]); // add to internal buffer
+        }
+        System.out.print(" [");
+        System.out.print(Mock.SPI_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: WRITE(\"");
+        System.out.print(data);
+        System.out.println("\")");
+        return data.length();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public short[] write(short[] data, int start, int length) throws IOException {
-        return new short[0];
+    public int read() throws IOException {
+        if(raw.isEmpty()) return -1;
+        byte b = raw.pop();
+        System.out.print(" [");
+        System.out.print(Mock.SPI_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: READ (0x");
+        System.out.print(StringUtil.toHexString(b));
+        System.out.println(")");
+        return b;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public short[] write(short... data) throws IOException {
-        return new short[0];
+    public int read(byte[] buffer, int offset, int length) throws IOException{
+        Objects.checkFromIndexSize(offset, length, buffer.length);
+
+        if(raw.isEmpty()) return -1;
+        int counter = 0;
+        for(int p = 0; p < length; p++) {
+            if(p+offset > buffer.length) break;
+            if(raw.isEmpty()) break;;
+            buffer[offset + p] = raw.pop();
+            counter++;
+        }
+
+        System.out.print(" [");
+        System.out.print(Mock.SPI_PROVIDER_NAME);
+        System.out.print("::");
+        System.out.print(this.id);
+        System.out.print("] :: READ (0x");
+        System.out.print(StringUtil.toHexString(buffer, offset, length));
+        System.out.println(")");
+
+        return counter;
     }
 }

@@ -30,16 +30,37 @@ package com.pi4j.example.gpio.digital;
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.digital.DigitalChangeEvent;
-import com.pi4j.io.gpio.digital.DigitalChangeListener;
 import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalStateChangeEvent;
+import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
+import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider;
 import com.pi4j.util.Console;
 
 import java.util.concurrent.Callable;
 
+/**
+ * <p>DigitalInputExampleUsingDependencyInjection class.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
 public class DigitalInputExampleUsingDependencyInjection {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     * @throws java.lang.Exception if any.
+     */
     public static void main(String[] args) throws Exception {
+
+        // configure logging output
+        System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+
+        // TODO :: REMOVE TEMPORARY PROPERTIES WHEN NATIVE PIGPIO LIB IS READY
+        // this temporary property is used to tell
+        // PIGPIO which remote Raspberry Pi to connect to
+        System.setProperty("pi4j.host", "rpi3bp.savage.lan");
 
         // Pi4J cannot perform dependency injection on static classes
         // we will create a container instance to run our example
@@ -48,13 +69,15 @@ public class DigitalInputExampleUsingDependencyInjection {
 
     public static class RuntimeContainer implements Callable<Void> {
 
-        public static final int DIGITAL_INPUT_PIN_ID_ADDRESS = 4;
-        public static final String DIGITAL_INPUT_PIN_ID = "my.digital.input.pin.four";
+        public static final int DIGITAL_INPUT_PIN_ID_ADDRESS = 0;
+        public static final String DIGITAL_INPUT_PIN_ID = "my.digital.input.pin.zero";
 
         // create & register a digital input instance using annotations and dependency injection
         @Register(DIGITAL_INPUT_PIN_ID)
         @Address(DIGITAL_INPUT_PIN_ID_ADDRESS)
         @Name("My Digital Input Pin")
+        @Debounce(300000) // microseconds
+        @WithProvider(type=PiGpioDigitalInputProvider.class)
         private DigitalInput input;
 
         @Inject
@@ -62,12 +85,12 @@ public class DigitalInputExampleUsingDependencyInjection {
 
         // register a digital input listener to listen for any value changes on the digital input pin
         @Register(DIGITAL_INPUT_PIN_ID)
-        private DigitalChangeListener changeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
+        private DigitalStateChangeListener changeListener = event -> System.out.println(" (LISTENER #1) :: " + event);
 
         // setup a digital input event listener to listen for any value changes on the digital input
         // using a custom method with a single event parameter
         @OnEvent(DIGITAL_INPUT_PIN_ID)
-        private void onDigitalInputChange(DigitalChangeEvent event){
+        private void onDigitalInputChange(DigitalStateChangeEvent event){
             System.out.println(" (LISTENER #2) :: " + event);
         }
 
