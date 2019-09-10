@@ -1,5 +1,3 @@
-import com.pi4j.extension.Extension;
-
 /*-
  * #%L
  * **********************************************************************
@@ -26,21 +24,21 @@ import com.pi4j.extension.Extension;
  * limitations under the License.
  * #L%
  */
-module pi4j.example {
+module com.pi4j.example {
 
     // Pi4J MODULES
-    requires pi4j.api;
-    requires pi4j.plugin.pigpio;
+    requires com.pi4j;
+    requires com.pi4j.plugin.pigpio;
 
     // SLF4J MODULES
     requires org.slf4j;
     requires org.slf4j.simple;
 
-    uses Extension;
+    uses com.pi4j.extension.Extension;
     uses com.pi4j.provider.Provider;
 
     // Pi4J Mock Platform and Providers
-    requires pi4j.plugin.mock;
+    requires com.pi4j.plugin.mock;
     uses com.pi4j.plugin.mock.platform.MockPlatform;
     uses com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInput;
     uses com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInputProvider;
@@ -60,11 +58,11 @@ module pi4j.example {
     uses com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
 
     // allow access to classes in the following namespaces for Pi4J annotation processing
-    opens com.pi4j.example.gpio.analog;
-    opens com.pi4j.example.gpio.digital;
-    opens com.pi4j.example.pwm;
-    opens com.pi4j.example.i2c;
-    opens com.pi4j.example.serial;
-    opens com.pi4j.example.spi;
-    opens com.pi4j.example;
+    opens com.pi4j.example.gpio.analog to com.pi4j;
+    opens com.pi4j.example.gpio.digital to com.pi4j;
+    opens com.pi4j.example.pwm to com.pi4j;
+    opens com.pi4j.example.i2c to com.pi4j;
+    opens com.pi4j.example.serial to com.pi4j;
+    opens com.pi4j.example.spi to com.pi4j;
+    opens com.pi4j.example to com.pi4j;
 }

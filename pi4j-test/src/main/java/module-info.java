@@ -1,5 +1,3 @@
-import com.pi4j.extension.Extension;
-
 /*-
  * #%L
  * **********************************************************************
@@ -26,20 +24,20 @@ import com.pi4j.extension.Extension;
  * limitations under the License.
  * #L%
  */
-module pi4j.test {
+module com.pi4j.test {
 
     // Pi4J API
-    requires pi4j.api;
+    requires com.pi4j;
 
     // SLF4J MODULES
     requires org.slf4j;
     requires org.slf4j.simple;
 
-    uses Extension;
+    uses com.pi4j.extension.Extension;
     uses com.pi4j.provider.Provider;
 
     // Pi4J Mock Platform and Providers
-    requires pi4j.plugin.mock;
+    requires com.pi4j.plugin.mock;
     uses com.pi4j.plugin.mock.platform.MockPlatform;
     uses com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInput;
     uses com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInputProvider;
