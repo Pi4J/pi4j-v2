@@ -25,6 +25,11 @@
  * #L%
  */
 module com.pi4j {
+
+    // depends on SLF4J
+    requires org.slf4j;
+
+    // exposed interfaces/classes
     exports com.pi4j;
     exports com.pi4j.annotation;
     exports com.pi4j.annotation.exception;
@@ -53,9 +58,11 @@ module com.pi4j {
     exports com.pi4j.registry;
     exports com.pi4j.util;
 
+    // extensibility service interfaces
     uses com.pi4j.extension.Plugin;
     uses com.pi4j.annotation.Processor;
 
+    // annotation processor implementations (for internal use)
     provides com.pi4j.annotation.Processor
             with com.pi4j.annotation.processor.injector.ContextInjector,
                     com.pi4j.annotation.processor.injector.AnalogInputInjector,
@@ -91,5 +98,5 @@ module com.pi4j {
                     com.pi4j.annotation.processor.event.InitializedEventProcessor,
                     com.pi4j.annotation.processor.event.ShutdownEventProcessor;
 
-    requires org.slf4j;
+
 }
