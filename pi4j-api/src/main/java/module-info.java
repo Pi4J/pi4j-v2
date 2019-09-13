@@ -97,6 +97,4 @@ module com.pi4j {
                     com.pi4j.annotation.processor.event.DigitalStateChangeEventProcessor,
                     com.pi4j.annotation.processor.event.InitializedEventProcessor,
                     com.pi4j.annotation.processor.event.ShutdownEventProcessor;
-
-
 }
