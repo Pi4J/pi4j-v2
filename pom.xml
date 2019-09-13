@@ -125,7 +125,7 @@
         <module>docker/pi4j-docker</module>
         <module>pi4j-test-harness</module>
         <module>libraries/pi4j-library</module>
-        <module>pi4j-api</module>
+        <module>pi4j-core</module>
         <module>plugins/pi4j-plugin</module>
         <module>pi4j-test</module>
         <module>pi4j-example</module>

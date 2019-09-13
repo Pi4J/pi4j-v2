@@ -2,7 +2,7 @@
  Pi4J :: Java I/O Library for Raspberry Pi
 ==========================================================================
 
-[![Build Status](https://travis-ci.org/Pi4J/pi4j-v2.svg?branch=master)](https://travis-ci.org/Pi4J/pi4j-v2?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-api/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-api)
+[![Build Status](https://travis-ci.org/Pi4J/pi4j-v2.svg?branch=master)](https://travis-ci.org/Pi4J/pi4j-v2?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core)
 
 ---
 

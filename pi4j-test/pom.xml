@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-api</artifactId>
+            <artifactId>pi4j-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
