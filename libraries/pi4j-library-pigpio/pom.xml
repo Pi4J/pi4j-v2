@@ -102,7 +102,7 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
                                 <if>
@@ -120,7 +120,7 @@
                                         </scp>
                                     </then>
                                 </if>
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
 
@@ -278,31 +278,6 @@
                                     </target>
                                 </configuration>
                             </execution>
-
-                            <!-- copy the compiled JNI library to the Raspberry Pi development/test machine -->
-                            <!--<execution>-->
-                                <!--<id>transfer-native</id>-->
-                                <!--<phase>install</phase>-->
-                                <!--<goals>-->
-                                    <!--<goal>run</goal>-->
-                                <!--</goals>-->
-                                <!--<configuration>-->
-                                    <!--<tasks>-->
-                                        <!--<taskdef resource="net/sf/antcontrib/antcontrib.properties"-->
-                                                 <!--classpathref="maven.plugin.classpath" />-->
-                                        <!--<if>-->
-                                            <!--<equals arg1="${pi4j.dev.transfer}" arg2="true" />-->
-                                            <!--<then>-->
-                                                <!--&lt;!&ndash; copy the SO native library file to the Raspberry Pi &ndash;&gt;-->
-                                                <!--<scp file="${project.build.directory}/build/native/libpi4j-pigpio.so"-->
-                                                     <!--todir="${pi4j.dev.user}:${pi4j.dev.password}@${pi4j.dev.host}:${pi4j.dev.directory}"-->
-                                                     <!--port="${pi4j.dev.port}" trust="true" verbose="false" failonerror="true">-->
-                                                <!--</scp>-->
-                                            <!--</then>-->
-                                        <!--</if>-->
-                                    <!--</tasks>-->
-                                <!--</configuration>-->
-                            <!--</execution>-->
                         </executions>
                     </plugin>
                 </plugins>

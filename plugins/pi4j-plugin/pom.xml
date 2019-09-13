@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-api</artifactId>
+            <artifactId>pi4j-core</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -28,9 +28,9 @@
     <!-- PROJECT MODULES <Pi4J PLUGINS> -->
     <modules>
         <module>../pi4j-plugin-mock</module>
-        <module>../pi4j-plugin-linuxfs</module>
         <module>../pi4j-plugin-pigpio</module>
         <module>../pi4j-plugin-raspberrypi</module>
+<!--        <module>../pi4j-plugin-linuxfs</module>-->  <!-- NOT YET IMPLEMENTED -->
     </modules>
 
     <!-- BUILD INSTRUCTIONS -->

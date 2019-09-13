@@ -30,7 +30,8 @@ module com.pi4j.test.harness {
     requires org.slf4j;
     requires com.fazecast.jSerialComm;
     requires org.json;
-    requires gson;
+    requires gson;    // modularized version not yet released as of 2019-09-12
+                      // see https://github.com/google/gson/issues/1315
 
     // EXPORTS
     exports  com.pi4j.test.harness;

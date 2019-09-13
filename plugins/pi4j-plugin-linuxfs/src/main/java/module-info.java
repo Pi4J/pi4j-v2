@@ -30,7 +30,7 @@ import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
  */
 module com.pi4j.plugin.linuxfs {
     requires com.pi4j;
-    requires jsch;
+    requires jsch;   // NOTE: this library has not yet been modularized
 
     exports com.pi4j.plugin.linuxfs;
     exports com.pi4j.plugin.linuxfs.provider.gpio.digital;

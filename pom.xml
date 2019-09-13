@@ -6,14 +6,14 @@
     <version>2.0-SNAPSHOT</version>
 	<name>Pi4J :: Parent POM</name>
 	<description>Parent Maven POM for the Pi4J Project</description>
-	<url>https://pi4j.com</url>
+	<url>https://v2.pi4j.com</url>
 	<inceptionYear>2012</inceptionYear>
 	<packaging>pom</packaging>
 
 	<!-- ORGANIZATION -->
 	<organization>
 		<name>Pi4J</name>
-		<url>https://pi4j.com</url>
+		<url>https://v2.pi4j.com</url>
 	</organization>
 
 	<!-- LICENSE -->
@@ -60,16 +60,17 @@
             <organization>Robo4J</organization>
             <organizationUrl>http://www.robo4j.io</organizationUrl>
             <properties>
-                <linikedin>https://www.linkedin.com/in/mhirt</linikedin>
+                <linkedin>https://www.linkedin.com/in/mhirt</linkedin>
                 <twitter>https://twitter.com/hirt</twitter>
             </properties>
         </contributor>
         <contributor>
             <name>Miroslav Wengner</name>
+            <url>http://www.wengnermiro.com/</url>
             <organization>Robo4J</organization>
             <organizationUrl>http://www.robo4j.io</organizationUrl>
             <properties>
-                <linikedin>https://www.linkedin.com/in/mwengner</linikedin>
+                <linkedin>https://www.linkedin.com/in/mwengner</linkedin>
                 <twitter>https://twitter.com/miragemiko</twitter>
             </properties>
         </contributor>
@@ -77,20 +78,20 @@
 
 	<!-- SOURCE CONTROL -->
 	<scm>
-		<developerConnection>scm:git:ssh://git@github.com/Pi4J/pi4j.git</developerConnection>
-		<connection>scm:git:ssh://git@github.com/Pi4J/pi4j.git</connection>
-		<url>https://github.com/Pi4J/pi4j.git</url>
+		<developerConnection>scm:git:ssh://git@github.com/Pi4J/pi4j-v2.git</developerConnection>
+		<connection>scm:git:ssh://git@github.com/Pi4J/pi4j-v2.git</connection>
+		<url>https://github.com/Pi4J/pi4j-v2.git</url>
 	</scm>
 
 	<!-- ISSUE MANAGEMENT -->
 	<issueManagement>
-		<url>https://github.com/Pi4J/pi4j/issues</url>
+		<url>https://github.com/Pi4J/pi4j-v2/issues</url>
 		<system>github</system>
 	</issueManagement>
 
 	<!-- DISTRIBUTION REPOSITORIES -->
 	<distributionManagement>
-		<downloadUrl>https://pi4j.com/download.html</downloadUrl>
+		<downloadUrl>https://v2.pi4j.com/download</downloadUrl>
 		<repository>
 			<id>sonatype-oss-staging</id>
 			<name>Sonatype Open Source Maven Repository</name>
@@ -124,7 +125,7 @@
         <module>docker/pi4j-docker</module>
         <module>pi4j-test-harness</module>
         <module>libraries/pi4j-library</module>
-        <module>pi4j-api</module>
+        <module>pi4j-core</module>
         <module>plugins/pi4j-plugin</module>
         <module>pi4j-test</module>
         <module>pi4j-example</module>
