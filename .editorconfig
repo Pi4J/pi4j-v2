@@ -1,0 +1,20 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = false
+max_line_length = 120
+tab_width = 2
+
+[*.java]
+indent_size = 4
+tab_width = 4
+ij_java_blank_lines_after_imports = 1
+ij_java_blank_lines_before_imports = 1
+
+[{*.ant,*.bpmn,*.fxml,*.jhm,*.jnlp,*.jrxml,*.plan,*.pom,*.rng,*.tld,*.wadl,*.wsdd,*.wsdl,*.xjb,*.xml,*.xsd,*.xsl,*.xslt,*.xul}]
+indent_size = 4
+tab_width = 4
