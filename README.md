@@ -29,8 +29,36 @@ Snapshot builds are available from:
    *  [Sonatype OSS] https://oss.sonatype.org/index.html#nexus-search;quick~pi4j
    *  [Downloads] https://pi4j.com/download.html
 
+Copyright (C) 2012-2020 Pi4J
 
-Copyright (C) 2012-2019 Pi4J
+## CONTRIBUTING TO PI4J
+
+### Adding a feature or solving a problem
+
+If you have and idea to extend and improve Pi4J, please first create a ticket to discuss how 
+it fits in the project and how it can be implemented. 
+
+If you find a bug, create a ticket, so we are aware of it and others with the same problem can 
+contribute what they already investigated. And the quickest way to get a fix? Try to search for 
+the cause of the problem or even better provide a code fix!
+
+### Code styling
+
+To prevent unnecessary code (tabs versus spaces, number of characters per line...) we have 
+defined an [editorconfig](.editorconfig) for IntelliJ IDEA. You can find [more info 
+here](https://www.jetbrains.com/help/idea/configuring-code-style.html) about its use.
+ 
+Some tips to keep the code clean and readable:
+* Short methods with a clear name
+* Use SonarLint to get improvement tips while code
+* Use shortcuts
+    * CTRL+ALT+L: Reformat code
+    * CTRL+ALT+O: Optimize imports
+    
+### Join the team
+
+You want to become a member of the Pi4J-team? Great idea! Send a short message to frank@pi4j.com 
+with your experience, ideas, and what you would like to contribute to the project.
 
 ## LICENSE
 
@@ -45,12 +73,19 @@ Copyright (C) 2012-2019 Pi4J
  See the License for the specific language governing permissions and
  limitations under the License.
 
-
 ## PROJECT OVERVIEW
 
-  Starting with the Pi4J 2.0 builds, the Pi4J project is prioritizing focus
-  on providing Java programs access, control and communication with the core
-  I/O capabilities of the Raspberry Pi platform.  Earlier versions of Pi4J
+Starting with the Pi4J 2.0 builds, the Pi4J project is prioritizing focus
+on providing Java programs access, control and communication with the core
+I/O capabilities of the Raspberry Pi platform.  
+
+**LINK BELOW TO BE CHANGED TO pi4j.com WHEN NEW SITE IS PUBLISHED**
+
+Read all about it on [v2.pi4j.com](https://v2.pi4j.com/).
+
+**TEXT BELOW TO BE MOVED TO NEW WEBSITE**
+  
+  Earlier versions of Pi4J
   were perhaps too ambitious in scope and that led to significant project
   bloat to the point that the project was becoming unsustainable.  The goal
   moving forward is to limit scope to that of the raw I/O capabilities
