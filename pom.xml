@@ -52,6 +52,20 @@
                 <role>developer</role>
             </roles>
         </developer>
+        <developer>
+            <name>Frank Delporte</name>
+            <email>frank@pi4j.com</email>
+            <url>https://webtechie.be</url>
+            <properties>
+                <blog>https://webtechie.be</blog>
+                <linikedin>https://www.linkedin.com/in/frankdelporte/</linikedin>
+                <twitter>https://twitter.com/FrankDelporte</twitter>
+            </properties>
+            <roles>
+                <role>facilitator</role>
+                <role>developer</role>
+            </roles>
+        </developer>
 	</developers>
     <contributors>
         <contributor>
@@ -123,23 +137,15 @@
 	<modules>
         <!-- THE FOLLOWING MODULES ARE V2 -->
         <module>docker/pi4j-docker</module>
-        <module>pi4j-test-harness</module>
         <module>libraries/pi4j-library</module>
         <module>pi4j-core</module>
         <module>plugins/pi4j-plugin</module>
         <module>pi4j-test</module>
         <module>pi4j-example</module>
-
     </modules>
-
-    <!-- PROJECT PREREQUISITES -->
-	<prerequisites>
-		<maven>3.0.5</maven>
-	</prerequisites>
 
 	<!-- BUILD PROPERTIES -->
 	<properties>
-
         <!-- =================================================================== -->
         <!-- SELECT THE PROPER COMPILER OPTION FOR THE NATIVE LIBRARY BUILDS     -->
         <!-- The supported options are:                                          -->
@@ -175,7 +181,7 @@
 
         <!-- SETTING FOR ARDUINO TEST HARNESS HARDWARE TESTING -->
         <!-- (you will need to override these in your "~/.m2/settings.xml" for your own development) -->
-        <pi4j.test.harness.enabled>true</pi4j.test.harness.enabled>
+        <pi4j.test.harness.enabled>false</pi4j.test.harness.enabled>
         <pi4j.test.harness.port>tty.usbmodem142301</pi4j.test.harness.port>
 
         <!-- DEFAULT Pi4J BUILD PROPERTIES FOR THE 'RaspberryPi' PLATFORM -->
@@ -198,7 +204,6 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- DEPENDENCY VERSIONS -->
-        <org.osgi.core.version>6.0.0</org.osgi.core.version>
         <ant-jsch.version>1.9.7</ant-jsch.version>
         <jsch.version>0.1.55</jsch.version>
         <ant-contrib.version>20020829</ant-contrib.version>
@@ -249,13 +254,6 @@
     <!-- PROJECT DEPENDENCIES -->
     <dependencyManagement>
         <dependencies>
-            <!-- OSGI DEPENDENCIES -->
-            <dependency>
-                <groupId>org.osgi</groupId>
-                <artifactId>org.osgi.core</artifactId>
-                <version>${org.osgi.core.version}</version>
-            </dependency>
-
             <!-- ANT/TASKING DEPENDENCIES -->
             <dependency>
                 <groupId>org.apache.ant</groupId>
