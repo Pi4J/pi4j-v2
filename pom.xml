@@ -141,7 +141,6 @@
         <module>pi4j-core</module>
         <module>plugins/pi4j-plugin</module>
         <module>pi4j-test</module>
-        <module>pi4j-example</module>
     </modules>
 
 	<!-- BUILD PROPERTIES -->
