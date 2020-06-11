@@ -42,6 +42,7 @@ public interface SerialConfigBuilder extends
     /**
      * <p>newInstance.</p>
      *
+     * @param context {@link Context}
      * @return a {@link com.pi4j.io.serial.SerialConfigBuilder} object.
      */
     static SerialConfigBuilder newInstance(Context context)  {

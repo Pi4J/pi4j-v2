@@ -44,6 +44,7 @@ public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig, 
     /**
      * <p>newConfigBuilder.</p>
      *
+     * @param context {@link Context}
      * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
      */
     static DigitalInputConfigBuilder newConfigBuilder(Context context){

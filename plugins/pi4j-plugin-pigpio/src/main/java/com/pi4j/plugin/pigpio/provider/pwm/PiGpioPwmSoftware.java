@@ -57,16 +57,17 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
     /**
      * <p>Constructor for PiGpioPwmSoftware.</p>
      *
-     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
-     * @param provider a {@link com.pi4j.io.pwm.PwmProvider} object.
-     * @param config a {@link com.pi4j.io.pwm.PwmConfig} object.
-     * @throws java.io.IOException if any.
+     * @param piGpio a {@link PiGpio} object.
+     * @param provider a {@link PwmProvider} object.
+     * @param config a {@link PwmConfig} object.
      */
-    public PiGpioPwmSoftware(PiGpio piGpio, PwmProvider provider, PwmConfig config) throws IOException {
+    public PiGpioPwmSoftware(PiGpio piGpio, PwmProvider provider, PwmConfig config) {
         super(piGpio, provider, config, RANGE);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Pwm initialize(Context context) throws InitializeException {
         try {

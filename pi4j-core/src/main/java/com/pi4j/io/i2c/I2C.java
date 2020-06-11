@@ -52,6 +52,7 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
     /**
      * <p>newConfigBuilder.</p>
      *
+     * @param context {@link Context}
      * @return a {@link com.pi4j.io.i2c.I2CConfigBuilder} object.
      */
     static I2CConfigBuilder newConfigBuilder(Context context){

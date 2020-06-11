@@ -49,6 +49,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
     /**
      * <p>newConfigBuilder.</p>
      *
+     * @param context {@link Context}
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder} object.
      */
     static DigitalOutputConfigBuilder newConfigBuilder(Context context){

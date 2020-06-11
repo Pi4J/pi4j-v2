@@ -45,7 +45,7 @@ public interface Config<CONFIG_TYPE> {
 
     /**
      * Underlying raw configuration properties.
-     * @return a {@link java.util.Map<String,String>} of raw property keys and string values.
+     * @return a {@link Map} of {@link String},{@link String} of raw property keys and string values.
      */
     Map<String,String> properties();
 

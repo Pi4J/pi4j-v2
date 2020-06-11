@@ -41,6 +41,7 @@ public interface PwmConfigBuilder extends GpioConfigBuilder<PwmConfigBuilder, Pw
     /**
      * <p>newInstance.</p>
      *
+     * @param context {@link Context}
      * @return a {@link com.pi4j.io.pwm.PwmConfigBuilder} object.
      */
     static PwmConfigBuilder newInstance(Context context)  {

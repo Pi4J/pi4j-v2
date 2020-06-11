@@ -61,13 +61,14 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      * @param provider a {@link com.pi4j.io.pwm.PwmProvider} object.
      * @param config a {@link com.pi4j.io.pwm.PwmConfig} object.
-     * @throws java.io.IOException if any.
      */
-    public PiGpioPwmHardware(PiGpio piGpio, PwmProvider provider, PwmConfig config) throws IOException {
+    public PiGpioPwmHardware(PiGpio piGpio, PwmProvider provider, PwmConfig config) {
         super(piGpio, provider, config, RANGE);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Pwm initialize(Context context) throws InitializeException {
         try {
