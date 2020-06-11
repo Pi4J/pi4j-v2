@@ -40,6 +40,7 @@ public interface AnalogInputConfigBuilder extends AnalogConfigBuilder<AnalogInpu
     /**
      * <p>newInstance.</p>
      *
+     * @param context {@link Context}
      * @return a {@link com.pi4j.io.gpio.analog.AnalogInputConfigBuilder} object.
      */
     static AnalogInputConfigBuilder newInstance(Context context) {

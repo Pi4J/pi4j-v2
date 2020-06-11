@@ -45,6 +45,7 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider>, OnOff<Pwm> {
     /**
      * <p>newConfigBuilder.</p>
      *
+     * @param context {@link Context}
      * @return a {@link com.pi4j.io.pwm.PwmConfigBuilder} object.
      */
     static PwmConfigBuilder newConfigBuilder(Context context){

@@ -110,7 +110,7 @@ public interface Context extends Describable,
 
     /**
      *
-     * @return
+     * @return {@link Future} of {@link Context}
      */
     Future<Context> asyncShutdown();
 
@@ -171,8 +171,9 @@ public interface Context extends Describable,
     /**
      * <p>platform.</p>
      *
-     * @param <P> a P object.
+     * @param id Id of the platform.
      * @return a P object.
+     * @throws PlatformNotFoundException if any.
      */
     default <P extends Platform> P platform(String id) throws PlatformNotFoundException {
         return (P)this.platforms().get(id);
@@ -181,8 +182,9 @@ public interface Context extends Describable,
     /**
      * <p>platform.</p>
      *
-     * @param <P> a P object.
+     * @param id Id of the platform.
      * @return a P object.
+     * @throws PlatformNotFoundException if any.
      */
     default <P extends Platform> P getPlatform(String id) throws PlatformNotFoundException {
         return this.platform(id);
@@ -191,7 +193,9 @@ public interface Context extends Describable,
     /**
      * <p>platform.</p>
      *
+     * @param id Id of the platform.
      * @return a P object.
+     * @throws PlatformNotFoundException if any.
      */
     default boolean hasPlatform(String id) throws PlatformNotFoundException {
         return this.platforms().exists(id);
@@ -200,25 +204,33 @@ public interface Context extends Describable,
     /**
      * <p>platform.</p>
      *
-     * @param <P> a P object.
+     * @param platformClass a P object.
      * @return a P object.
+     * @throws PlatformNotFoundException if any.
      */
     default <P extends Platform> P platform(Class<P> platformClass) throws PlatformNotFoundException {
-        return (P)this.platforms().get(platformClass);
+        return (P) this.platforms().get(platformClass);
     }
 
     /**
      * <p>platform.</p>
      *
-     * @param <P> a P object.
+     * @param platformClass a P object.
      * @return a P object.
+     * @throws PlatformNotFoundException if any.
      */
     default <P extends Platform> P getPlatform(Class<P> platformClass) throws PlatformNotFoundException {
         return platform(platformClass);
     }
 
+    /**
+     * <p>Has platforms.</p>
+     *
+     * @param platformClass a P object.
+     * @return {@link boolean}
+     * @throws PlatformNotFoundException if any.
+     */
     default boolean hasPlatform(Class<? extends Platform> platformClass) throws PlatformNotFoundException {
-
         return platforms().exists(platformClass);
     }
 

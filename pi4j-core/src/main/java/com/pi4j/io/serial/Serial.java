@@ -56,9 +56,10 @@ public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCl
     /**
      * <p>newConfigBuilder.</p>
      *
+     * @param context {@link Context}
      * @return a {@link com.pi4j.io.serial.SerialConfigBuilder} object.
      */
-    static SerialConfigBuilder newConfigBuilder(Context context){
+    static SerialConfigBuilder newConfigBuilder(Context context) {
         return SerialConfigBuilder.newInstance(context);
     }
 

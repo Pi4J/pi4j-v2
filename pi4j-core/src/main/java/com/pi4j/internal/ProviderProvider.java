@@ -48,9 +48,9 @@ public interface ProviderProvider extends ProviderAliases {
      * <p>provider.</p>
      *
      * @param providerId a {@link java.lang.String} object.
-     * @param <T> a T object.
+     * @param providerClass a T object.
      * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     * @throws ProviderNotFoundException if any.
      */
     <T extends Provider> T provider(String providerId, Class<T> providerClass) throws ProviderNotFoundException;
 
@@ -59,9 +59,9 @@ public interface ProviderProvider extends ProviderAliases {
      *
      * @param providerClass a {@link java.lang.Class} object.
      * @param <T> a T object.
+     * @throws ProviderNotFoundException if any.
+     * @throws ProviderInterfaceException if any.
      * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
-     * @throws com.pi4j.provider.exception.ProviderInterfaceException if any.
      */
     <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderInterfaceException;
 

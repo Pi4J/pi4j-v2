@@ -41,6 +41,7 @@ public interface AnalogInputConfig
     /**
      * <p>newBuilder.</p>
      *
+     * @param context {@link Context}
      * @return a {@link com.pi4j.io.gpio.analog.AnalogInputConfigBuilder} object.
      */
     static AnalogInputConfigBuilder newBuilder(Context context)  {

@@ -259,12 +259,15 @@ public enum IOType {
      *
      * @param ioType a {@link java.lang.String} object.
      * @return a {@link com.pi4j.io.IOType} object.
+     * @throws IOException if {@link IOType} could not be defined.
      */
     public static IOType parse(String ioType) throws IOException {
 
         try {
             IOType iot = IOType.valueOf(ioType);
-            if (iot != null) return iot;
+            if (iot != null) {
+                return iot;
+            }
         }
         catch (Exception e){}
 

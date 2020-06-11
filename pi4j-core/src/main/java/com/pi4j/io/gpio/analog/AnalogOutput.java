@@ -43,6 +43,7 @@ public interface AnalogOutput extends Analog<AnalogOutput, AnalogOutputConfig, A
     /**
      * <p>newConfigBuilder.</p>
      *
+     * @param context {@link Context}
      * @return a {@link com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder} object.
      */
     static AnalogOutputConfigBuilder newConfigBuilder(Context context){

@@ -51,6 +51,7 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
     /**
      * <p>newConfigBuilder.</p>
      *
+     * @param context {@link Context}
      * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
      */
     static SpiConfigBuilder newConfigBuilder(Context context){
