@@ -66,6 +66,16 @@
                 <role>developer</role>
             </roles>
         </developer>
+		<developer>
+			<id>eitch</id>
+			<name>Robert von Burg</name>
+			<email>eitch@eitchnet.ch</email>
+			<url>http://strolch.li</url>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
 	</developers>
     <contributors>
         <contributor>
