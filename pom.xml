@@ -257,7 +257,6 @@
         <pi4j.gpg.key></pi4j.gpg.key>
         <pi4j.gpg.keyring></pi4j.gpg.keyring>
         <pi4j.gpg.passphrase></pi4j.gpg.passphrase>
-
 	</properties>
 
     <!-- PROJECT DEPENDENCIES -->
