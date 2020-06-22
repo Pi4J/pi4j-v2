@@ -44,6 +44,8 @@ import com.pi4j.registry.Registry;
 import com.pi4j.registry.impl.DefaultRegistry;
 import com.pi4j.runtime.Runtime;
 import com.pi4j.runtime.impl.DefaultRuntime;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,13 +59,17 @@ import java.util.concurrent.Future;
  */
 public class DefaultContext implements Context {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private static final int DEFAULT_THREAD_POOL_SIZE = 10;
+
     private Runtime runtime = null;
     private ContextConfig config = null;
     private ContextProperties properties = null;
     private Providers providers = null;
     private Platforms platforms = null;
     private Registry registry = null;
+    private ExecutorService executorService = null;
 
     /**
      * <p>newInstance.</p>
@@ -130,6 +136,17 @@ public class DefaultContext implements Context {
     /** {@inheritDoc} */
     @Override
     public Platforms platforms() { return this.platforms; }
+
+    /** {@inheritDoc} */
+    @Override
+    public ExecutorService executorService() {
+        if (this.executorService == null) {
+            // No executor service was provided when creating the context.
+            // A predefined one will be initialized and used.
+            this.executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
+        }
+        return this.executorService;
+    }
 
     /** {@inheritDoc} */
     @Override

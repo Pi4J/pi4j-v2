@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
 
 /**
  * <p>ContextBuilder interface.</p>
@@ -70,6 +71,13 @@ public interface ContextBuilder extends Builder<Context> {
      * @return a {@link com.pi4j.context.ContextBuilder} object.
      */
     ContextBuilder add(Provider ... provider);
+    /**
+     * <p>set.</p>
+     *
+     * @param executorService the {@link ExecutorService} object.
+     * @return a {@link com.pi4j.context.ContextBuilder} object.
+     */
+    ContextBuilder set(ExecutorService executorService);
 
     /**
      * <p>defaultPlatform.</p>

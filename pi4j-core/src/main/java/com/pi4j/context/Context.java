@@ -55,6 +55,7 @@ import com.pi4j.util.PropertiesUtil;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 /**
@@ -99,6 +100,13 @@ public interface Context extends Describable,
      * @return a {@link com.pi4j.platform.Platforms} object.
      */
     Platforms platforms();
+
+    /**
+     * <p>{@link ExecutorService}</p>
+     *
+     * @return
+     */
+    ExecutorService executorService();
 
     /**
      * <p>shutdown.</p>
