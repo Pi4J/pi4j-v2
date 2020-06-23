@@ -36,6 +36,8 @@ import com.pi4j.event.ShutdownListener;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.executor.Executor;
+import com.pi4j.executor.impl.DefaultExecutor;
 import com.pi4j.platform.Platforms;
 import com.pi4j.platform.impl.DefaultPlatforms;
 import com.pi4j.provider.Providers;
@@ -61,15 +63,13 @@ public class DefaultContext implements Context {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final int DEFAULT_THREAD_POOL_SIZE = 10;
-
     private Runtime runtime = null;
     private ContextConfig config = null;
     private ContextProperties properties = null;
     private Providers providers = null;
     private Platforms platforms = null;
     private Registry registry = null;
-    private ExecutorService executorService = null;
+    private Executor executor = null;
 
     /**
      * <p>newInstance.</p>
@@ -109,6 +109,9 @@ public class DefaultContext implements Context {
         // create API accessible platforms instance  (READ-ONLY ACCESS OBJECT)
         this.platforms = DefaultPlatforms.newInstance(this.runtime.platforms());
 
+        // create API accessible executor instance (READ-ONLY ACCESS OBJECT)
+        this.executor = DefaultExecutor.newInstance(this.runtime.executor());
+
         // initialize runtime now
         this.runtime.initialize();
 
@@ -139,13 +142,8 @@ public class DefaultContext implements Context {
 
     /** {@inheritDoc} */
     @Override
-    public ExecutorService executorService() {
-        if (this.executorService == null) {
-            // No executor service was provided when creating the context.
-            // A predefined one will be initialized and used.
-            this.executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
-        }
-        return this.executorService;
+    public Executor executor() {
+        return this.executor;
     }
 
     /** {@inheritDoc} */

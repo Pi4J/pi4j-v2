@@ -35,6 +35,8 @@ import com.pi4j.event.*;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.executor.impl.DefaultRuntimeExecutor;
+import com.pi4j.executor.impl.RuntimeExecutor;
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.impl.DefaultPluginService;
 import com.pi4j.extension.impl.PluginStore;
@@ -53,8 +55,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
@@ -71,10 +71,10 @@ public class DefaultRuntime implements Runtime {
     private final RuntimeRegistry registry;
     private final RuntimeProviders providers;
     private final RuntimePlatforms platforms;
+    private final RuntimeExecutor executor;
     private final RuntimeProperties properties;
     private final List<Plugin> plugins = new ArrayList<>();
     private boolean isShutdown = false;
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final EventManager<Runtime, ShutdownListener, ShutdownEvent> shutdownEventManager;
     private final EventManager<Runtime, InitializedListener, InitializedEvent> initializedEventManager;
 
@@ -99,6 +99,7 @@ public class DefaultRuntime implements Runtime {
         this.registry = DefaultRuntimeRegistry.newInstance(this);
         this.providers = DefaultRuntimeProviders.newInstance(this);
         this.platforms = DefaultRuntimePlatforms.newInstance(this);
+        this.executor = DefaultRuntimeExecutor.newInstance(this);
         this.shutdownEventManager = new EventManager(this,
                 (EventDelegate<ShutdownListener, ShutdownEvent>) (listener, event) -> listener.onShutdown(event));
         this.initializedEventManager = new EventManager(this,
@@ -147,6 +148,12 @@ public class DefaultRuntime implements Runtime {
 
     /** {@inheritDoc} */
     @Override
+    public RuntimeExecutor executor() {
+        return this.executor;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Runtime inject(Object... objects) throws AnnotationException {
         annotationEngine.inject(objects);
         return this;
@@ -181,9 +188,7 @@ public class DefaultRuntime implements Runtime {
                 }
 
                 // shutdown executor threads
-                if(!executor.isShutdown()) {
-                    executor.shutdown();
-                }
+                this.executor.shutdown();
             } catch (Exception e) {
                 logger.error("failed to 'shutdown(); '", e);
                 throw new ShutdownException(e);
@@ -206,7 +211,7 @@ public class DefaultRuntime implements Runtime {
 
     @Override
     public Future<Context> asyncShutdown() {
-        return executor.submit(() -> {
+        return executor.get().submit(() -> {
             try {
                 shutdown();
             }
@@ -317,7 +322,7 @@ public class DefaultRuntime implements Runtime {
     }
 
     private Future<Context> notifyInitListeners() {
-        return executor.submit(() -> {
+        return executor.get().submit(() -> {
             try {
                 // wait .5 seconds before dispatching event
                 // (allows time to register event listeners)

@@ -29,6 +29,7 @@ package com.pi4j.context;
 
 import com.pi4j.config.Builder;
 import com.pi4j.context.impl.DefaultContextBuilder;
+import com.pi4j.executor.Executor;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 
@@ -38,7 +39,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
 
 /**
  * <p>ContextBuilder interface.</p>
@@ -74,10 +74,10 @@ public interface ContextBuilder extends Builder<Context> {
     /**
      * <p>set.</p>
      *
-     * @param executorService the {@link ExecutorService} object.
+     * @param executor the {@link com.pi4j.executor.Executor} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
      */
-    ContextBuilder set(ExecutorService executorService);
+    ContextBuilder set(Executor executor);
 
     /**
      * <p>defaultPlatform.</p>
