@@ -92,6 +92,7 @@ public interface Runtime extends InitializedEventProducer<Runtime>, ShutdownEven
      * @throws com.pi4j.annotation.exception.AnnotationException if any.
      */
     Runtime inject(Object... objects) throws AnnotationException;
+
     /**
      * <p>shutdown.</p>
      *
@@ -100,7 +101,10 @@ public interface Runtime extends InitializedEventProducer<Runtime>, ShutdownEven
      */
     Runtime shutdown() throws ShutdownException;
 
-    Future<Context> asyncShutdown();
+    /**
+     * <p>async shutdown.</p>
+     */
+    void asyncShutdown();
 
     /**
      * <p>initialize.</p>

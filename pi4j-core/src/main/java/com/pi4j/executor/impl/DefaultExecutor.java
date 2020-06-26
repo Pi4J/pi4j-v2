@@ -26,7 +26,12 @@ public class DefaultExecutor implements Executor {
     }
 
     @Override
-    public ExecutorService get() {
-        return this.runtimeExecutor.get();
+    public void execute(Runnable runnable) {
+        this.runtimeExecutor.execute(runnable);
+    }
+
+    @Override
+    public void asyncShutdown() {
+        this.runtimeExecutor.asyncShutdown();
     }
 }

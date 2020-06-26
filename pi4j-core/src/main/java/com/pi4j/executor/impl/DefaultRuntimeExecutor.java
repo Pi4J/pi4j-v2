@@ -1,11 +1,13 @@
 package com.pi4j.executor.impl;
 
+import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.platform.exception.PlatformNotFoundException;
 import com.pi4j.runtime.Runtime;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +38,20 @@ public class DefaultRuntimeExecutor implements RuntimeExecutor {
     }
 
     @Override
-    public ExecutorService get() {
-        return this.executorService;
+    public void execute(Runnable runnable) {
+        this.executorService.execute(runnable);
+    }
+
+    @Override
+    public void asyncShutdown() {
+        this.executorService.submit(() -> {
+            try {
+                shutdown();
+            }
+            catch (Exception e){
+                logger.error(e.getMessage(), e);
+            }
+        });
     }
 
     /**

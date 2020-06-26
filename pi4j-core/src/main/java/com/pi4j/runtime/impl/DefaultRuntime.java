@@ -210,16 +210,8 @@ public class DefaultRuntime implements Runtime {
     }
 
     @Override
-    public Future<Context> asyncShutdown() {
-        return executor.get().submit(() -> {
-            try {
-                shutdown();
-            }
-            catch (Exception e){
-                logger.error(e.getMessage(), e);
-            }
-            return context;
-        });
+    public void asyncShutdown() {
+        executor.asyncShutdown();
     }
 
     /** {@inheritDoc} */
@@ -321,8 +313,8 @@ public class DefaultRuntime implements Runtime {
         return this;
     }
 
-    private Future<Context> notifyInitListeners() {
-        return executor.get().submit(() -> {
+    private void notifyInitListeners() {
+        executor.execute(() -> {
             try {
                 // wait .5 seconds before dispatching event
                 // (allows time to register event listeners)
@@ -334,7 +326,6 @@ public class DefaultRuntime implements Runtime {
             catch (Exception e){
                 logger.error(e.getMessage(), e);
             }
-            return context;
         });
     }
 

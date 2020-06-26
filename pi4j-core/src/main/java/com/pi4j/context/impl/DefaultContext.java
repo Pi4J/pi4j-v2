@@ -162,8 +162,8 @@ public class DefaultContext implements Context {
     }
 
     @Override
-    public Future<Context> asyncShutdown() {
-        return this.runtime.asyncShutdown();
+    public void asyncShutdown() {
+        this.runtime.asyncShutdown();
     }
 
     @Override
