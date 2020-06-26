@@ -27,6 +27,9 @@ package com.pi4j.test.annotations;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.*;
 import com.pi4j.context.Context;
@@ -35,13 +38,13 @@ import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.plugin.mock.platform.MockPlatform;
 import com.pi4j.test.platform.TestPlatform;
 import com.pi4j.test.provider.TestDigitalInputProvider;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertFalse;
-
+@TestInstance(Lifecycle.PER_CLASS)
 public class DependencyInjectionDigitalInputTest {
 
     public static final int PIN_ADDRESS1 = 1;
@@ -63,7 +66,7 @@ public class DependencyInjectionDigitalInputTest {
     @WithPlatform(type = TestPlatform.class)
     DigitalInput inputUsingCustomProvider;
 
-    @Before
+    @BeforeAll
     public void beforeTest() throws Pi4JException {
         System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
@@ -85,7 +88,7 @@ public class DependencyInjectionDigitalInputTest {
                 .build().inject(this);
     }
 
-    @After
+    @AfterAll
     public void afterTest() {
         try {
             pi4j.shutdown();

@@ -29,6 +29,11 @@ package com.pi4j.plugin.pigpio.test.i2c;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.test.TestEnv;
@@ -37,14 +42,10 @@ import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProviderImpl;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 @DisplayName("PIGPIO Plugin :: Test I2C Raw Communication using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -162,7 +163,7 @@ public class TestI2cRawUsingTestHarness {
         assertNotNull(i2c);
 
         // ensure connection is open
-        assertTrue("I2C INSTANCE IS NOT OPEN", i2c.isOpen());
+        assertTrue(i2c.isOpen(), "I2C INSTANCE IS NOT OPEN");
     }
 
     @Test
@@ -178,7 +179,7 @@ public class TestI2cRawUsingTestHarness {
     @Order(3)
     public void testI2CSingleByteRead() throws Exception {
         // read single byte from the raw I2C device (not from a register)
-        Assert.assertEquals(SAMPLE_BYTE, i2c.readByte());
+        assertEquals(SAMPLE_BYTE, i2c.readByte());
     }
 
     @Test
@@ -195,7 +196,7 @@ public class TestI2cRawUsingTestHarness {
     public void testI2CByteArrayRead() throws Exception {
         // read an array of data bytes from the raw I2C device (not from a register)
         byte[] byteArray = i2c.readNBytes(SAMPLE_BYTE_ARRAY.length);
-        Assert.assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
+        assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
     }
 
     @Test
@@ -212,7 +213,7 @@ public class TestI2cRawUsingTestHarness {
     public void testI2CByteBufferRead() throws Exception {
         // read a buffer of data bytes from the raw I2C device (not from a register)
         ByteBuffer buffer = i2c.readByteBuffer(SAMPLE_BUFFER.capacity());
-        Assert.assertArrayEquals(SAMPLE_BUFFER.array(), buffer.array());
+        assertArrayEquals(SAMPLE_BUFFER.array(), buffer.array());
     }
 
     @Test
@@ -229,6 +230,6 @@ public class TestI2cRawUsingTestHarness {
     public void testI2CAsciiStringRead() throws Exception {
         // read a string of data from the raw I2C device (not from a register)
         String testString = i2c.readString(SAMPLE_STRING.length());
-        Assert.assertEquals(SAMPLE_STRING, testString);
+        assertEquals(SAMPLE_STRING, testString);
     }
 }

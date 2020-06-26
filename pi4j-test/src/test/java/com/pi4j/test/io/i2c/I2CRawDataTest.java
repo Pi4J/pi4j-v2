@@ -27,21 +27,27 @@ package com.pi4j.test.io.i2c;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.util.StringUtil;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.nio.ByteBuffer;
 import java.util.Random;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import static org.junit.Assert.assertNotNull;
-
+@TestInstance(Lifecycle.PER_CLASS)
 public class I2CRawDataTest {
     private Context pi4j;
 
@@ -53,7 +59,7 @@ public class I2CRawDataTest {
     private static ByteBuffer SAMPLE_BUFFER = ByteBuffer.wrap(SAMPLE_BUFFER_ARRAY);
     private static String SAMPLE_STRING = "Hello World!";
 
-    @Before
+    @BeforeEach
     public void beforeTest() throws Pi4JException {
         // Initialize Pi4J with auto context
         // An auto context enabled AUTO-DETECT loading
@@ -62,7 +68,7 @@ public class I2CRawDataTest {
         pi4j = Pi4J.newAutoContext();
     }
 
-    @After
+    @AfterEach
     public void afterTest() {
         try {
             pi4j.shutdown();
@@ -100,21 +106,21 @@ public class I2CRawDataTest {
 
             // read single byte from the raw I2C device (not from a register)
             byte b = (byte)i2c.read();
-            Assert.assertEquals(SAMPLE_BYTE, b);
+            assertEquals(SAMPLE_BYTE, b);
 
             // read an array of data bytes from the raw I2C device (not from a register)
             byte byteArray[] = new byte[SAMPLE_BYTE_ARRAY.length];
             i2c.read(byteArray, 0, byteArray.length);
-            Assert.assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
+            assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
 
             // read a buffer of data bytes from the raw I2C device (not from a register)
             ByteBuffer buffer = ByteBuffer.allocate(SAMPLE_BUFFER.capacity());
             i2c.read(buffer, 0, buffer.capacity());
-            Assert.assertArrayEquals(SAMPLE_BUFFER_ARRAY, buffer.array());
+            assertArrayEquals(SAMPLE_BUFFER_ARRAY, buffer.array());
 
             // read a string of data from the raw I2C device (not from a register)
             String testString = i2c.readString(SAMPLE_STRING.length());
-            Assert.assertEquals(SAMPLE_STRING, testString);
+            assertEquals(SAMPLE_STRING, testString);
         }
     }
 
@@ -146,7 +152,7 @@ public class I2CRawDataTest {
             System.out.println("[READ DATA  ] - 0x" + StringUtil.toHexString(result));
 
             // copare sample data against returned read data
-            Assert.assertArrayEquals(sample, result);
+            assertArrayEquals(sample, result);
         }
     }
 }

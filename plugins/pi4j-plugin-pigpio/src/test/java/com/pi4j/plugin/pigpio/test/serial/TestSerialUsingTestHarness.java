@@ -29,6 +29,11 @@ package com.pi4j.plugin.pigpio.test.serial;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.LifecycleException;
@@ -42,14 +47,10 @@ import com.pi4j.plugin.pigpio.provider.serial.PiGpioSerialProviderImpl;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 @DisplayName("PIGPIO Plugin :: Test Serial Communication using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -180,7 +181,7 @@ public class TestSerialUsingTestHarness {
         assertNotNull(serial);
 
         // ensure connection is open
-        assertTrue("SERIAL INSTANCE IS NOT OPEN", serial.isOpen());
+        assertTrue(serial.isOpen(), "SERIAL INSTANCE IS NOT OPEN");
     }
 
     @Test
@@ -196,7 +197,7 @@ public class TestSerialUsingTestHarness {
     @Order(3)
     public void testSerialSingleByteRead() throws Exception {
         // read single byte from the serial device
-        Assert.assertEquals(SAMPLE_BYTE, serial.readByte());
+        assertEquals(SAMPLE_BYTE, serial.readByte());
     }
 
     @Test
@@ -213,7 +214,7 @@ public class TestSerialUsingTestHarness {
     public void testSerialByteArrayRead() throws Exception {
         // read an array of data bytes from the serial device
         byte[] byteArray = serial.readNBytes(SAMPLE_BYTE_ARRAY.length);
-        Assert.assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
+        assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
     }
 
     @Test
@@ -230,7 +231,7 @@ public class TestSerialUsingTestHarness {
     public void testSerialByteBufferRead() throws Exception {
         // read a buffer of data bytes from the serial device
         ByteBuffer buffer = serial.readByteBuffer(SAMPLE_BUFFER.capacity());
-        Assert.assertArrayEquals(SAMPLE_BUFFER.array(), buffer.array());
+        assertArrayEquals(SAMPLE_BUFFER.array(), buffer.array());
     }
 
     @Test
@@ -247,7 +248,7 @@ public class TestSerialUsingTestHarness {
     public void testSerialAsciiStringRead() throws Exception {
         // read a string of data from the serial device
         String testString = serial.readString(SAMPLE_STRING.length());
-        Assert.assertEquals(SAMPLE_STRING, testString);
+        assertEquals(SAMPLE_STRING, testString);
     }
 
 }

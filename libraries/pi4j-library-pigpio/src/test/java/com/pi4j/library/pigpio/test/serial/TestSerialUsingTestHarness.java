@@ -29,6 +29,9 @@ package com.pi4j.library.pigpio.test.serial;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.library.pigpio.test.TestEnv;
@@ -36,7 +39,6 @@ import com.pi4j.library.pigpio.util.StringUtil;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -151,12 +153,12 @@ public class TestSerialUsingTestHarness {
             // READ :: NUMBER OF BYTES AVAILABLE TO READ
             int available = pigpio.serDataAvailable(handle);
             System.out.println(" (READ)  << AVAIL = " + available);
-            Assert.assertEquals("SERIAL BYTE VALUE MISMATCH",  1, available);
+            assertEquals(1, available, "SERIAL BYTE VALUE MISMATCH");
 
              // READ :: SINGLE RAW BYTE
             int rx = pigpio.serReadByte(handle);
             System.out.println(" (READ)  << VALUE = 0x" + Integer.toHexString(rx));
-            Assert.assertEquals("SERIAL BYTE VALUE MISMATCH",  b, rx);
+            assertEquals(b, rx, "SERIAL BYTE VALUE MISMATCH");
             System.out.println();
         }
     }
@@ -194,7 +196,7 @@ public class TestSerialUsingTestHarness {
             // READ :: NUMBER OF BYTES AVAILABLE TO READ
             int available = pigpio.serDataAvailable(handle);
             System.out.println(" (READ)  << AVAIL = " + available);
-            Assert.assertEquals("SERIAL READ AVAIL MISMATCH",  testData.length, available);
+            assertEquals(testData.length, available, "SERIAL READ AVAIL MISMATCH");
 
             // take a breath while buffer catches up
             Thread.sleep(50);
@@ -207,7 +209,7 @@ public class TestSerialUsingTestHarness {
 
             Thread.sleep(50);
 
-            Assert.assertArrayEquals("SERIAL MULTI-BYTE VALUE MISMATCH",  testData, readBuffer);
+            assertArrayEquals(testData, readBuffer, "SERIAL MULTI-BYTE VALUE MISMATCH");
         }
     }
 }

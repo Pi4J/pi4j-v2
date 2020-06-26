@@ -29,13 +29,15 @@ package com.pi4j.library.pigpio.test.i2c;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.library.pigpio.test.TestEnv;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -156,7 +158,7 @@ public class TestI2cRawUsingTestHarness {
             byte rx = (byte)pigpio.i2cReadByte(handle);
             System.out.println(" (READ)  << VALUE = " + Byte.toUnsignedInt(rx));
 
-            Assert.assertEquals("I2C BYTE VALUE MISMATCH",  b, Byte.toUnsignedInt(rx));
+            assertEquals(b, Byte.toUnsignedInt(rx), "I2C BYTE VALUE MISMATCH");
         }
     }
 
@@ -189,9 +191,9 @@ public class TestI2cRawUsingTestHarness {
             if(result > 0) {
                 String resultString = new String(buffer);
                 System.out.println(" (READ)  << VALUE = " + resultString);
-                Assert.assertEquals("I2C MULTI-BYTE VALUE MISMATCH", value, resultString);
+                assertEquals(value, resultString, "I2C MULTI-BYTE VALUE MISMATCH");
             } else {
-                Assert.fail("I2C READ FAILED: " + result);
+                fail("I2C READ FAILED: " + result);
             }
 
             Thread.sleep(20);

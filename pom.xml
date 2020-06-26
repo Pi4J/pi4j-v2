@@ -216,7 +216,6 @@
         <ant-jsch.version>1.10.8</ant-jsch.version>
         <jsch.version>0.1.55</jsch.version>
         <ant-contrib.version>20020829</ant-contrib.version>
-        <junit.version>4.13</junit.version>
         <junit.jupiter.version>5.6.2</junit.jupiter.version>
         <junit.platform.version>1.6.2</junit.platform.version>
         <slf4j.version>2.0.0-alpha1</slf4j.version>
@@ -293,12 +292,6 @@
 
             <!-- UNIT TESTING DEPENDENCIES -->
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
                 <version>${junit.jupiter.version}</version>
@@ -333,11 +326,6 @@
             <groupId>com.fazecast</groupId>
             <artifactId>jSerialComm</artifactId>
             <version>2.5.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

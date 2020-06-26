@@ -29,6 +29,8 @@ package com.pi4j.library.pigpio.test.pwm;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.library.pigpio.test.TestEnv;
@@ -36,7 +38,6 @@ import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -221,7 +222,7 @@ public class TestHardwarePwmUsingTestHarness {
                         pigpio.gpioHardwarePWM(p, 0, 0);
 
                         // give up and fail
-                        Assert.fail("PWM MEASURED FREQUENCY OUT OF ACCEPTABLE MARGIN OF ERROR");
+                        fail("PWM MEASURED FREQUENCY OUT OF ACCEPTABLE MARGIN OF ERROR");
                     }
                 }
             }

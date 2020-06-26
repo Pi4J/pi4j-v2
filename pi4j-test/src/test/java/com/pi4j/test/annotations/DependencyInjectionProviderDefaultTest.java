@@ -27,6 +27,9 @@ package com.pi4j.test.annotations;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.pi4j.Pi4J;
 import com.pi4j.annotation.Inject;
 import com.pi4j.context.Context;
@@ -34,13 +37,13 @@ import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.test.About;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertFalse;
-
+@TestInstance(Lifecycle.PER_CLASS)
 public class DependencyInjectionProviderDefaultTest {
 
     @Inject
@@ -52,7 +55,7 @@ public class DependencyInjectionProviderDefaultTest {
     @Inject
     AnalogInputProvider ainProvider;
 
-    @Before
+    @BeforeAll
     public void beforeTest() throws Pi4JException {
         System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
@@ -66,7 +69,7 @@ public class DependencyInjectionProviderDefaultTest {
         Pi4J.newAutoContext().inject(this);
     }
 
-    @After
+    @AfterAll
     public void afterTest() {
         try {
             pi4j.shutdown();

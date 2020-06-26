@@ -27,6 +27,8 @@ package com.pi4j.test.registry;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
@@ -34,12 +36,13 @@ import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
 import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInputProvider;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import static org.junit.Assert.assertEquals;
-
+@TestInstance(Lifecycle.PER_CLASS)
 public class RegistryGetIoInstancesByProvider {
 
     public static final int PIN_ADDRESS_1 = 1;
@@ -50,7 +53,7 @@ public class RegistryGetIoInstancesByProvider {
 
     private Context pi4j;
 
-    @Before
+    @BeforeAll
     public void beforeTest() throws Exception {
 
         System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
@@ -74,7 +77,7 @@ public class RegistryGetIoInstancesByProvider {
         DigitalInput input2 = pi4j.din().create(PIN_ADDRESS_2, PIN_ID_2);
     }
 
-    @After
+    @AfterAll
     public void afterTest() {
         try {
             pi4j.shutdown();
@@ -88,7 +91,7 @@ public class RegistryGetIoInstancesByProvider {
         var retrieved = pi4j.registry().allByProvider(DigitalInputProvider.class);
 
         // verify the retrieved I/O instance is the same count we registered
-        assertEquals("The I/O instances retrieved from registry is not a match.", 2, retrieved.size());
+        assertEquals(2, retrieved.size(), "The I/O instances retrieved from registry is not a match.");
     }
 
     @Test
@@ -98,7 +101,7 @@ public class RegistryGetIoInstancesByProvider {
         var retrieved = pi4j.registry().allByIoType(IOType.DIGITAL_INPUT);
 
         // verify the retrieved I/O instance is the same count we registered
-        assertEquals("The I/O instances retrieved from registry is not a match.", 2, retrieved.size());
+        assertEquals(2, retrieved.size(), "The I/O instances retrieved from registry is not a match.");
     }
 
     @Test
@@ -108,7 +111,7 @@ public class RegistryGetIoInstancesByProvider {
         var retrieved = pi4j.registry().allByProvider(MockDigitalInputProvider.ID);
 
         // verify the retrieved I/O instance is the same count we registered
-        assertEquals("The I/O instances retrieved from registry is not a match.", 2, retrieved.size());
+        assertEquals(2, retrieved.size(), "The I/O instances retrieved from registry is not a match.");
     }
 
     @Test
@@ -118,7 +121,7 @@ public class RegistryGetIoInstancesByProvider {
         var retrieved = pi4j.registry().allByIoType(IOType.ANALOG_INPUT);
 
         // verify the retrieved I/O instance is ZERO
-        assertEquals("No I/O instances should have retrieved from registry using this IO type.", 0, retrieved.size());
+        assertEquals(0, retrieved.size(), "No I/O instances should have retrieved from registry using this IO type.");
     }
 
 }
