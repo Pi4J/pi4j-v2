@@ -62,6 +62,19 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>
+                        --illegal-access=permit
+                        --add-opens com.pi4j.test/com.pi4j.test=com.pi4j
+                        --add-opens com.pi4j.test/com.pi4j.test.annotations=com.pi4j
+                        --add-opens com.pi4j.test/com.pi4j.test.context=com.pi4j
+                        --add-opens com.pi4j.test/com.pi4j.test.io.i2c=com.pi4j
+                        --add-opens com.pi4j.test/com.pi4j.test.io.serial=com.pi4j
+                        --add-opens com.pi4j.test/com.pi4j.test.platform=com.pi4j
+                        --add-opens com.pi4j.test/com.pi4j.test.provider=com.pi4j
+                        --add-opens com.pi4j.test/com.pi4j.test.registry=com.pi4j
+                    </argLine>
+                </configuration>
             </plugin>
 
             <!-- INCLUDE SOURCE JAR -->

@@ -17,6 +17,9 @@
 ## PROJECT INFORMATION
 
 Project website: https://pi4j.com/ <br />
+
+![Pi4J V2 architecture](assets/draw.io/pi4j-v2-architecture.jpg)
+
 Pi4J Community Forum (*new*): https://forum.pi4j.com/ <br />
 Version 2.0 Project Discussions (*new*): https://forum.pi4j.com/category/6/version-2-0 <br />
 Project issues list: https://github.com/Pi4J/pi4j/issues <br />
@@ -35,6 +38,8 @@ Copyright (C) 2012-2020 Pi4J
 
 For full description of the code structure, how to compile... see 
 the ["Core code internals" on our website](https://v2.pi4j.com/core-code-internals).
+
+![Pi4J V2 code structure](assets/draw.io/pi4j-v2-code-structure.jpg)
 
 ### Adding a feature or solving a problem
 
