@@ -27,7 +27,6 @@ package com.pi4j.runtime;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.context.Context;
 import com.pi4j.event.InitializedEventProducer;
 import com.pi4j.event.ShutdownEventProducer;
@@ -77,14 +76,6 @@ public interface Runtime extends InitializedEventProducer<Runtime>, ShutdownEven
      */
     Context context();
 
-    /**
-     * <p>inject.</p>
-     *
-     * @param objects a {@link java.lang.Object} object.
-     * @return a {@link com.pi4j.runtime.Runtime} object.
-     * @throws com.pi4j.annotation.exception.AnnotationException if any.
-     */
-    Runtime inject(Object... objects) throws AnnotationException;
     /**
      * <p>shutdown.</p>
      *

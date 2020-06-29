@@ -31,8 +31,6 @@ module com.pi4j {
 
     // exposed interfaces/classes
     exports com.pi4j;
-    exports com.pi4j.annotation;
-    exports com.pi4j.annotation.exception;
     exports com.pi4j.common;
     exports com.pi4j.config;
     exports com.pi4j.config.exception;
@@ -60,41 +58,4 @@ module com.pi4j {
 
     // extensibility service interfaces
     uses com.pi4j.extension.Plugin;
-    uses com.pi4j.annotation.Processor;
-
-    // annotation processor implementations (for internal use)
-    provides com.pi4j.annotation.Processor
-            with com.pi4j.annotation.processor.injector.ContextInjector,
-                    com.pi4j.annotation.processor.injector.AnalogInputInjector,
-                    com.pi4j.annotation.processor.injector.AnalogOutputInjector,
-                    com.pi4j.annotation.processor.injector.DigitalInputInjector,
-                    com.pi4j.annotation.processor.injector.DigitalOutputInjector,
-                    com.pi4j.annotation.processor.injector.I2CInjector,
-                    com.pi4j.annotation.processor.injector.PlatformInjector,
-                    com.pi4j.annotation.processor.injector.PlatformsInjector,
-                    com.pi4j.annotation.processor.injector.ProviderGroupInjector,
-                    com.pi4j.annotation.processor.injector.ProviderInjector,
-                    com.pi4j.annotation.processor.injector.ProvidersInjector,
-                    com.pi4j.annotation.processor.injector.PwmInjector,
-                    com.pi4j.annotation.processor.injector.RegistryInjector,
-                    com.pi4j.annotation.processor.injector.SerialInjector,
-                    com.pi4j.annotation.processor.injector.SpiInjector,
-                    com.pi4j.annotation.processor.register.AnalogInputRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.AnalogOutputRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.AnalogValueChangeListenerRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.BindingRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.DigitalStateChangeListenerRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.DigitalInputRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.DigitalOutputRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.I2CRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.OnOffGroupRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.PlatformRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.ProviderRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.PwmRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.InitializedListenerRegistrationProcessor,
-                    com.pi4j.annotation.processor.register.ShutdownListenerRegistrationProcessor,
-                    com.pi4j.annotation.processor.event.AnalogValueChangeEventProcessor,
-                    com.pi4j.annotation.processor.event.DigitalStateChangeEventProcessor,
-                    com.pi4j.annotation.processor.event.InitializedEventProcessor,
-                    com.pi4j.annotation.processor.event.ShutdownEventProcessor;
 }

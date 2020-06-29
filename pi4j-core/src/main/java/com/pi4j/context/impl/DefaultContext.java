@@ -27,7 +27,6 @@ package com.pi4j.context.impl;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
 import com.pi4j.context.ContextProperties;
@@ -130,13 +129,6 @@ public class DefaultContext implements Context {
     /** {@inheritDoc} */
     @Override
     public Platforms platforms() { return this.platforms; }
-
-    /** {@inheritDoc} */
-    @Override
-    public Context inject(Object... objects) throws AnnotationException {
-        this.runtime.inject(objects);
-        return this;
-    }
 
     /** {@inheritDoc} */
     @Override
