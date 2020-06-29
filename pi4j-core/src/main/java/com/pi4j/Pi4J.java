@@ -73,12 +73,11 @@ public class Pi4J {
     }
 
     /**
-     * Returns a new empty 'Context' instance which represents the Pi4J runtime
-     * state and lifecycle.  This empty 'Context' will not contain
+     * Returns a new empty 'Context' instance which represents the Pi4J
+     * runtime state and lifecycle.  This empty 'Context' will not contain
      * any 'Platforms' or 'Providers' by default.  The empty context
-     * is most commonly used in conjunction with dependency injection
-     * where 'Platforms' and 'Providers' are injected into the runtime
-     * context via the use of '@Register' annotations.
+     * can be used if 'Platforms' and 'Providers' need to be added to the
+     * runtime context.
      *
      * @return Context
      * @throws com.pi4j.exception.Pi4JException if any.

@@ -27,7 +27,6 @@ package com.pi4j.context;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
 import com.pi4j.config.Config;
@@ -113,16 +112,6 @@ public interface Context extends Describable,
      * @return {@link Future} of {@link Context}
      */
     Future<Context> asyncShutdown();
-
-    /**
-     * <p>inject.</p>
-     *
-     * @param objects a {@link java.lang.Object} object.
-     * @return a {@link com.pi4j.context.Context} object.
-     * @throws com.pi4j.annotation.exception.AnnotationException if any.
-     */
-    Context inject(Object... objects) throws AnnotationException;
-
 
     // ------------------------------------------------------------------------
     // PLATFORM ACCESSOR METHODS
