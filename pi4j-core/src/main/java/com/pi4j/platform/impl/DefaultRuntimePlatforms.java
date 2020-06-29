@@ -98,6 +98,25 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
         if(platforms.containsKey(platformId)){
             return true;
         }
+
+        // additionally attempt to resolve the platform by its class name
+        try {
+            Class platformClass = Class.forName(platformId);
+            if (platformClass != null && Platform.class.isAssignableFrom(platformClass)) {
+                for(Platform platform : platforms.values()){
+                    if(platformClass.isInstance(platform)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (ClassNotFoundException e){}
+
+        // if not found, attempt to resolve platform by class name
+        for (Platform platform : platforms.values()) {
+            if(platform.getClass().getName().equalsIgnoreCase(platformId)){
+                return true;
+            }
+        }
         return false;
     }
 
@@ -109,6 +128,19 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
         if(platforms.containsKey(platformId)){
             return platforms.get(platformId);
         }
+
+        // additionally attempt to resolve the platform by its class name
+        try {
+            Class platformClass = Class.forName(platformId);
+            if (platformClass != null && Platform.class.isAssignableFrom(platformClass)) {
+                for(Platform platform : platforms.values()){
+                    if(platformClass.isInstance(platform)) {
+                        return platform;
+                    }
+                }
+            }
+        } catch (ClassNotFoundException e){}
+
         throw new PlatformNotFoundException(platformId);
     }
 
