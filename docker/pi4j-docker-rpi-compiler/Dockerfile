@@ -24,7 +24,7 @@ ENV CROSS_PREFIX="/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian
 ENV CCPREFIX="${CROSS_PREFIX}"
 #ENV CC="arm-linux-gnueabihf-gcc"
 ENV RPI_CROSS_COMPILE="true"
-ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/bin/"
+ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/"
 ENV BUILD_FOLDER /build
 ENV BUILD_TARGET="all"
 
