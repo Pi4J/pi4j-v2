@@ -60,9 +60,8 @@ install:
   - cd $PROJECT_DIR
 
 # ----------------------------------------------------------------------------------
-# Build the project including the
-# 'pi4j-native' project using the cross-compiler profile.
+# Build the project including any native libraries
 # ----------------------------------------------------------------------------------
 script:
-  - jdk_switcher use openjdk11
+  - export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:bin/javac::")
   - mvn clean install -Drelease-build
