@@ -296,7 +296,7 @@
                                                  classpathref="maven.plugin.classpath" />
                                         <if>
                                             <!-- check for DOCKER-COMPILER setting in the 'pi4j.native.compiler' property -->
-                                            <equals arg1="${pi4j.native.compiler}" arg2="DOCKER-COMPILER" />
+                                            <equals arg1="${pi4j.native.compiler.effective}" arg2="DOCKER-COMPILER" />
                                             <then>
                                                 <!-- perform native build using Pi4J Docker Builder Image for native cross-compiling -->
                                                 <exec dir="${project.build.directory}/build/native" executable="/bin/bash" failonerror="true">
@@ -306,7 +306,7 @@
                                             <else>
                                                 <if>
                                                     <!-- check for CROSS-COMPILER setting in the 'pi4j.native.compiler' property -->
-                                                    <equals arg1="${pi4j.native.compiler}" arg2="CROSS-COMPILER" />
+                                                    <equals arg1="${pi4j.native.compiler.effective}" arg2="CROSS-COMPILER" />
                                                     <then>
                                                         <!-- perform native build using cross-compiler toolchains directly on host -->
                                                         <exec dir="${project.build.directory}/build/native" executable="/bin/bash" failonerror="true">
