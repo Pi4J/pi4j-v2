@@ -53,13 +53,15 @@ install:
   - export PROJECT_DIR=$PWD
   - sudo apt-get update -qq
   - sudo apt-get install -qq tree
+  - sudo apt-get --force-yes --yes install gcc-aarch64-linux-gnu
+  - sudo apt-get --force-yes --yes install gcc-arm-linux-gnueabihf
   - cd $HOME
-  - git clone https://github.com/raspberrypi/tools rpi-tools
-  - export PATH=$PATH:$HOME/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
-  - export ARCH=arm
-  - export CCPREFIX=$HOME/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
-  - export CC=arm-linux-gnueabihf-gcc
-  - export RPI_CROSS_COMPILE=true
+#  - git clone https://github.com/raspberrypi/tools rpi-tools
+#  - export PATH=$PATH:$HOME/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
+#  - export ARCH=arm
+#  - export CCPREFIX=$HOME/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
+#  - export CC=arm-linux-gnueabihf-gcc
+#  - export RPI_CROSS_COMPILE=true
   - cd $PROJECT_DIR
 
 # ----------------------------------------------------------------------------------
@@ -69,4 +71,4 @@ install:
 #  ... Skip javadoc.
 # ----------------------------------------------------------------------------------
 script:
-  - mvn clean install -Pnative,docker
+  - mvn clean install -Pnative
