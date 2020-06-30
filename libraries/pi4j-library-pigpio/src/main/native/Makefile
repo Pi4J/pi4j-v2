@@ -3,9 +3,9 @@
 #	pi4j-pigpio - Pi4J Java (JNI) library wrapper for PIGPIO
 #
 
-
 #DEBUG	     = -g -O0
-DEBUG	     = -O3
+ARCH        := armhf
+DEBUG	       = -O3
 CC           = $(CROSS_PREFIX)gcc
 AR           = $(CROSS_PREFIX)ar
 RANLIB       = $(CROSS_PREFIX)ranlib
@@ -27,7 +27,7 @@ INCLUDE	     = -I. -Ipigpio                                              \
                -I/usr/local/include -I/usr/local/include/linux
 
 CFLAGS      := $(DEBUG) -Wall $(INCLUDE) -Winline -pipe $(CARGS) -fPIC
-LIBS         =  -L pigpio -lpigpio -lrt
+LIBS         =  -L lib/$(ARCH) -L pigpio -lpigpio -lrt
 
 TARGET=libpi4j-pigpio.so
 

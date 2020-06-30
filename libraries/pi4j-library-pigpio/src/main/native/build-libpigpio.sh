@@ -4,7 +4,7 @@
 # **********************************************************************
 # ORGANIZATION  :  Pi4J
 # PROJECT       :  Pi4J :: JNI Native Binding Library for PIGPIO
-# FILENAME      :  build.sh
+# FILENAME      :  build-libpigpio.sh
 #
 # This file is part of the Pi4J project. More information about
 # this project can be found here:  https://pi4j.com/
@@ -42,10 +42,9 @@ if [ -z $PIGPIO_DIRECTORY ]; then
 	PIGPIO_DIRECTORY=pigpio
 fi
 
-
-echo "============================"
-echo "Building PIGPIO Library   "
-echo "============================"
+echo "====================================="
+echo "BUILDING: ${ARCH}/libpigpio"
+echo "====================================="
 echo "REPOSITORY : $PIGPIO_REPO"
 echo "BRANCH     : $PIGPIO_BRANCH"
 echo "DIRECTORY  : $PIGPIO_DIRECTORY"
@@ -54,35 +53,23 @@ echo "DIRECTORY  : $PIGPIO_DIRECTORY"
 # clone PIGPIO from github
 # ----------------------------------
 rm -rf $PIGPIO_DIRECTORY
-git clone $PIGPIO_REPO -b $PIGPIO_BRANCH $PIGPIO_DIRECTORY
+git clone $PIGPIO_REPO -b $PIGPIO_BRANCH $PIGPIO_DIRECTORY --single-branch --depth 1
 
 #rm -f pigpio.tar
 #wget abyz.me.uk/rpi/pigpio/pigpio.tar
 #tar xf pigpio.tar
 
-
 # ----------------------------------
 # build latest PIGPIO
 # ----------------------------------
-echo
-echo "============================"
-echo "PIGPIO Build script"
-echo "============================"
-echo
-echo "Compiling PIGPIO library"
-
-echo "-----------------------------------------------------------"
-echo "Compiling 'libpigpio' library <STARTED>"
-echo "PI4J NATIVE COMPILER: $PI4J_NATIVE_COMPILER"
-echo "-----------------------------------------------------------"
 cd $PIGPIO_DIRECTORY
-if [[ "$PI4J_NATIVE_COMPILER" == "DOCKER-COMPILER" || "$PI4J_NATIVE_COMPILER" == "docker-compiler"  ]]; then
-  docker run --env BUILD_TARGET=lib -v $(PWD):/build pi4j/raspberrypi-compiler
-elif [[ "$PI4J_NATIVE_COMPILER" == "CROSS-COMPILER" || "$PI4J_NATIVE_COMPILER" == "cross-compiler" ]]; then
-  make clean lib --always-make CROSS_PREFIX=${CROSS_PREFIX}
-else
-  make clean lib --always-make
-fi
-echo "-----------------------------------------------------------"
-echo "Compiling 'libpigpio' <FINISHED>"
-echo "-----------------------------------------------------------"
+make clean lib --always-make \
+  CROSS_PREFIX=${CROSS_PREFIX} \
+  CC=$CC \
+  ARCH=$ARCH
+
+#echo "Copying PIGPIO library files to parent 'lib' folder"
+mkdir -p ../lib/${ARCH}
+cp libpigpio.so ../lib/${ARCH}/libpigpio.so
+cp libpigpiod_if.so ../lib/${ARCH}/libpigpiod_if.so
+cp libpigpiod_if2.so ../lib/${ARCH}/libpigpiod_if2.so

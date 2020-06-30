@@ -146,7 +146,6 @@
 	<!-- PROJECT MODULES -->
 	<modules>
         <!-- THE FOLLOWING MODULES ARE V2 -->
-        <module>docker/pi4j-docker</module>
         <module>libraries/pi4j-library</module>
         <module>pi4j-core</module>
         <module>plugins/pi4j-plugin</module>
@@ -158,16 +157,28 @@
         <!-- =================================================================== -->
         <!-- SELECT THE PROPER COMPILER OPTION FOR THE NATIVE LIBRARY BUILDS     -->
         <!-- The supported options are:                                          -->
-        <!--    "HOST-COMPILER"   for compiling directly on the embedded host    -->
         <!--    "CROSS-COMPILER"  for cross-compiling on your host with a cross  -->
-        <!--                      compiler environment already setup             -->
+        <!--                      compiler environment setup for 64-bit (aarch64)-->
+        <!--                      and 32-bit (armhf) platforms.  The host must   -->
+        <!--                      be a Linux-based system with an Intel/AMD or   -->
+        <!--                      ARM 64-bit CPU and Operating System.  The host -->
+        <!--                      can be a RaspberryPi 3B or 4B that is running  -->
+        <!--                      Pi OS 64-bit. (Unable to cross-compile for     -->
+        <!--                      64-bit library on 32-bit only hosts.)          -->
         <!--    "DOCKER-COMPILER" for cross-compiling inside a Docker container  -->
         <!--                      best option when compiling on MacOS or Windows -->
+        <!--                      This option is also suitable for a Linux-based -->
+        <!--                      system where you would prefer not to install   -->
+        <!--                      ARM-based cross-compilers and other build      -->
+        <!--                      environment requirements like Java/JDK and     -->
+        <!--                      Maven.  This open only requires that you have  -->
+        <!--                      Docker (https://www.docker.com/) or Docker     -->
+        <!--                      Desktop installed and running on a 64-bit      -->
+        <!--                      Intel/AMD or ARM host system.                  -->
         <!--                                                                     -->
         <!-- (Note: you should override these options in your local M2 settings) -->
         <!-- =================================================================== -->
-        <pi4j.native.compiler>HOST-COMPILER</pi4j.native.compiler>
-        <!--<pi4j.native.compiler>CROSS-COMPILER</pi4j.native.compiler>-->
+        <pi4j.native.compiler>CROSS-COMPILER</pi4j.native.compiler>
         <!--<pi4j.native.compiler>DOCKER-COMPILER</pi4j.native.compiler>-->
 
         <!-- DEFAULT SETTINGS FOR REMOTELY BUILDING NATIVE LIBRARY ON A REMOTE PLATFORM -->
@@ -244,7 +255,6 @@
         <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
         <s3-upload-maven-plugin.version>1.4</s3-upload-maven-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
-        <dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
 
         <!-- REPORTS VERSIONS -->
         <maven-project-info-reports-plugin.version>3.1.0</maven-project-info-reports-plugin.version>
@@ -618,14 +628,6 @@
                     <artifactId>maven-enforcer-plugin</artifactId>
                     <version>3.0.0-M2</version>
                 </plugin>
-
-                <!-- DOCKERFILE PLUGIN -->
-                <plugin>
-                    <groupId>com.spotify</groupId>
-                    <artifactId>dockerfile-maven-plugin</artifactId>
-                    <version>${dockerfile-maven-plugin.version}</version>
-                </plugin>
-
             </plugins>
         </pluginManagement>
 
@@ -898,16 +900,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-
-        <!-- BUILD DOCKER IMAGES -->
-        <profile>
-            <id>docker</id>
-            <activation>
-                <property>
-                    <name>release-build</name>
-                </property>
-            </activation>
         </profile>
 
         <!-- BUILD NATIVE SOURCES -->

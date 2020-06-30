@@ -51,7 +51,8 @@
                     <include>LICENSE.txt</include>
                     <include>NOTICE.txt</include>
                     <include>README.md</include>
-                    <include>lib/libpi4j-pigpio.so</include> <!-- include the native JNI library as a resource -->
+                    <include>lib/armhf/libpi4j-pigpio.so</include> <!-- include the native 32-bit JNI library as a resource -->
+                    <include>lib/aarch64/libpi4j-pigpio.so</include> <!-- include the native 64-bit JNI library as a resource -->
                 </includes>
             </resource>
             <resource>
@@ -63,7 +64,7 @@
         <!-- BUILD PLUGINS -->
         <plugins>
 
-            <!-- ENFORCE THAT THE NATIVE JNI SO FILE EXISTS TO BE INCLUDED IN FINAL JAR           -->
+            <!-- ENFORCE THAT THE NATIVE JNI SO FILES EXISTS TO BE INCLUDED IN FINAL JAR           -->
             <!-- (The "lippi4j-pigpio.so" JNI library is embedded as a resource in the JAR file.) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -79,7 +80,10 @@
                             <rules>
                                 <requireFilesExist>
                                     <files>
-                                        <file>${project.build.outputDirectory}/lib/libpi4j-pigpio.so</file>
+                                        <!-- include 32-bit (ARMHF) Pi4J PIGPIO JNI Library  -->
+                                        <file>${project.build.outputDirectory}/lib/armhf/libpi4j-pigpio.so</file>
+                                        <!-- include 64-bit (AARCH64) Pi4J PIGPIO JNI Library  -->
+                                        <file>${project.build.outputDirectory}/lib/aarch64/libpi4j-pigpio.so</file>
                                     </files>
                                 </requireFilesExist>
                             </rules>
@@ -136,7 +140,10 @@
                             <target name="pi4j-attach-native-library" >
                                 <taskdef  resource="net/sf/antcontrib/antcontrib.properties"
                                           classpathref="maven.plugin.classpath"/>
-                                <attachartifact file="${project.build.directory}/lib/libpi4j-pigpio.so" type="so"/>
+                                <!-- attach 32-bit (ARMHF) Pi4J PIGPIO JNI Library  -->
+                                <attachartifact file="${project.build.directory}/lib/armhf/libpi4j-pigpio.so" classifier="armhf" type="so"/>
+                                <!-- attach 64-bit (AARCH64) Pi4J PIGPIO JNI Library  -->
+                                <attachartifact file="${project.build.directory}/lib/aarch64/libpi4j-pigpio.so" classifier="aarch64" type="so"/>
                             </target>
                         </configuration>
                     </execution>
@@ -198,7 +205,21 @@
                                 </goals>
                                 <configuration>
                                     <artifactItems>
-                                        <!-- LIBPI4J-PIGPIO for the Raspberry-Pi platform            -->
+                                        <!-- LIBPI4J-PIGPIO for the Raspberry-Pi 32-bit (ARMHF) platform  -->
+                                        <!-- (download the JNI native library to a staging directory -->
+                                        <!--  so it can be included in the final packaged jar)       -->
+                                        <artifactItem>
+                                            <groupId>${project.groupId}</groupId>
+                                            <artifactId>${project.artifactId}</artifactId>
+                                            <version>${project.version}</version>
+                                            <classifier>armhf</classifier>
+                                            <type>so</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${project.build.directory}/lib/armhf</outputDirectory>
+                                            <destFileName>libpi4j-pigpio.so</destFileName>
+                                        </artifactItem>
+
+                                        <!-- LIBPI4J-PIGPIO for the Raspberry-Pi 64-bit (AARCH64) platform -->
                                         <!-- (download the JNI native library to a staging directory -->
                                         <!--  so it can be included in the final packaged jar)       -->
                                         <artifactItem>
@@ -206,8 +227,9 @@
                                             <artifactId>${project.artifactId}</artifactId>
                                             <version>${project.version}</version>
                                             <type>so</type>
+                                            <classifier>aarch64</classifier>
                                             <overWrite>true</overWrite>
-                                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                                            <outputDirectory>${project.build.directory}/lib/aarch64</outputDirectory>
                                             <destFileName>libpi4j-pigpio.so</destFileName>
                                         </artifactItem>
                                     </artifactItems>
@@ -258,8 +280,10 @@
                                 </goals>
                             </execution>
 
+                            <!-- TODO :: Reconfigure the build script to execute the Docker commands directly
+                                         instead of bash script (to provide build support for Windows) -->
                             <!-- build the native JNI library (and any dependencies needed)   -->
-                            <!-- copy the compiled JNI SO file to the "lib" staging directory -->
+                            <!-- copy the compiled JNI SO files to the "lib" staging directory -->
                             <execution>
                                 <id>pi4j-build-native</id>
                                 <phase>generate-resources</phase>
@@ -268,13 +292,43 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <exec dir="${project.build.directory}/build/native" executable="/bin/bash" failonerror="true">
-                                            <env key="PI4J_NATIVE_COMPILER" value="${pi4j.native.compiler}"/>
-                                            <arg value="build.sh"/>
-                                        </exec>
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                                 classpathref="maven.plugin.classpath" />
+                                        <if>
+                                            <!-- check for DOCKER-COMPILER setting in the 'pi4j.native.compiler' property -->
+                                            <equals arg1="${pi4j.native.compiler}" arg2="DOCKER-COMPILER" />
+                                            <then>
+                                                <!-- perform native build using Pi4J Docker Builder Image for native cross-compiling -->
+                                                <exec dir="${project.build.directory}/build/native" executable="/bin/bash" failonerror="true">
+                                                    <arg value="build-docker.sh"/>
+                                                </exec>
+                                            </then>
+                                            <else>
+                                                <if>
+                                                    <!-- check for CROSS-COMPILER setting in the 'pi4j.native.compiler' property -->
+                                                    <equals arg1="${pi4j.native.compiler}" arg2="CROSS-COMPILER" />
+                                                    <then>
+                                                        <!-- perform native build using cross-compiler toolchains directly on host -->
+                                                        <exec dir="${project.build.directory}/build/native" executable="/bin/bash" failonerror="true">
+                                                            <arg value="build.sh"/>
+                                                        </exec>
+                                                    </then>
+                                                    <else>
+                                                        <fail message="NATIVE BUILD FAILED/ABORTED; Missing or invalid 'pi4j.native.compiler' property. [${pi4j.native.compiler}]; Expected 'CROSS-COMPILER|DOCKER-COMPILER'"/>
+                                                    </else>
+                                                </if>
+                                            </else>
+                                        </if>
+
+                                        <!-- copy compiled 32-bit (ARMHF) Pi4J PIGPIO JNI Library  -->
                                         <copy failonerror="true" includeEmptyDirs="false"
-                                              file="${project.build.directory}/build/native/libpi4j-pigpio.so"
-                                              todir="${project.build.directory}/lib"/>
+                                              file="${project.build.directory}/build/native/lib/armhf/libpi4j-pigpio.so"
+                                              todir="${project.build.directory}/lib/armhf"/>
+
+                                        <!-- copy compiled 64-bit (AARCH64) Pi4J PIGPIO JNI Library  -->
+                                        <copy failonerror="true" includeEmptyDirs="false"
+                                              file="${project.build.directory}/build/native/lib/aarch64/libpi4j-pigpio.so"
+                                              todir="${project.build.directory}/lib/aarch64"/>
                                     </target>
                                 </configuration>
                             </execution>

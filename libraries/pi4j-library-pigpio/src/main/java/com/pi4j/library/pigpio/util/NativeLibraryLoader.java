@@ -87,7 +87,26 @@ public class NativeLibraryLoader {
 
         // if there is no overriding library path defined, then attempt to load native library from embedded resource
         else {
-            String path = "/lib/" + fileName;
+            // get CPU architecture from system properties
+            String osArch = System.getProperty("os.arch").toLowerCase();
+
+            // sanitize CPU architecture string
+            switch (osArch) {
+                case "arm":
+                    osArch = "armhf";
+                    break;
+                case "arm64":
+                    osArch = "aarch64";
+                    break;
+                case "aarch64":
+                    break;
+                default:
+                    throw new IllegalStateException("Pi4J has detected and UNKNOWN/UNSUPPORTED 'os.arch' : [" +
+                        osArch + "]; only 'arm|armhf' and 'arm64|aarch64' are supported.");
+            }
+
+            // include the CPU architecture in the embedded path
+            String path = "/lib/" + osArch + "/" + fileName;
             logger.debug("Attempting to load library [" + fileName + "] using path: [" + path + "]");
             try {
                 loadLibraryFromClasspath(path);
