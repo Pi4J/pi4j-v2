@@ -35,6 +35,8 @@ jdk:
   - openjdk11
 os:
   - linux
+arch: 
+  - arm64
 dist: 
   - bionic
 
