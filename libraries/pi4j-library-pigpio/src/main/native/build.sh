@@ -46,7 +46,7 @@ if [[ ("$KERNEL" != "Linux") ]]; then
     echo "This native build is only supported on Linux-based systems running on an Intel/AMD or ARM 64-bit platform."
     echo "BUILD ABORTED; REASON: KERNEL='$KERNEL'; EXPECTED='Linux'"
     echo "(NOTE: You can run this build using the Pi4J Docker Builder images from OSX, Windows, Linux.)"
-    exit
+    exit 1
 fi
 
 # validate compatible CPU architecture
@@ -54,7 +54,7 @@ ARCHITECTURE=$(uname -m)
 if [[ (("$ARCHITECTURE" != "aarch64") && ("$ARCHITECTURE" != "amd64") && ("$ARCHITECTURE" != "x86_64")) ]]; then
     echo "This native build is only supported on Linux-based systems running on an Intel/AMD or ARM 64-bit platform."
     echo "BUILD ABORTED; REASON: ARCHITECTURE='$ARCHITECTURE'; EXPECTED='aarch64|amd64|x86_64'"
-    exit
+    exit 1
 fi
 
 # ------------------------------------------------------

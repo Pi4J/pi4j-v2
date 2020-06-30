@@ -197,8 +197,9 @@
         <!-- i.e.:   mvn clean install -Pnative -Pcross-compile -->
         <!-- i.e.:   mvn clean install -Pnative -Pdocker -->
 
-        <!-- used internally; do not set a value here -->
-        <pi4j.native.compiler.effective></pi4j.native.compiler.effective>
+        <!-- used internally; do not change value here -->
+        <!-- BY DEFAULT, ENABLE THE 'CROSS-COMPILER' FOR NATIVE BUILDS -->
+        <pi4j.native.compiler.effective>CROSS-COMPILER</pi4j.native.compiler.effective>
 
         <!-- DEFAULT SETTINGS FOR REMOTELY BUILDING NATIVE LIBRARY ON A REMOTE PLATFORM -->
         <pi4j.default.host>192.168.1.1</pi4j.default.host>
@@ -832,15 +833,12 @@
     </reporting>
 
     <profiles>
-        <!-- BY DEFAULT, ENABLE THE 'CROSS-COMPILER' FOR NATIVE BUILDS -->
+        <!-- DEFAULT PROFILE -->
         <profile>
             <id>default-profile</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <properties>
-                <pi4j.native.compiler.effective>CROSS-COMPILER</pi4j.native.compiler.effective>
-            </properties>
         </profile>
 
         <!-- INCLUDE HARDWARE INTEGRATION TESTS WHEN USING THIS BUILD PROFILE -->
