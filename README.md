@@ -34,6 +34,26 @@ Snapshot builds are available from:
 
 Copyright (C) 2012-2020 Pi4J
 
+## BUILD INSTRUCTIONS
+
+The Pi4J V2 codebase can be built using [Apache Maven 3.6.x](https://maven.apache.org/). and [Java JDK 11](https://openjdk.java.net/).
+The following command can be used to build the Pi4J V2 JARs:
+```
+mvn clean install
+```
+
+Pi4J V2 also includes native libraries that will need to be compiled if you are modifying any native code.
+Most users will never need to compile the native libraries as these artifacts are automatically downloaded  
+when building the Pi4J JARs from Maven repositories. One of the following commands can be used to build 
+the Pi4J V2 JARs and Native Libraries:
+```
+mvn clean install -Pnative
+mvn clean install -Pnative,docker
+```
+
+> **NOTE:** A comprehensive set of build instructions can be found in the [Pi4J V2 Documentation](https://v2.pi4j.com/build).
+
+
 ## CONTRIBUTING TO PI4J
 
 For full description of the code structure, how to compile... see 
@@ -80,13 +100,15 @@ Read all about it on [v2.pi4j.com](https://v2.pi4j.com/).
 
 ## IN DEVELOPMENT
 
-2019-02-27 :: 2.0-SNAPSHOT
+2020-06-30 :: 2.0-SNAPSHOT
 
   * Changed project to Apache License, Version 2.0
   * Removed `pi4j-device` library.  _(See [v2.pi4j.com](https://v2.pi4j.com/what-is-new))_
   * Removed `pi4j-gpio-extension` library.  _(See [v2.pi4j.com](https://v2.pi4j.com/what-is-new))_
   * Removed platform support for `Odroid`, `BananaPi`, `BPi`, `NanoPi`, `OrangePi`.  _(See [v2.pi4j.com](https://v2.pi4j.com/what-is-new))_
-
+  * Added support for 32-bit (`armhf`) and 64-bit (`aarch64`) distributions.
+  * Added support for native builds using Pi4J Docker Build images.
+  
 ## PREVIOUS RELEASES
 
 For previous 1.x release notes and source code, please see the 1.x branch
