@@ -69,4 +69,4 @@ install:
 #  ... Skip javadoc.
 # ----------------------------------------------------------------------------------
 script:
-  - mvn clean install -Pnative -Pcross-compile -Dmaven.javadoc.skip=false -DskipTests=true
+  - mvn clean install -Pnative,docker
