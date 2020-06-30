@@ -64,4 +64,5 @@ install:
 # 'pi4j-native' project using the cross-compiler profile.
 # ----------------------------------------------------------------------------------
 script:
+  - jdk_switcher use openjdk11
   - mvn clean install -Drelease-build
