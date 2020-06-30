@@ -75,13 +75,33 @@ public class NativeLibraryLoader {
             // if the overriding library path is set to "system", then attempt to use the system resolved library paths
             if (libpath.equalsIgnoreCase("system")) {
                 logger.debug("Attempting to load library using {pi4j.library.path} system resolved library name: [" + libName + "]");
-                System.loadLibrary(libName);
+                try {
+                    System.loadLibrary(libName);
+                }
+                catch (Exception ex){
+                    //throw this error
+                    throw new UnsatisfiedLinkError("Pi4J was unable load the native library [" +
+                        libName + "] from the system defined library path.  The system property 'pi4j.library.path' is defined as [" +
+                        libpath + "]. You can alternatively define the 'pi4j.library.path' " +
+                        "system property to override this behavior and specify an absolute library path." +
+                        "; UNDERLYING EXCEPTION: [" + ex.getClass().getName() + "]=" + ex.getMessage());
+                }
             }
             // if the overriding library path is set to something else, then attempt to use the defined path to resolve library
             else {
                 String path = Paths.get(libpath, fileName).toString();
                 logger.debug("Attempting to load library using {pi4j.library.path} defined path: [" + path + "]");
-                System.load(path);
+                try {
+                    System.load(path);
+                }
+                catch (Exception ex){
+                    //throw this error
+                    throw new UnsatisfiedLinkError("Pi4J was unable load the native library [" +
+                        libName + "] from the user defined library path.  The system property 'pi4j.library.path' is defined as [" +
+                        libpath + "]. Please make sure the defined the 'pi4j.library.path' " +
+                        "system property contains the correct absolute library path." +
+                        "; UNDERLYING EXCEPTION: [" + ex.getClass().getName() + "]=" + ex.getMessage());
+                }
             }
         }
 
@@ -113,6 +133,13 @@ public class NativeLibraryLoader {
                 logger.debug("Library [" + fileName + "] loaded successfully using embedded resource file: [" + path + "]");
             } catch (Exception | UnsatisfiedLinkError e) {
                 logger.error("Unable to load [" + fileName + "] using path: [" + path + "]", e);
+
+                //throw this error
+                throw new UnsatisfiedLinkError("Pi4J was unable to extract and load the native library [" +
+                    path + "] from the embedded resources inside this JAR [" +
+                    NativeLibraryLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath() +
+                    "]. to a temporary location on this system.  You can alternatively define the 'pi4j.library.path' " +
+                    "system property to override this behavior and specify the library path.");
             }
         }
 	}
