@@ -58,7 +58,7 @@ install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq tree git build-essential file curl wget
 #  - sudo apt-get --yes install gcc-multilib g++-multilib linux-libc-dev
-  - sudo apt-get --force-yes --yes install gcc-aarch64-linux-gnu
+#  - sudo apt-get --force-yes --yes install gcc-aarch64-linux-gnu
   - sudo apt-get --force-yes --yes install gcc-arm-linux-gnueabihf
   - cd $HOME
 #  - git clone https://github.com/raspberrypi/tools rpi-tools
