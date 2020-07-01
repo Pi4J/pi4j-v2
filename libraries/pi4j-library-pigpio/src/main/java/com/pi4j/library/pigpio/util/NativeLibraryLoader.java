@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -66,6 +67,7 @@ public class NativeLibraryLoader {
 			return;
 		}
 
+		// cache loaded library
 		loadedLibraries.add(fileName);
 
 		// determine if there is an overriding library path defined for native libraries
@@ -76,6 +78,7 @@ public class NativeLibraryLoader {
             if (libpath.equalsIgnoreCase("system")) {
                 logger.debug("Attempting to load library using {pi4j.library.path} system resolved library name: [" + libName + "]");
                 try {
+                    // load library from JVM system library path; based on library name
                     System.loadLibrary(libName);
                 }
                 catch (Exception ex){
@@ -87,11 +90,40 @@ public class NativeLibraryLoader {
                         "; UNDERLYING EXCEPTION: [" + ex.getClass().getName() + "]=" + ex.getMessage());
                 }
             }
-            // if the overriding library path is set to something else, then attempt to use the defined path to resolve library
-            else {
+
+            // if the overriding library path is set to "local", then attempt to use the JAR local path to resolve library
+            else if (libpath.equalsIgnoreCase("local")) {
+                // get local directory path of JAR file
+                try {
+                    libpath = NativeLibraryLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+                } catch (URISyntaxException e) {
+                    logger.error(e.getMessage(), e);
+                    libpath = ".";
+                }
+                // build path based on lib directory and lib filename
                 String path = Paths.get(libpath, fileName).toString();
                 logger.debug("Attempting to load library using {pi4j.library.path} defined path: [" + path + "]");
                 try {
+                    // load library from local path of this JAR file
+                    System.load(path);
+                }
+                catch (Exception ex){
+                    //throw this error
+                    throw new UnsatisfiedLinkError("Pi4J was unable load the native library [" +
+                        libName + "] from the user defined library path.  The system property 'pi4j.library.path' is defined as [" +
+                        libpath + "]. Please make sure the defined the 'pi4j.library.path' " +
+                        "system property contains the correct absolute library path." +
+                        "; UNDERLYING EXCEPTION: [" + ex.getClass().getName() + "]=" + ex.getMessage());
+                }
+            }
+
+            // if the overriding library path is set to something else, then attempt to use the defined path to resolve library
+            else {
+                // build path based on lib directory and lib filename
+                String path = Paths.get(libpath, fileName).toString();
+                logger.debug("Attempting to load library using {pi4j.library.path} defined path: [" + path + "]");
+                try {
+                    // load library from user defined absolute path provided via pi4j.library.path}
                     System.load(path);
                 }
                 catch (Exception ex){
