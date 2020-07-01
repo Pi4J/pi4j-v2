@@ -6,6 +6,8 @@
 [![License](https://img.shields.io/github/license/pi4j/pi4j-v2)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core)
 [![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.pi4j/pi4j-core?server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/#nexus-search;gav~com.pi4j~~~~)
+[![Site](https://img.shields.io/badge/Website-v2.pi4j.com-lightgrey)](https://v2.pi4j.com)
+[![Docs](https://img.shields.io/badge/Docs-v2.pi4j.com-blue)](https://v2.pi4j.com/documentation)
 [![Twitter Follow](https://img.shields.io/twitter/follow/pi4j?label=Pi4J&style=social)](https://twitter.com/pi4j)
 
 ---
