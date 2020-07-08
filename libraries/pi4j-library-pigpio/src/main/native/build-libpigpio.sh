@@ -66,6 +66,7 @@ cd $PIGPIO_DIRECTORY
 make clean lib --always-make \
   CROSS_PREFIX=${CROSS_PREFIX} \
   CC=$CC \
+  CFLAGS="-O3 -Wall -pthread ${CARGS}" \
   ARCH=$ARCH
 
 #echo "Copying PIGPIO library files to parent 'lib' folder"

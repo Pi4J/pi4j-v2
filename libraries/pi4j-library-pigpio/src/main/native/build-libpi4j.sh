@@ -67,6 +67,7 @@ make clean all \
   CROSS_PREFIX=${CROSS_PREFIX} \
   CC=${CC} \
   ARCH=${ARCH} \
+  CARGS="${CARGS}" \
   TARGET=lib/${ARCH}/libpi4j-pigpio.so $@
 
 echo
