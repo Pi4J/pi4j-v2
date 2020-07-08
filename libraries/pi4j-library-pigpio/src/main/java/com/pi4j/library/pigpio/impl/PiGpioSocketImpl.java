@@ -1076,7 +1076,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
-        validateI2cBlockLength(data.length);
+        validateI2cBlockLength(length);
         PiGpioPacket tx = new PiGpioPacket(I2CWI, handle, register).data(data, offset, length);
         PiGpioPacket rx = sendPacket(tx);
         logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());

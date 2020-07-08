@@ -1131,7 +1131,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
-        validateI2cBlockLength(data.length);
+        validateI2cBlockLength(length);
         Objects.checkFromIndexSize(offset, length, data.length);
         // write data array to I2C device register
         int result = PIGPIO.i2cWriteI2CBlockData(handle, register, data, offset, length);
