@@ -71,6 +71,12 @@ public class Mock {
     /** Constant <code>DIGITAL_OUTPUT_PROVIDER_ID="ID + -digital-output"</code> */
     public static final String DIGITAL_OUTPUT_PROVIDER_ID = ID + "-digital-output";
 
+    // Digital Multipurpose (GPIO) Provider name and unique ID
+    /** Constant <code>DIGITAL_MULTIPURPOSE_PROVIDER_NAME="NAME +   Digital Multipurpose (GPIO) Provider"</code> */
+    public static final String DIGITAL_MULTIPURPOSE_PROVIDER_NAME = NAME +  " Digital Multipurpose (GPIO) Provider";
+    /** Constant <code>DIGITAL_MULTIPURPOSE_PROVIDER_ID="ID + -digital-output"</code> */
+    public static final String DIGITAL_MULTIPURPOSE_PROVIDER_ID = ID + "-digital-multipurpose";
+
     // PWM Provider name and unique ID
     /** Constant <code>PWM_PROVIDER_NAME="NAME +  PWM Provider"</code> */
     public static final String PWM_PROVIDER_NAME = NAME + " PWM Provider";

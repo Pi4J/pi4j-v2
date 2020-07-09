@@ -33,6 +33,7 @@ import com.pi4j.plugin.mock.platform.MockPlatform;
 import com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogInputProvider;
 import com.pi4j.plugin.mock.provider.gpio.analog.MockAnalogOutputProvider;
 import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInputProvider;
+import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalMultipurposeProvider;
 import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProvider;
 import com.pi4j.plugin.mock.provider.i2c.MockI2CProvider;
 import com.pi4j.plugin.mock.provider.pwm.MockPwmProvider;
@@ -53,6 +54,7 @@ public class MockPlugin implements Plugin {
             MockAnalogOutputProvider.newInstance(),
             MockDigitalInputProvider.newInstance(),
             MockDigitalOutputProvider.newInstance(),
+            MockDigitalMultipurposeProvider.newInstance(),
             MockPwmProvider.newInstance(),
             MockI2CProvider.newInstance(),
             MockSpiProvider.newInstance(),
