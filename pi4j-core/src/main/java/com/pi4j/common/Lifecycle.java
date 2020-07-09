@@ -38,16 +38,19 @@ import com.pi4j.exception.ShutdownException;
  * @version $Id: $Id
  */
 public interface Lifecycle<T> {
+
     /**
-     * <p>initialize.</p>
+     * <p>Initialize a lifecycle providing the {@link Context} which can be stored by the implementation for later
+     * reference, e.g. to start a thread in the {@link com.pi4j.executor.Executor}</p>
      *
      * @param context a {@link com.pi4j.context.Context} object.
      * @return a T object.
      * @throws com.pi4j.exception.InitializeException if any.
      */
     T initialize(Context context) throws InitializeException;
+
     /**
-     * <p>shutdown.</p>
+     * <p>Shutdown the lifecycle.</p>
      *
      * @param context a {@link com.pi4j.context.Context} object.
      * @return a T object.
