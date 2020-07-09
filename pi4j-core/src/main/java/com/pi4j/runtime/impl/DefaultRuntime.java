@@ -27,9 +27,6 @@ package com.pi4j.runtime.impl;
  * #L%
  */
 
-import com.pi4j.annotation.AnnotationEngine;
-import com.pi4j.annotation.exception.AnnotationException;
-import com.pi4j.annotation.impl.DefaultAnnotationEngine;
 import com.pi4j.context.Context;
 import com.pi4j.event.*;
 import com.pi4j.exception.InitializeException;
@@ -67,7 +64,6 @@ public class DefaultRuntime implements Runtime {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Context context;
-    private final AnnotationEngine annotationEngine;
     private final RuntimeRegistry registry;
     private final RuntimeProviders providers;
     private final RuntimePlatforms platforms;
@@ -95,7 +91,6 @@ public class DefaultRuntime implements Runtime {
         // set local references
         this.context = context;
         this.properties = DefaultRuntimeProperties.newInstance(context);
-        this.annotationEngine = DefaultAnnotationEngine.newInstance(context);
         this.registry = DefaultRuntimeRegistry.newInstance(this);
         this.providers = DefaultRuntimeProviders.newInstance(this);
         this.platforms = DefaultRuntimePlatforms.newInstance(this);

@@ -27,7 +27,6 @@ package com.pi4j.context.impl;
  * #L%
  */
 
-import com.pi4j.annotation.exception.AnnotationException;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
 import com.pi4j.context.ContextProperties;

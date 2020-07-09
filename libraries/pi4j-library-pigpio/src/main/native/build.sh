@@ -3,7 +3,7 @@
 # #%L
 # **********************************************************************
 # ORGANIZATION  :  Pi4J
-# PROJECT       :  Pi4J :: JNI Native Library
+# PROJECT       :  Pi4J :: JNI Native Binding Library for PIGPIO
 # FILENAME      :  build.sh
 #
 # This file is part of the Pi4J project. More information about
@@ -28,24 +28,58 @@
 # #L%
 ###
 
+echo
+echo "**********************************************************************"
+echo "*                                                                    *"
+echo "*            Pi4J PIGPIO LIBRARY NATIVE BUILD <STARTED>              *"
+echo "*                                                                    *"
+echo "**********************************************************************"
+echo
+
+# ------------------------------------------------------
+# VALIDATE BUILD PLATFORM; PRECONDITIONS
+# ------------------------------------------------------
+
+# validate compatible OS/Kernel
+KERNEL=$(uname -s)
+if [[ ("$KERNEL" != "Linux") ]]; then
+    echo "This native build is only supported on Linux-based systems running on an Intel/AMD or ARM 64-bit platform."
+    echo "BUILD ABORTED; REASON: KERNEL='$KERNEL'; EXPECTED='Linux'"
+    echo "(NOTE: You can run this build using the Pi4J Docker Builder images from OSX, Windows, Linux.)"
+    exit 1
+fi
+
+# validate compatible CPU architecture
+ARCHITECTURE=$(uname -m)
+if [[ (("$ARCHITECTURE" != "aarch64") && ("$ARCHITECTURE" != "amd64") && ("$ARCHITECTURE" != "x86_64")) ]]; then
+    echo "This native build is only supported on Linux-based systems running on an Intel/AMD or ARM 64-bit platform."
+    echo "BUILD ABORTED; REASON: ARCHITECTURE='$ARCHITECTURE'; EXPECTED='aarch64|amd64|x86_64'"
+    exit 1
+fi
+
+# ------------------------------------------------------
+# ENSURE DEPENDENCY SCRIPTS ARE EXECUTABLE
+# ------------------------------------------------------
 # set executable permissions on build scripts
 chmod +x build-prerequisites.sh
-chmod +x build-pigpio.sh
-chmod +x build-pi4j.sh
+chmod +x build-libpigpio.sh
+chmod +x build-libpi4j.sh
 
 # ------------------------------------------------------
 # INSTALL BUILD PREREQUISITES
 # ------------------------------------------------------
-ARCHITECTURE=$(uname -m)
-echo "PLATFORM ARCH: $ARCHITECTURE"
-if [[ ( "$ARCHITECTURE" = "armv7l") || ("$ARCHITECTURE" = "armv6l") ]]; then
-   echo
-   echo "**********************************************************************"
-   echo "*                                                                    *"
-   echo "*                 INSTALLING Pi4J BUILD PREREQUISITES                *"
-   echo "*                                                                    *"
-   echo "**********************************************************************"
-   echo
+echo
+echo "====================================="
+echo " INSTALLING Pi4J BUILD PREREQUISITES "
+echo "====================================="
+echo
+
+# if running inside a Pi4J Docker Builder image, then there is no need to install prerequisites
+if [[ "${PI4J_BUILDER}" != "" ]]; then
+   echo "Running inside a Pi4J Docker Builder image; [version=${PI4J_BUILDER}; arch=${PI4J_BUILDER_ARCH}]"
+   echo "No need to check or install build environment prerequisites."
+else
+   # if this is a Linux-based system and a 64-bit Intel/AMD or ARM platform, then we can install the prerequisites
    # download and install development prerequisites
    ./build-prerequisites.sh
 fi
@@ -54,11 +88,9 @@ fi
 # JAVA_HOME ENVIRONMENT VARIABLE
 # ------------------------------------------------------
 echo
-echo "**********************************************************************"
-echo "*                                                                    *"
-echo "*           CHECKING JAVA_HOME ENVIRONMENT VARIABLE                  *"
-echo "*                                                                    *"
-echo "**********************************************************************"
+echo "========================================="
+echo " CHECKING JAVA_HOME ENVIRONMENT VARIABLE "
+echo "========================================="
 echo
 if [[ -n "$JAVA_HOME" ]]; then
    echo "'JAVA_HOME' already defined as: $JAVA_HOME";
@@ -68,39 +100,32 @@ else
 fi
 
 # ------------------------------------------------------
-# PIGPIO
+# BUILD NATIVE LIBRARIES FOR ARMv6,ARMv7,ARMv8 32-BIT (ARMHF)
+# USING THE LOCALLY INSTALLED ARM CROSS-COMPILER
 # ------------------------------------------------------
-echo
-echo "**********************************************************************"
-echo "*                                                                    *"
-echo "*             BUILDING PIGPIO LIBRARY (DEPENDENCY)                   *"
-echo "*                                                                    *"
-echo "**********************************************************************"
-echo
-if [[ -d "pigpio" ]] ; then
-    echo "The 'pigpio' library already exists; if you wish to rebuild, run a CLEAN build."
-else
-    ./build-pigpio.sh $@
-fi
-
+export CROSS_PREFIX=arm-linux-gnueabihf-
+export CC=arm-linux-gnueabihf-gcc
+export ARCH=armhf
+./build-libpi4j.sh $@
 
 # ------------------------------------------------------
-# Pi4J JNI Native Library
+# BUILD NATIVE LIBRARIES FOR ARMv8 64-BIT (ARM64)
+# USING THE LOCALLY INSTALLED ARM64 CROSS-COMPILER
 # ------------------------------------------------------
-echo
-echo "**********************************************************************"
-echo "*                                                                    *"
-echo "*                BUILDING Pi4J JNI -> PIGPIO LIBRARY                 *"
-echo "*                                                                    *"
-echo "**********************************************************************"
-echo
-./build-pi4j.sh $@
+export CROSS_PREFIX=aarch64-linux-gnu-
+export CC=aarch64-linux-gnu-gcc
+export ARCH=aarch64
+./build-libpi4j.sh $@
+
+echo "======================================"
+echo " Pi4J PIGPIO LIBRARY NATIVE ARTIFACTS "
+echo "======================================"
+tree -R lib
 
 echo
 echo "**********************************************************************"
 echo "*                                                                    *"
-echo "*                       Pi4J JNI BUILD COMPLETE                      *"
+echo "*           Pi4J PIGPIO LIBRARY NATIVE BUILD <FINISHED>              *"
 echo "*                                                                    *"
 echo "**********************************************************************"
 echo
-ls -la lib*

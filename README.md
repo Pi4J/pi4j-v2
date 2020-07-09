@@ -2,7 +2,13 @@
  Pi4J :: Java I/O Library for Raspberry Pi
 ==========================================================================
 
-[![Build Status](https://travis-ci.org/Pi4J/pi4j-v2.svg?branch=master)](https://travis-ci.org/Pi4J/pi4j-v2?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core)
+[![Build Status](https://travis-ci.org/Pi4J/pi4j-v2.svg?branch=master)](https://travis-ci.org/Pi4J/pi4j-v2?branch=master)
+[![License](https://img.shields.io/github/license/pi4j/pi4j-v2)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core)
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.pi4j/pi4j-core?server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/#nexus-search;gav~com.pi4j~~~~)
+[![Site](https://img.shields.io/badge/Website-v2.pi4j.com-lightgrey)](https://v2.pi4j.com)
+[![Docs](https://img.shields.io/badge/Docs-v2.pi4j.com-blue)](https://v2.pi4j.com/documentation)
+[![Twitter Follow](https://img.shields.io/twitter/follow/pi4j?label=Pi4J&style=social)](https://twitter.com/pi4j)
 
 ---
 
@@ -33,6 +39,26 @@ Snapshot builds are available from:
    *  [Downloads] https://pi4j.com/download.html
 
 Copyright (C) 2012-2020 Pi4J
+
+## BUILD INSTRUCTIONS
+
+The Pi4J V2 codebase can be built using [Apache Maven 3.6.x](https://maven.apache.org/). and [Java JDK 11](https://openjdk.java.net/).
+The following command can be used to build the Pi4J V2 JARs:
+```
+mvn clean install
+```
+
+Pi4J V2 also includes native libraries that will need to be compiled if you are modifying any native code.
+Most users will never need to compile the native libraries as these artifacts are automatically downloaded  
+when building the Pi4J JARs from Maven repositories. One of the following commands can be used to build 
+the Pi4J V2 JARs and Native Libraries:
+```
+mvn clean install -Pnative
+mvn clean install -Pnative,docker
+```
+
+> **NOTE:** A comprehensive set of build instructions can be found in the [Pi4J V2 Documentation](https://v2.pi4j.com/build).
+
 
 ## CONTRIBUTING TO PI4J
 
@@ -80,13 +106,15 @@ Read all about it on [v2.pi4j.com](https://v2.pi4j.com/).
 
 ## IN DEVELOPMENT
 
-2019-02-27 :: 2.0-SNAPSHOT
+2020-06-30 :: 2.0-SNAPSHOT
 
   * Changed project to Apache License, Version 2.0
   * Removed `pi4j-device` library.  _(See [v2.pi4j.com](https://v2.pi4j.com/what-is-new))_
   * Removed `pi4j-gpio-extension` library.  _(See [v2.pi4j.com](https://v2.pi4j.com/what-is-new))_
   * Removed platform support for `Odroid`, `BananaPi`, `BPi`, `NanoPi`, `OrangePi`.  _(See [v2.pi4j.com](https://v2.pi4j.com/what-is-new))_
-
+  * Added support for 32-bit (`armhf`) and 64-bit (`aarch64`) distributions.
+  * Added support for native builds using Pi4J Docker Build images.
+  
 ## PREVIOUS RELEASES
 
 For previous 1.x release notes and source code, please see the 1.x branch

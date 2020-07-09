@@ -3,8 +3,8 @@
 # #%L
 # **********************************************************************
 # ORGANIZATION  :  Pi4J
-# PROJECT       :  Pi4J :: JNI Native Library
-# FILENAME      :  install-prerequisites.sh
+# PROJECT       :  Pi4J :: JNI Native Binding Library for PIGPIO
+# FILENAME      :  build-prerequisites.sh
 #
 # This file is part of the Pi4J project. More information about
 # this project can be found here:  https://pi4j.com/
@@ -54,5 +54,23 @@ if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
     sudo apt-get --force-yes --yes install tree
   else
     echo " [PREREQUISITE] 'tree' already installed.";
+  fi
+
+  # gcc-arm-linux-gnueabihf
+  GCC_ARMHF_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc-arm-linux-gnueabihf)
+  if [[ "$?" == "1" ]] ; then
+    echo " [PREREQUISITE] installing 'gcc-arm-linux-gnueabihf'...";
+    sudo apt-get --force-yes --yes install gcc-arm-linux-gnueabihf
+  else
+    echo " [PREREQUISITE] 'gcc-arm-linux-gnueabihf' already installed.";
+  fi
+
+  # gcc-aarch64-linux-gnu
+  GCC_AARCH64_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc-aarch64-linux-gnu)
+  if [[ "$?" == "1" ]] ; then
+    echo " [PREREQUISITE] installing 'gcc-aarch64-linux-gnu'...";
+    sudo apt-get --force-yes --yes install gcc-aarch64-linux-gnu
+  else
+    echo " [PREREQUISITE] 'gcc-aarch64-linux-gnu' already installed.";
   fi
 fi
