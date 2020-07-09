@@ -5,7 +5,7 @@ package com.pi4j.io.gpio.digital;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (CORE)
- * FILENAME      :  DigitalOutput.java
+ * FILENAME      :  DigitalMultipurpose.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,9 +27,10 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
+
 import com.pi4j.context.Context;
+import com.pi4j.io.InputOutput;
 import com.pi4j.io.OnOff;
-import com.pi4j.io.Output;
 import com.pi4j.io.exception.IOException;
 
 import java.util.concurrent.Callable;
@@ -37,39 +38,78 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p>DigitalOutput interface.</p>
+ * <p>DigitalInput interface.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider>,
-        Output,
-        OnOff<DigitalOutput> {
+public interface DigitalMultipurpose extends
+    Digital<DigitalMultipurpose, DigitalMultipurposeConfig, DigitalMultipurposeProvider>,
+    InputOutput, OnOff<DigitalMultipurpose> {
+    /** Constant <code>DEFAULT_DEBOUNCE=10000</code> */
+    long DEFAULT_DEBOUNCE = 10000;
 
     /**
      * <p>newConfigBuilder.</p>
      *
      * @param context {@link Context}
-     * @return a {@link com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder} object.
+     * @return a {@link DigitalInputConfigBuilder} object.
      */
-    static DigitalOutputConfigBuilder newConfigBuilder(Context context){
-        return DigitalOutputConfigBuilder.newInstance(context);
-    }
-    /**
-     * <p>newBuilder.</p>
-     *
-     * @param context a {@link com.pi4j.context.Context} object.
-     * @return a {@link com.pi4j.io.gpio.digital.DigitalOutputBuilder} object.
-     */
-    static DigitalOutputBuilder newBuilder(Context context){
-        return DigitalOutputBuilder.newInstance(context);
+    static DigitalMultipurposeConfigBuilder newConfigBuilder(Context context){
+        return DigitalMultipurposeConfigBuilder.newInstance(context);
     }
 
     /**
-     * Get digital mode (input|output)
-     * @return OUTPUT
+     * <p>pull.</p>
+     *
+     * @return a {@link PullResistance} object.
      */
-    default DigitalMode mode() { return DigitalMode.OUTPUT; }
+    default PullResistance pull() { return config().pull(); }
+
+    /**
+     * Get digital mode (input|output)
+     * @return digital mode (input|output)
+     */
+    DigitalMode mode();
+
+    /**
+     * Set digital mode (input|output)
+     * @param mode DigitalMode (input|output)
+     * @return this I/O instance
+     */
+    DigitalMultipurpose mode(DigitalMode mode);
+
+    /**
+     * Set digital mode to INPUT
+     * @return this I/O instance
+     */
+    default DigitalMultipurpose input(){
+        return this.mode(DigitalMode.INPUT);
+    }
+
+    /**
+     * Return TRUE if mode is set to INPUT
+     * @return 'true' if mode is INPUT; else 'false'
+     */
+    default boolean isInput(){
+        return this.mode().isInput();
+    }
+
+    /**
+     * Return TRUE if mode is set to OUTPUT
+     * @return 'true' if mode is OUTPUT; else 'false'
+     */
+    default boolean isOutput(){
+        return this.mode().isOutput();
+    }
+
+    /**
+     * Set digital mode to OUTPUT
+     * @return this I/O instance
+     */
+    default DigitalMultipurpose output(){
+        return this.mode(DigitalMode.OUTPUT);
+    }
 
     /**
      * <p>state.</p>
@@ -78,7 +118,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    DigitalOutput state(DigitalState state) throws IOException;
+    DigitalMultipurpose state(DigitalState state) throws IOException;
 
     /**
      * <p>pulse.</p>
@@ -90,7 +130,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback) throws IOException;
+    DigitalMultipurpose pulse(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback) throws IOException;
     /**
      * <p>pulseAsync.</p>
      *
@@ -111,7 +151,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @param callback a {@link java.util.concurrent.Callable} object.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      */
-    DigitalOutput blink(int delay, int duration, TimeUnit unit, DigitalState state, Callable<Void> callback);
+    DigitalMultipurpose blink(int delay, int duration, TimeUnit unit, DigitalState state, Callable<Void> callback);
     /**
      * <p>blinkAsync.</p>
      *
@@ -131,7 +171,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput setState(boolean state) throws IOException {
+    default DigitalMultipurpose setState(boolean state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
     /**
@@ -141,7 +181,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput setState(byte state) throws IOException {
+    default DigitalMultipurpose setState(byte state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
     /**
@@ -151,7 +191,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput setState(short state) throws IOException {
+    default DigitalMultipurpose setState(short state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
     /**
@@ -161,7 +201,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput setState(int state) throws IOException {
+    default DigitalMultipurpose setState(int state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
     /**
@@ -171,7 +211,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput setState(long state) throws IOException {
+    default DigitalMultipurpose setState(long state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
     /**
@@ -181,7 +221,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput setState(float state) throws IOException {
+    default DigitalMultipurpose setState(float state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
     /**
@@ -191,7 +231,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput setState(double state) throws IOException {
+    default DigitalMultipurpose setState(double state) throws IOException {
         return this.state(DigitalState.getState(state));
     }
     /**
@@ -200,7 +240,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput high() throws IOException {
+    default DigitalMultipurpose high() throws IOException {
         return this.state(DigitalState.HIGH);
     }
     /**
@@ -209,7 +249,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput low() throws IOException {
+    default DigitalMultipurpose low() throws IOException {
         return this.state(DigitalState.LOW);
     }
     /**
@@ -218,10 +258,9 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput toggle() throws IOException {
+    default DigitalMultipurpose toggle() throws IOException {
         return this.state(DigitalState.getInverseState(this.state()));
     }
-
 
     /**
      * <p>pulseHigh.</p>
@@ -231,7 +270,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput pulseHigh(int interval, TimeUnit unit) throws IOException {
+    default DigitalMultipurpose pulseHigh(int interval, TimeUnit unit) throws IOException {
         return pulse(interval, unit, DigitalState.HIGH);
     }
     /**
@@ -242,7 +281,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput pulseLow(int interval, TimeUnit unit) throws IOException {
+    default DigitalMultipurpose pulseLow(int interval, TimeUnit unit) throws IOException {
         return pulse(interval, unit, DigitalState.LOW);
     }
 
@@ -278,7 +317,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput pulse(int interval, TimeUnit unit) throws IOException {
+    default DigitalMultipurpose pulse(int interval, TimeUnit unit) throws IOException {
         return pulse(interval, unit, DigitalState.HIGH);
     }
     /**
@@ -290,7 +329,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      * @throws com.pi4j.io.exception.IOException if any.
      */
-    default DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state) throws IOException {
+    default DigitalMultipurpose pulse(int interval, TimeUnit unit, DigitalState state) throws IOException {
         return pulse(interval, unit, state, null);
     }
 
@@ -323,7 +362,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @param unit a {@link java.util.concurrent.TimeUnit} object.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      */
-    default DigitalOutput blink(int interval, TimeUnit unit){
+    default DigitalMultipurpose blink(int interval, TimeUnit unit){
         return this.blink(interval, interval, unit);
     }
     /**
@@ -334,7 +373,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @param unit a {@link java.util.concurrent.TimeUnit} object.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      */
-    default DigitalOutput blink(int delay, int duration, TimeUnit unit){
+    default DigitalMultipurpose blink(int delay, int duration, TimeUnit unit){
         return this.blink(delay, duration, unit, DigitalState.HIGH);
     }
     /**
@@ -346,7 +385,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @param state a {@link com.pi4j.io.gpio.digital.DigitalState} object.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
      */
-    default DigitalOutput blink(int delay, int duration, TimeUnit unit, DigitalState state){
+    default DigitalMultipurpose blink(int delay, int duration, TimeUnit unit, DigitalState state){
         return this.blink(delay, duration, unit, state, null);
     }
 

@@ -47,6 +47,12 @@ public interface Digital<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CONFIG_TYPE,
 {
 
     /**
+     * Get digital mode (input|output)
+     * @return digital mode (input|output)
+     */
+    DigitalMode mode();
+
+    /**
      * <p>state.</p>
      *
      * @return a {@link com.pi4j.io.gpio.digital.DigitalState} object.
