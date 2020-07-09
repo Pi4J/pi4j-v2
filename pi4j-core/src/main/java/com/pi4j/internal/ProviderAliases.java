@@ -29,6 +29,7 @@ import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.analog.AnalogInputProvider;
 import com.pi4j.io.gpio.analog.AnalogOutputProvider;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
+import com.pi4j.io.gpio.digital.DigitalMultipurposeProvider;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.pwm.PwmProvider;
@@ -108,6 +109,17 @@ public interface ProviderAliases {
     }
 
     /**
+     * <p>dmulti.</p>
+     *
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws ProviderException if any.
+     */
+    default <T extends DigitalMultipurposeProvider> T dmulti() throws ProviderException{
+        return digitalMultipurpose();
+    }
+
+    /**
      * <p>analogInput.</p>
      *
      * @param <T> a T object.
@@ -149,6 +161,17 @@ public interface ProviderAliases {
      */
     default <T extends DigitalOutputProvider> T digitalOutput() throws ProviderException{
         return this.provider(IOType.DIGITAL_OUTPUT);
+    }
+
+    /**
+     * <p>digitalMultipurpose.</p>
+     *
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws ProviderException if any.
+     */
+    default <T extends DigitalMultipurposeProvider> T digitalMultipurpose() throws ProviderException{
+        return this.provider(IOType.DIGITAL_MULTIPURPOSE);
     }
 
     /**

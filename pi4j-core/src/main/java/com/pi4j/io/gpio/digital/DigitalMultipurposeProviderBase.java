@@ -1,16 +1,18 @@
 package com.pi4j.io.gpio.digital;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (CORE)
- * FILENAME      :  DigitalInput.java
+ * FILENAME      :  DigitalMultipurposeProviderBase.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
  * **********************************************************************
- * 
+ * %%
+ * Copyright (C) 2012 - 2020 Pi4J
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,41 +26,39 @@ package com.pi4j.io.gpio.digital;
  * limitations under the License.
  * #L%
  */
-
-
-import com.pi4j.context.Context;
-import com.pi4j.io.Input;
-
 /**
- * <p>DigitalInput interface.</p>
+ * <p>Abstract DigitalMultipurposeProviderBase class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig, DigitalInputProvider>, Input {
-    /** Constant <code>DEFAULT_DEBOUNCE=10000</code> */
-    long DEFAULT_DEBOUNCE = 10000;
+public abstract class DigitalMultipurposeProviderBase
+        extends DigitalProviderBase<DigitalMultipurposeProvider, DigitalMultipurpose, DigitalMultipurposeConfig>
+        implements DigitalMultipurposeProvider {
 
     /**
-     * <p>newConfigBuilder.</p>
-     *
-     * @param context {@link Context}
-     * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
+     * <p>Constructor for DigitalMultipurposeProviderBase.</p>
      */
-    static DigitalInputConfigBuilder newConfigBuilder(Context context){
-        return DigitalInputConfigBuilder.newInstance(context);
+    public DigitalMultipurposeProviderBase(){
+        super();
     }
 
     /**
-     * <p>pull.</p>
+     * <p>Constructor for DigitalInputProviderBase.</p>
      *
-     * @return a {@link com.pi4j.io.gpio.digital.PullResistance} object.
+     * @param id a {@link String} object.
      */
-    default PullResistance pull() { return config().pull(); }
+    public DigitalMultipurposeProviderBase(String id){
+        super(id);
+    }
 
     /**
-     * Get digital mode (input|output)
-     * @return INPUT
+     * <p>Constructor for DigitalInputProviderBase.</p>
+     *
+     * @param id a {@link String} object.
+     * @param name a {@link String} object.
      */
-    default DigitalMode mode() { return DigitalMode.INPUT; }
+    public DigitalMultipurposeProviderBase(String id, String name){
+        super(id, name);
+    }
 }

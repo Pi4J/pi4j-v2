@@ -1,16 +1,18 @@
 package com.pi4j.plugin.mock.provider.gpio.digital;
 
-/*
+/*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PLUGIN   :: Mock Platform & Providers
- * FILENAME      :  MockDigitalOutputProvider.java
+ * FILENAME      :  MockDigitalMultipurpose.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
  * **********************************************************************
- *
+ * %%
+ * Copyright (C) 2012 - 2020 Pi4J
+ * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -27,26 +29,48 @@ package com.pi4j.plugin.mock.provider.gpio.digital;
  * #L%
  */
 
-import com.pi4j.io.gpio.digital.DigitalOutputProvider;
-import com.pi4j.plugin.mock.Mock;
+
+import com.pi4j.io.exception.IOException;
+import com.pi4j.io.gpio.digital.*;
+
 
 /**
- * <p>MockDigitalOutputProvider interface.</p>
+ * <p>MockDigitalMultipurpose class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface MockDigitalOutputProvider extends DigitalOutputProvider {
-    /** Constant <code>NAME="Mock.DIGITAL_OUTPUT_PROVIDER_NAME"</code> */
-    String NAME = Mock.DIGITAL_OUTPUT_PROVIDER_NAME;
-    /** Constant <code>ID="Mock.DIGITAL_OUTPUT_PROVIDER_ID"</code> */
-    String ID = Mock.DIGITAL_OUTPUT_PROVIDER_ID;
+public class MockDigitalMultipurpose extends DigitalMultipurposeBase implements DigitalMultipurpose {
     /**
-     * <p>newInstance.</p>
+     * <p>Constructor for MockDigitalOutput.</p>
      *
-     * @return a {@link com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalMultipurposeProvider} object.
+     * @param provider a {@link DigitalOutputProvider} object.
+     * @param config a {@link DigitalOutputConfig} object.
      */
-    static MockDigitalOutputProvider newInstance() {
-        return new MockDigitalOutputProviderImpl();
+    public MockDigitalMultipurpose(DigitalMultipurposeProvider provider, DigitalMultipurposeConfig config){
+        super(provider, config);
     }
+
+    /**
+     * <p>mockState.</p>
+     *
+     * @param state a {@link DigitalState} object.
+     * @return a {@link MockDigitalMultipurpose} object.
+     * @throws IOException if any.
+     */
+    public MockDigitalMultipurpose mockState(DigitalState state) throws IOException {
+        this.state(state);
+        return this;
+    }
+
+    @Override
+    public DigitalMultipurpose on() throws IOException {
+        return high();
+    }
+
+    @Override
+    public DigitalMultipurpose off() throws IOException {
+        return low();
+    }
+
 }

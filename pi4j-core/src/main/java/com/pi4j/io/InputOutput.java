@@ -1,16 +1,18 @@
-package com.pi4j.io.gpio.digital;
+package com.pi4j.io;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (CORE)
- * FILENAME      :  DigitalInput.java
+ * FILENAME      :  InputOutput.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
  * **********************************************************************
- * 
+ * %%
+ * Copyright (C) 2012 - 2020 Pi4J
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,39 +28,12 @@ package com.pi4j.io.gpio.digital;
  */
 
 
-import com.pi4j.context.Context;
-import com.pi4j.io.Input;
-
 /**
- * <p>DigitalInput interface.</p>
+ * <p>Input interface.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig, DigitalInputProvider>, Input {
-    /** Constant <code>DEFAULT_DEBOUNCE=10000</code> */
-    long DEFAULT_DEBOUNCE = 10000;
-
-    /**
-     * <p>newConfigBuilder.</p>
-     *
-     * @param context {@link Context}
-     * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
-     */
-    static DigitalInputConfigBuilder newConfigBuilder(Context context){
-        return DigitalInputConfigBuilder.newInstance(context);
-    }
-
-    /**
-     * <p>pull.</p>
-     *
-     * @return a {@link com.pi4j.io.gpio.digital.PullResistance} object.
-     */
-    default PullResistance pull() { return config().pull(); }
-
-    /**
-     * Get digital mode (input|output)
-     * @return INPUT
-     */
-    default DigitalMode mode() { return DigitalMode.INPUT; }
+public interface InputOutput extends Input, Output {
+    // MARKER INTERFACE
 }

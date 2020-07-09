@@ -1,16 +1,18 @@
-package com.pi4j.io.gpio.digital;
+package com.pi4j.test.provider;
 
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (CORE)
- * FILENAME      :  DigitalInput.java
+ * PROJECT       :  Pi4J :: TESTING  :: Unit/Integration Tests
+ * FILENAME      :  TestDigitalMultipurpose.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
  * **********************************************************************
- * 
+ * %%
+ * Copyright (C) 2012 - 2020 Pi4J
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,40 +27,29 @@ package com.pi4j.io.gpio.digital;
  * #L%
  */
 
-
-import com.pi4j.context.Context;
-import com.pi4j.io.Input;
+import com.pi4j.io.gpio.digital.*;
 
 /**
- * <p>DigitalInput interface.</p>
+ * <p>TestDigitalMultipurpose class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public interface DigitalInput extends Digital<DigitalInput, DigitalInputConfig, DigitalInputProvider>, Input {
-    /** Constant <code>DEFAULT_DEBOUNCE=10000</code> */
-    long DEFAULT_DEBOUNCE = 10000;
+public class TestDigitalMultipurpose extends DigitalMultipurposeBase implements DigitalMultipurpose {
 
-    /**
-     * <p>newConfigBuilder.</p>
-     *
-     * @param context {@link Context}
-     * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
-     */
-    static DigitalInputConfigBuilder newConfigBuilder(Context context){
-        return DigitalInputConfigBuilder.newInstance(context);
+    /** {@inheritDoc} */
+    @Override
+    public DigitalState state() {
+        return this.state;
     }
 
     /**
-     * <p>pull.</p>
+     * <p>Constructor for TestDigitalInput.</p>
      *
-     * @return a {@link com.pi4j.io.gpio.digital.PullResistance} object.
+     * @param provider a {@link DigitalInputProvider} object.
+     * @param config a {@link DigitalInputConfig} object.
      */
-    default PullResistance pull() { return config().pull(); }
-
-    /**
-     * Get digital mode (input|output)
-     * @return INPUT
-     */
-    default DigitalMode mode() { return DigitalMode.INPUT; }
+    public TestDigitalMultipurpose(DigitalMultipurposeProvider provider, DigitalMultipurposeConfig config){
+        super(provider, config);
+    }
 }

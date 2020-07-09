@@ -58,6 +58,7 @@ public enum IOType {
     ANALOG_OUTPUT(AnalogOutputProvider.class, AnalogOutput.class, AnalogOutputConfig.class, AnalogOutputConfigBuilder.class),
     DIGITAL_INPUT(DigitalInputProvider.class, DigitalInput.class, DigitalInputConfig.class, DigitalInputConfigBuilder.class),
     DIGITAL_OUTPUT(DigitalOutputProvider.class, DigitalOutput.class, DigitalOutputConfig.class, DigitalOutputConfigBuilder.class),
+    DIGITAL_MULTIPURPOSE(DigitalMultipurposeProvider.class, DigitalMultipurpose.class, DigitalMultipurposeConfig.class, DigitalMultipurposeConfigBuilder.class),
     PWM(PwmProvider.class, Pwm.class, PwmConfig.class, PwmConfigBuilder.class),
     I2C(I2CProvider.class, com.pi4j.io.i2c.I2C.class, I2CConfig.class, I2CConfigBuilder.class),
     SPI(SpiProvider.class, Spi.class, I2CConfig.class, I2CConfigBuilder.class),
@@ -302,6 +303,15 @@ public enum IOType {
         if(ioType.startsWith("digital o")) return DIGITAL_OUTPUT;
         if(ioType.equalsIgnoreCase("dout")) return DIGITAL_OUTPUT;
 
+        // DIGITAL MULTIPURPOSE
+        if(ioType.startsWith("digital.m")) return DIGITAL_MULTIPURPOSE;
+        if(ioType.startsWith("digital-m")) return DIGITAL_MULTIPURPOSE;
+        if(ioType.startsWith("digital_m")) return DIGITAL_MULTIPURPOSE;
+        if(ioType.startsWith("digital m")) return DIGITAL_MULTIPURPOSE;
+        if(ioType.equalsIgnoreCase("dmulti")) return DIGITAL_MULTIPURPOSE;
+        if(ioType.equalsIgnoreCase("dmultipurpose")) return DIGITAL_MULTIPURPOSE;
+        if(ioType.equalsIgnoreCase("dmulti-purpose")) return DIGITAL_MULTIPURPOSE;
+
         // PWM
         if(ioType.equalsIgnoreCase("pwm")) return PWM;
         if(ioType.equalsIgnoreCase("p.w.m")) return PWM;
@@ -340,12 +350,3 @@ public enum IOType {
         throw new IllegalArgumentException("Unknown IO TYPE: " + ioType);
     }
 }
-
-//    ANALOG_INPUT(AnalogInputProvider.class, AnalogInput.class, AnalogInputConfig.class, AnalogInputConfigBuilder.class),
-//    ANALOG_OUTPUT(AnalogOutputProvider.class, AnalogOutput.class, AnalogOutputConfig.class, AnalogOutputConfigBuilder.class),
-//    DIGITAL_INPUT(DigitalInputProvider.class, DigitalInput.class, DigitalInputConfig.class, DigitalInputConfigBuilder.class),
-//    DIGITAL_OUTPUT(DigitalOutputProvider.class, DigitalOutput.class, DigitalOutputConfig.class, DigitalOutputConfigBuilder.class),
-//    PWM(PwmProvider.class, Pwm.class, PwmConfig.class, PwmConfigBuilder.class),
-//    I2C(I2CProvider.class, com.pi4j.io.i2c.I2C.class, I2CConfig.class, I2CConfigBuilder.class),
-//    SPI(SpiProvider.class, Spi.class, I2CConfig.class, I2CConfigBuilder.class),
-//    SERIAL(SerialProvider.class, Serial.class, SerialConfig.class, SerialConfigBuilder.class);
