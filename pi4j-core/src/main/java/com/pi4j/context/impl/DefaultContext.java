@@ -147,13 +147,6 @@ public class DefaultContext implements Context {
 
     /** {@inheritDoc} */
     @Override
-    public Context inject(Object... objects) throws AnnotationException {
-        this.runtime.inject(objects);
-        return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public Context shutdown() throws ShutdownException {
         // shutdown the runtime
         this.runtime.shutdown();

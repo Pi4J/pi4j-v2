@@ -149,13 +149,6 @@ public class DefaultRuntime implements Runtime {
 
     /** {@inheritDoc} */
     @Override
-    public Runtime inject(Object... objects) throws AnnotationException {
-        annotationEngine.inject(objects);
-        return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public Runtime shutdown() throws ShutdownException {
         if(!isShutdown) { // re-entrant calls should not perform shutdown again
             isShutdown = true;
