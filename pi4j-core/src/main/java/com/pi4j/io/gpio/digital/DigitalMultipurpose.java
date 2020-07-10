@@ -77,13 +77,13 @@ public interface DigitalMultipurpose extends
      * @param mode DigitalMode (input|output)
      * @return this I/O instance
      */
-    DigitalMultipurpose mode(DigitalMode mode);
+    DigitalMultipurpose mode(DigitalMode mode) throws IOException;
 
     /**
      * Set digital mode to INPUT
      * @return this I/O instance
      */
-    default DigitalMultipurpose input(){
+    default DigitalMultipurpose input() throws IOException {
         return this.mode(DigitalMode.INPUT);
     }
 
@@ -107,7 +107,7 @@ public interface DigitalMultipurpose extends
      * Set digital mode to OUTPUT
      * @return this I/O instance
      */
-    default DigitalMultipurpose output(){
+    default DigitalMultipurpose output() throws IOException {
         return this.mode(DigitalMode.OUTPUT);
     }
 
