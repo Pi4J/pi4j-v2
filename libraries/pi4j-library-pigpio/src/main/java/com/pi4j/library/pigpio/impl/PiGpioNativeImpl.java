@@ -792,7 +792,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      */
     @Override
     public int i2cOpen(int bus, int device, int flags) throws IOException {
-        logger.trace("[I2C::OPEN] -> Open I2C Bus [{}] and Device [{}]", bus, device);
+        logger.trace("[I2C::OPEN] -> Open I2C Bus [{}] and Device [{}]; FLAGS=[{}]", bus, device, flags);
         validateReady();
         validateI2cBus(bus);
         validateI2cDeviceAddress(device);
@@ -823,7 +823,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         validateHandle(handle);
         int result = PIGPIO.i2cClose(handle);
         boolean success = (result>=0);
-        logger.trace("[I2C::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, success);
+        logger.trace("[I2C::CLOSE] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, success, result);
         validateResult(result, false);
 
         // if the close was successful, then we need to remove the I2C handle from cache
@@ -846,7 +846,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         validateHandle(handle);
         int result = PIGPIO.i2cWriteQuick(handle ,bit);
         boolean success = (result>=0);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, success);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, success, result);
         validateResult(result, false);
         return result;
     }
@@ -864,7 +864,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         validateHandle(handle);
         int result = PIGPIO.i2cWriteByte(handle, value);
         boolean success = (result>=0);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, success);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, success, result);
         validateResult(result, false);
         return result;
     }
@@ -882,7 +882,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         validateHandle(handle);
         int result = PIGPIO.i2cReadByte(handle);
         boolean success = (result>=0);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, success);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, success, result);
         validateResult(result, false);
         return result;
     }
@@ -901,7 +901,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         validateI2cRegister(register);
         int result = PIGPIO.i2cWriteByteData(handle, register, value);
         boolean success = (result>=0);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, success);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, success, result);
         validateResult(result, false);
         return result;
     }
@@ -920,7 +920,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         validateI2cRegister(register);
         int result = PIGPIO.i2cWriteWordData(handle, register, value);
         boolean success = (result>=0);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, success);
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, success, result);
         validateResult(result, false);
         return result;
     }
@@ -939,7 +939,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         validateI2cRegister(register);
         int result = PIGPIO.i2cReadByteData(handle, register);
         boolean success = (result>=0);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, success);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, success, result);
         validateResult(result, false);
         return result;
     }
@@ -958,7 +958,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         validateI2cRegister(register);
         int result = PIGPIO.i2cReadWordData(handle, register);
         boolean success = (result>=0);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, success);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, success, result);
         validateResult(result, false);
         return result;
     }
@@ -978,7 +978,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         validateI2cRegister(register);
         int result = PIGPIO.i2cProcessCall(handle, register, value);
         boolean success = (result>=0);
-        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, success);
+        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, success, result);
         validateResult(result, false);
         return result;
     }
@@ -991,7 +991,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      */
     @Override
     public int i2cWriteBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
-        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, data.length);
+        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Block [{} bytes]; offset={}", handle ,register, length, offset);
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
@@ -999,7 +999,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         Objects.checkFromIndexSize(offset, length, data.length);
         // write data array to I2C device register
         int result = PIGPIO.i2cWriteBlockData(handle, register, data, offset, length);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, (result>=0));
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, (result>=0), result);
         validateResult(result, false);
         return result;
     }
@@ -1012,7 +1012,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      */
     @Override
     public int i2cReadBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException {
-        logger.trace("[I2C::READ] -> [{}]; Register [{}]; Block", handle ,register);
+        logger.trace("[I2C::READ] -> [{}]; Register [{}]; Block [{} bytes]; offset={}", handle, length, offset);
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
@@ -1020,7 +1020,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         // perform the read on the I2C device register
         int result = PIGPIO.i2cReadBlockData(handle, register, buffer, offset);
         boolean success = result >=0;
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, success, result);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, success, result);
         validateResult(result, false);
         return result;
     }
@@ -1036,7 +1036,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      */
     @Override
     public int i2cBlockProcessCall(int handle, int register, byte[] data, int offset, int length) throws IOException{
-        logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, length);
+        logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]; offset={}", handle ,register, length, offset);
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
@@ -1044,7 +1044,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         // write/read from I2C device register
         int result = PIGPIO.i2cBlockProcessCall(handle, register, data, offset, length);
         boolean success = result >=0;
-        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}l BYTES-READ={}", handle, success, result);
+        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, success, result);
         validateResult(result, false);
         return result;
     }
@@ -1063,7 +1063,8 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
     public int i2cBlockProcessCall(int handle, int register,
                                    byte[] write, int writeOffset, int writeLength,
                                    byte[] read, int readOffset) throws IOException {
-        logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, writeLength);
+        logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]; woff={}, roff={}",
+            handle ,register, writeLength, writeOffset, readOffset);
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
@@ -1078,8 +1079,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         // write/read from I2C device register
         int result = PIGPIO.i2cBlockProcessCall(handle, register, buffer, 0, writeLength);
         boolean success = (result>=0);
-
-        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}l BYTES-READ={}", handle, success, result);
+        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, success, result);
         validateResult(result, false);
 
         // copy data bytes returned in the temporary buffer/array to the "read" array
@@ -1105,16 +1105,15 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      */
     @Override
     public int i2cReadI2CBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException{
-        logger.trace("[I2C::READ] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, length);
+        logger.trace("[I2C::READ] -> [{}]; Register [{}]; I2C Block [{} bytes]; offset={}", handle ,register, length, offset);
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
-
         Objects.checkFromIndexSize(offset, length, buffer.length);
         // perform the read on the I2C device register
         int result = PIGPIO.i2cReadI2CBlockData(handle, register, buffer, offset, length);
         boolean success = result >=0;
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, success, result);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, success, result);
         validateResult(result, false);
         return result;
     }
@@ -1127,15 +1126,15 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      */
     @Override
     public int i2cWriteI2CBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
-        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, data.length);
+        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; I2C Block [{} bytes]; offset={}", handle, register, length, offset);
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
-        validateI2cBlockLength(data.length);
+        validateI2cBlockLength(length);
         Objects.checkFromIndexSize(offset, length, data.length);
         // write data array to I2C device register
         int result = PIGPIO.i2cWriteI2CBlockData(handle, register, data, offset, length);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, (result>=0));
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, (result>=0), result);
         validateResult(result, false);
         return result;
     }
@@ -1148,14 +1147,14 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      */
     @Override
     public int i2cReadDevice(int handle, byte[] buffer, int offset, int length) throws IOException {
-        logger.trace("[I2C::READ] -> [{}]; I2C Raw Read [{} bytes]", handle, length);
+        logger.trace("[I2C::READ] -> [{}]; I2C Raw Read [{} bytes]; offset={}", handle, length, offset);
         validateReady();
         validateHandle(handle);
         Objects.checkFromIndexSize(offset, length, buffer.length);
         // perform the read on the I2C device
         int result = PIGPIO.i2cReadDevice(handle, buffer, offset, length);
         boolean success = result >=0;
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; BYTES-READ={}",  handle, success, result);
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, success, result);
         validateResult(result, false);
         return result;
     }
@@ -1168,13 +1167,13 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      */
     @Override
     public int i2cWriteDevice(int handle, byte[] data, int offset, int length) throws IOException {
-        logger.trace("[I2C::WRITE] -> [{}]; I2C Raw Write [{} bytes]", handle, data.length);
+        logger.trace("[I2C::WRITE] -> [{}]; I2C Raw Write [{} bytes]; offset={}", handle, length, offset);
         validateReady();
         validateHandle(handle);
         Objects.checkFromIndexSize(offset, length, data.length);
         // write data array to I2C device
         int result = PIGPIO.i2cWriteDevice(handle, data, offset, length);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, (result>=0));
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, (result>=0), result);
         validateResult(result, false);
         return result;
     }
