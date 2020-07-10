@@ -68,7 +68,7 @@ public abstract class DigitalMultipurposeBase extends DigitalBase<DigitalMultipu
 
     /** {@inheritDoc} */
     @Override
-    public DigitalMultipurpose mode(DigitalMode mode) {
+    public DigitalMultipurpose mode(DigitalMode mode) throws com.pi4j.io.exception.IOException {
         this.mode = mode;
         return this;
     }
