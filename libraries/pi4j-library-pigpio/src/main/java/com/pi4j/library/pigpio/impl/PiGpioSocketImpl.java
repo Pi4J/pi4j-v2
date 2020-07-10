@@ -735,7 +735,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public int i2cOpen(int bus, int device, int flags) throws IOException {
-        logger.trace("[I2C::OPEN] -> Open I2C Bus [{}] and Device [{}]", bus, device);
+        logger.trace("[I2C::OPEN] -> Open I2C Bus [{}] and Device [{}]; flags={}", bus, device, flags);
         validateReady();
         validateI2cBus(bus);
         validateI2cDeviceAddress(device);
@@ -767,7 +767,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CC, handle);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::CLOSE] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        logger.trace("[I2C::CLOSE] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, rx.success(), rx.result());
         validateResult(rx, false);
 
         // if the close was successful, then we need to remove the I2C handle from cache
@@ -790,7 +790,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CWQ, handle, bit ? 1 : 0);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, rx.success(), rx.result());
         validateResult(rx, false);
         return rx.result();
     }
@@ -808,7 +808,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CWS, handle, Byte.toUnsignedInt(value));
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, rx.success(), rx.result());
         validateResult(rx, false);
         return rx.result();
     }
@@ -826,7 +826,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CRS, handle);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, rx.success(), rx.result());
         validateResult(rx, false);
         return rx.result();
     }
@@ -839,13 +839,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public int i2cWriteByteData(int handle, int register, byte value) throws IOException {
-        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Byte [{}]", handle ,register, Byte.toUnsignedInt(value));
+        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Byte [{}]", handle, register, Byte.toUnsignedInt(value));
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CWB, handle, register).data(Byte.toUnsignedInt(value));
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, rx.success(), rx.result());
         validateResult(rx, false);
         return rx.result();
     }
@@ -858,13 +858,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public int i2cWriteWordData(int handle, int register, int value) throws IOException {
-        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
+        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Word [{}]", handle, register, value);
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CWW, handle, register).data(value);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, rx.success(), rx.result());
         validateResult(rx, false);
         return rx.result();
     }
@@ -877,13 +877,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public int i2cReadByteData(int handle, int register) throws IOException {
-        logger.trace("[I2C::READ] -> [{}]; Register [{}]; Byte", handle ,register);
+        logger.trace("[I2C::READ] -> [{}]; Register [{}]; Byte", handle, register);
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRB, handle, register);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, rx.success(), rx.result());
         validateResult(rx, false);
         return rx.result();
     }
@@ -896,13 +896,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public int i2cReadWordData(int handle, int register) throws IOException {
-        logger.trace("[I2C::READ] -> [{}]; Register [{}]; Word", handle ,register);
+        logger.trace("[I2C::READ] -> [{}]; Register [{}]; Word", handle, register);
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRW, handle, register);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, rx.success(), rx.result());
         validateResult(rx, false);
         return rx.result();
     }
@@ -916,13 +916,13 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public int i2cProcessCall(int handle, int register, int value) throws IOException {
-        logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
+        logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Word [{}]", handle, register, value);
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CPC, handle, register).data(value);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, rx.success(), rx.result());
         validateResult(rx, false);
         return rx.result();
     }
@@ -935,7 +935,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public int i2cWriteBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
-        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, data.length);
+        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Block [{} bytes]; offset={}", handle ,register, length, offset);
         validateReady();
         Objects.checkFromIndexSize(offset, length, data.length);
         validateHandle(handle);
@@ -943,7 +943,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         validateI2cBlockLength(length);
         PiGpioPacket tx = new PiGpioPacket(I2CWK, handle, register).data(data, offset, length);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, rx.success(), rx.result());
         validateResult(rx, false);
         return rx.result();
     }
@@ -956,14 +956,14 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public int i2cReadBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException {
-        logger.trace("[I2C::READ] -> [{}]; Register [{}]; Block", handle ,register);
+        logger.trace("[I2C::READ] -> [{}]; Register [{}]; Block [{} bytes]; offset={}", handle ,register, length, offset);
         validateReady();
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRK, handle, register);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, rx.success(), rx.result());
         if(rx.success()) {
             int actual = rx.result();
             if(rx.dataLength() < actual) actual = rx.dataLength();
@@ -986,7 +986,8 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
     public int i2cBlockProcessCall(int handle, int register,
                                    byte[] write, int writeOffset, int writeLength,
                                    byte[] read, int readOffset) throws IOException {
-        logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]", handle ,register, writeLength);
+        logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]; woff={}; roff={}",
+            handle, register, writeLength, writeOffset, readOffset);
         validateReady();
         Objects.checkFromIndexSize(writeOffset, writeLength, write.length);
         validateHandle(handle);
@@ -996,7 +997,7 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
         // write/read from I2C device
         PiGpioPacket tx = new PiGpioPacket(I2CPK, handle, register).data(write, writeOffset, writeLength);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        logger.trace("[I2C::W/R] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, rx.success(), rx.result());
         validateResult(rx, false);
 
         // copy data bytes to provided "read" array/buffer
@@ -1035,14 +1036,14 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public int i2cReadI2CBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException{
-        logger.trace("[I2C::READ] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, length);
+        logger.trace("[I2C::READ] -> [{}]; Register [{}]; I2C Block [{} bytes]; offset={}", handle, register, length, offset);
         validateReady();
         Objects.checkFromIndexSize(offset, length, buffer.length);
         validateHandle(handle);
         validateI2cRegister(register);
         PiGpioPacket tx = new PiGpioPacket(I2CRI, handle, register).data(length);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, rx.success(), rx.result());
         validateResult(rx, false);
 
 //        logger.trace("[I2C::READ] <- DATA SIZE={}",  rx.result());
@@ -1072,14 +1073,14 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public int i2cWriteI2CBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
-        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; I2C Block [{} bytes]", handle ,register, data.length);
+        logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; I2C Block [{} bytes]; offset={}", handle ,register, length, offset);
         validateReady();
         validateHandle(handle);
         validateI2cRegister(register);
-        validateI2cBlockLength(data.length);
+        validateI2cBlockLength(length);
         PiGpioPacket tx = new PiGpioPacket(I2CWI, handle, register).data(data, offset, length);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, rx.success(), rx.result());
         validateResult(rx, false);
         return rx.result();
     }
@@ -1092,12 +1093,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public int i2cReadDevice(int handle, byte[] buffer, int offset, int length) throws IOException {
-        logger.trace("[I2C::READ] -> [{}]; I2C Raw Read [{} bytes]", handle, length);
+        logger.trace("[I2C::READ] -> [{}]; I2C Raw Read [{} bytes]; offset={}", handle, length, offset);
         validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CRD, handle, length);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}",  handle, rx.success());
+        logger.trace("[I2C::READ] <- HANDLE={}; SUCCESS={}; RESULT={}",  handle, rx.success(), rx.result());
         validateResult(rx, false);
         if(rx.success()) {
             int actual = rx.result();
@@ -1115,12 +1116,12 @@ public class PiGpioSocketImpl extends PiGpioSocketBase implements PiGpio {
      */
     @Override
     public int i2cWriteDevice(int handle, byte[] data, int offset, int length) throws IOException {
-        logger.trace("[I2C::WRITE] -> [{}]; I2C Raw Write [{} bytes]", handle, data.length);
+        logger.trace("[I2C::WRITE] -> [{}]; I2C Raw Write [{} bytes]; offset={}", handle, length, offset);
         validateReady();
         validateHandle(handle);
         PiGpioPacket tx = new PiGpioPacket(I2CWD, handle).data(data, offset, length);
         PiGpioPacket rx = sendPacket(tx);
-        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}", handle, rx.success());
+        logger.trace("[I2C::WRITE] <- HANDLE={}; SUCCESS={}; RESULT={}", handle, rx.success(), rx.result());
         validateResult(rx, false);
         return rx.result();
     }
