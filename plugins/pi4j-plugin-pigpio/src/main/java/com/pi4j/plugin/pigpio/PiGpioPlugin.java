@@ -34,6 +34,7 @@ import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider;
+import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalMultipurposeProvider;
 import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalOutputProvider;
 import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProvider;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
@@ -65,6 +66,12 @@ public class PiGpioPlugin implements Plugin {
     public static final String DIGITAL_OUTPUT_PROVIDER_NAME = NAME +  " Digital Output (GPIO) Provider";
     /** Constant <code>DIGITAL_OUTPUT_PROVIDER_ID="ID + -digital-output"</code> */
     public static final String DIGITAL_OUTPUT_PROVIDER_ID = ID + "-digital-output";
+
+    // Digital Multipurpose (GPIO) Provider name and unique ID
+    /** Constant <code>DIGITAL_MULTIPURPOSE_PROVIDER_NAME="NAME +   Digital Output (GPIO) Provider"</code> */
+    public static final String DIGITAL_MULTIPURPOSE_PROVIDER_NAME = NAME +  " Digital Multipurpose (GPIO) Provider";
+    /** Constant <code>DIGITAL_MULTIPURPOSE_PROVIDER_ID="ID + -digital-output"</code> */
+    public static final String DIGITAL_MULTIPURPOSE_PROVIDER_ID = ID + "-digital-multi";
 
     // PWM Provider name and unique ID
     /** Constant <code>PWM_PROVIDER_NAME="NAME +  PWM Provider"</code> */
@@ -163,6 +170,7 @@ public class PiGpioPlugin implements Plugin {
         Provider providers[] = {
                 PiGpioDigitalInputProvider.newInstance(piGpio),
                 PiGpioDigitalOutputProvider.newInstance(piGpio),
+                PiGpioDigitalMultipurposeProvider.newInstance(piGpio),
                 PiGpioPwmProvider.newInstance(piGpio),
                 PiGpioI2CProvider.newInstance(piGpio),
                 PiGpioSerialProvider.newInstance(piGpio),
