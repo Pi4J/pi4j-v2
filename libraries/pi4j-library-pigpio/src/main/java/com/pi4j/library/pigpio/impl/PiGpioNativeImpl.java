@@ -100,22 +100,6 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
             result = PIGPIO.gpioInitialise();
             validateResult(result);
 
-            // creat a terminate handler for received signals
-            PiGpioSignalCallback terminateSignalHandler = signum -> {
-                logger.trace("------------ HERE");
-                PIGPIO.gpioTerminate();
-                System.exit(signum);
-            };
-
-            // apply our terminate handler to these default system signals
-            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGHUP, terminateSignalHandler);
-            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGINT, terminateSignalHandler);
-            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGQUIT, terminateSignalHandler);
-            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGKILL, terminateSignalHandler);
-            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGTERM, terminateSignalHandler);
-            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGSTOP, terminateSignalHandler);
-            PIGPIO.gpioSetSignalFunc(PiGpioConst.SIGTSTP, terminateSignalHandler);
-
             // initialization successful
             this.initialized = true;
             logger.debug("[INITIALIZE] -- INITIALIZED SUCCESSFULLY");
