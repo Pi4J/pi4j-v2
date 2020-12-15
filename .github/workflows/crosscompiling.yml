@@ -26,4 +26,5 @@ jobs:
     - name: Build with Maven
       run: mvn clean install -Drelease-build
       env:
-        JAVA_HOME: $(readlink -f /usr/bin/javac | sed "s:bin/javac::")
+        JAVA_HOME: ${{ env.JAVA_HOME }}
+#       JAVA_HOME: $(readlink -f /usr/bin/javac | sed "s:bin/javac::")
