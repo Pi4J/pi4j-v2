@@ -17,21 +17,15 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
-    - name: apt-get update
-      run: sudo apt-get update -qq
-    - name: cross-compiler environment for native gcc/make builds for ARM (ARMHF) & ARM64 (AARCH64) platforms
-      run: sudo apt-get install -qq --yes tree git build-essential file curl wget maven gcc
-    - name: apt-get update
-      run: sudo apt-get --force-yes --yes install gcc-arm-linux-gnueabihf
     - name: Build with Maven
-      run: mvn clean install -Drelease-build
+      run: mvn clean install -Pnative
       env:
         JAVA_HOME: ${{ env.JAVA_HOME }}
 #       JAVA_HOME: $(readlink -f /usr/bin/javac | sed "s:bin/javac::")
     - name: Make staging directory
       run: mkdir staging
     - name: Copy target to staging
-      run: cp -r target/* staging
+      run: cp -r pi4j-core/target/* staging
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
