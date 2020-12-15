@@ -28,3 +28,12 @@ jobs:
       env:
         JAVA_HOME: ${{ env.JAVA_HOME }}
 #       JAVA_HOME: $(readlink -f /usr/bin/javac | sed "s:bin/javac::")
+    - name: Make staging directory
+      run: mkdir staging
+    - name: Copy target to staging
+      run: cp -r target/* staging
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: Package
+        path: staging
