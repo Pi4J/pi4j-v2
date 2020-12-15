@@ -1,0 +1,29 @@
+name: crosscompiling
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: apt-get update
+      run: sudo apt-get update -qq
+    - name: cross-compiler environment for native gcc/make builds for ARM (ARMHF) & ARM64 (AARCH64) platforms
+      run: sudo apt-get install -qq --yes tree git build-essential file curl wget maven gcc
+    - name: apt-get update
+      run: sudo apt-get --force-yes --yes install gcc-arm-linux-gnueabihf
+    - name: Build with Maven
+      run: mvn clean install -Drelease-build
+      env:
+        JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:bin/javac::")
