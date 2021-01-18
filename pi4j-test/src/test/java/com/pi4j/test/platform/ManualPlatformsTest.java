@@ -27,6 +27,9 @@ package com.pi4j.test.platform;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
@@ -39,18 +42,18 @@ import com.pi4j.plugin.mock.provider.i2c.MockI2CProvider;
 import com.pi4j.plugin.mock.provider.pwm.MockPwmProvider;
 import com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
 import com.pi4j.plugin.mock.provider.spi.MockSpiProvider;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+@TestInstance(Lifecycle.PER_CLASS)
 public class ManualPlatformsTest {
 
     private Context pi4j;
 
-    @Before
+    @BeforeAll
     public void beforeTest() throws Pi4JException {
 
         // Initialize Pi4J with AUTO-DETECT disabled
@@ -73,7 +76,7 @@ public class ManualPlatformsTest {
                         .build();
     }
 
-    @After
+    @AfterAll
     public void afterTest()  {
         try {
             pi4j.shutdown();

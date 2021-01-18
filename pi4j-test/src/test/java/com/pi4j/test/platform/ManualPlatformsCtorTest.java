@@ -27,24 +27,27 @@ package com.pi4j.test.platform;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.test.provider.TestI2CProvider;
 import com.pi4j.test.provider.TestPwmProvider;
 import com.pi4j.test.provider.TestSerialProvider;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+@TestInstance(Lifecycle.PER_CLASS)
 public class ManualPlatformsCtorTest {
 
     private Context pi4j;
 
-    @Before
+    @BeforeAll
     public void beforeTest() throws Pi4JException {
 
         // create our own custom provider implementation classes
@@ -70,7 +73,7 @@ public class ManualPlatformsCtorTest {
 
     }
 
-    @After
+    @AfterAll
     public void afterTest() throws Pi4JException {
         pi4j.shutdown();
     }

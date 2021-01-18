@@ -35,6 +35,8 @@ import com.pi4j.event.ShutdownListener;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.executor.Executor;
+import com.pi4j.executor.impl.DefaultExecutor;
 import com.pi4j.platform.Platforms;
 import com.pi4j.platform.impl.DefaultPlatforms;
 import com.pi4j.provider.Providers;
@@ -43,6 +45,8 @@ import com.pi4j.registry.Registry;
 import com.pi4j.registry.impl.DefaultRegistry;
 import com.pi4j.runtime.Runtime;
 import com.pi4j.runtime.impl.DefaultRuntime;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,13 +60,15 @@ import java.util.concurrent.Future;
  */
 public class DefaultContext implements Context {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private Runtime runtime = null;
     private ContextConfig config = null;
     private ContextProperties properties = null;
     private Providers providers = null;
     private Platforms platforms = null;
     private Registry registry = null;
+    private Executor executor = null;
 
     /**
      * <p>newInstance.</p>
@@ -139,8 +145,8 @@ public class DefaultContext implements Context {
     }
 
     @Override
-    public Future<Context> asyncShutdown() {
-        return this.runtime.asyncShutdown();
+    public void asyncShutdown() {
+        this.runtime.asyncShutdown();
     }
 
     @Override

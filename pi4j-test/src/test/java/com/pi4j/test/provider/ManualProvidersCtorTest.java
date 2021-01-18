@@ -27,24 +27,27 @@ package com.pi4j.test.provider;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.serial.SerialProvider;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+@TestInstance(Lifecycle.PER_CLASS)
 public class ManualProvidersCtorTest {
 
     private Context pi4j;
 
-    @Before
+    @BeforeAll
     public void beforeTest() throws Pi4JException {
 
         // create our own custom provider implementation classes
@@ -62,7 +65,7 @@ public class ManualProvidersCtorTest {
                 .build();
     }
 
-    @After
+    @AfterAll
     public void afterTest() {
         try {
             pi4j.shutdown();
@@ -77,7 +80,6 @@ public class ManualProvidersCtorTest {
 
     @Test
     public void testProviderCount() throws Exception {
-
         // ensure that only 4 providers were detected/loaded into the Pi4J context
         assertEquals(4 , pi4j.providers().all().size());
 

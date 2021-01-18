@@ -27,21 +27,24 @@ package com.pi4j.test.provider;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
+@TestInstance(Lifecycle.PER_CLASS)
 public class NoProvidersTest {
 
     private Context pi4j;
 
-    @Before
+    @BeforeAll
     public void beforeTest() throws Pi4JException {
         // Initialize Pi4J with an empty context
         // An empty context disables AUTO-DETECT loading
@@ -50,7 +53,7 @@ public class NoProvidersTest {
         pi4j = Pi4J.newContext();
     }
 
-    @After
+    @AfterAll
     public void afterTest() {
         try {
             pi4j.shutdown();
@@ -68,5 +71,4 @@ public class NoProvidersTest {
         // ensure that no io were detected/loaded into the Pi4J context
         assertTrue(pi4j.providers().all().isEmpty());
     }
-
 }

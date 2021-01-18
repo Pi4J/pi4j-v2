@@ -27,11 +27,13 @@ package com.pi4j.test.platform;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 public class ManualPlatformsTest2 {
 

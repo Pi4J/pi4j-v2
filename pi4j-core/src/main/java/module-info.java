@@ -49,6 +49,7 @@ module com.pi4j {
     exports com.pi4j.io.pwm;
     exports com.pi4j.io.serial;
     exports com.pi4j.io.spi;
+    exports com.pi4j.executor;
     exports com.pi4j.platform;
     exports com.pi4j.platform.exception;
     exports com.pi4j.provider;

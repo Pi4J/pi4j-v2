@@ -34,6 +34,7 @@ import com.pi4j.config.ConfigBuilder;
 import com.pi4j.event.InitializedEventProducer;
 import com.pi4j.event.ShutdownEventProducer;
 import com.pi4j.exception.LifecycleException;
+import com.pi4j.executor.Executor;
 import com.pi4j.internal.IOCreator;
 import com.pi4j.internal.ProviderProvider;
 import com.pi4j.io.IO;
@@ -54,6 +55,7 @@ import com.pi4j.util.PropertiesUtil;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 /**
@@ -108,10 +110,9 @@ public interface Context extends Describable,
     Context shutdown() throws LifecycleException;
 
     /**
-     *
-     * @return {@link Future} of {@link Context}
+     * <p>async shutdown.</p>
      */
-    Future<Context> asyncShutdown();
+    void asyncShutdown();
 
     // ------------------------------------------------------------------------
     // PLATFORM ACCESSOR METHODS

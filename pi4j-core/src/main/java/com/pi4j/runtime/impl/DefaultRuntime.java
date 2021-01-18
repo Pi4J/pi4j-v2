@@ -32,6 +32,8 @@ import com.pi4j.event.*;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.executor.impl.DefaultRuntimeExecutor;
+import com.pi4j.executor.impl.RuntimeExecutor;
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.impl.DefaultPluginService;
 import com.pi4j.extension.impl.PluginStore;
@@ -50,8 +52,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
@@ -70,7 +70,6 @@ public class DefaultRuntime implements Runtime {
     private final RuntimeProperties properties;
     private final List<Plugin> plugins = new ArrayList<>();
     private boolean isShutdown = false;
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final EventManager<Runtime, ShutdownListener, ShutdownEvent> shutdownEventManager;
     private final EventManager<Runtime, InitializedListener, InitializedEvent> initializedEventManager;
 
@@ -167,11 +166,6 @@ public class DefaultRuntime implements Runtime {
                         logger.error(e.getMessage(), e);
                     }
                 }
-
-                // shutdown executor threads
-                if(!executor.isShutdown()) {
-                    executor.shutdown();
-                }
             } catch (Exception e) {
                 logger.error("failed to 'shutdown(); '", e);
                 throw new ShutdownException(e);
@@ -193,16 +187,8 @@ public class DefaultRuntime implements Runtime {
     }
 
     @Override
-    public Future<Context> asyncShutdown() {
-        return executor.submit(() -> {
-            try {
-                shutdown();
-            }
-            catch (Exception e){
-                logger.error(e.getMessage(), e);
-            }
-            return context;
-        });
+    public void asyncShutdown() {
+        // TODO
     }
 
     /** {@inheritDoc} */
@@ -304,21 +290,8 @@ public class DefaultRuntime implements Runtime {
         return this;
     }
 
-    private Future<Context> notifyInitListeners() {
-        return executor.submit(() -> {
-            try {
-                // wait .5 seconds before dispatching event
-                // (allows time to register event listeners)
-                Thread.sleep(500);
-
-                // dispatch event now
-                initializedEventManager.dispatch(new InitializedEvent(this.context));
-            }
-            catch (Exception e){
-                logger.error(e.getMessage(), e);
-            }
-            return context;
-        });
+    private void notifyInitListeners() {
+        // TODO
     }
 
     @Override

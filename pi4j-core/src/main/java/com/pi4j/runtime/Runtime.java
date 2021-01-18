@@ -32,6 +32,7 @@ import com.pi4j.event.InitializedEventProducer;
 import com.pi4j.event.ShutdownEventProducer;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.executor.impl.RuntimeExecutor;
 import com.pi4j.platform.impl.RuntimePlatforms;
 import com.pi4j.provider.impl.RuntimeProviders;
 import com.pi4j.registry.impl.RuntimeRegistry;
@@ -84,7 +85,10 @@ public interface Runtime extends InitializedEventProducer<Runtime>, ShutdownEven
      */
     Runtime shutdown() throws ShutdownException;
 
-    Future<Context> asyncShutdown();
+    /**
+     * <p>async shutdown.</p>
+     */
+    void asyncShutdown();
 
     /**
      * <p>initialize.</p>
