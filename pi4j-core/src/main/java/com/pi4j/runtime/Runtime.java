@@ -88,7 +88,7 @@ public interface Runtime extends InitializedEventProducer<Runtime>, ShutdownEven
 
     /**
      *
-     * @return Flag indicating if the context has been shutdown
+     * @return Flag indicating if the runtime has been shutdown
      */
     boolean isShutdown();
 
