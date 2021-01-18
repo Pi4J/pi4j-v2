@@ -113,6 +113,12 @@ public interface Context extends Describable,
      */
     Future<Context> asyncShutdown();
 
+    /**
+     *
+     * @return Flag indicating if the context has been shutdown
+     */
+    boolean isShutdown();
+
     // ------------------------------------------------------------------------
     // PLATFORM ACCESSOR METHODS
     // ------------------------------------------------------------------------

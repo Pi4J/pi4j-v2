@@ -139,6 +139,11 @@ public class DefaultContext implements Context {
     }
 
     @Override
+    public boolean isShutdown() {
+        return this.runtime.isShutdown();
+    }
+
+    @Override
     public Future<Context> asyncShutdown() {
         return this.runtime.asyncShutdown();
     }

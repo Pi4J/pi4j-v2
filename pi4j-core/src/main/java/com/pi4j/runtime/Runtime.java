@@ -87,6 +87,12 @@ public interface Runtime extends InitializedEventProducer<Runtime>, ShutdownEven
     Future<Context> asyncShutdown();
 
     /**
+     *
+     * @return Flag indicating if the context has been shutdown
+     */
+    boolean isShutdown();
+
+    /**
      * <p>initialize.</p>
      *
      * @return a {@link com.pi4j.runtime.Runtime} object.
