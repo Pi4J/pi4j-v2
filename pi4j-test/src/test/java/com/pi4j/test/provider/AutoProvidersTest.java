@@ -44,7 +44,7 @@ public class AutoProvidersTest {
     @Before
     public void beforeTest() throws Pi4JException {
 
-        System.setProperty(org.slf4j.simple.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
         // initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled
