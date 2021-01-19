@@ -41,10 +41,11 @@ import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalInputProvider;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("PIGPIO Plugin :: Test Digital Input Pins using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -160,7 +161,7 @@ public class TestDigitalInputUsingTestHarness {
 
             DigitalState state = din.state();
             System.out.println("(PIN #" + p + ") >> STATE  = " + state);
-            Assert.assertEquals("DIGITAL INPUT STATE MISMATCH: " + p, DigitalState.HIGH, state);
+            assertEquals(DigitalState.HIGH, state, "DIGITAL INPUT STATE MISMATCH: " + p);
         }
     }
 
@@ -190,7 +191,7 @@ public class TestDigitalInputUsingTestHarness {
 
             DigitalState state = din.state();
             System.out.println("(PIN #" + p + ") >> STATE  = " + state);
-            Assert.assertEquals("DIGITAL INPUT STATE MISMATCH: " + p, DigitalState.LOW, state);
+            assertEquals(DigitalState.LOW, state, "DIGITAL INPUT STATE MISMATCH: " + p);
         }
     }
 
@@ -221,7 +222,7 @@ public class TestDigitalInputUsingTestHarness {
             int pull = harness.getPin(p).value;
 
             System.out.println("(PIN #" + p + ") >> PULL = " + pull);
-            Assert.assertEquals("DIGITAL INPUT PULL MISMATCH: " + p, 1, pull);
+            assertEquals(1, pull, "DIGITAL INPUT PULL MISMATCH: " + p);
         }
     }
 
@@ -258,7 +259,7 @@ public class TestDigitalInputUsingTestHarness {
             int pull = harness.getPin(p).value;
 
             System.out.println("(PIN #" + p + ") >> PULL = " + pull);
-            Assert.assertEquals("DIGITAL INPUT PULL MISMATCH: " + p, 0, pull);
+            assertEquals(0, pull, "DIGITAL INPUT PULL MISMATCH: " + p);
         }
     }
 }

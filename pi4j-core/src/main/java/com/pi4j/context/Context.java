@@ -34,7 +34,6 @@ import com.pi4j.config.ConfigBuilder;
 import com.pi4j.event.InitializedEventProducer;
 import com.pi4j.event.ShutdownEventProducer;
 import com.pi4j.exception.LifecycleException;
-import com.pi4j.executor.Executor;
 import com.pi4j.internal.IOCreator;
 import com.pi4j.internal.ProviderProvider;
 import com.pi4j.io.IO;

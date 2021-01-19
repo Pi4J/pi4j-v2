@@ -35,11 +35,12 @@ import com.pi4j.library.pigpio.util.StringUtil;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("PIGPIO Library :: Test SPI Communication")
 public class TestSpiUsingTestHarness {
@@ -151,7 +152,7 @@ public class TestSpiUsingTestHarness {
              // READ :: SINGLE RAW BYTE
             int rx = pigpio.spiReadByte(handle);
             System.out.println(" (READ)  << VALUE = 0x" + Integer.toHexString(rx));
-            Assert.assertEquals("SPI BYTE VALUE MISMATCH",  b, rx);
+            assertEquals(b, rx, "SPI BYTE VALUE MISMATCH");
             System.out.println();
 
             Thread.sleep(20);
@@ -176,7 +177,7 @@ public class TestSpiUsingTestHarness {
             int rx = pigpio.spiXferByte(handle, (byte)b);
             System.out.println(" (READ)  << VALUE = 0x" + Integer.toHexString(rx));
             if(lastByte > 0) {
-                Assert.assertEquals("SPI BYTE VALUE MISMATCH", lastByte, rx);
+                assertEquals(lastByte, rx, "SPI BYTE VALUE MISMATCH");
             }
             lastByte = b;
             System.out.println();
@@ -220,8 +221,8 @@ public class TestSpiUsingTestHarness {
 
             // the test harness will return a byte array where the first byte value in the array
             // is the last byte written to the SPI device and all remaining bytes will be zero
-            Assert.assertEquals("SPI MULTI-BYTE VALUE LENGTH MISMATCH",  len, bytesRead);
-            Assert.assertEquals("SPI MULTI-BYTE VALUE MISMATCH",  testData[testData.length-1], readBuffer[0]);
+            assertEquals(len, bytesRead, "SPI MULTI-BYTE VALUE LENGTH MISMATCH");
+            assertEquals(testData[testData.length-1], readBuffer[0], "SPI MULTI-BYTE VALUE MISMATCH");
         }
     }
 
@@ -256,7 +257,7 @@ public class TestSpiUsingTestHarness {
             System.out.println(" (READ)  << VALUE = 0x" + StringUtil.toHexString(readBuffer));
 
             // validate read length
-            Assert.assertEquals("SPI MULTI-BYTE VALUE LENGTH MISMATCH",  len, bytesRead);
+            assertEquals(len, bytesRead, "SPI MULTI-BYTE VALUE LENGTH MISMATCH");
 
             Thread.sleep(20);
 

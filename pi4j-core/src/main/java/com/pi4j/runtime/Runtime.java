@@ -32,12 +32,9 @@ import com.pi4j.event.InitializedEventProducer;
 import com.pi4j.event.ShutdownEventProducer;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
-import com.pi4j.executor.impl.RuntimeExecutor;
 import com.pi4j.platform.impl.RuntimePlatforms;
 import com.pi4j.provider.impl.RuntimeProviders;
 import com.pi4j.registry.impl.RuntimeRegistry;
-
-import java.util.concurrent.Future;
 
 /**
  * <p>Runtime interface.</p>

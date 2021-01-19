@@ -32,8 +32,6 @@ import com.pi4j.event.*;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
-import com.pi4j.executor.impl.DefaultRuntimeExecutor;
-import com.pi4j.executor.impl.RuntimeExecutor;
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.impl.DefaultPluginService;
 import com.pi4j.extension.impl.PluginStore;
@@ -52,7 +50,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.Future;
 
 /**
  * <p>DefaultRuntime class.</p>

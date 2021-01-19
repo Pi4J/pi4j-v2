@@ -38,13 +38,14 @@ import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPin;
 import com.pi4j.test.harness.TestHarnessPins;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("PIGPIO Library :: Test Digital Ouput Pins")
 public class TestDigitalOutputsUsingTestHarness {
@@ -137,7 +138,7 @@ public class TestDigitalOutputsUsingTestHarness {
         TestHarnessPin p = harness.getPin(pin); // get input pin state from the test harness
         System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
         System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
-        Assert.assertEquals("INCORRECT PIN VALUE", state.value(), p.value);
+        assertEquals(state.value(), p.value, "INCORRECT PIN VALUE");
 
         System.out.println();
         state = PiGpioState.HIGH;
@@ -146,7 +147,7 @@ public class TestDigitalOutputsUsingTestHarness {
         p = harness.getPin(pin); // get input pin state from the test harness
         System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
         System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
-        Assert.assertEquals("INCORRECT PIN VALUE", state.value(), p.value);
+        assertEquals(state.value(), p.value, "INCORRECT PIN VALUE");
 
         System.out.println();
         state = PiGpioState.LOW;
@@ -155,7 +156,7 @@ public class TestDigitalOutputsUsingTestHarness {
         p = harness.getPin(pin); // get input pin state from the test harness
         System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
         System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
-        Assert.assertEquals("INCORRECT PIN VALUE", state.value(), p.value);
+        assertEquals(state.value(), p.value, "INCORRECT PIN VALUE");
 
         System.out.println();
         state = PiGpioState.HIGH;
@@ -164,7 +165,7 @@ public class TestDigitalOutputsUsingTestHarness {
         p = harness.getPin(pin); // get input pin state from the test harness
         System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
         System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
-        Assert.assertEquals("INCORRECT PIN VALUE", state.value(), p.value);
+        assertEquals(state.value(), p.value, "INCORRECT PIN VALUE");
 
         System.out.println();
         state = PiGpioState.LOW;
@@ -173,7 +174,7 @@ public class TestDigitalOutputsUsingTestHarness {
         p = harness.getPin(pin); // get input pin state from the test harness
         System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
         System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
-        Assert.assertEquals("INCORRECT PIN VALUE", state.value(), p.value);
+        assertEquals(state.value(), p.value, "INCORRECT PIN VALUE");
 
         // disable test pin on the test harness
         p = harness.disablePin(pin);

@@ -29,7 +29,6 @@ package com.pi4j.context;
 
 import com.pi4j.config.Builder;
 import com.pi4j.context.impl.DefaultContextBuilder;
-import com.pi4j.executor.Executor;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 
@@ -71,13 +70,6 @@ public interface ContextBuilder extends Builder<Context> {
      * @return a {@link com.pi4j.context.ContextBuilder} object.
      */
     ContextBuilder add(Provider ... provider);
-    /**
-     * <p>set.</p>
-     *
-     * @param executor the {@link com.pi4j.executor.Executor} object.
-     * @return a {@link com.pi4j.context.ContextBuilder} object.
-     */
-    ContextBuilder set(Executor executor);
 
     /**
      * <p>defaultPlatform.</p>

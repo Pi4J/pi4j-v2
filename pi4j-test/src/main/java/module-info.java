@@ -35,7 +35,6 @@ module com.pi4j.test {
 
     uses com.pi4j.extension.Extension;
     uses com.pi4j.provider.Provider;
-    uses com.pi4j.executor.Executor;
 
     // Pi4J Mock Platform and Providers
     requires com.pi4j.plugin.mock;

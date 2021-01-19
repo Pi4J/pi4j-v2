@@ -31,12 +31,9 @@ import com.pi4j.context.Context;
 import com.pi4j.context.ContextBuilder;
 import com.pi4j.context.ContextConfig;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.executor.Executor;
-import com.pi4j.executor.impl.DefaultRuntimeExecutor;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
 import com.pi4j.util.StringUtil;
-import java.util.concurrent.ExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,8 +62,6 @@ public class DefaultContextBuilder implements ContextBuilder {
     // extensibility modules
     protected Collection<Platform> platforms = Collections.synchronizedList(new ArrayList<>());
     protected Collection<Provider> providers = Collections.synchronizedList(new ArrayList<>());
-
-    protected Executor executor = null;
 
     // properties
     protected Map<String,String> properties = Collections.synchronizedMap(new HashMap<>());
@@ -100,13 +95,6 @@ public class DefaultContextBuilder implements ContextBuilder {
     public ContextBuilder add(Provider... provider) {
         if(provider != null && provider.length > 0)
             this.providers.addAll(Arrays.asList(provider));
-        return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public ContextBuilder set(Executor executor) {
-        this.executor = executor;
         return this;
     }
 

@@ -35,8 +35,6 @@ import com.pi4j.event.ShutdownListener;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
-import com.pi4j.executor.Executor;
-import com.pi4j.executor.impl.DefaultExecutor;
 import com.pi4j.platform.Platforms;
 import com.pi4j.platform.impl.DefaultPlatforms;
 import com.pi4j.provider.Providers;
@@ -45,12 +43,8 @@ import com.pi4j.registry.Registry;
 import com.pi4j.registry.impl.DefaultRegistry;
 import com.pi4j.runtime.Runtime;
 import com.pi4j.runtime.impl.DefaultRuntime;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.Future;
 
 /**
  * <p>DefaultContext class.</p>
@@ -68,7 +62,6 @@ public class DefaultContext implements Context {
     private Providers providers = null;
     private Platforms platforms = null;
     private Registry registry = null;
-    private Executor executor = null;
 
     /**
      * <p>newInstance.</p>
