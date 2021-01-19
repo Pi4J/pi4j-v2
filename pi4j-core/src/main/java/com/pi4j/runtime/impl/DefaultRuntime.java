@@ -205,6 +205,11 @@ public class DefaultRuntime implements Runtime {
         });
     }
 
+    @Override
+    public boolean isShutdown() {
+        return isShutdown;
+    }
+
     /** {@inheritDoc} */
     @Override
     public Runtime initialize() throws InitializeException {
