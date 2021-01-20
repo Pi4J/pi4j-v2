@@ -33,6 +33,7 @@ import com.pi4j.library.pigpio.PiGpioCmd;
 import com.pi4j.library.pigpio.PiGpioPacket;
 import com.pi4j.library.pigpio.PiGpioState;
 import com.pi4j.library.pigpio.PiGpioStateChangeEvent;
+import com.pi4j.library.pigpio.test.TestI2CRaw;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,10 +52,11 @@ import java.nio.ByteOrder;
  */
 public class PiGpioSocketMonitor  {
 
+    private static final Logger logger = LoggerFactory.getLogger(PiGpioSocketMonitor.class);
+
     /** Constant <code>NAME="pigpio-monitor"</code> */
     public static String NAME = "pigpio-monitor";
 
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     protected final PiGpioSocketBase piGpio;
     protected Socket listener = null;
     protected boolean shutdown = false;
@@ -176,7 +178,7 @@ public class PiGpioSocketMonitor  {
 //                        ByteBuffer b = ByteBuffer.allocate(4);
 //                        b.order(ByteOrder.LITTLE_ENDIAN);
 //                        b.putInt(rx.p3());
-//                        System.out.println("[STATES] [" + Integer.toBinaryString(rx.p3()) + "]");
+//                        logger.info("[STATES] [" + Integer.toBinaryString(rx.p3()) + "]");
 
                             // enable socket notifications for pins 0-31
                             tx = new PiGpioPacket(PiGpioCmd.NOIB);
@@ -223,13 +225,13 @@ public class PiGpioSocketMonitor  {
                                         final int newPinState = buffer.getInt();
 
 //                        final BitSet levels = BitSet.valueOf(buffer.array());
-//                        System.out.println("[BYTES] [0x" + StringUtil.toHexString(buffer) + "]");
-//                        System.out.println("[SEQUE] " + sequence);
-//                        System.out.println("[FLAGS] " + flags);
-//                        System.out.println("[TICK ] " + tick);
-//                        System.out.println("[LEVEL] " + Integer.toBinaryString(level));
-//                        System.out.println("[STATE] " + BitSet.valueOf(raw).get(0));
-//                        System.out.println("--------------------------------------------------------");
+//                        logger.info("[BYTES] [0x" + StringUtil.toHexString(buffer) + "]");
+//                        logger.info("[SEQUE] " + sequence);
+//                        logger.info("[FLAGS] " + flags);
+//                        logger.info("[TICK ] " + tick);
+//                        logger.info("[LEVEL] " + Integer.toBinaryString(level));
+//                        logger.info("[STATE] " + BitSet.valueOf(raw).get(0));
+//                        logger.info("--------------------------------------------------------");
                                         logger.trace("[NOTIFY] SEQ={}; FLAGS={}; TICK={}; STATES=[{}]",
                                                 sequence, flags, tick, Integer.toBinaryString(newPinState));
 

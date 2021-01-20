@@ -37,6 +37,8 @@ import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Random;
@@ -47,6 +49,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DisplayName("PIGPIO Library :: Test Serial Communication")
 public class TestSerialUsingTestHarness {
 
+    private static final Logger logger = LoggerFactory.getLogger(TestSerialUsingTestHarness.class);
+
     private static String SERIAL_DEVICE = "/dev/ttyS0";
     private static int BAUD_RATE = 9600;
     private static int TEST_HARNESS_UART = 3;
@@ -56,13 +60,11 @@ public class TestSerialUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestSerialUsingTestHarness.class.getName() + ")");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("INITIALIZE TEST (" + TestSerialUsingTestHarness.class.getName() + ")");
+        logger.info("************************************************************************");
+        logger.info("");
 
         try {
             // create test harness and PIGPIO instances
@@ -73,18 +75,18 @@ public class TestSerialUsingTestHarness {
 
             // get test harness info
             TestHarnessInfo info = harness.getInfo();
-            System.out.println("... we are connected to test harness:");
-            System.out.println("----------------------------------------");
-            System.out.println("NAME       : " + info.name);
-            System.out.println("VERSION    : " + info.version);
-            System.out.println("DATE       : " + info.date);
-            System.out.println("COPYRIGHT  : " + info.copyright);
-            System.out.println("----------------------------------------");
+            logger.info("... we are connected to test harness:");
+            logger.info("----------------------------------------");
+            logger.info("NAME       : " + info.name);
+            logger.info("VERSION    : " + info.version);
+            logger.info("DATE       : " + info.date);
+            logger.info("COPYRIGHT  : " + info.copyright);
+            logger.info("----------------------------------------");
 
             // reset all pins on test harness before proceeding with this test
             TestHarnessPins reset = harness.reset();
-            System.out.println();
-            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+            logger.info("");
+            logger.info("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
 
             // enable the Serial Echo (Loopback) function on the test harness for these tests
             harness.enableSerialEcho(TEST_HARNESS_UART,  BAUD_RATE);
@@ -98,11 +100,11 @@ public class TestSerialUsingTestHarness {
 
     @AfterAll
     public static void terminate() throws IOException {
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestSerialUsingTestHarness.class.getName() + ") ");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("TERMINATE TEST (" + TestSerialUsingTestHarness.class.getName() + ") ");
+        logger.info("************************************************************************");
+        logger.info("");
     }
 
     @BeforeEach
@@ -134,10 +136,10 @@ public class TestSerialUsingTestHarness {
     @Test
     @DisplayName("SERIAL :: Test SINGLE-BYTE (W/R)")
     public void testSerialSingleByteTxRx() throws IOException {
-        System.out.println();
-        System.out.println("--------------------------------------------");
-        System.out.println("TEST SERIAL PORT SINGLE BYTE RAW READ/WRITE");
-        System.out.println("--------------------------------------------");
+        logger.info("");
+        logger.info("--------------------------------------------");
+        logger.info("TEST SERIAL PORT SINGLE BYTE RAW READ/WRITE");
+        logger.info("--------------------------------------------");
 
         // drain any pending bytes in buffer
         pigpio.serDrain(handle);
@@ -145,36 +147,36 @@ public class TestSerialUsingTestHarness {
         // iterate over BYTE range of values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
         for(int b = 0; b < 256; b++) {
-            System.out.println("[TEST WRITE/READ SINGLE BYTE]");
+            logger.info("[TEST WRITE/READ SINGLE BYTE]");
             // WRITE :: SINGLE RAW BYTE
-            System.out.println(" (WRITE) >> VALUE = 0x" + Integer.toHexString(b));
+            logger.info(" (WRITE) >> VALUE = 0x" + Integer.toHexString(b));
             pigpio.serWriteByte(handle, (byte)b);
 
             // READ :: NUMBER OF BYTES AVAILABLE TO READ
             int available = pigpio.serDataAvailable(handle);
-            System.out.println(" (READ)  << AVAIL = " + available);
+            logger.info(" (READ)  << AVAIL = " + available);
             assertEquals(1, available, "SERIAL BYTE VALUE MISMATCH");
 
              // READ :: SINGLE RAW BYTE
             int rx = pigpio.serReadByte(handle);
-            System.out.println(" (READ)  << VALUE = 0x" + Integer.toHexString(rx));
+            logger.info(" (READ)  << VALUE = 0x" + Integer.toHexString(rx));
             assertEquals(b, rx, "SERIAL BYTE VALUE MISMATCH");
-            System.out.println();
+            logger.info("");
         }
     }
 
     @Test
     @DisplayName("SERIAL :: Test MULTI-BYTE (W/R)")
     public void testSerialMultiByteTxRx() throws IOException, InterruptedException {
-        System.out.println();
-        System.out.println("----------------------------------------");
-        System.out.println("TEST SERIAL MULTI-BYTE READ/WRITE");
-        System.out.println("----------------------------------------");
+        logger.info("");
+        logger.info("----------------------------------------");
+        logger.info("TEST SERIAL MULTI-BYTE READ/WRITE");
+        logger.info("----------------------------------------");
 
         // iterate over series of test values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
         for(int x = 0; x < 50; x++) {
-            System.out.println("[TEST WRITE/READ MULTI-BYTE]");
+            logger.info("[TEST WRITE/READ MULTI-BYTE]");
 
             // drain any pending bytes in buffer
             pigpio.serDrain(handle);
@@ -187,7 +189,7 @@ public class TestSerialUsingTestHarness {
             r.nextBytes(testData);
 
             // WRITE :: MULTI-BYTE
-            System.out.println(" (WRITE) >> VALUE = " + StringUtil.toHexString(testData));
+            logger.info(" (WRITE) >> VALUE = " + StringUtil.toHexString(testData));
             pigpio.serWrite(handle, testData);
 
             // take a breath while buffer catches up
@@ -195,7 +197,7 @@ public class TestSerialUsingTestHarness {
 
             // READ :: NUMBER OF BYTES AVAILABLE TO READ
             int available = pigpio.serDataAvailable(handle);
-            System.out.println(" (READ)  << AVAIL = " + available);
+            logger.info(" (READ)  << AVAIL = " + available);
             assertEquals(testData.length, available, "SERIAL READ AVAIL MISMATCH");
 
             // take a breath while buffer catches up
@@ -204,8 +206,8 @@ public class TestSerialUsingTestHarness {
             // READ :: MULTI-BYTE
             byte[] readBuffer = new byte[available];
             int bytesRead = pigpio.serRead(handle, readBuffer, available);
-            System.out.println(" (READ)  << BYTES READ = " + bytesRead);
-            System.out.println(" (READ)  << VALUE = " + StringUtil.toHexString(readBuffer));
+            logger.info(" (READ)  << BYTES READ = " + bytesRead);
+            logger.info(" (READ)  << VALUE = " + StringUtil.toHexString(readBuffer));
 
             Thread.sleep(50);
 

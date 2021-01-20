@@ -42,6 +42,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -50,18 +52,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DisplayName("PIGPIO Library :: Test Digital Ouput Pins")
 public class TestDigitalOutputsUsingTestHarness {
 
+    private static final Logger logger = LoggerFactory.getLogger(TestDigitalOutputsUsingTestHarness.class);
+
     private static PiGpio pigpio;
     private static ArduinoTestHarness harness;
 
     @BeforeAll
     public static void initialize() {
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestDigitalOutputsUsingTestHarness.class.getName() + ")");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("INITIALIZE TEST (" + TestDigitalOutputsUsingTestHarness.class.getName() + ")");
+        logger.info("************************************************************************");
+        logger.info("");
 
         try {
             // create test harness and PIGPIO instances
@@ -74,13 +76,13 @@ public class TestDigitalOutputsUsingTestHarness {
 
             // get test harness info
             TestHarnessInfo info = harness.getInfo();
-            System.out.println("... we are connected to test harness:");
-            System.out.println("----------------------------------------");
-            System.out.println("NAME       : " + info.name);
-            System.out.println("VERSION    : " + info.version);
-            System.out.println("DATE       : " + info.date);
-            System.out.println("COPYRIGHT  : " + info.copyright);
-            System.out.println("----------------------------------------");
+            logger.info("... we are connected to test harness:");
+            logger.info("----------------------------------------");
+            logger.info("NAME       : " + info.name);
+            logger.info("VERSION    : " + info.version);
+            logger.info("DATE       : " + info.date);
+            logger.info("COPYRIGHT  : " + info.copyright);
+            logger.info("----------------------------------------");
 
         } catch (IOException e){
             e.printStackTrace();
@@ -89,11 +91,11 @@ public class TestDigitalOutputsUsingTestHarness {
 
     @AfterAll
     public static void terminate() throws IOException {
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestDigitalOutputsUsingTestHarness.class.getName() + ") ");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("TERMINATE TEST (" + TestDigitalOutputsUsingTestHarness.class.getName() + ") ");
+        logger.info("************************************************************************");
+        logger.info("");
 
         // shutdown test harness and PIGPIO instances
         pigpio.shutdown();
@@ -103,12 +105,11 @@ public class TestDigitalOutputsUsingTestHarness {
     @Test
     @DisplayName("GPIO :: Test Digital Output Pins")
     public void testGpioDigitalOutputs() throws IOException {
-
         // reset all pins on test harness before proceeding with this test
         TestHarnessPins reset = harness.reset();
 
-        System.out.println();
-        System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+        logger.info("");
+        logger.info("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
 
         // iterate over pins and perform test on each
         // TODO :: IMPLEMENT CORRECT SET OF TEST PINS
@@ -118,11 +119,10 @@ public class TestDigitalOutputsUsingTestHarness {
     }
 
     public void testDigitalOutputPin(int pin) throws IOException{
-
-        System.out.println();
-        System.out.println("----------------------------------------");
-        System.out.println("TEST SOC DIGITAL OUTPUT PIN [" + pin + "]");
-        System.out.println("----------------------------------------");
+        logger.info("");
+        logger.info("----------------------------------------");
+        logger.info("TEST SOC DIGITAL OUTPUT PIN [" + pin + "]");
+        logger.info("----------------------------------------");
 
         // configure test pin as an input pin on the test harness;
         // use the internal pull-up resistor on the Arduino hardware
@@ -131,55 +131,55 @@ public class TestDigitalOutputsUsingTestHarness {
         // configure output pin on test SoC (RaspberryPi)
         pigpio.gpioSetMode(pin, PiGpioMode.OUTPUT);
 
-        System.out.println();
+        logger.info("");
         PiGpioState state = PiGpioState.LOW;
-        System.out.println("TEST OUTPUT FOR [" + state.name() + "] STATE");
+        logger.info("TEST OUTPUT FOR [" + state.name() + "] STATE");
         pigpio.gpioWrite(pin, state); // set output pin state on SoC (RaspberryPi)
         TestHarnessPin p = harness.getPin(pin); // get input pin state from the test harness
-        System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
-        System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
+        logger.info(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
+        logger.info(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
         assertEquals(state.value(), p.value, "INCORRECT PIN VALUE");
 
-        System.out.println();
+        logger.info("");
         state = PiGpioState.HIGH;
-        System.out.println("TEST OUTPUT FOR [" + state.name() + "] STATE");
+        logger.info("TEST OUTPUT FOR [" + state.name() + "] STATE");
         pigpio.gpioWrite(pin, state); // set output pin state on SoC (RaspberryPi)
         p = harness.getPin(pin); // get input pin state from the test harness
-        System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
-        System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
+        logger.info(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
+        logger.info(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
         assertEquals(state.value(), p.value, "INCORRECT PIN VALUE");
 
-        System.out.println();
+        logger.info("");
         state = PiGpioState.LOW;
-        System.out.println("TEST OUTPUT FOR [" + state.name() + "] STATE");
+        logger.info("TEST OUTPUT FOR [" + state.name() + "] STATE");
         pigpio.gpioWrite(pin, state); // set output pin state on SoC (RaspberryPi)
         p = harness.getPin(pin); // get input pin state from the test harness
-        System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
-        System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
+        logger.info(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
+        logger.info(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
         assertEquals(state.value(), p.value, "INCORRECT PIN VALUE");
 
-        System.out.println();
+        logger.info("");
         state = PiGpioState.HIGH;
-        System.out.println("TEST OUTPUT FOR [" + state.name() + "] STATE");
+        logger.info("TEST OUTPUT FOR [" + state.name() + "] STATE");
         pigpio.gpioWrite(pin, state); // set output pin state on SoC (RaspberryPi)
         p = harness.getPin(pin); // get input pin state from the test harness
-        System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
-        System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
+        logger.info(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
+        logger.info(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
         assertEquals(state.value(), p.value, "INCORRECT PIN VALUE");
 
-        System.out.println();
+        logger.info("");
         state = PiGpioState.LOW;
-        System.out.println("TEST OUTPUT FOR [" + state.name() + "] STATE");
+        logger.info("TEST OUTPUT FOR [" + state.name() + "] STATE");
         pigpio.gpioWrite(pin, state); // set output pin state on SoC (RaspberryPi)
         p = harness.getPin(pin); // get input pin state from the test harness
-        System.out.println(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
-        System.out.println(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
+        logger.info(" (SET)  >> SOC  PIN [" + pin + "] VALUE = " + state);
+        logger.info(" (READ) << TEST PIN [" + p.pin + "] VALUE = " + PiGpioState.from(p.value));
         assertEquals(state.value(), p.value, "INCORRECT PIN VALUE");
 
         // disable test pin on the test harness
         p = harness.disablePin(pin);
-        System.out.println();
-        System.out.println("DISABLE TEST PIN [" + p.pin + "] ON TEST HARNESS <" + p.access + ">");
+        logger.info("");
+        logger.info("DISABLE TEST PIN [" + p.pin + "] ON TEST HARNESS <" + p.access + ">");
 
         // reset pin on SoC (Raspberry Pi) (defaults as an input pin)
         pigpio.gpioSetMode(pin, PiGpioMode.INPUT);

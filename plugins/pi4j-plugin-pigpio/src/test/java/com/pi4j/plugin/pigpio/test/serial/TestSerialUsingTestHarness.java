@@ -43,6 +43,8 @@ import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -52,6 +54,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("PIGPIO Plugin :: Test Serial Communication using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestSerialUsingTestHarness {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestSerialUsingTestHarness.class);
 
     private static String SERIAL_DEVICE = "/dev/ttyS0";
     private static int BAUD_RATE = Baud._38400.value();
@@ -70,14 +74,11 @@ public class TestSerialUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
-        // configure logging output
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestSerialUsingTestHarness.class.getName() + ")");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("INITIALIZE TEST (" + TestSerialUsingTestHarness.class.getName() + ")");
+        logger.info("************************************************************************");
+        logger.info("");
 
         try {
             // create test harness and PIGPIO instances
@@ -88,23 +89,23 @@ public class TestSerialUsingTestHarness {
 
             // get test harness info
             TestHarnessInfo info = harness.getInfo();
-            System.out.println("... we are connected to test harness:");
-            System.out.println("----------------------------------------");
-            System.out.println("NAME       : " + info.name);
-            System.out.println("VERSION    : " + info.version);
-            System.out.println("DATE       : " + info.date);
-            System.out.println("COPYRIGHT  : " + info.copyright);
-            System.out.println("----------------------------------------");
+            logger.info("... we are connected to test harness:");
+            logger.info("----------------------------------------");
+            logger.info("NAME       : " + info.name);
+            logger.info("VERSION    : " + info.version);
+            logger.info("DATE       : " + info.date);
+            logger.info("COPYRIGHT  : " + info.copyright);
+            logger.info("----------------------------------------");
 
             // reset all pins on test harness before proceeding with this test
             TestHarnessPins reset = harness.reset();
-            System.out.println();
-            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+            logger.info("");
+            logger.info("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
 
             // enable the Serial Echo (Loopback) function on the test harness for these tests
             harness.enableSerialEcho(TEST_HARNESS_UART,  BAUD_RATE);
-            System.out.println();
-            System.out.println("ENABLE SERIAL UART [" + TEST_HARNESS_UART + "] ON TEST HARNESS; BAUD=" + BAUD_RATE);
+            logger.info("");
+            logger.info("ENABLE SERIAL UART [" + TEST_HARNESS_UART + "] ON TEST HARNESS; BAUD=" + BAUD_RATE);
 
             // close connection to test harness
             harness.close();
@@ -132,7 +133,6 @@ public class TestSerialUsingTestHarness {
 
             // create serial instance
             serial = pi4j.create(config);
-
         } catch (IOException e){
             e.printStackTrace();
         } catch (Pi4JException e) {
@@ -144,11 +144,11 @@ public class TestSerialUsingTestHarness {
 
     @AfterAll
     public static void terminate() throws IOException, LifecycleException {
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestSerialUsingTestHarness.class.getName() + ") ");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("TERMINATE TEST (" + TestSerialUsingTestHarness.class.getName() + ") ");
+        logger.info("************************************************************************");
+        logger.info("");
 
         // close down serial
         //if(serial.isOpen())

@@ -42,6 +42,8 @@ import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -50,6 +52,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DisplayName("PIGPIO Plugin :: Test Digital Input Pins using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestDigitalInputUsingTestHarness {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestDigitalInputUsingTestHarness.class);
 
     public static int PIN_MIN = 2;
     public static int PIN_MAX = 27;
@@ -60,14 +64,11 @@ public class TestDigitalInputUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
-        // configure logging output
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestDigitalInputUsingTestHarness.class.getName() + ")");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("INITIALIZE TEST (" + TestDigitalInputUsingTestHarness.class.getName() + ")");
+        logger.info("************************************************************************");
+        logger.info("");
 
         try {
             // create test harness and PIGPIO instances
@@ -78,18 +79,18 @@ public class TestDigitalInputUsingTestHarness {
 
             // get test harness info
             TestHarnessInfo info = harness.getInfo();
-            System.out.println("... we are connected to test harness:");
-            System.out.println("----------------------------------------");
-            System.out.println("NAME       : " + info.name);
-            System.out.println("VERSION    : " + info.version);
-            System.out.println("DATE       : " + info.date);
-            System.out.println("COPYRIGHT  : " + info.copyright);
-            System.out.println("----------------------------------------");
+            logger.info("... we are connected to test harness:");
+            logger.info("----------------------------------------");
+            logger.info("NAME       : " + info.name);
+            logger.info("VERSION    : " + info.version);
+            logger.info("DATE       : " + info.date);
+            logger.info("COPYRIGHT  : " + info.copyright);
+            logger.info("----------------------------------------");
 
             // reset all pins on test harness before proceeding with this test
             TestHarnessPins reset = harness.reset();
-            System.out.println();
-            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+            logger.info("");
+            logger.info("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -97,11 +98,11 @@ public class TestDigitalInputUsingTestHarness {
 
     @AfterAll
     public static void terminate() throws IOException {
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestDigitalInputUsingTestHarness.class.getName() + ") ");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("TERMINATE TEST (" + TestDigitalInputUsingTestHarness.class.getName() + ") ");
+        logger.info("************************************************************************");
+        logger.info("");
 
         // shutdown connection to test harness
         harness.shutdown();;
@@ -136,10 +137,10 @@ public class TestDigitalInputUsingTestHarness {
     @Order(1)
     @DisplayName("DIN :: Test GPIO Digital Input Pins <HIGH>")
     public void testDigitalInputsHigh() throws Exception {
-        System.out.println();
-        System.out.println("----------------------------------------");
-        System.out.println("TEST DIGITAL INPUT PINS - HIGH");
-        System.out.println("----------------------------------------");
+        logger.info("");
+        logger.info("----------------------------------------");
+        logger.info("TEST DIGITAL INPUT PINS - HIGH");
+        logger.info("----------------------------------------");
 
         for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
@@ -154,13 +155,13 @@ public class TestDigitalInputUsingTestHarness {
             DigitalInput din = pi4j.create(config);
 
             // register event handler
-            din.addListener((DigitalStateChangeListener) event -> System.out.println(event.toString()));
+            din.addListener((DigitalStateChangeListener) event -> logger.info(event.toString()));
 
             // configure output pin to HIGH state on testing harness
             harness.setOutputPin(p, true);
 
             DigitalState state = din.state();
-            System.out.println("(PIN #" + p + ") >> STATE  = " + state);
+            logger.info("(PIN #" + p + ") >> STATE  = " + state);
             assertEquals(DigitalState.HIGH, state, "DIGITAL INPUT STATE MISMATCH: " + p);
         }
     }
@@ -169,10 +170,10 @@ public class TestDigitalInputUsingTestHarness {
     @Order(2)
     @DisplayName("DIN :: Test GPIO Digital Input Pins <LOW>")
     public void testDigitalInputsLow() throws Exception {
-        System.out.println();
-        System.out.println("----------------------------------------");
-        System.out.println("TEST DIGITAL INPUT PINS - LOW");
-        System.out.println("----------------------------------------");
+        logger.info("");
+        logger.info("----------------------------------------");
+        logger.info("TEST DIGITAL INPUT PINS - LOW");
+        logger.info("----------------------------------------");
 
         for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
@@ -190,7 +191,7 @@ public class TestDigitalInputUsingTestHarness {
             harness.setOutputPin(p, false);
 
             DigitalState state = din.state();
-            System.out.println("(PIN #" + p + ") >> STATE  = " + state);
+            logger.info("(PIN #" + p + ") >> STATE  = " + state);
             assertEquals(DigitalState.LOW, state, "DIGITAL INPUT STATE MISMATCH: " + p);
         }
     }
@@ -199,10 +200,10 @@ public class TestDigitalInputUsingTestHarness {
     @Order(3)
     @DisplayName("DIN :: Test GPIO Digital Input Pins <PULL-UP>")
     public void testDigitalInputsPullUp() throws Exception {
-        System.out.println();
-        System.out.println("----------------------------------------");
-        System.out.println("TEST DIGITAL INPUT PINS - PULL UP");
-        System.out.println("----------------------------------------");
+        logger.info("");
+        logger.info("----------------------------------------");
+        logger.info("TEST DIGITAL INPUT PINS - PULL UP");
+        logger.info("----------------------------------------");
 
         for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
@@ -221,7 +222,7 @@ public class TestDigitalInputUsingTestHarness {
             harness.setInputPin(p, false);
             int pull = harness.getPin(p).value;
 
-            System.out.println("(PIN #" + p + ") >> PULL = " + pull);
+            logger.info("(PIN #" + p + ") >> PULL = " + pull);
             assertEquals(1, pull, "DIGITAL INPUT PULL MISMATCH: " + p);
         }
     }
@@ -230,10 +231,10 @@ public class TestDigitalInputUsingTestHarness {
     @Order(4)
     @DisplayName("DIN :: Test GPIO Digital Input Pins <PULL-DOWN>")
     public void testDigitalInputsPullDown() throws Exception {
-        System.out.println();
-        System.out.println("----------------------------------------");
-        System.out.println("TEST DIGITAL INPUT PINS - PULL DOWN");
-        System.out.println("----------------------------------------");
+        logger.info("");
+        logger.info("----------------------------------------");
+        logger.info("TEST DIGITAL INPUT PINS - PULL DOWN");
+        logger.info("----------------------------------------");
 
         for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
@@ -258,7 +259,7 @@ public class TestDigitalInputUsingTestHarness {
             harness.setInputPin(p, false);
             int pull = harness.getPin(p).value;
 
-            System.out.println("(PIN #" + p + ") >> PULL = " + pull);
+            logger.info("(PIN #" + p + ") >> PULL = " + pull);
             assertEquals(0, pull, "DIGITAL INPUT PULL MISMATCH: " + p);
         }
     }

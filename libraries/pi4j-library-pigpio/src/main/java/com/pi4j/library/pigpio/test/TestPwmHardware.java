@@ -30,6 +30,8 @@ package com.pi4j.library.pigpio.test;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 /**
@@ -39,6 +41,8 @@ import org.slf4j.event.Level;
  * @version $Id: $Id
  */
 public class TestPwmHardware {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestPwmHardware.class);
 
     public static int GPIO_PIN = 21;
 
@@ -56,17 +60,17 @@ public class TestPwmHardware {
         }
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loglevel);
 
-        System.out.println();
-        System.out.println();
+        logger.info("");
+        logger.info("");
         PiGpio piGpio = PiGpio.newNativeInstance();
 
         piGpio.gpioInitialise();
-        System.out.println("-----------------------------------------------------");
-        System.out.println("PIGPIO INITIALIZED SUCCESSFULLY");
-        System.out.println("-----------------------------------------------------");
+        logger.info("-----------------------------------------------------");
+        logger.info("PIGPIO INITIALIZED SUCCESSFULLY");
+        logger.info("-----------------------------------------------------");
 
-        System.out.println("PIGPIO VERSION   : " + piGpio.gpioVersion());
-        System.out.println("PIGPIO HARDWARE  : " + piGpio.gpioHardwareRevision());
+        logger.info("PIGPIO VERSION   : " + piGpio.gpioVersion());
+        logger.info("PIGPIO HARDWARE  : " + piGpio.gpioHardwareRevision());
 
         // set pin ALT modes for PWM
         piGpio.gpioSetMode(19, PiGpioMode.ALT5);
@@ -75,12 +79,12 @@ public class TestPwmHardware {
         System.in.read();
         piGpio.gpioHardwarePWM(19, 0, 500000);
 
-        System.out.println("-----------------------------------------------------");
+        logger.info("-----------------------------------------------------");
         piGpio.gpioTerminate();
-        System.out.println("PIGPIO TERMINATED");
+        logger.info("PIGPIO TERMINATED");
 
-        System.out.println("-----------------------------------------------------");
-        System.out.println();
-        System.out.println();
+        logger.info("-----------------------------------------------------");
+        logger.info("");
+        logger.info("");
     }
 }

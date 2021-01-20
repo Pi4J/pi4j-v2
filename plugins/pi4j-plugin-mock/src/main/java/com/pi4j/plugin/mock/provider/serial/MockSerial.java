@@ -35,6 +35,8 @@ import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProvider;
 import com.pi4j.plugin.mock.Mock;
 import com.pi4j.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -48,6 +50,8 @@ import java.util.Objects;
  * @version $Id: $Id
  */
 public class MockSerial extends SerialBase implements Serial {
+
+    private static final Logger logger = LoggerFactory.getLogger(MockSerial.class);
 
     /**
      * ATTENTION:  The storage and management of the byte arrays
@@ -65,12 +69,12 @@ public class MockSerial extends SerialBase implements Serial {
      */
     public MockSerial(SerialProvider provider, SerialConfig config){
         super(provider, config);
-        System.out.print(" [");
-        System.out.print(Mock.SERIAL_PROVIDER_NAME);
-        System.out.print("::");
-        System.out.print(this.id);
-        System.out.print("] :: OPEN(DEVICE=" + config.device() + "; BAUD=" + config.baud() + ")");
-        System.out.println();
+        logger.info(" [");
+        logger.info(Mock.SERIAL_PROVIDER_NAME);
+        logger.info("::");
+        logger.info(this.id);
+        logger.info("] :: OPEN(DEVICE=" + config.device() + "; BAUD=" + config.baud() + ")");
+        logger.info("");
     }
 
     /** {@inheritDoc} */
@@ -82,12 +86,12 @@ public class MockSerial extends SerialBase implements Serial {
     /** {@inheritDoc} */
     @Override
     public void close() throws IOException {
-        System.out.print(" [");
-        System.out.print(Mock.SERIAL_PROVIDER_NAME);
-        System.out.print("::");
-        System.out.print(this.id);
-        System.out.print("] :: CLOSE(DEVICE=" + config.device() + "; BAUD=" + config.baud() + ")");
-        System.out.println();
+        logger.info(" [");
+        logger.info(Mock.SERIAL_PROVIDER_NAME);
+        logger.info("::");
+        logger.info(this.id);
+        logger.info("] :: CLOSE(DEVICE=" + config.device() + "; BAUD=" + config.baud() + ")");
+        logger.info("");
         super.close();
     }
 
@@ -95,13 +99,13 @@ public class MockSerial extends SerialBase implements Serial {
     @Override
     public int write(byte b) throws IOException {
         raw.add(b);
-        System.out.print(" [");
-        System.out.print(Mock.SERIAL_PROVIDER_NAME);
-        System.out.print("::");
-        System.out.print(this.id);
-        System.out.print("] :: WRITE(0x");
-        System.out.print(StringUtil.toHexString(b));
-        System.out.println(")");
+        logger.info(" [");
+        logger.info(Mock.SERIAL_PROVIDER_NAME);
+        logger.info("::");
+        logger.info(this.id);
+        logger.info("] :: WRITE(0x");
+        logger.info(StringUtil.toHexString(b));
+        logger.info(")");
         return 0;
     }
 
@@ -112,13 +116,13 @@ public class MockSerial extends SerialBase implements Serial {
         for(int p = offset; p-offset < length; p++){
             raw.add(data[p]); // add to internal buffer
         }
-        System.out.print(" [");
-        System.out.print(Mock.SERIAL_PROVIDER_NAME);
-        System.out.print("::");
-        System.out.print(this.id);
-        System.out.print("] :: WRITE(0x");
-        System.out.print(StringUtil.toHexString(data, offset, length));
-        System.out.println(")");
+        logger.info(" [");
+        logger.info(Mock.SERIAL_PROVIDER_NAME);
+        logger.info("::");
+        logger.info(this.id);
+        logger.info("] :: WRITE(0x");
+        logger.info(StringUtil.toHexString(data, offset, length));
+        logger.info(")");
         return length;
     }
 
@@ -129,13 +133,13 @@ public class MockSerial extends SerialBase implements Serial {
         for(int p = 0; p < buffer.length; p++){
             raw.add(buffer[p]); // add to internal buffer
         }
-        System.out.print(" [");
-        System.out.print(Mock.SERIAL_PROVIDER_NAME);
-        System.out.print("::");
-        System.out.print(this.id);
-        System.out.print("] :: WRITE(\"");
-        System.out.print(data);
-        System.out.println("\")");
+        logger.info(" [");
+        logger.info(Mock.SERIAL_PROVIDER_NAME);
+        logger.info("::");
+        logger.info(this.id);
+        logger.info("] :: WRITE(\"");
+        logger.info(data.toString());
+        logger.info("\")");
         return data.length();
     }
 
@@ -144,13 +148,13 @@ public class MockSerial extends SerialBase implements Serial {
     public int read() throws IOException {
         if(raw.isEmpty()) return -1;
         byte b = raw.pop();
-        System.out.print(" [");
-        System.out.print(Mock.SERIAL_PROVIDER_NAME);
-        System.out.print("::");
-        System.out.print(this.id);
-        System.out.print("] :: READ (0x");
-        System.out.print(StringUtil.toHexString(b));
-        System.out.println(")");
+        logger.info(" [");
+        logger.info(Mock.SERIAL_PROVIDER_NAME);
+        logger.info("::");
+        logger.info(this.id);
+        logger.info("] :: READ (0x");
+        logger.info(StringUtil.toHexString(b));
+        logger.info(")");
         return b;
     }
 
@@ -168,13 +172,13 @@ public class MockSerial extends SerialBase implements Serial {
             counter++;
         }
 
-        System.out.print(" [");
-        System.out.print(Mock.SERIAL_PROVIDER_NAME);
-        System.out.print("::");
-        System.out.print(this.id);
-        System.out.print("] :: READ (0x");
-        System.out.print(StringUtil.toHexString(buffer, offset, length));
-        System.out.println(")");
+        logger.info(" [");
+        logger.info(Mock.SERIAL_PROVIDER_NAME);
+        logger.info("::");
+        logger.info(this.id);
+        logger.info("] :: READ (0x");
+        logger.info(StringUtil.toHexString(buffer, offset, length));
+        logger.info(")");
 
         return counter;
     }

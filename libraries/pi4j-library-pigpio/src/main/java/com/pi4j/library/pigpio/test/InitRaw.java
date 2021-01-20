@@ -29,6 +29,8 @@ package com.pi4j.library.pigpio.test;
  */
 
 import com.pi4j.library.pigpio.internal.PIGPIO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 /**
@@ -38,6 +40,8 @@ import org.slf4j.event.Level;
  * @version $Id: $Id
  */
 public class InitRaw {
+
+    private static final Logger logger = LoggerFactory.getLogger(InitRaw.class);
 
     /**
      * <p>main.</p>
@@ -53,25 +57,25 @@ public class InitRaw {
         }
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loglevel);
 
-        System.out.println();
-        System.out.println();
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("Pi4J Library :: PIGPIO JNI (Raw) Wrapper Library");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
-        System.out.println("PIGPIO HARDWARE  : " + Integer.toHexString(PIGPIO.gpioHardwareRevision()));
+        logger.info("");
+        logger.info("");
+        logger.info("-----------------------------------------------------");
+        logger.info("-----------------------------------------------------");
+        logger.info("Pi4J Library :: PIGPIO JNI (Raw) Wrapper Library");
+        logger.info("-----------------------------------------------------");
+        logger.info("-----------------------------------------------------");
+        logger.info("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
+        logger.info("PIGPIO HARDWARE  : " + Integer.toHexString(PIGPIO.gpioHardwareRevision()));
         int init = PIGPIO.gpioInitialise();
         if(init < 0){
-            System.err.println("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
+            logger.error("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
         } else {
-            System.out.println("PIGPIO INITIALIZED SUCCESSFULLY");
+            logger.info("PIGPIO INITIALIZED SUCCESSFULLY");
             PIGPIO.gpioTerminate();
-            System.out.println("PIGPIO TERMINATED");
+            logger.info("PIGPIO TERMINATED");
         }
-        System.out.println("-----------------------------------------------------");
-        System.out.println();
-        System.out.println();
+        logger.info("-----------------------------------------------------");
+        logger.info("");
+        logger.info("");
     }
 }

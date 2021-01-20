@@ -28,6 +28,7 @@
  */
 module com.pi4j.plugin.mock {
     requires com.pi4j;
+    requires org.slf4j;
 
     uses com.pi4j.extension.Plugin;
 

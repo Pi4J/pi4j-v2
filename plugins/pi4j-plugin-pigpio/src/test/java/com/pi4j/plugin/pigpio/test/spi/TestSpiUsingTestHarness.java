@@ -42,6 +42,8 @@ import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -52,6 +54,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("PIGPIO Plugin :: Test SPI Communication using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestSpiUsingTestHarness {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestSpiUsingTestHarness.class);
 
     private static int SPI_CHANNEL = 0;
     private static int BAUD_RATE = 100000;
@@ -70,14 +74,11 @@ public class TestSpiUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
-        // configure logging output
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestSpiUsingTestHarness.class.getName() + ")");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("INITIALIZE TEST (" + TestSpiUsingTestHarness.class.getName() + ")");
+        logger.info("************************************************************************");
+        logger.info("");
 
         try {
             // create test harness and PIGPIO instances
@@ -88,23 +89,23 @@ public class TestSpiUsingTestHarness {
 
             // get test harness info
             TestHarnessInfo info = harness.getInfo();
-            System.out.println("... we are connected to test harness:");
-            System.out.println("----------------------------------------");
-            System.out.println("NAME       : " + info.name);
-            System.out.println("VERSION    : " + info.version);
-            System.out.println("DATE       : " + info.date);
-            System.out.println("COPYRIGHT  : " + info.copyright);
-            System.out.println("----------------------------------------");
+            logger.info("... we are connected to test harness:");
+            logger.info("----------------------------------------");
+            logger.info("NAME       : " + info.name);
+            logger.info("VERSION    : " + info.version);
+            logger.info("DATE       : " + info.date);
+            logger.info("COPYRIGHT  : " + info.copyright);
+            logger.info("----------------------------------------");
 
             // reset all pins on test harness before proceeding with this test
             TestHarnessPins reset = harness.reset();
-            System.out.println();
-            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+            logger.info("");
+            logger.info("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
 
             // enable the SPI Echo (Loopback) function on the test harness for these tests
             harness.enableSpiEcho(TEST_HARNESS_SPI_CHANNEL);
-            System.out.println();
-            System.out.println("ENABLE SPI CHANNEL [" + TEST_HARNESS_SPI_CHANNEL + "] ON TEST HARNESS; BAUD=" + BAUD_RATE);
+            logger.info("");
+            logger.info("ENABLE SPI CHANNEL [" + TEST_HARNESS_SPI_CHANNEL + "] ON TEST HARNESS; BAUD=" + BAUD_RATE);
 
             // close connection to test harness
             harness.close();
@@ -143,11 +144,11 @@ public class TestSpiUsingTestHarness {
 
     @AfterAll
     public static void terminate() throws IOException, LifecycleException {
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestSpiUsingTestHarness.class.getName() + ") ");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("TERMINATE TEST (" + TestSpiUsingTestHarness.class.getName() + ") ");
+        logger.info("************************************************************************");
+        logger.info("");
 
         // close down SPI channel
         spi.close();;

@@ -50,7 +50,8 @@ import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_PORT;
  */
 public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(PiGpioSocketBase.class);
+    
     protected final PiGpioSocketMonitor monitor;
 
     protected String host = DEFAULT_HOST;
@@ -303,7 +304,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 //        ByteBuffer b = ByteBuffer.allocate(4);
 //        b.order(ByteOrder.LITTLE_ENDIAN);
 //        b.putInt(rx.p3());
-//        System.out.println("[STATES] [" + Integer.toBinaryString(rx.p3()) + "]");
+//        logger.info("[STATES] [" + Integer.toBinaryString(rx.p3()) + "]");
 //
 //        tx = new PiGpioPacket(NOIB);
 //        rx = sendPacket(tx, listener);
@@ -316,7 +317,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 //            public void run() {
 //                try {
 //                    var in = listener.getInputStream();
-//                    System.out.println("START MONITOR");
+//                    logger.info("START MONITOR");
 //                    while(initialized && pinMonitor != 0) {
 //                        var available = in.available();
 //                        if(in.available() >= 12) {
@@ -331,13 +332,13 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 //                            final BitSet levels =  BitSet.valueOf(buffer.array());
 //
 //
-//                            System.out.println("[BYTES] [0x" + StringUtil.toHexString(buffer) + "]");
-//                            System.out.println("[SEQUE] " + sequence);
-//                            System.out.println("[FLAGS] " + flags);
-//                            System.out.println("[TICK ] " + tick);
-//                            System.out.println("[LEVEL] " + Integer.toBinaryString(level));
-//                            System.out.println("[STATE] " + BitSet.valueOf(raw).get(0));
-//                            System.out.println("--------------------------------------------------------");
+//                            logger.info("[BYTES] [0x" + StringUtil.toHexString(buffer) + "]");
+//                            logger.info("[SEQUE] " + sequence);
+//                            logger.info("[FLAGS] " + flags);
+//                            logger.info("[TICK ] " + tick);
+//                            logger.info("[LEVEL] " + Integer.toBinaryString(level));
+//                            logger.info("[STATE] " + BitSet.valueOf(raw).get(0));
+//                            logger.info("--------------------------------------------------------");
 //
 //
 //                            for (int i = 0; i < 32; i++) {
@@ -346,7 +347,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 //                                int newBit = (level >> i) & 1;
 //
 //                                if(oldBit != newBit){
-//                                    System.out.println("[BIT" + i + "] " + oldBit + " > " + newBit);
+//                                    logger.info("[BIT" + i + "] " + oldBit + " > " + newBit);
 //                                    final PiGpioState state = PiGpioState.from(newBit);
 //                                    final PiGpioStateChangeEvent event = new PiGpioStateChangeEvent(i, state, sequence, flags, tick);
 //                                    dispatchEvent(event);
@@ -358,7 +359,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 //                        }
 //                    }
 //                    listener.close();
-//                    System.out.println("STOP MONITOR");
+//                    logger.info("STOP MONITOR");
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }

@@ -30,6 +30,8 @@ import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.IOType;
 import com.pi4j.platform.Platform;
 import com.pi4j.provider.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>About class.</p>
@@ -39,7 +41,8 @@ import com.pi4j.provider.Provider;
  */
 public class About {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(About.class);
+    
     /**
      * <p>Constructor for About.</p>
      *
@@ -65,11 +68,11 @@ public class About {
      * @throws com.pi4j.exception.Pi4JException if any.
      */
     public void enumerateProviders(Context context, String title) throws Pi4JException {
-        System.out.println("=====================================================");
-        System.out.println(title);
-        System.out.println("=====================================================");
+        logger.info("=====================================================");
+        logger.info(title);
+        logger.info("=====================================================");
         for (Provider provider : context.providers().all().values()) {
-            System.out.println("  " + provider.name() + " [" + provider.id() + "]; " + provider.type());
+            logger.info("  " + provider.name() + " [" + provider.id() + "]; " + provider.type());
         }
     }
 
@@ -81,11 +84,11 @@ public class About {
      * @throws com.pi4j.exception.Pi4JException if any.
      */
     public void enumerateProviders(Context context, IOType ioType) throws Pi4JException {
-        System.out.println("=====================================================");
-        System.out.println(ioType + " PROVIDERS");
-        System.out.println("=====================================================");
+        logger.info("=====================================================");
+        logger.info(ioType + " PROVIDERS");
+        logger.info("=====================================================");
         for(var provider : context.providers().all(ioType).values()){
-            System.out.println("  " + provider.name() + " [" + provider.id() + "]; " + provider.type());
+            logger.info("  " + provider.name() + " [" + provider.id() + "]; " + provider.type());
         }
     }
 
@@ -96,11 +99,11 @@ public class About {
      * @throws com.pi4j.exception.Pi4JException if any.
      */
     public void enumeratePlatforms(Context context) throws Pi4JException {
-        System.out.println("=====================================================");
-        System.out.println("PLATFORMS");
-        System.out.println("=====================================================");
+        logger.info("=====================================================");
+        logger.info("PLATFORMS");
+        logger.info("=====================================================");
         for (Platform platform : context.platforms().all().values()) {
-            System.out.println("  " + platform.name() + " [" + platform.id() + "]; " + platform.getDescription());
+            logger.info("  " + platform.name() + " [" + platform.id() + "]; " + platform.getDescription());
         }
     }
 
@@ -111,19 +114,19 @@ public class About {
      * @throws com.pi4j.exception.Pi4JException if any.
      */
     public void describeDeafultPlatform(Context context) throws Pi4JException {
-        System.out.println("=====================================================");
-        System.out.println("DEFAULT (RUNTIME) PLATFORM ");
-        System.out.println("=====================================================");
-        System.out.println("  " + context.platform().name() + " [" + context.platform().id() + "]");
+        logger.info("=====================================================");
+        logger.info("DEFAULT (RUNTIME) PLATFORM ");
+        logger.info("=====================================================");
+        logger.info("  " + context.platform().name() + " [" + context.platform().id() + "]");
         context.platform().describe().print(System.out);
     }
 
 //    public void enumeratePlatformProviders() throws Pi4JException {
-//        System.out.println("=====================================================");
-//        System.out.println("PLATFORM PROVIDERS");
-//        System.out.println("=====================================================");
+//        logger.info("=====================================================");
+//        logger.info("PLATFORM PROVIDERS");
+//        logger.info("=====================================================");
 //        for(var provider : Pi4J.platform().providers().values()){
-//            System.out.println("  " + provider.name() + "[" + provider.id() + "]; " + provider.type());
+//            logger.info("  " + provider.name() + "[" + provider.id() + "]; " + provider.type());
 //        }
 //    }
 }

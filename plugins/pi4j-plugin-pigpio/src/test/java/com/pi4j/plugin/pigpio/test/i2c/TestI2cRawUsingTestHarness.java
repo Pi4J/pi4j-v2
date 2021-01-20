@@ -38,6 +38,8 @@ import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -48,6 +50,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("PIGPIO Plugin :: Test I2C Raw Communication using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestI2cRawUsingTestHarness {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestI2cRawUsingTestHarness.class);
 
     private static int I2C_BUS = 1;
     private static int I2C_DEVICE = 0x04;
@@ -66,14 +70,11 @@ public class TestI2cRawUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
-        // configure logging output
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestI2cRawUsingTestHarness.class.getName() + ")");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("INITIALIZE TEST (" + TestI2cRawUsingTestHarness.class.getName() + ")");
+        logger.info("************************************************************************");
+        logger.info("");
 
         try {
             // create test harness and PIGPIO instances
@@ -84,24 +85,24 @@ public class TestI2cRawUsingTestHarness {
 
             // get test harness info
             TestHarnessInfo info = harness.getInfo();
-            System.out.println("... we are connected to test harness:");
-            System.out.println("----------------------------------------");
-            System.out.println("NAME       : " + info.name);
-            System.out.println("VERSION    : " + info.version);
-            System.out.println("DATE       : " + info.date);
-            System.out.println("COPYRIGHT  : " + info.copyright);
-            System.out.println("----------------------------------------");
+            logger.info("... we are connected to test harness:");
+            logger.info("----------------------------------------");
+            logger.info("NAME       : " + info.name);
+            logger.info("VERSION    : " + info.version);
+            logger.info("DATE       : " + info.date);
+            logger.info("COPYRIGHT  : " + info.copyright);
+            logger.info("----------------------------------------");
 
             // reset all pins on test harness before proceeding with this test
             TestHarnessPins reset = harness.reset();
-            System.out.println();
-            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+            logger.info("");
+            logger.info("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
 
             // enable the I2C bus and device on the test harness hardware
             // (enable RAW mode data processing)
             harness.enableI2C(I2C_TEST_HARNESS_BUS, I2C_TEST_HARNESS_DEVICE, true);
-            System.out.println();
-            System.out.println("ENABLE I2C BUS [" + I2C_BUS + "] ON TEST HARNESS;");
+            logger.info("");
+            logger.info("ENABLE I2C BUS [" + I2C_BUS + "] ON TEST HARNESS;");
 
             // close connection to test harness
             harness.close();
@@ -112,16 +113,15 @@ public class TestI2cRawUsingTestHarness {
 
     @AfterAll
     public static void terminate() throws IOException {
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestI2cRawUsingTestHarness.class.getName() + ") ");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("TERMINATE TEST (" + TestI2cRawUsingTestHarness.class.getName() + ") ");
+        logger.info("************************************************************************");
+        logger.info("");
     }
 
     @BeforeEach
     public void beforeEach() throws Exception {
-
         // create I2C config
         var config  = I2C.newConfigBuilder(null)
                 .id("my-i2c-bus")

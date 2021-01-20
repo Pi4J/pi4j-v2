@@ -31,6 +31,8 @@ import com.pi4j.io.IOType;
 import com.pi4j.io.binding.AnalogOutputBinding;
 import com.pi4j.io.gpio.analog.AnalogValueChangeListener;
 import com.pi4j.test.provider.TestAnalogInputProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>Main class.</p>
@@ -39,6 +41,8 @@ import com.pi4j.test.provider.TestAnalogInputProvider;
  * @version $Id: $Id
  */
 public class Main {
+
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     /**
      * <p>Constructor for Main.</p>
@@ -53,10 +57,6 @@ public class Main {
      * @throws java.lang.Exception if any.
      */
     public static void main(String[] args) throws Exception {
-
-        // set logging
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-
         // Initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled
         // which will load all detected Pi4J extension libraries
@@ -92,31 +92,29 @@ public class Main {
         var output2 = pi4j.aout().create(100);
 
         input.addListener((AnalogValueChangeListener) event -> {
-            System.out.print("ANALOG INPUT [");
-            System.out.print(event.source().address());
-            System.out.print("] VALUE CHANGE: ");
-            System.out.println(event.value());
+            logger.info("ANALOG INPUT [");
+            logger.info(String.valueOf(event.source().address()));
+            logger.info("] VALUE CHANGE: ");
+            logger.info(event.value().toString());
         });
 
         output1.addListener((AnalogValueChangeListener) event -> {
-            System.out.print("ANALOG OUTPUT [");
-            System.out.print(event.source().address());
-            System.out.print("] VALUE CHANGE: ");
-            System.out.println(event.value());
+            logger.info("ANALOG OUTPUT [");
+            logger.info(String.valueOf(event.source().address()));
+            logger.info("] VALUE CHANGE: ");
+            logger.info(event.value().toString());
         });
         output2.addListener((AnalogValueChangeListener) event -> {
-            System.out.print("ANALOG OUTPUT [");
-            System.out.print(event.source().address());
-            System.out.print("] VALUE CHANGE: ");
-            System.out.println(event.value());
+            logger.info("ANALOG OUTPUT [");
+            logger.info(String.valueOf(event.source().address()));
+            logger.info("] VALUE CHANGE: ");
+            logger.info(event.value().toString());
         });
 
         input.bind(AnalogOutputBinding.newInstance(output1, output2));
 
-
-        System.out.println(input);
+        logger.info("Inpur: " + input.name());
         //((TestAnalogInput)input).test(21).test(22).test(23);
-
 
         //output.value(12);
         //output.setValue(78);
@@ -150,7 +148,7 @@ public class Main {
 //        des5.add("1.3.2.4");
 //        descriptor.print(System.out);
 
-        System.out.println("\r\n\r\n-----------------------------------\r\n" + "Pi4J - Runtime Information\r\n" + "-----------------------------------");
+        logger.info("\r\n\r\n-----------------------------------\r\n" + "Pi4J - Runtime Information\r\n" + "-----------------------------------");
         pi4j.describe().print(System.out);
 
         // shutdown Pi4J

@@ -39,16 +39,19 @@ import com.pi4j.util.StringUtil;
 
 import java.nio.ByteBuffer;
 import java.util.Random;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class I2CRawDataTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(I2CRawDataTest.class);
+
     private Context pi4j;
 
     private static int I2C_BUS = 1;
@@ -148,8 +151,8 @@ public class I2CRawDataTest {
             // read sample data using input stream
             byte[] result = i2c.in().readNBytes(sample.length);
 
-            System.out.println("[SAMPLE DATA] - 0x" + StringUtil.toHexString(sample));
-            System.out.println("[READ DATA  ] - 0x" + StringUtil.toHexString(result));
+            logger.info("[SAMPLE DATA] - 0x" + StringUtil.toHexString(sample));
+            logger.info("[READ DATA  ] - 0x" + StringUtil.toHexString(result));
 
             // copare sample data against returned read data
             assertArrayEquals(sample, result);

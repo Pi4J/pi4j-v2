@@ -43,6 +43,8 @@ import java.util.Arrays;
  */
 public class Main {
 
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
     /**
      * <p>main.</p>
      *
@@ -50,15 +52,9 @@ public class Main {
      * @throws java.lang.Exception if any.
      */
     public static void main(String[] args) throws Exception {
-
-
-
         //var output = connectAndExecute("pi", "rpi4b-1g", "raspberry", LinuxCmd.export(21));
-
         var output = sftp("pi", "rpi3bp", "raspberry", LinuxCmd.export(21));
-
-
-        System.out.println(output);
+        logger.info(output);
     }
 
     /**
@@ -73,8 +69,6 @@ public class Main {
     public static String sftp(String user, String host, String password, String command1) {
         String CommandOutput = null;
         try {
-
-
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
@@ -83,7 +77,7 @@ public class Main {
             session.setPassword(password);
             session.setConfig(config);
             session.connect();
-            // System.out.println("Connected");
+            logger.info("Connected");
 
             Channel channel=session.openChannel("sftp");
             channel.connect();
@@ -94,19 +88,19 @@ public class Main {
 
 //            InputStream is = new ByteArrayInputStream("20".getBytes());
 //            c.put(is, "/sys/class/gpio/export");
-            //System.out.println(x);
+            //logger.info(x);
 
 //            var cont = c.stat("/sys/class/gpio/gpio5");
-//            System.out.println(cont);
+//            logger.info(cont);
 //
 //            c.ls("/sys/class/gpio").forEach(v->{
-//                System.out.println("-> " + v);
+//                logger.info("-> " + v);
 //            });
 
-            //System.out.println(c.lstat("/sys/class/gpio/gpio22"));
+            //logger.info(c.lstat("/sys/class/gpio/gpio22"));
 
             //var ls = c.ls("/sys/class/gpio").contains("gpio20");
-            //System.out.println(ls);
+            //logger.info(ls);
 
             //c.get("/sys/class/gpio/gpio20", System.out);
 
@@ -120,7 +114,7 @@ public class Main {
             InputStream in  = c.get("/dev/pigout");
 
             //InputStream in  = c.get("/sys/class/gpio/gpio5/value");
-            System.out.println(Arrays.toString(in.readAllBytes()));
+            logger.info(Arrays.toString(in.readAllBytes()));
 //
 //            byte[] tmp = new byte[1024];
 //            while (true) {
@@ -129,12 +123,12 @@ public class Main {
 //
 //                    if (i < 0)
 //                        break;
-//                    // System.out.print(new String(tmp, 0, i));
+//                    // logger.info(new String(tmp, 0, i));
 //                    CommandOutput = new String(tmp, 0, i);
 //                }
 //
 //                if (channel.isClosed()) {
-//                    // System.out.println("exit-status: " +
+//                    // logger.info("exit-status: " +
 //                    // channel.getExitStatus());
 //                    break;
 //                }
@@ -176,7 +170,7 @@ public class Main {
             session.setPassword(password);
             session.setConfig(config);
             session.connect();
-            // System.out.println("Connected");
+            // logger.info("Connected");
 
             Channel channel = session.openChannel("exec");
             ((ChannelExec) channel).setCommand(command1);
@@ -193,12 +187,12 @@ public class Main {
 
                     if (i < 0)
                         break;
-                    // System.out.print(new String(tmp, 0, i));
+                    // logger.info(new String(tmp, 0, i));
                     CommandOutput = new String(tmp, 0, i);
                 }
 
                 if (channel.isClosed()) {
-                    // System.out.println("exit-status: " +
+                    // logger.info("exit-status: " +
                     // channel.getExitStatus());
                     break;
                 }
@@ -209,7 +203,7 @@ public class Main {
             }
             channel.disconnect();
             session.disconnect();
-            // System.out.println("DONE");
+            // logger.info("DONE");
 
         } catch (Exception e) {
             e.printStackTrace();

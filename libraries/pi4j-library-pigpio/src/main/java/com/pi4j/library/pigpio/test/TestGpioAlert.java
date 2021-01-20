@@ -29,6 +29,8 @@ package com.pi4j.library.pigpio.test;
  */
 
 import com.pi4j.library.pigpio.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 import java.io.IOException;
@@ -40,6 +42,8 @@ import java.io.IOException;
  * @version $Id: $Id
  */
 public class TestGpioAlert {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestGpioAlert.class);
 
     public static int GPIO_PIN = 21;
 
@@ -57,17 +61,17 @@ public class TestGpioAlert {
         }
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loglevel);
 
-        System.out.println();
-        System.out.println();
+        logger.info("");
+        logger.info("");
         PiGpio piGpio = PiGpio.newNativeInstance();
 
         piGpio.gpioInitialise();
-        System.out.println("-----------------------------------------------------");
-        System.out.println("PIGPIO INITIALIZED SUCCESSFULLY");
-        System.out.println("-----------------------------------------------------");
+        logger.info("-----------------------------------------------------");
+        logger.info("PIGPIO INITIALIZED SUCCESSFULLY");
+        logger.info("-----------------------------------------------------");
 
-        System.out.println("PIGPIO VERSION   : " + piGpio.gpioVersion());
-        System.out.println("PIGPIO HARDWARE  : " + piGpio.gpioHardwareRevision());
+        logger.info("PIGPIO VERSION   : " + piGpio.gpioVersion());
+        logger.info("PIGPIO HARDWARE  : " + piGpio.gpioHardwareRevision());
 
 
         piGpio.gpioSetMode(GPIO_PIN, PiGpioMode.INPUT);
@@ -77,23 +81,23 @@ public class TestGpioAlert {
         piGpio.addPinListener(GPIO_PIN, new PiGpioStateChangeListener() {
             @Override
             public void onChange(PiGpioStateChangeEvent event) throws Exception {
-                System.out.println("RECEIVED ALERT EVENT! " + event);
+                logger.info("RECEIVED ALERT EVENT! " + event);
                 throw new IOException("TEST");
             }
         });
 
         System.in.read();
-        System.out.println("PIGPIO ALERT CALLBACK REMOVED");
+        logger.info("PIGPIO ALERT CALLBACK REMOVED");
         piGpio.removeAllPinListeners();
         //piGpio.removeAllListeners();
         System.in.read();
 
-        System.out.println("-----------------------------------------------------");
+        logger.info("-----------------------------------------------------");
         piGpio.gpioTerminate();
-        System.out.println("PIGPIO TERMINATED");
+        logger.info("PIGPIO TERMINATED");
 
-        System.out.println("-----------------------------------------------------");
-        System.out.println();
-        System.out.println();
+        logger.info("-----------------------------------------------------");
+        logger.info("");
+        logger.info("");
     }
 }

@@ -30,6 +30,8 @@ package com.pi4j.library.pigpio.test;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioConst;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 /**
@@ -39,6 +41,8 @@ import org.slf4j.event.Level;
  * @version $Id: $Id
  */
 public class InitRemote {
+
+    private static final Logger logger = LoggerFactory.getLogger(InitRemote.class);
 
     /**
      * <p>main.</p>
@@ -60,25 +64,25 @@ public class InitRemote {
 
         // create native PiGpio instance
         PiGpio piGpio = PiGpio.newSocketInstance(host);
-        System.out.println();
-        System.out.println();
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("Pi4J Library :: PIGPIO (Remote) JNI Wrapper Library");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
+        logger.info("");
+        logger.info("");
+        logger.info("-----------------------------------------------------");
+        logger.info("-----------------------------------------------------");
+        logger.info("Pi4J Library :: PIGPIO (Remote) JNI Wrapper Library");
+        logger.info("-----------------------------------------------------");
+        logger.info("-----------------------------------------------------");
         int init = piGpio.gpioInitialise();
         if(init < 0){
-            System.err.println("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
+            logger.error("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
         } else {
-            System.out.println("PIGPIO INITIALIZED SUCCESSFULLY");
+            logger.info("PIGPIO INITIALIZED SUCCESSFULLY");
         }
-        System.out.println("PIGPIO VERSION   : " + piGpio.gpioVersion());
-        System.out.println("PIGPIO HARDWARE  : " + Long.toHexString(piGpio.gpioHardwareRevision()));
+        logger.info("PIGPIO VERSION   : " + piGpio.gpioVersion());
+        logger.info("PIGPIO HARDWARE  : " + Long.toHexString(piGpio.gpioHardwareRevision()));
         piGpio.gpioTerminate();
-        System.out.println("PIGPIO TERMINATED");
-        System.out.println("-----------------------------------------------------");
-        System.out.println();
-        System.out.println();
+        logger.info("PIGPIO TERMINATED");
+        logger.info("-----------------------------------------------------");
+        logger.info("");
+        logger.info("");
     }
 }
