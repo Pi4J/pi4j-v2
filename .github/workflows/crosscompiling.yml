@@ -18,9 +18,17 @@ jobs:
     - name: Make staging directory
       run: mkdir staging
     - name: Copy core to staging
-      run: cp -r pi4j-core/target/*.jar staging
+      run: |
+        cp -r pi4j-core/target/*.jar staging
+    - name: Copy libraries to staging
+      run: |
+        cp -r libraries/pi4j-library-pigpio/target/*.jar staging
+    - name: Copy plugins to staging
+      run: |
+        cp -r plugins/pi4j-plugin-pigpio/target/*.jar staging
+        cp -r plugins/pi4j-plugin-raspberrypi/target/*.jar staging
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        name: Package
+        name: pi4j-v2-dist
         path: staging
