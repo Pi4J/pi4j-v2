@@ -188,6 +188,11 @@ public class DefaultRuntime implements Runtime {
         // TODO
     }
 
+    @Override
+    public boolean isShutdown() {
+        return isShutdown;
+    }
+
     /** {@inheritDoc} */
     @Override
     public Runtime initialize() throws InitializeException {
