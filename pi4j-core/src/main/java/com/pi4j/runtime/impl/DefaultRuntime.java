@@ -50,6 +50,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * <p>DefaultRuntime class.</p>
@@ -66,6 +69,7 @@ public class DefaultRuntime implements Runtime {
     private final RuntimePlatforms platforms;
     private final RuntimeProperties properties;
     private final List<Plugin> plugins = new ArrayList<>();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private boolean isShutdown = false;
     private final EventManager<Runtime, ShutdownListener, ShutdownEvent> shutdownEventManager;
     private final EventManager<Runtime, InitializedListener, InitializedEvent> initializedEventManager;
@@ -184,8 +188,16 @@ public class DefaultRuntime implements Runtime {
     }
 
     @Override
-    public void asyncShutdown() {
-        // TODO
+    public Future<Context> asyncShutdown() {
+        return executor.submit(() -> {
+            try {
+                shutdown();
+            }
+            catch (Exception e){
+                logger.error(e.getMessage(), e);
+            }
+            return context;
+        });
     }
 
     @Override

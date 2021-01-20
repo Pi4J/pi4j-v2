@@ -109,9 +109,10 @@ public interface Context extends Describable,
     Context shutdown() throws LifecycleException;
 
     /**
-     * <p>async shutdown.</p>
+     *
+     * @return {@link Future} of {@link Context}
      */
-    void asyncShutdown();
+    Future<Context> asyncShutdown();
 
     /**
      *
