@@ -27,16 +27,19 @@ package com.pi4j.test.registry;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.digital.DigitalInput;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import static junit.framework.TestCase.assertEquals;
-
+@TestInstance(Lifecycle.PER_CLASS)
 public class RegistryGetIoInstance {
 
     public static final int PIN_ADDRESS = 1;
@@ -44,7 +47,7 @@ public class RegistryGetIoInstance {
 
     private Context pi4j;
 
-    @Before
+    @BeforeAll
     public void beforeTest() throws Pi4JException {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
 
@@ -55,7 +58,7 @@ public class RegistryGetIoInstance {
         pi4j = Pi4J.newAutoContext();
     }
 
-    @After
+    @AfterAll
     public void afterTest() {
         try {
             pi4j.shutdown();
@@ -72,6 +75,6 @@ public class RegistryGetIoInstance {
         DigitalInput retrieved = pi4j.registry().get(PIN_ID, DigitalInput.class);
 
         // verify the retrieved I/O instance is the same as the one we registered
-        assertEquals("The I/O instance retrieved from registry is not a match.", input,retrieved);
+        assertEquals(input,retrieved, "The I/O instance retrieved from registry is not a match.");
     }
 }

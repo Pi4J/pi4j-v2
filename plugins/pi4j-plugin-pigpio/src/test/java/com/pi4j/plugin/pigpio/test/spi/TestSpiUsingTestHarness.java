@@ -41,14 +41,13 @@ import com.pi4j.plugin.pigpio.provider.spi.PiGpioSpiProviderImpl;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 @DisplayName("PIGPIO Plugin :: Test SPI Communication using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -177,7 +176,7 @@ public class TestSpiUsingTestHarness {
         assertNotNull(spi);
 
         // ensure connection is open
-        assertTrue("SPI INSTANCE IS NOT OPEN", spi.isOpen());
+        assertTrue(spi.isOpen(), "SPI INSTANCE IS NOT OPEN");
     }
 
     @Test
@@ -193,7 +192,7 @@ public class TestSpiUsingTestHarness {
     @Order(3)
     public void testSpiSingleByteRead() throws Exception {
         // read single byte from the SPI device
-        Assert.assertEquals(SAMPLE_BYTE, spi.readByte());
+        assertEquals(SAMPLE_BYTE, spi.readByte());
     }
 
     @Test
@@ -210,7 +209,7 @@ public class TestSpiUsingTestHarness {
     public void testSpiByteArrayRead() throws Exception {
         // read an array of data bytes from the SPI device
         byte[] byteArray = spi.readNBytes(SAMPLE_BYTE_ARRAY.length);
-        Assert.assertEquals(SAMPLE_BYTE_ARRAY[SAMPLE_BYTE_ARRAY.length-1], byteArray[0]);
+        assertEquals(SAMPLE_BYTE_ARRAY[SAMPLE_BYTE_ARRAY.length-1], byteArray[0]);
     }
 
     @Test
@@ -227,7 +226,7 @@ public class TestSpiUsingTestHarness {
     public void testSpiByteBufferRead() throws Exception {
         // read a buffer of data bytes from the SPI device
         ByteBuffer buffer = spi.readByteBuffer(SAMPLE_BUFFER.capacity());
-        Assert.assertEquals(SAMPLE_BUFFER.get(SAMPLE_BUFFER.capacity()-1), buffer.get(0));
+        assertEquals(SAMPLE_BUFFER.get(SAMPLE_BUFFER.capacity()-1), buffer.get(0));
     }
 
     @Test
@@ -244,6 +243,6 @@ public class TestSpiUsingTestHarness {
     public void testSpiAsciiStringRead() throws Exception {
         // read a string of data from the SPI device
         String testString = spi.readString(SAMPLE_STRING.length());
-        Assert.assertEquals(SAMPLE_STRING.substring(SAMPLE_STRING.length()-1), testString.substring(0, 1));
+        assertEquals(SAMPLE_STRING.substring(SAMPLE_STRING.length()-1), testString.substring(0, 1));
     }
 }

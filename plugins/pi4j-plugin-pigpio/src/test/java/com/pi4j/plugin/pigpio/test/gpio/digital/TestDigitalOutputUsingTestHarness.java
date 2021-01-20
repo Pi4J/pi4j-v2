@@ -39,10 +39,11 @@ import com.pi4j.plugin.pigpio.provider.gpio.digital.PiGpioDigitalOutputProvider;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("PIGPIO Plugin :: Test Digital Output Pins using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -159,7 +160,7 @@ public class TestDigitalOutputUsingTestHarness {
             // read input state from test harness; compare with expected initial state
             int readState = harness.getPin(p).value;
             System.out.println("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
-            Assert.assertEquals("DIGITAL OUTPUT STATE MISMATCH: " + p,  dout.config().getInitialState().value(), readState);
+            assertEquals(dout.config().getInitialState().value(), readState, "DIGITAL OUTPUT STATE MISMATCH: " + p);
 
             // set state low
             dout.low();
@@ -168,7 +169,7 @@ public class TestDigitalOutputUsingTestHarness {
             // read input state from test harness; compare with expected LOW state
             readState = harness.getPin(p).value;
             System.out.println("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
-            Assert.assertEquals("DIGITAL OUTPUT STATE MISMATCH: " + p, DigitalState.LOW.value(), readState);
+            assertEquals(DigitalState.LOW.value(), readState, "DIGITAL OUTPUT STATE MISMATCH: " + p);
 
             // set state high
             dout.high();
@@ -177,7 +178,7 @@ public class TestDigitalOutputUsingTestHarness {
             // read input state from test harness; compare with expected HIGH state
             readState = harness.getPin(p).value;
             System.out.println("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
-            Assert.assertEquals("DIGITAL OUTPUT STATE MISMATCH: " + p, DigitalState.HIGH.value(), readState);
+            assertEquals(DigitalState.HIGH.value(), readState, "DIGITAL OUTPUT STATE MISMATCH: " + p);
 
             // toggle pin state
             dout.toggle();
@@ -186,7 +187,7 @@ public class TestDigitalOutputUsingTestHarness {
             // read input state from test harness; compare with expected LOW state
             readState = harness.getPin(p).value;
             System.out.println("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
-            Assert.assertEquals("DIGITAL OUTPUT STATE MISMATCH: " + p, DigitalState.LOW.value(), readState);
+            assertEquals(DigitalState.LOW.value(), readState, "DIGITAL OUTPUT STATE MISMATCH: " + p);
 
             // set state high
             dout.setState(1);
@@ -195,7 +196,7 @@ public class TestDigitalOutputUsingTestHarness {
             // read input state from test harness; compare with expected HIGH state
             readState = harness.getPin(p).value;
             System.out.println("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
-            Assert.assertEquals("DIGITAL OUTPUT STATE MISMATCH: " + p, DigitalState.HIGH.value(), readState);
+            assertEquals(DigitalState.HIGH.value(), readState, "DIGITAL OUTPUT STATE MISMATCH: " + p);
 
             // perform a shutdown on this pin
             dout.shutdown(pi4j);
@@ -204,7 +205,7 @@ public class TestDigitalOutputUsingTestHarness {
             // read input state from test harness; compare with expected shutdown state
             readState = harness.getPin(p).value;
             System.out.println("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
-            Assert.assertEquals("DIGITAL OUTPUT STATE MISMATCH: " + p,  dout.config().getShutdownState().value(), readState);
+            assertEquals(dout.config().getShutdownState().value(), readState, "DIGITAL OUTPUT STATE MISMATCH: " + p);
         }
     }
 }

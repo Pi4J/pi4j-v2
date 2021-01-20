@@ -27,20 +27,23 @@ package com.pi4j.test.context;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.Pi4JException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import static junit.framework.TestCase.assertNotNull;
-
+@TestInstance(Lifecycle.PER_CLASS)
 public class ContextTest {
 
     private Context pi4j;
 
-    @Before
+    @BeforeAll
     public void beforeTest() throws Pi4JException {
         // initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled
@@ -49,7 +52,7 @@ public class ContextTest {
         pi4j = Pi4J.newAutoContext();
     }
 
-    @After
+    @AfterAll
     public void afterTest() {
         try {
             pi4j.shutdown();

@@ -35,7 +35,6 @@ import com.pi4j.library.pigpio.test.TestEnv;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -44,6 +43,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("PIGPIO Library :: Test I2C Communication")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -175,7 +177,7 @@ public class TestI2cUsingTestHarness {
             System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + Byte.toUnsignedInt(values[register]) + ")");
 
             // validate read value match with expected value that was writted to this register
-            Assert.assertEquals("I2C WORD VALUE MISMATCH",  values[register], (byte)value);
+            assertEquals(values[register], (byte) value, "I2C WORD VALUE MISMATCH");
         }
     }
 
@@ -217,7 +219,7 @@ public class TestI2cUsingTestHarness {
             System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + values[register] + ")");
 
             // validate read value match with expected value that was writted to this register
-            Assert.assertEquals("I2C WORD VALUE MISMATCH",  values[register], value);
+            assertEquals(values[register], value, "I2C WORD VALUE MISMATCH");
         }
     }
 
@@ -247,7 +249,7 @@ public class TestI2cUsingTestHarness {
             System.out.println(" (READ)  << VALUE = " + returnedValue);
 
             // validate read value match with expected value that was writted to this register
-            Assert.assertEquals("I2C WORD VALUE MISMATCH",  generatedValue, returnedValue);
+            assertEquals(generatedValue, returnedValue, "I2C WORD VALUE MISMATCH");
         }
     }
 
@@ -327,7 +329,7 @@ public class TestI2cUsingTestHarness {
             System.out.println(" (READ)  << VALUE = " + Arrays.toString(readBuffer));
 
             // validate read value match with expected value that was written to this register
-            Assert.assertArrayEquals("I2C BLOCK VALUE MISMATCH",  writeBuffer, readBuffer);
+            assertArrayEquals(writeBuffer, readBuffer, "I2C BLOCK VALUE MISMATCH");
         }
     }
 
@@ -394,7 +396,7 @@ public class TestI2cUsingTestHarness {
             }
 
             // validate read value match with expected value that was writted to this register
-            Assert.assertEquals("I2C BLOCK VALUE MISMATCH",  values[register], valueString);
+            assertEquals(values[register], valueString, "I2C BLOCK VALUE MISMATCH");
         }
     }
 }

@@ -69,8 +69,8 @@ public class DefaultRuntime implements Runtime {
     private final RuntimePlatforms platforms;
     private final RuntimeProperties properties;
     private final List<Plugin> plugins = new ArrayList<>();
-    private boolean isShutdown = false;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private boolean isShutdown = false;
     private final EventManager<Runtime, ShutdownListener, ShutdownEvent> shutdownEventManager;
     private final EventManager<Runtime, InitializedListener, InitializedEvent> initializedEventManager;
 
@@ -166,11 +166,6 @@ public class DefaultRuntime implements Runtime {
                     } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                     }
-                }
-
-                // shutdown executor threads
-                if(!executor.isShutdown()) {
-                    executor.shutdown();
                 }
             } catch (Exception e) {
                 logger.error("failed to 'shutdown(); '", e);
@@ -309,21 +304,8 @@ public class DefaultRuntime implements Runtime {
         return this;
     }
 
-    private Future<Context> notifyInitListeners() {
-        return executor.submit(() -> {
-            try {
-                // wait .5 seconds before dispatching event
-                // (allows time to register event listeners)
-                Thread.sleep(500);
-
-                // dispatch event now
-                initializedEventManager.dispatch(new InitializedEvent(this.context));
-            }
-            catch (Exception e){
-                logger.error(e.getMessage(), e);
-            }
-            return context;
-        });
+    private void notifyInitListeners() {
+        // TODO
     }
 
     @Override

@@ -56,7 +56,8 @@ import java.util.concurrent.Future;
  */
 public class DefaultContext implements Context {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private Runtime runtime = null;
     private ContextConfig config = null;
     private ContextProperties properties = null;

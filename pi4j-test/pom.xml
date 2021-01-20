@@ -30,7 +30,6 @@
             <artifactId>pi4j-plugin-mock</artifactId>
             <version>${project.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>
