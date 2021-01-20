@@ -54,6 +54,7 @@ import com.pi4j.util.PropertiesUtil;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 /**

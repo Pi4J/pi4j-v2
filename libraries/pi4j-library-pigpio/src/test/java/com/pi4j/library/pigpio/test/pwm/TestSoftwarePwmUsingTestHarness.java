@@ -36,10 +36,12 @@ import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @DisplayName("PIGPIO Library :: Test Software Emulated PWM Pins")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -189,8 +191,8 @@ public class TestSoftwarePwmUsingTestHarness {
             System.out.println(" (READ)  << PWM FREQUENCY  = " + readFrequency + "; (EXPECTED=" + actualFrequency + ")");
             System.out.println(" (READ)  << PWM DUTY-CYCLE = " + readDutyCycle + "; (EXPECTED=" + dutyCycle + ")");
 
-            Assert.assertEquals("PWM FREQUENCY MISMATCH",  actualFrequency, readFrequency);
-            Assert.assertEquals("PWM DUTY-CYCLE MISMATCH",  dutyCycle, readDutyCycle);
+            assertEquals(actualFrequency, readFrequency, "PWM FREQUENCY MISMATCH");
+            assertEquals(dutyCycle, readDutyCycle, "PWM DUTY-CYCLE MISMATCH");
 
             Thread.sleep(100);
 
@@ -206,7 +208,7 @@ public class TestSoftwarePwmUsingTestHarness {
                         pigpio.gpioPWM(p, 0);;
 
                         // give up and fail
-                        Assert.fail("PWM MEASURED FREQUENCY OUT OF ACCEPTABLE MARGIN OF ERROR");
+                        fail("PWM MEASURED FREQUENCY OUT OF ACCEPTABLE MARGIN OF ERROR");
                     }
                 }
             }

@@ -27,12 +27,15 @@ package com.pi4j.test.io.serial;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayInputStream;
@@ -40,8 +43,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-
-import static org.junit.Assert.assertNotNull;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SerialDataTest {
@@ -88,7 +89,6 @@ public class SerialDataTest {
     @Order(1)
     @Test
     public void testSerialInstance() throws Exception {
-
         // ensure that the serial instance is not null;
         assertNotNull(serial);
     }
@@ -161,7 +161,7 @@ public class SerialDataTest {
     public void readByte() throws Exception {
         // read single byte from serial device and check for expected value
         byte b = (byte)serial.read();
-        Assert.assertEquals(SAMPLE_BYTE, b);
+        assertEquals(SAMPLE_BYTE, b);
     }
 
     @DisplayName("SERIAL :: Read Byte Array")
@@ -171,7 +171,7 @@ public class SerialDataTest {
         // read an array of data bytes from the serial device and check for expected value
         byte byteArray[] = new byte[SAMPLE_BYTE_ARRAY.length];
         serial.read(byteArray, 0, byteArray.length);
-        Assert.assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
+        assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
     }
 
     @DisplayName("SERIAL :: Read Byte Buffer")
@@ -181,7 +181,7 @@ public class SerialDataTest {
         // read a buffer of data bytes from the serial device and check for expected value
         ByteBuffer buffer = ByteBuffer.allocate(SAMPLE_BUFFER.capacity());
         serial.read(buffer, 0, buffer.capacity());
-        Assert.assertArrayEquals(SAMPLE_BUFFER_ARRAY, buffer.array());
+        assertArrayEquals(SAMPLE_BUFFER_ARRAY, buffer.array());
     }
 
     @DisplayName("SERIAL :: Read ASCII String")
@@ -190,7 +190,7 @@ public class SerialDataTest {
     public void readString() throws Exception {
         // read a string of data from the serial device and check for expected value
         String testString = serial.readString(SAMPLE_STRING.length());
-        Assert.assertEquals(SAMPLE_STRING, testString);
+        assertEquals(SAMPLE_STRING, testString);
     }
 
     @DisplayName("SERIAL :: Read Byte Stream")
@@ -200,7 +200,7 @@ public class SerialDataTest {
         // read a stream of data from the serial device and check for expected value
         byte[] byteArray = new byte[SAMPLE_BYTE_ARRAY.length];
         serial.read(byteArray);
-        Assert.assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
+        assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
     }
 
     @DisplayName("SERIAL :: Read Input Stream")
@@ -211,7 +211,7 @@ public class SerialDataTest {
         InputStream is = serial.in();
         byte[] byteArray = new byte[SAMPLE_BYTE_ARRAY.length];
         is.read(byteArray, 0, byteArray.length);
-        Assert.assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
+        assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
     }
 
     @DisplayName("SERIAL :: Read Char Array")
@@ -221,7 +221,7 @@ public class SerialDataTest {
         // read an array of data chars from the serial device and check for expected value
         char charArray[] = new char[SAMPLE_CHAR_ARRAY.length];
         serial.read(charArray, 0, charArray.length);
-        Assert.assertArrayEquals(SAMPLE_CHAR_ARRAY, charArray);
+        assertArrayEquals(SAMPLE_CHAR_ARRAY, charArray);
     }
 
     // --------------------------------------------------------------------
@@ -246,7 +246,7 @@ public class SerialDataTest {
 
         // read data into char buffer using explicit offset in data
         serial.read(buffer, 2, 5);
-        Assert.assertEquals("12HELLO890", buffer.rewind().toString());
+        assertEquals("12HELLO890", buffer.rewind().toString());
 
     }
 
@@ -280,7 +280,7 @@ public class SerialDataTest {
 
         // read data into char buffer using explicit offset in data
         serial.read(readBuffer);
-        Assert.assertEquals("**34#6789ABCDE", readBuffer.rewind().toString());
+        assertEquals("**34#6789ABCDE", readBuffer.rewind().toString());
     }
 
     @DisplayName("SERIAL :: Write/Read Byte Buffer (1)")
@@ -303,7 +303,7 @@ public class SerialDataTest {
         serial.read(buffer, 2, 5);
 //        System.out.println("[SAMPLE DATA] - 0x" + StringUtil.toHexString("12HELLO890".getBytes()));
 //        System.out.println("[READ DATA  ] - 0x" + StringUtil.toHexString(buffer));
-        Assert.assertArrayEquals("12HELLO890".getBytes(), buffer.array());
+        assertArrayEquals("12HELLO890".getBytes(), buffer.array());
     }
 
     @DisplayName("SERIAL :: Write/Read Byte Buffer (2)")
@@ -338,7 +338,7 @@ public class SerialDataTest {
         // read data into char buffer using explicit offset in data
         serial.read(readBuffer);
 
-        Assert.assertArrayEquals(
+        assertArrayEquals(
                 new byte[]{ (byte)0xFF, (byte)0xFF, (byte)4, (byte)5, (byte)99, (byte)7, (byte)8, (byte)9, (byte)10, (byte)11, (byte)12, (byte)13 },
                 readBuffer.array());
     }
@@ -371,7 +371,7 @@ public class SerialDataTest {
 //            System.out.println("[READ DATA  ] - 0x" + StringUtil.toHexString(result));
 //
 //            // copare sample data against returned read data
-//            Assert.assertArrayEquals(sample, result);
+//            assertArrayEquals(sample, result);
 //        }
 //    }
 }

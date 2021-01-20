@@ -40,12 +40,14 @@ import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
 import com.pi4j.util.StringUtil;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("PIGPIO Plugin :: Test I2C Communication using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -201,7 +203,7 @@ public class TestI2cUsingTestHarness {
             }
 
             // validate read value match with expected value that was writted to this register
-            Assert.assertEquals("I2C BYTE VALUE MISMATCH",  values[r], value);
+            assertEquals(values[r], value, "I2C BYTE VALUE MISMATCH");
         }
     }
 
@@ -256,7 +258,7 @@ public class TestI2cUsingTestHarness {
             }
 
             // validate read value match with expected value that was writted to this register
-            Assert.assertEquals("I2C WORD VALUE MISMATCH",  values[r], value);
+            assertEquals(values[r], value, "I2C WORD VALUE MISMATCH");
         }
     }
 
@@ -321,7 +323,7 @@ public class TestI2cUsingTestHarness {
                 }
             }
             // validate read value match with expected value that was writted to this register
-            Assert.assertArrayEquals("I2C BYTE-ARRAY VALUE MISMATCH",  expected, value);
+            assertArrayEquals(expected, value, "I2C BYTE-ARRAY VALUE MISMATCH");
             Thread.sleep(20);
         }
     }
@@ -388,7 +390,7 @@ public class TestI2cUsingTestHarness {
             }
 
             // validate read value match with expected value that was writted to this register
-            Assert.assertArrayEquals("I2C BYTE-BUFFER VALUE MISMATCH",  expected.array(), value.array());
+            assertArrayEquals(expected.array(), value.array(), "I2C BYTE-BUFFER VALUE MISMATCH");
         }
     }
 
@@ -420,7 +422,7 @@ public class TestI2cUsingTestHarness {
             System.out.println(" (READ)  << VALUE = " + value + "; (EXPECTED=" + values[r] + ")");
 
             // validate read value match with expected value that was writted to this register
-            Assert.assertEquals("I2C WORD VALUE MISMATCH",  values[r], value);
+            assertEquals(values[r], value, "I2C WORD VALUE MISMATCH");
         }
     }
 }
