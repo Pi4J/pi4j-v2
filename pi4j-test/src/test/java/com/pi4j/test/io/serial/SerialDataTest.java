@@ -301,8 +301,8 @@ public class SerialDataTest {
 
         // read data into char buffer using explicit offset in data
         serial.read(buffer, 2, 5);
-//        System.out.println("[SAMPLE DATA] - 0x" + StringUtil.toHexString("12HELLO890".getBytes()));
-//        System.out.println("[READ DATA  ] - 0x" + StringUtil.toHexString(buffer));
+//        logger.info("[SAMPLE DATA] - 0x" + StringUtil.toHexString("12HELLO890".getBytes()));
+//        logger.info("[READ DATA  ] - 0x" + StringUtil.toHexString(buffer));
         assertArrayEquals("12HELLO890".getBytes(), buffer.array());
     }
 
@@ -367,8 +367,8 @@ public class SerialDataTest {
 //            // read sample data using input stream
 //            byte[] result = i2c.in().readNBytes(sample.length);
 //
-//            System.out.println("[SAMPLE DATA] - 0x" + StringUtil.toHexString(sample));
-//            System.out.println("[READ DATA  ] - 0x" + StringUtil.toHexString(result));
+//            logger.info("[SAMPLE DATA] - 0x" + StringUtil.toHexString(sample));
+//            logger.info("[READ DATA  ] - 0x" + StringUtil.toHexString(result));
 //
 //            // copare sample data against returned read data
 //            assertArrayEquals(sample, result);

@@ -92,7 +92,7 @@ public class ProviderProxyHandler implements InvocationHandler {
         // we need to intercept the "create(IOConfig config)" method with the single IOConfig type argument
         if(args != null && args.length == 1 && args[0] instanceof IOConfig) {
             IOConfig ioConfig = (IOConfig) args[0];
-            //System.out.println("-->> PROVIDER [" +  provider.id() + "] CREATE IO INSTANCE: " + ioConfig.id());
+            //logger.info("-->> PROVIDER [" +  provider.id() + "] CREATE IO INSTANCE: " + ioConfig.id());
 
             // check to see if this IO instance is already registered in the IO Registry
             if(runtime.registry().exists(ioConfig.id()))

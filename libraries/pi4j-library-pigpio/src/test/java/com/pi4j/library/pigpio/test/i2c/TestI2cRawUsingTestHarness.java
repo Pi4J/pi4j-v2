@@ -36,6 +36,8 @@ import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -47,6 +49,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestI2cRawUsingTestHarness {
 
+    private static final Logger logger = LoggerFactory.getLogger(TestI2cRawUsingTestHarness.class);
+
     private static int I2C_BUS = 1;
     private static int I2C_DEVICE = 0x04;
     private static int I2C_TEST_HARNESS_BUS    = 0;
@@ -57,13 +61,11 @@ public class TestI2cRawUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestI2cRawUsingTestHarness.class.getName() + ")");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("INITIALIZE TEST (" + TestI2cRawUsingTestHarness.class.getName() + ")");
+        logger.info("************************************************************************");
+        logger.info("");
 
         try {
             // create test harness and PIGPIO instances
@@ -74,24 +76,24 @@ public class TestI2cRawUsingTestHarness {
 
             // get test harness info
             TestHarnessInfo info = harness.getInfo();
-            System.out.println("... we are connected to test harness:");
-            System.out.println("----------------------------------------");
-            System.out.println("NAME       : " + info.name);
-            System.out.println("VERSION    : " + info.version);
-            System.out.println("DATE       : " + info.date);
-            System.out.println("COPYRIGHT  : " + info.copyright);
-            System.out.println("----------------------------------------");
+            logger.info("... we are connected to test harness:");
+            logger.info("----------------------------------------");
+            logger.info("NAME       : " + info.name);
+            logger.info("VERSION    : " + info.version);
+            logger.info("DATE       : " + info.date);
+            logger.info("COPYRIGHT  : " + info.copyright);
+            logger.info("----------------------------------------");
 
             // reset all pins on test harness before proceeding with this test
             TestHarnessPins reset = harness.reset();
-            System.out.println();
-            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+            logger.info("");
+            logger.info("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
 
             // enable the I2C bus and device on the test harness hardware
             // (enable RAW mode data processing)
             harness.enableI2C(I2C_TEST_HARNESS_BUS, I2C_TEST_HARNESS_DEVICE, true);
-            System.out.println();
-            System.out.println("ENABLE I2C BUS [" + I2C_BUS + "] ON TEST HARNESS;");
+            logger.info("");
+            logger.info("ENABLE I2C BUS [" + I2C_BUS + "] ON TEST HARNESS;");
 
             // close connection to test harness
             harness.close();
@@ -102,11 +104,11 @@ public class TestI2cRawUsingTestHarness {
 
     @AfterAll
     public static void terminate() throws IOException {
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestI2cRawUsingTestHarness.class.getName() + ") ");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("TERMINATE TEST (" + TestI2cRawUsingTestHarness.class.getName() + ") ");
+        logger.info("************************************************************************");
+        logger.info("");
     }
 
     @BeforeEach
@@ -139,24 +141,24 @@ public class TestI2cRawUsingTestHarness {
     @DisplayName("I2C :: Test SINGLE-BYTE (W/R)")
     @Order(1)
     public void testI2CSingleByteTxRx() throws IOException, InterruptedException {
-        System.out.println();
-        System.out.println("----------------------------------------");
-        System.out.println("TEST I2C SINGLE BYTE RAW READ/WRITE");
-        System.out.println("----------------------------------------");
+        logger.info("");
+        logger.info("----------------------------------------");
+        logger.info("TEST I2C SINGLE BYTE RAW READ/WRITE");
+        logger.info("----------------------------------------");
 
         // iterate over BYTE range of values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
         for(int b = 0; b < 255; b++) {
-            System.out.println("[TEST WRITE/READ SINGLE BYTE]");
+            logger.info("[TEST WRITE/READ SINGLE BYTE]");
 
             // WRITE :: SINGLE RAW BYTE
-            System.out.println(" (WRITE) >> VALUE = " + b);
+            logger.info(" (WRITE) >> VALUE = " + b);
             pigpio.i2cWriteByte(handle, (byte)b);
             Thread.sleep(5);
 
             // READ :: SINGLE RAW BYTE
             byte rx = (byte)pigpio.i2cReadByte(handle);
-            System.out.println(" (READ)  << VALUE = " + Byte.toUnsignedInt(rx));
+            logger.info(" (READ)  << VALUE = " + Byte.toUnsignedInt(rx));
 
             assertEquals(b, Byte.toUnsignedInt(rx), "I2C BYTE VALUE MISMATCH");
         }
@@ -166,20 +168,20 @@ public class TestI2cRawUsingTestHarness {
     @DisplayName("I2C :: Test MULTI-BYTE (W/R)")
     @Order(2)
     public void testI2CMultiByteTxRx() throws IOException, InterruptedException {
-        System.out.println();
-        System.out.println("----------------------------------------");
-        System.out.println("TEST I2C MULTI-BYTE RAW READ/WRITE");
-        System.out.println("----------------------------------------");
+        logger.info("");
+        logger.info("----------------------------------------");
+        logger.info("TEST I2C MULTI-BYTE RAW READ/WRITE");
+        logger.info("----------------------------------------");
 
         // iterate over series of test values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
         for(int x = 0; x < 50; x++) {
-            System.out.println("[TEST WRITE/READ MULTI-BYTE]");
+            logger.info("[TEST WRITE/READ MULTI-BYTE]");
 
             String value = UUID.randomUUID().toString().substring(0, 8);
 
             // WRITE :: RAW MULTI-BYTE
-            System.out.println(" (WRITE) >> VALUE = " + value);
+            logger.info(" (WRITE) >> VALUE = " + value);
             pigpio.i2cWriteDevice(handle, value);
             Thread.sleep(20);
 
@@ -187,10 +189,10 @@ public class TestI2cRawUsingTestHarness {
             byte[] buffer = new byte[value.length()];
             var result = pigpio.i2cReadDevice(handle, buffer);
 
-            System.out.println(" (READ)  << RESULT = " + result);
+            logger.info(" (READ)  << RESULT = " + result);
             if(result > 0) {
                 String resultString = new String(buffer);
-                System.out.println(" (READ)  << VALUE = " + resultString);
+                logger.info(" (READ)  << VALUE = " + resultString);
                 assertEquals(value, resultString, "I2C MULTI-BYTE VALUE MISMATCH");
             } else {
                 fail("I2C READ FAILED: " + result);

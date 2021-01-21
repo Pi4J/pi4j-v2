@@ -30,6 +30,8 @@ package com.pi4j.library.pigpio;
  */
 
 import com.pi4j.library.pigpio.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,6 +59,8 @@ import java.util.Arrays;
  * @version $Id: $Id
  */
 public class PiGpioPacket {
+
+    private static final Logger logger = LoggerFactory.getLogger(PiGpioPacket.class);
 
     private PiGpioCmd cmd;
     private int p1 = 0;
@@ -383,7 +387,7 @@ public class PiGpioPacket {
         // bounds check remaining byte count
         if(p3 < remaining) remaining = p3;
 
-        //System.out.println("HAS-REMAINING: " + remaining);
+        //logger.info("HAS-REMAINING: " + remaining);
         if(remaining > 0){
             var temp = new byte[remaining];
             rx.get(temp, 0, remaining);

@@ -37,9 +37,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class ContextTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(ContextTest.class);
 
     private Context pi4j;
 
@@ -62,9 +66,9 @@ public class ContextTest {
     @Test
     public void testFactoryContextAcquisition() throws Pi4JException {
         assertNotNull(pi4j);
-        System.out.println("-------------------------------------------------");
-        System.out.println("Pi4J CONTEXT <acquired via factory accessor>");
-        System.out.println("-------------------------------------------------");
+        logger.info("-------------------------------------------------");
+        logger.info("Pi4J CONTEXT <acquired via factory accessor>");
+        logger.info("-------------------------------------------------");
         pi4j.describe().print(System.out);
     }
 }

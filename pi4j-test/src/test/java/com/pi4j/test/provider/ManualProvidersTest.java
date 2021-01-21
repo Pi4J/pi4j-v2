@@ -35,8 +35,12 @@ import com.pi4j.context.Context;
 import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.pwm.PwmProvider;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ManualProvidersTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(ManualProvidersTest.class);
 
     @Test
     public void testProviders() throws Exception {
@@ -60,7 +64,7 @@ public class ManualProvidersTest {
         assertEquals(2, pi4j.providers().all().size());
 
         // print out the detected Pi4J io libraries found on the class path
-        System.out.println("2 CUSTOM PROVIDERS (added via API)");
+        logger.info("2 CUSTOM PROVIDERS (added via API)");
         pi4j.providers().describe().print(System.out);
 
         // shutdown Pi4J runtime

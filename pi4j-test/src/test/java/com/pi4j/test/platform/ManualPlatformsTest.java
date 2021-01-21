@@ -47,9 +47,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class ManualPlatformsTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(ManualPlatformsTest.class);
 
     private Context pi4j;
 
@@ -91,12 +95,11 @@ public class ManualPlatformsTest {
 
     @Test
     public void testProvidersCount() throws Exception {
-
         // ensure that no io were detected/loaded into the Pi4J context
         assertEquals(1, pi4j.platforms().all().size());
 
         // print out the detected Pi4J io libraries found on the class path
-        System.out.println("1 'MOCK' PLATFORM (added via API)");
+        logger.info("1 'MOCK' PLATFORM (added via API)");
         pi4j.providers().describe().print(System.out);
     }
 }

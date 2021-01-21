@@ -68,7 +68,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultRuntimeProviders implements RuntimeProviders {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(DefaultRuntimeProviders.class);
+
     private Runtime runtime = null;
 
     // all detected/available providers
@@ -261,8 +262,8 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
                 // attempt to initialize the new io instance
                 initializeProvider(providerInstance);
 
-//                System.out.println("INTERFACES :: " + ReflectionUtil.getAllInterfaces(providerInstance));
-//                System.out.println("CLASSES :: " + ReflectionUtil.getAllClasses(providerInstance));
+//                logger.info("INTERFACES :: " + ReflectionUtil.getAllInterfaces(providerInstance));
+//                logger.info("CLASSES :: " + ReflectionUtil.getAllClasses(providerInstance));
 
                 ProviderProxyHandler handler = new ProviderProxyHandler(runtime, providerInstance);
                 var providerProxy = Proxy.newProxyInstance(

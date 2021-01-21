@@ -30,6 +30,8 @@ package com.pi4j.library.pigpio.test;
 
 import com.pi4j.library.pigpio.internal.PIGPIO;
 import com.pi4j.library.pigpio.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -42,6 +44,8 @@ import java.util.Random;
  */
 public class TestI2CRaw {
 
+    private static final Logger logger = LoggerFactory.getLogger(TestI2CRaw.class);
+
     private static int I2C_BUS = 1;
     private static int I2C_DEVICE = 0x04;
 
@@ -52,55 +56,55 @@ public class TestI2CRaw {
      * @throws Exception if any.
      */
     public static void main(String[] args) throws Exception {
-        System.out.println("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
-        System.out.println("PIGPIO HARDWARE  : " + PIGPIO.gpioHardwareRevision());
+        logger.info("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
+        logger.info("PIGPIO HARDWARE  : " + PIGPIO.gpioHardwareRevision());
 
         int init = PIGPIO.gpioInitialise();
-        System.out.println("PIGPIO INITIALIZE: " + init);
+        logger.info("PIGPIO INITIALIZE: " + init);
         if(init < 0){
-            System.err.println("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
+            logger.error("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
             System.exit(init);
         }
 
         // open I2C channel/bus/device
         int handle = PIGPIO.i2cOpen(I2C_BUS, I2C_DEVICE, 0);
-        System.out.println("PIGPIO I2C OPEN  : " + handle);
+        logger.info("PIGPIO I2C OPEN  : " + handle);
         if(handle < 0) {
-            System.err.println("ERROR; I2C OPEN FAILED: ERROR CODE: " + handle);
+            logger.error("ERROR; I2C OPEN FAILED: ERROR CODE: " + handle);
             System.exit(handle);
         }
 
-        System.out.println();
-        System.out.println("----------------------------------------");
-        System.out.println("TEST I2C SINGLE BYTE RAW READ/WRITE");
-        System.out.println("----------------------------------------");
+        logger.info("");
+        logger.info("----------------------------------------");
+        logger.info("TEST I2C SINGLE BYTE RAW READ/WRITE");
+        logger.info("----------------------------------------");
 
         // iterate over BYTE range of values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
         for(int b = 0; b < 255; b++) {
-            System.out.print("[W/R BYTE]");
+            logger.info("[W/R BYTE]");
 
             // WRITE :: SINGLE RAW BYTE
-            System.out.print(" (WRITE) 0x" + Integer.toHexString(b));
+            logger.info(" (WRITE) 0x" + Integer.toHexString(b));
             int result = PIGPIO.i2cWriteByte(handle, (byte)b);
             if(result < 0) {
-                System.err.println("\nERROR; I2C WRITE FAILED: ERROR CODE: " + result);
+                logger.error("\nERROR; I2C WRITE FAILED: ERROR CODE: " + result);
                 System.exit(result);
             }
 
             // READ :: SINGLE RAW BYTE
             result = PIGPIO.i2cReadByte(handle);
             if(result < 0) {
-                System.err.println("\nERROR; I2C READ FAILED: ERROR CODE: " + result);
+                logger.error("\nERROR; I2C READ FAILED: ERROR CODE: " + result);
                 System.exit(result);
             }
-            System.out.print(" (READ) 0x" + Integer.toHexString(result));
-            System.out.println();
+            logger.info(" (READ) 0x" + Integer.toHexString(result));
+            logger.info("");
 
             int expected = b;
             int received = result;
             if(received != expected) {
-                System.err.println("\nERROR; I2C READ FAILED: BYTE MISMATCH: expected=" + expected + "; received=" + received);
+                logger.error("\nERROR; I2C READ FAILED: BYTE MISMATCH: expected=" + expected + "; received=" + received);
                 System.exit(0);
             }
         }
@@ -108,7 +112,7 @@ public class TestI2CRaw {
         // iterate over series of test values, WRITE the byte then immediately
         // READ back the byte value and compare to make sure they are the same values.
         for(int x = 1; x < 100; x++) {
-            System.out.print("[W/R BUFFER]");
+            logger.info("[W/R BUFFER]");
 
             Random r = new Random();
             int len = r.nextInt((20)) + 2; // minimum of 2 bytes
@@ -116,32 +120,32 @@ public class TestI2CRaw {
             r.nextBytes(writeBuffer);
 
             // WRITE :: MULTI-BYTE
-            System.out.print(" (WRITE) 0x" + StringUtil.toHexString(writeBuffer));
+            logger.info(" (WRITE) 0x" + StringUtil.toHexString(writeBuffer));
             int result = PIGPIO.i2cWriteDevice(handle, writeBuffer, len);
             if(result < 0) {
-                System.err.println("\nERROR; I2C WRITE FAILED: ERROR CODE: " + result);
+                logger.error("\nERROR; I2C WRITE FAILED: ERROR CODE: " + result);
                 System.exit(result);
             }
 
             // READ :: MULTI-BYTE
             byte[] readBuffer = new byte[len];
             result = PIGPIO.i2cReadDevice(handle, readBuffer, len);
-            System.out.print(" (READ) 0x" + StringUtil.toHexString(readBuffer));
-            System.out.println();
+            logger.info(" (READ) 0x" + StringUtil.toHexString(readBuffer));
+            logger.info("");
             if(result < 0) {
-                System.err.println("\nERROR; I2C READ FAILED: ERROR CODE: " + result);
+                logger.error("\nERROR; I2C READ FAILED: ERROR CODE: " + result);
                 System.exit(result);
             }
 
             // validate read length
             if(result != len) {
-                System.err.println("\nERROR; I2C READ FAILED: LENGTH MISMATCH: " + result);
+                logger.error("\nERROR; I2C READ FAILED: LENGTH MISMATCH: " + result);
                 System.exit(result);
             }
 
             //validate data read back is same as written
             if(!Arrays.equals(writeBuffer, readBuffer)) {
-                System.err.println("\nERROR; I2C READ FAILED: BYTE MISMATCH: expected=" +
+                logger.error("\nERROR; I2C READ FAILED: BYTE MISMATCH: expected=" +
                         StringUtil.toHexString(writeBuffer) + "; received=" +
                         StringUtil.toHexString(readBuffer));
                 System.exit(0);
@@ -152,7 +156,7 @@ public class TestI2CRaw {
         PIGPIO.i2cClose(handle);
 
         PIGPIO.gpioTerminate();
-        System.out.println("PIGPIO TERMINATED");
-        System.out.println("ALL I2C RAW DEVICE TESTS COMPLETED SUCCESSFULLY");
+        logger.info("PIGPIO TERMINATED");
+        logger.info("ALL I2C RAW DEVICE TESTS COMPLETED SUCCESSFULLY");
     }
 }

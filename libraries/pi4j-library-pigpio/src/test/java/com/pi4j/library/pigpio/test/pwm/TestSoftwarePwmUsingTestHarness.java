@@ -37,6 +37,8 @@ import com.pi4j.test.harness.TestHarnessFrequency;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -47,19 +49,19 @@ import static org.junit.jupiter.api.Assertions.fail;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestSoftwarePwmUsingTestHarness {
 
+    private static final Logger logger = LoggerFactory.getLogger(TestSoftwarePwmUsingTestHarness.class);
+
     private PiGpio pigpio;
     private int handle;
     private static ArduinoTestHarness harness;
 
     @BeforeAll
     public static void initialize() {
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestSoftwarePwmUsingTestHarness.class.getName() + ")");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("INITIALIZE TEST (" + TestSoftwarePwmUsingTestHarness.class.getName() + ")");
+        logger.info("************************************************************************");
+        logger.info("");
 
         try {
             // create test harness and PIGPIO instances
@@ -70,19 +72,18 @@ public class TestSoftwarePwmUsingTestHarness {
 
             // get test harness info
             TestHarnessInfo info = harness.getInfo();
-            System.out.println("... we are connected to test harness:");
-            System.out.println("----------------------------------------");
-            System.out.println("NAME       : " + info.name);
-            System.out.println("VERSION    : " + info.version);
-            System.out.println("DATE       : " + info.date);
-            System.out.println("COPYRIGHT  : " + info.copyright);
-            System.out.println("----------------------------------------");
+            logger.info("... we are connected to test harness:");
+            logger.info("----------------------------------------");
+            logger.info("NAME       : " + info.name);
+            logger.info("VERSION    : " + info.version);
+            logger.info("DATE       : " + info.date);
+            logger.info("COPYRIGHT  : " + info.copyright);
+            logger.info("----------------------------------------");
 
             // reset all pins on test harness before proceeding with this test
             TestHarnessPins reset = harness.reset();
-            System.out.println();
-            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
-
+            logger.info("");
+            logger.info("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -90,11 +91,11 @@ public class TestSoftwarePwmUsingTestHarness {
 
     @AfterAll
     public static void terminate() throws IOException {
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestSoftwarePwmUsingTestHarness.class.getName() + ") ");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("TERMINATE TEST (" + TestSoftwarePwmUsingTestHarness.class.getName() + ") ");
+        logger.info("************************************************************************");
+        logger.info("");
 
         // shutdown connection to test harness
         harness.shutdown();
@@ -163,33 +164,33 @@ public class TestSoftwarePwmUsingTestHarness {
     public void testPwm(int frequency) throws IOException, InterruptedException {
         testPwm(frequency, 128); // 50% duty-cycle by default
     }
+
     public void testPwm(int frequency, int dutyCycle) throws IOException, InterruptedException {
-        System.out.println();
-        System.out.println("----------------------------------------");
-        System.out.println("TEST PWM SIGNALS AT " + frequency + " HZ");
-        System.out.println("----------------------------------------");
+        logger.info("");
+        logger.info("----------------------------------------");
+        logger.info("TEST PWM SIGNALS AT " + frequency + " HZ");
+        logger.info("----------------------------------------");
 
         for(int p = 2; p <= 27; p++) {
-
             // set pin to output pin
             pigpio.gpioSetMode(p, PiGpioMode.OUTPUT);
 
-            System.out.println();
-            System.out.println("[TEST SOFT PWM] :: PIN=" + p);
+            logger.info("");
+            logger.info("[TEST SOFT PWM] :: PIN=" + p);
             int actualFrequency = pigpio.gpioSetPWMfrequency(p, frequency);
 
             // write PWM frequency and duty-cycle
             pigpio.gpioPWM(p, dutyCycle);
-            System.out.println(" (WRITE) >> PWM FREQUENCY  = " + frequency  +
+            logger.info(" (WRITE) >> PWM FREQUENCY  = " + frequency  +
                     ((actualFrequency != frequency) ? " (ACTUAL FREQ SET: " + actualFrequency + ")" : ""));
-            System.out.println(" (WRITE) >> PWM DUTY-CYCLE = " + dutyCycle);
+            logger.info(" (WRITE) >> PWM DUTY-CYCLE = " + dutyCycle);
 
             // read back frequency and duty cycle
             int readFrequency = pigpio.gpioGetPWMfrequency(p);
             int readDutyCycle = pigpio.gpioGetPWMdutycycle(p);
 
-            System.out.println(" (READ)  << PWM FREQUENCY  = " + readFrequency + "; (EXPECTED=" + actualFrequency + ")");
-            System.out.println(" (READ)  << PWM DUTY-CYCLE = " + readDutyCycle + "; (EXPECTED=" + dutyCycle + ")");
+            logger.info(" (READ)  << PWM FREQUENCY  = " + readFrequency + "; (EXPECTED=" + actualFrequency + ")");
+            logger.info(" (READ)  << PWM DUTY-CYCLE = " + readDutyCycle + "; (EXPECTED=" + dutyCycle + ")");
 
             assertEquals(actualFrequency, readFrequency, "PWM FREQUENCY MISMATCH");
             assertEquals(dutyCycle, readDutyCycle, "PWM DUTY-CYCLE MISMATCH");
@@ -222,7 +223,7 @@ public class TestSoftwarePwmUsingTestHarness {
         TestHarnessFrequency measured = harness.getFrequency(pin);
 
         float deviation = (measured.frequency - frequency) * 100/(float)frequency;
-        System.out.println(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency + "; (EXPECTED=" + frequency + "; DEVIATION: " + deviation + "%)");
+        logger.info(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency + "; (EXPECTED=" + frequency + "; DEVIATION: " + deviation + "%)");
 
         // we allow a 25% margin of error, the testing harness uses a simple pulse counter to crudely
         // measure the PWM signal, its not very accurate but should provide sufficient validation testing

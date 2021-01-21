@@ -27,7 +27,8 @@ package com.pi4j.util;
  * #L%
  */
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>Console class.</p>
@@ -36,6 +37,8 @@ package com.pi4j.util;
  * @version $Id: $Id
  */
 public class Console {
+
+    private static final Logger logger = LoggerFactory.getLogger(Console.class);
 
     private static final int LINE_WIDTH = 60;
     /** Constant <code>CLEAR_SCREEN_ESCAPE_SEQUENCE="\033[2J\033[1;1H"</code> */
@@ -79,7 +82,7 @@ public class Console {
      * @return a {@link com.pi4j.util.Console} object.
      */
     public synchronized Console println(String line){
-        System.out.println(line);
+        logger.info(line);
         return this;
     }
 
@@ -90,7 +93,7 @@ public class Console {
      * @return a {@link com.pi4j.util.Console} object.
      */
     public synchronized Console println(Object line){
-        System.out.println(line);
+        logger.info(line.toString());
         return this;
     }
 
@@ -110,7 +113,7 @@ public class Console {
      * @return a {@link com.pi4j.util.Console} object.
      */
     public synchronized Console print(Object data){
-        System.out.print(data);
+        logger.info(data.toString());
         return this;
     }
 
@@ -121,7 +124,7 @@ public class Console {
      * @return a {@link com.pi4j.util.Console} object.
      */
     public synchronized Console print(String data){
-        System.out.print(data);
+        logger.info(data);
         return this;
     }
 

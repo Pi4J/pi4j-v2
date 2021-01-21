@@ -38,9 +38,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class RegistryTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(RegistryTest.class);
 
     private Context pi4j;
 
@@ -64,9 +68,9 @@ public class RegistryTest {
     public void testFactoryRegistryAcquisition() throws Pi4JException {
         Registry registry = pi4j.registry();
         assertNotNull(registry);
-        System.out.println("-------------------------------------------------");
-        System.out.println("Pi4J I/O REGISTRY <acquired via factory accessor>");
-        System.out.println("-------------------------------------------------");
+        logger.info("-------------------------------------------------");
+        logger.info("Pi4J I/O REGISTRY <acquired via factory accessor>");
+        logger.info("-------------------------------------------------");
         registry.describe().print(System.out);
     }
 }

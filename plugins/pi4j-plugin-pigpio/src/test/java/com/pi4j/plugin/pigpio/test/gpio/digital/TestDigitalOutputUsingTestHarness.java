@@ -40,6 +40,8 @@ import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -48,6 +50,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DisplayName("PIGPIO Plugin :: Test Digital Output Pins using Test Harness")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestDigitalOutputUsingTestHarness {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestDigitalOutputUsingTestHarness.class);
+    
     public static int PIN_MIN = 2;
     public static int PIN_MAX = 27;
 
@@ -57,14 +62,11 @@ public class TestDigitalOutputUsingTestHarness {
 
     @BeforeAll
     public static void initialize() {
-        // configure logging output
-        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("INITIALIZE TEST (" + TestDigitalOutputUsingTestHarness.class.getName() + ")");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("INITIALIZE TEST (" + TestDigitalOutputUsingTestHarness.class.getName() + ")");
+        logger.info("************************************************************************");
+        logger.info("");
 
         try {
             // create test harness and PIGPIO instances
@@ -75,18 +77,18 @@ public class TestDigitalOutputUsingTestHarness {
 
             // get test harness info
             TestHarnessInfo info = harness.getInfo();
-            System.out.println("... we are connected to test harness:");
-            System.out.println("----------------------------------------");
-            System.out.println("NAME       : " + info.name);
-            System.out.println("VERSION    : " + info.version);
-            System.out.println("DATE       : " + info.date);
-            System.out.println("COPYRIGHT  : " + info.copyright);
-            System.out.println("----------------------------------------");
+            logger.info("... we are connected to test harness:");
+            logger.info("----------------------------------------");
+            logger.info("NAME       : " + info.name);
+            logger.info("VERSION    : " + info.version);
+            logger.info("DATE       : " + info.date);
+            logger.info("COPYRIGHT  : " + info.copyright);
+            logger.info("----------------------------------------");
 
             // reset all pins on test harness before proceeding with this test
             TestHarnessPins reset = harness.reset();
-            System.out.println();
-            System.out.println("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
+            logger.info("");
+            logger.info("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,11 +96,11 @@ public class TestDigitalOutputUsingTestHarness {
 
     @AfterAll
     public static void terminate() throws IOException {
-        System.out.println();
-        System.out.println("************************************************************************");
-        System.out.println("TERMINATE TEST (" + TestDigitalOutputUsingTestHarness.class.getName() + ") ");
-        System.out.println("************************************************************************");
-        System.out.println();
+        logger.info("");
+        logger.info("************************************************************************");
+        logger.info("TERMINATE TEST (" + TestDigitalOutputUsingTestHarness.class.getName() + ") ");
+        logger.info("************************************************************************");
+        logger.info("");
 
         // shutdown connection to test harness
         harness.shutdown();
@@ -106,7 +108,6 @@ public class TestDigitalOutputUsingTestHarness {
 
     @BeforeEach
     public void beforeEach() throws Exception {
-
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
         piGpio = TestEnv.createPiGpio();
 
@@ -130,10 +131,10 @@ public class TestDigitalOutputUsingTestHarness {
     @Order(1)
     @DisplayName("DIN :: Test GPIO Digital Output Pins")
     public void testDigitalOutputsHigh() throws Exception {
-        System.out.println();
-        System.out.println("----------------------------------------");
-        System.out.println("TEST DIGITAL OUTPUT PINS ");
-        System.out.println("----------------------------------------");
+        logger.info("");
+        logger.info("----------------------------------------");
+        logger.info("TEST DIGITAL OUTPUT PINS ");
+        logger.info("----------------------------------------");
 
         for(int p = PIN_MIN; p <= PIN_MAX; p++) {
 
@@ -152,59 +153,59 @@ public class TestDigitalOutputUsingTestHarness {
             // create Digital Output I/O instance
             DigitalOutput dout = pi4j.create(config);
 
-            System.out.println();
-            System.out.println("[TEST DIGITAL OUTPUT] :: PIN=" + p);
-            System.out.println();
-            System.out.println("  (PIN #" + p + "; INIT)  >> STATE  = " + dout.config().getInitialState());
+            logger.info("");
+            logger.info("[TEST DIGITAL OUTPUT] :: PIN=" + p);
+            logger.info("");
+            logger.info("  (PIN #" + p + "; INIT)  >> STATE  = " + dout.config().getInitialState());
 
             // read input state from test harness; compare with expected initial state
             int readState = harness.getPin(p).value;
-            System.out.println("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
+            logger.info("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
             assertEquals(dout.config().getInitialState().value(), readState, "DIGITAL OUTPUT STATE MISMATCH: " + p);
 
             // set state low
             dout.low();
-            System.out.println("  (PIN #" + p + "; WRITE) >> STATE  = " + "LOW");
+            logger.info("  (PIN #" + p + "; WRITE) >> STATE  = " + "LOW");
 
             // read input state from test harness; compare with expected LOW state
             readState = harness.getPin(p).value;
-            System.out.println("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
+            logger.info("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
             assertEquals(DigitalState.LOW.value(), readState, "DIGITAL OUTPUT STATE MISMATCH: " + p);
 
             // set state high
             dout.high();
-            System.out.println("  (PIN #" + p + "; WRITE) >> STATE  = " + "HIGH");
+            logger.info("  (PIN #" + p + "; WRITE) >> STATE  = " + "HIGH");
 
             // read input state from test harness; compare with expected HIGH state
             readState = harness.getPin(p).value;
-            System.out.println("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
+            logger.info("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
             assertEquals(DigitalState.HIGH.value(), readState, "DIGITAL OUTPUT STATE MISMATCH: " + p);
 
             // toggle pin state
             dout.toggle();
-            System.out.println("  (PIN #" + p + "; WRITE) >> STATE  = " + "LOW");
+            logger.info("  (PIN #" + p + "; WRITE) >> STATE  = " + "LOW");
 
             // read input state from test harness; compare with expected LOW state
             readState = harness.getPin(p).value;
-            System.out.println("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
+            logger.info("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
             assertEquals(DigitalState.LOW.value(), readState, "DIGITAL OUTPUT STATE MISMATCH: " + p);
 
             // set state high
             dout.setState(1);
-            System.out.println("  (PIN #" + p + "; WRITE) >> STATE  = " + "HIGH");
+            logger.info("  (PIN #" + p + "; WRITE) >> STATE  = " + "HIGH");
 
             // read input state from test harness; compare with expected HIGH state
             readState = harness.getPin(p).value;
-            System.out.println("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
+            logger.info("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
             assertEquals(DigitalState.HIGH.value(), readState, "DIGITAL OUTPUT STATE MISMATCH: " + p);
 
             // perform a shutdown on this pin
             dout.shutdown(pi4j);
-            System.out.println("  (PIN #" + p + "; SHUTD) >> STATE  = " + dout.config().getShutdownState());
+            logger.info("  (PIN #" + p + "; SHUTD) >> STATE  = " + dout.config().getShutdownState());
 
             // read input state from test harness; compare with expected shutdown state
             readState = harness.getPin(p).value;
-            System.out.println("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
+            logger.info("  (PIN #" + p + "; READ)  << STATE  = " + DigitalState.getState(readState));
             assertEquals(dout.config().getShutdownState().value(), readState, "DIGITAL OUTPUT STATE MISMATCH: " + p);
         }
     }

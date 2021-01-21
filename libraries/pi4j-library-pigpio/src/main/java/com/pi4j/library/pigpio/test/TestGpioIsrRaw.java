@@ -32,6 +32,8 @@ import com.pi4j.library.pigpio.PiGpioConst;
 import com.pi4j.library.pigpio.internal.PIGPIO;
 import com.pi4j.library.pigpio.internal.PiGpioIsrCallback;
 import com.pi4j.library.pigpio.internal.PiGpioIsrCallbackEx;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 /**
@@ -41,6 +43,8 @@ import org.slf4j.event.Level;
  * @version $Id: $Id
  */
 public class TestGpioIsrRaw {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestGpioIsrRaw.class);
 
     public static int GPIO_PIN = 21;
 
@@ -58,22 +62,22 @@ public class TestGpioIsrRaw {
         }
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loglevel);
 
-        System.out.println();
-        System.out.println();
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("Pi4J Library :: PIGPIO JNI (Raw) Wrapper Library");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
-        System.out.println("PIGPIO HARDWARE  : " + Integer.toHexString(PIGPIO.gpioHardwareRevision()));
+        logger.info("");
+        logger.info("");
+        logger.info("-----------------------------------------------------");
+        logger.info("-----------------------------------------------------");
+        logger.info("Pi4J Library :: PIGPIO JNI (Raw) Wrapper Library");
+        logger.info("-----------------------------------------------------");
+        logger.info("-----------------------------------------------------");
+        logger.info("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
+        logger.info("PIGPIO HARDWARE  : " + Integer.toHexString(PIGPIO.gpioHardwareRevision()));
         int init = PIGPIO.gpioInitialise();
         if(init < 0){
-            System.err.println("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
+            logger.error("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
         } else {
-            System.out.println("-----------------------------------------------------");
-            System.out.println("PIGPIO INITIALIZED SUCCESSFULLY");
-            System.out.println("-----------------------------------------------------");
+            logger.info("-----------------------------------------------------");
+            logger.info("PIGPIO INITIALIZED SUCCESSFULLY");
+            logger.info("-----------------------------------------------------");
 
             PIGPIO.gpioSetMode(GPIO_PIN, PiGpioConst.PI_INPUT);
             PIGPIO.gpioSetPullUpDown(GPIO_PIN, PiGpioConst.PI_PUD_DOWN);
@@ -81,35 +85,35 @@ public class TestGpioIsrRaw {
             PIGPIO.gpioSetISRFunc(GPIO_PIN, new PiGpioIsrCallback() {
                 @Override
                 public void call(int pin, int state, long tick) {
-                    System.out.println("RECEIVED ISR EVENT! " + pin + " : " + state + " :" + tick);
+                    logger.info("RECEIVED ISR EVENT! " + pin + " : " + state + " :" + tick);
                 }
             });
 
             System.in.read();
-            System.out.println("PIGPIO ISR CALLBACK REMOVED");
+            logger.info("PIGPIO ISR CALLBACK REMOVED");
             PIGPIO.gpioDisableISRFunc(GPIO_PIN);
             System.in.read();
 
-            System.out.println("PIGPIO ISR EXTENDED CALLBACK ADDED");
+            logger.info("PIGPIO ISR EXTENDED CALLBACK ADDED");
             String testdata = "Hello World!";
             PIGPIO.gpioSetISRFuncEx(GPIO_PIN, new PiGpioIsrCallbackEx() {
                 @Override
                 public void call(int pin, int state, long tick, Object userdata) {
-                    System.out.println("RECEIVED ISR EVENT! " + pin + " : " + state + " :" + tick + " : " + userdata);
+                    logger.info("RECEIVED ISR EVENT! " + pin + " : " + state + " :" + tick + " : " + userdata);
                 }
             }, testdata);
 
             System.in.read();
-            System.out.println("PIGPIO ISR CALLBACK REMOVED");
+            logger.info("PIGPIO ISR CALLBACK REMOVED");
             PIGPIO.gpioDisableISRFunc(GPIO_PIN);
             System.in.read();
 
-            System.out.println("-----------------------------------------------------");
+            logger.info("-----------------------------------------------------");
             PIGPIO.gpioTerminate();
-            System.out.println("PIGPIO TERMINATED");
+            logger.info("PIGPIO TERMINATED");
         }
-        System.out.println("-----------------------------------------------------");
-        System.out.println();
-        System.out.println();
+        logger.info("-----------------------------------------------------");
+        logger.info("");
+        logger.info("");
     }
 }

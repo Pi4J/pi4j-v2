@@ -32,6 +32,8 @@ import com.pi4j.library.pigpio.PiGpioConst;
 import com.pi4j.library.pigpio.internal.PIGPIO;
 import com.pi4j.library.pigpio.internal.PiGpioAlertCallback;
 import com.pi4j.library.pigpio.internal.PiGpioAlertCallbackEx;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 /**
@@ -41,6 +43,8 @@ import org.slf4j.event.Level;
  * @version $Id: $Id
  */
 public class TestGpioAlertRaw {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestGpioAlertRaw.class);
 
     public static int GPIO_PIN = 21;
 
@@ -58,22 +62,22 @@ public class TestGpioAlertRaw {
         }
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loglevel);
 
-        System.out.println();
-        System.out.println();
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("Pi4J Library :: PIGPIO JNI (Raw) Wrapper Library");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("-----------------------------------------------------");
-        System.out.println("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
-        System.out.println("PIGPIO HARDWARE  : " + Integer.toHexString(PIGPIO.gpioHardwareRevision()));
+        logger.info("");
+        logger.info("");
+        logger.info("-----------------------------------------------------");
+        logger.info("-----------------------------------------------------");
+        logger.info("Pi4J Library :: PIGPIO JNI (Raw) Wrapper Library");
+        logger.info("-----------------------------------------------------");
+        logger.info("-----------------------------------------------------");
+        logger.info("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
+        logger.info("PIGPIO HARDWARE  : " + Integer.toHexString(PIGPIO.gpioHardwareRevision()));
         int init = PIGPIO.gpioInitialise();
         if(init < 0){
-            System.err.println("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
+            logger.error("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
         } else {
-            System.out.println("-----------------------------------------------------");
-            System.out.println("PIGPIO INITIALIZED SUCCESSFULLY");
-            System.out.println("-----------------------------------------------------");
+            logger.info("-----------------------------------------------------");
+            logger.info("PIGPIO INITIALIZED SUCCESSFULLY");
+            logger.info("-----------------------------------------------------");
 
             PIGPIO.gpioSetMode(GPIO_PIN, PiGpioConst.PI_INPUT);
             PIGPIO.gpioSetPullUpDown(GPIO_PIN, PiGpioConst.PI_PUD_DOWN);
@@ -81,35 +85,35 @@ public class TestGpioAlertRaw {
             PIGPIO.gpioSetAlertFunc(GPIO_PIN, new PiGpioAlertCallback() {
                 @Override
                 public void call(int pin, int state, long tick) throws Exception {
-                    System.out.println("RECEIVED ALERT EVENT! " + pin + " : " + state + " :" + tick);
+                    logger.info("RECEIVED ALERT EVENT! " + pin + " : " + state + " :" + tick);
                 }
             });
 
             System.in.read();
-            System.out.println("PIGPIO ALERT CALLBACK REMOVED");
+            logger.info("PIGPIO ALERT CALLBACK REMOVED");
             PIGPIO.gpioSetAlertFunc(GPIO_PIN, null);
             System.in.read();
 
-            System.out.println("PIGPIO ALERT EXTENDED CALLBACK ADDED");
+            logger.info("PIGPIO ALERT EXTENDED CALLBACK ADDED");
             String testdata = "Hello World!";
             PIGPIO.gpioSetAlertFuncEx(GPIO_PIN, new PiGpioAlertCallbackEx() {
                 @Override
                 public void call(int pin, int state, long tick, Object userdata) throws Exception {
-                    System.out.println("RECEIVED ALERT EVENT! " + pin + " : " + state + " :" + tick + " : " + userdata);
+                    logger.info("RECEIVED ALERT EVENT! " + pin + " : " + state + " :" + tick + " : " + userdata);
                 }
             }, testdata);
 
             System.in.read();
-            System.out.println("PIGPIO ALERT CALLBACK REMOVED");
+            logger.info("PIGPIO ALERT CALLBACK REMOVED");
             PIGPIO.gpioSetAlertFunc(GPIO_PIN, null);
             System.in.read();
 
-            System.out.println("-----------------------------------------------------");
+            logger.info("-----------------------------------------------------");
             PIGPIO.gpioTerminate();
-            System.out.println("PIGPIO TERMINATED");
+            logger.info("PIGPIO TERMINATED");
         }
-        System.out.println("-----------------------------------------------------");
-        System.out.println();
-        System.out.println();
+        logger.info("-----------------------------------------------------");
+        logger.info("");
+        logger.info("");
     }
 }

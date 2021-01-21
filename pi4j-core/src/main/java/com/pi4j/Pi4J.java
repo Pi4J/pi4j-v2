@@ -40,7 +40,8 @@ import org.slf4j.LoggerFactory;
  * @version $Id: $Id
  */
 public class Pi4J {
-    private static Logger logger = LoggerFactory.getLogger(Pi4J.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(Pi4J.class);
 
     // private constructor
     private Pi4J() {
@@ -55,7 +56,8 @@ public class Pi4J {
      *
      * @return ContextBuilder
      */
-    public static ContextBuilder newContextBuilder(){
+    public static ContextBuilder newContextBuilder() {
+        logger.info("New context builder");
         return ContextBuilder.newInstance();
     }
 
@@ -69,6 +71,7 @@ public class Pi4J {
      * @throws com.pi4j.exception.Pi4JException if any.
      */
     public static Context newAutoContext() throws Pi4JException {
+        logger.info("New auto context");
         return newContextBuilder().autoDetect().build();
     }
 
@@ -83,6 +86,7 @@ public class Pi4J {
      * @throws com.pi4j.exception.Pi4JException if any.
      */
     public static Context newContext() throws Pi4JException {
+        logger.info("New context");
         return newContextBuilder().build();
     }
 }
