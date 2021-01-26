@@ -38,7 +38,7 @@ Snapshot builds are available from:
    *  [Sonatype OSS] https://oss.sonatype.org/index.html#nexus-search;quick~pi4j
    *  [Downloads] https://pi4j.com/download.html
 
-Copyright (C) 2012-2020 Pi4J
+Copyright (C) 2012-2021 Pi4J
 
 ## BUILD INSTRUCTIONS
 
@@ -106,7 +106,7 @@ Read all about it on [v2.pi4j.com](https://v2.pi4j.com/).
 
 ## IN DEVELOPMENT
 
-2020-06-30 :: 2.0-SNAPSHOT
+2021-01-26 :: 2.0-SNAPSHOT
 
   * Changed project to Apache License, Version 2.0
   * Removed `pi4j-device` library.  _(See [v2.pi4j.com](https://v2.pi4j.com/what-is-new))_

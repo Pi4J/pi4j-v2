@@ -11,7 +11,7 @@ package com.pi4j.plugin.pigpio.test.pwm;
  * this project can be found here:  https://pi4j.com/
  * **********************************************************************
  * %%
- * Copyright (C) 2012 - 2020 Pi4J
+ * Copyright (C) 2012 - 2021 Pi4J
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -52,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class TestSoftwarePwmUsingTestHarness {
 
     private static final Logger logger = LoggerFactory.getLogger(TestSoftwarePwmUsingTestHarness.class);
-    
+
     public static int PIN_MIN = 2;
     public static int PIN_MAX = 27;
 
