@@ -20,23 +20,21 @@
 
 ---
 
-## PROJECT INFORMATION
+## PROJECT INFORMATION for V2 of Pi4J
 
-Project website: https://pi4j.com/ <br />
+Project website: [v2.pi4j.com](https://v2.pi4j.com/).
 
 ![Pi4J V2 architecture](assets/draw.io/pi4j-v2-architecture.jpg)
 
-Pi4J Community Forum (*new*): https://forum.pi4j.com/ <br />
-Version 2.0 Project Discussions (*new*): https://forum.pi4j.com/category/6/version-2-0 <br />
-Project issues list: https://github.com/Pi4J/pi4j/issues <br />
-<br />
-Release builds are available from:
-   *  [Maven Central] http://search.maven.org/#search%7Cga%7C1%7Ccom.pi4j
-   *  [Downloads] https://pi4j.com/download.html
+* Pi4J V2 Discussions (replacing the Forum) (*new*): [github.com/Pi4J/pi4j-v2/discussions](https://github.com/Pi4J/pi4j-v2/discussions)
+* Pi4J V2 issues: [github.com/Pi4J/pi4j-v2/issues](https://github.com/Pi4J/pi4j-v2/issues)
 
-Snapshot builds are available from:
-   *  [Sonatype OSS] https://oss.sonatype.org/index.html#nexus-search;quick~pi4j
-   *  [Downloads] https://pi4j.com/download.html
+Builds are available from:
+
+*  [Release builds from Maven Central](http://search.maven.org/#search%7Cga%7C1%7Ccom.pi4j)
+*  [V1 Downloads](https://pi4j.com/download.html)
+*  [Snapshot builds from Sonatype OSS](https://oss.sonatype.org/index.html#nexus-search;quick~pi4j)
+*  [APT/PPA Package Repository downloads](https://github.com/Pi4J/download)
 
 Copyright (C) 2012-2021 Pi4J
 
@@ -44,6 +42,7 @@ Copyright (C) 2012-2021 Pi4J
 
 The Pi4J V2 codebase can be built using [Apache Maven 3.6.x](https://maven.apache.org/). and [Java JDK 11](https://openjdk.java.net/).
 The following command can be used to build the Pi4J V2 JARs:
+
 ```
 mvn clean install
 ```
@@ -52,18 +51,18 @@ Pi4J V2 also includes native libraries that will need to be compiled if you are 
 Most users will never need to compile the native libraries as these artifacts are automatically downloaded  
 when building the Pi4J JARs from Maven repositories. One of the following commands can be used to build 
 the Pi4J V2 JARs and Native Libraries:
+
 ```
 mvn clean install -Pnative
 mvn clean install -Pnative,docker
 ```
 
-> **NOTE:** A comprehensive set of build instructions can be found in the [Pi4J V2 Documentation](https://v2.pi4j.com/build).
-
+> **NOTE:** A comprehensive set of build instructions can be found in the [Pi4J V2 Documentation](https://v2.pi4j.com/architecture/about-the-code/build-instructions/).
 
 ## CONTRIBUTING TO PI4J
 
 For full description of the code structure, how to compile... see 
-the ["Core code internals" on our website](https://v2.pi4j.com/core-code-internals).
+the ["About the code" on our website](https://v2.pi4j.com/architecture/about-the-code/).
 
 ![Pi4J V2 code structure](assets/draw.io/pi4j-v2-code-structure.jpg)
 
@@ -108,10 +107,12 @@ Read all about it on [v2.pi4j.com](https://v2.pi4j.com/).
 
 2021-01-26 :: 2.0-SNAPSHOT
 
+For more info see the new website _["What’s New in 2.0?"](https://v2.pi4j.com/about/new-in-v2/)_.
+
   * Changed project to Apache License, Version 2.0
-  * Removed `pi4j-device` library.  _(See [v2.pi4j.com](https://v2.pi4j.com/what-is-new))_
-  * Removed `pi4j-gpio-extension` library.  _(See [v2.pi4j.com](https://v2.pi4j.com/what-is-new))_
-  * Removed platform support for `Odroid`, `BananaPi`, `BPi`, `NanoPi`, `OrangePi`.  _(See [v2.pi4j.com](https://v2.pi4j.com/what-is-new))_
+  * Removed `pi4j-device` library.  
+  * Removed `pi4j-gpio-extension` library.
+  * Removed platform support for `Odroid`, `BananaPi`, `BPi`, `NanoPi`, `OrangePi`.
   * Added support for 32-bit (`armhf`) and 64-bit (`aarch64`) distributions.
   * Added support for native builds using Pi4J Docker Build images.
   
@@ -120,5 +121,5 @@ Read all about it on [v2.pi4j.com](https://v2.pi4j.com/).
 For previous 1.x release notes and source code, please see the 1.x branch
 or release tags in the source repository:
 
-  * **Releases**: https://github.com/Pi4J/pi4j/releases
-  * **Source Code**: https://github.com/Pi4J/pi4j/branches
+  * **Releases**: [github.com/Pi4J/pi4j/releases](https://github.com/Pi4J/pi4j/releases)
+  * **Source Code**: [github.com/Pi4J/pi4j/branches](https://github.com/Pi4J/pi4j/branches)
