@@ -133,10 +133,6 @@ public class TestSpiUsingTestHarness {
 
             // create SPI instance
             spi = pi4j.create(config);
-        } catch (IOException e){
-            e.printStackTrace();
-        } catch (Pi4JException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

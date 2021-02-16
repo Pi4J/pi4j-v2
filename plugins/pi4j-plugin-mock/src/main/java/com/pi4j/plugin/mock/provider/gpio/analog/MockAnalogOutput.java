@@ -64,9 +64,7 @@ public class MockAnalogOutput extends AnalogOutputBase implements AnalogOutput {
     public MockAnalogOutput mockValue(Number number){
         try {
             this.value(value);
-        } catch (IOIllegalValueException e) {
-            e.printStackTrace();
-        } catch (IOBoundsException e) {
+        } catch (IOIllegalValueException | IOBoundsException e) {
             e.printStackTrace();
         }
         return this;
