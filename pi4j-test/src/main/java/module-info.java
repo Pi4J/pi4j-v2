@@ -47,6 +47,8 @@ module com.pi4j.test {
     uses com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInputProvider;
     uses com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutput;
     uses com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProvider;
+    uses com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalMultipurpose;
+    uses com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalMultipurposeProvider;
     uses com.pi4j.plugin.mock.provider.pwm.MockPwm;
     uses com.pi4j.plugin.mock.provider.pwm.MockPwmProvider;
     uses com.pi4j.plugin.mock.provider.i2c.MockI2C;
