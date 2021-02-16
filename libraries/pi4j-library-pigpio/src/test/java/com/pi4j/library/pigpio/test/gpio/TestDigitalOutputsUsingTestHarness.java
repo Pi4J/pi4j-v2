@@ -118,7 +118,7 @@ public class TestDigitalOutputsUsingTestHarness {
         }
     }
 
-    public void testDigitalOutputPin(int pin) throws IOException{
+    public void testDigitalOutputPin(int pin) throws IOException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST SOC DIGITAL OUTPUT PIN [" + pin + "]");

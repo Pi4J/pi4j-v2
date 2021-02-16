@@ -51,7 +51,7 @@ public class MockSpiProviderImpl extends SpiProviderBase implements MockSpiProvi
 
     /** {@inheritDoc} */
     @Override
-    public Spi create(SpiConfig config) throws Exception {
+    public Spi create(SpiConfig config) {
         return new MockSpi(this, config);
     }
 }

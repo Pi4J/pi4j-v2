@@ -48,9 +48,8 @@ public class InitRemote {
      * <p>main.</p>
      *
      * @param args an array of {@link String} objects.
-     * @throws Exception if any.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         String loglevel = "INFO";
         String host = PiGpioConst.DEFAULT_HOST;
         if(args != null && args.length > 0){

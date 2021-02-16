@@ -33,8 +33,6 @@ import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
 
-import java.io.IOException;
-
 /**
  * <p>MockAnalogInputProviderImpl class.</p>
  *
@@ -53,7 +51,7 @@ public class MockAnalogInputProviderImpl extends AnalogInputProviderBase impleme
 
     /** {@inheritDoc} */
     @Override
-    public AnalogInput create(AnalogInputConfig config) throws IOException {
+    public AnalogInput create(AnalogInputConfig config) {
         return new MockAnalogInput(this, config);
     }
 }

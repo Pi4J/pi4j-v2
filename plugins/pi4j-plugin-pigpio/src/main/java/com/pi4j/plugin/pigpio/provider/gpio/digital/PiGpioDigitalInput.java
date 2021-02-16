@@ -41,8 +41,6 @@ import com.pi4j.library.pigpio.PiGpioStateChangeListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 /**
  * <p>PiGpioDigitalInput class.</p>
  *
@@ -62,9 +60,8 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      * @param provider a {@link com.pi4j.io.gpio.digital.DigitalInputProvider} object.
      * @param config a {@link com.pi4j.io.gpio.digital.DigitalInputConfig} object.
-     * @throws java.io.IOException if any.
      */
-    public PiGpioDigitalInput(PiGpio piGpio, DigitalInputProvider provider, DigitalInputConfig config) throws IOException {
+    public PiGpioDigitalInput(PiGpio piGpio, DigitalInputProvider provider, DigitalInputConfig config) {
         super(provider, config);
         this.piGpio = piGpio;
         this.pin = config.address().intValue();
@@ -84,41 +81,35 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
     public DigitalInput initialize(Context context) throws InitializeException {
         super.initialize(context);
 
-        try {
-            // configure GPIO pin as an INPUT pin
-            this.piGpio.gpioSetMode(pin, PiGpioMode.INPUT);
+        // configure GPIO pin as an INPUT pin
+        this.piGpio.gpioSetMode(pin, PiGpioMode.INPUT);
 
-            // if configured, set GPIO pin pull resistance
-            switch(config.pull()){
-                case PULL_DOWN:{
-                    this.piGpio.gpioSetPullUpDown(pin, PiGpioPud.DOWN);
-                    break;
-                }
-                case PULL_UP:{
-                    this.piGpio.gpioSetPullUpDown(pin, PiGpioPud.UP);
-                    break;
-                }
+        // if configured, set GPIO pin pull resistance
+        switch(config.pull()){
+            case PULL_DOWN:{
+                this.piGpio.gpioSetPullUpDown(pin, PiGpioPud.DOWN);
+                break;
             }
-
-            // if configured, set GPIO debounce
-            if(this.config.debounce() != null) {
-                int steadyInterval = 0;
-                if(this.config.debounce() > 300000){
-                    steadyInterval = 300000;
-                } else{
-                    steadyInterval = this.config.debounce().intValue();
-                }
-                this.piGpio.gpioNoiseFilter(pin, 0, 0);
-                this.piGpio.gpioGlitchFilter(pin, steadyInterval);
+            case PULL_UP:{
+                this.piGpio.gpioSetPullUpDown(pin, PiGpioPud.UP);
+                break;
             }
-
-            // add this pin listener
-            this.piGpio.addPinListener(pin, piGpioPinListener);
-
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-            throw new InitializeException(e);
         }
+
+        // if configured, set GPIO debounce
+        if(this.config.debounce() != null) {
+            int steadyInterval = 0;
+            if(this.config.debounce() > 300000){
+                steadyInterval = 300000;
+            } else{
+                steadyInterval = this.config.debounce().intValue();
+            }
+            this.piGpio.gpioNoiseFilter(pin, 0, 0);
+            this.piGpio.gpioGlitchFilter(pin, steadyInterval);
+        }
+
+        // add this pin listener
+        this.piGpio.addPinListener(pin, piGpioPinListener);
         return this;
     }
 
@@ -141,8 +132,7 @@ public class PiGpioDigitalInput extends DigitalInputBase implements DigitalInput
                 }
             }
             return this.state;
-        }
-        catch (Exception e){
+        } catch (Exception e){
             logger.error(e.getMessage(), e);
             return DigitalState.UNKNOWN;
         }

@@ -43,9 +43,8 @@ public interface PwmProvider extends Provider<PwmProvider, Pwm, PwmConfig> {
      * @param builder a {@link com.pi4j.io.pwm.PwmConfigBuilder} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends Pwm> T create(PwmConfigBuilder builder) throws Exception {
+    default <T extends Pwm> T create(PwmConfigBuilder builder) {
         return (T)create(builder.build());
     }
 
@@ -55,9 +54,8 @@ public interface PwmProvider extends Provider<PwmProvider, Pwm, PwmConfig> {
      * @param address a {@link java.lang.Integer} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends Pwm> T create(Integer address) throws Exception {
+    default <T extends Pwm> T create(Integer address) {
         var config = Pwm.newConfigBuilder(context())
                 .address(address)
                 .build();
@@ -71,9 +69,8 @@ public interface PwmProvider extends Provider<PwmProvider, Pwm, PwmConfig> {
      * @param id a {@link java.lang.String} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends Pwm> T create(Integer address, String id) throws Exception {
+    default <T extends Pwm> T create(Integer address, String id) {
         var config = Pwm.newConfigBuilder(context())
                 .address(address)
                 .id(id)
@@ -89,9 +86,8 @@ public interface PwmProvider extends Provider<PwmProvider, Pwm, PwmConfig> {
      * @param name a {@link java.lang.String} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends Pwm> T create(Integer address, String id, String name) throws Exception {
+    default <T extends Pwm> T create(Integer address, String id, String name) {
         var config = Pwm.newConfigBuilder(context())
                 .address(address)
                 .id(id)
@@ -109,9 +105,8 @@ public interface PwmProvider extends Provider<PwmProvider, Pwm, PwmConfig> {
      * @param description a {@link java.lang.String} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends Pwm> T create(Integer address, String id, String name, String description) throws Exception {
+    default <T extends Pwm> T create(Integer address, String id, String name, String description) {
         var config = Pwm.newConfigBuilder(context())
                 .address(address)
                 .id(id)

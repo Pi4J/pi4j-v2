@@ -33,8 +33,6 @@ import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.PiGpioPlugin;
 
-import java.io.IOException;
-
 /**
  * <p>PiGpioPwmProvider interface.</p>
  *
@@ -51,9 +49,8 @@ public interface PiGpioPwmProvider extends PwmProvider {
      *
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      * @return a {@link com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider} object.
-     * @throws java.io.IOException if any.
      */
-    static PiGpioPwmProvider newInstance(PiGpio piGpio) throws IOException {
+    static PiGpioPwmProvider newInstance(PiGpio piGpio) {
         return new PiGpioPwmProviderImpl(piGpio);
     }
 }

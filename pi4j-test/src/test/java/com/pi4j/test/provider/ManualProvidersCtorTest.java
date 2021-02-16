@@ -48,7 +48,7 @@ public class ManualProvidersCtorTest {
     private Context pi4j;
 
     @BeforeAll
-    public void beforeTest() throws Pi4JException {
+    public void beforeTest() {
 
         // create our own custom provider implementation classes
         PwmProvider pwmProvider = TestPwmProvider.newInstance();
@@ -73,13 +73,13 @@ public class ManualProvidersCtorTest {
     }
 
     @Test
-    public void testProvidersNotNull() throws Pi4JException {
+    public void testProvidersNotNull() {
         // ensure that the io collection in the Pi4J context is not NULL
         assertNotNull(pi4j.providers());
     }
 
     @Test
-    public void testProviderCount() throws Exception {
+    public void testProviderCount() {
         // ensure that only 4 providers were detected/loaded into the Pi4J context
         assertEquals(4 , pi4j.providers().all().size());
 

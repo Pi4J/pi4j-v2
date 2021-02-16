@@ -51,7 +51,7 @@ public class RpiDigitalOutputProviderImpl extends DigitalOutputProviderBase impl
 
     /** {@inheritDoc} */
     @Override
-    public DigitalOutput create(DigitalOutputConfig config) throws Exception {
+    public DigitalOutput create(DigitalOutputConfig config) {
         return new RpiDigitalOutput(this, config);
     }
 }

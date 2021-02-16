@@ -126,7 +126,6 @@ public interface DigitalOutputBuilder {
      * <p>build.</p>
      *
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws java.lang.Exception if any.
      */
-    DigitalOutput build() throws Exception;
+    DigitalOutput build();
 }

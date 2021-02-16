@@ -43,9 +43,8 @@ public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
      * @param builder a {@link com.pi4j.io.i2c.I2CConfigBuilder} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends I2C> T create(I2CConfigBuilder builder) throws Exception {
+    default <T extends I2C> T create(I2CConfigBuilder builder) {
         return (T)create(builder.build());
     }
 
@@ -56,9 +55,8 @@ public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
      * @param device a {@link java.lang.Integer} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends I2C> T create(Integer bus, Integer device) throws Exception {
+    default <T extends I2C> T create(Integer bus, Integer device) {
         var config = I2C.newConfigBuilder(context())
                 .bus(bus)
                 .device(device)
@@ -74,9 +72,8 @@ public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
      * @param id a {@link java.lang.String} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends I2C> T create(Integer bus, Integer device, String id) throws Exception {
+    default <T extends I2C> T create(Integer bus, Integer device, String id) {
         var config = I2C.newConfigBuilder(context())
                 .bus(bus)
                 .device(device)
@@ -94,9 +91,8 @@ public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
      * @param name a {@link java.lang.String} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends I2C> T create(Integer bus, Integer device, String id, String name) throws Exception {
+    default <T extends I2C> T create(Integer bus, Integer device, String id, String name) {
         var config = I2C.newConfigBuilder(context())
                 .bus(bus)
                 .device(device)
@@ -116,9 +112,8 @@ public interface I2CProvider extends Provider<I2CProvider, I2C, I2CConfig> {
      * @param description a {@link java.lang.String} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends I2C> T create(Integer bus, Integer device, String id, String name, String description) throws Exception {
+    default <T extends I2C> T create(Integer bus, Integer device, String id, String name, String description) {
         var config = I2C.newConfigBuilder(context())
                 .bus(bus)
                 .device(device)

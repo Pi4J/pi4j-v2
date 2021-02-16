@@ -32,8 +32,6 @@ import com.pi4j.io.IO;
 import com.pi4j.io.IODataReader;
 import com.pi4j.io.IODataWriter;
 
-import java.io.IOException;
-
 /**
  * <p>Serial interface.</p>
  *
@@ -75,17 +73,15 @@ public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCl
      * Get the number of data bytes available in the serial receive buffer
      *
      * @return a int.
-     * @throws java.io.IOException if any.
      */
-    int available() throws IOException;
+    int available();
 
     /**
      * This function will drain the current serial receive buffer of any lingering bytes.
      *
      * @return Returns the number of bytes of data drained (&gt;=0) if OK, otherwise a negative error code.
-     * @throws java.io.IOException if any.
      */
-    default int drain() throws IOException{
+    default int drain() {
         // get number of bytes available
         int avail = this.available();
         if(avail > 0) {
@@ -99,14 +95,11 @@ public interface Serial extends IO<Serial, SerialConfig, SerialProvider>, AutoCl
 
     /**
      * <p>open.</p>
-     *
-     * @throws java.io.IOException if any.
      */
-    void open() throws IOException;
+    void open();
+
     /**
      * <p>close.</p>
-     *
-     * @throws java.io.IOException if any.
      */
-    void close() throws IOException;
+    void close();
 }

@@ -66,7 +66,7 @@ public class AutoPlatformsTest {
     }
 
     @Test
-    public void testPlatformsNotEmpty() throws Exception {
+    public void testPlatformsNotEmpty() {
         // ensure that 1 or more platforms were detected/loaded into the Pi4J context
         assertFalse(pi4j.platforms().all().isEmpty());
 

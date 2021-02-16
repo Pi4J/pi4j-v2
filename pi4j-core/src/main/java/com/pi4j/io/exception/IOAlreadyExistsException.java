@@ -27,7 +27,6 @@ package com.pi4j.io.exception;
  * #L%
  */
 
-
 /**
  * <p>
  * This exception is thrown if a platform assignment is attempted when a

@@ -31,8 +31,6 @@ package com.pi4j.plugin.pigpio.test.serial;
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
-import com.pi4j.exception.LifecycleException;
-import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.serial.Baud;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.library.pigpio.PiGpio;
@@ -46,7 +44,6 @@ import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -133,17 +130,13 @@ public class TestSerialUsingTestHarness {
 
             // create serial instance
             serial = pi4j.create(config);
-        } catch (IOException e){
-            e.printStackTrace();
-        } catch (Pi4JException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @AfterAll
-    public static void terminate() throws IOException, LifecycleException {
+    public static void terminate() {
         logger.info("");
         logger.info("************************************************************************");
         logger.info("TERMINATE TEST (" + TestSerialUsingTestHarness.class.getName() + ") ");
@@ -152,7 +145,7 @@ public class TestSerialUsingTestHarness {
 
         // close down serial
         //if(serial.isOpen())
-        serial.close();;
+        serial.close();
 
         // shutdown the PiGpio library
         piGpio.shutdown();
@@ -162,18 +155,18 @@ public class TestSerialUsingTestHarness {
     }
 
     @BeforeEach
-    public void beforeEach() throws Exception {
+    public void beforeEach() {
 
     }
 
     @AfterEach
-    public void afterEach() throws Exception {
+    public void afterEach() {
     }
 
     @Test
     @DisplayName("SERIAL :: Verify SERIAL Instance")
     @Order(1)
-    public void testSerialInstance() throws Exception {
+    public void testSerialInstance() {
         // ensure that the SERIAL instance is not null;
         assertNotNull(serial);
 
@@ -184,7 +177,7 @@ public class TestSerialUsingTestHarness {
     @Test
     @DisplayName("SERIAL :: Test BYTE (WRITE)")
     @Order(2)
-    public void testSerialSingleByteWrite() throws Exception {
+    public void testSerialSingleByteWrite() {
         // write a single byte to the serial device
         serial.write(SAMPLE_BYTE);
     }
@@ -192,7 +185,7 @@ public class TestSerialUsingTestHarness {
     @Test
     @DisplayName("SERIAL :: Test BYTE (READ)")
     @Order(3)
-    public void testSerialSingleByteRead() throws Exception {
+    public void testSerialSingleByteRead() {
         // read single byte from the serial device
         assertEquals(SAMPLE_BYTE, serial.readByte());
     }
@@ -200,7 +193,7 @@ public class TestSerialUsingTestHarness {
     @Test
     @DisplayName("SERIAL :: Test BYTE-ARRAY (WRITE)")
     @Order(4)
-    public void testSerialByteArrayWrite() throws Exception {
+    public void testSerialByteArrayWrite() {
         // write an array of data bytes to the serial device
         serial.write(SAMPLE_BYTE_ARRAY);
     }
@@ -208,7 +201,7 @@ public class TestSerialUsingTestHarness {
     @Test
     @DisplayName("SERIAL :: Test BYTE-ARRAY (READ)")
     @Order(5)
-    public void testSerialByteArrayRead() throws Exception {
+    public void testSerialByteArrayRead() {
         // read an array of data bytes from the serial device
         byte[] byteArray = serial.readNBytes(SAMPLE_BYTE_ARRAY.length);
         assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
@@ -217,7 +210,7 @@ public class TestSerialUsingTestHarness {
     @Test
     @DisplayName("SERIAL :: Test BYTE-BUFFER (WRITE)")
     @Order(6)
-    public void testSerialByteBufferWrite() throws Exception {
+    public void testSerialByteBufferWrite() {
         // write a buffer of data bytes to the serial device
         serial.write(SAMPLE_BUFFER);
     }
@@ -225,7 +218,7 @@ public class TestSerialUsingTestHarness {
     @Test
     @DisplayName("SERIAL :: Test BYTE-BUFFER (READ)")
     @Order(7)
-    public void testSerialByteBufferRead() throws Exception {
+    public void testSerialByteBufferRead() {
         // read a buffer of data bytes from the serial device
         ByteBuffer buffer = serial.readByteBuffer(SAMPLE_BUFFER.capacity());
         assertArrayEquals(SAMPLE_BUFFER.array(), buffer.array());
@@ -234,7 +227,7 @@ public class TestSerialUsingTestHarness {
     @Test
     @DisplayName("SERIAL :: Test ASCII STRING (WRITE)")
     @Order(8)
-    public void testSerialAsciiStringWrite() throws Exception {
+    public void testSerialAsciiStringWrite() {
         // write a string of data to the serial device
         serial.write(SAMPLE_STRING);
     }
@@ -242,7 +235,7 @@ public class TestSerialUsingTestHarness {
     @Test
     @DisplayName("SERIAL :: Test ASCII STRING (READ)")
     @Order(9)
-    public void testSerialAsciiStringRead() throws Exception {
+    public void testSerialAsciiStringRead() {
         // read a string of data from the serial device
         String testString = serial.readString(SAMPLE_STRING.length());
         assertEquals(SAMPLE_STRING, testString);

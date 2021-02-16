@@ -66,7 +66,7 @@ public class TestSerialProviderImpl extends SerialProviderBase implements TestSe
 
     /** {@inheritDoc} */
     @Override
-    public Serial create(SerialConfig config) throws Exception {
+    public Serial create(SerialConfig config) {
         return null;
     }
 }

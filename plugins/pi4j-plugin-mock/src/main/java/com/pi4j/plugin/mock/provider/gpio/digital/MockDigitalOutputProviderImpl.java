@@ -51,7 +51,7 @@ public class MockDigitalOutputProviderImpl extends DigitalOutputProviderBase imp
 
     /** {@inheritDoc} */
     @Override
-    public DigitalOutput create(DigitalOutputConfig config) throws Exception {
+    public DigitalOutput create(DigitalOutputConfig config) {
         return new MockDigitalOutput(this, config);
     }
 }

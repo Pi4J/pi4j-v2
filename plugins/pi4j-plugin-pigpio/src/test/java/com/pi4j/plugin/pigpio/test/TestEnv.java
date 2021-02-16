@@ -36,12 +36,16 @@ import java.io.IOException;
 
 public class TestEnv {
 
-    public static ArduinoTestHarness createTestHarness() throws IOException {
+    public static ArduinoTestHarness createTestHarness() {
         //harness = new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbserial-00000000"));
-        return new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142401"));
+        try {
+            return new ArduinoTestHarness(System.getProperty("pi4j.test.harness.port", "tty.usbmodem142401"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static PiGpio createPiGpio() throws IOException {
+    public static PiGpio createPiGpio() {
         return PiGpio.newSocketInstance(System.getProperty("pi4j.pigpio.host", "rpi3bp2.savage.lan"),
                                         System.getProperty("pi4j.pigpio.port", "8888"));
 //        return PiGpio.newNativeInstance();

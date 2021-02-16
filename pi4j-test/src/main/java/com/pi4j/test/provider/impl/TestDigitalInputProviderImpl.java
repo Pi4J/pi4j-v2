@@ -67,7 +67,7 @@ public class TestDigitalInputProviderImpl extends DigitalInputProviderBase imple
 
     /** {@inheritDoc} */
     @Override
-    public DigitalInput create(DigitalInputConfig config) throws Exception {
+    public DigitalInput create(DigitalInputConfig config) {
         return new TestDigitalInput(this, config);
     }
 }

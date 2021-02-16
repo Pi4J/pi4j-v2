@@ -27,11 +27,9 @@ package com.pi4j.io.i2c.impl;
  * #L%
  */
 
-import com.pi4j.io.exception.IOReadException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CRegister;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
@@ -65,7 +63,7 @@ public class DefaultI2CRegister implements I2CRegister {
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte b) throws IOException {
+    public int write(byte b) {
         return this.i2c.writeRegister(this.address, b);
     }
 
@@ -75,45 +73,45 @@ public class DefaultI2CRegister implements I2CRegister {
      * Write a single word value (16-bit) to the I2C device register.
      */
     @Override
-    public void writeWord(int word) throws IOException{
+    public void writeWord(int word) {
         this.i2c.writeRegisterWord(this.address, word);
     }
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte[] data, int offset, int length) throws IOException {
+    public int write(byte[] data, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, data.length);
         return this.i2c.writeRegister(this.address, data, offset, length);
     }
 
     /** {@inheritDoc} */
     @Override
-    public int readWord() throws IOException, IOReadException {
+    public int readWord() {
         return this.i2c.readRegisterWord(this.address);
     }
 
     /** {@inheritDoc} */
     @Override
-    public int writeReadWord(int word) throws IOException, IOReadException {
+    public int writeReadWord(int word) {
         return this.i2c.writeReadRegisterWord(this.address, word);
     }
 
     /** {@inheritDoc} */
     @Override
-    public int read() throws IOException {
+    public int read() {
         return this.i2c.readRegister(this.address);
     }
 
     /** {@inheritDoc} */
     @Override
-    public int read(byte[] buffer, int offset, int length) throws IOException {
+    public int read(byte[] buffer, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, buffer.length);
         return this.i2c.readRegister(this.address, buffer, offset, length);
     }
 
     /** {@inheritDoc} */
     @Override
-    public String readString(Charset charset, int length) throws IOException, IOReadException {
+    public String readString(Charset charset, int length) {
         return this.i2c.readRegisterString(this.address, charset, length);
     }
 }

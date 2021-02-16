@@ -30,6 +30,7 @@ package com.pi4j.library.pigpio.test.pwm;
  */
 
 import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.library.pigpio.PiGpioException;
 import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.library.pigpio.test.TestEnv;
 import com.pi4j.test.harness.ArduinoTestHarness;
@@ -117,7 +118,7 @@ public class TestHardwarePwmUsingTestHarness {
     }
 
     @AfterEach
-    public void afterEach() throws IOException {
+    public void afterEach() {
         // shutdown PIGPIO instances
         pigpio.shutdown();
     }
@@ -125,7 +126,7 @@ public class TestHardwarePwmUsingTestHarness {
     @Test
     @Order(0)
     @DisplayName("PWM :: Test HW PWM @ 15 Hz")
-    public void testPwmAt15Hertz() throws IOException, InterruptedException {
+    public void testPwmAt15Hertz() {
         testPwm(PiGpioMode.ALT0, ALT0_PINS, 15);
         testPwm(PiGpioMode.ALT5, ALT5_PINS, 15);
     }
@@ -133,7 +134,7 @@ public class TestHardwarePwmUsingTestHarness {
     @Test
     @Order(1)
     @DisplayName("PWM :: Test HW PWM @ 50 Hz")
-    public void testPwmAt50Hertz() throws IOException, InterruptedException {
+    public void testPwmAt50Hertz() {
         testPwm(PiGpioMode.ALT0, ALT0_PINS, 50);
         testPwm(PiGpioMode.ALT5, ALT5_PINS, 50);
     }
@@ -141,7 +142,7 @@ public class TestHardwarePwmUsingTestHarness {
     @Test
     @Order(2)
     @DisplayName("PWM :: Test HW PWM @ 100 Hz")
-    public void testPwmAt100Hertz() throws IOException, InterruptedException {
+    public void testPwmAt100Hertz() {
         testPwm(PiGpioMode.ALT0, ALT0_PINS, 100);
         testPwm(PiGpioMode.ALT5, ALT5_PINS, 100);
     }
@@ -149,7 +150,7 @@ public class TestHardwarePwmUsingTestHarness {
     @Test
     @Order(3)
     @DisplayName("PWM :: Test HW PWM @ 700 Hz")
-    public void testPwmAt700Hertz() throws IOException, InterruptedException {
+    public void testPwmAt700Hertz() {
         testPwm(PiGpioMode.ALT0, ALT0_PINS, 700);
         testPwm(PiGpioMode.ALT5, ALT5_PINS, 700);
     }
@@ -157,7 +158,7 @@ public class TestHardwarePwmUsingTestHarness {
     @Test
     @Order(4)
     @DisplayName("PWM :: Test HW PWM @ 1000 Hz (1 KHz)")
-    public void testPwmAt1000Hertz() throws IOException, InterruptedException {
+    public void testPwmAt1000Hertz() {
         testPwm(PiGpioMode.ALT0, ALT0_PINS, 1000);
         testPwm(PiGpioMode.ALT5, ALT5_PINS, 1000);
     }
@@ -165,7 +166,7 @@ public class TestHardwarePwmUsingTestHarness {
     @Test
     @Order(5)
     @DisplayName("PWM :: Test HW PWM @ 5000 Hz (5 KHz)")
-    public void testPwmAt5000Hertz() throws IOException, InterruptedException {
+    public void testPwmAt5000Hertz() {
         testPwm(PiGpioMode.ALT0, ALT0_PINS, 5000);
         testPwm(PiGpioMode.ALT5, ALT5_PINS, 5000);
     }
@@ -173,7 +174,7 @@ public class TestHardwarePwmUsingTestHarness {
     @Test
     @Order(6)
     @DisplayName("PWM :: Test HW PWM @ 10000 Hz (10 KHz)")
-    public void testPwmAt10000Hertz() throws IOException, InterruptedException {
+    public void testPwmAt10000Hertz() {
         testPwm(PiGpioMode.ALT0, ALT0_PINS, 10000);
         testPwm(PiGpioMode.ALT5, ALT5_PINS, 10000);
     }
@@ -181,75 +182,83 @@ public class TestHardwarePwmUsingTestHarness {
     @Test
     @Order(7)
     @DisplayName("PWM :: Test HW PWM @ 100000 Hz (100 KHz)")
-    public void testPwmAt100000Hertz() throws IOException, InterruptedException {
+    public void testPwmAt100000Hertz() {
         testPwm(PiGpioMode.ALT0, ALT0_PINS, 100000);
         testPwm(PiGpioMode.ALT5, ALT5_PINS, 100000);
     }
 
-    public void testPwm(PiGpioMode mode, int[] pins, int frequency) throws IOException, InterruptedException {
+    public void testPwm(PiGpioMode mode, int[] pins, int frequency) {
         testPwm(mode, pins, frequency, 50); // 50% duty-cycle by default
     }
-    public void testPwm(PiGpioMode mode, int[] pins, int frequency, int dutyCycle) throws IOException, InterruptedException {
+    public void testPwm(PiGpioMode mode, int[] pins, int frequency, int dutyCycle) {
         logger.info("");
         logger.info("---------------------------------------------------------");
         logger.info("TEST PWM SIGNALS AT " + frequency + " HZ; PINS=" + Arrays.toString(pins) + "; MODE=" + mode.name());
         logger.info("---------------------------------------------------------");
 
-        for(int p : pins) {
+        try {
+            for(int p : pins) {
 
-            // set pin ALT modes for PWM
-            pigpio.gpioSetMode(p, mode);
+                // set pin ALT modes for PWM
+                pigpio.gpioSetMode(p, mode);
 
-            logger.info("");
-            logger.info("[TEST HARDWARE PWM] :: PIN=" + p + " <" + mode.name() + ">");
+                logger.info("");
+                logger.info("[TEST HARDWARE PWM] :: PIN=" + p + " <" + mode.name() + ">");
 
-            // hardware PWM duty cycle scaling
-            int dc = dutyCycle * 10000;
+                // hardware PWM duty cycle scaling
+                int dc = dutyCycle * 10000;
 
-            // write PWM frequency and duty-cycle
-            pigpio.gpioHardwarePWM(p, frequency, dc);
-            logger.info(" (WRITE) >> PWM FREQUENCY  = " + frequency);
-            logger.info(" (WRITE) >> PWM DUTY-CYCLE = " + dc);
+                // write PWM frequency and duty-cycle
+                pigpio.gpioHardwarePWM(p, frequency, dc);
+                logger.info(" (WRITE) >> PWM FREQUENCY  = " + frequency);
+                logger.info(" (WRITE) >> PWM DUTY-CYCLE = " + dc);
 
-            // test once ..
-            if(measureFrequency(p, frequency) == false){
-                Thread.sleep(500);
-                // test twice ..
+                // test once ..
                 if(measureFrequency(p, frequency) == false){
-                    Thread.sleep(1000);
-                    // test thrice ..
+                    Thread.sleep(500);
+                    // test twice ..
                     if(measureFrequency(p, frequency) == false){
-                        // turn off PWM pin
-                        pigpio.gpioHardwarePWM(p, 0, 0);
+                        Thread.sleep(1000);
+                        // test thrice ..
+                        if(measureFrequency(p, frequency) == false){
+                            // turn off PWM pin
+                            pigpio.gpioHardwarePWM(p, 0, 0);
 
-                        // give up and fail
-                        fail("PWM MEASURED FREQUENCY OUT OF ACCEPTABLE MARGIN OF ERROR");
+                            // give up and fail
+                            fail("PWM MEASURED FREQUENCY OUT OF ACCEPTABLE MARGIN OF ERROR");
+                        }
                     }
                 }
-            }
 
-            // turn off PWM pin
-            pigpio.gpioHardwarePWM(p, 0, 0);
+                // turn off PWM pin
+                pigpio.gpioHardwarePWM(p, 0, 0);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private boolean measureFrequency(int pin, int frequency) throws IOException {
-        TestHarnessFrequency measured = harness.getFrequency(pin);
+    private boolean measureFrequency(int pin, int frequency) {
+        try {
+            TestHarnessFrequency measured = harness.getFrequency(pin);
 
-        float deviation = (measured.frequency - frequency) * 100/(float)frequency;
-        logger.info(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency + "; (EXPECTED=" + frequency + "; DEVIATION: " + deviation + "%)");
+            float deviation = (measured.frequency - frequency) * 100/(float)frequency;
+            logger.info(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency + "; (EXPECTED=" + frequency + "; DEVIATION: " + deviation + "%)");
 
-        // we allow a 30% margin of error, the testing harness uses a simple pulse counter to crudely
-        // measure the PWM signal, its not very accurate and we don't take enough samples to get a
-        // better average, but it should provide sufficient validation testing just to verify the
-        // applied PWM signal is close to the expected frequency calculate margin of error offset value
-        long marginOfError = Math.round(frequency * .30);
+            // we allow a 30% margin of error, the testing harness uses a simple pulse counter to crudely
+            // measure the PWM signal, its not very accurate and we don't take enough samples to get a
+            // better average, but it should provide sufficient validation testing just to verify the
+            // applied PWM signal is close to the expected frequency calculate margin of error offset value
+            long marginOfError = Math.round(frequency * .30);
 
-        // test measured value against HI/LOW offsets to determine acceptable range
-        if(measured.frequency < frequency-marginOfError) return false;
-        if(measured.frequency > frequency+marginOfError) return false;
+            // test measured value against HI/LOW offsets to determine acceptable range
+            if(measured.frequency < frequency-marginOfError) return false;
+            if(measured.frequency > frequency+marginOfError) return false;
 
-        // success
-        return true;
+            // success
+            return true;
+        } catch (IOException e) {
+            throw new PiGpioException(e);
+        }
     }
 }

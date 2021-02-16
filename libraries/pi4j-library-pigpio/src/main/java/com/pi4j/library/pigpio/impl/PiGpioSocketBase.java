@@ -31,6 +31,7 @@ package com.pi4j.library.pigpio.impl;
 
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioCmd;
+import com.pi4j.library.pigpio.PiGpioException;
 import com.pi4j.library.pigpio.PiGpioPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,9 +69,8 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
      *
      * @param host hostname or IP address of the RaspberryPi to connect to via TCP/IP socket.
      * @param port TCP port number of the RaspberryPi to connect to via TCP/IP socket.
-     * @throws java.io.IOException if any.
      */
-    protected PiGpioSocketBase(String host, int port) throws IOException {
+    protected PiGpioSocketBase(String host, int port) {
         this.host = host;
         this.port = port;
         this.connected = false;
@@ -91,7 +91,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      */
     @Override
-    public int gpioInitialise() throws IOException {
+    public int gpioInitialise() {
         int result = 0;
         logger.trace("[INITIALIZE] -> STARTED");
         if(!this.initialized) {
@@ -128,7 +128,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
      * This function resets the used DMA channels, releases memory, and terminates any running threads.
      */
     @Override
-    public void gpioTerminate() throws IOException {
+    public void gpioTerminate() {
         logger.trace("[SHUTDOWN] -> STARTED");
         if(this.initialized) {
             // close all open SPI, SERIAL, I2C handles
@@ -141,7 +141,12 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 
         // shutdown connected socket
         if(socket != null && socket.isConnected())
-            socket.close();
+            try {
+                socket.close();
+            }
+            catch (IOException e) {
+                throw new PiGpioException(e);
+            }
 
         // clear initialized flag
         this.initialized = false;
@@ -153,9 +158,8 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
      *
      * @param cmd a {@link com.pi4j.library.pigpio.PiGpioCmd} object.
      * @return a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
-     * @throws java.io.IOException if any.
      */
-    protected PiGpioPacket sendCommand(PiGpioCmd cmd) throws IOException {
+    protected PiGpioPacket sendCommand(PiGpioCmd cmd) {
         return sendPacket(new PiGpioPacket(cmd));
     }
 
@@ -165,9 +169,8 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
      * @param cmd a {@link com.pi4j.library.pigpio.PiGpioCmd} object.
      * @param p1 a int.
      * @return a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
-     * @throws java.io.IOException if any.
      */
-    protected PiGpioPacket sendCommand(PiGpioCmd cmd, int p1) throws IOException {
+    protected PiGpioPacket sendCommand(PiGpioCmd cmd, int p1) {
         return sendPacket(new PiGpioPacket(cmd, p1));
     }
     /**
@@ -177,9 +180,8 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
      * @param p1 a int.
      * @param p2 a int.
      * @return a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
-     * @throws java.io.IOException if any.
      */
-    protected PiGpioPacket sendCommand(PiGpioCmd cmd, int p1, int p2) throws IOException {
+    protected PiGpioPacket sendCommand(PiGpioCmd cmd, int p1, int p2) {
         return sendPacket(new PiGpioPacket(cmd, p1, p2));
     }
     /**
@@ -187,9 +189,8 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
      *
      * @param tx a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
      * @return a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
-     * @throws java.io.IOException if any.
      */
-    protected PiGpioPacket sendPacket(PiGpioPacket tx) throws IOException {
+    protected PiGpioPacket sendPacket(PiGpioPacket tx) {
         validateReady();
         return sendPacket(tx, this.socket);
     }
@@ -199,50 +200,52 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
      * @param tx a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
      * @param sck a {@link java.net.Socket} object.
      * @return a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
-     * @throws java.io.IOException if any.
      */
-    protected PiGpioPacket sendPacket(PiGpioPacket tx, Socket sck) throws IOException {
+    protected PiGpioPacket sendPacket(PiGpioPacket tx, Socket sck) {
         try {
-            // get socket streams
-            var in = sck.getInputStream();
-            var out = sck.getOutputStream();
-
-            // transmit packet
-            logger.trace("[TX] -> " + tx.toString());
-            out.write(PiGpioPacket.encode(tx));
-            out.flush();
-
-            // wait until data has been received (timeout after 500 ms and throw exception)
-            int millis = 0;
             try {
-                while(in.available() < 16){
-                    if(millis > 500){   // timeout exception
-                        throw new IOException("Command timed out; no response from host in 500 milliseconds");
-                    }
-                    millis+=5;
-                    Thread.sleep(5); // ... take a breath ..
-                }
-            } catch (InterruptedException e) {
-                // wrap exception
-                throw new IOException(e.getMessage(), e);
-            }
+                // get socket streams
+                var in = sck.getInputStream();
+                var out = sck.getOutputStream();
 
-            // read receive packet
-            PiGpioPacket rx = PiGpioPacket.decode(in);
-            logger.trace("[RX] <- " + rx.toString());
-            return rx;
-        }
-        catch (SocketException se){
-            // socket is no longer connected
-            this.connected = false;
-            socket.close();
-            socket = null;
-            throw se;
+                // transmit packet
+                logger.trace("[TX] -> " + tx.toString());
+                out.write(PiGpioPacket.encode(tx));
+                out.flush();
+
+                // wait until data has been received (timeout after 500 ms and throw exception)
+                int millis = 0;
+                try {
+                    while (in.available() < 16) {
+                        if (millis > 500) {   // timeout exception
+                            throw new PiGpioException("Command timed out; no response from host in 500 milliseconds");
+                        }
+                        millis += 5;
+                        Thread.sleep(5); // ... take a breath ..
+                    }
+                } catch (Exception e) {
+                    // wrap exception
+                    throw new PiGpioException(e.getMessage(), e);
+                }
+
+                // read receive packet
+                PiGpioPacket rx = PiGpioPacket.decode(in);
+                logger.trace("[RX] <- " + rx.toString());
+                return rx;
+            } catch (SocketException se) {
+                // socket is no longer connected
+                this.connected = false;
+                socket.close();
+                socket = null;
+                throw new PiGpioException(se);
+            }
+        } catch (IOException e) {
+            throw new PiGpioException(e);
         }
     }
 
     /** {@inheritDoc} */
-    public void gpioNotifications(int pin, boolean enabled) throws IOException{
+    public void gpioNotifications(int pin, boolean enabled){
         logger.trace("[GPIO] -> {} Pin [{}] Notifications", (enabled ? "ENABLE" : "DISABLE"), pin);
         validateReady();
         this.monitor.enable(pin, enabled);
@@ -251,10 +254,8 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 
     /**
      * <p>disableNotifications.</p>
-     *
-     * @throws java.io.IOException if any.
      */
-    protected void disableNotifications() throws IOException {
+    protected void disableNotifications() {
         logger.trace("[GPIO] -> DISABLE ALL Pin Notifications");
         validateReady();
         this.monitor.disable();
@@ -263,25 +264,25 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 
     /**
      * <p>validateReady.</p>
-     *
-     * @throws java.io.IOException if any.
      */
     @Override
-    protected void validateReady() throws IOException {
+    protected void validateReady() {
         super.validateReady();
         validateConnection();
     }
 
     /**
      * <p>validateConnection.</p>
-     *
-     * @throws java.io.IOException if any.
      */
-    protected void validateConnection() throws IOException {
+    protected void validateConnection() {
         // if not connected, attempt to reconnect
         if(socket == null || !this.connected){
             // attempt to connect to PiGpio Daemon on remote Raspberry Pi
-            this.socket = new Socket(host, port);
+            try {
+                this.socket = new Socket(host, port);
+            } catch (IOException e) {
+                throw new PiGpioException(e);
+            }
 
             // update connection status flag
             this.connected = this.socket.isConnected();
@@ -290,7 +291,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 //                    "]; make sure the PiGpio Daemon is running on the remote Raspberry Pi and the host is accessible.");
     }
 
-//    protected void enableNotifications() throws IOException {
+//    protected void enableNotifications() {
 ////        PiGpioPacket noib = new PiGpioPacket(NOIB);
 //        var listener = new Socket(this.host, this.port);
 //

@@ -36,6 +36,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
+import java.io.IOException;
+
 /**
  * <p>Main class.</p>
  *
@@ -52,9 +54,8 @@ public class TestGpioAlertRaw {
      * <p>main.</p>
      *
      * @param args an array of {@link String} objects.
-     * @throws Exception if any.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         String loglevel = "INFO";
         if(args != null && args.length > 0){
             Level lvl = Level.valueOf(args[0].toUpperCase());
@@ -84,7 +85,7 @@ public class TestGpioAlertRaw {
             PIGPIO.gpioGlitchFilter(GPIO_PIN, 100000);
             PIGPIO.gpioSetAlertFunc(GPIO_PIN, new PiGpioAlertCallback() {
                 @Override
-                public void call(int pin, int state, long tick) throws Exception {
+                public void call(int pin, int state, long tick) {
                     logger.info("RECEIVED ALERT EVENT! " + pin + " : " + state + " :" + tick);
                 }
             });
@@ -98,7 +99,7 @@ public class TestGpioAlertRaw {
             String testdata = "Hello World!";
             PIGPIO.gpioSetAlertFuncEx(GPIO_PIN, new PiGpioAlertCallbackEx() {
                 @Override
-                public void call(int pin, int state, long tick, Object userdata) throws Exception {
+                public void call(int pin, int state, long tick, Object userdata) {
                     logger.info("RECEIVED ALERT EVENT! " + pin + " : " + state + " :" + tick + " : " + userdata);
                 }
             }, testdata);

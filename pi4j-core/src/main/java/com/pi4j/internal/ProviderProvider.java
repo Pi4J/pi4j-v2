@@ -71,7 +71,7 @@ public interface ProviderProvider extends ProviderAliases {
      * @param ioType a {@link com.pi4j.io.IOType} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     * @throws ProviderNotFoundException if the provider specified by {@code ioType} can not be found.
      */
     <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException;
 
@@ -107,7 +107,7 @@ public interface ProviderProvider extends ProviderAliases {
      * @param providerId a {@link java.lang.String} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     * @throws ProviderNotFoundException if the provider specified by {@code providerId} can not be found.
      */
     default <T extends Provider> T getProvider(String providerId) throws ProviderNotFoundException{
         return provider(providerId);
@@ -119,7 +119,7 @@ public interface ProviderProvider extends ProviderAliases {
      * @param providerId a {@link java.lang.String} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     * @throws ProviderNotFoundException if the provider specified by {@code providerId} can not be found.
      */
     default <T extends Provider> T getProvider(String providerId, Class<T> providerClass) throws ProviderNotFoundException{
         return provider(providerId, providerClass);
@@ -131,8 +131,8 @@ public interface ProviderProvider extends ProviderAliases {
      * @param providerClass a {@link java.lang.Class} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
-     * @throws com.pi4j.provider.exception.ProviderInterfaceException if any.
+     * @throws ProviderNotFoundException if the provider specified by {@code providerClass} can not be found.
+     * @throws ProviderInterfaceException if {@code providerClass} is not a valid provider.
      */
     default <T extends Provider> T getProvider(Class<T> providerClass) throws ProviderNotFoundException,
                                                                               ProviderInterfaceException{
@@ -145,7 +145,7 @@ public interface ProviderProvider extends ProviderAliases {
      * @param ioType a {@link com.pi4j.io.IOType} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws com.pi4j.provider.exception.ProviderNotFoundException if any.
+     * @throws ProviderNotFoundException if the provider specified by {@code ioType} can not be found.
      */
     default <T extends Provider> T getProvider(IOType ioType) throws ProviderNotFoundException{
         return provider(ioType);

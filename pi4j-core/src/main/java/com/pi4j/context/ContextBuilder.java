@@ -282,7 +282,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @param stream a {@link java.io.InputStream} object.
      * @param prefixFilter a {@link java.lang.String} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code stream}.
      */
     ContextBuilder properties(InputStream stream, String prefixFilter) throws IOException;
     /**
@@ -291,7 +291,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @param reader a {@link java.io.Reader} object.
      * @param prefixFilter a {@link java.lang.String} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code reader}.
      */
     ContextBuilder properties(Reader reader, String prefixFilter) throws IOException;
     /**
@@ -300,7 +300,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @param file a {@link java.io.File} object.
      * @param prefixFilter a {@link java.lang.String} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code file}.
      */
     ContextBuilder properties(File file, String prefixFilter) throws IOException;
 
@@ -318,9 +318,9 @@ public interface ContextBuilder extends Builder<Context> {
      *
      * @param stream a {@link java.io.InputStream} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code stream}.
      */
-    default ContextBuilder properties(InputStream stream) throws IOException{
+    default ContextBuilder properties(InputStream stream) throws IOException {
         return properties(stream, null);
     }
     /**
@@ -328,9 +328,9 @@ public interface ContextBuilder extends Builder<Context> {
      *
      * @param reader a {@link java.io.Reader} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code reader}.
      */
-    default ContextBuilder properties(Reader reader) throws IOException{
+    default ContextBuilder properties(Reader reader) throws IOException {
         return properties(reader, null);
     }
     /**
@@ -338,9 +338,9 @@ public interface ContextBuilder extends Builder<Context> {
      *
      * @param file a {@link java.io.File} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code file}.
      */
-    default ContextBuilder properties(File file) throws IOException{
+    default ContextBuilder properties(File file) throws IOException {
         return properties(file, null);
     }
 
@@ -407,7 +407,7 @@ public interface ContextBuilder extends Builder<Context> {
      *
      * @param stream a {@link java.io.InputStream} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code stream}.
      */
     default ContextBuilder addProperties(InputStream stream) throws IOException{
         return properties(stream, null);
@@ -418,7 +418,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @param stream a {@link java.io.InputStream} object.
      * @param prefixFilter a {@link java.lang.String} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code stream}.
      */
     default ContextBuilder addProperties(InputStream stream, String prefixFilter) throws IOException{
         return properties(stream, prefixFilter);
@@ -429,7 +429,7 @@ public interface ContextBuilder extends Builder<Context> {
      *
      * @param reader a {@link java.io.Reader} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code reader}.
      */
     default ContextBuilder addProperties(Reader reader) throws IOException{
         return properties(reader, null);
@@ -440,7 +440,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @param reader a {@link java.io.Reader} object.
      * @param prefixFilter a {@link java.lang.String} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code reader}.
      */
     default ContextBuilder addProperties(Reader reader, String prefixFilter) throws IOException{
         return properties(reader, prefixFilter);
@@ -451,7 +451,7 @@ public interface ContextBuilder extends Builder<Context> {
      *
      * @param file a {@link java.io.File} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code file}.
      */
     default ContextBuilder addProperties(File file) throws IOException{
         return properties(file, null);
@@ -462,7 +462,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @param file a {@link java.io.File} object.
      * @param prefixFilter a {@link java.lang.String} object.
      * @return a {@link com.pi4j.context.ContextBuilder} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code file}.
      */
     default ContextBuilder addProperties(File file, String prefixFilter) throws IOException{
         return properties(file, prefixFilter);

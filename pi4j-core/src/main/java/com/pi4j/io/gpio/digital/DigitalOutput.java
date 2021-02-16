@@ -70,7 +70,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      *
      * @param state a {@link com.pi4j.io.gpio.digital.DigitalState} object.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     DigitalOutput state(DigitalState state) throws IOException;
     /**
@@ -81,7 +81,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @param state a {@link com.pi4j.io.gpio.digital.DigitalState} object.
      * @param callback a {@link java.util.concurrent.Callable} object.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     DigitalOutput pulse(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback) throws IOException;
     /**
@@ -122,7 +122,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      *
      * @param state a boolean.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     default DigitalOutput setState(boolean state) throws IOException {
         return this.state(DigitalState.getState(state));
@@ -132,7 +132,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      *
      * @param state a byte.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     default DigitalOutput setState(byte state) throws IOException {
         return this.state(DigitalState.getState(state));
@@ -142,7 +142,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      *
      * @param state a short.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     default DigitalOutput setState(short state) throws IOException {
         return this.state(DigitalState.getState(state));
@@ -152,7 +152,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      *
      * @param state a int.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     default DigitalOutput setState(int state) throws IOException {
         return this.state(DigitalState.getState(state));
@@ -162,7 +162,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      *
      * @param state a long.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     default DigitalOutput setState(long state) throws IOException {
         return this.state(DigitalState.getState(state));
@@ -172,7 +172,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      *
      * @param state a float.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     default DigitalOutput setState(float state) throws IOException {
         return this.state(DigitalState.getState(state));
@@ -182,7 +182,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      *
      * @param state a double.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     default DigitalOutput setState(double state) throws IOException {
         return this.state(DigitalState.getState(state));
@@ -191,7 +191,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * <p>high.</p>
      *
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     default DigitalOutput high() throws IOException {
         return this.state(DigitalState.HIGH);
@@ -200,7 +200,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * <p>low.</p>
      *
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     default DigitalOutput low() throws IOException {
         return this.state(DigitalState.LOW);
@@ -209,7 +209,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * <p>toggle.</p>
      *
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     default DigitalOutput toggle() throws IOException {
         return this.state(DigitalState.getInverseState(this.state()));
@@ -222,7 +222,7 @@ public interface DigitalOutput extends Digital<DigitalOutput, DigitalOutputConfi
      * @param interval a int.
      * @param unit a {@link java.util.concurrent.TimeUnit} object.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws com.pi4j.io.exception.IOException if any.
+     * @throws IOException if any.
      */
     default DigitalOutput pulseHigh(int interval, TimeUnit unit) throws IOException {
         return pulse(interval, unit, DigitalState.HIGH);

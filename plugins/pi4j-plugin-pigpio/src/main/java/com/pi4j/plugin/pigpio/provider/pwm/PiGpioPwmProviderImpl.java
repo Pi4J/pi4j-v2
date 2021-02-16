@@ -35,8 +35,6 @@ import com.pi4j.io.pwm.PwmProviderBase;
 import com.pi4j.io.pwm.PwmType;
 import com.pi4j.library.pigpio.PiGpio;
 
-import java.io.IOException;
-
 /**
  * <p>PiGpioPwmProviderImpl class.</p>
  *
@@ -51,9 +49,8 @@ public class PiGpioPwmProviderImpl extends PwmProviderBase implements PiGpioPwmP
      * <p>Constructor for PiGpioPwmProviderImpl.</p>
      *
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
-     * @throws java.io.IOException if any.
      */
-    public PiGpioPwmProviderImpl(PiGpio piGpio) throws IOException {
+    public PiGpioPwmProviderImpl(PiGpio piGpio) {
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
@@ -61,7 +58,7 @@ public class PiGpioPwmProviderImpl extends PwmProviderBase implements PiGpioPwmP
 
     /** {@inheritDoc} */
     @Override
-    public Pwm create(PwmConfig config) throws Exception {
+    public Pwm create(PwmConfig config) {
         // initialize the PIGPIO library
         if(!piGpio.isInitialized()) piGpio.initialize();
 

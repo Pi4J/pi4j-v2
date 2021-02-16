@@ -32,11 +32,9 @@ package com.pi4j.library.pigpio.impl;
 import com.pi4j.library.pigpio.*;
 import com.pi4j.library.pigpio.internal.PIGPIO;
 import com.pi4j.library.pigpio.internal.PiGpioAlertCallback;
-import com.pi4j.library.pigpio.internal.PiGpioSignalCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -59,17 +57,15 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * the native shared library while the daemon is running concurrently.
      *
      * @return a {@link PiGpio} object.
-     * @throws IOException if any.
      */
-    public static PiGpio newInstance() throws IOException {
+    public static PiGpio newInstance() {
         return new PiGpioNativeImpl();
     }
 
     /**
      * DEFAULT PRIVATE CONSTRUCTOR
-     * @throws IOException if any
      */
-    private PiGpioNativeImpl() throws IOException {
+    private PiGpioNativeImpl() {
         super();
         this.initialized = false;
     }
@@ -87,7 +83,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      */
     @Override
-    public int gpioInitialise() throws IOException {
+    public int gpioInitialise() {
         int result = 0;
 
         logger.trace("[INITIALIZE] -> STARTED");
@@ -121,7 +117,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * This function resets the used DMA channels, releases memory, and terminates any running threads.
      */
     @Override
-    public void gpioTerminate() throws IOException {
+    public void gpioTerminate() {
         logger.trace("[SHUTDOWN] -> STARTED");
         if(this.initialized) {
             // close all open SPI, SERIAL, I2C handles
@@ -143,7 +139,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioVersion">PIGPIO::gpioVersion</a>
      */
     @Override
-    public int gpioVersion() throws IOException {
+    public int gpioVersion() {
         logger.trace("[VERSION] -> GET VERSION");
         validateReady();
         int version = PIGPIO.gpioVersion();
@@ -171,12 +167,12 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision">PIGPIO::gpioHardwareRevision</a>
      */
     @Override
-    public long gpioHardwareRevision() throws IOException {
+    public long gpioHardwareRevision() {
         logger.trace("[HARDWARE] -> GET REVISION");
         validateReady();
         int revision = PIGPIO.gpioHardwareRevision();
         logger.trace("[HARDWARE] <- REVISION: {}", revision);
-        if(revision <= 0) throw new IOException("Hardware revision could not be determined.");
+        if(revision <= 0) throw new PiGpioException("Hardware revision could not be determined.");
         return revision;
     }
 
@@ -193,7 +189,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPullUpDown">PIGPIO::gpioSetPullUpDown</a>
      */
     @Override
-    public void gpioSetPullUpDown(int pin, PiGpioPud pud) throws IOException {
+    public void gpioSetPullUpDown(int pin, PiGpioPud pud) {
         logger.trace("[GPIO::PUD-SET] -> PIN: {}; PUD={}({});", pin, pud.name(), pud.value());
         validateReady();
         validatePin(pin);
@@ -209,7 +205,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetMode">PIGPIO::gpioGetMode</a>
      */
     @Override
-    public PiGpioMode gpioGetMode(int pin) throws IOException {
+    public PiGpioMode gpioGetMode(int pin) {
         logger.trace("[GPIO::MODE-GET] -> PIN: {};", pin);
         validateReady();
         validatePin(pin);
@@ -230,7 +226,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetMode">PIGPIO::gpioSetMode</a>
      */
     @Override
-    public void gpioSetMode(int pin, PiGpioMode mode) throws IOException {
+    public void gpioSetMode(int pin, PiGpioMode mode) {
         logger.trace("[GPIO::MODE-SET] -> PIN: {}; MODE={}({});", pin, mode.name(), mode.value());
         validateReady();
         validatePin(pin);
@@ -246,7 +242,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioRead">PIGPIO::gpioRead</a>
      */
     @Override
-    public PiGpioState gpioRead(int pin) throws IOException {
+    public PiGpioState gpioRead(int pin) {
         logger.trace("[GPIO::GET] -> PIN: {}", pin);
         validateReady();
         validatePin(pin);
@@ -264,7 +260,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite">PIGPIO::gpioWrite</a>
      */
     @Override
-    public void gpioWrite(int pin, PiGpioState state) throws IOException {
+    public void gpioWrite(int pin, PiGpioState state) {
         logger.trace("[GPIO::SET] -> PIN: {}; {}({});", pin, state.name(), state.value());
         validateReady();
         validatePin(pin);
@@ -293,7 +289,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * Each (stable) edge will be timestamped steady microseconds after it was first detected.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter">PIGPIO::gpioGlitchFilter</a>
      */
-    public void gpioGlitchFilter(int pin, int steady) throws IOException {
+    public void gpioGlitchFilter(int pin, int steady) {
         logger.trace("[GPIO::GLITCH] -> PIN: {}; INTERVAL: {};", pin, steady);
         validateReady();
         validatePin(pin);
@@ -324,7 +320,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * Your software must be designed to cope with such reports.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter">PIGPIO::gpioGlitchFilter</a>
      */
-    public void gpioNoiseFilter(int pin, int steady, int active) throws IOException{
+    public void gpioNoiseFilter(int pin, int steady, int active) {
         logger.trace("[GPIO::NOISE] -> PIN: {}; INTERVAL: {};", pin, steady);
         validateReady();
         validatePin(pin);
@@ -351,7 +347,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioPWM">PIGPIO::gpioPWM</a>
      */
     @Override
-    public void gpioPWM(int pin, int dutyCycle) throws IOException {
+    public void gpioPWM(int pin, int dutyCycle) {
         logger.trace("[PWM::SET] -> PIN: {}; DUTY-CYCLE={};", pin, dutyCycle);
         validateReady();
         validateUserPin(pin);
@@ -374,7 +370,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMdutycycle">PIGPIO::gpioGetPWMdutycycle</a>
      */
     @Override
-    public int gpioGetPWMdutycycle(int pin) throws IOException {
+    public int gpioGetPWMdutycycle(int pin) {
         logger.trace("[PWM::GET] -> PIN: {}", pin);
         validateReady();
         validateUserPin(pin);
@@ -411,7 +407,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange">PIGPIO::gpioSetPWMrange</a>
      */
     @Override
-    public int gpioSetPWMrange(int pin, int range) throws IOException {
+    public int gpioSetPWMrange(int pin, int range) {
         logger.trace("[PWM-RANGE::SET] -> PIN: {}; RANGE={}", pin, range);
         validateReady();
         validateUserPin(pin);
@@ -430,7 +426,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrange">PIGPIO::gpioGetPWMrange</a>
      */
     @Override
-    public int gpioGetPWMrange(int pin) throws IOException {
+    public int gpioGetPWMrange(int pin) {
         logger.trace("[PWM-RANGE::GET] -> PIN: {}", pin);
         validateReady();
         validateUserPin(pin);
@@ -450,7 +446,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrealRange">PIGPIO::gpioGetPWMrealRange</a>
      */
     @Override
-    public int gpioGetPWMrealRange(int pin) throws IOException {
+    public int gpioGetPWMrealRange(int pin) {
         logger.trace("[PWM-REAL-RANGE::GET] -> PIN: {}", pin);
         validateReady();
         validateUserPin(pin);
@@ -500,7 +496,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange">PIGPIO::gpioSetPWMrange</a>
      */
     @Override
-    public int gpioSetPWMfrequency(int pin, int frequency) throws IOException {
+    public int gpioSetPWMfrequency(int pin, int frequency) {
         logger.trace("[PWM-FREQ::SET] -> PIN: {}; FREQUENCY={}", pin, frequency);
         validateReady();
         validateUserPin(pin);
@@ -525,7 +521,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMfrequency">PIGPIO::gpioGetPWMfrequency</a>
      */
     @Override
-    public int gpioGetPWMfrequency(int pin) throws IOException {
+    public int gpioGetPWMfrequency(int pin) {
         logger.trace("[PWM-FREQ::GET] -> PIN: {}", pin);
         validateReady();
         validateUserPin(pin);
@@ -571,7 +567,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * dutyCycle is automatically scaled to take this into account.
      */
     @Override
-    public void gpioHardwarePWM(int pin, int frequency, int dutyCycle) throws IOException {
+    public void gpioHardwarePWM(int pin, int frequency, int dutyCycle) {
         logger.trace("[HW-PWM::SET] -> PIN: {}; FREQUENCY={}; DUTY-CYCLE={}", pin, frequency, dutyCycle);
         validateReady();
         validateUserPin(pin);
@@ -582,7 +578,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
     }
 
     @Override
-    public void gpioNotifications(int pin, boolean enabled) throws IOException {
+    public void gpioNotifications(int pin, boolean enabled) {
         if(enabled)
             PIGPIO.gpioSetAlertFunc(pin, gpioAlertCallbackHandler);
         else
@@ -595,7 +591,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      */
     private PiGpioAlertCallback gpioAlertCallbackHandler = new PiGpioAlertCallback() {
         @Override
-        public void call(int pin, int state, long tick) throws Exception {
+        public void call(int pin, int state, long tick) {
             try {
                 dispatchEvent(new PiGpioStateChangeEvent(pin, PiGpioState.from(state), tick));
             }
@@ -647,7 +643,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * Thereafter use the PWM command to move the servo, e.g. gpioPWM(25, 1500) will set a 1500 us pulse.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioServo">PIGPIO::gpioServo</a>
      */
-    public void gpioServo(int pin, int pulseWidth) throws IOException{
+    public void gpioServo(int pin, int pulseWidth){
         logger.trace("[SERVO::SET] -> PIN: {}; PULSE-WIDTH={};", pin, pulseWidth);
         validateReady();
         validateUserPin(pin);
@@ -663,7 +659,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * Returns the servo pulse-width setting for the GPIO.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetServoPulsewidth">PIGPIO::gpioGetServoPulsewidth</a>
      */
-    public int gpioGetServoPulsewidth(int pin) throws IOException{
+    public int gpioGetServoPulsewidth(int pin){
         logger.trace("[SERVO::GET] -> PIN: {}", pin);
         validateReady();
         validateUserPin(pin);
@@ -691,7 +687,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioDelay">PIGPIO::gpioDelay</a>
      */
     @Override
-    public long gpioDelay(long micros) throws IOException {
+    public long gpioDelay(long micros) {
         logger.trace("[DELAY] -> MICROS: {}", micros);
         validateReady();
         validateDelayMicroseconds(micros);
@@ -708,7 +704,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/pigs.html#MILS">PIGPIO::MILS</a>
      */
     @Override
-    public int gpioDelayMilliseconds(int millis) throws IOException{
+    public int gpioDelayMilliseconds(int millis){
         logger.trace("[DELAY] -> MILLIS: {}", millis);
         validateReady();
         validateDelayMilliseconds(millis);
@@ -746,7 +742,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioTick">PIGPIO::gpioTick</a>
      */
     @Override
-    public long gpioTick() throws IOException {
+    public long gpioTick() {
         logger.trace("[TICK::GET] -> Get current tick");
         validateReady();
         long result = PIGPIO.gpioTick();
@@ -775,7 +771,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cOpen">PIGPIO::i2cOpen</a>
      */
     @Override
-    public int i2cOpen(int bus, int device, int flags) throws IOException {
+    public int i2cOpen(int bus, int device, int flags) {
         logger.trace("[I2C::OPEN] -> Open I2C Bus [{}] and Device [{}]; FLAGS=[{}]", bus, device, flags);
         validateReady();
         validateI2cBus(bus);
@@ -801,7 +797,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cClose">PIGPIO::i2cClose</a>
      */
     @Override
-    public int i2cClose(int handle) throws IOException {
+    public int i2cClose(int handle) {
         logger.trace("[I2C::CLOSE] -> HANDLE={}, Close I2C Bus", handle);
         validateReady();
         validateHandle(handle);
@@ -824,7 +820,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteQuick">PIGPIO::i2cWriteQuick</a>
      */
     @Override
-    public int i2cWriteQuick(int handle, boolean bit) throws IOException {
+    public int i2cWriteQuick(int handle, boolean bit) {
         logger.trace("[I2C::WRITE] -> HANDLE={}; R/W Bit [{}]", handle, bit ? 1 : 0);
         validateReady();
         validateHandle(handle);
@@ -842,7 +838,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByte">PIGPIO::i2cWriteByte</a>
      */
     @Override
-    public int i2cWriteByte(int handle, byte value) throws IOException {
+    public int i2cWriteByte(int handle, byte value) {
         logger.trace("[I2C::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
         validateReady();
         validateHandle(handle);
@@ -860,7 +856,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByte">PIGPIO::i2cReadByte</a>
      */
     @Override
-    public int i2cReadByte(int handle) throws IOException {
+    public int i2cReadByte(int handle) {
         logger.trace("[I2C::READ] -> [{}]; Byte", handle);
         validateReady();
         validateHandle(handle);
@@ -878,7 +874,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByteData">PIGPIO::i2cWriteByteData</a>
      */
     @Override
-    public int i2cWriteByteData(int handle, int register, byte value) throws IOException {
+    public int i2cWriteByteData(int handle, int register, byte value) {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Byte [{}]", handle ,register, Byte.toUnsignedInt(value));
         validateReady();
         validateHandle(handle);
@@ -897,7 +893,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteWordData">PIGPIO::i2cWriteWordData</a>
      */
     @Override
-    public int i2cWriteWordData(int handle, int register, int value) throws IOException {
+    public int i2cWriteWordData(int handle, int register, int value) {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
         validateReady();
         validateHandle(handle);
@@ -916,7 +912,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByteData">PIGPIO::i2cReadByteData</a>
      */
     @Override
-    public int i2cReadByteData(int handle, int register) throws IOException {
+    public int i2cReadByteData(int handle, int register) {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Byte", handle ,register);
         validateReady();
         validateHandle(handle);
@@ -935,7 +931,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadWordData">PIGPIO::i2cReadWordData</a>
      */
     @Override
-    public int i2cReadWordData(int handle, int register) throws IOException {
+    public int i2cReadWordData(int handle, int register) {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Word", handle ,register);
         validateReady();
         validateHandle(handle);
@@ -955,7 +951,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cProcessCall">PIGPIO::i2cProcessCall</a>
      */
     @Override
-    public int i2cProcessCall(int handle, int register, int value) throws IOException {
+    public int i2cProcessCall(int handle, int register, int value) {
         logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Word [{}]", handle ,register, value);
         validateReady();
         validateHandle(handle);
@@ -974,7 +970,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
      */
     @Override
-    public int i2cWriteBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
+    public int i2cWriteBlockData(int handle, int register, byte[] data, int offset, int length) {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; Block [{} bytes]; offset={}", handle ,register, length, offset);
         validateReady();
         validateHandle(handle);
@@ -995,7 +991,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * The amount of returned data is set by the device.
      */
     @Override
-    public int i2cReadBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException {
+    public int i2cReadBlockData(int handle, int register, byte[] buffer, int offset, int length) {
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; Block [{} bytes]; offset={}", handle, length, offset);
         validateReady();
         validateHandle(handle);
@@ -1019,7 +1015,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * The total number of bytes sent/received must be 32 or less.
      */
     @Override
-    public int i2cBlockProcessCall(int handle, int register, byte[] data, int offset, int length) throws IOException{
+    public int i2cBlockProcessCall(int handle, int register, byte[] data, int offset, int length){
         logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]; offset={}", handle ,register, length, offset);
         validateReady();
         validateHandle(handle);
@@ -1046,7 +1042,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
     @Override
     public int i2cBlockProcessCall(int handle, int register,
                                    byte[] write, int writeOffset, int writeLength,
-                                   byte[] read, int readOffset) throws IOException {
+                                   byte[] read, int readOffset) {
         logger.trace("[I2C::W/R] -> [{}]; Register [{}]; Block [{} bytes]; woff={}, roff={}",
             handle ,register, writeLength, writeOffset, readOffset);
         validateReady();
@@ -1088,7 +1084,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadI2CBlockData">PIGPIO::i2cReadI2CBlockData</a>
      */
     @Override
-    public int i2cReadI2CBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException{
+    public int i2cReadI2CBlockData(int handle, int register, byte[] buffer, int offset, int length){
         logger.trace("[I2C::READ] -> [{}]; Register [{}]; I2C Block [{} bytes]; offset={}", handle ,register, length, offset);
         validateReady();
         validateHandle(handle);
@@ -1109,7 +1105,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
      */
     @Override
-    public int i2cWriteI2CBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException {
+    public int i2cWriteI2CBlockData(int handle, int register, byte[] data, int offset, int length) {
         logger.trace("[I2C::WRITE] -> [{}]; Register [{}]; I2C Block [{} bytes]; offset={}", handle, register, length, offset);
         validateReady();
         validateHandle(handle);
@@ -1130,7 +1126,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadDevice">PIGPIO::i2cReadDevice</a>
      */
     @Override
-    public int i2cReadDevice(int handle, byte[] buffer, int offset, int length) throws IOException {
+    public int i2cReadDevice(int handle, byte[] buffer, int offset, int length) {
         logger.trace("[I2C::READ] -> [{}]; I2C Raw Read [{} bytes]; offset={}", handle, length, offset);
         validateReady();
         validateHandle(handle);
@@ -1150,7 +1146,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
      */
     @Override
-    public int i2cWriteDevice(int handle, byte[] data, int offset, int length) throws IOException {
+    public int i2cWriteDevice(int handle, byte[] data, int offset, int length) {
         logger.trace("[I2C::WRITE] -> [{}]; I2C Raw Write [{} bytes]; offset={}", handle, length, offset);
         validateReady();
         validateHandle(handle);
@@ -1176,7 +1172,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serOpen">PIGPIO::serOpen</a>
      */
     @Override
-    public int serOpen(CharSequence device, int baud, int flags) throws IOException {
+    public int serOpen(CharSequence device, int baud, int flags) {
         logger.trace("[SERIAL::OPEN] -> Open Serial Port [{}] at Baud Rate [{}]", device, baud);
         validateReady();
 
@@ -1201,7 +1197,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serClose">PIGPIO::serClose</a>
      */
     @Override
-    public int serClose(int handle) throws IOException {
+    public int serClose(int handle) {
         logger.trace("[SERIAL::CLOSE] -> HANDLE={}, Close Serial Port", handle);
         validateReady();
         validateHandle(handle);
@@ -1226,7 +1222,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWriteByte">PIGPIO::serWriteByte</a>
      */
     @Override
-    public int serWriteByte(int handle, byte value) throws IOException {
+    public int serWriteByte(int handle, byte value) {
         logger.trace("[SERIAL::WRITE] -> HANDLE={}; Byte [{}]", handle, Byte.toUnsignedInt(value));
         validateReady();
         validateHandle(handle);
@@ -1244,7 +1240,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte">PIGPIO::serReadByte</a>
      */
     @Override
-    public int serReadByte(int handle) throws IOException {
+    public int serReadByte(int handle) {
         logger.trace("[SERIAL::READ] -> [{}]; Byte", handle);
         validateReady();
         validateHandle(handle);
@@ -1262,7 +1258,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
      */
     @Override
-    public int serWrite(int handle, byte[] data, int offset, int length) throws IOException {
+    public int serWrite(int handle, byte[] data, int offset, int length) {
         logger.trace("[SERIAL::WRITE] -> [{}]; Serial Write [{} bytes]", handle, data.length);
         validateReady();
         Objects.checkFromIndexSize(offset, length, data.length);
@@ -1282,7 +1278,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serRead">PIGPIO::serRead</a>
      */
     @Override
-    public int serRead(int handle, byte[] buffer, int offset, int length) throws IOException {
+    public int serRead(int handle, byte[] buffer, int offset, int length) {
         logger.trace("[SERIAL::READ] -> [{}]; Serial Read [{} bytes]", handle, length);
         validateReady();
         Objects.checkFromIndexSize(offset, length, buffer.length);
@@ -1302,7 +1298,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serDataAvailable">PIGPIO::serDataAvailable</a>
      */
     @Override
-    public int serDataAvailable(int handle) throws IOException {
+    public int serDataAvailable(int handle) {
         logger.trace("[SERIAL::AVAIL] -> Get number of bytes available to read");
         validateReady();
         int result = PIGPIO.serDataAvailable(handle);
@@ -1317,7 +1313,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * This function will drain the current serial receive buffer of any lingering bytes.
      */
     @Override
-    public int serDrain(int handle) throws IOException{
+    public int serDrain(int handle){
         logger.trace("[SERIAL::DRAIN] -> Drain any remaining bytes in serial RX buffer");
         validateReady();
 
@@ -1396,7 +1392,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiOpen">PIGPIO::spiOpen</a>
      */
     @Override
-    public int spiOpen(int channel, int baud, int flags) throws IOException {
+    public int spiOpen(int channel, int baud, int flags) {
         logger.trace("[SPI::OPEN] -> Open SPI Channel [{}] at Baud Rate [{}]; Flags=[{}]", channel, baud, flags);
         validateReady();
         int handle = PIGPIO.spiOpen(channel, baud, flags);
@@ -1418,7 +1414,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiClose">PIGPIO::spiClose</a>
      */
     @Override
-    public int spiClose(int handle) throws IOException {
+    public int spiClose(int handle) {
         logger.trace("[SPI::CLOSE] -> HANDLE={}, Close Serial Port", handle);
         validateReady();
         validateHandle(handle);
@@ -1442,7 +1438,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      */
     @Override
-    public int spiWrite(int handle, byte[] data, int offset, int length) throws IOException {
+    public int spiWrite(int handle, byte[] data, int offset, int length) {
         logger.trace("[SPI::WRITE] -> [{}]; Serial Write [{} bytes]", handle, data.length);
         validateReady();
         validateHandle(handle);
@@ -1465,7 +1461,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiRead">PIGPIO::spiRead</a>
      */
     @Override
-    public int spiRead(int handle, byte[] buffer, int offset, int length) throws IOException {
+    public int spiRead(int handle, byte[] buffer, int offset, int length) {
         logger.trace("[SPI::READ] -> [{}]; Serial Read [{} bytes]", handle, length);
         validateReady();
         validateHandle(handle);
@@ -1491,7 +1487,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#spiWrite">PIGPIO::spiWrite</a>
      */
     @Override
-    public int spiXfer(int handle, byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException {
+    public int spiXfer(int handle, byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) {
         logger.trace("[SPI::XFER] -> [{}]; Serial Transfer [{} bytes]", handle, numberOfBytes);
         validateReady();
         validateHandle(handle);

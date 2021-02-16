@@ -49,9 +49,8 @@ public class Main {
      * <p>main.</p>
      *
      * @param args an array of {@link java.lang.String} objects.
-     * @throws java.lang.Exception if any.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         //var output = connectAndExecute("pi", "rpi4b-1g", "raspberry", LinuxCmd.export(21));
         var output = sftp("pi", "rpi3bp", "raspberry", LinuxCmd.export(21));
         logger.info(output);

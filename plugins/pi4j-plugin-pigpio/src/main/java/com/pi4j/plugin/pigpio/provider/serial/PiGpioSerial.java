@@ -58,9 +58,8 @@ public class PiGpioSerial extends SerialBase implements Serial {
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      * @param provider a {@link com.pi4j.io.serial.SerialProvider} object.
      * @param config a {@link com.pi4j.io.serial.SerialConfig} object.
-     * @throws java.io.IOException if any.
      */
-    public PiGpioSerial(PiGpio piGpio, SerialProvider provider, SerialConfig config) throws IOException {
+    public PiGpioSerial(PiGpio piGpio, SerialProvider provider, SerialConfig config) {
         super(provider, config);
 
         // set local reference instance
@@ -89,13 +88,13 @@ public class PiGpioSerial extends SerialBase implements Serial {
 
     /** {@inheritDoc} */
     @Override
-    public int available() throws IOException {
+    public int available()  {
         return piGpio.serDataAvailable(this.handle);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void close() throws IOException {
+    public void close()  {
         piGpio.serClose(this.handle);
         super.close();
     }
@@ -106,13 +105,13 @@ public class PiGpioSerial extends SerialBase implements Serial {
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte b) throws IOException {
+    public int write(byte b) {
         return piGpio.serWriteByte(this.handle, b);
     }
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte[] data, int offset, int length) throws IOException {
+    public int write(byte[] data, int offset, int length) {
         return piGpio.serWrite(this.handle, data, offset, length);
     }
 
@@ -123,13 +122,13 @@ public class PiGpioSerial extends SerialBase implements Serial {
 
     /** {@inheritDoc} */
     @Override
-    public int read() throws IOException {
+    public int read() {
         return piGpio.serReadByte(this.handle);
     }
 
     /** {@inheritDoc} */
     @Override
-    public int read(byte[] buffer, int offset, int length) throws IOException {
+    public int read(byte[] buffer, int offset, int length) {
         return piGpio.serRead(this.handle, buffer, offset, length);
     }
 
@@ -139,7 +138,7 @@ public class PiGpioSerial extends SerialBase implements Serial {
 
     /** {@inheritDoc} */
     @Override
-    public int drain() throws IOException{
+    public int drain() {
         return piGpio.serDrain(this.handle);
     }
 }

@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;
@@ -107,7 +106,7 @@ public class TestI2cUsingTestHarness {
     }
 
     @AfterAll
-    public static void terminate() throws IOException {
+    public static void terminate() {
         logger.info("");
         logger.info("************************************************************************");
         logger.info("TERMINATE TEST (" + TestI2cUsingTestHarness.class.getName() + ") ");
@@ -116,7 +115,7 @@ public class TestI2cUsingTestHarness {
     }
 
     @BeforeEach
-    public void beforeEach() throws IOException {
+    public void beforeEach() {
         // create test harness and PIGPIO instances
         pigpio = TestEnv.createPiGpio();
 
@@ -132,7 +131,7 @@ public class TestI2cUsingTestHarness {
     }
 
     @AfterEach
-    public void afterEach() throws IOException {
+    public void afterEach() {
         // CLOSE I2C
         pigpio.i2cClose(handle);
 
@@ -143,7 +142,7 @@ public class TestI2cUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test register: BYTE (W/R)")
     @Order(1)
-    public void testI2CSingleByteTxRx() throws IOException, InterruptedException {
+    public void testI2CSingleByteTxRx() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C REGISTER READ/WRITE BYTE");
@@ -183,7 +182,7 @@ public class TestI2cUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test register: WORD (W/R)")
     @Order(1)
-    public void testI2CSingleWordTxRx() throws IOException, InterruptedException {
+    public void testI2CSingleWordTxRx() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C REGISTER READ/WRITE WORD");
@@ -223,7 +222,7 @@ public class TestI2cUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test register: WORD process (W/R)")
     @Order(2)
-    public void testI2CProcessWordTxRx() throws IOException, InterruptedException {
+    public void testI2CProcessWordTxRx() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C REGISTER PROCESS (W/R) <WORD>");
@@ -252,7 +251,7 @@ public class TestI2cUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test register: BLOCK (W/R)")
     @Order(3)
-    public void testI2CBlockDataTxRx() throws IOException, InterruptedException {
+    public void testI2CBlockDataTxRx() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C REGISTER READ/WRITE BLOCK");
@@ -294,7 +293,7 @@ public class TestI2cUsingTestHarness {
     @DisplayName("I2C :: Test register: BLOCK process (W/R)")
     @Order(4)
     @Disabled("This test is disabled until we can research the problem with the 'I2CPK' command response.")
-    public void testI2CProcessBlockTxRx() throws IOException, InterruptedException {
+    public void testI2CProcessBlockTxRx() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C REGISTER PROCESS (W/R) <BLOCK>");
@@ -330,7 +329,7 @@ public class TestI2cUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test register: I2C BLOCK (W/R)")
     @Order(5)
-    public void testI2CBlockI2CDataTxRx() throws IOException, InterruptedException, NoSuchAlgorithmException {
+    public void testI2CBlockI2CDataTxRx() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C REGISTER READ/WRITE BLOCK");

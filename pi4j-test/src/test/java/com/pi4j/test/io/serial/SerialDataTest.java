@@ -33,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
-import com.pi4j.exception.LifecycleException;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.plugin.mock.provider.serial.MockSerialProvider;
 import org.junit.jupiter.api.*;
@@ -59,7 +58,7 @@ public class SerialDataTest {
     private static String SAMPLE_STRING = "Hello World!";
 
     @BeforeAll
-    public static void beforeAllTests() throws Exception {
+    public static void beforeAllTests() {
         // Initialize Pi4J with Mock Serial Provider only
         pi4j = Pi4J.newContextBuilder()
                 .add(MockSerialProvider.newInstance())
@@ -73,7 +72,7 @@ public class SerialDataTest {
     }
 
     @AfterAll
-    public static void afterAllTests() throws IOException, LifecycleException {
+    public static void afterAllTests() {
             // close serial port
             if(serial.isOpen()) serial.close();
 
@@ -88,7 +87,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Verify Serial Instance")
     @Order(1)
     @Test
-    public void testSerialInstance() throws Exception {
+    public void testSerialInstance() {
         // ensure that the serial instance is not null;
         assertNotNull(serial);
     }
@@ -96,7 +95,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Write Single Byte")
     @Order(2)
     @Test
-    public void writeByte() throws Exception {
+    public void writeByte() {
         // write a single byte to the serial device
         serial.write(SAMPLE_BYTE);
     }
@@ -105,7 +104,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Write Byte Array")
     @Order(3)
     @Test
-    public void writeByteArray() throws Exception {
+    public void writeByteArray() {
         // write an array of bytes to the serial device
         serial.write(SAMPLE_BYTE_ARRAY);
     }
@@ -113,7 +112,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Write Byte Buffer")
     @Order(4)
     @Test
-    public void writeByteBuffer() throws Exception {
+    public void writeByteBuffer() {
         // write a buffer of data bytes to the serial device.
         serial.write(SAMPLE_BUFFER);
     }
@@ -121,7 +120,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Write ASCII String")
     @Order(5)
     @Test
-    public void writeString() throws Exception {
+    public void writeString() {
         // write a string of data to the serial device.
         serial.write(SAMPLE_STRING);
     }
@@ -129,7 +128,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Write Byte Stream")
     @Order(6)
     @Test
-    public void writeStream() throws Exception {
+    public void writeStream() {
         // write a stream to the serial device
         ByteArrayInputStream bis = new ByteArrayInputStream(SAMPLE_BYTE_ARRAY);
         serial.write(bis);
@@ -138,7 +137,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Write Output Stream")
     @Order(7)
     @Test
-    public void writeOutStream() throws Exception {
+    public void writeOutStream() throws IOException {
         // write directly to the output stream of the serial device
         serial.out().write(SAMPLE_BYTE_ARRAY);
     }
@@ -146,7 +145,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Write Char Array")
     @Order(9)
     @Test
-    public void writeCharArray() throws Exception {
+    public void writeCharArray() {
         // write char array to the serial device
         serial.write(SAMPLE_CHAR_ARRAY);
     }
@@ -158,7 +157,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Read Single Byte")
     @Order(11)
     @Test
-    public void readByte() throws Exception {
+    public void readByte() {
         // read single byte from serial device and check for expected value
         byte b = (byte)serial.read();
         assertEquals(SAMPLE_BYTE, b);
@@ -167,7 +166,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Read Byte Array")
     @Order(12)
     @Test
-    public void readByteArray() throws Exception {
+    public void readByteArray() {
         // read an array of data bytes from the serial device and check for expected value
         byte byteArray[] = new byte[SAMPLE_BYTE_ARRAY.length];
         serial.read(byteArray, 0, byteArray.length);
@@ -177,7 +176,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Read Byte Buffer")
     @Order(13)
     @Test
-    public void readByteBuffer() throws Exception {
+    public void readByteBuffer() {
         // read a buffer of data bytes from the serial device and check for expected value
         ByteBuffer buffer = ByteBuffer.allocate(SAMPLE_BUFFER.capacity());
         serial.read(buffer, 0, buffer.capacity());
@@ -187,7 +186,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Read ASCII String")
     @Order(14)
     @Test
-    public void readString() throws Exception {
+    public void readString() {
         // read a string of data from the serial device and check for expected value
         String testString = serial.readString(SAMPLE_STRING.length());
         assertEquals(SAMPLE_STRING, testString);
@@ -196,7 +195,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Read Byte Stream")
     @Order(15)
     @Test
-    public void readStream() throws Exception {
+    public void readStream() {
         // read a stream of data from the serial device and check for expected value
         byte[] byteArray = new byte[SAMPLE_BYTE_ARRAY.length];
         serial.read(byteArray);
@@ -206,7 +205,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Read Input Stream")
     @Order(16)
     @Test
-    public void readInputStream() throws Exception {
+    public void readInputStream() throws IOException {
         // read  the input stream directly from serial device and check for expected value
         InputStream is = serial.in();
         byte[] byteArray = new byte[SAMPLE_BYTE_ARRAY.length];
@@ -217,7 +216,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Read Char Array")
     @Order(17)
     @Test
-    public void readCharArray() throws Exception {
+    public void readCharArray() {
         // read an array of data chars from the serial device and check for expected value
         char charArray[] = new char[SAMPLE_CHAR_ARRAY.length];
         serial.read(charArray, 0, charArray.length);
@@ -231,7 +230,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Write/Read Char Buffer (1)")
     @Order(21)
     @Test
-    public void readCharBuffer1() throws Exception {
+    public void readCharBuffer1() {
 
         // drain any existing data in the serial RX buffer
         serial.drain();
@@ -253,7 +252,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Write/Read Char Buffer (2)")
     @Order(22)
     @Test
-    public void readCharBuffer2() throws Exception {
+    public void readCharBuffer2() {
 
         // drain any existing data in the serial RX buffer
         serial.drain();
@@ -286,7 +285,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Write/Read Byte Buffer (1)")
     @Order(23)
     @Test
-    public void readByteBuffer1() throws Exception {
+    public void readByteBuffer1() {
 
         // drain any existing data in the serial RX buffer
         serial.drain();
@@ -309,7 +308,7 @@ public class SerialDataTest {
     @DisplayName("SERIAL :: Write/Read Byte Buffer (2)")
     @Order(24)
     @Test
-    public void readByteBuffer2() throws Exception {
+    public void readByteBuffer2() {
 
         // drain any existing data in the serial RX buffer
         serial.drain();
@@ -344,7 +343,7 @@ public class SerialDataTest {
     }
 
 //    @Test
-//    public void testRawDataStream() throws Exception {
+//    public void testRawDataStream() {
 //        // create random set of sample data
 //        Random rand = new Random();
 //        byte sample[] = new byte[1024];

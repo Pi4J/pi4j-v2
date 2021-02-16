@@ -103,11 +103,11 @@ public class TestSoftwarePwmUsingTestHarness {
         logger.info("");
 
         // shutdown connection to test harness
-        harness.shutdown();;
+        harness.shutdown();
     }
 
     @BeforeEach
-    public void beforeEach() throws Exception {
+    public void beforeEach() {
 
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
         piGpio = TestEnv.createPiGpio();
@@ -123,7 +123,7 @@ public class TestSoftwarePwmUsingTestHarness {
     }
 
     @AfterEach
-    public void afterEach() throws Exception {
+    public void afterEach() {
         // shutdown the PiGpio library after each test
         piGpio.shutdown();
     }
@@ -131,49 +131,49 @@ public class TestSoftwarePwmUsingTestHarness {
     @Test
     @Order(1)
     @DisplayName("PWM :: Test Software PWM @ 50 Hz")
-    public void testPwmAt50Hertz() throws Exception {
+    public void testPwmAt50Hertz() {
         testPwm(50);
     }
 
     @Test
     @Order(2)
     @DisplayName("PWM :: Test Software PWM @ 100 Hz")
-    public void testPwmAt100Hertz() throws Exception {
+    public void testPwmAt100Hertz() {
         testPwm(100);
     }
 
     @Test
     @Order(3)
     @DisplayName("PWM :: Test Software PWM @ 700 Hz")
-    public void testPwmAt700Hertz() throws Exception {
+    public void testPwmAt700Hertz() {
         testPwm(700);
     }
 
     @Test
     @Order(4)
     @DisplayName("PWM :: Test Software PWM @ 1000 Hz (1 KHz)")
-    public void testPwmAt1000Hertz() throws Exception {
+    public void testPwmAt1000Hertz() {
         testPwm(1000);
     }
 
     @Test
     @Order(5)
     @DisplayName("PWM :: Test Software PWM @ 5000 Hz (5 KHz)")
-    public void testPwmAt5000Hertz() throws Exception {
+    public void testPwmAt5000Hertz() {
         testPwm(5000);
     }
 
     @Test
     @Order(6)
     @DisplayName("PWM :: Test Software PWM @ 10000 Hz (10 KHz)")
-    public void testPwmAt10000Hertz() throws Exception {
+    public void testPwmAt10000Hertz() {
         testPwm(10000);
     }
 
-    public void testPwm(int frequency) throws Exception {
+    public void testPwm(int frequency) {
         testPwm(frequency, 50); // 80% duty-cycle by default
     }
-    public void testPwm(int frequency, int dutyCycle) throws Exception {
+    public void testPwm(int frequency, int dutyCycle) {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST PWM SIGNALS AT " + frequency + " HZ");
@@ -200,27 +200,31 @@ public class TestSoftwarePwmUsingTestHarness {
             logger.info(" (PWM) >> SET DUTY-CYCLE PERCENT = " + dutyCycle + "%");
             logger.info(" (PWM) << GET ACTUAL FREQUENCY   = " + pwm.actualFrequency());
 
-            Thread.sleep(10);
+            try {
+                Thread.sleep(10);
 
-            // skip measuring pin 9 frequency; something is not working here on the test harness
-            if(p != 9) {
+                // skip measuring pin 9 frequency; something is not working here on the test harness
+                if(p != 9) {
 
-                // test once ..
-                if (measureFrequency(pwm) == false) {
-                    // test twice ..
-                    Thread.sleep(1000);
+                    // test once ..
                     if (measureFrequency(pwm) == false) {
-                        // test thrice ..
-                        Thread.sleep(2000);
+                        // test twice ..
+                        Thread.sleep(1000);
                         if (measureFrequency(pwm) == false) {
-                            // turn off PWM pin
-                            pwm.off();
+                            // test thrice ..
+                            Thread.sleep(2000);
+                            if (measureFrequency(pwm) == false) {
+                                // turn off PWM pin
+                                pwm.off();
 
-                            // give up and fail
-                            fail("PWM MEASURED FREQUENCY OUT OF ACCEPTABLE MARGIN OF ERROR");
+                                // give up and fail
+                                fail("PWM MEASURED FREQUENCY OUT OF ACCEPTABLE MARGIN OF ERROR");
+                            }
                         }
                     }
                 }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
 
             // turn off PWM pin
@@ -228,23 +232,27 @@ public class TestSoftwarePwmUsingTestHarness {
         }
     }
 
-    private boolean measureFrequency(Pwm pwm) throws Exception {
-        int frequency = pwm.actualFrequency();
-        TestHarnessFrequency measured = harness.getFrequency(pwm.address());
-        float deviation = (measured.frequency - frequency) * 100/(float)frequency;
-        logger.info(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency + "; (EXPECTED=" + frequency + "; DEVIATION: " + deviation + "%)");
+    private boolean measureFrequency(Pwm pwm) {
+        try {
+            int frequency = pwm.actualFrequency();
+            TestHarnessFrequency measured = harness.getFrequency(pwm.address());
+            float deviation = (measured.frequency - frequency) * 100/(float)frequency;
+            logger.info(" (TEST)  << MEASURED FREQUENCY = " + measured.frequency + "; (EXPECTED=" + frequency + "; DEVIATION: " + deviation + "%)");
 
-        // we allow a 25% margin of error, the testing harness uses a simple pulse counter to crudely
-        // measure the PWM signal, its not very accurate but should provide sufficient validation testing
-        // just to verify the applied PWM signal is close to the expected frequency
-        // calculate margin of error offset value
-        long marginOfError = Math.round(frequency * .25);
+            // we allow a 25% margin of error, the testing harness uses a simple pulse counter to crudely
+            // measure the PWM signal, its not very accurate but should provide sufficient validation testing
+            // just to verify the applied PWM signal is close to the expected frequency
+            // calculate margin of error offset value
+            long marginOfError = Math.round(frequency * .25);
 
-        // test measured value against HI/LOW offsets to determine acceptable range
-        if(measured.frequency < frequency-marginOfError) return false;
-        if(measured.frequency > frequency+marginOfError) return false;
+            // test measured value against HI/LOW offsets to determine acceptable range
+            if(measured.frequency < frequency-marginOfError) return false;
+            if(measured.frequency > frequency+marginOfError) return false;
 
-        // success
-        return true;
+            // success
+            return true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

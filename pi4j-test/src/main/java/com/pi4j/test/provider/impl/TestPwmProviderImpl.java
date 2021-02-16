@@ -66,7 +66,7 @@ public class TestPwmProviderImpl extends PwmProviderBase implements TestPwmProvi
 
     /** {@inheritDoc} */
     @Override
-    public Pwm create(PwmConfig config) throws Exception {
+    public Pwm create(PwmConfig config) {
         return null;
     }
 }

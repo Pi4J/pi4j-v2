@@ -30,5 +30,5 @@ package com.pi4j.library.pigpio.internal;
  */
 
 public interface PiGpioIsrCallbackEx {
-    void call(int pin, int state, long tick, Object userdata) throws Exception;
+    void call(int pin, int state, long tick, Object userdata);
 }

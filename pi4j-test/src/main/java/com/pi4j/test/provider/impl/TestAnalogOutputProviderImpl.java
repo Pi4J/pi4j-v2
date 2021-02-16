@@ -67,7 +67,7 @@ public class TestAnalogOutputProviderImpl extends AnalogOutputProviderBase imple
 
     /** {@inheritDoc} */
     @Override
-    public AnalogOutput create(AnalogOutputConfig config) throws Exception {
+    public AnalogOutput create(AnalogOutputConfig config) {
         return new TestAnalogOutput();
     }
 }

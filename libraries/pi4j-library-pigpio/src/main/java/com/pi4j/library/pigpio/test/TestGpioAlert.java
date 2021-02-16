@@ -51,9 +51,8 @@ public class TestGpioAlert {
      * <p>main.</p>
      *
      * @param args an array of {@link String} objects.
-     * @throws Exception if any.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         String loglevel = "INFO";
         if(args != null && args.length > 0){
             Level lvl = Level.valueOf(args[0].toUpperCase());
@@ -80,9 +79,9 @@ public class TestGpioAlert {
 
         piGpio.addPinListener(GPIO_PIN, new PiGpioStateChangeListener() {
             @Override
-            public void onChange(PiGpioStateChangeEvent event) throws Exception {
+            public void onChange(PiGpioStateChangeEvent event) {
                 logger.info("RECEIVED ALERT EVENT! " + event);
-                throw new IOException("TEST");
+                throw new PiGpioException("TEST");
             }
         });
 

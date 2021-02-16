@@ -29,8 +29,6 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
-import java.io.IOException;
-
 /**
  * <p>PiGpio_PWM interface.</p>
  *
@@ -48,9 +46,8 @@ public interface PiGpio_PWM {
      * @param pin user_gpio: 0-31
      * @param dutyCycle dutycycle: 0-range
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioPWM">PIGPIO::gpioPWM</a>
-     * @throws java.io.IOException if any.
      */
-    void gpioPWM(int pin, int dutyCycle) throws IOException;
+    void gpioPWM(int pin, int dutyCycle);
 
     /**
      * Starts PWM on the GPIO, duty-cycle between 0 (off) and range (fully on). Range defaults to 255.
@@ -61,9 +58,8 @@ public interface PiGpio_PWM {
      * @param pin user_gpio: 0-31
      * @param dutyCycle dutycycle: 0-range
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioPWM">PIGPIO::gpioPWM</a>
-     * @throws java.io.IOException if any.
      */
-    default void gpioSetPWMdutycycle(int pin, int dutyCycle) throws IOException{
+    default void gpioSetPWMdutycycle(int pin, int dutyCycle){
         gpioPWM(pin,dutyCycle);
     }
 
@@ -80,9 +76,8 @@ public interface PiGpio_PWM {
      * @param pin user_gpio: 0-31
      * @return Returns between 0 (off) and range (fully on) if OK.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMdutycycle">PIGPIO::gpioGetPWMdutycycle</a>
-     * @throws java.io.IOException if any.
      */
-    int gpioGetPWMdutycycle(int pin) throws IOException;
+    int gpioGetPWMdutycycle(int pin);
 
 
     /**
@@ -112,9 +107,8 @@ public interface PiGpio_PWM {
      * @param range range: 25-40000
      * @return real range for the given GPIO's frequency if OK.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange">PIGPIO::gpioSetPWMrange</a>
-     * @throws java.io.IOException if any.
      */
-    int gpioSetPWMrange(int pin, int range) throws IOException;
+    int gpioSetPWMrange(int pin, int range);
 
     /**
      * Returns the duty-cycle range used for the GPIO if OK.
@@ -123,9 +117,8 @@ public interface PiGpio_PWM {
      * @param pin user_gpio: 0-31
      * @return duty-cycle range
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrange">PIGPIO::gpioGetPWMrange</a>
-     * @throws java.io.IOException if any.
      */
-    int gpioGetPWMrange(int pin) throws IOException;
+    int gpioGetPWMrange(int pin);
 
     /**
      * Returns the real range used for the GPIO if OK.
@@ -136,9 +129,8 @@ public interface PiGpio_PWM {
      * @param pin user_gpio: 0-31
      * @return real range used for the GPIO if OK.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMrealRange">PIGPIO::gpioGetPWMrealRange</a>
-     * @throws java.io.IOException if any.
      */
-    int gpioGetPWMrealRange(int pin) throws IOException;
+    int gpioGetPWMrealRange(int pin);
 
     /**
      * Sets the frequency in hertz to be used for the GPIO.
@@ -180,9 +172,8 @@ public interface PiGpio_PWM {
      * @param frequency frequency: $gt;=0
      * @return Returns the numerically closest frequency if OK
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPWMrange">PIGPIO::gpioSetPWMrange</a>
-     * @throws java.io.IOException if any.
      */
-    int gpioSetPWMfrequency(int pin, int frequency) throws IOException;
+    int gpioSetPWMfrequency(int pin, int frequency);
 
 
     /**
@@ -198,9 +189,8 @@ public interface PiGpio_PWM {
      * @param pin user_gpio: 0-31
      * @return Returns the frequency (in hertz) used for the GPIO if OK.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetPWMfrequency">PIGPIO::gpioGetPWMfrequency</a>
-     * @throws java.io.IOException if any.
      */
-    int gpioGetPWMfrequency(int pin) throws IOException;
+    int gpioGetPWMfrequency(int pin);
 
 
     /**
@@ -239,7 +229,6 @@ public interface PiGpio_PWM {
      * @param pin a supported hardware PWM pin
      * @param frequency  0 (off) or 1-125M (1-187.5M for the BCM2711)
      * @param dutyCycle  0 (off) to 1000000 (1M)(fully on)
-     * @throws java.io.IOException if any.
      */
-    void gpioHardwarePWM(int pin, int frequency, int dutyCycle) throws IOException;
+    void gpioHardwarePWM(int pin, int frequency, int dutyCycle);
 }

@@ -38,7 +38,6 @@ import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayDeque;
 import java.util.Objects;
@@ -79,13 +78,13 @@ public class MockSerial extends SerialBase implements Serial {
 
     /** {@inheritDoc} */
     @Override
-    public int available() throws IOException {
+    public int available() {
         return raw.size();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void close() throws IOException {
+    public void close() {
         logger.info(" [");
         logger.info(Mock.SERIAL_PROVIDER_NAME);
         logger.info("::");
@@ -97,7 +96,7 @@ public class MockSerial extends SerialBase implements Serial {
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte b) throws IOException {
+    public int write(byte b) {
         raw.add(b);
         logger.info(" [");
         logger.info(Mock.SERIAL_PROVIDER_NAME);
@@ -111,7 +110,7 @@ public class MockSerial extends SerialBase implements Serial {
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte[] data, int offset, int length) throws IOException {
+    public int write(byte[] data, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, data.length);
         for(int p = offset; p-offset < length; p++){
             raw.add(data[p]); // add to internal buffer
@@ -128,7 +127,7 @@ public class MockSerial extends SerialBase implements Serial {
 
     /** {@inheritDoc} */
     @Override
-    public int write(Charset charset, CharSequence data) throws IOException {
+    public int write(Charset charset, CharSequence data) {
         byte[] buffer = data.toString().getBytes(charset);
         for(int p = 0; p < buffer.length; p++){
             raw.add(buffer[p]); // add to internal buffer
@@ -145,7 +144,7 @@ public class MockSerial extends SerialBase implements Serial {
 
     /** {@inheritDoc} */
     @Override
-    public int read() throws IOException {
+    public int read() {
         if(raw.isEmpty()) return -1;
         byte b = raw.pop();
         logger.info(" [");
@@ -160,14 +159,14 @@ public class MockSerial extends SerialBase implements Serial {
 
     /** {@inheritDoc} */
     @Override
-    public int read(byte[] buffer, int offset, int length) throws IOException{
+    public int read(byte[] buffer, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, buffer.length);
 
         if(raw.isEmpty()) return -1;
         int counter = 0;
         for(int p = 0; p < length; p++) {
             if(p+offset > buffer.length) break;
-            if(raw.isEmpty()) break;;
+            if(raw.isEmpty()) break;
             buffer[offset + p] = raw.pop();
             counter++;
         }

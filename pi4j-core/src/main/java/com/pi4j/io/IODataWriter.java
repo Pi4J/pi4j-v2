@@ -37,6 +37,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
+import com.pi4j.exception.Pi4JException;
+
 /**
  * Data Writer Interface for Pi4J Data Communications
  *
@@ -57,19 +59,17 @@ public interface IODataWriter {
      * Write a single raw byte value.
      *
      * @param b byte to be written
-     * @throws java.io.IOException thrown on write error
      * @return a int.
      */
-    int write(byte b) throws IOException;
+    int write(byte b);
 
     /**
      * Write a single raw byte value.
      *
      * @param b integer value that will be cast to a byte and written
-     * @throws java.io.IOException thrown on write error
      * @return a int.
      */
-    default int write(int b) throws IOException{
+    default int write(int b) {
         return write((byte)b);
     }
 
@@ -84,9 +84,8 @@ public interface IODataWriter {
      * @param offset offset in data buffer to start at
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    int write(byte[] data, int offset, int length) throws IOException;
+    int write(byte[] data, int offset, int length);
 
     /**
      * Write an array of byte values starting with the first byte in the array up to the provided length.
@@ -94,9 +93,8 @@ public interface IODataWriter {
      * @param data data array of bytes to be written
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(byte[] data, int length) throws IOException{
+    default int write(byte[] data, int length) {
         return write(data, 0, length);
     }
 
@@ -105,9 +103,8 @@ public interface IODataWriter {
      *
      * @param data data array of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(byte ... data) throws IOException {
+    default int write(byte... data) {
         return write(data, 0, data.length);
     }
 
@@ -116,14 +113,17 @@ public interface IODataWriter {
      *
      * @param data data array of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(byte[] ... data) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        for (byte[] ba : data) {
-            os.write(ba);
+    default int write(byte[]... data) {
+        try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            for (byte[] ba : data) {
+                os.write(ba);
+            }
+            return write(os.toByteArray());
+        } catch (IOException e) {
+            throw new Pi4JException(e);
         }
-        return write(os.toByteArray());
     }
 
     /**
@@ -131,14 +131,17 @@ public interface IODataWriter {
      *
      * @param data collection of byte array of data to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(Collection<byte[]> data) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        for (byte[] ba : data) {
-            os.write(ba);
+    default int write(Collection<byte[]> data) {
+        try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            for (byte[] ba : data) {
+                os.write(ba);
+            }
+            return write(os.toByteArray());
+        } catch (IOException e) {
+            throw new Pi4JException(e);
         }
-        return write(os.toByteArray());
     }
 
     // ------------------------------------------------------------------------------------
@@ -160,9 +163,8 @@ public interface IODataWriter {
      * @param offset offset in data buffer to start at
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(ByteBuffer buffer, int offset, int length) throws IOException{
+    default int write(ByteBuffer buffer, int offset, int length) {
         // perform bounds checking on requested length versus total remaining size available
         if(length > (buffer.capacity()-offset)){
             length = buffer.capacity()-offset;
@@ -184,9 +186,8 @@ public interface IODataWriter {
      * @param buffer byte buffer of data to be written
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(ByteBuffer buffer, int length) throws IOException{
+    default int write(ByteBuffer buffer, int length) {
         // if the buffer position is already at the buffer limit, then flip the buffer for
         //reading data from the buffer at the starting position to write to the I/O device
         if(buffer.position() == buffer.limit()) buffer.flip();
@@ -211,9 +212,8 @@ public interface IODataWriter {
      *
      * @param buffer byte buffer of data to be written (from current position to limit)
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(ByteBuffer buffer) throws IOException{
+    default int write(ByteBuffer buffer) {
         // if the buffer position is already at the buffer limit, then flip the buffer for
         //reading data from the buffer at the starting position to write to the I/O device
         if(buffer.position() == buffer.limit()) buffer.flip();
@@ -235,19 +235,22 @@ public interface IODataWriter {
      *
      * @param buffer byte buffer of data to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(ByteBuffer ... buffer) throws IOException{
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        for (ByteBuffer bb : buffer) {
-            // if the buffer position is already at the buffer limit, then flip the buffer for
-            //reading data from the buffer at the starting position to write to the I/O device
-            if(bb.position() == bb.limit()) bb.flip();
+    default int write(ByteBuffer ... buffer) {
+        try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            for (ByteBuffer bb : buffer) {
+                // if the buffer position is already at the buffer limit, then flip the buffer for
+                //reading data from the buffer at the starting position to write to the I/O device
+                if(bb.position() == bb.limit()) bb.flip();
 
-            // write the byte array to the byte output stream
-            os.write(bb.array());
+                // write the byte array to the byte output stream
+                os.write(bb.array());
+            }
+            return write(os.toByteArray());
+        } catch (IOException e) {
+            throw new Pi4JException(e);
         }
-        return write(os.toByteArray());
     }
 
     // ------------------------------------------------------------------------------------
@@ -259,10 +262,13 @@ public interface IODataWriter {
      *
      * @param stream stream of data to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(InputStream stream) throws IOException{
-        return write(stream.readAllBytes());
+    default int write(InputStream stream) {
+        try {
+            return write(stream.readAllBytes());
+        } catch (IOException e) {
+            throw new Pi4JException(e);
+        }
     }
 
     /**
@@ -271,10 +277,13 @@ public interface IODataWriter {
      * @param stream stream of data to be written
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(InputStream stream, int length) throws IOException{
-        return write(stream.readNBytes(length));
+    default int write(InputStream stream, int length) {
+        try {
+            return write(stream.readNBytes(length));
+        } catch (IOException e) {
+            throw new Pi4JException(e);
+        }
     }
 
     /**
@@ -282,14 +291,17 @@ public interface IODataWriter {
      *
      * @param stream stream of data to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(InputStream ... stream) throws IOException{
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        for (InputStream is : stream) {
-            os.write(is.readAllBytes());
+    default int write(InputStream ... stream) {
+        try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            for (InputStream is : stream) {
+                os.write(is.readAllBytes());
+            }
+            return write(os.toByteArray());
+        } catch (IOException e) {
+            throw new Pi4JException(e);
         }
-        return write(os.toByteArray());
     }
 
     // ------------------------------------------------------------------------------------
@@ -302,9 +314,8 @@ public interface IODataWriter {
      * @param data string data (US_ASCII) to be written
      * @param charset character set to use for byte encoding
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(Charset charset, CharSequence data) throws IOException{
+    default int write(Charset charset, CharSequence data) {
         return write(data.toString().getBytes(charset));
     }
 
@@ -314,9 +325,8 @@ public interface IODataWriter {
      * @param data string data (US_ASCII) to be written
      * @param charset character set to use for byte encoding
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(Charset charset, CharSequence ... data) throws IOException{
+    default int write(Charset charset, CharSequence ... data) {
         StringBuilder builder = new StringBuilder();
         for(var d : data){
             builder.append(d);
@@ -331,16 +341,19 @@ public interface IODataWriter {
      * @param charset character set to use for byte encoding
      * @param data collection of character sequences of data to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(Charset charset, Collection<CharSequence> ... data) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        for (Collection<CharSequence> csc : data) {
-            for (CharSequence cs : csc) {
-                os.write(cs.toString().getBytes(charset));
+    default int write(Charset charset, Collection<CharSequence> ... data) {
+        try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            for (Collection<CharSequence> csc : data) {
+                for (CharSequence cs : csc) {
+                    os.write(cs.toString().getBytes(charset));
+                }
             }
+            return write(os.toByteArray());
+        } catch (IOException e) {
+            throw new Pi4JException(e);
         }
-        return write(os.toByteArray());
     }
 
     /**
@@ -348,9 +361,8 @@ public interface IODataWriter {
      *
      * @param data string data (US_ASCII) to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(CharSequence data) throws IOException{
+    default int write(CharSequence data) {
         return write(StandardCharsets.US_ASCII, data);
     }
 
@@ -359,9 +371,8 @@ public interface IODataWriter {
      *
      * @param data string data (US_ASCII) to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(CharSequence ... data) throws IOException{
+    default int write(CharSequence ... data) {
         return write(StandardCharsets.US_ASCII, data);
     }
 
@@ -370,9 +381,8 @@ public interface IODataWriter {
      *
      * @param data collection of character sequences of data to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(Collection<CharSequence> ... data) throws IOException {
+    default int write(Collection<CharSequence> ... data) {
         return write(StandardCharsets.US_ASCII, data);
     }
 
@@ -388,9 +398,8 @@ public interface IODataWriter {
      * @param offset offset in data character array to start at
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(char[] data, int offset, int length) throws IOException {
+    default int write(char[] data, int offset, int length) {
         return write(StandardCharsets.US_ASCII, data, offset, length);
     }
 
@@ -401,9 +410,8 @@ public interface IODataWriter {
      * @param data ASCII character array used for data write
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(char[] data, int length) throws IOException {
+    default int write(char[] data, int length) {
         return write(StandardCharsets.US_ASCII, data, length);
     }
 
@@ -412,9 +420,8 @@ public interface IODataWriter {
      *
      * @param data ASCII character array used for data write
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(char ... data) throws IOException{
+    default int write(char ... data) {
         return write(StandardCharsets.US_ASCII, data);
     }
 
@@ -427,9 +434,8 @@ public interface IODataWriter {
      * @param offset offset in data character array to start at
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(Charset charset, char[] data, int offset, int length) throws IOException {
+    default int write(Charset charset, char[] data, int offset, int length) {
         ByteBuffer bb = charset.encode(CharBuffer.wrap(data, offset, length));
         return write(bb.array());
     }
@@ -442,9 +448,8 @@ public interface IODataWriter {
      * @param data ASCII character array used for data write
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(Charset charset, char[] data, int length) throws IOException {
+    default int write(Charset charset, char[] data, int length) {
         ByteBuffer bb = charset.encode(CharBuffer.wrap(data, 0, length));
         return write(bb.array());
     }
@@ -455,9 +460,8 @@ public interface IODataWriter {
      * @param data character array (1 or more chars) to be written
      * @param charset character set to use for byte encoding
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(Charset charset, char ... data) throws IOException{
+    default int write(Charset charset, char ... data) {
         ByteBuffer bb = charset.encode(CharBuffer.wrap(data));
         return write(bb.array());
     }
@@ -468,16 +472,19 @@ public interface IODataWriter {
      *
      * @param data collection of character sequences of data to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      * @param charset a {@link java.nio.charset.Charset} object.
      */
-    default int write(Charset charset, Collection<char[]> data) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        for (char[] ca : data) {
-            ByteBuffer bb = charset.encode(CharBuffer.wrap(ca));
-            os.write(bb.array());
+    default int write(Charset charset, Collection<char[]> data) {
+        try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            for (char[] ca : data) {
+                ByteBuffer bb = charset.encode(CharBuffer.wrap(ca));
+                os.write(bb.array());
+            }
+            return write(os.toByteArray());
+        } catch (IOException e) {
+            throw new Pi4JException(e);
         }
-        return write(os.toByteArray());
     }
 
     // ------------------------------------------------------------------------------------
@@ -499,9 +506,8 @@ public interface IODataWriter {
      * @param offset offset in data character array to start at
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(CharBuffer buffer, int offset, int length) throws IOException {
+    default int write(CharBuffer buffer, int offset, int length) {
         return write(StandardCharsets.US_ASCII, buffer, offset, length);
     }
 
@@ -538,9 +544,8 @@ public interface IODataWriter {
      *
      * @param buffer ASCII character buffer used for data write
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(CharBuffer buffer) throws IOException {
+    default int write(CharBuffer buffer) {
         return write(StandardCharsets.US_ASCII, buffer);
     }
 
@@ -557,9 +562,8 @@ public interface IODataWriter {
      *
      * @param buffer ASCII character buffer used for data write
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(CharBuffer ... buffer) throws IOException {
+    default int write(CharBuffer ... buffer) {
         return write(StandardCharsets.US_ASCII, buffer);
     }
 
@@ -580,9 +584,8 @@ public interface IODataWriter {
      * @param offset offset in data character array to start at
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(Charset charset, CharBuffer buffer, int offset, int length) throws IOException {
+    default int write(Charset charset, CharBuffer buffer, int offset, int length) {
         // perform bounds checking on requested length versus total remaining size available
         if(length > (buffer.capacity()-offset)){
             length = buffer.capacity()-offset;
@@ -609,9 +612,8 @@ public interface IODataWriter {
      * @param buffer character buffer used for data write
      * @param length number of character in character array to be written
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(Charset charset, CharBuffer buffer, int length) throws IOException {
+    default int write(Charset charset, CharBuffer buffer, int length) {
         // if the buffer position is already at the buffer limit, then flip the buffer for
         //reading data from the buffer at the starting position to write to the I/O device
         if(buffer.position() == buffer.limit()) buffer.flip();
@@ -638,9 +640,8 @@ public interface IODataWriter {
      * @param charset character set to use for byte encoding
      * @param buffer character buffer used for data write
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(Charset charset, CharBuffer buffer) throws IOException {
+    default int write(Charset charset, CharBuffer buffer) {
         // if the buffer position is already at the buffer limit, then flip the buffer for
         //reading data from the buffer at the starting position to write to the I/O device
         if(buffer.position() == buffer.limit()) buffer.flip();
@@ -664,22 +665,25 @@ public interface IODataWriter {
      * @param charset character set to use for byte encoding
      * @param buffer character buffer used for data write
      * @return The number of bytes (not characters) written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int write(Charset charset, CharBuffer ... buffer) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        for (CharBuffer cb : buffer) {
-            // if the buffer position is already at the buffer limit, then flip the buffer for
-            //reading data from the buffer at the starting position to write to the I/O device
-            if(cb.position() == cb.limit()) cb.flip();
+    default int write(Charset charset, CharBuffer ... buffer) {
+        try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            for (CharBuffer cb : buffer) {
+                // if the buffer position is already at the buffer limit, then flip the buffer for
+                //reading data from the buffer at the starting position to write to the I/O device
+                if(cb.position() == cb.limit()) cb.flip();
 
-            // encode the contents of the character buffer from the current position up to the limit
-            ByteBuffer bb = charset.encode(CharBuffer.wrap(cb.array(), cb.position(), cb.remaining()));
+                // encode the contents of the character buffer from the current position up to the limit
+                ByteBuffer bb = charset.encode(CharBuffer.wrap(cb.array(), cb.position(), cb.remaining()));
 
-            // write the encoded byte buffer to the byte array output stream
-            os.write(bb.array());
+                // write the encoded byte buffer to the byte array output stream
+                os.write(bb.array());
+            }
+            return write(os.toByteArray());
+        } catch (IOException e) {
+            throw new Pi4JException(e);
         }
-        return write(os.toByteArray());
     }
 
 
@@ -696,17 +700,17 @@ public interface IODataWriter {
         var t = this;
         return new OutputStream() {
             @Override
-            public void write(int b) throws IOException {
-                t.write((byte)b);;
+            public void write(int b) {
+                t.write((byte)b);
             }
 
             @Override
-            public void write(byte b[]) throws IOException {
+            public void write(byte b[]) {
                 t.write(b);
             }
 
             @Override
-            public void write(byte b[], int off, int len) throws IOException {
+            public void write(byte b[], int off, int len) {
                 this.write(b, off, len);
             }
         };

@@ -35,8 +35,6 @@ import com.pi4j.io.i2c.I2CBase;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
 
-import java.io.IOException;
-
 /**
  * <p>RpiI2C class.</p>
  *
@@ -57,49 +55,49 @@ public class RpiI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int read() throws IOException {
+    public int read() {
         return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public int read(byte[] buffer, int offset, int length) throws IOException {
+    public int read(byte[] buffer, int offset, int length) {
         return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte b) throws IOException {
+    public int write(byte b) {
         return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte[] data, int offset, int length) throws IOException {
+    public int write(byte[] data, int offset, int length) {
         return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public int readRegister(int register) throws IOException {
+    public int readRegister(int register) {
         return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public int readRegister(int register, byte[] buffer, int offset, int length) throws IOException {
+    public int readRegister(int register, byte[] buffer, int offset, int length) {
         return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public int writeRegister(int register, byte b) throws IOException {
+    public int writeRegister(int register, byte b) {
         return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public int writeRegister(int register, byte[] data, int offset, int length) throws IOException {
+    public int writeRegister(int register, byte[] data, int offset, int length) {
         return 0;
     }
 }

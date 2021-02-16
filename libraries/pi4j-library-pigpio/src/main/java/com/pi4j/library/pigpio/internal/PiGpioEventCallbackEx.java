@@ -30,5 +30,5 @@ package com.pi4j.library.pigpio.internal;
  */
 
 public interface PiGpioEventCallbackEx {
-    void call(int event, long tick, Object userdata) throws Exception;
+    void call(int event, long tick, Object userdata);
 }

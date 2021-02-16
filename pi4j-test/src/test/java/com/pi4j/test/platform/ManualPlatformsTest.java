@@ -58,7 +58,7 @@ public class ManualPlatformsTest {
     private Context pi4j;
 
     @BeforeAll
-    public void beforeTest() throws Pi4JException {
+    public void beforeTest() {
 
         // Initialize Pi4J with AUTO-DETECT disabled
         // we don't want to load any detected Pi4J extension
@@ -88,13 +88,13 @@ public class ManualPlatformsTest {
     }
 
     @Test
-    public void testProvidersNotNull() throws Pi4JException {
+    public void testProvidersNotNull() {
         // ensure that the io collection in the Pi4J context is not NULL
         assertNotNull(pi4j.providers());
     }
 
     @Test
-    public void testProvidersCount() throws Exception {
+    public void testProvidersCount() {
         // ensure that no io were detected/loaded into the Pi4J context
         assertEquals(1, pi4j.platforms().all().size());
 

@@ -37,6 +37,7 @@ import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.util.StringUtil;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
 import org.junit.jupiter.api.AfterEach;
@@ -79,7 +80,7 @@ public class I2CRawDataTest {
     }
 
     @Test
-    public void testRawDataWriteRead() throws Exception {
+    public void testRawDataWriteRead() {
 
         // create I2C config
         var config  = I2C.newConfigBuilder(pi4j)
@@ -90,7 +91,7 @@ public class I2CRawDataTest {
                 .build();
 
         // use try-with-resources to auto-close I2C when complete
-        try (var i2c = pi4j.i2c().create(config);) {
+        try (var i2c = pi4j.i2c().create(config)) {
 
             // ensure that the I2C instance is not null;
             assertNotNull(i2c);
@@ -128,7 +129,7 @@ public class I2CRawDataTest {
     }
 
     @Test
-    public void testRawDataStream() throws Exception {
+    public void testRawDataStream() throws IOException {
         // create random set of sample data
         Random rand = new Random();
         byte sample[] = new byte[1024];
@@ -143,7 +144,7 @@ public class I2CRawDataTest {
                 .build();
 
         // use try-with-resources to auto-close I2C when complete
-        try (var i2c = pi4j.i2c().create(config);) {
+        try (var i2c = pi4j.i2c().create(config)) {
 
             // write sample data using output stream
             i2c.out().write(sample);

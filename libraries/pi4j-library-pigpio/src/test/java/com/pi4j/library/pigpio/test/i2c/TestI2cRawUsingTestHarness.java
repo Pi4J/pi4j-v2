@@ -103,7 +103,7 @@ public class TestI2cRawUsingTestHarness {
     }
 
     @AfterAll
-    public static void terminate() throws IOException {
+    public static void terminate() {
         logger.info("");
         logger.info("************************************************************************");
         logger.info("TERMINATE TEST (" + TestI2cRawUsingTestHarness.class.getName() + ") ");
@@ -112,7 +112,7 @@ public class TestI2cRawUsingTestHarness {
     }
 
     @BeforeEach
-    public void beforeEach() throws IOException {
+    public void beforeEach() {
         // create test harness and PIGPIO instances
         pigpio = TestEnv.createPiGpio();
 
@@ -128,7 +128,7 @@ public class TestI2cRawUsingTestHarness {
     }
 
     @AfterEach
-    public void afterEach() throws IOException {
+    public void afterEach() {
 
         // CLOSE I2C
         pigpio.i2cClose(handle);
@@ -140,7 +140,7 @@ public class TestI2cRawUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test SINGLE-BYTE (W/R)")
     @Order(1)
-    public void testI2CSingleByteTxRx() throws IOException, InterruptedException {
+    public void testI2CSingleByteTxRx() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C SINGLE BYTE RAW READ/WRITE");
@@ -167,7 +167,7 @@ public class TestI2cRawUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test MULTI-BYTE (W/R)")
     @Order(2)
-    public void testI2CMultiByteTxRx() throws IOException, InterruptedException {
+    public void testI2CMultiByteTxRx() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C MULTI-BYTE RAW READ/WRITE");
