@@ -71,9 +71,8 @@ public interface TestDigitalInputProvider extends DigitalInputProvider {
      *
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends DigitalInput> T create() throws Exception {
+    default <T extends DigitalInput> T create() {
         return create(0);
     }
 }

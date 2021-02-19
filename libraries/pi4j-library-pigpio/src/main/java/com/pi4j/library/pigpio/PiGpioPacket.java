@@ -349,7 +349,7 @@ public class PiGpioPacket {
      *
      * @param stream a {@link java.io.InputStream} object.
      * @return a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
-     * @throws java.io.IOException if any.
+     * @throws IOException if an error occurs accessing {@code stream}.
      */
     public static PiGpioPacket decode(InputStream stream) throws IOException {
         return PiGpioPacket.decode(stream.readNBytes(stream.available()));
@@ -360,15 +360,14 @@ public class PiGpioPacket {
      *
      * @param data an array of {@link byte} objects.
      * @return a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
-     * @throws java.io.IOException if any.
      */
-    public static PiGpioPacket decode(byte[] data) throws IOException {
+    public static PiGpioPacket decode(byte[] data) {
         ByteBuffer rx = ByteBuffer.wrap(data);
         rx.order(ByteOrder.LITTLE_ENDIAN);
 
         // check data length for minimum package size
         if(data.length < 16){
-            throw new IOException("Insufficient number of data bytes bytes received; COUNT=" + data.length);
+            throw new IllegalArgumentException("Insufficient number of data bytes bytes received; COUNT=" + data.length);
         }
 
         // parse packet parameters from raw received bytes

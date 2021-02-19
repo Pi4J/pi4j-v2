@@ -102,7 +102,7 @@ public class I2CRegisterDataTest {
     }
 
     @Test
-    public void testRegisterDataWriteRead() throws Exception {
+    public void testRegisterDataWriteRead() {
 
         // create I2C config
         var config  = I2C.newConfigBuilder(pi4j)
@@ -113,7 +113,7 @@ public class I2CRegisterDataTest {
                 .build();
 
         // use try-with-resources to auto-close I2C when complete
-        try (var i2c = pi4j.i2c().create(config);) {
+        try (var i2c = pi4j.i2c().create(config)) {
 
             // ensure that the I2C instance is not null;
             assertNotNull(i2c);
@@ -136,7 +136,7 @@ public class I2CRegisterDataTest {
         }
     }
 
-    public void writeRegister(I2CRegister register, TestData sample) throws Exception {
+    public void writeRegister(I2CRegister register, TestData sample) {
 
         // write a single byte (8-bit) value to the raw I2C device (not to a register)
         register.write(sample.byt);
@@ -154,7 +154,7 @@ public class I2CRegisterDataTest {
         register.write(sample.str);
     }
 
-    public void readRegister(I2CRegister register, TestData sample) throws Exception {
+    public void readRegister(I2CRegister register, TestData sample) {
 
         // read single byte (8-bit) value from the raw I2C device (not from a register)
         byte b = (byte)register.read();

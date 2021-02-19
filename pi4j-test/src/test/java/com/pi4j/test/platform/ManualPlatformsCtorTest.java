@@ -48,7 +48,7 @@ public class ManualPlatformsCtorTest {
     private Context pi4j;
 
     @BeforeAll
-    public void beforeTest() throws Pi4JException {
+    public void beforeTest() {
 
         // create our own custom provider implementation classes
         var pwmProvider = TestPwmProvider.newInstance();
@@ -74,24 +74,24 @@ public class ManualPlatformsCtorTest {
     }
 
     @AfterAll
-    public void afterTest() throws Pi4JException {
+    public void afterTest() {
         pi4j.shutdown();
     }
 
     @Test
-    public void testPlatformsNotNull() throws Pi4JException {
+    public void testPlatformsNotNull() {
         // ensure that the 'platforms' collection in the Pi4J context is not NULL
         assertNotNull(pi4j.platforms());
     }
 
     @Test
-    public void testProvidersNotNull() throws Pi4JException {
+    public void testProvidersNotNull() {
         // ensure that the 'providers' collection in the Pi4J context is not NULL
         assertNotNull(pi4j.providers());
     }
 
     @Test
-    public void testPlatformCount() throws Exception {
+    public void testPlatformCount() {
 
         // ensure that only one platform was detected/loaded into the Pi4J context
         assertEquals(pi4j.platforms().all().size(), 1);
@@ -107,7 +107,7 @@ public class ManualPlatformsCtorTest {
     }
 
     @Test
-    public void testPlatformProviderCount() throws Exception {
+    public void testPlatformProviderCount() {
 
         // ensure that exactly 2 providers are associated with the single default platform in the Pi4J context
         assertEquals(2, pi4j.platform().providers().size());

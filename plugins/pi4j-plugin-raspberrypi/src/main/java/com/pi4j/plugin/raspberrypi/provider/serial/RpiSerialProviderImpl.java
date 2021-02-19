@@ -52,7 +52,7 @@ public class RpiSerialProviderImpl extends SerialProviderBase implements RpiSeri
 
     /** {@inheritDoc} */
     @Override
-    public Serial create(SerialConfig config) throws Exception {
+    public Serial create(SerialConfig config) {
         return new RpiSerial(this, config);
     }
 }

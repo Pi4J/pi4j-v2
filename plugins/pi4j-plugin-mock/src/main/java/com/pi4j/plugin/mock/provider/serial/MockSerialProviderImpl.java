@@ -52,7 +52,7 @@ public class MockSerialProviderImpl extends SerialProviderBase implements MockSe
 
     /** {@inheritDoc} */
     @Override
-    public Serial create(SerialConfig config) throws Exception {
+    public Serial create(SerialConfig config) {
         return new MockSerial(this, config);
     }
 }

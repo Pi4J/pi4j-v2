@@ -29,7 +29,6 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -53,9 +52,8 @@ public interface PiGpio_Serial {
      * @param flags  No flags are currently defined. This parameter should be set to zero.
      * @return Returns a handle (&gt;=0) if OK, otherwise PI_NO_HANDLE, or PI_SER_OPEN_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serOpen">PIGPIO::serOpen</a>
-     * @throws java.io.IOException if any.
      */
-    int serOpen(CharSequence device, int baud, int flags) throws IOException;
+    int serOpen(CharSequence device, int baud, int flags);
 
     /**
      * This function opens a serial device at a specified baud rate and with specified flags.
@@ -67,11 +65,10 @@ public interface PiGpio_Serial {
      *              1800, 2400, 4800, 9600, 19200, 38400, 57600, 115200, or 230400.
      * @return Returns a handle (&gt;=0) if OK, otherwise PI_NO_HANDLE, or PI_SER_OPEN_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serOpen">PIGPIO::serOpen</a>
-     * @throws java.io.IOException if any.
      */
-    default int serOpen(CharSequence device, int baud) throws IOException {
+    default int serOpen(CharSequence device, int baud) {
         return serOpen(device, baud, 0);
-    };
+    }
 
     /**
      * This function closes the serial device associated with the handle.
@@ -79,9 +76,8 @@ public interface PiGpio_Serial {
      * @param handle the open serial device handle; (&gt;=0, as returned by a call to serOpen)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serClose">PIGPIO::serClose</a>
-     * @throws java.io.IOException if any.
      */
-    int serClose(int handle) throws IOException;
+    int serClose(int handle);
 
     // ------------------------------------------------------------------------------------
     // WRITE :: BYTE
@@ -94,9 +90,8 @@ public interface PiGpio_Serial {
      * @param value byte value to write to serial port
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWriteByte">PIGPIO::serWriteByte</a>
-     * @throws java.io.IOException if any.
      */
-    int serWriteByte(int handle, byte value) throws IOException;
+    int serWriteByte(int handle, byte value);
 
     // ------------------------------------------------------------------------------------
     // READ :: BYTE
@@ -109,9 +104,8 @@ public interface PiGpio_Serial {
      * @param handle the open serial device handle; (&gt;=0, as returned by a call to serOpen)
      * @return Returns the read byte (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_SER_READ_NO_DATA, or PI_SER_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serReadByte">PIGPIO::serReadByte</a>
-     * @throws java.io.IOException if any.
      */
-    int serReadByte(int handle) throws IOException;
+    int serReadByte(int handle);
 
     // ------------------------------------------------------------------------------------
     // WRITE :: BYTE ARRAY
@@ -127,9 +121,8 @@ public interface PiGpio_Serial {
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
-     * @throws java.io.IOException if any.
      */
-    int serWrite(int handle, byte[] data, int offset, int length) throws IOException;
+    int serWrite(int handle, byte[] data, int offset, int length);
 
     /**
      * This function writes multiple bytes from the byte array ('data') to the serial
@@ -140,9 +133,8 @@ public interface PiGpio_Serial {
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default int serWrite(int handle, byte[] data, int length) throws IOException{
+    default int serWrite(int handle, byte[] data, int length){
         return serWrite(handle, data, 0, length);
     }
 
@@ -154,9 +146,8 @@ public interface PiGpio_Serial {
      * @param data the array of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default int serWrite(int handle, byte[] data) throws IOException{
+    default int serWrite(int handle, byte[] data){
         return serWrite(handle, data, 0, data.length);
     }
 
@@ -182,9 +173,8 @@ public interface PiGpio_Serial {
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default int serWrite(int handle, ByteBuffer buffer, int offset, int length) throws IOException{
+    default int serWrite(int handle, ByteBuffer buffer, int offset, int length){
         // perform bounds checking on requested length versus total remaining size available
         if(length > (buffer.capacity()-offset)){
             length = buffer.capacity()-offset;
@@ -209,9 +199,8 @@ public interface PiGpio_Serial {
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default int serWrite(int handle, ByteBuffer buffer, int length) throws IOException{
+    default int serWrite(int handle, ByteBuffer buffer, int length){
         // if the buffer position is already at the buffer limit, then flip the buffer for
         //reading data from the buffer at the starting position to write to the I/O device
         if(buffer.position() == buffer.limit()) buffer.flip();
@@ -240,9 +229,8 @@ public interface PiGpio_Serial {
      * @param buffer the byte buffer of data to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default int serWrite(int handle, ByteBuffer buffer) throws IOException{
+    default int serWrite(int handle, ByteBuffer buffer){
         // if the buffer position is already at the buffer limit, then flip the buffer for
         //reading data from the buffer at the starting position to write to the I/O device
         if(buffer.position() == buffer.limit()) buffer.flip();
@@ -266,9 +254,8 @@ public interface PiGpio_Serial {
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default int serWrite(int handle, Charset charset, CharSequence data, int offset, int length) throws IOException{
+    default int serWrite(int handle, Charset charset, CharSequence data, int offset, int length){
         return serWrite(handle, data.toString().getBytes(charset), offset, length);
     }
 
@@ -282,9 +269,8 @@ public interface PiGpio_Serial {
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default int serWrite(int handle, Charset charset, CharSequence data, int length) throws IOException{
+    default int serWrite(int handle, Charset charset, CharSequence data, int length){
         return serWrite(handle, charset, data, 0, length);
     }
 
@@ -297,9 +283,8 @@ public interface PiGpio_Serial {
      * @param data the character/string data to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default int serWrite(int handle, CharSequence data, Charset charset) throws IOException{
+    default int serWrite(int handle, CharSequence data, Charset charset){
         return serWrite(handle, charset, data, 0, data.length());
     }
 
@@ -313,9 +298,8 @@ public interface PiGpio_Serial {
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default int serWrite(int handle, CharSequence data, int offset, int length) throws IOException{
+    default int serWrite(int handle, CharSequence data, int offset, int length){
         return serWrite(handle, StandardCharsets.US_ASCII, data, offset, length);
     }
 
@@ -328,9 +312,8 @@ public interface PiGpio_Serial {
      * @param length the number of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default int serWrite(int handle, CharSequence data, int length) throws IOException{
+    default int serWrite(int handle, CharSequence data, int length){
         return serWrite(handle, data, 0, length);
     }
 
@@ -342,9 +325,8 @@ public interface PiGpio_Serial {
      * @param data the ASCII character/string data to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serWrite">PIGPIO::serWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default int serWrite(int handle, CharSequence data) throws IOException{
+    default int serWrite(int handle, CharSequence data){
         return serWrite(handle, data, data.length());
     }
 
@@ -364,9 +346,8 @@ public interface PiGpio_Serial {
      * @param length the maximum number of bytes to read
      * @return Returns the number of bytes read if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_READ_NO_DATA.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serRead">PIGPIO::serRead</a>
-     * @throws java.io.IOException if any.
      */
-    int serRead(int handle, byte[] buffer, int offset, int length) throws IOException;
+    int serRead(int handle, byte[] buffer, int offset, int length);
 
     /**
      * This function reads a number of bytes specified by the 'length' parameter from the
@@ -379,9 +360,8 @@ public interface PiGpio_Serial {
      * @param length the maximum number of bytes to read
      * @return Returns the number of bytes read if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_READ_NO_DATA.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serRead">PIGPIO::serRead</a>
-     * @throws java.io.IOException if any.
      */
-    default int serRead(int handle, byte[] buffer, int length) throws IOException{
+    default int serRead(int handle, byte[] buffer, int length){
         return serRead(handle, buffer, 0, length);
     }
 
@@ -395,9 +375,8 @@ public interface PiGpio_Serial {
      * @param buffer a byte array to receive the read data
      * @return Returns the number of bytes read if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_READ_NO_DATA.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serRead">PIGPIO::serRead</a>
-     * @throws java.io.IOException if any.
      */
-    default int serRead(int handle, byte[] buffer) throws IOException{
+    default int serRead(int handle, byte[] buffer){
         return serRead(handle, buffer, 0, buffer.length);
     }
 
@@ -423,9 +402,8 @@ public interface PiGpio_Serial {
      * @param length the maximum number of bytes to read
      * @return Returns the number of bytes read if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_READ_NO_DATA.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serRead">PIGPIO::serRead</a>
-     * @throws java.io.IOException if any.
      */
-    default int serRead(int handle, ByteBuffer buffer, int offset, int length) throws IOException{
+    default int serRead(int handle, ByteBuffer buffer, int offset, int length){
         // perform bounds checking on requested length versus total remaining size available
         if(length > (buffer.capacity()-offset)){
             length = buffer.capacity()-offset;
@@ -467,9 +445,8 @@ public interface PiGpio_Serial {
      * @param length the maximum number of bytes to read
      * @return Returns the number of bytes read if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_READ_NO_DATA.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serRead">PIGPIO::serRead</a>
-     * @throws java.io.IOException if any.
      */
-    default int serRead(int handle, ByteBuffer buffer, int length) throws IOException{
+    default int serRead(int handle, ByteBuffer buffer, int length){
         // if the buffer position is already at the buffer limit, then rewind the buffer for
         // writing new data into the buffer read from the I/O device
         if(buffer.position() == buffer.limit()) buffer.rewind();
@@ -497,9 +474,8 @@ public interface PiGpio_Serial {
      * @param buffer a byte buffer (with pre-allocated capacity) to receive the read data
      * @return Returns the number of bytes read if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_SER_READ_NO_DATA.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serRead">PIGPIO::serRead</a>
-     * @throws java.io.IOException if any.
      */
-    default int serRead(int handle, ByteBuffer buffer) throws IOException{
+    default int serRead(int handle, ByteBuffer buffer){
         // if the buffer position is already at the buffer limit, then rewind the buffer for
         // writing new data into the buffer read from the I/O device
         if(buffer.position() == buffer.limit()) buffer.rewind();
@@ -518,9 +494,8 @@ public interface PiGpio_Serial {
      * @param handle the open serial device handle; (&gt;=0, as returned by a call to serOpen)
      * @return Returns the number of bytes of data available (&gt;=0) if OK, otherwise PI_BAD_HANDLE.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#serDataAvailable">PIGPIO::serDataAvailable</a>
-     * @throws java.io.IOException if any.
      */
-    int serDataAvailable(int handle) throws IOException;
+    int serDataAvailable(int handle);
 
 
     // ------------------------------------------------------------------------------------
@@ -532,7 +507,6 @@ public interface PiGpio_Serial {
      *
      * @param handle the open serial device handle; (&gt;=0, as returned by a call to serOpen)
      * @return Returns the number of bytes of data drained (&gt;=0) if OK, otherwise PI_BAD_HANDLE.
-     * @throws java.io.IOException if any.
      */
-    int serDrain(int handle) throws IOException;
+    int serDrain(int handle);
 }

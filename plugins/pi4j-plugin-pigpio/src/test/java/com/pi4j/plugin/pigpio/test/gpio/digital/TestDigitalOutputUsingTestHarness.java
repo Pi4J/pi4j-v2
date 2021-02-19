@@ -107,7 +107,7 @@ public class TestDigitalOutputUsingTestHarness {
     }
 
     @BeforeEach
-    public void beforeEach() throws Exception {
+    public void beforeEach() {
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
         piGpio = TestEnv.createPiGpio();
 
@@ -122,7 +122,7 @@ public class TestDigitalOutputUsingTestHarness {
     }
 
     @AfterEach
-    public void afterEach() throws Exception {
+    public void afterEach() {
         // shutdown the PiGpio library after each test
         piGpio.shutdown();
     }
@@ -130,7 +130,7 @@ public class TestDigitalOutputUsingTestHarness {
     @Test
     @Order(1)
     @DisplayName("DIN :: Test GPIO Digital Output Pins")
-    public void testDigitalOutputsHigh() throws Exception {
+    public void testDigitalOutputsHigh() throws IOException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST DIGITAL OUTPUT PINS ");

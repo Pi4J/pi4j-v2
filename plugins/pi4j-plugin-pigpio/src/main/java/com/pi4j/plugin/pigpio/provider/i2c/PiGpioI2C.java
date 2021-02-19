@@ -32,7 +32,6 @@ package com.pi4j.plugin.pigpio.provider.i2c;
 
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
-import com.pi4j.io.exception.IOReadException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CBase;
 import com.pi4j.io.i2c.I2CConfig;
@@ -40,7 +39,6 @@ import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
 
-import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -60,9 +58,8 @@ public class PiGpioI2C extends I2CBase implements I2C {
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      * @param provider a {@link com.pi4j.io.i2c.I2CProvider} object.
      * @param config a {@link com.pi4j.io.i2c.I2CConfig} object.
-     * @throws java.io.IOException if any.
      */
-    public PiGpioI2C(PiGpio piGpio, I2CProvider provider, I2CConfig config) throws IOException {
+    public PiGpioI2C(PiGpio piGpio, I2CProvider provider, I2CConfig config) {
         super(provider, config);
 
         // set local reference instance
@@ -97,7 +94,7 @@ public class PiGpioI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public void close() throws IOException {
+    public void close() {
         piGpio.i2cClose(this.handle);
         super.close();
     }
@@ -108,13 +105,13 @@ public class PiGpioI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte b) throws IOException {
+    public int write(byte b) {
         return piGpio.i2cWriteByte(this.handle, b);
     }
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte[] data, int offset, int length) throws IOException {
+    public int write(byte[] data, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, data.length);
         piGpio.i2cWriteDevice(this.handle, data, offset, length);
         return length;
@@ -126,13 +123,13 @@ public class PiGpioI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int read() throws IOException{
+    public int read() {
         return piGpio.i2cReadByte(this.handle);
     }
 
     /** {@inheritDoc} */
     @Override
-    public int read(byte[] buffer, int offset, int length) throws IOException{
+    public int read(byte[] buffer, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, buffer.length);
         return piGpio.i2cReadDevice(this.handle, buffer, offset, length);
     }
@@ -143,13 +140,13 @@ public class PiGpioI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int writeRegister(int register, byte b) throws IOException {
+    public int writeRegister(int register, byte b) {
         return piGpio.i2cWriteByteData(this.handle, register, b);
     }
 
     /** {@inheritDoc} */
     @Override
-    public int writeRegister(int register, byte[] data, int offset, int length) throws IOException {
+    public int writeRegister(int register, byte[] data, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, data.length);
         piGpio.i2cWriteI2CBlockData(this.handle, register, data, offset, length);
         return length;
@@ -161,20 +158,20 @@ public class PiGpioI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int readRegister(int register) throws IOException {
+    public int readRegister(int register) {
         return piGpio.i2cReadByteData(this.handle, register);
     }
 
     /** {@inheritDoc} */
     @Override
-    public int readRegister(int register, byte[] buffer, int offset, int length) throws IOException {
+    public int readRegister(int register, byte[] buffer, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, buffer.length);
         return piGpio.i2cReadI2CBlockData(this.handle, register, buffer, offset, length);
     }
 
     /** {@inheritDoc} */
     @Override
-    public int writeReadRegisterWord(int register, int word) throws IOException, IOReadException {
+    public int writeReadRegisterWord(int register, int word) {
         return piGpio.i2cProcessCall(this.handle, register, word);
     }
 }

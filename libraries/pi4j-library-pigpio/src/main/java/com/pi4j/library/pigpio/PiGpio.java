@@ -32,8 +32,6 @@ package com.pi4j.library.pigpio;
 import com.pi4j.library.pigpio.impl.PiGpioNativeImpl;
 import com.pi4j.library.pigpio.impl.PiGpioSocketImpl;
 
-import java.io.IOException;
-
 /**
  * <p>PiGpio interface.</p>
  *
@@ -55,9 +53,8 @@ public interface PiGpio extends
      * @param host hostname or IP address of the RaspberryPi to connect to via TCP/IP socket.
      * @param port TCP port number of the RaspberryPi to connect to via TCP/IP socket.
      * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
-     * @throws java.io.IOException if any.
      */
-    static PiGpio newSocketInstance(String host, String port) throws IOException {
+    static PiGpio newSocketInstance(String host, String port) {
         return PiGpioSocketImpl.newInstance(host, port);
     }
 
@@ -68,9 +65,8 @@ public interface PiGpio extends
      * @param host hostname or IP address of the RaspberryPi to connect to via TCP/IP socket.
      * @param port TCP port number of the RaspberryPi to connect to via TCP/IP socket.
      * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
-     * @throws java.io.IOException if any.
      */
-    static PiGpio newSocketInstance(String host, int port) throws IOException {
+    static PiGpio newSocketInstance(String host, int port) {
         return PiGpioSocketImpl.newInstance(host, port);
     }
 
@@ -80,9 +76,8 @@ public interface PiGpio extends
      *
      * @param host hostname or IP address of the RaspberryPi to connect to via TCP/IP socket.
      * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
-     * @throws java.io.IOException if any.
      */
-    static PiGpio newSocketInstance(String host) throws IOException {
+    static PiGpio newSocketInstance(String host) {
         return PiGpioSocketImpl.newInstance(host);
     }
 
@@ -91,9 +86,8 @@ public interface PiGpio extends
      * Connects to the local system (127.0.0.1) using the default port (8888).
      *
      * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
-     * @throws java.io.IOException if any.
      */
-    static PiGpio newSocketInstance() throws IOException {
+    static PiGpio newSocketInstance() {
         return PiGpioSocketImpl.newInstance();
     }
 
@@ -105,9 +99,8 @@ public interface PiGpio extends
      * the native shared library while the daemon is running concurrently.
      *
      * @return a {@link com.pi4j.library.pigpio.PiGpio} object.
-     * @throws java.io.IOException if any.
      */
-    static PiGpio newNativeInstance() throws IOException {
+    static PiGpio newNativeInstance() {
         return PiGpioNativeImpl.newInstance();
     }
 
@@ -136,9 +129,8 @@ public interface PiGpio extends
      * - gpioHardwareRevision
      *
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
-     * @throws java.io.IOException if any.
      */
-    int gpioInitialise() throws IOException;
+    int gpioInitialise();
 
     /**
      * Initialises the library.
@@ -150,9 +142,8 @@ public interface PiGpio extends
      * - gpioHardwareRevision
      *
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
-     * @throws java.io.IOException if any.
      */
-    default int initialize() throws IOException{ return gpioInitialise(); }
+    default int initialize(){ return gpioInitialise(); }
 
     /**
      * Initialises the library.
@@ -164,9 +155,8 @@ public interface PiGpio extends
      * - gpioHardwareRevision
      *
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
-     * @throws java.io.IOException if any.
      */
-    default int gpioInitialize() throws IOException { return gpioInitialise(); } // US spelling variant
+    default int gpioInitialize() { return gpioInitialise(); } // US spelling variant
 
     /**
      * Initialises the library.
@@ -178,9 +168,8 @@ public interface PiGpio extends
      * - gpioHardwareRevision
      *
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
-     * @throws java.io.IOException if any.
      */
-    default int initialise() throws IOException { return gpioInitialise(); }     // UK spelling variant
+    default int initialise() { return gpioInitialise(); }     // UK spelling variant
 
     /**
      * Shutdown/Terminate the library.
@@ -188,10 +177,8 @@ public interface PiGpio extends
      * Returns nothing.
      * Call before program exit.
      * This function resets the used DMA channels, releases memory, and terminates any running threads.
-     *
-     * @throws java.io.IOException if any.
      */
-    default void shutdown() throws IOException{
+    default void shutdown() {
         gpioTerminate();
     }
 
@@ -201,10 +188,8 @@ public interface PiGpio extends
      * Returns nothing.
      * Call before program exit.
      * This function resets the used DMA channels, releases memory, and terminates any running threads.
-     *
-     * @throws java.io.IOException if any.
      */
-    default void terminate() throws IOException{
+    default void terminate() {
         gpioTerminate();
     }
 
@@ -214,19 +199,16 @@ public interface PiGpio extends
      * Returns nothing.
      * Call before program exit.
      * This function resets the used DMA channels, releases memory, and terminates any running threads.
-     *
-     * @throws java.io.IOException if any.
      */
-    void gpioTerminate() throws IOException;
+    void gpioTerminate();
 
     /**
      * Returns the pigpio library version.
      *
      * @return pigpio version.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioVersion">PIGPIO::gpioVersion</a>
-     * @throws java.io.IOException if any.
      */
-    int gpioVersion() throws IOException;
+    int gpioVersion();
 
     /**
      * Returns the hardware revision.
@@ -246,9 +228,8 @@ public interface PiGpio extends
      *
      * @return hardware revision as raw 32-bit UINT
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision">PIGPIO::gpioHardwareRevision</a>
-     * @throws java.io.IOException if any.
      */
-    long gpioHardwareRevision() throws IOException;
+    long gpioHardwareRevision();
 
 
     /**
@@ -269,9 +250,8 @@ public interface PiGpio extends
      *
      * @return hardware revision in hexadecimal string
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision">PIGPIO::gpioHardwareRevision</a>
-     * @throws java.io.IOException if any.
      */
-    String gpioHardwareRevisionString() throws IOException;
+    String gpioHardwareRevisionString();
 
     /**
      * Delays for at least the number of microseconds specified by micros. (between 1 and 1000000 [1 second])
@@ -280,17 +260,15 @@ public interface PiGpio extends
      * @param micros micros: the number of microseconds to sleep (between 1 and 1000000 [1 second])
      * @return Returns the actual length of the delay in microseconds.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioDelay">PIGPIO::gpioDelay</a>
-     * @throws java.io.IOException if any.
      */
-    long gpioDelay(long micros) throws IOException;
+    long gpioDelay(long micros);
     /**
      * <p>gpioDelayMicroseconds.</p>
      *
      * @param micros a int.
      * @return a int.
-     * @throws java.io.IOException if any.
      */
-    default long gpioDelayMicroseconds(long micros) throws IOException{
+    default long gpioDelayMicroseconds(long micros){
         return gpioDelay(micros);
     }
 
@@ -300,9 +278,8 @@ public interface PiGpio extends
      * @param millis millis: the number of milliseconds to sleep (between 1 and 60000 [1 minute])
      * @return Returns the actual length of the delay in milliseconds.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/pigs.html#MILS">PIGPIO::MILS</a>
-     * @throws java.io.IOException if any.
      */
-    int gpioDelayMilliseconds(int millis) throws IOException;
+    int gpioDelayMilliseconds(int millis);
 
     /**
      * Returns the current system tick.
@@ -325,34 +302,30 @@ public interface PiGpio extends
      *
      * @return Returns the current system tick.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioTick">PIGPIO::gpioTick</a>
-     * @throws java.io.IOException if any.
      */
-    long gpioTick() throws IOException;
+    long gpioTick();
 
     /**
      * <p>gpioNotifications.</p>
      *
      * @param pin a int.
      * @param enabled a boolean.
-     * @throws java.io.IOException if any.
      */
-    void gpioNotifications(int pin, boolean enabled) throws IOException;
+    void gpioNotifications(int pin, boolean enabled);
     /**
      * <p>gpioEnableNotifications.</p>
      *
      * @param pin a int.
-     * @throws java.io.IOException if any.
      */
-    default void gpioEnableNotifications(int pin) throws IOException{
+    default void gpioEnableNotifications(int pin) {
         gpioNotifications(pin, true);
     }
     /**
      * <p>gpioDisableNotifications.</p>
      *
      * @param pin a int.
-     * @throws java.io.IOException if any.
      */
-    default void gpioDisableNotifications(int pin) throws IOException{
+    default void gpioDisableNotifications(int pin) {
         gpioNotifications(pin, false);
     }
     /**

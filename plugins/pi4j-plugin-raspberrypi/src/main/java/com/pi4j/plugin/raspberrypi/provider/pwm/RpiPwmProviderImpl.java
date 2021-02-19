@@ -51,7 +51,7 @@ public class RpiPwmProviderImpl extends PwmProviderBase implements RpiPwmProvide
 
     /** {@inheritDoc} */
     @Override
-    public Pwm create(PwmConfig config) throws Exception {
+    public Pwm create(PwmConfig config) {
         return new RpiPwm(this, config);
     }
 }

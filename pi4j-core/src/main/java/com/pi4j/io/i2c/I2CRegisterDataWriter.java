@@ -58,10 +58,9 @@ public interface I2CRegisterDataWriter {
      *
      * @param register the register address to write to
      * @param b byte to be written
-     * @throws java.io.IOException thrown on write error
      * @return a int.
      */
-    int writeRegister(int register, byte b) throws IOException;
+    int writeRegister(int register, byte b);
 
     /**
      * Write a single raw byte (8-bit) value to the I2C device register.
@@ -69,10 +68,9 @@ public interface I2CRegisterDataWriter {
      *
      * @param register the register address to write to
      * @param b byte to be written; the provided Integer wll be cast to a Byte.
-     * @throws java.io.IOException thrown on write error
      * @return a int.
      */
-    default int writeRegister(int register, int b) throws IOException{
+    default int writeRegister(int register, int b) {
         return writeRegister(register, (byte)b);
     }
 
@@ -85,10 +83,9 @@ public interface I2CRegisterDataWriter {
      *
      * @param register the register address to write to
      * @param word 16-bit word value to be written
-     * @throws java.io.IOException thrown on write error
      * @return a int.
      */
-    default int writeRegisterWord(int register, int word) throws IOException{
+    default int writeRegisterWord(int register, int word) {
         byte[] buffer = new byte[] { (byte)(word >> 8), (byte)word };
         return this.writeRegister(register, buffer);
     }
@@ -106,9 +103,8 @@ public interface I2CRegisterDataWriter {
      * @param offset offset in data buffer to start at
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    int writeRegister(int register, byte[] data, int offset, int length) throws IOException;
+    int writeRegister(int register, byte[] data, int offset, int length);
 
     /**
      * Write an array of byte values starting with the first byte in the array
@@ -118,9 +114,8 @@ public interface I2CRegisterDataWriter {
      * @param data data array of bytes to be written
      * @param length number of bytes to be written
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int writeRegister(int register, byte[] data, int length) throws IOException{
+    default int writeRegister(int register, byte[] data, int length) {
         return writeRegister(register, data, 0, length);
     }
 
@@ -130,9 +125,8 @@ public interface I2CRegisterDataWriter {
      * @param register the register address to write to
      * @param data data to be written to the i2c device in one go
      * @return The number of bytes written, possibly zero
-     * @throws java.io.IOException thrown on write error
      */
-    default int writeRegister(int register, byte ... data) throws IOException {
+    default int writeRegister(int register, byte ... data) {
         return writeRegister(register, data, 0, data.length);
     }
 

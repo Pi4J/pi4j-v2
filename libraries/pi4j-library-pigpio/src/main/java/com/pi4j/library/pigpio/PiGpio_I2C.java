@@ -29,7 +29,6 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -58,9 +57,8 @@ public interface PiGpio_I2C {
      * @param flags no flags are currently defined. This parameter should be set to zero.
      * @return Returns a handle (&gt;=0) if OK, otherwise PI_BAD_I2C_BUS, PI_BAD_I2C_ADDR, PI_BAD_FLAGS, PI_NO_HANDLE, or PI_I2C_OPEN_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cOpen">PIGPIO::i2cOpen</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cOpen(int bus, int device, int flags) throws IOException;
+    int i2cOpen(int bus, int device, int flags);
 
     /**
      * Opens a I2C device on a given I2C bus for communications.
@@ -77,9 +75,8 @@ public interface PiGpio_I2C {
      * @param device the I2C device address to open/access for reading and writing. (0-0x7F)
      * @return Returns a handle (&gt;=0) if OK, otherwise PI_BAD_I2C_BUS, PI_BAD_I2C_ADDR, PI_BAD_FLAGS, PI_NO_HANDLE, or PI_I2C_OPEN_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cOpen">PIGPIO::i2cOpen</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cOpen(int bus, int device) throws IOException{
+    default int i2cOpen(int bus, int device){
         return i2cOpen(bus, device, 0);
     }
 
@@ -89,9 +86,8 @@ public interface PiGpio_I2C {
      * @param handle the open I2C device handle; (&gt;=0, as returned by a call to i2cOpen)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cClose">PIGPIO::i2cClose</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cClose(int handle) throws IOException;
+    int i2cClose(int handle);
 
     /**
      * This sends a single bit (in the Rd/Wr bit) to the device associated with the handle.
@@ -100,9 +96,8 @@ public interface PiGpio_I2C {
      * @param bit 0-1, the value to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteQuick">PIGPIO::i2cWriteQuick</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cWriteQuick(int handle, boolean bit) throws IOException;
+    int i2cWriteQuick(int handle, boolean bit);
 
     /**
      * This sends a single byte to the device associated with the handle.
@@ -111,9 +106,8 @@ public interface PiGpio_I2C {
      * @param value raw byte value (0-0xFF) to write to I2C device
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByte">PIGPIO::i2cWriteByte</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cWriteByte(int handle, byte value) throws IOException;
+    int i2cWriteByte(int handle, byte value);
 
     /**
      * This reads a single byte from the device associated with the handle.
@@ -121,9 +115,8 @@ public interface PiGpio_I2C {
      * @param handle the open I2C device handle; (&gt;=0, as returned by a call to i2cOpen)
      * @return Returns the byte read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByte">PIGPIO::i2cReadByte</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cReadByte(int handle) throws IOException;
+    int i2cReadByte(int handle);
 
     /**
      * This writes a single byte to the specified register of the device associated with the handle.
@@ -133,9 +126,8 @@ public interface PiGpio_I2C {
      * @param value raw byte value (0-0xFF) to write to I2C device
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteByteData">PIGPIO::i2cWriteByteData</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cWriteByteData(int handle, int register, byte value) throws IOException;
+    int i2cWriteByteData(int handle, int register, byte value);
 
     /**
      * This writes a single 16 bit word to the specified register of the device associated with the handle.
@@ -145,9 +137,8 @@ public interface PiGpio_I2C {
      * @param value raw word (2-byte) value (0-0xFFFF) to write to I2C device
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteWordData">PIGPIO::i2cWriteWordData</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cWriteWordData(int handle, int register, int value) throws IOException;
+    int i2cWriteWordData(int handle, int register, int value);
 
     /**
      * This reads a single byte from the specified register of the device associated with the handle.
@@ -156,9 +147,8 @@ public interface PiGpio_I2C {
      * @param register the I2C register address to read from. (0-255)
      * @return Returns the byte read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadByteData">PIGPIO::i2cReadByteData</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cReadByteData(int handle, int register) throws IOException;
+    int i2cReadByteData(int handle, int register);
 
     /**
      * This reads a single 16 bit word from the specified register of the device associated with the handle.
@@ -167,9 +157,8 @@ public interface PiGpio_I2C {
      * @param register the I2C register address to read from. (0-255)
      * @return Returns the word (2-byte value) read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadWordData">PIGPIO::i2cReadWordData</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cReadWordData(int handle, int register) throws IOException;
+    int i2cReadWordData(int handle, int register);
 
     /**
      * This writes 16 bits of data to the specified register of the device associated with
@@ -180,9 +169,8 @@ public interface PiGpio_I2C {
      * @param value raw word (2-byte) value (0-0xFFFF) to write to I2C device
      * @return Returns the word read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cProcessCall">PIGPIO::i2cProcessCall</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cProcessCall(int handle, int register, int value) throws IOException;
+    int i2cProcessCall(int handle, int register, int value);
 
     /**
      * This writes up to 32 bytes from the byte array ('data') to the specified register
@@ -195,9 +183,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cWriteBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException;
+    int i2cWriteBlockData(int handle, int register, byte[] data, int offset, int length);
 
     /**
      * This writes up to 32 bytes from the byte array ('data') to the specified register of
@@ -209,9 +196,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteBlockData(int handle, int register, byte[] data, int length) throws IOException{
+    default int i2cWriteBlockData(int handle, int register, byte[] data, int length){
         return i2cWriteBlockData(handle, register, data, 0, length);
     }
 
@@ -224,9 +210,8 @@ public interface PiGpio_I2C {
      * @param data the array of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteBlockData(int handle, int register, byte[] data) throws IOException{
+    default int i2cWriteBlockData(int handle, int register, byte[] data){
         return i2cWriteBlockData(handle, register, data, data.length);
     }
 
@@ -249,9 +234,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteBlockData(int handle, int register, ByteBuffer buffer, int offset, int length) throws IOException{
+    default int i2cWriteBlockData(int handle, int register, ByteBuffer buffer, int offset, int length){
         // perform bounds checking on requested length versus total remaining size available
         if(length > (buffer.capacity()-offset)){
             length = buffer.capacity()-offset;
@@ -277,9 +261,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteBlockData(int handle, int register, ByteBuffer buffer, int length) throws IOException{
+    default int i2cWriteBlockData(int handle, int register, ByteBuffer buffer, int length){
         // if the buffer position is already at the buffer limit, then flip the buffer for
         //reading data from the buffer at the starting position to write to the I/O device
         if(buffer.position() == buffer.limit()) buffer.flip();
@@ -309,9 +292,8 @@ public interface PiGpio_I2C {
      * @param buffer the byte buffer of data to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteBlockData(int handle, int register, ByteBuffer buffer) throws IOException{
+    default int i2cWriteBlockData(int handle, int register, ByteBuffer buffer){
         // if the buffer position is already at the buffer limit, then flip the buffer for
         //reading data from the buffer at the starting position to write to the I/O device
         if(buffer.position() == buffer.limit()) buffer.flip();
@@ -332,9 +314,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteBlockData(int handle, int register, Charset charset, CharSequence data, int offset, int length) throws IOException{
+    default int i2cWriteBlockData(int handle, int register, Charset charset, CharSequence data, int offset, int length){
         return i2cWriteBlockData(handle, register, data.toString().getBytes(charset), offset, length);
     }
 
@@ -349,9 +330,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteBlockData(int handle, int register, Charset charset, CharSequence data, int length) throws IOException{
+    default int i2cWriteBlockData(int handle, int register, Charset charset, CharSequence data, int length){
         return i2cWriteBlockData(handle, register, charset, data, 0, length);
     }
 
@@ -365,9 +345,8 @@ public interface PiGpio_I2C {
      * @param data the character/string data to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteBlockData(int handle, int register, Charset charset, CharSequence data) throws IOException{
+    default int i2cWriteBlockData(int handle, int register, Charset charset, CharSequence data){
         return i2cWriteBlockData(handle, register, charset, data, data.length());
     }
 
@@ -382,9 +361,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteBlockData(int handle, int register, CharSequence data, int offset, int length) throws IOException{
+    default int i2cWriteBlockData(int handle, int register, CharSequence data, int offset, int length){
         return i2cWriteBlockData(handle, register, StandardCharsets.US_ASCII, data, offset, length);
     }
 
@@ -398,9 +376,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteBlockData(int handle, int register, CharSequence data, int length) throws IOException{
+    default int i2cWriteBlockData(int handle, int register, CharSequence data, int length){
         return i2cWriteBlockData(handle, register, data, 0, length);
     }
 
@@ -413,9 +390,8 @@ public interface PiGpio_I2C {
      * @param data the ASCII character/string data to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteBlockData">PIGPIO::i2cWriteBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteBlockData(int handle, int register, CharSequence data) throws IOException{
+    default int i2cWriteBlockData(int handle, int register, CharSequence data){
         return i2cWriteBlockData(handle, register, data, data.length());
     }
 
@@ -433,9 +409,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadBlockData">PIGPIO::i2cReadBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cReadBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException;
+    int i2cReadBlockData(int handle, int register, byte[] buffer, int offset, int length);
 
     /**
      * This function reads a block up to 32 bytes specified by the 'length' parameter from the
@@ -449,9 +424,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadBlockData">PIGPIO::i2cReadBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadBlockData(int handle, int register, byte[] buffer, int length) throws IOException {
+    default int i2cReadBlockData(int handle, int register, byte[] buffer, int length) {
         return i2cReadBlockData(handle, register, buffer, 0, length);
     }
 
@@ -466,9 +440,8 @@ public interface PiGpio_I2C {
      * @param buffer a byte array to receive the read data
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadBlockData">PIGPIO::i2cReadBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadBlockData(int handle, int register, byte[] buffer) throws IOException {
+    default int i2cReadBlockData(int handle, int register, byte[] buffer) {
         return i2cReadBlockData(handle, register, buffer, buffer.length);
     }
 
@@ -492,9 +465,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadBlockData">PIGPIO::i2cReadBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadBlockData(int handle, int register, ByteBuffer buffer, int offset, int length) throws IOException{
+    default int i2cReadBlockData(int handle, int register, ByteBuffer buffer, int offset, int length){
 
         // perform bounds checking on requested length versus total remaining size available
         if(length > (buffer.capacity()-offset)){
@@ -539,9 +511,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadBlockData">PIGPIO::i2cReadBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadBlockData(int handle, int register, ByteBuffer buffer, int length) throws IOException {
+    default int i2cReadBlockData(int handle, int register, ByteBuffer buffer, int length) {
         // if the buffer position is already at the buffer limit, then rewind the buffer for
         // writing new data into the buffer read from the I/O device
         if(buffer.position() == buffer.limit()) buffer.rewind();
@@ -571,9 +542,8 @@ public interface PiGpio_I2C {
      * @param buffer a byte buffer (pre-allocated) to receive the read data
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadBlockData">PIGPIO::i2cReadBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadBlockData(int handle, int register, ByteBuffer buffer) throws IOException {
+    default int i2cReadBlockData(int handle, int register, ByteBuffer buffer) {
         // if the buffer position is already at the buffer limit, then rewind the buffer for
         // writing new data into the buffer read from the I/O device
         if(buffer.position() == buffer.limit()) buffer.rewind();
@@ -599,9 +569,8 @@ public interface PiGpio_I2C {
      * @param readOffset the starting offset position in the provided read array/buffer to start copying the data bytes read.
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cBlockProcessCall(int handle, int register, byte[] write, int writeOffset, int writeLength, byte[] read, int readOffset) throws IOException;
+    int i2cBlockProcessCall(int handle, int register, byte[] write, int writeOffset, int writeLength, byte[] read, int readOffset);
 
     /**
      * This writes data bytes to the specified register of the device associated with the handle and reads a
@@ -619,9 +588,8 @@ public interface PiGpio_I2C {
      *             is determined by the actual I2C device  (a pre-allocated array/buffer of 32 bytes is safe)
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cBlockProcessCall(int handle, int register, byte[] write, int writeOffset, int writeLength, byte[] read) throws IOException{
+    default int i2cBlockProcessCall(int handle, int register, byte[] write, int writeOffset, int writeLength, byte[] read){
         return i2cBlockProcessCall(handle, register, write, writeOffset, writeLength, read, 0);
     }
 
@@ -640,9 +608,8 @@ public interface PiGpio_I2C {
      *             is determined by the actual I2C device  (a pre-allocated array/buffer of 32 bytes is safe)
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cBlockProcessCall(int handle, int register, byte[] write, int writeLength, byte[] read) throws IOException{
+    default int i2cBlockProcessCall(int handle, int register, byte[] write, int writeLength, byte[] read){
         return i2cBlockProcessCall(handle, register, write, 0, writeLength, read, 0);
     }
 
@@ -660,9 +627,8 @@ public interface PiGpio_I2C {
      *             is determined by the actual I2C device  (a pre-allocated array/buffer of 32 bytes is safe)
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cBlockProcessCall(int handle, int register, byte[] write, byte[] read) throws IOException{
+    default int i2cBlockProcessCall(int handle, int register, byte[] write, byte[] read){
         return i2cBlockProcessCall(handle, register, write, 0, write.length, read, 0);
     }
 
@@ -681,9 +647,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cBlockProcessCall(int handle, int register, byte[] data, int offset, int length) throws IOException;
+    int i2cBlockProcessCall(int handle, int register, byte[] data, int offset, int length);
 
     /**
      * This writes data bytes to the specified register of the device associated with the handle and reads a
@@ -699,9 +664,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cBlockProcessCall(int handle, int register, byte[] data, int length) throws IOException {
+    default int i2cBlockProcessCall(int handle, int register, byte[] data, int length) {
         return i2cBlockProcessCall(handle, register, data, 0, length);
     }
 
@@ -718,9 +682,8 @@ public interface PiGpio_I2C {
      *             overwritten with the data read from the I2C device register.
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cBlockProcessCall(int handle, int register, byte[] data) throws IOException {
+    default int i2cBlockProcessCall(int handle, int register, byte[] data) {
         return i2cBlockProcessCall(handle, register, data, data.length);
     }
 
@@ -740,11 +703,10 @@ public interface PiGpio_I2C {
      *             is determined by the actual I2C device  (a pre-allocated array/buffer of 32 bytes is safe)
      * @param readOffset the starting offset position in the provided read buffer to start copying the data bytes read.
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
      */
     // TODO :: THE IMPLEMENTATION NEEDS TO HONOR BUFFER POSITIONING
-//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer write, int writeOffset, int writeLength, ByteBuffer read, int readOffset) throws IOException{
+//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer write, int writeOffset, int writeLength, ByteBuffer read, int readOffset){
 //        return i2cBlockProcessCall(handle, register, write.array(), writeOffset, writeLength, read.array(), readOffset);
 //    }
 
@@ -763,11 +725,10 @@ public interface PiGpio_I2C {
      * @param read a byte buffer to receive the read data; note the size must be pre-allocated and must be at
      *             is determined by the actual I2C device  (a pre-allocated array/buffer of 32 bytes is safe)
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
      */
     // TODO :: THE IMPLEMENTATION NEEDS TO HONOR BUFFER POSITIONING
-//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer write, int writeOffset, int writeLength, ByteBuffer read) throws IOException{
+//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer write, int writeOffset, int writeLength, ByteBuffer read){
 //        return i2cBlockProcessCall(handle, register, write, writeOffset, writeLength, read, 0);
 //    }
 
@@ -785,11 +746,10 @@ public interface PiGpio_I2C {
      * @param read a byte buffer to receive the read data; note the size must be pre-allocated and must be at
      *             is determined by the actual I2C device  (a pre-allocated array/buffer of 32 bytes is safe)
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
      */
     // TODO :: THE IMPLEMENTATION NEEDS TO HONOR BUFFER POSITIONING
-//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer write, int writeLength, ByteBuffer read) throws IOException{
+//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer write, int writeLength, ByteBuffer read){
 //        return i2cBlockProcessCall(handle, register, write, 0, writeLength, read, 0);
 //    }
 
@@ -806,11 +766,10 @@ public interface PiGpio_I2C {
      * @param read a byte buffer to receive the read data; note the size must be pre-allocated and must be at
      *             is determined by the actual I2C device  (a pre-allocated array/buffer of 32 bytes is safe)
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
      */
     // TODO :: THE IMPLEMENTATION NEEDS TO HONOR BUFFER POSITIONING
-//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer write, ByteBuffer read) throws IOException{
+//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer write, ByteBuffer read){
 //        return i2cBlockProcessCall(handle, register, write, 0, write.capacity(), read, 0);
 //    }
 
@@ -828,11 +787,10 @@ public interface PiGpio_I2C {
      * @param offset the starting offset position in the provided byte array to start writing from.
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
      */
     // TODO :: THE IMPLEMENTATION NEEDS TO HONOR BUFFER POSITIONING
-//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer data, int offset, int length) throws IOException{
+//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer data, int offset, int length){
 //        return i2cBlockProcessCall(handle, register, data, offset, length, data, offset);
 //    }
 
@@ -849,11 +807,10 @@ public interface PiGpio_I2C {
      *             overwritten with the data read from the I2C device register.
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
      */
     // TODO :: THE IMPLEMENTATION NEEDS TO HONOR BUFFER POSITIONING
-//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer data, int length) throws IOException {
+//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer data, int length) {
 //        return i2cBlockProcessCall(handle, register, data, 0, length);
 //    }
 
@@ -869,11 +826,10 @@ public interface PiGpio_I2C {
      * @param data a single byte array/buffer containing data to write and the array contents will be
      *             overwritten with the data read from the I2C device register.
      * @return Returns the number of bytes read (&gt;=0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
-     * @throws IOException
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cBlockProcessCall">PIGPIO::i2cBlockProcessCall</a>
      */
     // TODO :: THE IMPLEMENTATION NEEDS TO HONOR BUFFER POSITIONING
-//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer data) throws IOException {
+//    default int i2cBlockProcessCall(int handle, int register, ByteBuffer data) {
 //        return i2cBlockProcessCall(handle, register, data, data.capacity());
 //    }
 
@@ -889,7 +845,7 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns the number of bytes read (&gt;0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      */
-    int i2cReadI2CBlockData(int handle, int register, byte[] buffer, int offset, int length) throws IOException;
+    int i2cReadI2CBlockData(int handle, int register, byte[] buffer, int offset, int length);
 
     /**
      * This reads count bytes from the specified register of the device associated with the handle .
@@ -902,9 +858,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns the number of bytes read (&gt;0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadI2CBlockData">PIGPIO::i2cReadI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadI2CBlockData(int handle, int register, byte[] buffer, int length) throws IOException{
+    default int i2cReadI2CBlockData(int handle, int register, byte[] buffer, int length){
         return i2cReadI2CBlockData(handle, register, buffer, 0, length);
     }
 
@@ -918,9 +873,8 @@ public interface PiGpio_I2C {
      * @param buffer a byte array (pre-allocated) to receive the read data
      * @return Returns the number of bytes read (&gt;0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadI2CBlockData">PIGPIO::i2cReadI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadI2CBlockData(int handle, int register, byte[] buffer) throws IOException{
+    default int i2cReadI2CBlockData(int handle, int register, byte[] buffer){
         return i2cReadI2CBlockData(handle, register, buffer, buffer.length);
     }
 
@@ -944,9 +898,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns the number of bytes read (&gt;0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadI2CBlockData">PIGPIO::i2cReadI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadI2CBlockData(int handle, int register, ByteBuffer buffer, int offset, int length) throws IOException{
+    default int i2cReadI2CBlockData(int handle, int register, ByteBuffer buffer, int offset, int length){
 
         // perform bounds checking on requested length versus total remaining size available
         if(length > (buffer.capacity()-offset)){
@@ -991,9 +944,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns the number of bytes read (&gt;0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadI2CBlockData">PIGPIO::i2cReadI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadI2CBlockData(int handle, int register, ByteBuffer buffer, int length) throws IOException{
+    default int i2cReadI2CBlockData(int handle, int register, ByteBuffer buffer, int length){
         // if the buffer position is already at the buffer limit, then rewind the buffer for
         // writing new data into the buffer read from the I/O device
         if(buffer.position() == buffer.limit()) buffer.rewind();
@@ -1023,9 +975,8 @@ public interface PiGpio_I2C {
      * @param buffer a byte buffer (pre-allocated) to receive the read data
      * @return Returns the number of bytes read (&gt;0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadI2CBlockData">PIGPIO::i2cReadI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadI2CBlockData(int handle, int register, ByteBuffer buffer) throws IOException{
+    default int i2cReadI2CBlockData(int handle, int register, ByteBuffer buffer){
         // if the buffer position is already at the buffer limit, then rewind the buffer for
         // writing new data into the buffer read from the I/O device
         if(buffer.position() == buffer.limit()) buffer.rewind();
@@ -1045,9 +996,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cWriteI2CBlockData(int handle, int register, byte[] data, int offset, int length) throws IOException;
+    int i2cWriteI2CBlockData(int handle, int register, byte[] data, int offset, int length);
 
     /**
      * This writes up to 32 bytes from the byte array ('data') to the specified register of
@@ -1059,9 +1009,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteI2CBlockData(int handle, int register, byte[] data, int length) throws IOException{
+    default int i2cWriteI2CBlockData(int handle, int register, byte[] data, int length){
         return i2cWriteI2CBlockData(handle, register, data, 0, length);
     }
 
@@ -1074,9 +1023,8 @@ public interface PiGpio_I2C {
      * @param data a byte array containing the data to write to the I2C device register
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteI2CBlockData(int handle, int register, byte[] data) throws IOException{
+    default int i2cWriteI2CBlockData(int handle, int register, byte[] data){
         return i2cWriteI2CBlockData(handle, register, data, data.length);
     }
 
@@ -1099,9 +1047,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteI2CBlockData(int handle, int register, ByteBuffer buffer, int offset, int length) throws IOException{
+    default int i2cWriteI2CBlockData(int handle, int register, ByteBuffer buffer, int offset, int length){
         // perform bounds checking on requested length versus total remaining size available
         if(length > (buffer.capacity()-offset)){
             length = buffer.capacity()-offset;
@@ -1127,9 +1074,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteI2CBlockData(int handle, int register, ByteBuffer buffer, int length) throws IOException{
+    default int i2cWriteI2CBlockData(int handle, int register, ByteBuffer buffer, int length){
         // if the buffer position is already at the buffer limit, then flip the buffer for
         //reading data from the buffer at the starting position to write to the I/O device
         if(buffer.position() == buffer.limit()) buffer.flip();
@@ -1159,9 +1105,8 @@ public interface PiGpio_I2C {
      * @param buffer a byte buffer containing the data to write to the I2C device register
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteI2CBlockData(int handle, int register, ByteBuffer buffer) throws IOException{
+    default int i2cWriteI2CBlockData(int handle, int register, ByteBuffer buffer){
         // if the buffer position is already at the buffer limit, then flip the buffer for
         //reading data from the buffer at the starting position to write to the I/O device
         if(buffer.position() == buffer.limit()) buffer.flip();
@@ -1182,9 +1127,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteI2CBlockData(int handle, int register, Charset charset, CharSequence data, int offset, int length) throws IOException{
+    default int i2cWriteI2CBlockData(int handle, int register, Charset charset, CharSequence data, int offset, int length){
         return i2cWriteI2CBlockData(handle, register, data.toString().getBytes(charset), offset, length);
     }
 
@@ -1199,9 +1143,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteI2CBlockData(int handle, int register, Charset charset, CharSequence data, int length) throws IOException{
+    default int i2cWriteI2CBlockData(int handle, int register, Charset charset, CharSequence data, int length){
         return i2cWriteI2CBlockData(handle, register, charset, data, 0, length);
     }
 
@@ -1215,9 +1158,8 @@ public interface PiGpio_I2C {
      * @param data a byte array containing the data to write to the I2C device register
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteI2CBlockData(int handle, int register, Charset charset, CharSequence data) throws IOException{
+    default int i2cWriteI2CBlockData(int handle, int register, Charset charset, CharSequence data){
         return i2cWriteI2CBlockData(handle, register, charset, data, data.length());
     }
 
@@ -1232,9 +1174,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteI2CBlockData(int handle, int register, CharSequence data, int offset, int length) throws IOException{
+    default int i2cWriteI2CBlockData(int handle, int register, CharSequence data, int offset, int length){
         return i2cWriteI2CBlockData(handle, register, StandardCharsets.US_ASCII, data, offset, length);
     }
 
@@ -1248,9 +1189,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteI2CBlockData(int handle, int register, CharSequence data, int length) throws IOException{
+    default int i2cWriteI2CBlockData(int handle, int register, CharSequence data, int length){
         return i2cWriteI2CBlockData(handle, register, data, 0, length);
     }
 
@@ -1263,9 +1203,8 @@ public interface PiGpio_I2C {
      * @param data an ASCII string containing the data to write to the I2C device register
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteI2CBlockData">PIGPIO::i2cWriteI2CBlockData</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteI2CBlockData(int handle, int register, CharSequence data) throws IOException{
+    default int i2cWriteI2CBlockData(int handle, int register, CharSequence data){
         return i2cWriteI2CBlockData(handle, register, data, data.length());
     }
 
@@ -1278,9 +1217,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns number of bytes read (&gt;0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadDevice">PIGPIO::i2cReadDevice</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cReadDevice(int handle, byte[] buffer, int offset, int length) throws IOException;
+    int i2cReadDevice(int handle, byte[] buffer, int offset, int length);
 
     /**
      * This reads count bytes from the raw device into byte buffer array.
@@ -1290,9 +1228,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns number of bytes read (&gt;0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadDevice">PIGPIO::i2cReadDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadDevice(int handle, byte[] buffer, int length) throws IOException{
+    default int i2cReadDevice(int handle, byte[] buffer, int length){
         return i2cReadDevice(handle, buffer, 0, length);
     }
 
@@ -1303,9 +1240,8 @@ public interface PiGpio_I2C {
      * @param buffer a byte array (pre-allocated) to receive the read data
      * @return Returns number of bytes read (&gt;0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadDevice">PIGPIO::i2cReadDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadDevice(int handle, byte[] buffer) throws IOException{
+    default int i2cReadDevice(int handle, byte[] buffer){
         return i2cReadDevice(handle, buffer, buffer.length);
     }
 
@@ -1327,9 +1263,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns number of bytes read (&gt;0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadDevice">PIGPIO::i2cReadDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadDevice(int handle, ByteBuffer buffer, int offset, int length) throws IOException{
+    default int i2cReadDevice(int handle, ByteBuffer buffer, int offset, int length){
         // perform bounds checking on requested length versus total remaining size available
         if(length > (buffer.capacity()-offset)){
             length = buffer.capacity()-offset;
@@ -1371,9 +1306,8 @@ public interface PiGpio_I2C {
      * @param length the maximum number of bytes to read (1-32)
      * @return Returns number of bytes read (&gt;0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadDevice">PIGPIO::i2cReadDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadDevice(int handle, ByteBuffer buffer, int length) throws IOException{
+    default int i2cReadDevice(int handle, ByteBuffer buffer, int length){
         // if the buffer position is already at the buffer limit, then rewind the buffer for
         // writing new data into the buffer read from the I/O device
         if(buffer.position() == buffer.limit()) buffer.rewind();
@@ -1402,9 +1336,8 @@ public interface PiGpio_I2C {
      * @param buffer a byte buffer (pre-allocated) to receive the read data
      * @return Returns number of bytes read (&gt;0) if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_READ_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cReadDevice">PIGPIO::i2cReadDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cReadDevice(int handle, ByteBuffer buffer) throws IOException{
+    default int i2cReadDevice(int handle, ByteBuffer buffer){
         // if the buffer position is already at the buffer limit, then rewind the buffer for
         // writing new data into the buffer read from the I/O device
         if(buffer.position() == buffer.limit()) buffer.rewind();
@@ -1423,9 +1356,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
-     * @throws java.io.IOException if any.
      */
-    int i2cWriteDevice(int handle, byte[] data, int offset, int length) throws IOException;
+    int i2cWriteDevice(int handle, byte[] data, int offset, int length);
 
     /**
      * This writes multiple bytes from the provided byte array ('data') to the raw I2C device
@@ -1436,9 +1368,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteDevice(int handle, byte[] data, int length) throws IOException{
+    default int i2cWriteDevice(int handle, byte[] data, int length){
         return i2cWriteDevice(handle, data, 0, length);
     }
 
@@ -1450,9 +1381,8 @@ public interface PiGpio_I2C {
      * @param data the array of bytes to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteDevice(int handle, byte[] data) throws IOException{
+    default int i2cWriteDevice(int handle, byte[] data){
         return i2cWriteDevice(handle, data, data.length);
     }
 
@@ -1474,9 +1404,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteDevice(int handle, ByteBuffer buffer, int offset, int length) throws IOException{
+    default int i2cWriteDevice(int handle, ByteBuffer buffer, int offset, int length){
         // perform bounds checking on requested length versus total remaining size available
         if(length > (buffer.capacity()-offset)){
             length = buffer.capacity()-offset;
@@ -1501,9 +1430,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteDevice(int handle, ByteBuffer buffer, int length) throws IOException{
+    default int i2cWriteDevice(int handle, ByteBuffer buffer, int length){
         // if the buffer position is already at the buffer limit, then flip the buffer for
         //reading data from the buffer at the starting position to write to the I/O device
         if(buffer.position() == buffer.limit()) buffer.flip();
@@ -1532,9 +1460,8 @@ public interface PiGpio_I2C {
      * @param buffer the byte buffer of data to write
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteDevice(int handle, ByteBuffer buffer) throws IOException{
+    default int i2cWriteDevice(int handle, ByteBuffer buffer){
         // if the buffer position is already at the buffer limit, then flip the buffer for
         //reading data from the buffer at the starting position to write to the I/O device
         if(buffer.position() == buffer.limit()) buffer.flip();
@@ -1554,9 +1481,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteDevice(int handle, Charset charset, CharSequence data, int offset, int length) throws IOException{
+    default int i2cWriteDevice(int handle, Charset charset, CharSequence data, int offset, int length){
         return i2cWriteDevice(handle, data.toString().getBytes(charset), offset ,length);
     }
 
@@ -1570,9 +1496,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteDevice(int handle, Charset charset, CharSequence data, int length) throws IOException{
+    default int i2cWriteDevice(int handle, Charset charset, CharSequence data, int length){
         return i2cWriteDevice(handle, charset, data, 0, length);
     }
 
@@ -1585,9 +1510,8 @@ public interface PiGpio_I2C {
      * @param data the character sequence or string of data to write to the I2C device
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteDevice(int handle, Charset charset, CharSequence data) throws IOException{
+    default int i2cWriteDevice(int handle, Charset charset, CharSequence data){
         return i2cWriteDevice(handle, charset, data, data.length());
     }
 
@@ -1601,9 +1525,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteDevice(int handle, CharSequence data, int offset, int length) throws IOException{
+    default int i2cWriteDevice(int handle, CharSequence data, int offset, int length){
         return i2cWriteDevice(handle, data.toString().getBytes(StandardCharsets.US_ASCII), offset ,length);
     }
 
@@ -1616,9 +1539,8 @@ public interface PiGpio_I2C {
      * @param length the number of bytes to write (maximum 32 bytes supported)
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteDevice(int handle, CharSequence data, int length) throws IOException{
+    default int i2cWriteDevice(int handle, CharSequence data, int length){
         return i2cWriteDevice(handle, data, 0, length);
     }
 
@@ -1630,9 +1552,8 @@ public interface PiGpio_I2C {
      * @param data the character sequence or string of data to write to the I2C device
      * @return Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or PI_I2C_WRITE_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#i2cWriteDevice">PIGPIO::i2cWriteDevice</a>
-     * @throws java.io.IOException if any.
      */
-    default int i2cWriteDevice(int handle, CharSequence data) throws IOException{
+    default int i2cWriteDevice(int handle, CharSequence data){
         return i2cWriteDevice(handle, data, data.length());
     }
 }

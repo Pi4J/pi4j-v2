@@ -51,7 +51,7 @@ public class RpiSpiProviderImpl extends SpiProviderBase implements RpiSpiProvide
 
     /** {@inheritDoc} */
     @Override
-    public Spi create(SpiConfig config) throws Exception {
+    public Spi create(SpiConfig config) {
         return new RpiSpi(this, config);
     }
 }

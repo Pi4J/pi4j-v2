@@ -51,7 +51,7 @@ public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase 
 
     /** {@inheritDoc} */
     @Override
-    public DigitalOutput create(DigitalOutputConfig config) throws Exception {
+    public DigitalOutput create(DigitalOutputConfig config) {
 
         // export GPIO pin
         // /sys/class/gpio

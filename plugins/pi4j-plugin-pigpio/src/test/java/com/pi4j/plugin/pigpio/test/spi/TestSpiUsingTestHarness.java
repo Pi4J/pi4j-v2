@@ -31,8 +31,6 @@ package com.pi4j.plugin.pigpio.test.spi;
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
-import com.pi4j.exception.LifecycleException;
-import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.pigpio.test.TestEnv;
@@ -45,7 +43,6 @@ import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -133,17 +130,13 @@ public class TestSpiUsingTestHarness {
 
             // create SPI instance
             spi = pi4j.create(config);
-        } catch (IOException e){
-            e.printStackTrace();
-        } catch (Pi4JException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @AfterAll
-    public static void terminate() throws IOException, LifecycleException {
+    public static void terminate() {
         logger.info("");
         logger.info("************************************************************************");
         logger.info("TERMINATE TEST (" + TestSpiUsingTestHarness.class.getName() + ") ");
@@ -151,7 +144,7 @@ public class TestSpiUsingTestHarness {
         logger.info("");
 
         // close down SPI channel
-        spi.close();;
+        spi.close();
 
         // shutdown the PiGpio library
         piGpio.shutdown();
@@ -161,18 +154,18 @@ public class TestSpiUsingTestHarness {
     }
 
     @BeforeEach
-    public void beforeEach() throws Exception {
+    public void beforeEach() {
 
     }
 
     @AfterEach
-    public void afterEach() throws Exception {
+    public void afterEach() {
     }
 
     @Test
     @DisplayName("SPI :: Verify SPI Instance")
     @Order(1)
-    public void testSpiInstance() throws Exception {
+    public void testSpiInstance() {
         // ensure that the SPI instance is not null;
         assertNotNull(spi);
 
@@ -183,7 +176,7 @@ public class TestSpiUsingTestHarness {
     @Test
     @DisplayName("SPI :: Test BYTE (WRITE)")
     @Order(2)
-    public void testSpiSingleByteWrite() throws Exception {
+    public void testSpiSingleByteWrite() {
         // write a single byte to the SPI device
         spi.write(SAMPLE_BYTE);
     }
@@ -191,7 +184,7 @@ public class TestSpiUsingTestHarness {
     @Test
     @DisplayName("SPI :: Test BYTE (READ)")
     @Order(3)
-    public void testSpiSingleByteRead() throws Exception {
+    public void testSpiSingleByteRead() {
         // read single byte from the SPI device
         assertEquals(SAMPLE_BYTE, spi.readByte());
     }
@@ -199,7 +192,7 @@ public class TestSpiUsingTestHarness {
     @Test
     @DisplayName("SPI :: Test BYTE-ARRAY (WRITE)")
     @Order(4)
-    public void testSpiByteArrayWrite() throws Exception {
+    public void testSpiByteArrayWrite() {
         // write an array of data bytes to the SPI device
         spi.write(SAMPLE_BYTE_ARRAY);
     }
@@ -207,7 +200,7 @@ public class TestSpiUsingTestHarness {
     @Test
     @DisplayName("SPI :: Test BYTE-ARRAY (READ)")
     @Order(5)
-    public void testSpiByteArrayRead() throws Exception {
+    public void testSpiByteArrayRead() {
         // read an array of data bytes from the SPI device
         byte[] byteArray = spi.readNBytes(SAMPLE_BYTE_ARRAY.length);
         assertEquals(SAMPLE_BYTE_ARRAY[SAMPLE_BYTE_ARRAY.length-1], byteArray[0]);
@@ -216,7 +209,7 @@ public class TestSpiUsingTestHarness {
     @Test
     @DisplayName("SPI :: Test BYTE-BUFFER (WRITE)")
     @Order(6)
-    public void testSpiByteBufferWrite() throws Exception {
+    public void testSpiByteBufferWrite() {
         // write a buffer of data bytes to the SPI device
         spi.write(SAMPLE_BUFFER);
     }
@@ -224,7 +217,7 @@ public class TestSpiUsingTestHarness {
     @Test
     @DisplayName("SPI :: Test BYTE-BUFFER (READ)")
     @Order(7)
-    public void testSpiByteBufferRead() throws Exception {
+    public void testSpiByteBufferRead() {
         // read a buffer of data bytes from the SPI device
         ByteBuffer buffer = spi.readByteBuffer(SAMPLE_BUFFER.capacity());
         assertEquals(SAMPLE_BUFFER.get(SAMPLE_BUFFER.capacity()-1), buffer.get(0));
@@ -233,7 +226,7 @@ public class TestSpiUsingTestHarness {
     @Test
     @DisplayName("SPI :: Test ASCII STRING (WRITE)")
     @Order(8)
-    public void testSpiAsciiStringWrite() throws Exception {
+    public void testSpiAsciiStringWrite() {
         // write a string of data to the SPI device
         spi.write(SAMPLE_STRING);
     }
@@ -241,7 +234,7 @@ public class TestSpiUsingTestHarness {
     @Test
     @DisplayName("SPI :: Test ASCII STRING (READ)")
     @Order(9)
-    public void testSpiAsciiStringRead() throws Exception {
+    public void testSpiAsciiStringRead() {
         // read a string of data from the SPI device
         String testString = spi.readString(SAMPLE_STRING.length());
         assertEquals(SAMPLE_STRING.substring(SAMPLE_STRING.length()-1), testString.substring(0, 1));

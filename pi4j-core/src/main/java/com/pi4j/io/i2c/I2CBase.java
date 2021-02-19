@@ -32,8 +32,6 @@ import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.IOBase;
 import com.pi4j.io.i2c.impl.DefaultI2CRegister;
 
-import java.io.IOException;
-
 /**
  * <p>Abstract I2CBase class.</p>
  *
@@ -66,7 +64,7 @@ public abstract class I2CBase extends IOBase<I2C, I2CConfig, I2CProvider> implem
 
     /** {@inheritDoc} */
     @Override
-    public void close() throws IOException {
+    public void close() {
         this.isOpen = false;
     }
 

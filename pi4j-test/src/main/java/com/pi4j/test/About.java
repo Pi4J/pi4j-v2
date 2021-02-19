@@ -45,19 +45,16 @@ public class About {
 
     /**
      * <p>Constructor for About.</p>
-     *
-     * @throws java.lang.Exception if any.
      */
-    public About() throws Exception {
+    public About() {
     }
 
     /**
      * <p>enumerateProviders.</p>
      *
      * @param context a {@link com.pi4j.context.Context} object.
-     * @throws com.pi4j.exception.Pi4JException if any.
      */
-    public void enumerateProviders(Context context) throws Pi4JException {
+    public void enumerateProviders(Context context) {
         enumerateProviders(context,"PROVIDERS");
     }
     /**
@@ -65,9 +62,8 @@ public class About {
      *
      * @param context a {@link com.pi4j.context.Context} object.
      * @param title a {@link java.lang.String} object.
-     * @throws com.pi4j.exception.Pi4JException if any.
      */
-    public void enumerateProviders(Context context, String title) throws Pi4JException {
+    public void enumerateProviders(Context context, String title) {
         logger.info("=====================================================");
         logger.info(title);
         logger.info("=====================================================");
@@ -81,9 +77,8 @@ public class About {
      *
      * @param context a {@link com.pi4j.context.Context} object.
      * @param ioType a {@link com.pi4j.io.IOType} object.
-     * @throws com.pi4j.exception.Pi4JException if any.
      */
-    public void enumerateProviders(Context context, IOType ioType) throws Pi4JException {
+    public void enumerateProviders(Context context, IOType ioType) {
         logger.info("=====================================================");
         logger.info(ioType + " PROVIDERS");
         logger.info("=====================================================");
@@ -96,9 +91,8 @@ public class About {
      * <p>enumeratePlatforms.</p>
      *
      * @param context a {@link com.pi4j.context.Context} object.
-     * @throws com.pi4j.exception.Pi4JException if any.
      */
-    public void enumeratePlatforms(Context context) throws Pi4JException {
+    public void enumeratePlatforms(Context context) {
         logger.info("=====================================================");
         logger.info("PLATFORMS");
         logger.info("=====================================================");
@@ -111,7 +105,7 @@ public class About {
      * <p>describeDeafultPlatform.</p>
      *
      * @param context a {@link com.pi4j.context.Context} object.
-     * @throws com.pi4j.exception.Pi4JException if any.
+     * @throws Pi4JException if any.
      */
     public void describeDeafultPlatform(Context context) throws Pi4JException {
         logger.info("=====================================================");

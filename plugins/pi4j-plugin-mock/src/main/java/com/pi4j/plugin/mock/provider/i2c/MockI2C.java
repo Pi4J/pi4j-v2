@@ -38,7 +38,6 @@ import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayDeque;
 import java.util.Objects;
@@ -80,7 +79,7 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public void close() throws IOException {
+    public void close() {
         logger.info(" [");
         logger.info(Mock.I2C_PROVIDER_NAME);
         logger.info("::");
@@ -96,7 +95,7 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte b) throws IOException {
+    public int write(byte b) {
         raw.add(b);
         logger.info(" [");
         logger.info(Mock.I2C_PROVIDER_NAME);
@@ -110,7 +109,7 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte[] data, int offset, int length) throws IOException {
+    public int write(byte[] data, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, data.length);
         for(int p = offset; p-offset < length; p++){
             raw.add(data[p]); // add to internal buffer
@@ -127,7 +126,7 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int write(Charset charset, CharSequence data) throws IOException {
+    public int write(Charset charset, CharSequence data) {
         byte[] buffer = data.toString().getBytes(charset);
         for(int p = 0; p < buffer.length; p++){
             raw.add(buffer[p]); // add to internal buffer
@@ -148,7 +147,7 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int read() throws IOException{
+    public int read() {
         if(raw.isEmpty()) return -1;
         byte b = raw.pop();
         logger.info(" [");
@@ -163,14 +162,14 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int read(byte[] buffer, int offset, int length) throws IOException{
+    public int read(byte[] buffer, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, buffer.length);
 
         if(raw.isEmpty()) return -1;
         int counter = 0;
         for(int p = 0; p < length; p++) {
             if(p+offset > buffer.length) break;
-            if(raw.isEmpty()) break;;
+            if(raw.isEmpty()) break;
             buffer[offset + p] = raw.pop();
             counter++;
         }
@@ -188,11 +187,11 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public String readString(Charset charset, int length) throws IOException{
+    public String readString(Charset charset, int length) {
         if(raw.isEmpty()) return null;
         byte[] buffer = new byte[length];
         for(int p = 0; p < length; p++) {
-            if(raw.isEmpty()) break;;
+            if(raw.isEmpty()) break;
             buffer[p] = raw.pop();
         }
         String result = new String(buffer, charset);
@@ -214,7 +213,7 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int writeRegister(int register, byte b) throws IOException {
+    public int writeRegister(int register, byte b) {
 
         if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
         registers[register].add(b);
@@ -234,7 +233,7 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int writeRegister(int register, byte[] data, int offset, int length) throws IOException {
+    public int writeRegister(int register, byte[] data, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, data.length);
 
         // add to internal buffer
@@ -259,7 +258,7 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int writeRegister(int register, Charset charset, CharSequence data) throws IOException{
+    public int writeRegister(int register, Charset charset, CharSequence data) {
 
         if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
         byte[] buffer = data.toString().getBytes(charset);
@@ -286,9 +285,9 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int readRegister(int register) throws IOException {
-        if(registers[register] == null) throw new IOException("No available data to read");
-        if(registers[register].isEmpty()) throw new IOException("No available data to read");
+    public int readRegister(int register) {
+        if(registers[register] == null) throw new IllegalStateException("No available data to read");
+        if(registers[register].isEmpty()) throw new IllegalStateException("No available data to read");
         byte b = registers[register].pop();
         logger.info(" [");
         logger.info(Mock.I2C_PROVIDER_NAME);
@@ -305,14 +304,14 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public int readRegister(int register, byte[] buffer, int offset, int length) throws IOException {
+    public int readRegister(int register, byte[] buffer, int offset, int length) {
         if(registers[register] == null) return -1;
         if(registers[register].isEmpty()) return -1;
 
         int counter = 0;
         for(int p = 0; p < length; p++) {
             if(p+offset > buffer.length) break;
-            if(registers[register].isEmpty()) break;;
+            if(registers[register].isEmpty()) break;
             buffer[offset + p] = registers[register].pop();
             counter++;
         }
@@ -331,13 +330,13 @@ public class MockI2C extends I2CBase implements I2C {
 
     /** {@inheritDoc} */
     @Override
-    public String readRegisterString(int register, Charset charset, int length) throws IOException {
+    public String readRegisterString(int register, Charset charset, int length) {
         if(registers[register] == null) return null;
         if(registers[register].isEmpty()) return null;
 
         byte[] buffer = new byte[length];
         for(int p = 0; p < length; p++) {
-            if(registers[register].isEmpty()) break;;
+            if(registers[register].isEmpty()) break;
             buffer[p] = registers[register].pop();
         }
         String result = new String(buffer, charset);

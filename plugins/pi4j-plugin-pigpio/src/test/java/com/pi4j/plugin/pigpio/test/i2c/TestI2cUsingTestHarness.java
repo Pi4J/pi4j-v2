@@ -29,7 +29,6 @@ package com.pi4j.plugin.pigpio.test.i2c;
  * #L%
  */
 
-import com.pi4j.io.exception.IOReadException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CRegister;
 import com.pi4j.library.pigpio.PiGpio;
@@ -109,7 +108,7 @@ public class TestI2cUsingTestHarness {
     }
 
     @AfterAll
-    public static void terminate() throws IOException {
+    public static void terminate() {
         logger.info("");
         logger.info("************************************************************************");
         logger.info("TERMINATE TEST (" + TestI2cUsingTestHarness.class.getName() + ") ");
@@ -118,7 +117,7 @@ public class TestI2cUsingTestHarness {
     }
 
     @BeforeEach
-    public void beforeEach() throws Exception {
+    public void beforeEach() {
         // create I2C config
         var config  = I2C.newConfigBuilder(null)
                 .id("my-i2c-bus")
@@ -141,7 +140,7 @@ public class TestI2cUsingTestHarness {
     }
 
     @AfterEach
-    public void afterEach() throws Exception {
+    public void afterEach() {
         // close I2C (if needed)
         if(i2c.isOpen())
             i2c.close();
@@ -153,7 +152,7 @@ public class TestI2cUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test register: BYTE (W/R)")
     @Order(1)
-    public void testI2CByteWriteRead() throws IOException, InterruptedException, IOReadException {
+    public void testI2CByteWriteRead() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C REGISTER READ/WRITE BYTE");
@@ -208,7 +207,7 @@ public class TestI2cUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test register: WORD (W/R)")
     @Order(2)
-    public void testI2CWordWriteRead() throws IOException, InterruptedException, IOReadException {
+    public void testI2CWordWriteRead() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C REGISTER READ/WRITE WORD");
@@ -262,7 +261,7 @@ public class TestI2cUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test register: BYTE-ARRAY (W/R)")
     @Order(3)
-    public void testI2CByteArrayWriteRead() throws IOException, InterruptedException, IOReadException {
+    public void testI2CByteArrayWriteRead() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C REGISTER READ/WRITE BYTE-ARRAY");
@@ -327,7 +326,7 @@ public class TestI2cUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test register: BYTE-BUFFER (W/R)")
     @Order(4)
-    public void testI2CByteBufferWriteRead() throws IOException, InterruptedException, IOReadException {
+    public void testI2CByteBufferWriteRead() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C REGISTER READ/WRITE BYTE BUFFER");
@@ -392,7 +391,7 @@ public class TestI2cUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test register: (EXCHANGE) WORD (W->R)")
     @Order(5)
-    public void testI2CWordExchange() throws IOException, InterruptedException, IOReadException {
+    public void testI2CWordExchange() {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST I2C REGISTER EXCHANGE WORD");

@@ -48,23 +48,23 @@ import com.pi4j.io.spi.SpiConfigBuilder;
 
 public interface IOCreator {
 
-    <I extends IO>I create(IOConfig config, IOType type) throws Exception;
-    <I extends IO>I create(String id) throws Exception;
-    <I extends IO>I create(String id, IOType ioType) throws Exception;
+    <I extends IO>I create(IOConfig config, IOType type);
+    <I extends IO>I create(String id);
+    <I extends IO>I create(String id, IOType ioType);
 
-    default <I extends IO>I create(String id, Class<I> ioClass) throws Exception{
+    default <I extends IO>I create(String id, Class<I> ioClass) {
         return create(id, IOType.getByIOClass(ioClass));
     }
 
-    default <I extends IO>I create(IOConfig config, Class<I> ioClass) throws Exception{
+    default <I extends IO>I create(IOConfig config, Class<I> ioClass) {
         return (ioClass.cast(create((IOConfig) config, IOType.getByIOClass(ioClass))));
     }
 
-    default <I extends IO>I create(IOConfigBuilder builder, IOType ioType) throws Exception{
+    default <I extends IO>I create(IOConfigBuilder builder, IOType ioType) {
         return create((IOConfig)builder.build(), ioType);
     }
 
-    default <I extends IO>I create(IOConfigBuilder builder, Class<I> ioClass) throws Exception{
+    default <I extends IO>I create(IOConfigBuilder builder, Class<I> ioClass) {
         return create((IOConfig) builder.build(), ioClass);
     }
 
@@ -73,9 +73,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.gpio.analog.AnalogOutputConfig} object.
      * @return a {@link com.pi4j.io.gpio.analog.AnalogOutput} object.
-     * @throws java.lang.Exception if any.
      */
-    default AnalogOutput create(AnalogOutputConfig config) throws Exception{
+    default AnalogOutput create(AnalogOutputConfig config) {
         return create(config, AnalogOutput.class);
     }
 
@@ -84,9 +83,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.gpio.analog.AnalogInputConfig} object.
      * @return a {@link com.pi4j.io.gpio.analog.AnalogInput} object.
-     * @throws java.lang.Exception if any.
      */
-    default AnalogInput create(AnalogInputConfig config) throws Exception{
+    default AnalogInput create(AnalogInputConfig config) {
         return create(config, AnalogInput.class);
     }
 
@@ -95,9 +93,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.gpio.digital.DigitalOutputConfig} object.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws java.lang.Exception if any.
      */
-    default DigitalOutput create(DigitalOutputConfig config) throws Exception{
+    default DigitalOutput create(DigitalOutputConfig config) {
         return create(config, DigitalOutput.class);
     }
 
@@ -106,9 +103,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.gpio.digital.DigitalInputConfig} object.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalInput} object.
-     * @throws java.lang.Exception if any.
      */
-    default DigitalInput create(DigitalInputConfig config) throws Exception{
+    default DigitalInput create(DigitalInputConfig config) {
         return create(config, DigitalInput.class);
     }
 
@@ -117,9 +113,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.pwm.PwmConfig} object.
      * @return a {@link com.pi4j.io.pwm.Pwm} object.
-     * @throws java.lang.Exception if any.
      */
-    default Pwm create(PwmConfig config) throws Exception{
+    default Pwm create(PwmConfig config) {
         return create(config, Pwm.class);
     }
 
@@ -128,9 +123,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.i2c.I2CConfig} object.
      * @return a {@link com.pi4j.io.i2c.I2C} object.
-     * @throws java.lang.Exception if any.
      */
-    default I2C create(I2CConfig config) throws Exception{
+    default I2C create(I2CConfig config) {
         return create(config, I2C.class);
     }
 
@@ -139,9 +133,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.spi.SpiConfig} object.
      * @return a {@link com.pi4j.io.spi.Spi} object.
-     * @throws java.lang.Exception if any.
      */
-    default Spi create(SpiConfig config) throws Exception{
+    default Spi create(SpiConfig config) {
         return create(config, Spi.class);
     }
 
@@ -150,9 +143,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.serial.SerialConfig} object.
      * @return a {@link com.pi4j.io.serial.Serial} object.
-     * @throws java.lang.Exception if any.
      */
-    default Serial create(SerialConfig config) throws Exception{
+    default Serial create(SerialConfig config) {
         return create(config, Serial.class);
     }
 
@@ -161,9 +153,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.gpio.analog.AnalogOutputConfigBuilder} object.
      * @return a {@link com.pi4j.io.gpio.analog.AnalogOutput} object.
-     * @throws java.lang.Exception if any.
      */
-    default AnalogOutput create(AnalogOutputConfigBuilder config) throws Exception{
+    default AnalogOutput create(AnalogOutputConfigBuilder config) {
         return create(config.build());
     }
 
@@ -172,9 +163,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.gpio.analog.AnalogInputConfigBuilder} object.
      * @return a {@link com.pi4j.io.gpio.analog.AnalogInput} object.
-     * @throws java.lang.Exception if any.
      */
-    default AnalogInput create(AnalogInputConfigBuilder config) throws Exception{
+    default AnalogInput create(AnalogInputConfigBuilder config) {
         return create(config.build());
     }
 
@@ -183,9 +173,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder} object.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalOutput} object.
-     * @throws java.lang.Exception if any.
      */
-    default DigitalOutput create(DigitalOutputConfigBuilder config) throws Exception{
+    default DigitalOutput create(DigitalOutputConfigBuilder config) {
         return create(config.build());
     }
 
@@ -194,9 +183,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalInput} object.
-     * @throws java.lang.Exception if any.
      */
-    default DigitalInput create(DigitalInputConfigBuilder config) throws Exception{
+    default DigitalInput create(DigitalInputConfigBuilder config) {
         return create(config.build());
     }
 
@@ -205,9 +193,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.pwm.PwmConfigBuilder} object.
      * @return a {@link com.pi4j.io.pwm.Pwm} object.
-     * @throws java.lang.Exception if any.
      */
-    default Pwm create(PwmConfigBuilder config) throws Exception{
+    default Pwm create(PwmConfigBuilder config) {
         return create(config.build());
     }
 
@@ -216,9 +203,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.i2c.I2CConfigBuilder} object.
      * @return a {@link com.pi4j.io.i2c.I2C} object.
-     * @throws java.lang.Exception if any.
      */
-    default I2C create(I2CConfigBuilder config) throws Exception{
+    default I2C create(I2CConfigBuilder config) {
         return create(config.build());
     }
 
@@ -227,9 +213,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
      * @return a {@link com.pi4j.io.spi.Spi} object.
-     * @throws java.lang.Exception if any.
      */
-    default Spi create(SpiConfigBuilder config) throws Exception{
+    default Spi create(SpiConfigBuilder config) {
         return create(config.build());
     }
 
@@ -238,9 +223,8 @@ public interface IOCreator {
      *
      * @param config a {@link com.pi4j.io.serial.SerialConfigBuilder} object.
      * @return a {@link com.pi4j.io.serial.Serial} object.
-     * @throws java.lang.Exception if any.
      */
-    default Serial create(SerialConfigBuilder config) throws Exception{
+    default Serial create(SerialConfigBuilder config) {
         return create(config.build());
     }
 }

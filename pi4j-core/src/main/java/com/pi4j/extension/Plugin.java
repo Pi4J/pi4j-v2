@@ -28,8 +28,8 @@ package com.pi4j.extension;
  */
 
 import com.pi4j.context.Context;
-
-import java.io.IOException;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
 
 /**
  * <p>Plugin interface.</p>
@@ -42,17 +42,17 @@ public interface Plugin  {
      * <p>initialize.</p>
      *
      * @param service a {@link com.pi4j.extension.PluginService} object.
-     * @throws java.io.IOException if any.
+     * @throws InitializeException if error occurs initializing the plugin
      */
-    void initialize(PluginService service) throws IOException;
+    void initialize(PluginService service) throws InitializeException;
 
     /**
      * <p>shutdown.</p>
      *
      * @param context a {@link com.pi4j.context.Context} object.
-     * @throws java.io.IOException if any.
+     * @throws ShutdownException if an error occurs shutting down the plugin
      */
-    default void shutdown(Context context) throws IOException{
+    default void shutdown(Context context) throws ShutdownException {
         // do nothing <optional override>
     }
 }

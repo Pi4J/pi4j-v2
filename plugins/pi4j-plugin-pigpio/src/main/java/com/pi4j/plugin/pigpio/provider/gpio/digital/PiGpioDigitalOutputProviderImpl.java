@@ -57,7 +57,7 @@ public class PiGpioDigitalOutputProviderImpl extends DigitalOutputProviderBase i
 
     /** {@inheritDoc} */
     @Override
-    public DigitalOutput create(DigitalOutputConfig config) throws Exception {
+    public DigitalOutput create(DigitalOutputConfig config) {
         // initialize the PIGPIO library
         if(!piGpio.isInitialized()) piGpio.initialize();
 

@@ -143,7 +143,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
 
     /** {@inheritDoc} */
     @Override
-    public <I extends IO>I create(IOConfig config, IOType ioType) throws Exception{
+    public <I extends IO>I create(IOConfig config, IOType ioType) {
 
         // create by explicitly configured IO <PROVIDER> from IO config
         String providerId = config.provider();
@@ -169,11 +169,11 @@ public abstract class PlatformBase<PLATFORM extends Platform>
 
     /** {@inheritDoc} */
     @Override
-    public <T extends IO>T create(String id) throws Exception {
+    public <T extends IO>T create(String id) {
         Provider provider = null;
 
         // validate context
-        if(this.context == null) throw new IOException("Unable to create IO instance; this platform has not been 'initialized()' with a Pi4J context.");
+        if(this.context == null) throw new IllegalStateException("Unable to create IO instance; this platform has not been 'initialized()' with a Pi4J context.");
 
         // resolve inheritable properties from the context based on the provided 'id' for this IO instance
         Map<String,String> inheritedProperties = PropertiesUtil.subProperties(this.context.properties().all(), id);
@@ -208,11 +208,11 @@ public abstract class PlatformBase<PLATFORM extends Platform>
 
     /** {@inheritDoc} */
     @Override
-    public <T extends IO>T create(String id, IOType ioType) throws Exception {
+    public <T extends IO>T create(String id, IOType ioType) {
         Provider provider = null;
 
         // validate context
-        if(this.context == null) throw new IOException("Unable to create IO instance; this platform has not been 'initialized()' with a Pi4J context.");
+        if(this.context == null) throw new IllegalStateException("Unable to create IO instance; this platform has not been 'initialized()' with a Pi4J context.");
 
         // resolve inheritable properties from the context based on the provided 'id' for this IO instance
         Map<String,String> inheritedProperties = PropertiesUtil.subProperties(this.context.properties().all(), id);

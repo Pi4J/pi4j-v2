@@ -33,7 +33,6 @@ import com.pi4j.context.ContextProperties;
 import com.pi4j.event.InitializedListener;
 import com.pi4j.event.ShutdownListener;
 import com.pi4j.exception.LifecycleException;
-import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.platform.Platforms;
 import com.pi4j.platform.impl.DefaultPlatforms;
@@ -70,14 +69,13 @@ public class DefaultContext implements Context {
      *
      * @param config a {@link com.pi4j.context.ContextConfig} object.
      * @return a {@link com.pi4j.context.Context} object.
-     * @throws com.pi4j.exception.Pi4JException if any.
      */
-    public static Context newInstance(ContextConfig config) throws Pi4JException {
+    public static Context newInstance(ContextConfig config) {
         return new DefaultContext(config);
     }
 
     // private constructor
-    private DefaultContext(ContextConfig config) throws Pi4JException {
+    private DefaultContext(ContextConfig config) {
         logger.trace("new Pi4J runtime context initialized [config={}]", config);
 
         // validate config object exists

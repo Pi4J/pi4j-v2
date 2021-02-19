@@ -54,16 +54,15 @@ public interface Provider<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CO
      *
      * @param config a CONFIG_TYPE object.
      * @return a IO_TYPE object.
-     * @throws java.lang.Exception if any.
      */
-    IO_TYPE create(CONFIG_TYPE config) throws Exception;
+    IO_TYPE create(CONFIG_TYPE config);
 
     /**
      * <p>type.</p>
      *
      * @return a {@link com.pi4j.io.IOType} object.
      */
-    default IOType type() { return IOType.getByProviderClass(this.getClass()); };
+    default IOType type() { return IOType.getByProviderClass(this.getClass()); }
     /**
      * <p>getType.</p>
      *
@@ -87,7 +86,7 @@ public interface Provider<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CO
         return descriptor;
     }
 
-    default IO_TYPE create(String id) throws Exception {
+    default IO_TYPE create(String id) {
         // validate context
         if(context() == null) throw new IOException("Unable to create IO instance; this provider has not been 'initialized()' with a Pi4J context.");
 

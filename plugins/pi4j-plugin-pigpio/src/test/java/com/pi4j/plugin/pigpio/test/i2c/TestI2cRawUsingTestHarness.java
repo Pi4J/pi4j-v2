@@ -112,7 +112,7 @@ public class TestI2cRawUsingTestHarness {
     }
 
     @AfterAll
-    public static void terminate() throws IOException {
+    public static void terminate() {
         logger.info("");
         logger.info("************************************************************************");
         logger.info("TERMINATE TEST (" + TestI2cRawUsingTestHarness.class.getName() + ") ");
@@ -121,7 +121,7 @@ public class TestI2cRawUsingTestHarness {
     }
 
     @BeforeEach
-    public void beforeEach() throws Exception {
+    public void beforeEach() {
         // create I2C config
         var config  = I2C.newConfigBuilder(null)
                 .id("my-i2c-bus")
@@ -144,7 +144,7 @@ public class TestI2cRawUsingTestHarness {
     }
 
     @AfterEach
-    public void afterEach() throws Exception {
+    public void afterEach() {
         // close I2C (if needed)
         if(i2c.isOpen())
             i2c.close();
@@ -156,7 +156,7 @@ public class TestI2cRawUsingTestHarness {
     @Test
     @DisplayName("I2C :: Verify I2C Instance")
     @Order(1)
-    public void testI2CInstance() throws Exception {
+    public void testI2CInstance() {
         // ensure that the I2C instance is not null;
         assertNotNull(i2c);
 
@@ -167,7 +167,7 @@ public class TestI2cRawUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test BYTE (WRITE)")
     @Order(2)
-    public void testI2CSingleByteWrite() throws Exception {
+    public void testI2CSingleByteWrite() {
         // write a single byte to the raw I2C device (not to a register)
         i2c.write(SAMPLE_BYTE);
     }
@@ -175,7 +175,7 @@ public class TestI2cRawUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test BYTE (READ)")
     @Order(3)
-    public void testI2CSingleByteRead() throws Exception {
+    public void testI2CSingleByteRead() {
         // read single byte from the raw I2C device (not from a register)
         assertEquals(SAMPLE_BYTE, i2c.readByte());
     }
@@ -183,7 +183,7 @@ public class TestI2cRawUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test BYTE-ARRAY (WRITE)")
     @Order(6)
-    public void testI2CByteArrayWrite() throws Exception {
+    public void testI2CByteArrayWrite() {
         // write an array of data bytes to the raw I2C device (not to a register)
         i2c.write(SAMPLE_BYTE_ARRAY);
     }
@@ -191,7 +191,7 @@ public class TestI2cRawUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test BYTE-ARRAY (READ)")
     @Order(7)
-    public void testI2CByteArrayRead() throws Exception {
+    public void testI2CByteArrayRead() {
         // read an array of data bytes from the raw I2C device (not from a register)
         byte[] byteArray = i2c.readNBytes(SAMPLE_BYTE_ARRAY.length);
         assertArrayEquals(SAMPLE_BYTE_ARRAY, byteArray);
@@ -200,7 +200,7 @@ public class TestI2cRawUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test BYTE-BUFFER (WRITE)")
     @Order(8)
-    public void testI2CByteBufferWrite() throws Exception {
+    public void testI2CByteBufferWrite() {
         // write a buffer of data bytes to the raw I2C device (not to a register)
         i2c.write(SAMPLE_BUFFER);
     }
@@ -208,7 +208,7 @@ public class TestI2cRawUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test BYTE-BUFFER (READ)")
     @Order(9)
-    public void testI2CByteBufferRead() throws Exception {
+    public void testI2CByteBufferRead() {
         // read a buffer of data bytes from the raw I2C device (not from a register)
         ByteBuffer buffer = i2c.readByteBuffer(SAMPLE_BUFFER.capacity());
         assertArrayEquals(SAMPLE_BUFFER.array(), buffer.array());
@@ -217,7 +217,7 @@ public class TestI2cRawUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test ASCII STRING (WRITE)")
     @Order(10)
-    public void testI2CAsciiStringWrite() throws Exception {
+    public void testI2CAsciiStringWrite() {
         // write a string of data to the raw I2C device (not to a register)
         i2c.write(SAMPLE_STRING);
     }
@@ -225,7 +225,7 @@ public class TestI2cRawUsingTestHarness {
     @Test
     @DisplayName("I2C :: Test ASCII STRING (READ)")
     @Order(11)
-    public void testI2CAsciiStringRead() throws Exception {
+    public void testI2CAsciiStringRead() {
         // read a string of data from the raw I2C device (not from a register)
         String testString = i2c.readString(SAMPLE_STRING.length());
         assertEquals(SAMPLE_STRING, testString);

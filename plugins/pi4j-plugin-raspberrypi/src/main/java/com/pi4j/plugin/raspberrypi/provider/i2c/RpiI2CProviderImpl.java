@@ -51,7 +51,7 @@ public class RpiI2CProviderImpl extends I2CProviderBase implements RpiI2CProvide
 
     /** {@inheritDoc} */
     @Override
-    public I2C create(I2CConfig config) throws Exception {
+    public I2C create(I2CConfig config) {
         return new RpiI2C(this, config);
     }
 

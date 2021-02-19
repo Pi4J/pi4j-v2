@@ -27,10 +27,6 @@ package com.pi4j.io.i2c;
  * #L%
  */
 
-import com.pi4j.io.exception.IOReadException;
-
-import java.io.IOException;
-
 /**
  * I2C Register Data Writer Interface for Pi4J Data Communications
  *
@@ -49,10 +45,8 @@ public interface I2CRegisterDataReaderWriter extends I2CRegisterDataReader, I2CR
      * @param register the register address to write to
      * @param word 16-bit word value to be written
      * @return The 16-bit word value read/returned; or a negative value if error
-     * @throws java.io.IOException thrown on write error
-     * @throws com.pi4j.io.exception.IOReadException if any.
      */
-    default int writeReadRegisterWord(int register, int word) throws IOException, IOReadException {
+    default int writeReadRegisterWord(int register, int word) {
         writeRegisterWord(register, word);
         return readRegisterWord(register);
     }

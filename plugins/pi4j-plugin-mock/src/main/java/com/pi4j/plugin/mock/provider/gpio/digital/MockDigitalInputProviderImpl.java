@@ -33,8 +33,6 @@ import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
 
-import java.io.IOException;
-
 /**
  * <p>MockDigitalInputProviderImpl class.</p>
  *
@@ -53,7 +51,7 @@ public class MockDigitalInputProviderImpl extends DigitalInputProviderBase imple
 
     /** {@inheritDoc} */
     @Override
-    public DigitalInput create(DigitalInputConfig config) throws IOException {
+    public DigitalInput create(DigitalInputConfig config) {
         return new MockDigitalInput(this, config);
     }
 }

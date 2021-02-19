@@ -57,7 +57,7 @@ public class PiGpioI2CProviderImpl extends I2CProviderBase implements PiGpioI2CP
 
     /** {@inheritDoc} */
     @Override
-    public I2C create(I2CConfig config) throws Exception {
+    public I2C create(I2CConfig config) {
         // initialize the PIGPIO library
         if(!piGpio.isInitialized()) piGpio.initialize();
 

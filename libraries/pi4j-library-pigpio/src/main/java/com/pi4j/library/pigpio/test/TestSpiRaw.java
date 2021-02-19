@@ -51,9 +51,8 @@ public class TestSpiRaw {
      * <p>main.</p>
      *
      * @param args an array of {@link String} objects.
-     * @throws Exception if any.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         logger.info("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
         logger.info("PIGPIO HARDWARE  : " + PIGPIO.gpioHardwareRevision());
 

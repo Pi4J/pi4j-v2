@@ -40,9 +40,8 @@ public interface DigitalOutputProvider extends DigitalProvider<DigitalOutputProv
      * @param builder a {@link com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends DigitalOutput> T create(DigitalOutputConfigBuilder builder) throws Exception {
+    default <T extends DigitalOutput> T create(DigitalOutputConfigBuilder builder) {
         return (T)create(builder.build());
     }
 
@@ -52,9 +51,8 @@ public interface DigitalOutputProvider extends DigitalProvider<DigitalOutputProv
      * @param address a {@link java.lang.Integer} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends DigitalOutput> T create(Integer address) throws Exception {
+    default <T extends DigitalOutput> T create(Integer address) {
         var config = DigitalOutput.newConfigBuilder(context())
                 .address(address)
                 .build();
@@ -68,9 +66,8 @@ public interface DigitalOutputProvider extends DigitalProvider<DigitalOutputProv
      * @param id a {@link java.lang.String} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends DigitalOutput> T create(Integer address, String id) throws Exception {
+    default <T extends DigitalOutput> T create(Integer address, String id) {
         var config = DigitalOutput.newConfigBuilder(context())
                 .id(id)
                 .address(address)
@@ -86,9 +83,8 @@ public interface DigitalOutputProvider extends DigitalProvider<DigitalOutputProv
      * @param name a {@link java.lang.String} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends DigitalOutput> T create(Integer address, String id, String name) throws Exception {
+    default <T extends DigitalOutput> T create(Integer address, String id, String name) {
         var config = DigitalOutput.newConfigBuilder(context())
                 .address(address)
                 .id(id)
@@ -106,9 +102,8 @@ public interface DigitalOutputProvider extends DigitalProvider<DigitalOutputProv
      * @param description a {@link java.lang.String} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends DigitalOutput> T create(Integer address, String id, String name, String description) throws Exception {
+    default <T extends DigitalOutput> T create(Integer address, String id, String name, String description) {
         var config = DigitalOutput.newConfigBuilder(context())
                 .address(address)
                 .id(id)

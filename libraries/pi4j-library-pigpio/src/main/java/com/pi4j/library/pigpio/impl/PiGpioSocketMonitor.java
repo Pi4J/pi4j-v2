@@ -33,7 +33,6 @@ import com.pi4j.library.pigpio.PiGpioCmd;
 import com.pi4j.library.pigpio.PiGpioPacket;
 import com.pi4j.library.pigpio.PiGpioState;
 import com.pi4j.library.pigpio.PiGpioStateChangeEvent;
-import com.pi4j.library.pigpio.test.TestI2CRaw;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,9 +71,8 @@ public class PiGpioSocketMonitor  {
      * <p>Constructor for PiGpioSocketMonitor.</p>
      *
      * @param piGpio a {@link com.pi4j.library.pigpio.impl.PiGpioSocketBase} object.
-     * @throws java.io.IOException if any.
      */
-    public PiGpioSocketMonitor(PiGpioSocketBase piGpio) throws IOException {
+    public PiGpioSocketMonitor(PiGpioSocketBase piGpio) {
         this.piGpio = piGpio;
     }
 
@@ -105,9 +103,8 @@ public class PiGpioSocketMonitor  {
      *
      * @param pin a int.
      * @param enabled a boolean.
-     * @throws java.io.IOException if any.
      */
-    public void enable(int pin, boolean enabled) throws IOException{
+    public void enable(int pin, boolean enabled){
 
         // update pin monitor
         if(enabled) {
@@ -130,10 +127,8 @@ public class PiGpioSocketMonitor  {
 
     /**
      * <p>disable.</p>
-     *
-     * @throws java.io.IOException if any.
      */
-    protected void disable() throws IOException {
+    protected void disable() {
         // reset pin monitoring flags
         pinMonitor = 0b00000000000000000000000000000000;
 

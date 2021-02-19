@@ -30,6 +30,8 @@ package com.pi4j.plugin.pigpio;
  */
 
 import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
 import com.pi4j.library.pigpio.PiGpio;
@@ -40,8 +42,6 @@ import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
 import com.pi4j.plugin.pigpio.provider.serial.PiGpioSerialProvider;
 import com.pi4j.plugin.pigpio.provider.spi.PiGpioSpiProvider;
 import com.pi4j.provider.Provider;
-
-import java.io.IOException;
 
 /**
  * <p>PiGpioPlugin class.</p>
@@ -116,7 +116,7 @@ public class PiGpioPlugin implements Plugin {
 
     /** {@inheritDoc} */
     @Override
-    public void initialize(PluginService service) throws IOException {
+    public void initialize(PluginService service) throws InitializeException {
 
         // get PIGPIO hostname/ip-address and ip-port
         Boolean remote = DEFAULT_PIGPIO_REMOTE;
@@ -178,7 +178,7 @@ public class PiGpioPlugin implements Plugin {
 
     /** {@inheritDoc} */
     @Override
-    public void shutdown(Context context) throws IOException {
+    public void shutdown(Context context) throws ShutdownException {
         // shutdown the PiGpio library
         if(piGpio != null && piGpio.isInitialized()) piGpio.shutdown();
     }

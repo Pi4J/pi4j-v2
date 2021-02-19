@@ -29,8 +29,6 @@ package com.pi4j.library.pigpio;
  * #L%
  */
 
-import java.io.IOException;
-
 /**
  * <p>PiGpio_GPIO interface.</p>
  *
@@ -45,9 +43,8 @@ public interface PiGpio_GPIO {
      * @param pin gpio pin address
      * @param pud pull-up, pull-down, pull-off
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetPullUpDown">PIGPIO::gpioSetPullUpDown</a>
-     * @throws java.io.IOException if any.
      */
-    void gpioSetPullUpDown(int pin, PiGpioPud pud) throws IOException;
+    void gpioSetPullUpDown(int pin, PiGpioPud pud);
 
     /**
      * Gets the GPIO mode.
@@ -55,9 +52,8 @@ public interface PiGpio_GPIO {
      * @param pin gpio pin address
      * @return  pin mode: input, output, etc.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGetMode">PIGPIO::gpioGetMode</a>
-     * @throws java.io.IOException if any.
      */
-    PiGpioMode gpioGetMode(int pin) throws IOException;
+    PiGpioMode gpioGetMode(int pin);
 
     /**
      * Sets the GPIO mode, typically input or output.
@@ -65,9 +61,8 @@ public interface PiGpio_GPIO {
      * @param pin gpio pin address
      * @param mode pin mode: input, output, etc.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioSetMode">PIGPIO::gpioSetMode</a>
-     * @throws java.io.IOException if any.
      */
-    void gpioSetMode(int pin, PiGpioMode mode) throws IOException;
+    void gpioSetMode(int pin, PiGpioMode mode);
 
     /**
      * Reads the GPIO level, on (HIGH) or off (LOW).
@@ -75,9 +70,8 @@ public interface PiGpio_GPIO {
      * @param pin gpio pin address
      * @return pin state: HIGH or LOW
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioRead">PIGPIO::gpioRead</a>
-     * @throws java.io.IOException if any.
      */
-    PiGpioState gpioRead(int pin) throws IOException;
+    PiGpioState gpioRead(int pin);
 
     /**
      * Sets the GPIO level, on (HIGH) or off (LOW).
@@ -85,9 +79,8 @@ public interface PiGpio_GPIO {
      * @param pin gpio pin address
      * @param state HIGH or LOW
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite">PIGPIO::gpioWrite</a>
-     * @throws java.io.IOException if any.
      */
-    void gpioWrite(int pin, PiGpioState state) throws IOException;
+    void gpioWrite(int pin, PiGpioState state);
 
     /**
      * Sets the GPIO level, 'true' (HIGH) or 'false' (LOW).
@@ -95,11 +88,10 @@ public interface PiGpio_GPIO {
      * @param pin gpio pin address
      * @param state HIGH ('true') or LOW ('false')
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite">PIGPIO::gpioWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default void gpioWrite(int pin, boolean state) throws IOException{
+    default void gpioWrite(int pin, boolean state){
         gpioWrite(pin, PiGpioState.from(state));
-    };
+    }
 
     /**
      * Sets the GPIO level, '1' (HIGH) or '0' (LOW).
@@ -107,11 +99,10 @@ public interface PiGpio_GPIO {
      * @param pin gpio pin address
      * @param state HIGH ('1') or LOW ('0')
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioWrite">PIGPIO::gpioWrite</a>
-     * @throws java.io.IOException if any.
      */
-    default void gpioWrite(int pin, int state) throws IOException{
+    default void gpioWrite(int pin, int state){
         gpioWrite(pin, PiGpioState.from(state));
-    };
+    }
 
     /**
      * Sets a glitch filter on a GPIO.  (AKA Debounce)
@@ -134,9 +125,8 @@ public interface PiGpio_GPIO {
      * @param pin gpio pin address (valid pins are 0-31)
      * @param steady interval in microseconds (valid range: 0-300000)
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter">PIGPIO::gpioGlitchFilter</a>
-     * @throws java.io.IOException if any.
      */
-    void gpioGlitchFilter(int pin, int steady) throws IOException;
+    void gpioGlitchFilter(int pin, int steady);
 
     /**
      * Sets a noise filter on a GPIO.
@@ -160,7 +150,6 @@ public interface PiGpio_GPIO {
      * @param steady interval in microseconds (valid range: 0-300000)
      * @param active interval in microseconds (valid range: 0-1000000)
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioGlitchFilter">PIGPIO::gpioGlitchFilter</a>
-     * @throws java.io.IOException if any.
      */
-    void gpioNoiseFilter(int pin, int steady, int active) throws IOException;
+    void gpioNoiseFilter(int pin, int steady, int active);
 }

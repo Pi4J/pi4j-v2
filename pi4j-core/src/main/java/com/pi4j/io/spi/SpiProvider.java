@@ -38,18 +38,18 @@ import com.pi4j.provider.Provider;
  */
 public interface SpiProvider extends Provider<SpiProvider, Spi, SpiConfig> {
 
-//    default <T extends Spi> T create(SpiConfigBuilder builder) throws Exception {
+//    default <T extends Spi> T create(SpiConfigBuilder builder) {
 //        return (T)create(builder.build());
 //    }
 
-//    default <T extends Spi> T create(Integer address) throws Exception {
+//    default <T extends Spi> T create(Integer address) {
 //        var config = Spi.newConfigBuilder()
 //                .address(address)
 //                .build();
 //        return (T)create(config);
 //    }
 //
-//    default <T extends Spi> T create(Integer address, String id) throws Exception {
+//    default <T extends Spi> T create(Integer address, String id) {
 //        var config = Spi.newConfigBuilder()
 //                .address(address)
 //                .id(id)
@@ -57,7 +57,7 @@ public interface SpiProvider extends Provider<SpiProvider, Spi, SpiConfig> {
 //        return (T)create(config);
 //    }
 //
-//    default <T extends Spi> T create(Integer address, String id, String name) throws Exception {
+//    default <T extends Spi> T create(Integer address, String id, String name) {
 //        var config = Spi.newConfigBuilder()
 //                .address(address)
 //                .id(id)
@@ -66,7 +66,7 @@ public interface SpiProvider extends Provider<SpiProvider, Spi, SpiConfig> {
 //        return (T)create(config);
 //    }
 //
-//    default <T extends Spi> T create(Integer address, String id, String name, String description) throws Exception {
+//    default <T extends Spi> T create(Integer address, String id, String name, String description) {
 //        var config = Spi.newConfigBuilder()
 //                .address(address)
 //                .id(id)

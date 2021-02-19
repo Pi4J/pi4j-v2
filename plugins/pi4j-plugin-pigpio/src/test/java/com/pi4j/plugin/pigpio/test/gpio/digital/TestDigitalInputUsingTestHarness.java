@@ -105,11 +105,11 @@ public class TestDigitalInputUsingTestHarness {
         logger.info("");
 
         // shutdown connection to test harness
-        harness.shutdown();;
+        harness.shutdown();
     }
 
     @BeforeEach
-    public void beforeEach() throws Exception {
+    public void beforeEach() {
 
         // TODO :: THIS WILL NEED TO CHANGE WHEN NATIVE PIGPIO SUPPORT IS ADDED
         piGpio = TestEnv.createPiGpio();
@@ -125,7 +125,7 @@ public class TestDigitalInputUsingTestHarness {
     }
 
     @AfterEach
-    public void afterEach() throws Exception {
+    public void afterEach() {
         // shutdown Pi4J after each test
         pi4j.shutdown();
 
@@ -136,7 +136,7 @@ public class TestDigitalInputUsingTestHarness {
     @Test
     @Order(1)
     @DisplayName("DIN :: Test GPIO Digital Input Pins <HIGH>")
-    public void testDigitalInputsHigh() throws Exception {
+    public void testDigitalInputsHigh() throws IOException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST DIGITAL INPUT PINS - HIGH");
@@ -169,7 +169,7 @@ public class TestDigitalInputUsingTestHarness {
     @Test
     @Order(2)
     @DisplayName("DIN :: Test GPIO Digital Input Pins <LOW>")
-    public void testDigitalInputsLow() throws Exception {
+    public void testDigitalInputsLow() throws IOException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST DIGITAL INPUT PINS - LOW");
@@ -199,7 +199,7 @@ public class TestDigitalInputUsingTestHarness {
     @Test
     @Order(3)
     @DisplayName("DIN :: Test GPIO Digital Input Pins <PULL-UP>")
-    public void testDigitalInputsPullUp() throws Exception {
+    public void testDigitalInputsPullUp() throws IOException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST DIGITAL INPUT PINS - PULL UP");
@@ -230,7 +230,7 @@ public class TestDigitalInputUsingTestHarness {
     @Test
     @Order(4)
     @DisplayName("DIN :: Test GPIO Digital Input Pins <PULL-DOWN>")
-    public void testDigitalInputsPullDown() throws Exception {
+    public void testDigitalInputsPullDown() throws IOException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST DIGITAL INPUT PINS - PULL DOWN");

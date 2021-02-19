@@ -99,7 +99,7 @@ public class TestSerialUsingTestHarness {
     }
 
     @AfterAll
-    public static void terminate() throws IOException {
+    public static void terminate() {
         logger.info("");
         logger.info("************************************************************************");
         logger.info("TERMINATE TEST (" + TestSerialUsingTestHarness.class.getName() + ") ");
@@ -108,7 +108,7 @@ public class TestSerialUsingTestHarness {
     }
 
     @BeforeEach
-    public void beforeEach() throws IOException {
+    public void beforeEach() {
         // create test harness and PIGPIO instances
         pigpio = TestEnv.createPiGpio();
 
@@ -124,7 +124,7 @@ public class TestSerialUsingTestHarness {
     }
 
     @AfterEach
-    public void afterEach() throws IOException {
+    public void afterEach() {
 
         // CLOSE SERIAL PORT
         pigpio.serClose(handle);
@@ -135,7 +135,7 @@ public class TestSerialUsingTestHarness {
 
     @Test
     @DisplayName("SERIAL :: Test SINGLE-BYTE (W/R)")
-    public void testSerialSingleByteTxRx() throws IOException {
+    public void testSerialSingleByteTxRx() {
         logger.info("");
         logger.info("--------------------------------------------");
         logger.info("TEST SERIAL PORT SINGLE BYTE RAW READ/WRITE");
@@ -167,7 +167,7 @@ public class TestSerialUsingTestHarness {
 
     @Test
     @DisplayName("SERIAL :: Test MULTI-BYTE (W/R)")
-    public void testSerialMultiByteTxRx() throws IOException, InterruptedException {
+    public void testSerialMultiByteTxRx() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST SERIAL MULTI-BYTE READ/WRITE");

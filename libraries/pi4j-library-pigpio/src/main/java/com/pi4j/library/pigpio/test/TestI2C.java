@@ -53,9 +53,8 @@ public class TestI2C {
      * <p>main.</p>
      *
      * @param args an array of {@link String} objects.
-     * @throws Exception if any.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         PiGpio piGpio = PiGpio.newNativeInstance();
 

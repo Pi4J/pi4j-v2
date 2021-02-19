@@ -67,7 +67,7 @@ public class TestAnalogInputProviderImpl extends AnalogInputProviderBase impleme
 
     /** {@inheritDoc} */
     @Override
-    public AnalogInput create(AnalogInputConfig config) throws Exception {
+    public AnalogInput create(AnalogInputConfig config) {
         return new TestAnalogInput(this, config);
     }
 }

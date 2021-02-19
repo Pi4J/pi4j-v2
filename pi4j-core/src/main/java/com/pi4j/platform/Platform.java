@@ -201,15 +201,15 @@ public interface Platform extends IOCreator, ProviderProvider, Extension<Platfor
     // ------------------------------------------------------------------------
 
     @Override
-    <I extends IO>I create(IOConfig config, IOType ioType) throws Exception;
+    <I extends IO>I create(IOConfig config, IOType ioType);
 
     /** {@inheritDoc} */
     @Override
-    <T extends IO>T create(String id) throws Exception;
+    <T extends IO>T create(String id);
 
     /** {@inheritDoc} */
     @Override
-    <T extends IO>T create(String id, IOType ioType) throws Exception;
+    <T extends IO>T create(String id, IOType ioType);
 
     // ------------------------------------------------------------------------
     // DESCRIPTOR

@@ -29,8 +29,7 @@ package com.pi4j.exception;
 
 /**
  * <p>
- * This exception is thrown if a platform assignment is attempted when a
- * platform instance has already been assigned.
+ * Base exception class for Pi4J exceptions.
  * </p>
  *
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
@@ -38,7 +37,7 @@ package com.pi4j.exception;
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class Pi4JException extends Exception {
+public class Pi4JException extends RuntimeException {
 
     /**
      * Default Constructor

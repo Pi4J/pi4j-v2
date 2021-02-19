@@ -32,15 +32,14 @@ package com.pi4j.plugin.pigpio.provider.gpio.digital;
 
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
+import com.pi4j.io.exception.IOException;
 import com.pi4j.io.gpio.digital.*;
 import com.pi4j.library.pigpio.PiGpio;
+import com.pi4j.library.pigpio.PiGpioException;
 import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.library.pigpio.PiGpioState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-
 
 /**
  * <p>PiGpioDigitalOutput class.</p>
@@ -73,7 +72,7 @@ public class PiGpioDigitalOutput extends DigitalOutputBase implements DigitalOut
         try {
             // configure GPIO pin as an OUTPUT pin
             this.piGpio.gpioSetMode(pin, PiGpioMode.OUTPUT);
-        } catch (IOException e) {
+        } catch (PiGpioException e) {
             logger.error(e.getMessage(), e);
             throw new InitializeException(e);
         }
@@ -82,12 +81,12 @@ public class PiGpioDigitalOutput extends DigitalOutputBase implements DigitalOut
 
     /** {@inheritDoc} */
     @Override
-    public DigitalOutput state(DigitalState state) throws com.pi4j.io.exception.IOException {
+    public DigitalOutput state(DigitalState state) throws IOException {
         try {
             this.piGpio.gpioWrite(pin, PiGpioState.from(state.value()));
-        } catch (IOException e) {
+        } catch (PiGpioException e) {
             logger.error(e.getMessage(), e);
-            throw new com.pi4j.io.exception.IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage(), e);
         }
         return super.state(state);
     }

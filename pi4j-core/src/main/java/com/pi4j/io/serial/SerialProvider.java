@@ -44,20 +44,19 @@ public interface SerialProvider extends Provider<SerialProvider, Serial, SerialC
      * @param builder a {@link com.pi4j.io.serial.SerialConfigBuilder} object.
      * @param <T> a T object.
      * @return a T object.
-     * @throws java.lang.Exception if any.
      */
-    default <T extends Serial> T create(SerialConfigBuilder builder) throws Exception {
+    default <T extends Serial> T create(SerialConfigBuilder builder) {
         return (T)create(builder.build());
     }
 
-//    default <T extends Serial> T create(Integer address) throws Exception {
+//    default <T extends Serial> T create(Integer address) {
 //        var config = Serial.newConfigBuilder()
 //                .address(address)
 //                .build();
 //        return (T)create(config);
 //    }
 //
-//    default <T extends Serial> T create(Integer address, String id) throws Exception {
+//    default <T extends Serial> T create(Integer address, String id) {
 //        var config = Serial.newConfigBuilder()
 //                .address(address)
 //                .id(id)
@@ -65,7 +64,7 @@ public interface SerialProvider extends Provider<SerialProvider, Serial, SerialC
 //        return (T)create(config);
 //    }
 //
-//    default <T extends Serial> T create(Integer address, String id, String name) throws Exception {
+//    default <T extends Serial> T create(Integer address, String id, String name) {
 //        var config = Serial.newConfigBuilder()
 //                .address(address)
 //                .id(id)
@@ -74,7 +73,7 @@ public interface SerialProvider extends Provider<SerialProvider, Serial, SerialC
 //        return (T)create(config);
 //    }
 //
-//    default <T extends Serial> T create(Integer address, String id, String name, String description) throws Exception {
+//    default <T extends Serial> T create(Integer address, String id, String name, String description) {
 //        var config = Serial.newConfigBuilder()
 //                .address(address)
 //                .id(id)

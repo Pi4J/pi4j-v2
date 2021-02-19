@@ -31,8 +31,6 @@ import com.pi4j.io.IOBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 /**
  * <p>Abstract SpiBase class.</p>
  *
@@ -62,13 +60,13 @@ public abstract class SpiBase extends IOBase<Spi, SpiConfig, SpiProvider> implem
 
     /** {@inheritDoc} */
     @Override
-    public void open() throws IOException {
+    public void open() {
         logger.trace("invoked 'open()'");
     }
 
     /** {@inheritDoc} */
     @Override
-    public void close() throws IOException {
+    public void close() {
         logger.trace("invoked 'closed()'");
         this.isOpen = false;
     }

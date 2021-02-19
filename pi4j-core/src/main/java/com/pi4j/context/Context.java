@@ -33,7 +33,7 @@ import com.pi4j.config.Config;
 import com.pi4j.config.ConfigBuilder;
 import com.pi4j.event.InitializedEventProducer;
 import com.pi4j.event.ShutdownEventProducer;
-import com.pi4j.exception.LifecycleException;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.internal.IOCreator;
 import com.pi4j.internal.ProviderProvider;
 import com.pi4j.io.IO;
@@ -54,7 +54,6 @@ import com.pi4j.util.PropertiesUtil;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 /**
@@ -104,9 +103,9 @@ public interface Context extends Describable,
      * <p>shutdown.</p>
      *
      * @return a {@link com.pi4j.context.Context} object.
-     * @throws com.pi4j.exception.LifecycleException if any.
+     * @throws com.pi4j.exception.ShutdownException if an error occurs during shutdown.
      */
-    Context shutdown() throws LifecycleException;
+    Context shutdown() throws ShutdownException;
 
     /**
      *
@@ -169,7 +168,7 @@ public interface Context extends Describable,
      *
      * @param id Id of the platform.
      * @return a P object.
-     * @throws PlatformNotFoundException if any.
+     * @throws PlatformNotFoundException if platform specified by {@code id} is not found.
      */
     default <P extends Platform> P platform(String id) throws PlatformNotFoundException {
         return (P)this.platforms().get(id);
@@ -180,7 +179,7 @@ public interface Context extends Describable,
      *
      * @param id Id of the platform.
      * @return a P object.
-     * @throws PlatformNotFoundException if any.
+     * @throws PlatformNotFoundException if platform specified by {@code id} is not found.
      */
     default <P extends Platform> P getPlatform(String id) throws PlatformNotFoundException {
         return this.platform(id);
@@ -191,7 +190,7 @@ public interface Context extends Describable,
      *
      * @param id Id of the platform.
      * @return a P object.
-     * @throws PlatformNotFoundException if any.
+     * @throws PlatformNotFoundException if platform specified by {@code id} is not found.
      */
     default boolean hasPlatform(String id) throws PlatformNotFoundException {
         return this.platforms().exists(id);
@@ -202,7 +201,7 @@ public interface Context extends Describable,
      *
      * @param platformClass a P object.
      * @return a P object.
-     * @throws PlatformNotFoundException if any.
+     * @throws PlatformNotFoundException if platform specified by {@code platformClass} is not found.
      */
     default <P extends Platform> P platform(Class<P> platformClass) throws PlatformNotFoundException {
         return (P) this.platforms().get(platformClass);
@@ -213,7 +212,7 @@ public interface Context extends Describable,
      *
      * @param platformClass a P object.
      * @return a P object.
-     * @throws PlatformNotFoundException if any.
+     * @throws PlatformNotFoundException if platform specified by {@code platformClass} is not found.
      */
     default <P extends Platform> P getPlatform(Class<P> platformClass) throws PlatformNotFoundException {
         return platform(platformClass);
@@ -224,7 +223,7 @@ public interface Context extends Describable,
      *
      * @param platformClass a P object.
      * @return {@link boolean}
-     * @throws PlatformNotFoundException if any.
+     * @throws PlatformNotFoundException if platform specified by {@code platformClass} is not found.
      */
     default boolean hasPlatform(Class<? extends Platform> platformClass) throws PlatformNotFoundException {
         return platforms().exists(platformClass);
@@ -298,7 +297,7 @@ public interface Context extends Describable,
     // ------------------------------------------------------------------------
 
     @Override
-    default <I extends IO>I create(IOConfig config, IOType ioType) throws Exception{
+    default <I extends IO>I create(IOConfig config, IOType ioType) {
 
         // create by explicitly configured IO <PLATFORM> from IO config
         String platformId = config.platform();
@@ -330,7 +329,7 @@ public interface Context extends Describable,
     }
 
     @Override
-    default <T extends IO>T create(String id) throws Exception {
+    default <T extends IO>T create(String id) {
         Provider provider = null;
 
         // resolve inheritable properties from the context based on the provided 'id' for this IO instance
@@ -373,7 +372,7 @@ public interface Context extends Describable,
     }
 
     @Override
-    default <T extends IO>T create(String id, IOType ioType) throws Exception {
+    default <T extends IO>T create(String id, IOType ioType) {
         Provider provider = null;
 
         // resolve inheritable properties from the context based on the provided 'id' for this IO instance

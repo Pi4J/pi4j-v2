@@ -33,7 +33,6 @@ import com.pi4j.library.pigpio.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -60,55 +59,39 @@ public abstract class PiGpioBase implements PiGpio {
      * Close all open handles
      * Returns nothing.
      */
-    protected void closeAllOpenHandles() throws IOException {
+    protected void closeAllOpenHandles() {
         // close all open SPI handles
         spiHandles.forEach((handle) -> {
-            try {
-                logger.trace("[SHUTDOWN] -- CLOSING OPEN SPI HANDLE: [{}]", handle);
-                spiClose(handle.intValue());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            logger.trace("[SHUTDOWN] -- CLOSING OPEN SPI HANDLE: [{}]", handle);
+            spiClose(handle.intValue());
         });
 
         // close all open SERIAL handles
         serialHandles.forEach((handle) -> {
-            try {
-                logger.trace("[SHUTDOWN] -- CLOSING OPEN SERIAL HANDLE: [{}]", handle);
-                serClose(handle.intValue());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            logger.trace("[SHUTDOWN] -- CLOSING OPEN SERIAL HANDLE: [{}]", handle);
+            serClose(handle.intValue());
         });
 
         // close all open I2C handles
         i2cHandles.forEach((handle) -> {
-            try {
-                logger.trace("[SHUTDOWN] -- CLOSING OPEN I2C HANDLE: [{}]", handle);
-                i2cClose(handle.intValue());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            logger.trace("[SHUTDOWN] -- CLOSING OPEN I2C HANDLE: [{}]", handle);
+            i2cClose(handle.intValue());
         });
     }
 
     /**
      * <p>validateReady.</p>
-     *
-     * @throws java.io.IOException if any.
      */
-    protected void validateReady() throws IOException {
+    protected void validateReady() {
         validateInitialized();
     }
 
     /**
      * <p>validateInitialized.</p>
-     *
-     * @throws java.io.IOException if any.
      */
-    protected void validateInitialized() throws IOException {
+    protected void validateInitialized() {
         if(!this.initialized)
-            throw new IOException("PIGPIO NOT INITIALIZED; make sure you call the PiGpio::initialize() function first.");
+            throw new PiGpioException("PIGPIO NOT INITIALIZED; make sure you call the PiGpio::initialize() function first.");
     }
 
     /**
@@ -141,8 +124,7 @@ public abstract class PiGpioBase implements PiGpio {
      * Type 3    X  X  X  X  X  X  X  X  X  X  X  X  -  -  -  -
      *
      * @param pin a int.
-     * @throws java.lang.IllegalArgumentException if any.
-     * @throws java.lang.IllegalArgumentException if any.
+     * @throws java.lang.IllegalArgumentException if {@code pin} in not a valid pin.
      */
     protected void validateUserPin(int pin) throws IllegalArgumentException {
         validatePin(pin, true);
@@ -152,8 +134,7 @@ public abstract class PiGpioBase implements PiGpio {
      * <p>validatePin.</p>
      *
      * @param pin a int.
-     * @throws java.lang.IllegalArgumentException if any.
-     * @throws java.lang.IllegalArgumentException if any.
+     * @throws java.lang.IllegalArgumentException if {@code pin} in not a valid pin.
      */
     protected void validatePin(int pin) throws IllegalArgumentException {
         validatePin(pin, false);
@@ -164,8 +145,7 @@ public abstract class PiGpioBase implements PiGpio {
      *
      * @param pin a int.
      * @param userPin a boolean.
-     * @throws java.lang.IllegalArgumentException if any.
-     * @throws java.lang.IllegalArgumentException if any.
+     * @throws java.lang.IllegalArgumentException if {@code pin} in not a valid pin.
      */
     protected void validatePin(int pin, boolean userPin) throws IllegalArgumentException {
         int min = PI_MIN_GPIO;
@@ -178,8 +158,7 @@ public abstract class PiGpioBase implements PiGpio {
      * <p>validateDutyCycle.</p>
      *
      * @param dutyCycle a int.
-     * @throws java.lang.IllegalArgumentException if any.
-     * @throws java.lang.IllegalArgumentException if any.
+     * @throws java.lang.IllegalArgumentException if {@code dutyCycle} is not valid.
      */
     protected void validateDutyCycle(int dutyCycle) throws IllegalArgumentException{
         int min = 0;
@@ -193,8 +172,7 @@ public abstract class PiGpioBase implements PiGpio {
      * <p>validateDutyCycleRange.</p>
      *
      * @param range a int.
-     * @throws java.lang.IllegalArgumentException if any.
-     * @throws java.lang.IllegalArgumentException if any.
+     * @throws java.lang.IllegalArgumentException if {@code range} is not valid.
      */
     protected void validateDutyCycleRange(int range) throws IllegalArgumentException{
         int min = PI_MIN_DUTYCYCLE_RANGE;
@@ -208,8 +186,7 @@ public abstract class PiGpioBase implements PiGpio {
      * <p>validatePulseWidth.</p>
      *
      * @param pulseWidth a int.
-     * @throws java.lang.IllegalArgumentException if any.
-     * @throws java.lang.IllegalArgumentException if any.
+     * @throws java.lang.IllegalArgumentException if {@code pulseWidth} is not valid.
      */
     protected void validatePulseWidth(int pulseWidth) throws IllegalArgumentException{
         if(pulseWidth == 0) return;
@@ -250,9 +227,8 @@ public abstract class PiGpioBase implements PiGpio {
      * <p>validateResult.</p>
      *
      * @param result a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
-     * @throws java.io.IOException if any.
      */
-    protected void validateResult(PiGpioPacket result) throws IOException{
+    protected void validateResult(PiGpioPacket result){
         validateResult(result.result());
     }
 
@@ -261,9 +237,8 @@ public abstract class PiGpioBase implements PiGpio {
      *
      * @param result a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
      * @param throwException a boolean.
-     * @throws java.io.IOException if any.
      */
-    protected void validateResult(PiGpioPacket result, boolean throwException) throws IOException{
+    protected void validateResult(PiGpioPacket result, boolean throwException){
         validateResult(result.result(), throwException);
     }
 
@@ -271,9 +246,8 @@ public abstract class PiGpioBase implements PiGpio {
      * <p>validateResult.</p>
      *
      * @param value a long.
-     * @throws java.io.IOException if any.
      */
-    protected void validateResult(long value) throws IOException {
+    protected void validateResult(long value) {
         validateResult(value, true);
     }
 
@@ -282,14 +256,13 @@ public abstract class PiGpioBase implements PiGpio {
      *
      * @param value a long.
      * @param throwException a boolean.
-     * @throws java.io.IOException if any.
      */
-    protected void validateResult(long value, boolean throwException) throws IOException {
+    protected void validateResult(long value, boolean throwException) {
         if(value < 0) {
             PiGpioError err = PiGpioError.from(value);
             logger.warn("PIGPIO ERROR: " + err.name() + "; " + err.message());
             if(throwException) {
-                throw new IOException("PIGPIO ERROR: " + err.name() + "; " + err.message());
+                throw new PiGpioException("PIGPIO ERROR: " + err.name() + "; " + err.message());
             }
         }
     }
@@ -298,12 +271,11 @@ public abstract class PiGpioBase implements PiGpio {
      * <p>validateHandle.</p>
      *
      * @param handle a int.
-     * @throws java.io.IOException if any.
      */
-    protected void validateHandle(int handle) throws IOException {
+    protected void validateHandle(int handle) {
         // validate I2C handle
         if(handle < 0) {
-            throw new IOException("PIGPIO ERROR: INVALID I2C/SPI/SERIAL HANDLE [" + handle + "]; Valid range: >0");
+            throw new IllegalArgumentException("PIGPIO ERROR: INVALID I2C/SPI/SERIAL HANDLE [" + handle + "]; Valid range: >0");
         }
     }
 
@@ -311,12 +283,11 @@ public abstract class PiGpioBase implements PiGpio {
      * <p>validateI2cRegister.</p>
      *
      * @param register a int.
-     * @throws java.io.IOException if any.
      */
-    protected void validateI2cRegister(int register) throws IOException {
+    protected void validateI2cRegister(int register) {
         // validate I2C/SMBus register range
         if(register < 0 || register > 255) {
-            throw new IOException("PIGPIO ERROR: INVALID I2C REGISTER [" + register + "]; Valid range: 0-255");
+            throw new IllegalArgumentException("PIGPIO ERROR: INVALID I2C REGISTER [" + register + "]; Valid range: 0-255");
         }
     }
 
@@ -324,12 +295,11 @@ public abstract class PiGpioBase implements PiGpio {
      * <p>validateI2cDeviceAddress.</p>
      *
      * @param device a int.
-     * @throws java.io.IOException if any.
      */
-    protected void validateI2cDeviceAddress(int device) throws IOException {
+    protected void validateI2cDeviceAddress(int device) {
         // validate I2C/SMBus device address :: 0-0x7F
         if(device < 0 || device > 0x7F) {
-            throw new IOException("PIGPIO ERROR: INVALID I2C DEVICE ADDRESS [" + device + "]; Valid range: 0-127");
+            throw new IllegalArgumentException("PIGPIO ERROR: INVALID I2C DEVICE ADDRESS [" + device + "]; Valid range: 0-127");
         }
     }
 
@@ -337,12 +307,11 @@ public abstract class PiGpioBase implements PiGpio {
      * <p>validateI2cBus.</p>
      *
      * @param bus a int.
-     * @throws java.io.IOException if any.
      */
-    protected void validateI2cBus(int bus) throws IOException {
+    protected void validateI2cBus(int bus) {
         // validate I2C/SMBus bus number :: >=0
         if(bus < 0) {
-            throw new IOException("PIGPIO ERROR: INVALID I2C BUS [" + bus + "]; Valid range: >=0");
+            throw new IllegalArgumentException("PIGPIO ERROR: INVALID I2C BUS [" + bus + "]; Valid range: >=0");
         }
     }
 
@@ -350,12 +319,11 @@ public abstract class PiGpioBase implements PiGpio {
      * <p>validateI2cBlockLength.</p>
      *
      * @param length a int.
-     * @throws java.io.IOException if any.
      */
-    protected void validateI2cBlockLength(int length) throws IOException {
+    protected void validateI2cBlockLength(int length) {
         // validate I2C/SMBus payload data length :: 0-32
         if(length < 0 || length > 32) {
-            throw new IOException("PIGPIO ERROR: INVALID I2C PAYLOAD DATA LENGTH [" + length + "]; Valid range: 0-32");
+            throw new IllegalArgumentException("PIGPIO ERROR: INVALID I2C PAYLOAD DATA LENGTH [" + length + "]; Valid range: 0-32");
         }
     }
 
@@ -363,12 +331,11 @@ public abstract class PiGpioBase implements PiGpio {
      * <p>validateGpioGlitchFilter.</p>
      *
      * @param interval a int.
-     * @throws java.io.IOException if any.
      */
-    protected void validateGpioGlitchFilter(int interval) throws IOException {
+    protected void validateGpioGlitchFilter(int interval) {
         // validate GPIO glitch filter interval value :: 0-300000
         if(interval < 0 || interval > 300000) {
-            throw new IOException("PIGPIO ERROR: INVALID GPIO GLITCH FILTER INTERVAL [" + interval + "]; Valid range: 0-300000");
+            throw new IllegalArgumentException("PIGPIO ERROR: INVALID GPIO GLITCH FILTER INTERVAL [" + interval + "]; Valid range: 0-300000");
         }
     }
 
@@ -377,15 +344,14 @@ public abstract class PiGpioBase implements PiGpio {
      *
      * @param steady a int.
      * @param active a int.
-     * @throws java.io.IOException if any.
      */
-    protected void validateGpioNoiseFilter(int steady, int active) throws IOException {
+    protected void validateGpioNoiseFilter(int steady, int active) {
         // validate GPIO noise filter properties
         if(steady < 0 || steady > 300000) {
-            throw new IOException("PIGPIO ERROR: INVALID GPIO NOISE FILTER -> STEADY INTERVAL [" + steady + " us]; Valid range: 0-300000");
+            throw new IllegalArgumentException("PIGPIO ERROR: INVALID GPIO NOISE FILTER -> STEADY INTERVAL [" + steady + " us]; Valid range: 0-300000");
         }
         if(active < 0 || active > 1000000) {
-            throw new IOException("PIGPIO ERROR: INVALID GPIO NOISE FILTER -> ACTIVE INTERVAL [" + steady + " us]; Valid range: 0-1000000");
+            throw new IllegalArgumentException("PIGPIO ERROR: INVALID GPIO NOISE FILTER -> ACTIVE INTERVAL [" + steady + " us]; Valid range: 0-1000000");
         }
     }
 
@@ -422,11 +388,7 @@ public abstract class PiGpioBase implements PiGpio {
         }
 
         // enable this GPIO pin for notification monitoring
-        try {
-            this.gpioEnableNotifications(pin);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        }
+        this.gpioEnableNotifications(pin);
     }
 
     /** {@inheritDoc} */
@@ -449,11 +411,7 @@ public abstract class PiGpioBase implements PiGpio {
 
         // disable this GPIO pin for notification monitoring
         if(listeners.isEmpty()) {
-            try {
-                this.gpioDisableNotifications(pin);
-            } catch (IOException e) {
-                logger.error(e.getMessage(), e);
-            }
+            this.gpioDisableNotifications(pin);
         }
     }
 
@@ -474,11 +432,7 @@ public abstract class PiGpioBase implements PiGpio {
         listeners.clear();
 
         // disable this GPIO pin for notification monitoring
-        try {
-            this.gpioDisableNotifications(pin);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        }
+        this.gpioDisableNotifications(pin);
     }
 
     /** {@inheritDoc} */
@@ -518,7 +472,7 @@ public abstract class PiGpioBase implements PiGpio {
      *
      * @param event a {@link com.pi4j.library.pigpio.PiGpioStateChangeEvent} object.
      */
-    protected void dispatchEvent(final PiGpioStateChangeEvent event) throws Exception{
+    protected void dispatchEvent(final PiGpioStateChangeEvent event) {
         try {
             // dispatch event to each registered listener
             stateChangeListeners.forEach(listener -> {
@@ -568,7 +522,7 @@ public abstract class PiGpioBase implements PiGpio {
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioHardwareRevision">PIGPIO::gpioHardwareRevision</a>
      */
     @Override
-    public String gpioHardwareRevisionString() throws IOException {
+    public String gpioHardwareRevisionString() {
         logger.trace("[HARDWARE] -> GET REVISION (STRING)");
         validateReady();
         long revision = gpioHardwareRevision();

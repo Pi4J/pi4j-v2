@@ -99,7 +99,7 @@ public class TestSpiUsingTestHarness {
     }
 
     @AfterAll
-    public static void terminate() throws IOException {
+    public static void terminate() {
         logger.info("");
         logger.info("************************************************************************");
         logger.info("TERMINATE TEST (" + TestSpiUsingTestHarness.class.getName() + ") ");
@@ -108,7 +108,7 @@ public class TestSpiUsingTestHarness {
     }
 
     @BeforeEach
-    public void beforeEach() throws IOException {
+    public void beforeEach() {
         // create test harness and PIGPIO instances
         pigpio = TestEnv.createPiGpio();
 
@@ -124,7 +124,7 @@ public class TestSpiUsingTestHarness {
     }
 
     @AfterEach
-    public void afterEach() throws IOException {
+    public void afterEach() {
         // CLOSE SPI PORT
         pigpio.spiClose(handle);
 
@@ -134,7 +134,7 @@ public class TestSpiUsingTestHarness {
 
     @Test
     @DisplayName("SPI :: Test SINGLE-BYTE (W/R)")
-    public void testSerialSingleByteTxRx() throws IOException, InterruptedException {
+    public void testSerialSingleByteTxRx() throws InterruptedException {
         logger.info("");
         logger.info("--------------------------------------------");
         logger.info("TEST SPI PORT SINGLE BYTE READ/WRITE");
@@ -162,7 +162,7 @@ public class TestSpiUsingTestHarness {
 
     @Test
     @DisplayName("SPI :: Test SINGLE-BYTE (XFER)")
-    public void testSerialSingleByteXfer() throws IOException, InterruptedException {
+    public void testSerialSingleByteXfer() throws InterruptedException {
         logger.info("");
         logger.info("--------------------------------------------");
         logger.info("TEST SPI PORT SINGLE BYTE XFER");
@@ -190,7 +190,7 @@ public class TestSpiUsingTestHarness {
 
     @Test
     @DisplayName("SPI :: Test MULTI-BYTE (W/R)")
-    public void testSerialMultiByteTxRx() throws IOException, InterruptedException {
+    public void testSerialMultiByteTxRx() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST SPI MULTI-BYTE READ/WRITE");
@@ -231,7 +231,7 @@ public class TestSpiUsingTestHarness {
 
     @Test
     @DisplayName("SPI :: Test MULTI-BYTE (XFER)")
-    public void testSerialMultiByteXfer() throws IOException, InterruptedException {
+    public void testSerialMultiByteXfer() throws InterruptedException {
         logger.info("");
         logger.info("----------------------------------------");
         logger.info("TEST SPI MULTI-BYTE XFER");

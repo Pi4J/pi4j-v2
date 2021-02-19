@@ -43,7 +43,7 @@ public class ManualProvidersTest {
     private static final Logger logger = LoggerFactory.getLogger(ManualProvidersTest.class);
 
     @Test
-    public void testProviders() throws Exception {
+    public void testProviders() {
 
         // create our own custom provider implementation classes
         PwmProvider pwmProvider = TestPwmProvider.newInstance();

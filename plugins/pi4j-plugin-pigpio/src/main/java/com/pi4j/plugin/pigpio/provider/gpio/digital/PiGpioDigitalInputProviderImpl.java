@@ -34,8 +34,6 @@ import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
 import com.pi4j.library.pigpio.PiGpio;
 
-import java.io.IOException;
-
 /**
  * <p>PiGpioDigitalInputProviderImpl class.</p>
  *
@@ -59,7 +57,7 @@ public class PiGpioDigitalInputProviderImpl extends DigitalInputProviderBase imp
 
     /** {@inheritDoc} */
     @Override
-    public DigitalInput create(DigitalInputConfig config) throws IOException {
+    public DigitalInput create(DigitalInputConfig config) {
         // initialize the PIGPIO library
         if(!piGpio.isInitialized()) piGpio.initialize();
 

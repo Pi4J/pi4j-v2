@@ -47,9 +47,8 @@ public class Init {
      * <p>main.</p>
      *
      * @param args an array of {@link String} objects.
-     * @throws Exception if any.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         String loglevel = "INFO";
         if(args != null && args.length > 0){
             Level lvl = Level.valueOf(args[0].toUpperCase());

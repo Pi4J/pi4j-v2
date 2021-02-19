@@ -48,13 +48,12 @@ public class IOBoundsException extends IOException {
      * @param max a {@link java.lang.Integer} object.
      */
     public IOBoundsException(Integer value, Integer min, Integer max){
-        super((new StringBuilder())
-        .append("The requested value [")
-        .append(value)
-        .append("] is out of bounds; <min: ")
-        .append(min)
-        .append(", max: ")
-        .append(max)
-        .append(">").toString());
+        super("The requested value ["
+            + value
+            + "] is out of bounds; <min: "
+            + min
+            + ", max: "
+            + max
+            + ">");
     }
 }

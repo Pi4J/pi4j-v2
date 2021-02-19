@@ -45,7 +45,7 @@ public class AutoProvidersTest {
     private Context pi4j;
 
     @BeforeAll
-    public void beforeTest() throws Pi4JException {
+    public void beforeTest() {
 
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
@@ -64,12 +64,12 @@ public class AutoProvidersTest {
     }
 
     @Test
-    public void testProvidersNotNull() throws Pi4JException {
+    public void testProvidersNotNull() {
         assertNotNull(pi4j.providers());
     }
 
     @Test
-    public void testProvidersNotEmpty() throws Exception {
+    public void testProvidersNotEmpty() {
         // ensure that 1 or more providers were detected/loaded into the Pi4J context
         assertFalse(pi4j.providers().all().isEmpty());
 

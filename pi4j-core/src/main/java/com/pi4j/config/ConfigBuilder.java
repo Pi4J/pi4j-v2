@@ -127,7 +127,7 @@ public interface ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends Builder<CONFIG
      *
      * @param stream a {@link java.io.InputStream} object.
      * @return a BUILDER_TYPE object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code stream}.
      */
     BUILDER_TYPE load(InputStream stream) throws IOException;
     /**
@@ -136,7 +136,7 @@ public interface ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends Builder<CONFIG
      * @param stream a {@link java.io.InputStream} object.
      * @param prefixFilter a {@link java.lang.String} object.
      * @return a BUILDER_TYPE object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code stream}.
      */
     BUILDER_TYPE load(InputStream stream, String prefixFilter) throws IOException;
     /**
@@ -144,7 +144,7 @@ public interface ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends Builder<CONFIG
      *
      * @param reader a {@link java.io.Reader} object.
      * @return a BUILDER_TYPE object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code reader}.
      */
     BUILDER_TYPE load(Reader reader) throws IOException;
     /**
@@ -153,7 +153,7 @@ public interface ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends Builder<CONFIG
      * @param reader a {@link java.io.Reader} object.
      * @param prefixFilter a {@link java.lang.String} object.
      * @return a BUILDER_TYPE object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code reader}.
      */
     BUILDER_TYPE load(Reader reader, String prefixFilter) throws IOException;
     /**
@@ -161,7 +161,7 @@ public interface ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends Builder<CONFIG
      *
      * @param file a {@link java.io.File} object.
      * @return a BUILDER_TYPE object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code file}.
      */
     BUILDER_TYPE load(File file) throws IOException;
     /**
@@ -170,7 +170,7 @@ public interface ConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> extends Builder<CONFIG
      * @param file a {@link java.io.File} object.
      * @param prefixFilter a {@link java.lang.String} object.
      * @return a BUILDER_TYPE object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException if an error occurs accessing {@code file}.
      */
     BUILDER_TYPE load(File file, String prefixFilter) throws IOException;
 }

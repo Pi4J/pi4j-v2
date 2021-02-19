@@ -31,8 +31,6 @@ import com.pi4j.io.IOBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 /**
  * <p>Abstract SerialBase class.</p>
  *
@@ -63,13 +61,13 @@ public abstract class SerialBase extends IOBase<Serial, SerialConfig, SerialProv
 
     /** {@inheritDoc} */
     @Override
-    public void open() throws IOException {
+    public void open() {
         logger.trace("invoked 'open()'");
     }
 
     /** {@inheritDoc} */
     @Override
-    public void close() throws IOException {
+    public void close() {
         logger.trace("invoked 'closed()'");
         this.isOpen = false;
     }

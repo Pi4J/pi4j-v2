@@ -43,7 +43,7 @@ public interface Lifecycle<T> {
      *
      * @param context a {@link com.pi4j.context.Context} object.
      * @return a T object.
-     * @throws com.pi4j.exception.InitializeException if any.
+     * @throws com.pi4j.exception.InitializeException if an error occurs during initialization.
      */
     T initialize(Context context) throws InitializeException;
     /**
@@ -51,7 +51,7 @@ public interface Lifecycle<T> {
      *
      * @param context a {@link com.pi4j.context.Context} object.
      * @return a T object.
-     * @throws com.pi4j.exception.ShutdownException if any.
+     * @throws com.pi4j.exception.ShutdownException if an error occurs during shutdown.
      */
     T shutdown(Context context) throws ShutdownException;
 }

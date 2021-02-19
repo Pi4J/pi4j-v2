@@ -28,9 +28,13 @@ package com.pi4j.runtime.impl;
  */
 
 import com.pi4j.context.Context;
-import com.pi4j.event.*;
+import com.pi4j.event.EventDelegate;
+import com.pi4j.event.EventManager;
+import com.pi4j.event.InitializedEvent;
+import com.pi4j.event.InitializedListener;
+import com.pi4j.event.ShutdownEvent;
+import com.pi4j.event.ShutdownListener;
 import com.pi4j.exception.InitializeException;
-import com.pi4j.exception.Pi4JException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.impl.DefaultPluginService;
@@ -49,7 +53,13 @@ import com.pi4j.util.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -79,14 +89,13 @@ public class DefaultRuntime implements Runtime {
      *
      * @param context a {@link com.pi4j.context.Context} object.
      * @return a {@link com.pi4j.runtime.Runtime} object.
-     * @throws com.pi4j.exception.Pi4JException if any.
      */
-    public static Runtime newInstance(Context context) throws Pi4JException {
+    public static Runtime newInstance(Context context) {
         return new DefaultRuntime(context);
     }
 
     // private constructor
-    private DefaultRuntime(Context context) throws Pi4JException {
+    private DefaultRuntime(Context context) {
 
         // set local references
         this.context = context;

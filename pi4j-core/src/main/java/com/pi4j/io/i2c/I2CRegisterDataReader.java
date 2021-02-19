@@ -29,7 +29,6 @@ package com.pi4j.io.i2c;
 
 import com.pi4j.io.exception.IOReadException;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -58,11 +57,8 @@ public interface I2CRegisterDataReader {
      * @param register The I2C device register address to write to.
      * @return If successful, a zero or positive integer value representing the byte value (0-255)
      *         is returned.  If a read error was encountered, a negative error code may be returned.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I/O device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    int readRegister(int register) throws IOException;
+    int readRegister(int register);
 
 
     // ------------------------------------------------------------------------------------
@@ -79,11 +75,8 @@ public interface I2CRegisterDataReader {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I/O device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    int readRegister(int register, byte[] buffer, int offset, int length) throws IOException;
+    int readRegister(int register, byte[] buffer, int offset, int length);
 
     /**
      * Read data from the I2C device register into the provided byte array starting at the zero
@@ -94,11 +87,8 @@ public interface I2CRegisterDataReader {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I/O device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, byte[] buffer, int length) throws IOException{
+    default int readRegister(int register, byte[] buffer, int length) {
         return readRegister(register, buffer, 0, length);
     }
 
@@ -110,11 +100,8 @@ public interface I2CRegisterDataReader {
      * @param buffer the byte array/buffer the read data will be copied/inserted into
      * @return If successful, return the number of bytes read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I/O device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, byte[] buffer) throws IOException{
+    default int readRegister(int register, byte[] buffer) {
         return readRegister(register, buffer, buffer.length);
     }
 
@@ -141,11 +128,8 @@ public interface I2CRegisterDataReader {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, ByteBuffer buffer, int offset, int length) throws IOException{
+    default int readRegister(int register, ByteBuffer buffer, int offset, int length) {
         // perform bounds checking on requested length versus total remaining size available
         if(length > (buffer.capacity()-offset)){
             length = buffer.capacity()-offset;
@@ -187,11 +171,8 @@ public interface I2CRegisterDataReader {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, ByteBuffer buffer, int length) throws IOException{
+    default int readRegister(int register, ByteBuffer buffer, int length) {
         // if the buffer position is already at the buffer limit, then rewind the buffer for
         // writing new data into the buffer read from the I/O device
         if(buffer.position() == buffer.limit()) buffer.rewind();
@@ -220,11 +201,8 @@ public interface I2CRegisterDataReader {
      *               register will be copied (from current position to limit)
      * @return If successful, return the number of bytes read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, ByteBuffer buffer) throws IOException{
+    default int readRegister(int register, ByteBuffer buffer) {
         // if the buffer position is already at the buffer limit, then rewind the buffer for
         // writing new data into the buffer read from the I/O device
         if(buffer.position() == buffer.limit()) buffer.rewind();
@@ -250,11 +228,8 @@ public interface I2CRegisterDataReader {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, Charset charset, char[] buffer, int offset, int length) throws IOException{
+    default int readRegister(int register, Charset charset, char[] buffer, int offset, int length) {
         // determine the maximum number of bytes that may be needed for this character set
         // and create a byte array to temporarily read the raw data from the I/O device
         int maxBytes = (int)charset.newDecoder().maxCharsPerByte() * length;
@@ -295,11 +270,8 @@ public interface I2CRegisterDataReader {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, Charset charset, char[] buffer, int length) throws IOException{
+    default int readRegister(int register, Charset charset, char[] buffer, int length) {
         return readRegister(register, buffer, 0, length);
     }
 
@@ -313,11 +285,8 @@ public interface I2CRegisterDataReader {
      * @param buffer the character array the read data will be copied/inserted into
      * @return If successful, return the number of bytes read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, Charset charset, char[] buffer) throws IOException{
+    default int readRegister(int register, Charset charset, char[] buffer) {
         return readRegister(register, buffer, buffer.length);
     }
 
@@ -332,11 +301,8 @@ public interface I2CRegisterDataReader {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, char[] buffer, int offset, int length) throws IOException{
+    default int readRegister(int register, char[] buffer, int offset, int length) {
         return readRegister(register, StandardCharsets.US_ASCII, buffer, offset, length);
     }
 
@@ -350,11 +316,8 @@ public interface I2CRegisterDataReader {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, char[] buffer, int length) throws IOException{
+    default int readRegister(int register, char[] buffer, int length) {
         return readRegister(register, StandardCharsets.US_ASCII, buffer, length);
     }
 
@@ -367,11 +330,8 @@ public interface I2CRegisterDataReader {
      * @param buffer the character array the read data will be copied/inserted into
      * @return If successful, return the number of bytes read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, char[] buffer) throws IOException{
+    default int readRegister(int register, char[] buffer) {
         return readRegister(register, StandardCharsets.US_ASCII, buffer, buffer.length);
     }
 
@@ -399,14 +359,11 @@ public interface I2CRegisterDataReader {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes (not characters) read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      * @param offset a int.
      */
-    default int readRegister(int register, Charset charset, CharBuffer buffer, int offset, int length) throws IOException{
+    default int readRegister(int register, Charset charset, CharBuffer buffer, int offset, int length) {
         // validate length argument
-        if(length <=0) throw new IOException("Invalid read request; length must be greater than zero.");
+        if(length <=0) throw new IllegalArgumentException("Invalid read request; length must be greater than zero.");
 
         // determine the maximum number of bytes that may be needed for this character set
         // and create a byte array to temporarily read the raw data from the I/O device
@@ -458,12 +415,9 @@ public interface I2CRegisterDataReader {
      * @param buffer the character array the read data will be copied/inserted into
      * @return If successful, return the number of bytes (not characters) read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      * @param length a int.
      */
-    default int readRegister(int register, Charset charset, CharBuffer buffer, int length) throws IOException{
+    default int readRegister(int register, Charset charset, CharBuffer buffer, int length) {
         // if the buffer position is already at the buffer limit, then rewind the buffer for reading
         if(buffer.position() == buffer.limit()) buffer.rewind();
 
@@ -488,11 +442,8 @@ public interface I2CRegisterDataReader {
      * @param buffer the character array the read data will be copied/inserted into
      * @return If successful, return the number of bytes (not characters) read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, Charset charset, CharBuffer buffer) throws IOException{
+    default int readRegister(int register, Charset charset, CharBuffer buffer) {
         // if the buffer position is already at the buffer limit, then rewind the buffer for reading
         if(buffer.position() == buffer.limit()) buffer.rewind();
 
@@ -518,12 +469,9 @@ public interface I2CRegisterDataReader {
      * @param length the number of bytes to read
      * @return If successful, return the number of bytes (not characters) read from the I/O device;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I/O device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      * @param register a int.
      */
-    default int readRegister(int register, CharBuffer buffer, int offset, int length) throws IOException{
+    default int readRegister(int register, CharBuffer buffer, int offset, int length) {
         return readRegister(register, StandardCharsets.US_ASCII, buffer, offset, length);
     }
 
@@ -544,12 +492,9 @@ public interface I2CRegisterDataReader {
      * @param buffer the character array the read data will be copied/inserted into
      * @return If successful, return the number of bytes (not characters) read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      * @param length a int.
      */
-    default int readRegister(int register, CharBuffer buffer, int length) throws IOException{
+    default int readRegister(int register, CharBuffer buffer, int length) {
         return readRegister(register, StandardCharsets.US_ASCII, buffer, length);
     }
 
@@ -570,11 +515,8 @@ public interface I2CRegisterDataReader {
      * @param buffer the character array the read data will be copied/inserted into
      * @return If successful, return the number of bytes (not characters) read from the I2C device register;
      *         else on a read error, return a negative error code.
-     * @throws java.io.IOException In some cases, a java.io.IOException may be thrown if there is something wrong
-     *                     with the I2C device or communication path.  Typical read access errors
-     *                     are returned as negative return values and not exception.
      */
-    default int readRegister(int register, CharBuffer buffer) throws IOException{
+    default int readRegister(int register, CharBuffer buffer) {
         return readRegister(register, StandardCharsets.US_ASCII, buffer);
     }
 
@@ -588,12 +530,9 @@ public interface I2CRegisterDataReader {
      *
      * @param register The I2C device register address to write to.
      * @return The 8-bit byte value
-     * @throws java.io.IOException In all error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I/O device or communication path or for any
-     *                     read access errors encountered.
      * @throws com.pi4j.io.exception.IOReadException if any.
      */
-    default byte readRegisterByte(int register) throws IOException, IOReadException {
+    default byte readRegisterByte(int register) {
         int actual = readRegister(register);
         if(actual < 0) throw new IOReadException(actual);
         return (byte)actual;
@@ -604,12 +543,8 @@ public interface I2CRegisterDataReader {
      *
      * @param register The I2C device register address to write to.
      * @return The 16-bit (2-byte) word value
-     * @throws java.io.IOException In all error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I/O device or communication path or for any
-     *                     read access errors encountered.
-     * @throws com.pi4j.io.exception.IOReadException if any.
      */
-    default int readRegisterWord(int register) throws IOException, IOReadException {
+    default int readRegisterWord(int register) {
         byte[] buffer = new byte[2];
         int actual = readRegister(register, buffer);
         if(actual < 2) throw new IOReadException(actual);
@@ -628,15 +563,10 @@ public interface I2CRegisterDataReader {
      * @param offset the offset index in the data read to start copying read data
      * @param length the number of bytes to read
      * @return a new byte array containing the data bytes read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
-     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
-     *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
-    default byte[] readRegisterNBytes(int register, int offset, int length) throws IOException, IOReadException {
+    default byte[] readRegisterNBytes(int register, int offset, int length) {
         if (length <= 0) {
             throw new IllegalArgumentException("length <= 0");
         }
@@ -660,15 +590,10 @@ public interface I2CRegisterDataReader {
      * @param register The I2C device register address to write to.
      * @param length the number of bytes to read
      * @return a new byte array containing the data bytes read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
-     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
-     *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
-    default byte[] readRegisterNBytes(int register, int length) throws IOException, IOReadException {
+    default byte[] readRegisterNBytes(int register, int length) {
         return readRegisterNBytes(register, 0, length);
     }
 
@@ -684,15 +609,10 @@ public interface I2CRegisterDataReader {
      * @param offset the offset index in the data read to start copying read data
      * @param length the number of bytes to read
      * @return a new ByteBuffer containing the data bytes read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
-     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
-     *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
-    default ByteBuffer readRegisterByteBuffer(int register, int offset, int length) throws IOException, IOReadException {
+    default ByteBuffer readRegisterByteBuffer(int register, int offset, int length) {
         if (length <= 0) {
             throw new IllegalArgumentException("length <= 0");
         }
@@ -717,14 +637,10 @@ public interface I2CRegisterDataReader {
      * @param register The I2C device register address to write to.
      * @param length the number of bytes to read
      * @return a new ByteBuffer containing the data bytes read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, I2C device or communication path or for any
-     *                     read access errors encountered.
-     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
-     *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
-    default ByteBuffer readRegisterByteBuffer(int register, int length) throws IOException, IOReadException {
+    default ByteBuffer readRegisterByteBuffer(int register, int length) {
         byte[] temp = new byte[length];
         int actual = readRegister(register, temp, 0, length);
         if(actual < 0) throw new IOReadException(actual);
@@ -742,15 +658,12 @@ public interface I2CRegisterDataReader {
      * @param offset the offset index in the raw bytes read to start from
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character array containing the decoded character data read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
      * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
-    default char[] readRegisterCharArray(int register, Charset charset, int offset, int numberOfBytes) throws IOException, IOReadException {
+    default char[] readRegisterCharArray(int register, Charset charset, int offset, int numberOfBytes) throws IOReadException {
         byte[] temp = new byte[numberOfBytes];
         int actual = readRegister(register, temp, offset, numberOfBytes);
         if(actual < 0) throw new IOReadException(actual);
@@ -766,15 +679,12 @@ public interface I2CRegisterDataReader {
      * @param charset character set to use for byte decoding
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character array containing the decoded character data read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
      * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
-    default char[] readRegisterCharArray(int register, Charset charset, int numberOfBytes) throws IOException, IOReadException {
+    default char[] readRegisterCharArray(int register, Charset charset, int numberOfBytes) throws IOReadException {
         return readRegisterCharArray(register, charset, 0, numberOfBytes);
     }
 
@@ -788,15 +698,12 @@ public interface I2CRegisterDataReader {
      * @param offset the offset index in the raw bytes read to start from
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character array containing the decoded character data read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
      * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
-    default char[] readRegisterCharArray(int register, int offset, int numberOfBytes) throws IOException, IOReadException {
+    default char[] readRegisterCharArray(int register, int offset, int numberOfBytes) throws IOReadException {
         return readRegisterCharArray(register, StandardCharsets.US_ASCII, offset, numberOfBytes);
     }
 
@@ -808,15 +715,12 @@ public interface I2CRegisterDataReader {
      * @param register The I2C device register address to write to.
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character array containing the decoded character data read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
      * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      */
-    default char[] readRegisterCharArray(int register, int numberOfBytes) throws IOException, IOReadException {
+    default char[] readRegisterCharArray(int register, int numberOfBytes) throws IOReadException {
         return readRegisterCharArray(register, 0, numberOfBytes);
     }
 
@@ -830,16 +734,13 @@ public interface I2CRegisterDataReader {
      * @param offset the offset index in the raw bytes read to start from
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
      * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      * @param register a int.
      */
-    default CharBuffer readRegisterCharBuffer(int register, Charset charset, int offset, int numberOfBytes) throws IOException, IOReadException {
+    default CharBuffer readRegisterCharBuffer(int register, Charset charset, int offset, int numberOfBytes) throws IOReadException {
         byte[] temp = new byte[numberOfBytes];
         int actual = readRegister(register, temp, offset, numberOfBytes);
         if(actual < 0) throw new IOReadException(actual);
@@ -854,16 +755,13 @@ public interface I2CRegisterDataReader {
      * @param charset character set to use for byte decoding
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
      * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      * @param register a int.
      */
-    default CharBuffer readRegisterCharBuffer(int register, Charset charset, int numberOfBytes) throws IOException, IOReadException {
+    default CharBuffer readRegisterCharBuffer(int register, Charset charset, int numberOfBytes) throws IOReadException {
         return readRegisterCharBuffer(register, charset, 0, numberOfBytes);
     }
 
@@ -876,16 +774,13 @@ public interface I2CRegisterDataReader {
      * @param offset the offset index in the raw bytes read to start from
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
      * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      * @param register a int.
      */
-    default CharBuffer readRegisterCharBuffer(int register, int offset, int numberOfBytes) throws IOException, IOReadException {
+    default CharBuffer readRegisterCharBuffer(int register, int offset, int numberOfBytes) throws IOReadException {
         return readRegisterCharBuffer(register, StandardCharsets.US_ASCII, offset, numberOfBytes);
     }
 
@@ -896,16 +791,13 @@ public interface I2CRegisterDataReader {
      *
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
      * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      * @param register a int.
      */
-    default CharBuffer readRegisterCharBuffer(int register, int numberOfBytes) throws IOException, IOReadException {
+    default CharBuffer readRegisterCharBuffer(int register, int numberOfBytes) throws IOReadException {
         return readRegisterCharBuffer(register, 0, numberOfBytes);
     }
 
@@ -919,16 +811,13 @@ public interface I2CRegisterDataReader {
      * @param offset the offset index in the raw bytes read to start from
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
      * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      * @param register a int.
      */
-    default String readRegisterString(int register, Charset charset, int offset, int numberOfBytes) throws IOException, IOReadException {
+    default String readRegisterString(int register, Charset charset, int offset, int numberOfBytes) throws IOReadException {
         byte[] temp = new byte[numberOfBytes];
         int actual = readRegister(register, temp, 0, numberOfBytes);
         if(actual < 0) throw new IOReadException(actual);
@@ -942,16 +831,11 @@ public interface I2CRegisterDataReader {
      * @param charset character set to use for byte decoding
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
-     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
-     *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      * @param register a int.
      */
-    default String readRegisterString(int register, Charset charset, int numberOfBytes) throws IOException, IOReadException {
+    default String readRegisterString(int register, Charset charset, int numberOfBytes) {
         return readRegisterString(register, charset, 0, numberOfBytes);
     }
 
@@ -964,16 +848,11 @@ public interface I2CRegisterDataReader {
      * @param offset the offset index in the raw bytes read to start from
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
-     * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
-     *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      * @param register a int.
      */
-    default String readRegisterString(int register, int offset, int numberOfBytes) throws IOException, IOReadException {
+    default String readRegisterString(int register, int offset, int numberOfBytes) {
         return readRegisterString(register, StandardCharsets.US_ASCII, offset, numberOfBytes);
     }
 
@@ -984,16 +863,13 @@ public interface I2CRegisterDataReader {
      *
      * @param numberOfBytes the number of bytes to read (not number of characters)
      * @return a new character buffer (CharBuffer) containing the decoded character data read from the I2C device register.
-     * @throws java.io.IOException In most error conditions, an java.io.IOException will be thrown if there is
-     *                     something wrong with the I2C device or communication path or for any
-     *                     read access errors encountered.
      * @throws com.pi4j.io.exception.IOReadException An com.pi4j.io.exception.IOReadException is thrown if a read access error code
      *                         is returned from the underlying read() functions.
      * @throws java.lang.IllegalArgumentException An java.lang.IllegalArgumentException is thrown if one of the
      *                         method parameters are invalid.
      * @param register a int.
      */
-    default String readRegisterString(int register, int numberOfBytes) throws IOException, IOReadException {
+    default String readRegisterString(int register, int numberOfBytes) throws IOReadException {
         return readRegisterString(register, 0, numberOfBytes);
     }
 }

@@ -34,8 +34,6 @@ import com.pi4j.io.spi.SpiBase;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProvider;
 
-import java.io.IOException;
-
 /**
  * <p>RpiSpi class.</p>
  *
@@ -62,43 +60,41 @@ public class RpiSpi extends SpiBase implements Spi {
 
     /** {@inheritDoc} */
     @Override
-    public void open() throws IOException {
-
+    public void open() {
     }
 
     /** {@inheritDoc} */
     @Override
-    public void close() throws IOException {
-
+    public void close() {
     }
 
     /** {@inheritDoc} */
     @Override
-    public int transfer(byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) throws IOException {
+    public int transfer(byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) {
         return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public int read() throws IOException {
+    public int read() {
         return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public int read(byte[] buffer, int offset, int length) throws IOException {
+    public int read(byte[] buffer, int offset, int length) {
         return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte b) throws IOException {
+    public int write(byte b) {
         return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public int write(byte[] data, int offset, int length) throws IOException {
+    public int write(byte[] data, int offset, int length) {
         return 0;
     }
 }

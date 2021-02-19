@@ -50,6 +50,13 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
         AutoCloseable {
 
     /**
+     * <p>close.</p>
+     */
+    // Override to remove checked exception declaration
+    @Override
+    void close();
+
+    /**
      * <p>newConfigBuilder.</p>
      *
      * @param context {@link Context}

@@ -29,7 +29,6 @@ package com.pi4j;
 
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextBuilder;
-import com.pi4j.exception.Pi4JException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,9 +67,8 @@ public class Pi4J {
      * in the application's class-path.
      *
      * @return Context
-     * @throws com.pi4j.exception.Pi4JException if any.
      */
-    public static Context newAutoContext() throws Pi4JException {
+    public static Context newAutoContext() {
         logger.info("New auto context");
         return newContextBuilder().autoDetect().build();
     }
@@ -83,9 +81,8 @@ public class Pi4J {
      * runtime context.
      *
      * @return Context
-     * @throws com.pi4j.exception.Pi4JException if any.
      */
-    public static Context newContext() throws Pi4JException {
+    public static Context newContext() {
         logger.info("New context");
         return newContextBuilder().build();
     }

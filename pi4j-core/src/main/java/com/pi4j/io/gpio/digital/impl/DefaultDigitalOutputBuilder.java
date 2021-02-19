@@ -138,7 +138,7 @@ public class DefaultDigitalOutputBuilder implements DigitalOutputBuilder {
 
     /** {@inheritDoc} */
     @Override
-    public DigitalOutput build() throws Exception {
+    public DigitalOutput build() {
 
         // create I/O instance config
         DigitalOutputConfig config = this.builder.build();

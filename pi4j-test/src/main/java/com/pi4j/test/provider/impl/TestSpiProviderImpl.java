@@ -66,7 +66,7 @@ public class TestSpiProviderImpl extends SpiProviderBase implements TestSpiProvi
 
     /** {@inheritDoc} */
     @Override
-    public Spi create(SpiConfig config) throws Exception {
+    public Spi create(SpiConfig config) {
         return null;
     }
 }

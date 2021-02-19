@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 public class ManualPlatformsTest2 {
 
     @Test
-    public void testPlatforms() throws Exception {
+    public void testPlatforms() {
 
         // create our own custom platform implementation classes
         TestPlatform platform1 = new TestPlatform("test-platform-1", "Test Platform #1");

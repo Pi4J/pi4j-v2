@@ -29,9 +29,6 @@ package com.pi4j.io.i2c;
 
 import com.pi4j.io.IODataReader;
 import com.pi4j.io.IODataWriter;
-import com.pi4j.io.exception.IOReadException;
-
-import java.io.IOException;
 
 /**
  * I2C Device Register.
@@ -60,18 +57,15 @@ public interface I2CRegister extends IODataWriter, IODataReader {
      * Write a single word value (16-bit) to the I2C device register.
      *
      * @param word 16-bit word value to be written
-     * @throws java.io.IOException thrown on write error
      */
-    void writeWord(int word) throws IOException;
+    void writeWord(int word);
 
     /**
      * Read a single word value (16-bit) to the I2C device register.
      *
      * @return If success, then returns 16-bit word value read from I2C register; else a negative error code.
-     * @throws java.io.IOException thrown on write error
-     * @throws com.pi4j.io.exception.IOReadException if any.
      */
-    int readWord() throws IOException, IOReadException;
+    int readWord();
 
     /**
      * Write a single word value (16-bit) to the I2C device register
@@ -79,8 +73,6 @@ public interface I2CRegister extends IODataWriter, IODataReader {
      *
      * @param word 16-bit word value to be written
      * @return The 16-bit word value read/returned; or a negative value if error
-     * @throws java.io.IOException thrown on write error
-     * @throws com.pi4j.io.exception.IOReadException if any.
      */
-    int writeReadWord(int word) throws IOException, IOReadException;
+    int writeReadWord(int word);
 }
