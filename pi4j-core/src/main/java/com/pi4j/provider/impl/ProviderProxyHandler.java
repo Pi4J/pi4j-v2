@@ -164,13 +164,8 @@ public class ProviderProxyHandler implements InvocationHandler {
                         .bindTo(proxy)
                         .invokeWithArguments(args);
             }
-            catch (NoSuchMethodException e){
-                logger.trace(e.getMessage(), e);
-                continue;
-            }
             catch (Throwable e){
                 logger.trace(e.getMessage(), e);
-                continue;
             }
         }
 

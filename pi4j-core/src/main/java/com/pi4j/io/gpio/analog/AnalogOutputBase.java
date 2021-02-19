@@ -61,9 +61,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
         if(config().initialValue() != null){
             try {
                 value(config().initialValue());
-            } catch (IOIllegalValueException e) {
-                logger.error(e.getMessage() ,e);
-            } catch (IOBoundsException e) {
+            } catch (IOIllegalValueException | IOBoundsException e) {
                 logger.error(e.getMessage() ,e);
             }
         }
@@ -145,9 +143,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
         if(config().shutdownValue() != null){
             try {
                 value(config().shutdownValue());
-            } catch (IOIllegalValueException e) {
-                logger.error(e.getMessage() ,e);
-            } catch (IOBoundsException e) {
+            } catch (IOIllegalValueException | IOBoundsException e) {
                 logger.error(e.getMessage() ,e);
             }
         }

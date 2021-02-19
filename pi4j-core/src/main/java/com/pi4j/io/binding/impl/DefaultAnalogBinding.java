@@ -58,9 +58,7 @@ public class DefaultAnalogBinding
         members.forEach((output)->{
             try {
                 ((AnalogOutput)output).value(event.value());
-            } catch (IOIllegalValueException e) {
-                e.printStackTrace();
-            } catch (IOBoundsException e) {
+            } catch (IOIllegalValueException | IOBoundsException e) {
                 e.printStackTrace();
             }
         });
