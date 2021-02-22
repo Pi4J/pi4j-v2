@@ -27,12 +27,14 @@ package com.pi4j.provider;
  * #L%
  */
 
+import java.util.Map;
+
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
 import com.pi4j.io.IOType;
 import com.pi4j.provider.exception.ProviderException;
-
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>ProviderGroup class.</p>
@@ -41,6 +43,8 @@ import java.util.Map;
  * @version $Id: $Id
  */
 public class ProviderGroup<T extends Provider> implements Describable {
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private IOType type = null;
     private Providers providers;
@@ -95,7 +99,7 @@ public class ProviderGroup<T extends Provider> implements Describable {
                 descriptor.add(provider.describe());
             });
         } catch (ProviderException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return descriptor;
     }

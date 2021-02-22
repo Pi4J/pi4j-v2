@@ -131,7 +131,7 @@ public class TestSerialUsingTestHarness {
             // create serial instance
             serial = pi4j.create(config);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

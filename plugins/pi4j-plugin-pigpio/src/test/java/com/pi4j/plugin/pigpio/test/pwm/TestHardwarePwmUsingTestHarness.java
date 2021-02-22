@@ -29,6 +29,8 @@ package com.pi4j.plugin.pigpio.test.pwm;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.io.exception.IOException;
@@ -36,8 +38,8 @@ import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmType;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioException;
-import com.pi4j.plugin.pigpio.test.TestEnv;
 import com.pi4j.plugin.pigpio.provider.pwm.PiGpioPwmProvider;
+import com.pi4j.plugin.pigpio.test.TestEnv;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessFrequency;
 import com.pi4j.test.harness.TestHarnessInfo;
@@ -45,8 +47,6 @@ import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.jupiter.api.Assertions.fail;
 
 
 @DisplayName("PIGPIO Plugin :: Test PWM (Hardware-Generated Signals) using Test Harness")
@@ -89,7 +89,7 @@ public class TestHardwarePwmUsingTestHarness {
             logger.info("");
             logger.info("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
         } catch (java.io.IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

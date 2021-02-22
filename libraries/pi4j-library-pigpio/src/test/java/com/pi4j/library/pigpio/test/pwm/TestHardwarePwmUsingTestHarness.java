@@ -29,6 +29,11 @@ package com.pi4j.library.pigpio.test.pwm;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.IOException;
+import java.util.Arrays;
+
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioException;
 import com.pi4j.library.pigpio.PiGpioMode;
@@ -40,11 +45,6 @@ import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.fail;
 
 @DisplayName("PIGPIO Library :: Test Hardware-Supported PWM Pins")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -89,7 +89,7 @@ public class TestHardwarePwmUsingTestHarness {
             logger.info("");
             logger.info("RESET ALL PINS ON TEST HARNESS; (" + reset.total + " pin reset)");
         } catch (IOException e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

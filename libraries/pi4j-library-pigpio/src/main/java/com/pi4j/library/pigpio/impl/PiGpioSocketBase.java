@@ -29,19 +29,19 @@ package com.pi4j.library.pigpio.impl;
  * #L%
  */
 
+import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_HOST;
+import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_PORT;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.net.SocketException;
+
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioCmd;
 import com.pi4j.library.pigpio.PiGpioException;
 import com.pi4j.library.pigpio.PiGpioPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.net.Socket;
-import java.net.SocketException;
-
-import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_HOST;
-import static com.pi4j.library.pigpio.PiGpioConst.DEFAULT_PORT;
 
 /**
  * <p>Abstract PiGpioSocketBase class.</p>
@@ -362,7 +362,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
 //                    listener.close();
 //                    logger.info("STOP MONITOR");
 //                } catch (IOException e) {
-//                    e.printStackTrace();
+//                    logger.error(e.getMessage(), e);
 //                }
 //            }
 //        }.start();

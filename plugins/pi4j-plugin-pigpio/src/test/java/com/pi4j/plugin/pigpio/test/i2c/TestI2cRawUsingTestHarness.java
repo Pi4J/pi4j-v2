@@ -29,22 +29,22 @@ package com.pi4j.plugin.pigpio.test.i2c;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.library.pigpio.PiGpio;
-import com.pi4j.plugin.pigpio.test.TestEnv;
 import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProvider;
 import com.pi4j.plugin.pigpio.provider.i2c.PiGpioI2CProviderImpl;
+import com.pi4j.plugin.pigpio.test.TestEnv;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @DisplayName("PIGPIO Plugin :: Test I2C Raw Communication using Test Harness")
@@ -107,7 +107,7 @@ public class TestI2cRawUsingTestHarness {
             // close connection to test harness
             harness.close();
         } catch (IOException e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

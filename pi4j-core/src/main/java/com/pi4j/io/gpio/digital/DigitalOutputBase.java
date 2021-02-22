@@ -116,7 +116,7 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
             try {
                 callback.call();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
         return this;

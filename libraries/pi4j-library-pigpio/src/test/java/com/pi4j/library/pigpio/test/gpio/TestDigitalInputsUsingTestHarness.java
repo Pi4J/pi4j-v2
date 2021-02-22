@@ -29,12 +29,15 @@ package com.pi4j.library.pigpio.test.gpio;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.library.pigpio.PiGpioPud;
 import com.pi4j.library.pigpio.PiGpioState;
 import com.pi4j.library.pigpio.test.TestEnv;
-import com.pi4j.library.pigpio.test.TestGpioAlertRaw;
 import com.pi4j.test.harness.ArduinoTestHarness;
 import com.pi4j.test.harness.TestHarnessInfo;
 import com.pi4j.test.harness.TestHarnessPin;
@@ -45,10 +48,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("PIGPIO Library :: Test Digital Input Pins")
 public class TestDigitalInputsUsingTestHarness {
@@ -85,7 +84,7 @@ public class TestDigitalInputsUsingTestHarness {
             logger.info("COPYRIGHT  : " + info.copyright);
             logger.info("----------------------------------------");
         } catch (IOException e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
