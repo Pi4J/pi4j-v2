@@ -29,6 +29,15 @@ package com.pi4j.library.pigpio.test.i2c;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.UUID;
+
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.library.pigpio.test.TestEnv;
@@ -38,15 +47,6 @@ import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("PIGPIO Library :: Test I2C Communication")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -101,7 +101,7 @@ public class TestI2cUsingTestHarness {
             // close connection to  test harness
             harness.close();
         } catch (IOException e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

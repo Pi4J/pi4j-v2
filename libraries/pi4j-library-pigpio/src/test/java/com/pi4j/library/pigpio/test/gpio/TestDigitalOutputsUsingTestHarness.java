@@ -29,6 +29,10 @@ package com.pi4j.library.pigpio.test.gpio;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
 import com.pi4j.library.pigpio.PiGpioPud;
@@ -44,10 +48,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("PIGPIO Library :: Test Digital Ouput Pins")
 public class TestDigitalOutputsUsingTestHarness {
@@ -85,7 +85,7 @@ public class TestDigitalOutputsUsingTestHarness {
             logger.info("----------------------------------------");
 
         } catch (IOException e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

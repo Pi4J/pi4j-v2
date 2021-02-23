@@ -29,19 +29,19 @@ package com.pi4j.library.pigpio.impl;
  * #L%
  */
 
-import com.pi4j.library.pigpio.PiGpioCmd;
-import com.pi4j.library.pigpio.PiGpioPacket;
-import com.pi4j.library.pigpio.PiGpioState;
-import com.pi4j.library.pigpio.PiGpioStateChangeEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+
+import com.pi4j.library.pigpio.PiGpioCmd;
+import com.pi4j.library.pigpio.PiGpioPacket;
+import com.pi4j.library.pigpio.PiGpioState;
+import com.pi4j.library.pigpio.PiGpioStateChangeEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>PiGpioSocketMonitor class.</p>
@@ -85,7 +85,7 @@ public class PiGpioSocketMonitor  {
             disable();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

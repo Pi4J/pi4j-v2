@@ -28,6 +28,8 @@ package com.pi4j.common;
  */
 
 import com.pi4j.extension.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>Abstract IdentityBase class.</p>
@@ -36,6 +38,8 @@ import com.pi4j.extension.Extension;
  * @version $Id: $Id
  */
 public abstract class IdentityBase<T> implements Extension<T> {
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected String id;
     protected String name;

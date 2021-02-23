@@ -29,6 +29,11 @@ package com.pi4j.library.pigpio.test.spi;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.util.Random;
+
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.test.TestEnv;
 import com.pi4j.library.pigpio.util.StringUtil;
@@ -38,11 +43,6 @@ import com.pi4j.test.harness.TestHarnessPins;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("PIGPIO Library :: Test SPI Communication")
 public class TestSpiUsingTestHarness {
@@ -94,7 +94,7 @@ public class TestSpiUsingTestHarness {
             // close connection to test harness
             harness.close();
         } catch (IOException e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

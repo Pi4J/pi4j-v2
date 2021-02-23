@@ -73,7 +73,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
         try {
             return step(config().stepValue());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return this;
         }
     }
@@ -84,7 +84,7 @@ public abstract class AnalogOutputBase extends AnalogBase<AnalogOutput, AnalogOu
         try {
             return step(0-config().stepValue());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return this;
         }
     }

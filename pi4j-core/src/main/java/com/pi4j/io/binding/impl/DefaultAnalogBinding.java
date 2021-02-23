@@ -59,7 +59,7 @@ public class DefaultAnalogBinding
             try {
                 ((AnalogOutput)output).value(event.value());
             } catch (IOIllegalValueException | IOBoundsException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         });
     }

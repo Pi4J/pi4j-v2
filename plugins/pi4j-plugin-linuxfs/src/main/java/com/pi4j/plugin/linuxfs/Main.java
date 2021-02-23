@@ -142,7 +142,7 @@ public class Main {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return CommandOutput;
     }
@@ -205,7 +205,7 @@ public class Main {
             // logger.info("DONE");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return CommandOutput;
 

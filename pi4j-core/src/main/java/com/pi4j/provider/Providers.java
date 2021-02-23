@@ -27,6 +27,8 @@ package com.pi4j.provider;
  * #L%
  */
 
+import java.util.Map;
+
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
 import com.pi4j.io.IOType;
@@ -42,8 +44,7 @@ import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderIOTypeException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 import com.pi4j.provider.exception.ProviderTypeException;
-
-import java.util.Map;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -404,7 +405,7 @@ public interface Providers extends Describable {
                 descriptor.add(ioTypeDescriptor);
 
             } catch (ProviderNotFoundException e) {
-                e.printStackTrace();
+                LoggerFactory.getLogger(this.getClass()).error(e.getMessage(), e);
             }
         }
 
