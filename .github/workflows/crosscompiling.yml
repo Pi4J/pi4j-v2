@@ -21,7 +21,17 @@ jobs:
       run: |
         cp -r pi4j-distribution/target/*.deb staging
         cp -r pi4j-distribution/target/*.zip staging
-        cp -r pi4j-distribution/target/*.tar.gz staging
+        cp -r pi4j-distribution/target/*.tar.gz staging        
+    - name: Publish build packages to APT download repository
+      uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      with:
+        source_file: 'pi4j-distribution/target/*.deb'
+        destination_repo: 'pi4j/download'
+        user_email: 'team@pi4j.com'
+        user_name: 'Pi4J Build'
+        commit_message: '[AUTO] publish updated build packages'        
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
