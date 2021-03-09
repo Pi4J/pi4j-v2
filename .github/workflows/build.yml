@@ -33,12 +33,16 @@ jobs:
         name: Staging
         url: 'https://pi4j.com/download'
       steps:
+        - name: Download math result for job 1
+          uses: actions/download-artifact@v2
+          with:
+            name: pi4j-v2-dist      
         - name: Publish build packages to APT download repository
           uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
           env:
             API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
           with:
-            source_file: 'pi4j-distribution/target/*.deb'
+            source_file: 'staging/*.deb'
             destination_repo: 'pi4j/download'
             destination_branch: 'main'
             user_email: 'team@pi4j.com'
