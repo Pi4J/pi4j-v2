@@ -12,7 +12,7 @@ jobs:
     - name: Get latest Docker image
       run: docker pull pi4j/pi4j-builder:2.0
     - name: Build entire Pi4J Project in Docker
-      run: docker run --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build pi4j/pi4j-builder:2.0
+      run: docker run --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build "clean install" pi4j/pi4j-builder:2.0
     - name: Make staging directory
       run: mkdir staging
     - name: Copy distribution files to staging
@@ -45,7 +45,7 @@ jobs:
           env:
             API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
           with:
-            source_file: 'staging/*.deb'
+            source_file: '*.deb'
             destination_repo: 'pi4j/download'
             destination_branch: 'main'
             user_email: 'team@pi4j.com'
