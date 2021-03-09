@@ -8,8 +8,7 @@ Build state:
 [![License](https://img.shields.io/github/license/pi4j/pi4j-v2)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core)
 [![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.pi4j/pi4j-core?server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/#nexus-search;gav~com.pi4j~~~~)
-[![Site](https://img.shields.io/badge/Website-v2.pi4j.com-lightgrey)](https://v2.pi4j.com)
-[![Docs](https://img.shields.io/badge/Docs-v2.pi4j.com-blue)](https://v2.pi4j.com/documentation)
+[![Site](https://img.shields.io/badge/Website-pi4j.com-green)](https://pi4j.com)
 [![Twitter Follow](https://img.shields.io/twitter/follow/pi4j?label=Pi4J&style=social)](https://twitter.com/pi4j)
 
 ---
@@ -24,7 +23,7 @@ Build state:
 
 ## PROJECT INFORMATION for V2 of Pi4J
 
-Project website: [v2.pi4j.com](https://v2.pi4j.com/).
+Project website: [pi4j.com](https://pi4j.com/).
 
 ![Pi4J V2 architecture](assets/draw.io/pi4j-v2-architecture.jpg)
 
@@ -34,8 +33,8 @@ Project website: [v2.pi4j.com](https://v2.pi4j.com/).
 Builds are available from:
 
 *  [Release builds from Maven Central](http://search.maven.org/#search%7Cga%7C1%7Ccom.pi4j)
-*  [V1 Downloads](https://pi4j.com/download.html)
 *  [Snapshot builds from Sonatype OSS](https://oss.sonatype.org/index.html#nexus-search;quick~pi4j)
+*  [Pi4J Downloads](https://pi4j.com/download)
 *  [APT/PPA Package Repository downloads](https://github.com/Pi4J/download)
 
 Copyright (C) 2012-2021 Pi4J
@@ -59,12 +58,12 @@ mvn clean install -Pnative
 mvn clean install -Pnative,docker
 ```
 
-> **NOTE:** A comprehensive set of build instructions can be found in the [Pi4J V2 Documentation](https://v2.pi4j.com/architecture/about-the-code/build-instructions/).
+> **NOTE:** A comprehensive set of build instructions can be found in the [Pi4J V2 Documentation](https://pi4j.com/architecture/about-the-code/build-instructions/).
 
 ## CONTRIBUTING TO PI4J
 
 For full description of the code structure, how to compile... see 
-the ["About the code" on our website](https://v2.pi4j.com/architecture/about-the-code/).
+the ["About the code" on our website](https://pi4j.com/architecture/about-the-code/).
 
 ![Pi4J V2 code structure](assets/draw.io/pi4j-v2-code-structure.jpg)
 
@@ -103,13 +102,13 @@ I/O capabilities of the Raspberry Pi platform.
 
 **LINK BELOW TO BE CHANGED TO pi4j.com WHEN NEW SITE IS PUBLISHED**
 
-Read all about it on [v2.pi4j.com](https://v2.pi4j.com/).
+Read all about it on [pi4j.com](https://pi4j.com/).
 
 ## IN DEVELOPMENT
 
 2021-01-26 :: 2.0-SNAPSHOT
 
-For more info see the new website _["What’s New in 2.0?"](https://v2.pi4j.com/about/new-in-v2/)_.
+For more info see the new website _["What’s New in 2.0?"](https://pi4j.com/about/new-in-v2/)_.
 
   * Changed project to Apache License, Version 2.0
   * Removed `pi4j-device` library.  
