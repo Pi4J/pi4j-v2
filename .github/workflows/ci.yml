@@ -46,7 +46,7 @@ jobs:
           env:
             API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
           with:
-            source_file: '*.{deb,tar.gz}'
+            source_file: 'pi4j-*.*'
             destination_repo: 'pi4j/download'
             destination_branch: 'main'
             user_email: 'team@pi4j.com'
