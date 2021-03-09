@@ -2,7 +2,8 @@
  Pi4J :: Java I/O Library for Raspberry Pi
 ==========================================================================
 
-Build state: ![GitHub Actions build state](https://github.com/pi4j/pi4j-v2/workflows/Continious Integration/badge.svg)
+Build state: 
+![GitHub Actions build state](https://github.com/pi4j/pi4j-v2/workflows/Continious%20Integration/badge.svg)
 
 [![License](https://img.shields.io/github/license/pi4j/pi4j-v2)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core)
