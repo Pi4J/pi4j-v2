@@ -5,14 +5,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  Build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Get latest Docker image
       run: docker pull pi4j/pi4j-builder:2.0
     - name: Build entire Pi4J Project in Docker
-      run: docker run --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build "clean install" pi4j/pi4j-builder:2.0
+      run: docker run --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build pi4j/pi4j-builder:2.0 clean install
     - name: Make staging directory
       run: mkdir staging
     - name: Copy distribution files to staging
@@ -20,7 +20,7 @@ jobs:
         cp -r pi4j-distribution/target/*.deb staging
         cp -r pi4j-distribution/target/*.zip staging
         cp -r pi4j-distribution/target/*.tar.gz staging        
-    - name: Upload
+    - name: Uploaddistribution files to staging
       uses: actions/upload-artifact@v2
       with:
         name: pi4j-v2-dist
@@ -33,7 +33,7 @@ jobs:
         name: Staging
         url: 'https://pi4j.com/download'
       steps:
-        - name: Download staged artifacts from build step
+        - name: Download staged artifacts from build 
           uses: actions/download-artifact@v2
           with:
             name: pi4j-v2-dist  
