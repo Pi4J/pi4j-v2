@@ -12,7 +12,7 @@ jobs:
     - name: Get latest Docker image
       run: docker pull pi4j/pi4j-builder:2.0
     - name: Build entire Pi4J Project in Docker
-      run: docker run --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build pi4j/pi4j-builder:2.0 clean install
+      run: docker run --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build pi4j/pi4j-builder:2.0 clean install -DskipTests
     - name: Make staging directory
       run: mkdir staging
     - name: Copy distribution files to staging
@@ -20,7 +20,7 @@ jobs:
         cp -r pi4j-distribution/target/*.deb staging
         cp -r pi4j-distribution/target/*.zip staging
         cp -r pi4j-distribution/target/*.tar.gz staging        
-    - name: Uploaddistribution files to staging
+    - name: Upload distribution files to staging
       uses: actions/upload-artifact@v2
       with:
         name: pi4j-v2-dist
