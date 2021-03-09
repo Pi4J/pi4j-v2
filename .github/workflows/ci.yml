@@ -1,4 +1,4 @@
-name: Build
+name: Continious Integration & Deployment
 
 on:
   # Allows you to run this workflow manually from the Actions tab
@@ -25,13 +25,13 @@ jobs:
       with:
         name: pi4j-v2-dist
         path: staging
-  DeployStaging:
-      name: Deploy to Staging 
+  DeployPackages:
+      name: Deploy Build Packages to APT Repo
       needs: [Build]
       runs-on: ubuntu-latest
       environment: 
         name: Staging
-        url: 'https://pi4j.com/download'
+        url: 'https://github.com/Pi4J/download'
       steps:
         - name: Download staged artifacts from build 
           uses: actions/download-artifact@v2
@@ -45,7 +45,7 @@ jobs:
           env:
             API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
           with:
-            source_file: '*.deb'
+            source_file: '*.{deb,tar.gz}'
             destination_repo: 'pi4j/download'
             destination_branch: 'main'
             user_email: 'team@pi4j.com'
