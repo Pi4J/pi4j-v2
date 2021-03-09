@@ -6,28 +6,27 @@ on:
 
 jobs:
   Build:
-    name: Build & Deploy to Maven
+    name: Build & Deploy Snapshot
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Get latest Docker image
       run: docker pull pi4j/pi4j-builder:2.0
     - name: Build entire Pi4J Project in Docker
-      run: docker run --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build pi4j/pi4j-builder:2.0 clean install -DskipTests
+      run: docker run --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build pi4j/pi4j-builder:2.0 clean deploy -Pnative,cross-compile
     - name: Make staging directory
       run: mkdir staging
     - name: Copy distribution files to staging
       run: |
         cp -r pi4j-distribution/target/*.deb staging
-        cp -r pi4j-distribution/target/*.zip staging
-        cp -r pi4j-distribution/target/*.tar.gz staging        
+        cp -r pi4j-distribution/target/*.zip staging    
     - name: Upload distribution files to staging
       uses: actions/upload-artifact@v2
       with:
         name: pi4j-v2-dist
         path: staging
   DeployPackages:
-      name: Deploy Build Packages to APT Repo
+      name: Deploy to APT/Download Repo
       needs: [Build]
       runs-on: ubuntu-latest
       environment: 
