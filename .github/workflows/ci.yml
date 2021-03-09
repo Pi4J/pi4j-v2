@@ -1,4 +1,4 @@
-name: Continious Integration & Deployment
+name: Continious Integration
 
 on:
   # Allows you to run this workflow manually from the Actions tab
@@ -6,6 +6,7 @@ on:
 
 jobs:
   Build:
+    name: Build & Deploy to Maven
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
