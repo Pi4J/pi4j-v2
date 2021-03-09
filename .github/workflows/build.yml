@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get latest Docker image
+      run: docker pull pi4j/pi4j-builder:2.0
+    - name: Build entire Pi4J Project in Docker
+      run: docker run --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build pi4j/pi4j-builder:2.0
+    - name: Make staging directory
+      run: mkdir staging
+    - name: Copy distribution files to staging
+      run: |
+        cp -r pi4j-distribution/target/*.deb staging
+        cp -r pi4j-distribution/target/*.zip staging
+        cp -r pi4j-distribution/target/*.tar.gz staging        
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: pi4j-v2-dist
+        path: staging
+  DeployStaging:
+      name: Deploy to Staging 
+      needs: [Build]
+      runs-on: ubuntu-latest
+      environment: 
+        name: Staging
+        url: 'https://pi4j.com/download'
+      steps:
+        - name: Publish build packages to APT download repository
+          uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
+          env:
+            API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+          with:
+            source_file: 'pi4j-distribution/target/*.deb'
+            destination_repo: 'pi4j/download'
+            destination_branch: 'main'
+            user_email: 'team@pi4j.com'
+            user_name: 'Pi4J Build'
