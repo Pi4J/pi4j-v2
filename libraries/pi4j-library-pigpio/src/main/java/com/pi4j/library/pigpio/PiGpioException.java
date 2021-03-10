@@ -51,7 +51,7 @@ package com.pi4j.library.pigpio;
  * </p>
  *
  * @see <a href="http://www.pi4j.com/">http://www.pi4j.com/</a>
- * @author Mike Heath <mheath@apache.org>
+ * @author Mike Heath mheath@apache.org
  * @version $Id: $Id
  */
 public class PiGpioException extends RuntimeException {
