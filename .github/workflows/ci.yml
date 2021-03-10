@@ -1,7 +1,10 @@
 name: Continious Integration
 
 on:
-  # Allows you to run this workflow manually from the Actions tab
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
