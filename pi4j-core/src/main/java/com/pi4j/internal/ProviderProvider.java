@@ -47,6 +47,7 @@ public interface ProviderProvider extends ProviderAliases {
      *
      * @param providerId a {@link java.lang.String} object.
      * @param providerClass a T object.
+     * @param <T> the provider type
      * @return a T object.
      * @throws ProviderNotFoundException if any.
      */

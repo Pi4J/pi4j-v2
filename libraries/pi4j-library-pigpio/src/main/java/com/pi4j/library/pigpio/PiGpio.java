@@ -126,7 +126,7 @@ public interface PiGpio extends
      * - gpioVersion
      * - gpioHardwareRevision
      *
-     * @return
+     * @return the pigpio version number if OK, otherwise PI_INIT_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      */
     int gpioInitialise();
@@ -140,7 +140,7 @@ public interface PiGpio extends
      * - gpioVersion
      * - gpioHardwareRevision
      *
-     * @return
+     * @return the pigpio version number if OK, otherwise PI_INIT_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      */
     default int initialize(){ return gpioInitialise(); }
@@ -154,7 +154,7 @@ public interface PiGpio extends
      * - gpioVersion
      * - gpioHardwareRevision
      *
-     * @return
+     * @return the pigpio version number if OK, otherwise PI_INIT_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      */
     default int gpioInitialize() { return gpioInitialise(); } // US spelling variant
@@ -168,7 +168,7 @@ public interface PiGpio extends
      * - gpioVersion
      * - gpioHardwareRevision
      *
-     * @return
+     * @return the pigpio version number if OK, otherwise PI_INIT_FAILED.
      * @see <a href="http://abyz.me.uk/rpi/pigpio/cif.html#gpioInitialise">PIGPIO::gpioInitialise</a>
      */
     default int initialise() { return gpioInitialise(); }     // UK spelling variant
