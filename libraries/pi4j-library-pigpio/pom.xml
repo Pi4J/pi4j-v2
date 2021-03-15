@@ -9,7 +9,7 @@
         <artifactId>pi4j-library</artifactId>
         <groupId>com.pi4j</groupId>
         <version>2.0-SNAPSHOT</version>
-        <relativePath>../pi4j-library</relativePath>
+        <relativePath>../pi4j-library/pom.xml</relativePath>
     </parent>
 
     <!-- MAVEN ARTIFACT INFORMATION -->
