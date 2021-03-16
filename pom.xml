@@ -540,40 +540,6 @@
                     <extensions>true</extensions>
                 </plugin>
 
-                <!-- GENERATE LICENSE HEADERS IN SOURCE FILES -->
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>license-maven-plugin</artifactId>
-                    <version>${license-maven-plugin.version}</version>
-                    <configuration>
-                        <verbose>false</verbose>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>append-license-file-headers</id>
-                            <goals>
-                                <goal>update-file-header</goal>
-                            </goals>
-                            <phase>process-sources</phase>
-                            <configuration>
-                                <licenseName>apache_v2</licenseName>
-                                <descriptionTemplate>${basedir}/../src/license/template.ftl</descriptionTemplate>
-                                <canUpdateCopyright>true</canUpdateCopyright>
-                                <canUpdateDescription>true</canUpdateDescription>
-                                <canUpdateLicense>true</canUpdateLicense>
-                                <excludes>
-                                    <exclude>*.sh</exclude> <!-- exclude shell scripts -->
-                                </excludes>
-                                <roots>
-                                    <root>src/main/native</root>
-                                    <root>src/main/java</root>
-                                    <root>src/test</root>
-                                </roots>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-
                 <!-- USED TO GENERATE HEADER FILES FOR NATIVE LIBS -->
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -674,51 +640,6 @@
 					<goals>install</goals>
 				</configuration>
 			</plugin>
-
-			<!-- GENERATE LICENSE FILE IN PROJECT ROOT -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<version>${license-maven-plugin.version}</version>
-				<executions>
-					<execution>
-						<id>update-project-license</id>
-						<goals>
-							<goal>update-project-license</goal>
-						</goals>
-						<phase>process-sources</phase>
-						<configuration>
-							<licenseName>apache_v2</licenseName>
-						</configuration>
-					</execution>
-					<execution>
-						<id>append-license-file-headers</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-						<configuration>
-							<descriptionTemplate>${basedir}/src/license/template.ftl</descriptionTemplate>
-						</configuration>
-					</execution>
-				</executions>
-				<inherited>false</inherited>
-			</plugin>
-
-            <!-- REMOVE TRAILING WHITESPACE AUTOMATICALLY -->
-            <plugin>
-                <artifactId>whitespace-maven-plugin</artifactId>
-                <groupId>com.github.dantwining.whitespace-maven-plugin</groupId>
-                <version>1.0.4</version>
-                <executions>
-                    <execution>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>trim</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
 			<!-- GENERATE SITE DOCUMENTATION -->
 			<plugin>

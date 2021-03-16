@@ -67,39 +67,6 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
 
-            <!-- GENERATE LICENSE HEADERS IN SOURCE FILES -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <configuration>
-                    <verbose>false</verbose>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>append-license-file-headers</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                        <configuration>
-                            <licenseName>lgpl_v3</licenseName>
-                            <descriptionTemplate>${basedir}/../../src/license/template.ftl</descriptionTemplate>
-                            <canUpdateCopyright>true</canUpdateCopyright>
-                            <canUpdateDescription>true</canUpdateDescription>
-                            <canUpdateLicense>true</canUpdateLicense>
-                            <excludes>
-                                <exclude>*.sh</exclude> <!-- exclude shell scripts -->
-                            </excludes>
-                            <roots>
-                                <root>src/main/native</root>
-                                <root>src/main/java</root>
-                                <root>src/test</root>
-                            </roots>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- DOWNLOAD LICENSE, README & NOTICE ARTIFACTS -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
