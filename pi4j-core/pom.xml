@@ -66,12 +66,6 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
 
-            <!-- GENERATE LICENSE HEADERS IN SOURCE FILES -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-            </plugin>
-
             <!-- OSGi BUNDLE -->
             <plugin>
                 <groupId>org.apache.felix</groupId>
