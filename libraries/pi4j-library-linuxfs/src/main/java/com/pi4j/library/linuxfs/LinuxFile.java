@@ -68,6 +68,7 @@ public class LinuxFile extends RandomAccessFile {
      *     ioctl command
      * @param value
      *     int ioctl value
+     * @throws IOException when something goes wrong
      */
     public void ioctl(long command, int value) throws IOException {
         int response = directIOCTL(this.fdHandle, command, value);
@@ -84,7 +85,7 @@ public class LinuxFile extends RandomAccessFile {
      * useful for appending entry-point data structures at the end of the buffer, while referring to other
      * structures/data that come before them in the buffer.
      *
-     * <I NEED A BETTER EXPL OF BUFFERS HERE>
+     * <p><b>I NEED A BETTER EXPL OF BUFFERS HERE</b></p>
      *
      * When assembling the structured data, use {@link LinuxFile#wordSize} to determine the size in bytes needed for a
      * pointer. Also be sure to consider GCC padding and structure alignment. GCC will try a field to its word size (32b
@@ -109,7 +110,7 @@ public class LinuxFile extends RandomAccessFile {
      * @param offsets
      *     byte offsets of pointer at given index
      *
-     * @throws IOException
+     * @throws IOException when something goes wrong
      */
     public void ioctl(final long command, ByteBuffer data, IntBuffer offsets) throws IOException {
         ByteBuffer originalData = data;
