@@ -41,11 +41,11 @@ if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
   fi
 
   # GIT
-  GIT_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' git-core|grep "install ok installed")
+  GIT_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' git|grep "install ok installed")
   if [[ "" == "$GIT_INSTALLED" ]]; then
-    sudo apt-get --force-yes --yes install git-core
+    sudo apt-get --force-yes --yes install git
   else
-    echo " [PREREQUISITE] 'git-core' already installed.";
+    echo " [PREREQUISITE] 'git' already installed.";
   fi
 
   # TREE
