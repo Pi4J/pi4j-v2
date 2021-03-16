@@ -27,11 +27,13 @@ package com.pi4j.plugin.linuxfs;
  * #L%
  */
 
-import com.jcraft.jsch.*;
-import com.pi4j.plugin.linuxfs.provider.gpio.LinuxCmd;
-
 import java.io.InputStream;
 import java.util.Arrays;
+
+import com.jcraft.jsch.*;
+import com.pi4j.plugin.linuxfs.provider.gpio.LinuxCmd;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>Main class.</p>

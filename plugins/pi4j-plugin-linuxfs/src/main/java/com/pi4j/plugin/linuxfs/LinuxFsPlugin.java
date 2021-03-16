@@ -29,6 +29,7 @@ package com.pi4j.plugin.linuxfs;
 
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
+import com.pi4j.plugin.linuxfs.i2c.LinuxFsI2CProvider;
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalInputProvider;
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalOutputProvider;
 import com.pi4j.provider.Provider;
@@ -41,14 +42,75 @@ import com.pi4j.provider.Provider;
  */
 public class LinuxFsPlugin implements Plugin {
 
-    private Provider providers[] = {
-            LinuxFsDigitalInputProvider.newInstance(),
-            LinuxFsDigitalOutputProvider.newInstance()
-    };
+    /**
+     * Constant <code>NAME="LinuxFS"</code>
+     */
+    public static final String NAME = "LinuxFS";
+    /**
+     * Constant <code>ID="linuxfs"</code>
+     */
+    public static final String ID = "linuxfs";
 
-    /** {@inheritDoc} */
+//    // Analog Input (GPIO) Provider name and unique ID
+//    public static final String ANALOG_INPUT_PROVIDER_NAME = NAME + " Analog Input (GPIO) Provider";
+//    public static final String ANALOG_INPUT_PROVIDER_ID = ID + "-analog-input";
+
+    // Analog Output (GPIO) Provider name and unique ID
+    /**
+     * Constant <code>ANALOG_OUTPUT_PROVIDER_NAME="NAME +  Analog Output (GPIO) Provider"</code>
+     */
+    public static final String ANALOG_OUTPUT_PROVIDER_NAME = NAME + " Analog Output (GPIO) Provider";
+    /**
+     * Constant <code>ANALOG_OUTPUT_PROVIDER_ID="ID + -analog-output"</code>
+     */
+    public static final String ANALOG_OUTPUT_PROVIDER_ID = ID + "-analog-output";
+
+    // Digital Input (GPIO) Provider name and unique ID
+    /**
+     * Constant <code>DIGITAL_INPUT_PROVIDER_NAME="NAME +   Digital Input (GPIO) Provider"</code>
+     */
+    public static final String DIGITAL_INPUT_PROVIDER_NAME = NAME + " Digital Input (GPIO) Provider";
+    /**
+     * Constant <code>DIGITAL_INPUT_PROVIDER_ID="ID + -digital-input"</code>
+     */
+    public static final String DIGITAL_INPUT_PROVIDER_ID = ID + "-digital-input";
+
+    // Digital Output (GPIO) Provider name and unique ID
+    /**
+     * Constant <code>DIGITAL_OUTPUT_PROVIDER_NAME="NAME +   Digital Output (GPIO) Provider"</code>
+     */
+    public static final String DIGITAL_OUTPUT_PROVIDER_NAME = NAME + " Digital Output (GPIO) Provider";
+    /**
+     * Constant <code>DIGITAL_OUTPUT_PROVIDER_ID="ID + -digital-output"</code>
+     */
+    public static final String DIGITAL_OUTPUT_PROVIDER_ID = ID + "-digital-output";
+
+//    // PWM Provider name and unique ID
+//    public static final String PWM_PROVIDER_NAME = NAME + " PWM Provider";
+//    public static final String PWM_PROVIDER_ID = ID + "-pwm";
+
+    // I2C Provider name and unique ID
+    public static final String I2C_PROVIDER_NAME = NAME + " I2C Provider";
+    public static final String I2C_PROVIDER_ID = ID + "-i2c";
+
+//    // SPI Provider name and unique ID
+//    public static final String SPI_PROVIDER_NAME = NAME + " SPI Provider";
+//    public static final String SPI_PROVIDER_ID = ID + "-spi";
+//
+//    // Serial Provider name and unique ID
+//    public static final String SERIAL_PROVIDER_NAME = NAME + " Serial Provider";
+//    public static final String SERIAL_PROVIDER_ID = ID + "-serial";
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initialize(PluginService service) {
+
+        Provider[] providers = { LinuxFsDigitalInputProvider.newInstance(),
+            LinuxFsDigitalOutputProvider.newInstance(),
+            LinuxFsI2CProvider.newInstance()
+        };
 
         // register the LinuxFS I/O Providers with the plugin service
         service.register(providers);

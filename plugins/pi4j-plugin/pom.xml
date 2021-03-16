@@ -30,7 +30,7 @@
         <module>../pi4j-plugin-mock</module>
         <module>../pi4j-plugin-pigpio</module>
         <module>../pi4j-plugin-raspberrypi</module>
-<!--        <module>../pi4j-plugin-linuxfs</module>-->  <!-- NOT YET IMPLEMENTED -->
+        <module>../pi4j-plugin-linuxfs</module>
     </modules>
 
     <!-- BUILD INSTRUCTIONS -->

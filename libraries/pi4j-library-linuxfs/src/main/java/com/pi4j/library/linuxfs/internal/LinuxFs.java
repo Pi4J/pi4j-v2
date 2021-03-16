@@ -1,11 +1,11 @@
-import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
+package com.pi4j.library.linuxfs.internal;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
- * FILENAME      :  module-info.java
+ * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for LinuxFS Library
+ * FILENAME      :  LinuxFs.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -26,18 +26,25 @@ import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module com.pi4j.plugin.linuxfs {
 
-    // depends on SLF4J
-    requires org.slf4j;
+import java.io.FileDescriptor;
 
-    requires com.pi4j;
-    requires com.pi4j.library.linuxfs;
-    requires jsch;   // NOTE: this library has not yet been modularized
+import com.pi4j.library.linuxfs.util.NativeLibraryLoader;
 
-    exports com.pi4j.plugin.linuxfs;
-    exports com.pi4j.plugin.linuxfs.provider.gpio.digital;
+public class LinuxFs {
 
-    provides com.pi4j.extension.Plugin
-            with LinuxFsPlugin;
+    static {
+        // Load the platform library
+        NativeLibraryLoader.load("libpi4j-linuxfs.so", "pi4j-linuxfs");
+    }
+
+    public native int open(String filename, FileDescriptor fd);
+
+    public native int close(int fd);
+
+    public native int ioctl(int fd, long command, int value);
+
+    public native int errno();
+
+    public native String strerror(int code);
 }

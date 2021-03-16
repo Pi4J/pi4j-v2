@@ -1,11 +1,11 @@
-import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
+package com.pi4j.plugin.linuxfs.i2c;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
- * FILENAME      :  module-info.java
+ * PROJECT       :  Pi4J :: PLUGIN   :: PIGPIO I/O Providers
+ * FILENAME      :  PiGpioI2CProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -26,18 +26,29 @@ import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module com.pi4j.plugin.linuxfs {
 
-    // depends on SLF4J
-    requires org.slf4j;
+import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
 
-    requires com.pi4j;
-    requires com.pi4j.library.linuxfs;
-    requires jsch;   // NOTE: this library has not yet been modularized
+/**
+ * <p>PiGpioI2CProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
+public interface LinuxFsI2CProvider extends I2CProvider {
 
-    exports com.pi4j.plugin.linuxfs;
-    exports com.pi4j.plugin.linuxfs.provider.gpio.digital;
+    /** Constant <code>NAME="PiGpioPlugin.I2C_PROVIDER_NAME"</code> */
+    String NAME = LinuxFsPlugin.I2C_PROVIDER_NAME;
+    /** Constant <code>ID="PiGpioPlugin.I2C_PROVIDER_ID"</code> */
+    String ID = LinuxFsPlugin.I2C_PROVIDER_ID;
 
-    provides com.pi4j.extension.Plugin
-            with LinuxFsPlugin;
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link LinuxFsI2CProvider} object.
+     */
+    static LinuxFsI2CProvider newInstance() {
+        return new LinuxFsI2CProviderImpl();
+    }
 }

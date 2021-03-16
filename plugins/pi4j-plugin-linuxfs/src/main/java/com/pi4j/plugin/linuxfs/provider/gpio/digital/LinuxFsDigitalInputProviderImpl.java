@@ -31,8 +31,6 @@ import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
 
-import java.io.IOException;
-
 /**
  * <p>LinuxFsDigitalInputProviderImpl class.</p>
  *
@@ -51,7 +49,7 @@ public class LinuxFsDigitalInputProviderImpl extends DigitalInputProviderBase im
 
     /** {@inheritDoc} */
     @Override
-    public DigitalInput create(DigitalInputConfig config) throws IOException {
+    public DigitalInput create(DigitalInputConfig config) {
         return new LinuxFsDigitalInput(this, config);
     }
 }

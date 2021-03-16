@@ -1,10 +1,8 @@
-import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
-
 /*-
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
+ * PROJECT       :  Pi4J :: LIBRARY  :: JNI Wrapper for LinuxFS Library
  * FILENAME      :  module-info.java
  *
  * This file is part of the Pi4J project. More information about
@@ -26,18 +24,14 @@ import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module com.pi4j.plugin.linuxfs {
+module com.pi4j.library.linuxfs {
 
-    // depends on SLF4J
+    // SLF4J
     requires org.slf4j;
 
+    // PI4J
     requires com.pi4j;
-    requires com.pi4j.library.linuxfs;
-    requires jsch;   // NOTE: this library has not yet been modularized
 
-    exports com.pi4j.plugin.linuxfs;
-    exports com.pi4j.plugin.linuxfs.provider.gpio.digital;
-
-    provides com.pi4j.extension.Plugin
-            with LinuxFsPlugin;
+    // EXPORTS
+    exports com.pi4j.library.linuxfs;
 }

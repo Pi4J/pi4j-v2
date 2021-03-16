@@ -27,11 +27,11 @@ package com.pi4j.plugin.linuxfs.provider.gpio;
  * #L%
  */
 
-import com.pi4j.io.gpio.digital.DigitalState;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import com.pi4j.io.gpio.digital.DigitalState;
 
 /**
  * <p>LinuxCmd class.</p>
@@ -89,9 +89,8 @@ public class LinuxCmd {
      *
      * @param address a int.
      * @return a {@link java.lang.String} object.
-     * @throws java.io.IOException if any.
      */
-    public static String export(int address) throws IOException {
+    public static String export(int address) {
         var path = Paths.get(DEFAULT_SYSTEM_PATH, "export");
         return String.format("echo %d > %s", address, path.toString());
     }
