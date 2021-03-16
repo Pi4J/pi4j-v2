@@ -37,7 +37,7 @@
 #include <stdint.h>
 #include <sys/mman.h>
 
-#include "com_pi4j_library_linuxfs_LinuxFS.h"
+#include "com_pi4j_library_linuxfs_internal_LinuxFS.h"
 
 int directIOCTLStructure
   (int fd, unsigned long command, void *data, size_t headOffset, uint32_t *offsetMap, uint32_t offsetSize);

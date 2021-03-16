@@ -34,7 +34,7 @@ TARGET=libpi4j-linuxfs.so
 # Should not alter anything below this line
 ###############################################################################
 
-SRC	=   com_pi4j_library_linuxfs_LinuxFS.c
+SRC	=   com_pi4j_library_linuxfs_internal_LinuxFS.c
 
 OBJ =	$(SRC:.c=.o)
 
@@ -67,4 +67,4 @@ uninstall:
 	rm -f /usr/local/lib/$(TARGET)
 
 # DO NOT DELETE
-com_pi4j_library_linuxfs_LinuxFS.o: com_pi4j_library_linuxfs_LinuxFS.h
+com_pi4j_library_linuxfs_internal_LinuxFS.o: com_pi4j_library_linuxfs_internal_LinuxFS.h
