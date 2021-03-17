@@ -1,0 +1,31 @@
+name: Continious Integration (Pull Request)
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  Build:
+    name: Build Snapshot
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get latest Docker image
+      run: docker pull pi4j/pi4j-builder:2.0
+    - name: Build entire Pi4J Project in Docker
+      env:
+        MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}    
+      run: docker run --env MAVEN_USERNAME=$MAVEN_USERNAME --env MAVEN_PASSWORD=$MAVEN_PASSWORD --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build pi4j/pi4j-builder:2.0 clean install -Pnative,cross-compile --batch-mode
+    - name: Make staging directory
+      run: mkdir staging
+    - name: Copy distribution files to staging
+      run: |
+        cp -r pi4j-distribution/target/*.deb staging
+        cp -r pi4j-distribution/target/*.zip staging    
+    - name: Upload distribution files to staging
+      uses: actions/upload-artifact@v2
+      with:
+        name: pi4j-v2-dist
+        path: staging
