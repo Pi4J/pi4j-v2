@@ -165,6 +165,7 @@ public interface Context extends Describable,
      * <p>platform.</p>
      *
      * @param id Id of the platform.
+     * @param <P> the platform type
      * @return a P object.
      * @throws PlatformNotFoundException if platform specified by {@code id} is not found.
      */
@@ -176,6 +177,7 @@ public interface Context extends Describable,
      * <p>platform.</p>
      *
      * @param id Id of the platform.
+     * @param <P> the platform type
      * @return a P object.
      * @throws PlatformNotFoundException if platform specified by {@code id} is not found.
      */
@@ -198,6 +200,7 @@ public interface Context extends Describable,
      * <p>platform.</p>
      *
      * @param platformClass a P object.
+     * @param <P> the platform type
      * @return a P object.
      * @throws PlatformNotFoundException if platform specified by {@code platformClass} is not found.
      */
@@ -209,6 +212,7 @@ public interface Context extends Describable,
      * <p>platform.</p>
      *
      * @param platformClass a P object.
+     * @param <P> the platform type
      * @return a P object.
      * @throws PlatformNotFoundException if platform specified by {@code platformClass} is not found.
      */
