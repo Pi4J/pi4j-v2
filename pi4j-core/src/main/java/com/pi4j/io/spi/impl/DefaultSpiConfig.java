@@ -55,11 +55,6 @@ public class DefaultSpiConfig
     protected DefaultSpiConfig(Map<String,String> properties){
         super(properties);
 
-        // define default property values if any are missing (based on the required address value)
-        this.id = StringUtil.setIfNullOrEmpty(this.id, "SPI-" + this.address(), true);
-        this.name = StringUtil.setIfNullOrEmpty(this.name, "SPI-" + this.address(), true);
-        this.description = StringUtil.setIfNullOrEmpty(this.description, "SPI-" + this.address(), true);
-
         // load optional BAUD RATE from properties
         if(properties.containsKey(BAUD_KEY)){
             this.baud = StringUtil.parseInteger(properties.get(BAUD_KEY), Spi.DEFAULT_BAUD);
@@ -73,6 +68,11 @@ public class DefaultSpiConfig
         } else {
             this.mode = Spi.DEFAULT_MODE;
         }
+
+        // define default property values if any are missing (based on the required address value)
+        this.id = StringUtil.setIfNullOrEmpty(this.id, "SPI-" + this.address(), true);
+        this.name = StringUtil.setIfNullOrEmpty(this.name, "SPI-" + this.address(), true);
+        this.description = StringUtil.setIfNullOrEmpty(this.description, "SPI-" + this.address(), true);
     }
 
     /** {@inheritDoc} */
