@@ -61,6 +61,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @return a {@link com.pi4j.context.ContextBuilder} object.
      */
     ContextBuilder add(Platform ... platform);
+
     /**
      * <p>add.</p>
      *
@@ -75,6 +76,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @return a {@link java.lang.String} object.
      */
     String defaultPlatform();
+
     /**
      * <p>defaultPlatform.</p>
      *
@@ -89,6 +91,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @return a {@link com.pi4j.context.ContextBuilder} object.
      */
     ContextBuilder autoDetectPlatforms();
+
     /**
      * <p>noAutoDetectPlatforms.</p>
      *
@@ -102,6 +105,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @return a {@link com.pi4j.context.ContextBuilder} object.
      */
     ContextBuilder autoDetectProviders();
+
     /**
      * <p>noAutoDetectProviders.</p>
      *
@@ -115,6 +119,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @return a {@link com.pi4j.context.ContextBuilder} object.
      */
     ContextBuilder autoInject();
+
     /**
      * <p>noAutoInject.</p>
      *
@@ -186,6 +191,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder addPlatform(Platform ... platform){
         return add(platform);
     }
+
     /**
      * <p>addPlatform.</p>
      *
@@ -215,6 +221,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder defaultPlatform(Platform platform){
         return defaultPlatform(platform.id());
     }
+
     /**
      * <p>setDefaultPlatform.</p>
      *
@@ -224,6 +231,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder setDefaultPlatform(String platformId){
         return defaultPlatform(platformId);
     }
+
     /**
      * <p>setDefaultPlatform.</p>
      *
@@ -234,7 +242,6 @@ public interface ContextBuilder extends Builder<Context> {
         return defaultPlatform(platform);
     }
 
-
     /**
      * <p>property.</p>
      *
@@ -243,6 +250,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @return a {@link com.pi4j.context.ContextBuilder} object.
      */
     ContextBuilder property(String key, String value);
+
     /**
      * <p>property.</p>
      *
@@ -258,6 +266,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @return a {@link com.pi4j.context.ContextBuilder} object.
      */
     ContextBuilder properties(Map<String,String> values);
+
     /**
      * <p>properties.</p>
      *
@@ -266,6 +275,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @return a {@link com.pi4j.context.ContextBuilder} object.
      */
     ContextBuilder properties(Map<String,String> properties, String prefixFilter);
+
     /**
      * <p>properties.</p>
      *
@@ -274,6 +284,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @return a {@link com.pi4j.context.ContextBuilder} object.
      */
     ContextBuilder properties(Properties properties, String prefixFilter);
+
     /**
      * <p>properties.</p>
      *
@@ -283,6 +294,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @throws java.io.IOException if an error occurs accessing {@code stream}.
      */
     ContextBuilder properties(InputStream stream, String prefixFilter) throws IOException;
+
     /**
      * <p>properties.</p>
      *
@@ -292,6 +304,7 @@ public interface ContextBuilder extends Builder<Context> {
      * @throws java.io.IOException if an error occurs accessing {@code reader}.
      */
     ContextBuilder properties(Reader reader, String prefixFilter) throws IOException;
+
     /**
      * <p>properties.</p>
      *
@@ -311,6 +324,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder properties(Properties properties){
         return properties(properties, null);
     }
+
     /**
      * <p>properties.</p>
      *
@@ -321,6 +335,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder properties(InputStream stream) throws IOException {
         return properties(stream, null);
     }
+
     /**
      * <p>properties.</p>
      *
@@ -331,6 +346,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder properties(Reader reader) throws IOException {
         return properties(reader, null);
     }
+
     /**
      * <p>properties.</p>
      *
@@ -352,6 +368,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder addProperty(String key, String value){
         return property(key, value);
     }
+
     /**
      * <p>addProperty.</p>
      *
@@ -361,6 +378,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder addProperty(Map.Entry<String,String> ... value){
         return property(value);
     }
+
     /**
      * <p>addProperties.</p>
      *
@@ -371,6 +389,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder addProperties(Properties properties, String prefixFilter){
         return properties(properties, prefixFilter);
     }
+
     /**
      * <p>addProperties.</p>
      *
@@ -380,6 +399,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder addProperties(Properties properties){
         return properties(properties, null);
     }
+
     /**
      * <p>addProperties.</p>
      *
@@ -389,6 +409,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder addProperties(Map<String,String> properties){
         return properties(properties, null);
     }
+
     /**
      * <p>addProperties.</p>
      *
@@ -410,6 +431,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder addProperties(InputStream stream) throws IOException{
         return properties(stream, null);
     }
+
     /**
      * <p>addProperties.</p>
      *
@@ -432,6 +454,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder addProperties(Reader reader) throws IOException{
         return properties(reader, null);
     }
+
     /**
      * <p>addProperties.</p>
      *
@@ -454,6 +477,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder addProperties(File file) throws IOException{
         return properties(file, null);
     }
+
     /**
      * <p>addProperties.</p>
      *
@@ -476,6 +500,7 @@ public interface ContextBuilder extends Builder<Context> {
     default ContextBuilder add(Properties properties, String prefixFilter){
         return properties(properties, prefixFilter);
     }
+
     /**
      * <p>add.</p>
      *
