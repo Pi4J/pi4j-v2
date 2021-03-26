@@ -65,11 +65,6 @@ public class DefaultI2CConfig
     protected DefaultI2CConfig(Map<String,String> properties){
         super(properties);
 
-        // define default property values if any are missing (based on the required address value)
-        this.id = StringUtil.setIfNullOrEmpty(this.id, "I2C-" + this.bus() + "." + this.device(), true);
-        this.name = StringUtil.setIfNullOrEmpty(this.name, "I2C-" + this.bus() + "." + this.device(), true);
-        this.description = StringUtil.setIfNullOrEmpty(this.description, "I2C-" + this.bus() + "." + this.device(), true);
-
         // load (required) BUS property
         if(properties.containsKey(BUS_KEY)){
             this.bus = Integer.parseInt(properties.get(BUS_KEY));
@@ -83,6 +78,11 @@ public class DefaultI2CConfig
         } else {
             throw new ConfigMissingRequiredKeyException(DEVICE_KEY);
         }
+
+        // define default property values if any are missing (based on the required address value)
+        this.id = StringUtil.setIfNullOrEmpty(this.id, "I2C-" + this.bus() + "." + this.device(), true);
+        this.name = StringUtil.setIfNullOrEmpty(this.name, "I2C-" + this.bus() + "." + this.device(), true);
+        this.description = StringUtil.setIfNullOrEmpty(this.description, "I2C-" + this.bus() + "." + this.device(), true);
     }
 
     /** {@inheritDoc} */
