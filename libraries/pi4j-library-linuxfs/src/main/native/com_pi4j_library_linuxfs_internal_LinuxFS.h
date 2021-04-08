@@ -31,25 +31,26 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_getFileDescriptor
-  (JNIEnv *env, jclass obj, jstring filename);
 
-JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_errno
+JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_getPosixFD
+  (JNIEnv *env, jclass obj, jobject fileDescriptor);
+
+JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_errno
   (JNIEnv *env, jclass obj);
 
-JNIEXPORT jstring JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_strerror
+JNIEXPORT jstring JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_strerror
   (JNIEnv *env, jclass obj, jint errorNum);
 
-JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_directIOCTL
+JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_directIOCTL
   (JNIEnv *env, jclass obj, jint fd, jlong command, jlong value);
 
-JNIEXPORT jlong JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_mmap
+JNIEXPORT jlong JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_mmap
   (JNIEnv *env, jclass obj, jint fd, jint length, jint prot, jint flags, jint offset);
 
-JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_munmapDirect
+JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_munmapDirect
   (JNIEnv *env, jclass obj, jlong address, jlong capacity);
 
-JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_directIOCTLStructure
+JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_directIOCTLStructure
   (JNIEnv *env, jclass obj, jint fd, jlong command, jobject data, jint dataOffset, jobject offsetMap, jint offsetMapOffset, jint offsetCapacity);
 
 #ifdef __cplusplus

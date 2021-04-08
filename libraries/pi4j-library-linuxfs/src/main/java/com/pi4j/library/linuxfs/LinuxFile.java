@@ -47,7 +47,7 @@ public class LinuxFile extends RandomAccessFile {
 
     public LinuxFile(String name, String mode) throws IOException {
         super(name, mode);
-        this.fdHandle = getFileDescriptor();
+        this.fdHandle = getPosixFD();
     }
 
     public static final int wordSize = getWordSize();
@@ -58,7 +58,7 @@ public class LinuxFile extends RandomAccessFile {
 
     static {
         // Load the platform library
-        NativeLibraryLoader.load("liblinuxfs.so", "linuxfs");
+        NativeLibraryLoader.load("libpi4j-linuxfs.so", "pi4j-linuxfs");
     }
 
     /**
@@ -68,7 +68,9 @@ public class LinuxFile extends RandomAccessFile {
      *     ioctl command
      * @param value
      *     int ioctl value
-     * @throws IOException when something goes wrong
+     *
+     * @throws IOException
+     *     when something goes wrong
      */
     public void ioctl(long command, int value) throws IOException {
         int response = directIOCTL(this.fdHandle, command, value);
@@ -110,7 +112,8 @@ public class LinuxFile extends RandomAccessFile {
      * @param offsets
      *     byte offsets of pointer at given index
      *
-     * @throws IOException when something goes wrong
+     * @throws IOException
+     *     when something goes wrong
      */
     public void ioctl(final long command, ByteBuffer data, IntBuffer offsets) throws IOException {
         ByteBuffer originalData = data;
@@ -182,20 +185,30 @@ public class LinuxFile extends RandomAccessFile {
 
     /**
      * Gets the real POSIX file descriptor for use by custom jni calls.
+     *
+     * @return the real POSIX file descriptor
+     *
+     * @throws IOException
+     *     if reading fails
      */
-    private int getFileDescriptor() throws IOException {
-        final int fd = getFileDescriptor(getFD());
+    protected int getPosixFD() throws IOException {
+        final int fd = getPosixFD(getFD());
         if (fd < 1)
             throw new IOException("failed to get POSIX file descriptor!");
         return fd;
     }
 
-    private static int getWordSize() {
+    /**
+     * Return the word size, i.e. 4 or 8, depending if the system ist 32-bit or 64-bit respectively
+     *
+     * @return the word size, i.e. 4 or 8, depending if the system ist 32-bit or 64-bit respectively
+     */
+    protected static int getWordSize() {
         final String archDataModel = System.getProperty("sun.arch.data.model");
         return "64".equals(archDataModel) ? 8 : 4;
     }
 
-    private synchronized IntBuffer getOffsetsBuffer(int size) {
+    protected synchronized IntBuffer getOffsetsBuffer(int size) {
         final int byteSize = size * 4;
         IntBuffer buf = localOffsetsBuffer.get();
 
@@ -215,7 +228,7 @@ public class LinuxFile extends RandomAccessFile {
         return buf;
     }
 
-    private synchronized ByteBuffer getDataBuffer(int size) {
+    protected synchronized ByteBuffer getDataBuffer(int size) {
         ByteBuffer buf = localDataBuffer.get();
 
         if (size > localBufferSize)
@@ -262,7 +275,7 @@ public class LinuxFile extends RandomAccessFile {
         }
     }
 
-    protected static native int getFileDescriptor(FileDescriptor fileDescriptor);
+    protected static native int getPosixFD(FileDescriptor fileDescriptor);
 
     protected static native int errno();
 

@@ -42,27 +42,49 @@
 int directIOCTLStructure
   (int fd, unsigned long command, void *data, size_t headOffset, uint32_t *offsetMap, uint32_t offsetSize);
 
-JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_getFileDescriptor
-  (JNIEnv *env, jclass obj, jstring filename) {
-  return open(filename, O_RDWR | O_NONBLOCK);
+JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_getPosixFD
+  (JNIEnv *env, jclass obj, jobject fileDescriptorObj) {
+    jfieldID  fdFieldID;
+    jclass    fdClass;
+    int       fd = -1;
+
+    // Get Class and Field information.
+    fdClass = (*env)->FindClass(env, "java/io/FileDescriptor");
+
+    if ( fdClass == NULL ) {
+        // Unable to obtain Class information
+        return -2;
+    }
+
+    fdFieldID = (*env)->GetFieldID(env, fdClass, "fd", "I");
+
+    if ( fdFieldID == NULL ) {
+        // Unable to obtain Field information
+        return -3;
+    }
+
+    // Extract POSIX File Descriptor from Java FileDescriptor object
+    fd = (*env)->GetIntField(env, fileDescriptorObj, fdFieldID);
+
+    return fd;
 }
 
-JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_errno
+JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_errno
   (JNIEnv *env, jclass obj) {
     return errno;
 }
 
-JNIEXPORT jstring JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_strerror
+JNIEXPORT jstring JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_strerror
   (JNIEnv *env, jclass obj, jint errorNum) {
     return (*env)->NewStringUTF(env, strerror(errorNum));
 }
 
-JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_directIOCTL
+JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_directIOCTL
   (JNIEnv *env, jclass obj, jint fd, jlong command, jlong value) {
     return ioctl(fd, command, value);
 }
 
-JNIEXPORT jlong JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_mmap
+JNIEXPORT jlong JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_mmap
   (JNIEnv *env, jclass obj, jint fd, jint length, jint prot, jint flags, jint offset) {
     void *addr = mmap(NULL, length, prot, flags, fd, offset);
 
@@ -72,14 +94,13 @@ JNIEXPORT jlong JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_mmap
     return (jlong)(uintptr_t)addr;
 }
 
-JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_munmapDirect
+JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_munmapDirect
   (JNIEnv *env, jclass obj, jlong address, jlong capacity) {
     return munmap((void *)(uintptr_t)address, (size_t)capacity);
 }
 
-JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFS_directIOCTLStructure
-  (JNIEnv *env, jclass obj, jint fd, jlong command, jobject data, jint dataOffset, jobject offsetMap, jint offsetMapOffset, jint offsetCapacity)
-{
+JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_directIOCTLStructure
+  (JNIEnv *env, jclass obj, jint fd, jlong command, jobject data, jint dataOffset, jobject offsetMap, jint offsetMapOffset, jint offsetCapacity) {
     uint8_t *dataBuffer = (uint8_t *)((*env)->GetDirectBufferAddress(env, data));
     uint32_t *offsetBuffer = (uint32_t *)((*env)->GetDirectBufferAddress(env, offsetMap));
 
