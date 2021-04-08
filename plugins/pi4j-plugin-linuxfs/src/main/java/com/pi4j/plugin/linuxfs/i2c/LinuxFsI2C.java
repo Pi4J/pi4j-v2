@@ -139,7 +139,10 @@ public class LinuxFsI2C extends I2CBase implements I2C {
      */
     @Override
     public int readRegister(int register) {
-        return this.i2CBus.execute(this, file -> file.read(new byte[] { (byte) register }));
+        return this.i2CBus.execute(this, file -> {
+            file.write(register);
+            return file.read();
+        });
     }
 
     /**
@@ -148,10 +151,10 @@ public class LinuxFsI2C extends I2CBase implements I2C {
     @Override
     public int readRegister(int register, byte[] buffer, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, buffer.length);
-        byte[] tmp = new byte[length + 1];
-        tmp[0] = (byte) register;
-        System.arraycopy(buffer, 0, tmp, 1, length);
-        return write(tmp);
+        return this.i2CBus.execute(this, file -> {
+            file.write(register);
+            return file.read(buffer, offset, length);
+        });
     }
 
     /**
