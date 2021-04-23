@@ -28,7 +28,7 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
  */
 
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
-import com.pi4j.plugin.linuxfs.LinuxFs;
+import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
 
 /**
  * <p>LinuxFsDigitalInputProvider interface.</p>
@@ -38,9 +38,9 @@ import com.pi4j.plugin.linuxfs.LinuxFs;
  */
 public interface LinuxFsDigitalInputProvider extends DigitalInputProvider {
     /** Constant <code>NAME="LinuxFs.DIGITAL_INPUT_PROVIDER_NAME"</code> */
-    String NAME = LinuxFs.DIGITAL_INPUT_PROVIDER_NAME;
+    String NAME = LinuxFsPlugin.DIGITAL_INPUT_PROVIDER_NAME;
     /** Constant <code>ID="LinuxFs.DIGITAL_INPUT_PROVIDER_ID"</code> */
-    String ID = LinuxFs.DIGITAL_INPUT_PROVIDER_ID;
+    String ID = LinuxFsPlugin.DIGITAL_INPUT_PROVIDER_ID;
     /**
      * <p>newInstance.</p>
      *

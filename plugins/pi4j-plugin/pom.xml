@@ -6,7 +6,7 @@
         <artifactId>pi4j-parent</artifactId>
         <groupId>com.pi4j</groupId>
         <version>2.0-SNAPSHOT</version>
-        <relativePath>../../</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -30,7 +30,7 @@
         <module>../pi4j-plugin-mock</module>
         <module>../pi4j-plugin-pigpio</module>
         <module>../pi4j-plugin-raspberrypi</module>
-<!--        <module>../pi4j-plugin-linuxfs</module>-->  <!-- NOT YET IMPLEMENTED -->
+        <module>../pi4j-plugin-linuxfs</module>
     </modules>
 
     <!-- BUILD INSTRUCTIONS -->
@@ -77,39 +77,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-
-            <!-- GENERATE LICENSE HEADERS IN SOURCE FILES -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <configuration>
-                    <verbose>false</verbose>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>append-license-file-headers</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                        <configuration>
-                            <licenseName>lgpl_v3</licenseName>
-                            <descriptionTemplate>${basedir}/../../src/license/template.ftl</descriptionTemplate>
-                            <canUpdateCopyright>true</canUpdateCopyright>
-                            <canUpdateDescription>true</canUpdateDescription>
-                            <canUpdateLicense>true</canUpdateLicense>
-                            <excludes>
-                                <exclude>*.sh</exclude> <!-- exclude shell scripts -->
-                            </excludes>
-                            <roots>
-                                <root>src/main/native</root>
-                                <root>src/main/java</root>
-                                <root>src/test</root>
-                            </roots>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <!-- DOWNLOAD LICENSE, README & NOTICE ARTIFACTS -->

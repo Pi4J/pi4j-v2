@@ -1,11 +1,11 @@
-import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
+package com.pi4j.plugin.linuxfs.i2c;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
- * FILENAME      :  module-info.java
+ * PROJECT       :  Pi4J :: PLUGIN   :: PIGPIO I/O Providers
+ * FILENAME      :  PiGpioI2CProviderImpl.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -26,18 +26,31 @@ import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module com.pi4j.plugin.linuxfs {
 
-    // depends on SLF4J
-    requires org.slf4j;
+import java.util.HashMap;
+import java.util.Map;
 
-    requires com.pi4j;
-    requires com.pi4j.library.linuxfs;
-    requires jsch;   // NOTE: this library has not yet been modularized
+import com.pi4j.io.i2c.I2C;
+import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.i2c.I2CProviderBase;
 
-    exports com.pi4j.plugin.linuxfs;
-    exports com.pi4j.plugin.linuxfs.provider.gpio.digital;
+public class LinuxFsI2CProviderImpl extends I2CProviderBase implements LinuxFsI2CProvider {
 
-    provides com.pi4j.extension.Plugin
-            with LinuxFsPlugin;
+    private final Map<Integer, LinuxFsI2CBus> i2CBusMap;
+
+    public LinuxFsI2CProviderImpl() {
+        this.id = ID;
+        this.name = NAME;
+        this.i2CBusMap = new HashMap<>();
+    }
+
+    @Override
+    public I2C create(I2CConfig config) {
+        synchronized (this) {
+            LinuxFsI2CBus i2CBus = this.i2CBusMap.computeIfAbsent(config.getBus(), busNr -> new LinuxFsI2CBus(config));
+
+            // create new I/O instance based on I/O config
+            return new LinuxFsI2C(i2CBus, this, config);
+        }
+    }
 }

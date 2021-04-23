@@ -13,19 +13,13 @@
     </parent>
 
     <!-- MAVEN ARTIFACT INFORMATION -->
-    <artifactId>pi4j-library-pigpio</artifactId>
-    <name>Pi4J :: LIBRARY  :: JNI Wrapper for PIGPIO Library</name>
-    <description>Pi4J wrapper for the PIGPIO library</description>
+    <artifactId>pi4j-library-linuxfs</artifactId>
+    <name>Pi4J :: LIBRARY  :: JNI Wrapper for LinuxFS Library</name>
+    <description>Pi4J wrapper for the LinuxFS library</description>
     <packaging>jar</packaging>
 
     <!-- PROJECT DEPENDENCIES -->
     <dependencies>
-        <dependency>
-            <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-test-harness</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -51,8 +45,8 @@
                     <include>LICENSE.txt</include>
                     <include>NOTICE.txt</include>
                     <include>README.md</include>
-                    <include>lib/armhf/libpi4j-pigpio.so</include> <!-- include the native 32-bit JNI library as a resource -->
-                    <include>lib/aarch64/libpi4j-pigpio.so</include> <!-- include the native 64-bit JNI library as a resource -->
+                    <include>lib/armhf/libpi4j-linuxfs.so</include> <!-- include the native 32-bit JNI library as a resource -->
+                    <include>lib/aarch64/libpi4j-linuxfs.so</include> <!-- include the native 64-bit JNI library as a resource -->
                 </includes>
             </resource>
             <resource>
@@ -65,7 +59,7 @@
         <plugins>
 
             <!-- ENFORCE THAT THE NATIVE JNI SO FILES EXISTS TO BE INCLUDED IN FINAL JAR           -->
-            <!-- (The "lippi4j-pigpio.so" JNI library is embedded as a resource in the JAR file.) -->
+            <!-- (The "lippi4j-linuxfs.so" JNI library is embedded as a resource in the JAR file.) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -80,10 +74,10 @@
                             <rules>
                                 <requireFilesExist>
                                     <files>
-                                        <!-- include 32-bit (ARMHF) Pi4J PIGPIO JNI Library  -->
-                                        <file>${project.build.outputDirectory}/lib/armhf/libpi4j-pigpio.so</file>
-                                        <!-- include 64-bit (AARCH64) Pi4J PIGPIO JNI Library  -->
-                                        <file>${project.build.outputDirectory}/lib/aarch64/libpi4j-pigpio.so</file>
+                                        <!-- include 32-bit (ARMHF) Pi4J LinuxFS JNI Library  -->
+                                        <file>${project.build.outputDirectory}/lib/armhf/libpi4j-linuxfs.so</file>
+                                        <!-- include 64-bit (AARCH64) Pi4J LinuxFS JNI Library  -->
+                                        <file>${project.build.outputDirectory}/lib/aarch64/libpi4j-linuxfs.so</file>
                                     </files>
                                 </requireFilesExist>
                             </rules>
@@ -129,7 +123,7 @@
                     </execution>
 
                     <!-- ATTACH NATIVE LIBRARY ARTIFACT -->
-                    <!-- attach the compiled JNI native library ("libpi4j-pigpio.so") as an artifact -->
+                    <!-- attach the compiled JNI native library ("libpi4j-linuxfs.so") as an artifact -->
                     <execution>
                         <id>pi4j-attach-native</id>
                         <phase>package</phase>
@@ -140,10 +134,10 @@
                             <target name="pi4j-attach-native-library" >
                                 <taskdef  resource="net/sf/antcontrib/antcontrib.properties"
                                           classpathref="maven.plugin.classpath"/>
-                                <!-- attach 32-bit (ARMHF) Pi4J PIGPIO JNI Library  -->
-                                <attachartifact file="${project.build.directory}/lib/armhf/libpi4j-pigpio.so" classifier="armhf" type="so"/>
-                                <!-- attach 64-bit (AARCH64) Pi4J PIGPIO JNI Library  -->
-                                <attachartifact file="${project.build.directory}/lib/aarch64/libpi4j-pigpio.so" classifier="aarch64" type="so"/>
+                                <!-- attach 32-bit (ARMHF) Pi4J LinuxFS JNI Library  -->
+                                <attachartifact file="${project.build.directory}/lib/armhf/libpi4j-linuxfs.so" classifier="armhf" type="so"/>
+                                <!-- attach 64-bit (AARCH64) Pi4J LinuxFS JNI Library  -->
+                                <attachartifact file="${project.build.directory}/lib/aarch64/libpi4j-linuxfs.so" classifier="aarch64" type="so"/>
                             </target>
                         </configuration>
                     </execution>
@@ -205,7 +199,7 @@
                                 </goals>
                                 <configuration>
                                     <artifactItems>
-                                        <!-- LIBPI4J-PIGPIO for the Raspberry-Pi 32-bit (ARMHF) platform  -->
+                                        <!-- LIBPI4J-LinuxFS for the Raspberry-Pi 32-bit (ARMHF) platform  -->
                                         <!-- (download the JNI native library to a staging directory -->
                                         <!--  so it can be included in the final packaged jar)       -->
                                         <artifactItem>
@@ -216,10 +210,10 @@
                                             <type>so</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>${project.build.directory}/lib/armhf</outputDirectory>
-                                            <destFileName>libpi4j-pigpio.so</destFileName>
+                                            <destFileName>libpi4j-linuxfs.so</destFileName>
                                         </artifactItem>
 
-                                        <!-- LIBPI4J-PIGPIO for the Raspberry-Pi 64-bit (AARCH64) platform -->
+                                        <!-- LIBPI4J-LinuxFS for the Raspberry-Pi 64-bit (AARCH64) platform -->
                                         <!-- (download the JNI native library to a staging directory -->
                                         <!--  so it can be included in the final packaged jar)       -->
                                         <artifactItem>
@@ -230,7 +224,7 @@
                                             <classifier>aarch64</classifier>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>${project.build.directory}/lib/aarch64</outputDirectory>
-                                            <destFileName>libpi4j-pigpio.so</destFileName>
+                                            <destFileName>libpi4j-linuxfs.so</destFileName>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
@@ -242,7 +236,7 @@
         </profile>
 
         <!-- NATIVE BUILD PROFILE -->
-        <!-- This profile is optionally used when needing to re-compile the "libpi4j-pigpio.so".   -->
+        <!-- This profile is optionally used when needing to re-compile the "libpi4j-LinuxFS.so".   -->
         <!-- JNI native library from sources and included in the final packaged JAR file.          -->
         <!-- This profile must be run when producing a "release" build or performing a deployment. -->
         <!-- Please see the <pi4j.native.compiler> property in the master parent POM for further   -->
@@ -320,14 +314,14 @@
                                             </else>
                                         </if>
 
-                                        <!-- copy compiled 32-bit (ARMHF) Pi4J PIGPIO JNI Library  -->
+                                        <!-- copy compiled 32-bit (ARMHF) Pi4J LinuxFS JNI Library  -->
                                         <copy failonerror="true" includeEmptyDirs="false"
-                                              file="${project.build.directory}/build/native/lib/armhf/libpi4j-pigpio.so"
+                                              file="${project.build.directory}/build/native/lib/armhf/libpi4j-linuxfs.so"
                                               todir="${project.build.directory}/lib/armhf"/>
 
-                                        <!-- copy compiled 64-bit (AARCH64) Pi4J PIGPIO JNI Library  -->
+                                        <!-- copy compiled 64-bit (AARCH64) Pi4J LinuxFS JNI Library  -->
                                         <copy failonerror="true" includeEmptyDirs="false"
-                                              file="${project.build.directory}/build/native/lib/aarch64/libpi4j-pigpio.so"
+                                              file="${project.build.directory}/build/native/lib/aarch64/libpi4j-linuxfs.so"
                                               todir="${project.build.directory}/lib/aarch64"/>
                                     </target>
                                 </configuration>
