@@ -219,8 +219,8 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
         // iterate the given platform array
         for(var platformInstance : platform) {
 
-            logger.trace("adding platform to managed platform map [id={}; name={}; class={}]",
-                    platformInstance.id(), platformInstance.name(), platformInstance.getClass().getName());
+            logger.info("adding platform to managed platform map [id={}; name={}; priority={}; class={}]",
+                    platformInstance.id(), platformInstance.name(), platformInstance.priority(), platformInstance.getClass().getName());
 
             // perform check to see if this platform reports as enabled/supported
             if(!platformInstance.enabled(this.runtime.context())){
@@ -239,8 +239,6 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
 
             // add new platform to managed set
             platforms.put(platformInstance.id(), platformInstance);
-            logger.debug("added platform to managed platform map [id={}; name={}; class={}]",
-                    platformInstance.id(), platformInstance.name(), platformInstance.getClass().getName());
 
             // set system wide default platform
             if(defaultPlatform == null) {
@@ -251,10 +249,10 @@ public class DefaultRuntimePlatforms implements RuntimePlatforms {
 
             }
             else{
-                if(platformInstance.weight() > this.defaultPlatform.weight()){
+                if(platformInstance.priority() > this.defaultPlatform.priority()){
                     this.defaultPlatform = platformInstance;
                     logger.debug("default platform is now [id={}; name={}; class={}; weight={}]",
-                            defaultPlatform.id(), defaultPlatform.name(), defaultPlatform.getClass().getName(), defaultPlatform.weight());
+                            defaultPlatform.id(), defaultPlatform.name(), defaultPlatform.getClass().getName(), defaultPlatform.priority());
                 }
             }
         }

@@ -50,11 +50,16 @@ import java.util.Map;
 public interface Platform extends IOCreator, ProviderProvider, Extension<Platform> {
 
     /**
-     * <p>weight.</p>
+     * <p>The priority in which platforms must be handled. This will be used to determine which one to use if multiple are provided with the same providers.</p>
+     * <ul>
+     *     <li>Negative number: used e.g. for a Mock provider</li>
+     *     <li>Low number: very unlikely to be used</li>
+     *     <li>Higher number: very likely to be used</li>
+     * </ul>
      *
      * @return a int.
      */
-    int weight();
+    int priority();
 
     /**
      *

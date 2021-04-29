@@ -60,11 +60,11 @@ public class MockPlatform extends PlatformBase<MockPlatform> implements Platform
 
     /** {@inheritDoc} */
     @Override
-    public int weight() {
-        // the MOCK platform is weighted at zero to indicate that it has a very
+    public int priority() {
+        // the MOCK platform has a priority of -1000 to indicate that it has a very
         // low priority and should only be used in the case where other platforms
         // are not found in the classpath
-        return 0;
+        return -1000;
     }
 
     /** {@inheritDoc} */

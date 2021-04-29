@@ -81,7 +81,7 @@ public class TestPlatform extends PlatformBase<TestPlatform> implements Platform
 
     /** {@inheritDoc} */
     @Override
-    public int weight() {
+    public int priority() {
         // the Test platform is weighted at zero to indicate that it has a very
         // low priority and should only be used in the case where other platforms
         // are not found in the classpath
