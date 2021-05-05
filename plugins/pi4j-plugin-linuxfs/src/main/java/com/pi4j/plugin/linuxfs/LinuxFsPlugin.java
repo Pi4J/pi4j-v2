@@ -29,7 +29,7 @@ package com.pi4j.plugin.linuxfs;
 
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
-import com.pi4j.plugin.linuxfs.i2c.LinuxFsI2CProvider;
+import com.pi4j.plugin.linuxfs.provider.i2c.LinuxFsI2CProvider;
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalInputProvider;
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalOutputProvider;
 import com.pi4j.provider.Provider;

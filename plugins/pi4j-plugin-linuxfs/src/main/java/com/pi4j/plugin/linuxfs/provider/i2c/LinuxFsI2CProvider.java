@@ -1,11 +1,11 @@
-package com.pi4j.plugin.linuxfs.i2c;
+package com.pi4j.plugin.linuxfs.provider.i2c;
 
 /*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PLUGIN   :: PIGPIO I/O Providers
- * FILENAME      :  PiGpioI2CProviderImpl.java
+ * FILENAME      :  PiGpioI2CProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,30 +27,28 @@ package com.pi4j.plugin.linuxfs.i2c;
  * #L%
  */
 
-import java.util.HashMap;
-import java.util.Map;
+import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
 
-import com.pi4j.io.i2c.I2C;
-import com.pi4j.io.i2c.I2CConfig;
-import com.pi4j.io.i2c.I2CProviderBase;
+/**
+ * <p>PiGpioI2CProvider interface.</p>
+ *
+ * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @version $Id: $Id
+ */
+public interface LinuxFsI2CProvider extends I2CProvider {
 
-public class LinuxFsI2CProviderImpl extends I2CProviderBase implements LinuxFsI2CProvider {
+    /** Constant <code>NAME="PiGpioPlugin.I2C_PROVIDER_NAME"</code> */
+    String NAME = LinuxFsPlugin.I2C_PROVIDER_NAME;
+    /** Constant <code>ID="PiGpioPlugin.I2C_PROVIDER_ID"</code> */
+    String ID = LinuxFsPlugin.I2C_PROVIDER_ID;
 
-    private final Map<Integer, LinuxFsI2CBus> i2CBusMap;
-
-    public LinuxFsI2CProviderImpl() {
-        this.id = ID;
-        this.name = NAME;
-        this.i2CBusMap = new HashMap<>();
-    }
-
-    @Override
-    public I2C create(I2CConfig config) {
-        synchronized (this) {
-            LinuxFsI2CBus i2CBus = this.i2CBusMap.computeIfAbsent(config.getBus(), busNr -> new LinuxFsI2CBus(config));
-
-            // create new I/O instance based on I/O config
-            return new LinuxFsI2C(i2CBus, this, config);
-        }
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link LinuxFsI2CProvider} object.
+     */
+    static LinuxFsI2CProvider newInstance() {
+        return new LinuxFsI2CProviderImpl();
     }
 }
