@@ -247,7 +247,7 @@ public abstract class PlatformBase<PLATFORM extends Platform>
 
     /** {@inheritDoc} */
     @Override
-    public abstract int weight();
+    public abstract int priority();
 
     /** {@inheritDoc} */
     @Override

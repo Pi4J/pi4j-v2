@@ -58,10 +58,9 @@ public class RaspberryPiPlatform extends PlatformBase<RaspberryPiPlatform> imple
 
     /** {@inheritDoc} */
     @Override
-    public int weight() {
-        // the MOCK platform is weighted at zero to indicate that it has a very
-        // low priority and should only be used in the case where other platforms
-        // are not found in the classpath
+    public int priority() {
+        // this platform has a priority of 5 to indicate that it is lickely to be used
+        // in the case where other platforms are not found in the classpath
         return 5;
     }
 

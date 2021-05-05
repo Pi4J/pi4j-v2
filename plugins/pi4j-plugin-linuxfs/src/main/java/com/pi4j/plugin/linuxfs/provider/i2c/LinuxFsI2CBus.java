@@ -1,4 +1,4 @@
-package com.pi4j.plugin.linuxfs.i2c;
+package com.pi4j.plugin.linuxfs.provider.i2c;
 
 import java.io.File;
 import java.io.IOException;
