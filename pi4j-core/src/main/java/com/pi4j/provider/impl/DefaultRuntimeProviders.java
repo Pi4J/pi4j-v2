@@ -265,7 +265,7 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
 
                 ProviderProxyHandler handler = new ProviderProxyHandler(runtime, providerInstance);
                 var providerProxy = Proxy.newProxyInstance(
-                        Provider.class.getClassLoader(),
+                        Thread.currentThread().getContextClassLoader(),
                         ReflectionUtil.getAllInterfaces(providerInstance).toArray(new Class[]{}),
                         handler);
 
