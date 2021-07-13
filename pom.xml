@@ -403,6 +403,7 @@
                         <tagNameFormat>release/@{project.version}</tagNameFormat>
                         <pushChanges>false</pushChanges>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <arguments>-Drelease-build</arguments>
                     </configuration>
                 </plugin>
 
