@@ -21,12 +21,6 @@
     <!-- PROJECT DEPENDENCIES -->
     <dependencies>
         <dependency>
-            <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-test-harness</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>

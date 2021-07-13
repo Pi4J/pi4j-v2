@@ -20,12 +20,6 @@
     <dependencies>
         <dependency>
             <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-test-harness</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.pi4j</groupId>
             <artifactId>pi4j-library-pigpio</artifactId>
             <version>${project.version}</version>
         </dependency>
