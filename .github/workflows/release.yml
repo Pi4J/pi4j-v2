@@ -10,24 +10,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2    
     - name: Extract Project Version
-      run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+      run: echo ::set-output name=version::$(mvn -q org.codehaus.mojo:build-helper-maven-plugin:3.2.0:parse-version -Dexec.executable=echo -Dexec.args='${parsedVersion.majorVersion}.${parsedVersion.minorVersion}' --non-recursive exec:exec)
       id: project
-    - name: Parse Project Version (semver)
-      id: semver_parser 
-      uses: booxmedialtd/ws-action-parse-semver@v1
-      with:
-         input_string: '${{ steps.project.outputs.version }}'
-    - name: Use parsed semver
-      run: |
-            echo "v${{ steps.semver_parser.outputs.major }}"
-            echo "v${{ steps.semver_parser.outputs.minor }}"
-            echo "v${{ steps.semver_parser.outputs.patch }}"
-            echo "v${{ steps.semver_parser.outputs.prerelease }}"
-            echo "v${{ steps.semver_parser.outputs.build }}"
-            echo "v${{ steps.semver_parser.outputs.fullversion }}"
     - name: Show Project Release Version
-      run: echo Pi4J Project Version ${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}         
-    
+      run: echo Pi4J Project Version ${{ steps.project.outputs.version }}             
     - name: Get latest Docker image
       run: docker pull pi4j/pi4j-builder:2.0
     - name: Configure Git user
