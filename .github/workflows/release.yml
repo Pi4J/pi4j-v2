@@ -26,9 +26,13 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: pi4j-v2-dist
-        path: staging
-        
+        path: staging        
+
   ExtractProjectVersion:
+    name: Extract Project Version
+    needs: [Build]
+    runs-on: ubuntu-latest
+    steps:
     - name: Extract Project Version
       run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
       id: project
@@ -40,7 +44,7 @@ jobs:
       needs: [Build]
       runs-on: ubuntu-latest
       environment: 
-        name: Staging
+        name: Production
         url: 'https://github.com/Pi4J/download'
       steps:
         - name: Download staged artifacts from build 
@@ -62,6 +66,13 @@ jobs:
             user_name: 'Pi4J Build'
 
   CreateGitHubRelease:
+      name: Create GitHub Release
+      needs: [Build]
+      runs-on: ubuntu-latest
+      environment: 
+        name: Production
+        url: 'https://github.com/Pi4J/download'
+      steps:
         - name: Create GitHub Release
           id: create_release
           uses: actions/create-release@v1
