@@ -40,16 +40,9 @@ jobs:
   
   PerformRelease:
     name: Perform Release
-    runs-on: ubuntu-latest
     needs: [PrepareRelease]
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Get latest Docker image
-      run: docker pull pi4j/pi4j-builder:2.0
-    - name: Configure Git user
-      run: |
-        git config user.email "actions@github.com"
-        git config user.name "GitHub Actions"
     - name: Build entire Pi4J Project in Docker
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
