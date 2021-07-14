@@ -1,0 +1,81 @@
+name: Perform Release Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Build:
+    name: Build & Deploy Release
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get latest Docker image
+      run: docker pull pi4j/pi4j-builder:2.0
+    - name: Build entire Pi4J Project in Docker
+      env:
+        MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}    
+      run: docker run --env MAVEN_USERNAME=$MAVEN_USERNAME --env MAVEN_PASSWORD=$MAVEN_PASSWORD --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build pi4j/pi4j-builder:2.0 clean deploy release:prepare release:perform -Pcross-compile --batch-mode
+    - name: Make staging directory
+      run: mkdir staging
+    - name: Copy distribution files to staging
+      run: |
+        cp -r pi4j-distribution/target/*.deb staging
+        cp -r pi4j-distribution/target/*.zip staging    
+    - name: Upload distribution files to staging
+      uses: actions/upload-artifact@v2
+      with:
+        name: pi4j-v2-dist
+        path: staging
+        
+  ExtractProjectVersion:
+    - name: Extract Project Version
+      run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+      id: project
+    - name: Show extracted Maven project version
+      run: echo Pi4J Project Version : ${{ steps.project.outputs.version }}        
+  
+  DeployPackages:
+      name: Deploy to APT/Download Repo
+      needs: [Build]
+      runs-on: ubuntu-latest
+      environment: 
+        name: Staging
+        url: 'https://github.com/Pi4J/download'
+      steps:
+        - name: Download staged artifacts from build 
+          uses: actions/download-artifact@v2
+          with:
+            name: pi4j-v2-dist  
+        - name: Display downloaded build artifacts
+          shell: bash
+          run: tree
+        - name: Publish build packages to APT download repository
+          uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
+          env:
+            API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+          with:
+            source_file: 'pi4j-*.*'
+            destination_repo: 'pi4j/download'
+            destination_branch: 'main'
+            user_email: 'team@pi4j.com'
+            user_name: 'Pi4J Build'
+
+  CreateGitHubRelease:
+        - name: Create GitHub Release
+          id: create_release
+          uses: actions/create-release@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            tag_name: ${{ steps.project.outputs.version }}
+            release_name: ${{ steps.project.outputs.version }}
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: staging
+            asset_name: pi4j-v2-dist.zip
+            asset_content_type: application/zip      
+          body: |
+            ### Things that changed in this release
+            ${{ steps.changelog.outputs.changelog }}
+          draft: true
+          prerelease: true 
