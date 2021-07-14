@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  Build:
-    name: Build & Deploy Release
+  PrepareRelease:
+    name: Prepare Release
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -38,9 +38,28 @@ jobs:
         name: pi4j-v2-dist
         path: staging        
   
+  PerformRelease:
+    name: Perform Release
+    runs-on: ubuntu-latest
+    needs: [PrepareRelease]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get latest Docker image
+      run: docker pull pi4j/pi4j-builder:2.0
+    - name: Configure Git user
+      run: |
+        git config user.email "actions@github.com"
+        git config user.name "GitHub Actions"
+    - name: Build entire Pi4J Project in Docker
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}    
+      run: mvn release:perform -Pcross-compile --batch-mode
+    
   DeployPackages:
-      name: Deploy to APT/Download Repo
-      needs: [Build]
+      name: Publish Release to APT/Download Repo
+      needs: [PerformRelease]
       runs-on: ubuntu-latest
       environment: 
         name: Production
@@ -64,9 +83,9 @@ jobs:
             user_email: 'team@pi4j.com'
             user_name: 'Pi4J Build'
 
-  CreateGitHubRelease:
-      name: Create GitHub Release
-      needs: [Build]
+  DeployGitHubRelease:
+      name: Publish GitHub Release
+      needs: [PerformRelease]
       runs-on: ubuntu-latest
       environment: 
         name: Production
@@ -78,12 +97,8 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
-            tag_name: ${{ steps.project.outputs.version }}
-            release_name: ${{ steps.project.outputs.version }}
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: staging
-            asset_name: pi4j-v2-dist.zip
-            asset_content_type: application/zip      
+            tag_name: release/2.0
+            release_name: 2.0
             body: |
               ### Things that changed in this release
               ${{ steps.changelog.outputs.changelog }}
