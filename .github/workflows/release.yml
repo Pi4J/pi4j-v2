@@ -85,8 +85,8 @@ jobs:
             asset_path: staging
             asset_name: pi4j-v2-dist.zip
             asset_content_type: application/zip      
-          body: |
-            ### Things that changed in this release
-            ${{ steps.changelog.outputs.changelog }}
-          draft: true
-          prerelease: true 
+            body: |
+              ### Things that changed in this release
+              ${{ steps.changelog.outputs.changelog }}
+            draft: true
+            prerelease: true 
