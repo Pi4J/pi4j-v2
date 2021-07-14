@@ -17,9 +17,10 @@ jobs:
         git config user.name "GitHub Actions"
     - name: Build entire Pi4J Project in Docker
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}    
-      run: docker run --env MAVEN_USERNAME=$MAVEN_USERNAME --env MAVEN_PASSWORD=$MAVEN_PASSWORD --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build pi4j/pi4j-builder:2.0 release:prepare release:perform -Pcross-compile --batch-mode
+      run: docker run --env GITHUB_TOKEN=$GITHUB_TOKEN --env MAVEN_USERNAME=$MAVEN_USERNAME --env MAVEN_PASSWORD=$MAVEN_PASSWORD --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build pi4j/pi4j-builder:2.0 release:prepare release:perform -Pcross-compile --batch-mode
     - name: Make staging directory
       run: mkdir staging
     - name: Copy distribution files to staging
