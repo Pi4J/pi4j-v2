@@ -3,12 +3,31 @@ name: Perform Release Build
 on:
   workflow_dispatch:
 
-jobs:
+jobs:            
   PrepareRelease:
     name: Prepare Release
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2    
+    - name: Extract Project Version
+      run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+      id: project
+    - name: Parse Project Version (semver)
+      id: semver_parser 
+      uses: booxmedialtd/ws-action-parse-semver@v1
+      with:
+         input_string: '${{ steps.project.outputs.version }}'
+    - name: Use parsed semver
+      run: |
+            echo "v${{ steps.semver_parser.outputs.major }}"
+            echo "v${{ steps.semver_parser.outputs.minor }}"
+            echo "v${{ steps.semver_parser.outputs.patch }}"
+            echo "v${{ steps.semver_parser.outputs.prerelease }}"
+            echo "v${{ steps.semver_parser.outputs.build }}"
+            echo "v${{ steps.semver_parser.outputs.fullversion }}"
+    - name: Show Project Release Version
+      run: echo Pi4J Project Version ${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}         
+    
     - name: Get latest Docker image
       run: docker pull pi4j/pi4j-builder:2.0
     - name: Configure Git user
@@ -27,11 +46,6 @@ jobs:
       run: |
         cp -r pi4j-distribution/target/*.deb staging
         cp -r pi4j-distribution/target/*.zip staging    
-    - name: Extract Project Version
-      run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-      id: project
-    - name: Show extracted Maven project version
-      run: echo Pi4J Project Version ${{ steps.project.outputs.version }}        
     - name: Upload distribution files to staging
       uses: actions/upload-artifact@v2
       with:
