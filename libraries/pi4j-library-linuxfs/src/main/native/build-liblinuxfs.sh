@@ -52,13 +52,13 @@ echo "BUILDING: ${ARCH}/libpi4j-linuxfs"
 echo "====================================="
 
 # perform compile
-mkdir -p lib/${ARCH}
+mkdir -p lib/${ARCH}/pi4j-linuxfs
 make clean all \
   --always-make \
   CROSS_PREFIX=${CROSS_PREFIX} \
   CC=${CC} \
   ARCH=${ARCH} \
-  TARGET=lib/${ARCH}/libpi4j-linuxfs.so $@
+  TARGET=lib/${ARCH}/pi4j-linuxfs/libpi4j-linuxfs.so $@
 
 echo
 echo "-----------------------------------------------------------------------------"

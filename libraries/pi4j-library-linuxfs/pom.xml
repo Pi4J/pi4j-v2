@@ -45,8 +45,8 @@
                     <include>LICENSE.txt</include>
                     <include>NOTICE.txt</include>
                     <include>README.md</include>
-                    <include>lib/armhf/libpi4j-linuxfs.so</include> <!-- include the native 32-bit JNI library as a resource -->
-                    <include>lib/aarch64/libpi4j-linuxfs.so</include> <!-- include the native 64-bit JNI library as a resource -->
+                    <include>lib/armhf/pi4j-linuxfs/libpi4j-linuxfs.so</include> <!-- include the native 32-bit JNI library as a resource -->
+                    <include>lib/aarch64/pi4j-linuxfs/libpi4j-linuxfs.so</include> <!-- include the native 64-bit JNI library as a resource -->
                 </includes>
             </resource>
             <resource>
@@ -75,9 +75,9 @@
                                 <requireFilesExist>
                                     <files>
                                         <!-- include 32-bit (ARMHF) Pi4J LinuxFS JNI Library  -->
-                                        <file>${project.build.outputDirectory}/lib/armhf/libpi4j-linuxfs.so</file>
+                                        <file>${project.build.outputDirectory}/lib/armhf/pi4j-linuxfs/libpi4j-linuxfs.so</file>
                                         <!-- include 64-bit (AARCH64) Pi4J LinuxFS JNI Library  -->
-                                        <file>${project.build.outputDirectory}/lib/aarch64/libpi4j-linuxfs.so</file>
+                                        <file>${project.build.outputDirectory}/lib/aarch64/pi4j-linuxfs/libpi4j-linuxfs.so</file>
                                     </files>
                                 </requireFilesExist>
                             </rules>
@@ -135,9 +135,9 @@
                                 <taskdef  resource="net/sf/antcontrib/antcontrib.properties"
                                           classpathref="maven.plugin.classpath"/>
                                 <!-- attach 32-bit (ARMHF) Pi4J LinuxFS JNI Library  -->
-                                <attachartifact file="${project.build.directory}/lib/armhf/libpi4j-linuxfs.so" classifier="armhf" type="so"/>
+                                <attachartifact file="${project.build.directory}/lib/armhf/pi4j-linuxfs/libpi4j-linuxfs.so" classifier="armhf" type="so"/>
                                 <!-- attach 64-bit (AARCH64) Pi4J LinuxFS JNI Library  -->
-                                <attachartifact file="${project.build.directory}/lib/aarch64/libpi4j-linuxfs.so" classifier="aarch64" type="so"/>
+                                <attachartifact file="${project.build.directory}/lib/aarch64/pi4j-linuxfs/libpi4j-linuxfs.so" classifier="aarch64" type="so"/>
                             </target>
                         </configuration>
                     </execution>
@@ -209,7 +209,7 @@
                                             <classifier>armhf</classifier>
                                             <type>so</type>
                                             <overWrite>true</overWrite>
-                                            <outputDirectory>${project.build.directory}/lib/armhf</outputDirectory>
+                                            <outputDirectory>${project.build.directory}/lib/armhf/pi4j-linuxfs</outputDirectory>
                                             <destFileName>libpi4j-linuxfs.so</destFileName>
                                         </artifactItem>
 
@@ -223,7 +223,7 @@
                                             <type>so</type>
                                             <classifier>aarch64</classifier>
                                             <overWrite>true</overWrite>
-                                            <outputDirectory>${project.build.directory}/lib/aarch64</outputDirectory>
+                                            <outputDirectory>${project.build.directory}/lib/aarch64/pi4j-linuxfs</outputDirectory>
                                             <destFileName>libpi4j-linuxfs.so</destFileName>
                                         </artifactItem>
                                     </artifactItems>
@@ -316,13 +316,13 @@
 
                                         <!-- copy compiled 32-bit (ARMHF) Pi4J LinuxFS JNI Library  -->
                                         <copy failonerror="true" includeEmptyDirs="false"
-                                              file="${project.build.directory}/build/native/lib/armhf/libpi4j-linuxfs.so"
-                                              todir="${project.build.directory}/lib/armhf"/>
+                                              file="${project.build.directory}/build/native/lib/armhf/pi4j-linuxfs/libpi4j-linuxfs.so"
+                                              todir="${project.build.directory}/lib/armhf/pi4j-linuxfs"/>
 
                                         <!-- copy compiled 64-bit (AARCH64) Pi4J LinuxFS JNI Library  -->
                                         <copy failonerror="true" includeEmptyDirs="false"
-                                              file="${project.build.directory}/build/native/lib/aarch64/libpi4j-linuxfs.so"
-                                              todir="${project.build.directory}/lib/aarch64"/>
+                                              file="${project.build.directory}/build/native/lib/aarch64/pi4j-linuxfs/libpi4j-linuxfs.so"
+                                              todir="${project.build.directory}/lib/aarch64/pi4j-linuxfs"/>
                                     </target>
                                 </configuration>
                             </execution>

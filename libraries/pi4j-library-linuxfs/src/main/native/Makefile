@@ -27,7 +27,7 @@ INCLUDE	     = -I.                                                       \
                -I/usr/local/include -I/usr/local/include/linux
 
 CFLAGS      := $(DEBUG) -Wall $(INCLUDE) -Winline -pipe $(CARGS) -fPIC
-LIBS         =  -L lib/$(ARCH) -lrt
+LIBS         =  -L lib/$(ARCH)/pi4j-linuxfs -lrt
 
 TARGET=libpi4j-linuxfs.so
 

@@ -156,7 +156,7 @@ public class NativeLibraryLoader {
             }
 
             // include the CPU architecture in the embedded path
-            String path = "/lib/" + osArch + "/" + fileName;
+            String path = "/lib/" + osArch + "/" + libName + "/" + fileName;
             logger.debug("Attempting to load library [" + fileName + "] using path: [" + path + "]");
             try {
                 loadLibraryFromClasspath(path);
