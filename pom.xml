@@ -265,6 +265,7 @@
         <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <maven-scm-plugin.version>1.11.2</maven-scm-plugin.version>
         <maven-bundle-plugin.version>4.2.1</maven-bundle-plugin.version>
         <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
@@ -289,6 +290,7 @@
         <pi4j.gpg.key></pi4j.gpg.key>
         <pi4j.gpg.keyring></pi4j.gpg.keyring>
         <pi4j.gpg.passphrase></pi4j.gpg.passphrase>
+        <gpg.keyname>${pi4j.gpg.key}</gpg.keyname>
 	</properties>
 
     <!-- PROJECT DEPENDENCIES -->
@@ -537,6 +539,19 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>${maven-gpg-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                            <configuration>
+                                <keyname>${gpg.keyname}</keyname>
+                                <passphraseServerId>${gpg.keyname}</passphraseServerId>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <!-- SCM PLUGIN (used to access github) -->
@@ -640,6 +655,29 @@
                     <artifactId>maven-enforcer-plugin</artifactId>
                     <version>3.0.0-M2</version>
                 </plugin>
+
+                <!-- Deploy to Maven plugin -->
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>${nexus-staging-maven-plugin.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <serverId>oss.sonatype.org</serverId>
+                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>deploy-to-sonatype</id>
+                            <phase>deploy</phase>
+                            <goals>
+                                <goal>deploy</goal>
+                                <goal>release</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
             </plugins>
         </pluginManagement>
 
@@ -940,6 +978,31 @@
             <properties>
                 <pi4j.dev.transfer>true</pi4j.dev.transfer>
             </properties>
+        </profile>
+
+        <!-- profile to deploy to sonatype nexus -->
+        <profile>
+            <id>deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>
