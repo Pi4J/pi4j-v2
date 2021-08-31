@@ -254,6 +254,7 @@
         <jSerialComm.version>2.6.2</jSerialComm.version>
         <gson.version>2.8.6</gson.version>
         <json.version>20200518</json.version>
+        <osgi.annotation.version>7.0.0</osgi.annotation.version>
 
         <!-- PLUGIN VERSIONS -->
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
@@ -267,7 +268,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <maven-scm-plugin.version>1.11.2</maven-scm-plugin.version>
-        <maven-bundle-plugin.version>4.2.1</maven-bundle-plugin.version>
+        <bnd-maven-plugin.version>5.3.0</bnd-maven-plugin.version>
         <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <native-maven-plugin.version>1.0-alpha-9</native-maven-plugin.version>
@@ -338,6 +339,21 @@
                 <version>${junit.jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
+            
+            <!-- BUILD TIME DEPENDENCIES OSGI-->
+			<dependency>
+			    <groupId>org.osgi</groupId>
+			    <artifactId>osgi.annotation</artifactId>
+			    <version>${osgi.annotation.version}</version>
+			    <scope>provided</scope>
+			</dependency>
+			
+			<dependency>
+		    	<groupId>biz.aQute.bnd</groupId>
+		    	<artifactId>biz.aQute.bndlib</artifactId>
+		    	<version>${bnd-maven-plugin.version}</version>
+		    	<scope>compile</scope>
+			</dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -373,7 +389,19 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <!-- BUILD TIME DEPENDENCIES OSGI-->
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>osgi.annotation</artifactId>
+		    <scope>compile</scope>
+		</dependency>
 
+		<dependency>
+		    <groupId>biz.aQute.bnd</groupId>
+		    <artifactId>biz.aQute.bndlib</artifactId>
+		    <scope>compile</scope>
+		</dependency>
     </dependencies>
 
 	<!-- BUILD INSTRUCTIONS -->
@@ -439,6 +467,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>${maven-jar-plugin.version}</version>
+                    <configuration>
+			        	<archive>
+			            	<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+			     	   </archive>
+			  		</configuration>
                 </plugin>
 
                 <!-- INCLUDE SOURCE JAR -->
@@ -563,11 +596,20 @@
 
                 <!-- OSGi BUNDLE -->
                 <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <version>${maven-bundle-plugin.version}</version>
-                    <extensions>true</extensions>
-                </plugin>
+				    <groupId>biz.aQute.bnd</groupId>
+				    <artifactId>bnd-maven-plugin</artifactId>
+                    <version>${bnd-maven-plugin.version}</version>
+				    <executions>
+				        <execution>
+				            <goals>
+				                <goal>bnd-process</goal>
+				            </goals>
+				        </execution>
+				    </executions>
+				    <configuration>
+				    
+				    </configuration>
+				</plugin>
 
                 <!-- USED TO GENERATE HEADER FILES FOR NATIVE LIBS -->
                 <plugin>
@@ -766,6 +808,12 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            
+            <!-- OSGi BUNDLE -->
+            <plugin>
+                <groupId>biz.aQute.bnd</groupId>
+   				<artifactId>bnd-maven-plugin</artifactId>
             </plugin>
 		</plugins>
 	</build>

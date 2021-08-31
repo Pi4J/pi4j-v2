@@ -1,0 +1,3 @@
+-jpms-module-info: com.pi4j.plugin.raspberrypi
+
+Bundle-Version: 2.0.0

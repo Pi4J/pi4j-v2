@@ -1,0 +1,3 @@
+-jpms-module-info: com.pi4j.plugin.mock
+
+Bundle-Version: 2.0.0

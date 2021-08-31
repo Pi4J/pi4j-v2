@@ -57,6 +57,7 @@ import org.slf4j.LoggerFactory;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
+@aQute.bnd.annotation.spi.ServiceConsumer(value=Plugin.class)
 public class DefaultRuntime implements Runtime {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

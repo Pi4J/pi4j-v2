@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
+@aQute.bnd.annotation.jpms.MainClass
 public class Main {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);

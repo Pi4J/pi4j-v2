@@ -38,12 +38,15 @@ import com.pi4j.plugin.raspberrypi.provider.serial.RpiSerialProvider;
 import com.pi4j.plugin.raspberrypi.provider.spi.RpiSpiProvider;
 import com.pi4j.provider.Provider;
 
+import aQute.bnd.annotation.spi.ServiceProvider;
+
 /**
  * <p>RaspberryPiPlugin class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
+@ServiceProvider(Plugin.class)
 public class RaspberryPiPlugin implements Plugin {
 
     private Provider providers[] = {

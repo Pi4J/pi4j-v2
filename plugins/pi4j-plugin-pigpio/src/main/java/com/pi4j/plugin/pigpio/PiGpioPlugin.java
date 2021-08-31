@@ -41,12 +41,15 @@ import com.pi4j.plugin.pigpio.provider.serial.PiGpioSerialProvider;
 import com.pi4j.plugin.pigpio.provider.spi.PiGpioSpiProvider;
 import com.pi4j.provider.Provider;
 
+import aQute.bnd.annotation.spi.ServiceProvider;
+
 /**
  * <p>PiGpioPlugin class.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
+@ServiceProvider(Plugin.class)
 public class PiGpioPlugin implements Plugin {
 
     /** Constant <code>NAME="PiGpio"</code> */

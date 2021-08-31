@@ -26,13 +26,14 @@ package com.pi4j.plugin.linuxfs;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
-import com.pi4j.plugin.linuxfs.provider.i2c.LinuxFsI2CProvider;
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalInputProvider;
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalOutputProvider;
+import com.pi4j.plugin.linuxfs.provider.i2c.LinuxFsI2CProvider;
 import com.pi4j.provider.Provider;
+
+import aQute.bnd.annotation.spi.ServiceProvider;
 
 /**
  * <p>LinuxFsPlugin class.</p>
@@ -40,6 +41,7 @@ import com.pi4j.provider.Provider;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
+@ServiceProvider(Plugin.class)
 public class LinuxFsPlugin implements Plugin {
 
     /**
