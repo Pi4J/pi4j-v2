@@ -2,7 +2,7 @@ name: Continious Integration
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]
   workflow_dispatch:
 
 jobs:
@@ -51,6 +51,6 @@ jobs:
           with:
             source_file: 'pi4j-*.*'
             destination_repo: 'pi4j/download'
-            destination_branch: 'main'
+            destination_branch: 'develop'
             user_email: 'team@pi4j.com'
             user_name: 'Pi4J Build'
