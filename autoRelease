@@ -1,0 +1,255 @@
+#!/bin/bash -e
+
+declare SCRIPT_NAME="${0##*/}"
+declare SCRIPT_DIR="$(cd ${0%/*} ; pwd)"
+
+declare START_DIR="$(pwd)"
+
+# usage
+if [ $# != 2 ] ; then
+  echo -e "Usage: ${0} <major|minor|update> <release_branch>"
+  exit 1
+fi
+
+## Make sure no changes
+if ! git diff-index --quiet HEAD -- ; then
+  echo -e "ERROR: You have unsaved changes."
+  exit 1
+fi
+
+updateType="${1}"
+releaseBranch="${2}"
+logFile="${START_DIR}/../autoRelease.log"
+echo -e "INFO: Log is at ${logFile}"
+
+if ! [[ -d "${START_DIR}/target" ]] ; then
+  if ! mkdir "${START_DIR}/target/" ; then
+    echo -e "ERROR: Failed to create target directory"
+    exit 1
+  fi
+fi
+
+lastTag=""
+lastUpdateVersion=""
+initialTag=false
+
+currentPomVersion=$(xmllint --xpath "/*[local-name() = 'project']/*[local-name() = 'version']/text()" pom.xml | tr -d '[:space:]')
+if [[ "${currentPomVersion}" == "XPath set is empty" ]] ; then
+  currentPomVersion=$(xmllint --xpath "/*[local-name() = 'project']/*[local-name() = 'parent']/*[local-name() = 'version']/text()" pom.xml | tr -d '[:space:]')
+  if [[ "${currentPomVersion}" == "XPath set is empty" ]] ; then
+    echo -e "ERROR: Failed to parse current pom version!"
+    exit 1
+  fi
+fi
+echo -e "INFO: Current pom version is ${currentPomVersion}"
+
+# find which major/minor version we are building
+releaseVersion=$(echo -n "$releaseBranch" | cut -d '/' -f 2)
+echo -e "INFO: releaseVersion: ${releaseVersion}"
+if [[ "${releaseVersion}" == "${releaseBranch}" ]] ; then
+  lastTag=$(git for-each-ref --format="%(refname)" --sort=-taggerdate --count=1 refs/tags | cut -d '/' -f 3)
+  if [[ "${lastTag}" == "" ]] ; then
+    echo -e "WARN: No tag yet, using pom version ${currentPomVersion}"
+    currentPomVersion=${currentPomVersion/-SNAPSHOT/}
+    lastTag=${currentPomVersion}
+    initialTag=true
+  else
+    echo -e "INFO: On non-release branch ${releaseBranch}, using last tag ${lastTag}"
+  fi
+else
+  expectedMajorVersion=$(echo -n "$releaseVersion" | cut -d '.' -f 1)
+  expectedMinorVersion=$(echo -n "$releaseVersion" | cut -d '.' -f 2)
+
+  ## find last tag with same major and minor
+  for t in $(git tag) ; do
+    # ignore wrong major version
+    tMa=$(echo -n "$t" | cut -d '.' -f 1)
+    if [[ "${tMa}" != "${expectedMajorVersion}" ]] ; then
+      continue
+    fi
+
+    # ignore wrong minor version
+    tMi=$(echo -n "$t" | cut -d '.' -f 2)
+    if [[ "${tMi}" != "${expectedMinorVersion}" ]] ; then
+      continue
+    fi
+
+    tUp=$(echo -n "$t" | cut -d '.' -f 3)
+    if [[ "${lastUpdateVersion}" != "" ]] && [[ "$tUp" -le "${lastUpdateVersion}" ]] ; then
+      continue
+    fi
+
+    lastUpdateVersion="$tUp"
+    lastTag="${t}"
+  done
+
+  if [[ "${lastTag}" == "" ]] ; then
+    echo -e "WARN: There is no last tag for releaseVersion: ${releaseVersion}, thus using initial version ${releaseVersion}"
+    lastTag=${releaseVersion}
+    updateType="NONE"
+  else
+    echo -e "INFO: Previous tag: ${lastTag}"
+  fi
+
+fi
+
+## Increment updateVersion
+majorVersion=$(echo -n "$lastTag" | cut -d '.' -f 1)
+minorVersion=$(echo -n "$lastTag" | cut -d '.' -f 2)
+updateVersion=$(echo -n "$lastTag" | cut -d '.' -f 3)
+if [[ "${updateVersion}" == "" && "${updateType}" == "update" ]] ; then
+  updateVersion=0
+fi
+if [[ "${updateType}" == "major" ]] ; then
+  echo -e "INFO: Incrementing major version from ${majorVersion} to $((majorVersion+1)). Resetting minor and update versions."
+  if $initialTag ; then
+    majorVersion=${majorVersion}
+  else
+    majorVersion=$((majorVersion+1))
+  fi
+  minorVersion=0
+  updateVersion=0
+elif [[ "${updateType}" == "minor" ]]; then
+  echo -e "INFO: Incrementing minor version from ${minorVersion} to $((minorVersion+1)). Resetting update version."
+  if $initialTag ; then
+    minorVersion=${minorVersion}
+  else
+    minorVersion=$((minorVersion+1))
+  fi
+  if [[ "${updateVersion}" == "" && "${updateType}" == "update" ]] ; then
+    updateVersion=0
+  fi
+elif [[ "${updateType}" == "update" ]]; then
+  echo -e "INFO: Incrementing update version from ${updateVersion} to $((updateVersion+1))."
+  if $initialTag ; then
+    updateVersion=${updateVersion}
+  else
+    updateVersion=$((updateVersion+1))
+  fi
+fi
+
+# build new version
+if [[ "${updateVersion}" == "" ]] ; then
+  newVersion="${majorVersion}.${minorVersion}"
+else
+  newVersion="${majorVersion}.${minorVersion}.${updateVersion}"
+fi
+
+# cleanup trap
+function cleanup {
+  echo -e "\nINFO: Cleaning up..."
+  git checkout "${releaseBranch}"
+  git checkout .
+  git branch -D temp
+}
+trap cleanup EXIT
+
+# Confirm
+echo -e "INFO: Do you want to create release/tag ${newVersion} from release branch ${releaseBranch}? [Y/n]"
+read a
+if [[ "${a}" != "" ]] && [[ "${a}" != "y" ]] ; then
+  exit 0
+fi
+
+# validate tag does not exist
+echo -e "INFO: Fetching tags and branches and validating they do not exist..."
+if ! git fetch --all --tags > /dev/null ; then
+  echo -e "ERROR: Tags and branches could not be fetched!"
+  exit 1
+fi
+if git tag | grep "${newVersion}" > /dev/null ; then
+  echo -e "ERROR: Tag already exists!"
+  exit 1
+fi
+
+# make sure gpg-agent is available and loaded
+echo -e "\nINFO: Searching for gpg-agent..."
+if ! command -v gpg-agent ; then
+  echo -e "ERROR: gpg-agent missing!"
+fi
+if ! gpg-agent 2>&1 | grep "running and available" ; then
+  echo -e "WARN: gpg-agent not running, trying to start..."
+  if ! gpg-agent --daemon ; then
+    echo -e "ERROR: Failed to initialize gpg-agent, please make sure it is up and running before continuing!"
+    exit 1
+  fi
+  if ! gpg-agent 2>&1 | grep "running and available" ; then
+    echo -e "ERROR: Failed to initialize gpg-agent, please make sure it is up and running before continuing!"
+    exit 1
+  fi
+fi
+
+# Checkout release branch
+echo -e "\nINFO: Checking out release branch ${releaseBranch}"
+if ! git show-ref -q "${releaseBranch}" ; then
+  if ! git checkout -b "${releaseBranch}" ; then
+    echo -e "ERROR: Failed to checkout branch ${releaseBranch}"
+    exit 1
+  fi
+  if ! git push origin "${releaseBranch}" ; then
+    echo -e "ERROR: Failed to push new release branch ${releaseBranch} to origin!"
+    exit 1
+  fi
+elif ! git checkout "${releaseBranch}" ; then
+  echo -e "ERROR: Failed to checkout branch ${releaseBranch}"
+  exit 1
+fi
+
+# create temp branch
+echo -e "\nINFO: Creating temp branch..."
+if ! git checkout -b temp ; then
+  echo -e "ERROR: Failed to create temp branch!"
+  exit 1
+fi
+
+# set release version
+echo -e "\nINFO: Setting version..."
+if ! mvn versions:set -DgenerateBackupPoms=false -DnewVersion="${newVersion}" > "${logFile}" ; then
+  echo -e "ERROR: Failed to set new version!"
+  exit 1
+fi
+
+# build
+echo -e "\nINFO: Doing a build with new version..."
+if ! mvn clean package -DskipTests ${MVN_PROFILES} > "${logFile}" ; then
+  echo -e "ERROR: Failed to build with new version!"
+  exit 1
+fi
+
+# commit to tag
+echo -e "\nINFO: Creating tag..."
+if ! git add . ; then
+  echo -e "ERROR: Failed to git add"
+  exit 1
+fi
+if ! git commit -m "[Project] Set new version ${newVersion}" ; then
+  echo -e "ERROR: Failed to git commit"
+  exit 1
+fi
+if ! git tag --sign --message "[Project] New Version ${newVersion}" "${newVersion}" ; then
+  echo -e "ERROR: Failed to git tag"
+  exit 1
+fi
+
+# local install
+echo -e "\nINFO: Installing new version..."
+if ! git checkout "${newVersion}" ; then
+  echo -e "ERROR: Failed to checkout tag ${newVersion}"
+  exit 1
+fi
+if ! mvn source:jar install -DskipTests ${MVN_PROFILES} > /dev/null ; then
+  echo -e "ERROR: Failed to install new version!"
+  exit 1
+fi
+
+# git push
+echo -e "INFO: Pushing to origin..."
+if ! git push origin "${newVersion}" ; then
+  echo -e "ERROR: Failed to push tag"
+  exit 1
+fi
+echo -e "\nINFO: Pushed Release/Tag ${newVersion}"
+
+rm -f "${logFile}"
+echo -e "\nINFO: Release/Tag ${newVersion} created."
+exit 0
