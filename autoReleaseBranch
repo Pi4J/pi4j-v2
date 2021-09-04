@@ -1,0 +1,97 @@
+#!/bin/bash
+
+function pwb() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
+}
+
+# usage
+if [ $# != 3 ] ; then
+  echo -e "Usage: ${0} <major|minor|update> <source_branch> <release_branch>"
+  exit 1
+fi
+
+current_branch="$(pwb)"
+updateType="${1}"
+source_branch="${2}"
+branch="${3}"
+
+echo "INFO: Fetching..."
+if ! git fetch --all --tags ; then
+  echo "ERROR: Failed to fetch all tags!"
+  exit 1
+fi
+
+if [ "${source_branch}" == "${branch}" ] ; then
+  echo "INFO: Already on branch ${source_branch}..."
+else
+  echo "INFO: Checking out ${source_branch}..."
+  if ! git checkout "${source_branch}" ; then
+    echo "ERROR: Failed to checkout branch ${source_branch}"
+    exit 1
+  fi
+
+  echo "INFO: Rebasing origin/${source_branch}..."
+  if ! git rebase "origin/${source_branch}" ; then
+    echo "ERROR: Failed to rebase ${source_branch}!"
+    exit 1
+  fi
+fi
+
+echo "INFO: Checking out ${branch}..."
+if ! git checkout "${branch}" ; then
+  echo "ERROR: Failed to checkout branch ${branch}"
+  exit 1
+fi
+
+echo "INFO: Rebasing origin/${branch}..."
+if ! git rebase "origin/${branch}" ; then
+  echo "ERROR: Failed to rebase ${branch}!"
+  exit 1
+fi
+
+if [ "${source_branch}" == "${branch}" ] ; then
+  echo "INFO: Source and release branch are the same not merging: ${source_branch}"
+else
+  echo "INFO: Merging ${source_branch}..."
+  if ! GIT_EDITOR=: git merge ${source_branch} ; then
+    echo "ERROR: Failed to prepare repo for auto release!"
+    exit 1
+  fi
+fi
+
+echo -n "INFO: Merge complete. Please update versions in pom.xml: <enter>"
+read a
+if ! editor ./pom.xml ; then
+  echo "ERROR: pom.xml failed"
+  exit 1
+fi
+
+if output=$(git status --porcelain) && [ -z "$output" ]; then
+  echo "INFO: No changes in pom.xml, no commit needed."
+else
+  git add pom.xml
+  if ! git commit -m "[Project] Update pom.xml in auto release" ; then
+    echo "ERROR: Failed to commit changed pom.xml"
+    exit 1
+  fi
+fi
+
+echo "INFO: Pushing ${branch} to origin..."
+if ! git push origin ${branch} ; then
+  echo "ERROR: Failed to push ${branch} to origin."
+  exit 1
+fi
+
+echo "INFO: Starting auto release on branch ${branch}..."
+if ! autoRelease "${updateType}" "${branch}" ; then
+  echo "ERROR: Failed to perform auto release!"
+  exit 1
+fi
+
+if [[ "${current_branch}" != "${branch}" ]] ; then
+  echo "INFO: Checking out previous ${branch}..."
+  git checkout "${current_branch}"
+fi
+
+echo "INFO: Performed auto-release on ${branch}"
+exit 0
