@@ -13,14 +13,6 @@ Build state:
 
 ---
 
-## DISCLAIMER:: EXPERIMENTAL VERSION
-
-### This repository is an experimental and incomplete work-in-progress for the next major version of Pi4J.  Do not try using this project, it will not work at this time.
-
-### !! NOT READY FOR PRODUCTION USE !!
-
----
-
 ## PROJECT INFORMATION for V2 of Pi4J
 
 Project website: [pi4j.com](https://pi4j.com/).
@@ -100,27 +92,11 @@ Starting with the Pi4J 2.0 builds, the Pi4J project is prioritizing focus
 on providing Java programs access, control and communication with the core
 I/O capabilities of the Raspberry Pi platform.  
 
-**LINK BELOW TO BE CHANGED TO pi4j.com WHEN NEW SITE IS PUBLISHED**
-
 Read all about it on [pi4j.com](https://pi4j.com/).
-
-## IN DEVELOPMENT
-
-2021-01-26 :: 2.0-SNAPSHOT
-
-For more info see the new website _["What’s New in 2.0?"](https://pi4j.com/about/new-in-v2/)_.
-
-  * Changed project to Apache License, Version 2.0
-  * Removed `pi4j-device` library.  
-  * Removed `pi4j-gpio-extension` library.
-  * Removed platform support for `Odroid`, `BananaPi`, `BPi`, `NanoPi`, `OrangePi`.
-  * Added support for 32-bit (`armhf`) and 64-bit (`aarch64`) distributions.
-  * Added support for native builds using Pi4J Docker Build images.
   
 ## PREVIOUS RELEASES
 
-For previous 1.x release notes and source code, please see the 1.x branch
-or release tags in the source repository:
+For previous 1.x release notes and source code, please see the [1.x GitHub repository](https://github.com/pi4J/pi4J).
 
   * **Releases**: [github.com/Pi4J/pi4j/releases](https://github.com/Pi4J/pi4j/releases)
   * **Source Code**: [github.com/Pi4J/pi4j/branches](https://github.com/Pi4J/pi4j/branches)

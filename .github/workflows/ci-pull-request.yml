@@ -2,7 +2,7 @@ name: Continious Integration (Pull Request)
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ develop ]
   workflow_dispatch:
 
 jobs:
