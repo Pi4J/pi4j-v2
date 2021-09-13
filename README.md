@@ -11,13 +11,16 @@ Build state:
 [![Site](https://img.shields.io/badge/Website-pi4j.com-green)](https://pi4j.com)
 [![Twitter Follow](https://img.shields.io/twitter/follow/pi4j?label=Pi4J&style=social)](https://twitter.com/pi4j)
 
+<a href="https://foojay.io/today/works-with-openjdk"><img align="left" src="https://github.com/foojayio/badges/raw/main/works_with_openjdk/Works-with-OpenJDK.png" width="100"></a>
+<br><br><br>
+
 ---
 
 ## PROJECT INFORMATION for V2 of Pi4J
 
 Project website: [pi4j.com](https://pi4j.com/).
 
-![Pi4J V2 architecture](assets/draw.io/pi4j-v2-architecture.jpg)
+![Pi4J diagram](https://pi4j.com/assets/about/home/pi4j-overview.jpg)
 
 * Pi4J V2 Discussions (replacing the Forum) (*new*): [github.com/Pi4J/pi4j-v2/discussions](https://github.com/Pi4J/pi4j-v2/discussions)
 * Pi4J V2 issues: [github.com/Pi4J/pi4j-v2/issues](https://github.com/Pi4J/pi4j-v2/issues)
