@@ -26,8 +26,10 @@ package com.pi4j.util;
  */
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * <p>ReflectionUtil class.</p>
@@ -38,13 +40,25 @@ import java.util.Set;
 public class ReflectionUtil {
 
     /**
+     * <p>getAllInterfacesSorted.  Interfaces are sorted by full qualified class name.</p>
+     *
+     * @param target a {@link java.lang.Object} object.
+     * @return a sorted {@link java.util.Collection} object.
+     */
+    public static Collection<Class> getAllInterfacesSorted(Object target){
+        return getAllInterfaces(target.getClass())
+            .stream()
+            .sorted(Comparator.comparing(Class::getName))
+            .collect(Collectors.toList());
+    }
+
+    /**
      * <p>getAllInterfaces.</p>
      *
      * @param target a {@link java.lang.Object} object.
      * @return a {@link java.util.Collection} object.
      */
     public static Collection<Class> getAllInterfaces(Object target){
-        Set<Class> results = new HashSet<>();
         return getAllInterfaces(target.getClass());
     }
 
