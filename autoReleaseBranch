@@ -1,9 +1,5 @@
 #!/bin/bash
 
-function pwb() {
-    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
-}
-
 # usage
 if [ $# != 3 ] ; then
   echo -e "Usage: ${0} <major|minor|update> <source_branch> <release_branch>"
@@ -21,6 +17,16 @@ if ! git fetch --all --tags ; then
   exit 1
 fi
 
+
+# cleanup trap
+function cleanup {
+  echo "INFO: Checking out previous ${branch}..."
+  git checkout "${current_branch}"
+}
+trap cleanup EXIT
+
+
+echo
 if [ "${source_branch}" == "${branch}" ] ; then
   echo "INFO: Already on branch ${source_branch}..."
 else
@@ -37,18 +43,39 @@ else
   fi
 fi
 
-echo "INFO: Checking out ${branch}..."
+
+echo
+echo "INFO: Checking out target ${branch}..."
 if ! git checkout "${branch}" ; then
-  echo "ERROR: Failed to checkout branch ${branch}"
-  exit 1
+  echo "WARN: Failed to checkout target branch ${branch}"
+  echo -e "WARN: Do you want to create target branch ${branch} from branch ${source_branch}? [Y/n]"
+  read a
+  if [[ "${a}" != "" ]] && [[ "${a}" != "y" ]] ; then
+    exit 0
+  fi
+
+  if ! git checkout -b "${branch}" "${source_branch}" ; then
+    echo "ERROR: Failed to create new branch ${branch}"
+    exit 1
+  fi
+
+  echo "INFO: Pushing new branch to origin..."
+  if ! git push --set-upstream origin "${branch}" ; then
+    echo "ERROR: Failed to push new branch ${branch} to origin!"
+    exit 1
+  fi
 fi
 
+
+# rebasing
 echo "INFO: Rebasing origin/${branch}..."
 if ! git rebase "origin/${branch}" ; then
   echo "ERROR: Failed to rebase ${branch}!"
   exit 1
 fi
 
+
+# merge branchs
 if [ "${source_branch}" == "${branch}" ] ; then
   echo "INFO: Source and release branch are the same not merging: ${source_branch}"
 else
@@ -59,6 +86,8 @@ else
   fi
 fi
 
+
+# have user update pom.xml if necessary
 echo -n "INFO: Merge complete. Please update versions in pom.xml: <enter>"
 read a
 if ! editor ./pom.xml ; then
@@ -66,6 +95,8 @@ if ! editor ./pom.xml ; then
   exit 1
 fi
 
+
+# commit changes
 if output=$(git status --porcelain) && [ -z "$output" ]; then
   echo "INFO: No changes in pom.xml, no commit needed."
 else
@@ -76,21 +107,20 @@ else
   fi
 fi
 
+
+# push changes to origin
 echo "INFO: Pushing ${branch} to origin..."
 if ! git push origin ${branch} ; then
   echo "ERROR: Failed to push ${branch} to origin."
   exit 1
 fi
 
+
+# now perform autoRelease
 echo "INFO: Starting auto release on branch ${branch}..."
 if ! autoRelease "${updateType}" "${branch}" ; then
   echo "ERROR: Failed to perform auto release!"
   exit 1
-fi
-
-if [[ "${current_branch}" != "${branch}" ]] ; then
-  echo "INFO: Checking out previous ${branch}..."
-  git checkout "${current_branch}"
 fi
 
 echo "INFO: Performed auto-release on ${branch}"
