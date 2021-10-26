@@ -267,7 +267,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <maven-scm-plugin.version>1.11.2</maven-scm-plugin.version>
-        <maven-bundle-plugin.version>4.2.1</maven-bundle-plugin.version>
+        <maven-bundle-plugin.version>5.1.2</maven-bundle-plugin.version>
         <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <native-maven-plugin.version>1.0-alpha-9</native-maven-plugin.version>
