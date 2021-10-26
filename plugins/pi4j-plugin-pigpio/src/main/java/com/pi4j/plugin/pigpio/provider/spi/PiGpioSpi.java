@@ -60,11 +60,18 @@ public class PiGpioSpi extends SpiBase implements Spi {
         // set local reference instance
         this.piGpio = piGpio;
 
+        // the default value for 'flags' is defined my the 'mode' configuration
+        int flags = config.mode().getMode();
+
+        // next, combine any optional defined auxiliary defined flags
+        if(config().flags() != null)
+            flags |= config().flags().intValue();
+
         // create SPI instance of PIGPIO SPI
         this.handle = piGpio.spiOpen(
                 config.address(),
                 config.baud(),
-                config.mode().getMode());
+                flags);
 
         // set open state flag
         this.isOpen = true;

@@ -62,6 +62,15 @@ public interface SpiConfigBuilder extends
      * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
      */
     SpiConfigBuilder mode(SpiMode mode);
+
+    /**
+     * <p>flags.</p>
+     *
+     * @param flags a {@link java.lang.Integer} value.
+     * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
+     */
+    SpiConfigBuilder flags(Integer flags);
+
     /**
      * <p>mode.</p>
      *

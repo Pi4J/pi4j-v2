@@ -46,6 +46,7 @@ public class DefaultSpiConfig
     // private configuration properties
     protected final Integer baud;
     protected final SpiMode mode;
+    protected final Integer flags;
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -69,6 +70,13 @@ public class DefaultSpiConfig
             this.mode = Spi.DEFAULT_MODE;
         }
 
+        // load optional FLAGS BITS from properties
+        if(properties.containsKey(FLAGS_KEY)){
+            this.flags = StringUtil.parseInteger(properties.get(FLAGS_KEY), null);
+        } else {
+            this.flags = null;
+        }
+
         // define default property values if any are missing (based on the required address value)
         this.id = StringUtil.setIfNullOrEmpty(this.id, "SPI-" + this.address(), true);
         this.name = StringUtil.setIfNullOrEmpty(this.name, "SPI-" + this.address(), true);
@@ -86,4 +94,8 @@ public class DefaultSpiConfig
     public SpiMode mode() {
         return this.mode;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public Integer flags() { return this.flags; }
 }

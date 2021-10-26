@@ -40,6 +40,8 @@ public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig>
     String BAUD_KEY = "baud";
     /** Constant <code>MODE_KEY="mode"</code> */
     String MODE_KEY = "mode";
+    /** Constant <code>FLAGS_KEY="flags"</code> */
+    String FLAGS_KEY = "flags";
 
     /**
      * <p>newBuilder.</p>
@@ -79,4 +81,19 @@ public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig>
         return mode();
     }
 
+    /**
+     * <p>flags.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
+    Integer flags();
+
+    /**
+     * <p>getFlags.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
+    default Integer getFlags() {
+        return flags();
+    }
 }

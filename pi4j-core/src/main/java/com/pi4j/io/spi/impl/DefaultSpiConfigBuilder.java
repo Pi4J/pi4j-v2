@@ -71,6 +71,12 @@ public class DefaultSpiConfigBuilder
         return this;
     }
 
+    @Override
+    public SpiConfigBuilder flags(Integer flags) {
+        this.properties.put(SpiConfig.FLAGS_KEY, flags.toString());
+        return this;
+    }
+
     /** {@inheritDoc} */
     @Override
     public SpiConfig build() {
