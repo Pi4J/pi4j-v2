@@ -27,6 +27,7 @@ package com.pi4j.io.gpio.digital.impl;
 
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
+import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.io.gpio.digital.PullResistance;
 import com.pi4j.io.impl.IOAddressConfigBase;
 import com.pi4j.util.StringUtil;
@@ -53,6 +54,7 @@ public class DefaultDigitalInputConfig
     // private configuration properties
     protected PullResistance pullResistance = PullResistance.OFF;
     protected Long debounce = DigitalInput.DEFAULT_DEBOUNCE;
+    protected DigitalState onState = DigitalState.HIGH;
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -76,6 +78,11 @@ public class DefaultDigitalInputConfig
         if(properties.containsKey(DEBOUNCE_RESISTANCE_KEY)){
             this.debounce = Long.parseLong(properties.get(DEBOUNCE_RESISTANCE_KEY));
         }
+
+        // load on-state value property
+        if(properties.containsKey(ON_STATE_KEY)){
+            this.onState = DigitalState.parse(properties.get(ON_STATE_KEY));
+        }
     }
 
     /** {@inheritDoc} */
@@ -87,4 +94,9 @@ public class DefaultDigitalInputConfig
     /** {@inheritDoc} */
     @Override
     public Long debounce() { return this.debounce; }
+
+    @Override
+    public DigitalState onState() {
+        return this.onState;
+    }
 }

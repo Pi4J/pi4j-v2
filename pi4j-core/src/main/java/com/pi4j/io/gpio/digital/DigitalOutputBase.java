@@ -164,14 +164,31 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
     /** {@inheritDoc} */
     @Override
     public DigitalOutput on() throws IOException {
-        // TODO :: REVISIT STATE VS ON/OFF
-        return high();
+
+        // the default ON state is HIGH
+        DigitalState onState = DigitalState.HIGH;
+
+        // get configured ON state
+        if(config().onState() != null){
+            onState = config().onState();
+        }
+
+        // set the current state to the configured ON state
+        return state(onState);
     }
 
     /** {@inheritDoc} */
     @Override
     public DigitalOutput off() throws IOException {
-        // TODO :: REVISIT STATE VS ON/OFF
-        return low();
+        // the default OFF state is LOW
+        DigitalState offState = DigitalState.LOW;
+
+        // get configured ON state; then set OFF state to inverse of ON state
+        if(config().onState() != null){
+            offState = DigitalState.getInverseState(config().onState());
+        }
+
+        // set the current state to the configured OFF state
+        return state(offState);
     }
 }

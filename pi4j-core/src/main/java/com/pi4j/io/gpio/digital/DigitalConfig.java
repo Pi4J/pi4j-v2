@@ -35,5 +35,22 @@ import com.pi4j.io.gpio.GpioConfig;
  * @version $Id: $Id
  */
 public interface DigitalConfig<CONFIG_TYPE extends Config> extends GpioConfig<CONFIG_TYPE> {
-    // MARKER INTERFACE
+
+    /** Constant <code>ON_STATE_KEY="onstate"</code> */
+    String ON_STATE_KEY = "onstate";
+    /**
+     * <p>onState.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalState} object.
+     */
+    DigitalState onState();
+
+    /**
+     * <p>getOnState.</p>
+     *
+     * @return a {@link com.pi4j.io.gpio.digital.DigitalState} object.
+     */
+    default DigitalState getOnState(){
+        return this.onState();
+    }
 }

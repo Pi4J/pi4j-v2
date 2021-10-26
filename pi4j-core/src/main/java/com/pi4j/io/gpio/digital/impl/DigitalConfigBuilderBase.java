@@ -28,6 +28,8 @@ package com.pi4j.io.gpio.digital.impl;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalConfig;
 import com.pi4j.io.gpio.digital.DigitalConfigBuilder;
+import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
+import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.io.impl.IOAddressConfigBuilderBase;
 
 /**
@@ -45,5 +47,12 @@ public abstract class DigitalConfigBuilderBase<BUILDER_TYPE extends DigitalConfi
      */
     protected DigitalConfigBuilderBase(Context context){
         super(context);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public BUILDER_TYPE onState(DigitalState state) {
+        this.properties.put(DigitalConfig.ON_STATE_KEY, state.toString());
+        return (BUILDER_TYPE)this;
     }
 }
