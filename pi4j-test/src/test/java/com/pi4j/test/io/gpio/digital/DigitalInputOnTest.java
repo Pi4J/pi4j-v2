@@ -67,7 +67,7 @@ public class DigitalInputOnTest {
 
         // create GPIO digital input config
         var config  = DigitalInput.newConfigBuilder(pi4j)
-            .id("test-output")
+            .id("test-input")
             .name("Test Digital Input")
             .address(1)
             .build();
@@ -79,7 +79,7 @@ public class DigitalInputOnTest {
         MockDigitalInput mockInput = (MockDigitalInput)input;
         mockInput.mockState(DigitalState.HIGH);
 
-        // ensure output is ON and not OFF
+        // ensure input is ON and not OFF
         assertTrue(input.isOn());
         assertFalse(input.isOff());
     }
@@ -89,7 +89,7 @@ public class DigitalInputOnTest {
 
         // create GPIO digital input config
         var config  = DigitalInput.newConfigBuilder(pi4j)
-            .id("test-output")
+            .id("test-input")
             .name("Test Digital Input")
             .onState(DigitalState.HIGH)
             .address(1)
@@ -102,7 +102,7 @@ public class DigitalInputOnTest {
         MockDigitalInput mockInput = (MockDigitalInput)input;
         mockInput.mockState(DigitalState.HIGH);
 
-        // ensure output is ON and not OFF
+        // ensure input is ON and not OFF
         assertTrue(input.isOn());
         assertFalse(input.isOff());
     }
@@ -112,7 +112,7 @@ public class DigitalInputOnTest {
 
         // create GPIO digital input config
         var config  = DigitalInput.newConfigBuilder(pi4j)
-            .id("test-output")
+            .id("test-input")
             .name("Test Digital Input")
             .onState(DigitalState.LOW)
             .address(1)
@@ -125,7 +125,7 @@ public class DigitalInputOnTest {
         MockDigitalInput mockInput = (MockDigitalInput)input;
         mockInput.mockState(DigitalState.LOW);
 
-        // ensure output is ON and not OFF
+        // ensure input is ON and not OFF
         assertTrue(input.isOn());
         assertFalse(input.isOff());
     }
