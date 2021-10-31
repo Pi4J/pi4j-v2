@@ -25,8 +25,7 @@ package com.pi4j.io.gpio.digital.impl;
  * #L%
  */
 
-import com.pi4j.io.gpio.digital.DigitalOutputConfig;
-import com.pi4j.io.gpio.digital.DigitalState;
+import com.pi4j.io.gpio.digital.*;
 import com.pi4j.io.impl.IOAddressConfigBase;
 import com.pi4j.util.StringUtil;
 
@@ -45,6 +44,7 @@ public class DefaultDigitalOutputConfig
     // private configuration properties
     protected DigitalState shutdownState = null;
     protected DigitalState initialState = null;
+    protected DigitalState onState = DigitalState.HIGH;
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -75,6 +75,11 @@ public class DefaultDigitalOutputConfig
         if(properties.containsKey(SHUTDOWN_STATE_KEY)){
             this.shutdownState = DigitalState.parse(properties.get(SHUTDOWN_STATE_KEY));
         }
+
+        // load on-state value property
+        if(properties.containsKey(ON_STATE_KEY)){
+            this.onState = DigitalState.parse(properties.get(ON_STATE_KEY));
+        }
     }
 
     /** {@inheritDoc} */
@@ -94,5 +99,10 @@ public class DefaultDigitalOutputConfig
     @Override
     public DigitalState initialState() {
         return this.initialState;
+    }
+
+    @Override
+    public DigitalState onState() {
+        return this.onState;
     }
 }

@@ -35,5 +35,11 @@ import com.pi4j.io.gpio.GpioConfigBuilder;
  */
 public interface DigitalConfigBuilder<BUILDER_TYPE extends DigitalConfigBuilder, CONFIG_TYPE extends DigitalConfig>
         extends GpioConfigBuilder<BUILDER_TYPE, CONFIG_TYPE> {
-    // MARKER INTERFACE
+    /**
+     * <p>pull.</p>
+     *
+     * @param state a {@link com.pi4j.io.gpio.digital.DigitalState} object.
+     * @return a {@link BUILDER_TYPE} object.
+     */
+    BUILDER_TYPE onState(DigitalState state);
 }

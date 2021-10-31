@@ -130,7 +130,15 @@ public abstract class DigitalBase<DIGITAL_TYPE extends Digital<DIGITAL_TYPE, CON
     /** {@inheritDoc} */
     @Override
     public boolean isOn() {
-        // TODO :: REVISIT STATE VS ON/OFF
-        return state().isHigh();
+        // the default ON state is HIGH
+        DigitalState onState = DigitalState.HIGH;
+
+        // get configured ON state
+        if(config().onState() != null){
+            onState = config().onState();
+        }
+
+        // return TRUE if the current state matches the configured ON state
+        return state().equals(onState);
     }
 }

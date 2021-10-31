@@ -64,15 +64,4 @@ public class MockDigitalOutput extends DigitalOutputBase implements DigitalOutpu
         this.state(state);
         return this;
     }
-
-    @Override
-    public DigitalOutput on() throws IOException {
-        return high();
-    }
-
-    @Override
-    public DigitalOutput off() throws IOException {
-        return low();
-    }
-
 }
