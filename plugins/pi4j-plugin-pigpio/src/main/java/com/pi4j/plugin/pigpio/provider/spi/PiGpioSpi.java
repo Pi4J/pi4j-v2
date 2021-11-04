@@ -97,6 +97,11 @@ public class PiGpioSpi extends SpiBase implements Spi {
         // the default value for 'flags' is zero
         int flags = 0;
 
+        // if 'flags' were provided in the SPI config, then accept them
+        if(config().flags() != null){
+            flags = config().flags().intValue();
+        }
+
         // only SPI BUS_0 and AUX SPI BUS_1 are supported by PiGPIO
         if(bus.getBus() > 1){
             throw new IOException("Unsupported BUS by PiGPIO SPI Provider: bus=" + bus.toString());
