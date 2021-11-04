@@ -27,9 +27,7 @@ package com.pi4j.io.spi.impl;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.impl.IOAddressConfigBuilderBase;
-import com.pi4j.io.spi.SpiConfig;
-import com.pi4j.io.spi.SpiConfigBuilder;
-import com.pi4j.io.spi.SpiMode;
+import com.pi4j.io.spi.*;
 
 /**
  * <p>DefaultSpiConfigBuilder class.</p>
@@ -66,14 +64,36 @@ public class DefaultSpiConfigBuilder
 
     /** {@inheritDoc} */
     @Override
+    public SpiConfigBuilder bus(SpiBus bus) {
+        this.properties.put(SpiConfig.BUS_KEY, Integer.toString(bus.getBus()));
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public SpiConfigBuilder mode(SpiMode mode) {
         this.properties.put(SpiConfig.MODE_KEY, Integer.toString(mode.getMode()));
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SpiConfigBuilder flags(Long flags) {
         this.properties.put(SpiConfig.FLAGS_KEY, flags.toString());
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SpiConfigBuilder channel(Integer channel) {
+        this.properties.put(SpiConfig.ADDRESS_KEY, channel.toString());
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SpiConfigBuilder chipSelect(SpiChipSelect chipSelect) {
+        this.properties.put(SpiConfig.ADDRESS_KEY, Integer.toString(chipSelect.getChipSelect()));
         return this;
     }
 

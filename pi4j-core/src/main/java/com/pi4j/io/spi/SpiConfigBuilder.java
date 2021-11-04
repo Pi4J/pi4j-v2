@@ -56,12 +56,36 @@ public interface SpiConfigBuilder extends
     SpiConfigBuilder baud(Integer rate);
 
     /**
+     * <p>bus.</p>
+     *
+     * @param bus a {@link com.pi4j.io.spi.SpiBus} object.
+     * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
+     */
+    SpiConfigBuilder bus(SpiBus bus);
+
+    /**
+     * <p>bus.</p>
+     *
+     * @param bus a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
+     */
+    default SpiConfigBuilder bus(Integer bus){ return bus(SpiBus.getByNumber(bus)); }
+
+    /**
      * <p>mode.</p>
      *
      * @param mode a {@link com.pi4j.io.spi.SpiMode} object.
      * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
      */
     SpiConfigBuilder mode(SpiMode mode);
+
+    /**
+     * <p>mode.</p>
+     *
+     * @param mode a {@link java.lang.Integer} object.
+     * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
+     */
+    default SpiConfigBuilder mode(Integer mode){ return mode(SpiMode.getByNumber(mode)); }
 
     /**
      * <p>flags.</p>
@@ -72,10 +96,18 @@ public interface SpiConfigBuilder extends
     SpiConfigBuilder flags(Long flags);
 
     /**
-     * <p>mode.</p>
+     * <p>channel. (ALIAS for 'address')</p>
      *
-     * @param mode a {@link java.lang.Integer} object.
+     * @param channel a {@link java.lang.Integer} value.
      * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
      */
-    default SpiConfigBuilder mode(Integer mode){ return mode(SpiMode.getByNumber(mode)); }
+    SpiConfigBuilder channel(Integer channel);
+
+    /**
+     * <p>chipSelect. (ALIAS for 'address')</p>
+     *
+     * @param chipSelect a {@link com.pi4j.io.spi.SpiChipSelect} value.
+     * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
+     */
+    SpiConfigBuilder chipSelect(SpiChipSelect chipSelect);
 }
