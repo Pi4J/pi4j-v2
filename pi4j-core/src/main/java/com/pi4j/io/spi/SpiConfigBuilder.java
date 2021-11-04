@@ -66,10 +66,10 @@ public interface SpiConfigBuilder extends
     /**
      * <p>flags.</p>
      *
-     * @param flags a {@link java.lang.Integer} value.
+     * @param flags a {@link java.lang.Long} value.
      * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
      */
-    SpiConfigBuilder flags(Integer flags);
+    SpiConfigBuilder flags(Long flags);
 
     /**
      * <p>mode.</p>

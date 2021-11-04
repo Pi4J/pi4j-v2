@@ -46,7 +46,7 @@ public class DefaultSpiConfig
     // private configuration properties
     protected final Integer baud;
     protected final SpiMode mode;
-    protected final Integer flags;
+    protected final Long flags;
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -72,7 +72,7 @@ public class DefaultSpiConfig
 
         // load optional FLAGS BITS from properties
         if(properties.containsKey(FLAGS_KEY)){
-            this.flags = StringUtil.parseInteger(properties.get(FLAGS_KEY), null);
+            this.flags = StringUtil.parseLong(properties.get(FLAGS_KEY), null);
         } else {
             this.flags = null;
         }
@@ -97,5 +97,5 @@ public class DefaultSpiConfig
 
     /** {@inheritDoc} */
     @Override
-    public Integer flags() { return this.flags; }
+    public Long flags() { return this.flags; }
 }

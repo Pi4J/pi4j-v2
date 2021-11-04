@@ -84,16 +84,16 @@ public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig>
     /**
      * <p>flags.</p>
      *
-     * @return a {@link java.lang.Integer} object.
+     * @return a {@link java.lang.Long} object.
      */
-    Integer flags();
+    Long flags();
 
     /**
      * <p>getFlags.</p>
      *
-     * @return a {@link java.lang.Integer} object.
+     * @return a {@link java.lang.Long} object.
      */
-    default Integer getFlags() {
+    default Long getFlags() {
         return flags();
     }
 }

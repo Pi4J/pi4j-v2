@@ -72,7 +72,7 @@ public class DefaultSpiConfigBuilder
     }
 
     @Override
-    public SpiConfigBuilder flags(Integer flags) {
+    public SpiConfigBuilder flags(Long flags) {
         this.properties.put(SpiConfig.FLAGS_KEY, flags.toString());
         return this;
     }
