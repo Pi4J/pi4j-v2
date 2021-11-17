@@ -1,4 +1,4 @@
-name: Continious Integration
+name: Build develop snapshot and push to download repo
 
 on:
   push:
