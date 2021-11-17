@@ -1,4 +1,4 @@
-name: Continious Integration (Pull Request)
+name: Build pull-request to develop branch
 
 on:
   pull_request:
