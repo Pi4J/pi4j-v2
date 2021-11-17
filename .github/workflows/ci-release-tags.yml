@@ -35,7 +35,7 @@ jobs:
       needs: [Build]
       runs-on: ubuntu-latest
       environment: 
-        name: Staging
+        name: Release
         url: 'https://github.com/Pi4J/download'
       steps:
         - name: Download staged artifacts from build 
