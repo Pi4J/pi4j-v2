@@ -155,7 +155,7 @@ public class MockI2C extends I2CBase implements I2C {
         logger.info("] :: READ(0x");
         logger.info(StringUtil.toHexString(b));
         logger.info(")");
-        return b;
+        return b & 0xff;
     }
 
     /** {@inheritDoc} */
