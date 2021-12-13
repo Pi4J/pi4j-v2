@@ -49,9 +49,8 @@ echo -e "INFO: releaseVersion: ${releaseVersion}"
 if [[ "${releaseVersion}" == "${releaseBranch}" ]] ; then
   lastTag=$(git for-each-ref --format="%(refname)" --sort=-taggerdate --count=1 refs/tags | cut -d '/' -f 3)
   if [[ "${lastTag}" == "" ]] ; then
-    echo -e "WARN: No tag yet, using pom version ${currentPomVersion}"
-    currentPomVersion=${currentPomVersion/-SNAPSHOT/}
-    lastTag=${currentPomVersion}
+    echo -e "WARN: No tag yet, using pom version ${currentPomVersion} without -SNAPSHOT"
+    lastTag=${currentPomVersion/-SNAPSHOT/}
     initialTag=true
   else
     echo -e "INFO: On non-release branch ${releaseBranch}, using last tag ${lastTag}"
@@ -97,7 +96,7 @@ fi
 majorVersion=$(echo -n "$lastTag" | cut -d '.' -f 1)
 minorVersion=$(echo -n "$lastTag" | cut -d '.' -f 2)
 updateVersion=$(echo -n "$lastTag" | cut -d '.' -f 3)
-if [[ "${updateVersion}" == "" && "${updateType}" == "update" ]] ; then
+if [[ "${updateVersion}" == "" ]] ; then
   updateVersion=0
 fi
 if [[ "${updateType}" == "major" ]] ; then
@@ -129,11 +128,8 @@ elif [[ "${updateType}" == "update" ]]; then
 fi
 
 # build new version
-if [[ "${updateVersion}" == "" ]] ; then
-  newVersion="${majorVersion}.${minorVersion}"
-else
-  newVersion="${majorVersion}.${minorVersion}.${updateVersion}"
-fi
+newVersion="${majorVersion}.${minorVersion}.${updateVersion}"
+
 
 # cleanup trap
 function cleanup {
@@ -144,12 +140,14 @@ function cleanup {
 }
 trap cleanup EXIT
 
+
 # Confirm
 echo -e "INFO: Do you want to create release/tag ${newVersion} from release branch ${releaseBranch}? [Y/n]"
 read a
 if [[ "${a}" != "" ]] && [[ "${a}" != "y" ]] ; then
   exit 0
 fi
+
 
 # validate tag does not exist
 echo -e "INFO: Fetching tags and branches and validating they do not exist..."
@@ -161,6 +159,7 @@ if git tag | grep "${newVersion}" > /dev/null ; then
   echo -e "ERROR: Tag already exists!"
   exit 1
 fi
+
 
 # make sure gpg-agent is available and loaded
 echo -e "\nINFO: Searching for gpg-agent..."
@@ -179,6 +178,7 @@ if ! gpg-agent 2>&1 | grep "running and available" ; then
   fi
 fi
 
+
 # Checkout release branch
 echo -e "\nINFO: Checking out release branch ${releaseBranch}"
 if ! git show-ref -q "${releaseBranch}" ; then
@@ -195,12 +195,14 @@ elif ! git checkout "${releaseBranch}" ; then
   exit 1
 fi
 
+
 # create temp branch
 echo -e "\nINFO: Creating temp branch..."
 if ! git checkout -b temp ; then
   echo -e "ERROR: Failed to create temp branch!"
   exit 1
 fi
+
 
 # set release version
 echo -e "\nINFO: Setting version..."
@@ -209,12 +211,14 @@ if ! mvn versions:set -DgenerateBackupPoms=false -DnewVersion="${newVersion}" > 
   exit 1
 fi
 
+
 # build
 echo -e "\nINFO: Doing a build with new version..."
 if ! mvn clean package -DskipTests ${MVN_PROFILES} > "${logFile}" ; then
   echo -e "ERROR: Failed to build with new version!"
   exit 1
 fi
+
 
 # commit to tag
 echo -e "\nINFO: Creating tag..."
@@ -231,6 +235,7 @@ if ! git tag --sign --message "[Project] New Version ${newVersion}" "${newVersio
   exit 1
 fi
 
+
 # local install
 echo -e "\nINFO: Installing new version..."
 if ! git checkout "${newVersion}" ; then
@@ -242,13 +247,42 @@ if ! mvn source:jar install -DskipTests ${MVN_PROFILES} > /dev/null ; then
   exit 1
 fi
 
+
+# rebase tag into release branch
+if ! git checkout "${releaseBranch}" ; then
+  echo -e "ERROR: Failed to checkout release branch ${releaseBranch}"
+fi
+if ! git rebase temp ; then
+  echo -e "ERROR: Failed to rebase tag into release branch!"
+fi
+
+
+# set last POM version if it was a SNAPSHOT version
+if [[ ${currentPomVersion} == *-SNAPSHOT ]] ; then
+  echo -e "\nINFO: Setting POM version to previous version ${currentPomVersion}..."
+  if ! mvn versions:set -DgenerateBackupPoms=false -DnewVersion="${currentPomVersion}" > "${logFile}" ; then
+    echo -e "ERROR: Failed to set new version!"
+    exit 1
+  fi
+  if ! git add . ; then
+    echo -e "ERROR: Failed to git add"
+    exit 1
+  fi
+  if ! git commit -m "[Project] Set release SNAPSHOT version ${newVersion}" ; then
+    echo -e "ERROR: Failed to git commit"
+    exit 1
+  fi
+fi
+
+
 # git push
 echo -e "INFO: Pushing to origin..."
-if ! git push origin "${newVersion}" ; then
-  echo -e "ERROR: Failed to push tag"
+if ! git push origin "${releaseBranch}" --follow-tags ; then
+  echo -e "ERROR: Failed to push changes"
   exit 1
 fi
 echo -e "\nINFO: Pushed Release/Tag ${newVersion}"
+
 
 rm -f "${logFile}"
 echo -e "\nINFO: Release/Tag ${newVersion} created."
