@@ -683,7 +683,6 @@
 
         <!-- GLOBAL BUILD PLUGINS (used when building all modules) -->
 		<plugins>
-
 			<!-- USE LATEST SCM PLUGIN TO SUPPORT GIT -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -691,27 +690,6 @@
 				<configuration>
 					<goals>install</goals>
 				</configuration>
-			</plugin>
-
-			<!-- GENERATE SITE DOCUMENTATION -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-                <version>3.4</version>
-				<inherited>false</inherited>
-				<configuration>
-                    <generateProjectInfo>true</generateProjectInfo>
-                    <generateReports>true</generateReports>
-                    <generateSitemap>true</generateSitemap>
-                    <outputDirectory>${project.reporting.outputDirectory}/${project.artifact.selectedVersion.majorVersion}.${project.artifact.selectedVersion.minorVersion}</outputDirectory>
-				</configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.velocity</groupId>
-                        <artifactId>velocity</artifactId>
-                        <version>1.5</version>
-                    </dependency>
-                </dependencies>
 			</plugin>
 
 			<!-- ATTACH LICENSE AS ARTIFACT -->
