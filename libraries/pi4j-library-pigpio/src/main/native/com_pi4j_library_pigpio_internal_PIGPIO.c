@@ -267,6 +267,18 @@ JNIEXPORT void JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioTerminat
     return gpioTerminate();
 }
 
+/*
+ * Class:     com_pi4j_library_pigpio_internal_PIGPIO
+ * Method:    gpioCfgClock
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioCfgClock
+  (JNIEnv * env, jclass class, jint micros, jint peripheral, jint source)
+{
+  return gpioCfgClock((unsigned)micros, (unsigned)peripheral, (unsigned)source);
+}
+
+
 // *****************************************************************************************************
 // *****************************************************************************************************
 // SIGNAL HANDLING (and callback events) IMPLEMENTATION
@@ -446,6 +458,7 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioSetSigna
     return result;
 }
 
+  
 // *****************************************************************************************************
 // *****************************************************************************************************
 // GPIO IMPLEMENTATION

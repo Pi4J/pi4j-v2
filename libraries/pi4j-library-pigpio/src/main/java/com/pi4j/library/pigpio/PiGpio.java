@@ -118,6 +118,19 @@ public interface PiGpio extends
 
 
     /**
+     * Configures pigpio to use a particular sample rate timed by a specified peripheral.
+     * This function is only effective if called before gpioInitialise.
+     * The timings are provided by the specified peripheral (PWM or PCM).
+     * The default setting is 5 microseconds using the PCM peripheral.
+     *
+     * @param cfgMicros 1, 2, 4, 5, 8, 10
+     * @param cfgPeripheral 0 (PWM), 1 (PCM)
+     * @param cfgSource deprecated, value is ignored
+     * @return
+     */
+    int gpioCfgClock(int cfgMicros, int cfgPeripheral, int cfgSource);
+    
+    /**
      * Initialises the library.
      *
      * Returns the pigpio version number if OK, otherwise PI_INIT_FAILED.

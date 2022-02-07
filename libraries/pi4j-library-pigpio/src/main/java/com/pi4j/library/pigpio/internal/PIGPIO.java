@@ -1262,12 +1262,15 @@ public class PIGPIO {
      */
     public static native int gpioCfgBufferSize(int cfgMillis);
     /**
-     * <p>gpioCfgClock.</p>
+     * Configures pigpio to use a particular sample rate timed by a specified peripheral.
+     * This function is only effective if called before gpioInitialise.
+     * The timings are provided by the specified peripheral (PWM or PCM).
+     * The default setting is 5 microseconds using the PCM peripheral.
      *
-     * @param cfgMicros a int.
-     * @param cfgPeripheral a int.
-     * @param cfgSource a int.
-     * @return a int.
+     * @param cfgMicros 1, 2, 4, 5, 8, 10
+     * @param cfgPeripheral 0 (PWM), 1 (PCM)
+     * @param cfgSource deprecated, value is ignored
+     * @return
      */
     public static native int gpioCfgClock(int cfgMicros, int cfgPeripheral, int cfgSource);
     /**
