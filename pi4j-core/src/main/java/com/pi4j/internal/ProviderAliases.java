@@ -37,6 +37,8 @@ import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
+import com.pi4j.io.sensor.SensorProvider;
+
 
 public interface ProviderAliases {
 
@@ -44,7 +46,7 @@ public interface ProviderAliases {
      * <p>provider.</p>
      *
      * @param ioType a {@link IOType} object.
-     * @param <T> a T object.
+     * @param <T>    a T object.
      * @return a T object.
      * @throws ProviderNotFoundException if any.
      */
@@ -54,11 +56,11 @@ public interface ProviderAliases {
      * <p>provider.</p>
      *
      * @param ioType a {@link IOType} object.
-     * @param <T> a T object.
+     * @param <T>    a T object.
      * @return a T object.
      * @throws ProviderNotFoundException if any.
      */
-    default <T extends Provider> T getProvider(IOType ioType) throws ProviderNotFoundException{
+    default <T extends Provider> T getProvider(IOType ioType) throws ProviderNotFoundException {
         return provider(ioType);
     }
 
@@ -81,7 +83,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends AnalogOutputProvider> T aout() throws ProviderException{
+    default <T extends AnalogOutputProvider> T aout() throws ProviderException {
         return analogOutput();
     }
 
@@ -92,7 +94,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends DigitalInputProvider> T din() throws ProviderException{
+    default <T extends DigitalInputProvider> T din() throws ProviderException {
         return digitalInput();
     }
 
@@ -103,7 +105,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends DigitalOutputProvider> T dout() throws ProviderException{
+    default <T extends DigitalOutputProvider> T dout() throws ProviderException {
         return digitalOutput();
     }
 
@@ -125,7 +127,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends AnalogOutputProvider> T analogOutput() throws ProviderException{
+    default <T extends AnalogOutputProvider> T analogOutput() throws ProviderException {
         return this.provider(IOType.ANALOG_OUTPUT);
     }
 
@@ -136,7 +138,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends DigitalInputProvider> T digitalInput() throws ProviderException{
+    default <T extends DigitalInputProvider> T digitalInput() throws ProviderException {
         return this.provider(IOType.DIGITAL_INPUT);
     }
 
@@ -147,7 +149,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends DigitalOutputProvider> T digitalOutput() throws ProviderException{
+    default <T extends DigitalOutputProvider> T digitalOutput() throws ProviderException {
         return this.provider(IOType.DIGITAL_OUTPUT);
     }
 
@@ -158,7 +160,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends PwmProvider> T pwm() throws ProviderException{
+    default <T extends PwmProvider> T pwm() throws ProviderException {
         return this.provider(IOType.PWM);
     }
 
@@ -169,7 +171,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends SpiProvider> T spi() throws ProviderException{
+    default <T extends SpiProvider> T spi() throws ProviderException {
         return this.provider(IOType.SPI);
     }
 
@@ -180,7 +182,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends I2CProvider> T i2c() throws ProviderException{
+    default <T extends I2CProvider> T i2c() throws ProviderException {
         return this.provider(IOType.I2C);
     }
 
@@ -191,7 +193,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends SerialProvider> T serial() throws ProviderException{
+    default <T extends SerialProvider> T serial() throws ProviderException {
         return this.provider(IOType.SERIAL);
     }
 
@@ -213,7 +215,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends AnalogOutputProvider> T getAnalogOutputProvider() throws ProviderException{
+    default <T extends AnalogOutputProvider> T getAnalogOutputProvider() throws ProviderException {
         return this.analogOutput();
     }
 
@@ -224,7 +226,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends DigitalInputProvider> T getDigitalInputProvider() throws ProviderException{
+    default <T extends DigitalInputProvider> T getDigitalInputProvider() throws ProviderException {
         return this.digitalInput();
     }
 
@@ -235,7 +237,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends DigitalOutputProvider> T getDigitalOutputProvider() throws ProviderException{
+    default <T extends DigitalOutputProvider> T getDigitalOutputProvider() throws ProviderException {
         return this.digitalOutput();
     }
 
@@ -246,7 +248,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends PwmProvider> T getPwmProvider() throws ProviderException{
+    default <T extends PwmProvider> T getPwmProvider() throws ProviderException {
         return this.pwm();
     }
 
@@ -257,7 +259,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends SpiProvider> T getSpiProvider() throws ProviderException{
+    default <T extends SpiProvider> T getSpiProvider() throws ProviderException {
         return this.spi();
     }
 
@@ -268,7 +270,7 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends I2CProvider> T getI2CProvider() throws ProviderException{
+    default <T extends I2CProvider> T getI2CProvider() throws ProviderException {
         return this.i2c();
     }
 
@@ -279,7 +281,32 @@ public interface ProviderAliases {
      * @return a T object.
      * @throws ProviderException if any.
      */
-    default <T extends SerialProvider> T getSerialProvider() throws ProviderException{
+    default <T extends SerialProvider> T getSerialProvider() throws ProviderException {
         return this.serial();
     }
+
+
+    /**
+     * <p>sensor.</p>
+     *
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws ProviderException if any.
+     */
+    default <T extends SensorProvider> T sensor() throws ProviderException {
+        return this.provider(IOType.SENSOR);
+    }
+
+
+    /**
+     * <p>serial.</p>
+     *
+     * @param <T> a T object.
+     * @return a T object.
+     * @throws ProviderException if any.
+     */
+    default <T extends SensorProvider> T getSensorProvider() throws ProviderException {
+        return this.sensor();
+    }
 }
+

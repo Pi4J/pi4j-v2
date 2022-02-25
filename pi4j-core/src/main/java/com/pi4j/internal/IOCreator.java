@@ -43,6 +43,9 @@ import com.pi4j.io.serial.SerialConfigBuilder;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiConfigBuilder;
+import com.pi4j.io.sensor.Sensor;
+import com.pi4j.io.sensor.SensorConfig;
+
 
 public interface IOCreator {
 
@@ -224,5 +227,15 @@ public interface IOCreator {
      */
     default Serial create(SerialConfigBuilder config) {
         return create(config.build());
+    }
+
+    /**
+     * <p>create.</p>
+     *
+     * @param config a {@link com.pi4j.io.sensor.SensorConfig} object.
+     * @return a {@link com.pi4j.io.sensor.Sensor} object.
+     */
+    default Sensor create(SensorConfig config) {
+        return create(config, Sensor.class);
     }
 }

@@ -36,6 +36,10 @@ import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmConfigBuilder;
 import com.pi4j.io.pwm.PwmProvider;
+import com.pi4j.io.sensor.Sensor;
+import com.pi4j.io.sensor.SensorConfig;
+import com.pi4j.io.sensor.SensorConfigBuilder;
+import com.pi4j.io.sensor.SensorProvider;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialConfigBuilder;
@@ -61,7 +65,8 @@ public enum IOType {
     PWM(PwmProvider.class, Pwm.class, PwmConfig.class, PwmConfigBuilder.class),
     I2C(I2CProvider.class, com.pi4j.io.i2c.I2C.class, I2CConfig.class, I2CConfigBuilder.class),
     SPI(SpiProvider.class, Spi.class, I2CConfig.class, I2CConfigBuilder.class),
-    SERIAL(SerialProvider.class, Serial.class, SerialConfig.class, SerialConfigBuilder.class);
+    SERIAL(SerialProvider.class, Serial.class, SerialConfig.class, SerialConfigBuilder.class),
+    SENSOR(SensorProvider.class, Sensor.class, SensorConfig.class, SensorConfigBuilder .class);
 
     private Class<? extends Provider> providerClass;
     private Class<? extends IO> ioClass;
@@ -336,6 +341,9 @@ public enum IOType {
         if(ioType.equalsIgnoreCase("uart")) return SERIAL;
         if(ioType.equalsIgnoreCase("rs232")) return SERIAL;
 
+        // SENSOR
+        if(ioType.startsWith("sensor")) return SENSOR;
+        if(ioType.equalsIgnoreCase("sensor")) return SENSOR;
 
         throw new IllegalArgumentException("Unknown IO TYPE: " + ioType);
     }

@@ -54,6 +54,10 @@ module com.pi4j {
     exports com.pi4j.registry;
     exports com.pi4j.util;
 
+
+    // new sensor provider
+    exports com.pi4j.io.sensor;
+
     // extensibility service interfaces
     uses com.pi4j.extension.Plugin;
 }
