@@ -40,6 +40,7 @@ import com.pi4j.io.IOType;
 import com.pi4j.io.exception.IOException;
 import com.pi4j.io.exception.IOInvalidIDException;
 import com.pi4j.io.exception.IONotFoundException;
+import com.pi4j.io.exception.IOShutdownException;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.Platforms;
 import com.pi4j.platform.exception.PlatformNotFoundException;
@@ -50,7 +51,6 @@ import com.pi4j.provider.exception.ProviderNotFoundException;
 import com.pi4j.registry.Registry;
 import com.pi4j.util.PropertiesUtil;
 import com.pi4j.util.StringUtil;
-
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -103,7 +103,7 @@ public interface Context extends Describable,
      * @return a {@link com.pi4j.context.Context} object.
      * @throws com.pi4j.exception.ShutdownException if an error occurs during shutdown.
      */
-    Context shutdown() throws ShutdownException;
+	Context shutdown() throws ShutdownException;
 
     /**
      *
@@ -416,7 +416,19 @@ public interface Context extends Describable,
         builder.id(id);
         builder.load(inheritedProperties);
         return (T)provider.create((Config) builder.build());
-    }
+	}
+
+	/**
+	 * shutdown and unregister a created IO.
+	 *
+	 * @param <T> the IO Type
+	 * @param id the IO id
+	 * @return the IO which was shutdown or null if it wasn't created/registered
+	 * @throws IONotFoundException if the IO was not registered
+	 * @throws IOInvalidIDException if the ID is invalid
+	 * @throws IOShutdownException if an error occured while shuting down the IO
+	 */
+	<T extends IO> T shutdown(String id) throws IOInvalidIDException, IONotFoundException, IOShutdownException;
 
     // ------------------------------------------------------------------------
     // I/O INSTANCE ACCESSORS
