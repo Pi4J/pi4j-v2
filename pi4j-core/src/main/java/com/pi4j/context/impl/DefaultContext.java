@@ -28,10 +28,13 @@ package com.pi4j.context.impl;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
 import com.pi4j.context.ContextProperties;
+import com.pi4j.context.impl.DefaultContext;
+import com.pi4j.context.impl.DefaultContextProperties;
 import com.pi4j.event.InitializedListener;
 import com.pi4j.event.ShutdownListener;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.io.IO;
 import com.pi4j.platform.Platforms;
 import com.pi4j.platform.impl.DefaultPlatforms;
 import com.pi4j.provider.Providers;
@@ -40,10 +43,9 @@ import com.pi4j.registry.Registry;
 import com.pi4j.registry.impl.DefaultRegistry;
 import com.pi4j.runtime.Runtime;
 import com.pi4j.runtime.impl.DefaultRuntime;
+import java.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.Future;
 
 /**
  * <p>DefaultContext class.</p>
@@ -133,7 +135,12 @@ public class DefaultContext implements Context {
         // shutdown the runtime
         this.runtime.shutdown();
         return this;
-    }
+	}
+
+	@Override
+	public <T extends IO> T shutdown(String id) {
+		return runtime.registry().remove(id);
+	}
 
     @Override
     public boolean isShutdown() {
