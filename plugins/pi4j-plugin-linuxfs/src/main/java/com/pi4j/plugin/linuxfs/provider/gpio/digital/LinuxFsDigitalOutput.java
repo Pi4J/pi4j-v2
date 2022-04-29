@@ -27,11 +27,11 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
  * #L%
  */
 
-
-import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalOutputBase;
-import com.pi4j.io.gpio.digital.DigitalOutputConfig;
-import com.pi4j.io.gpio.digital.DigitalOutputProvider;
+import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.io.exception.IOException;
+import com.pi4j.io.gpio.digital.*;
+import com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio;
 
 
 /**
@@ -41,13 +41,62 @@ import com.pi4j.io.gpio.digital.DigitalOutputProvider;
  * @version $Id: $Id
  */
 public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOutput {
+    protected final LinuxGpio gpio;
+
     /**
      * <p>Constructor for LinuxFsDigitalOutput.</p>
      *
      * @param provider a {@link com.pi4j.io.gpio.digital.DigitalOutputProvider} object.
      * @param config a {@link com.pi4j.io.gpio.digital.DigitalOutputConfig} object.
      */
-    public LinuxFsDigitalOutput(DigitalOutputProvider provider, DigitalOutputConfig config){
+    public LinuxFsDigitalOutput(LinuxGpio gpio, DigitalOutputProvider provider, DigitalOutputConfig config){
         super(provider, config);
+        this.gpio = gpio;
+    }
+
+    @Override
+    public DigitalOutput initialize(Context context) throws InitializeException {
+        try {
+            // export GPIO pin
+            gpio.export();
+
+            // set GPIO pin direction [OUTPUT]
+            gpio.direction(LinuxGpio.Direction.OUT);
+
+        } catch (java.io.IOException e) {
+            throw new InitializeException(e);
+        }
+
+        // initialize GPIO pin state (in superclass)
+        super.initialize(context);
+
+        // return this instance
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DigitalOutput state(DigitalState state) throws IOException {
+        try {
+            // apple updated GPIO state via Linux FS
+            gpio.state(state);
+        } catch (java.io.IOException e) {
+            throw new IOException(e.getMessage(), e);
+        }
+        return super.state(state);
+    }
+
+    @Override
+    public DigitalState state() {
+
+        // update internal state tracking variable with actual state from Linux FS
+        try {
+            this.state = gpio.state();
+        } catch (java.io.IOException e) {
+            throw new IOException(e.getMessage(), e);
+        }
+
+        // return current GPIO state
+        return super.state();
     }
 }
