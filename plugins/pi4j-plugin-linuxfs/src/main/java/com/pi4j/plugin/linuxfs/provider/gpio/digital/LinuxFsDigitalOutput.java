@@ -29,9 +29,12 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
 
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.exception.IOException;
 import com.pi4j.io.gpio.digital.*;
 import com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -41,11 +44,14 @@ import com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio;
  * @version $Id: $Id
  */
 public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOutput {
+
     protected final LinuxGpio gpio;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * <p>Constructor for LinuxFsDigitalOutput.</p>
      *
+     * @param gpio a {@link com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio} linux file system GPIO object.
      * @param provider a {@link com.pi4j.io.gpio.digital.DigitalOutputProvider} object.
      * @param config a {@link com.pi4j.io.gpio.digital.DigitalOutputConfig} object.
      */
@@ -56,18 +62,31 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
 
     @Override
     public DigitalOutput initialize(Context context) throws InitializeException {
+        logger.trace("initializing GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+
+        // [EXPORT] requested GPIO pin if its not already exported
         try {
-            // export GPIO pin
-            gpio.export();
-
-            // set GPIO pin direction [OUTPUT]
-            gpio.direction(LinuxGpio.Direction.OUT);
-
+            if(!gpio.isExported()) {
+                logger.trace("exporting GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+                gpio.export();
+            } else{
+                logger.trace("GPIO [" + this.config.address() + "] is already exported; " + gpio.getPinPath());
+            }
         } catch (java.io.IOException e) {
-            throw new InitializeException(e);
+            logger.error(e.getMessage(), e);
+            throw new InitializeException("Unable to export GPIO [" + config.address() + "] @ <" + gpio.systemPath() + ">; " + e.getMessage(), e);
         }
 
-        // initialize GPIO pin state (in superclass)
+        // [OUTPUT] configure GPIO pin direction as digital output
+        try {
+            logger.trace("set direction [OUT] on GPIO " + gpio.getPinPath());
+            gpio.direction(LinuxGpio.Direction.OUT);
+        } catch (java.io.IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new InitializeException("Unable to set GPIO [" + config.address() + "] DIRECTION=[OUT] @ <" + gpio.pinPath() + ">; " + e.getMessage(), e);
+        }
+
+        // [INITIALIZE STATE] initialize GPIO pin state (via superclass impl)
         super.initialize(context);
 
         // return this instance
@@ -76,11 +95,52 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
 
     /** {@inheritDoc} */
     @Override
-    public DigitalOutput state(DigitalState state) throws IOException {
+    public DigitalOutput shutdown(Context context) throws ShutdownException {
+        logger.trace("shutdown GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+
+        // --------------------------------------------------------------------------
+        // [ATTENTION]
+        // --------------------------------------------------------------------------
+        // IF WE UN-EXPORT THE PIN, ANY SHUTDOWN STATE WILL BE IGNORED AND
+        // THE PIN WILL DEFAULT TO A LOW STATE OR POTENTIALLY A FLOATING STATE
+        // IF THE PIN IS DEFAULTED AS AN INPUT PIN AS A RESULT OF UN-EXPORTING IT.
+        //
+        // IF A VALID SHUTDOWN STATE HAS BEEN CONFIGURED FOR THIS DIGITAL OUTPUT INSTANCE,
+        // WE WILL LEAVE THE GPIO PIN EXPORTED ON SHUTDOWN OF PI4J
+        //
+        // IF NO SHUTDOWN STATE HAS BEEN CONFIGURED FOR THIS DIGITAL OUTPUT INSTANCE,
+        // WE WILL UN-EXPORT THE GPIO PIN ON SHUTDOWN OF PI4J
+        //
+        // (this was the same behavior in Pi4J v1.x)
+        // --------------------------------------------------------------------------
+
+        // set pin state to shutdown state if a shutdown state is configured
+        if(config().shutdownState() != null && config().shutdownState() != DigitalState.UNKNOWN){
+            return super.shutdown(context);
+        }
+
+        // otherwise ... un-export the GPIO pin from the Linux file system impl
         try {
-            // apple updated GPIO state via Linux FS
+            logger.trace("unexporting GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+            gpio.unexport();
+        } catch (java.io.IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new ShutdownException("Failed to UNEXPORT GPIO [" + config().address() + "] @ <" + gpio.systemPath() + ">; " + e.getMessage(), e);
+        }
+
+        // return this digital output instance
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DigitalOutput state(DigitalState state) throws IOException {
+        logger.trace("set state [" + state.getName() + "] on GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+        try {
+            // apply requested GPIO state via Linux FS
             gpio.state(state);
         } catch (java.io.IOException e) {
+            logger.error(e.getMessage(), e);
             throw new IOException(e.getMessage(), e);
         }
         return super.state(state);
@@ -88,15 +148,23 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
 
     @Override
     public DigitalState state() {
+        logger.trace("get state on GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
 
-        // update internal state tracking variable with actual state from Linux FS
         try {
-            this.state = gpio.state();
+            // acquire actual GPIO state directly from Linux file system impl
+            DigitalState currentState = gpio.state();
+
+            // update/sync internal state tracking variable if mismatch
+            if(this.state != currentState) {
+                this.state = currentState;
+                logger.trace("state mismatch detected; sync internal state [" + this.state.getName() + "] on GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+            }
         } catch (java.io.IOException e) {
+            logger.error(e.getMessage(), e);
             throw new IOException(e.getMessage(), e);
         }
 
-        // return current GPIO state
+        // return current GPIO state via superclass impl
         return super.state();
     }
 }

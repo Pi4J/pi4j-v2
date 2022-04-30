@@ -295,4 +295,36 @@ public class LinuxGpio {
         var path = Paths.get(pinPath,"active_low");
         return Files.readString(path).trim().equalsIgnoreCase("1");
     }
+
+    /**
+     * Get Linux File System path for GPIO
+     * @return Linux File System path for GPIO
+     */
+    public String systemPath(){
+        return getSystemPath();
+    }
+
+    /**
+     * Get Linux File System path for GPIO
+     * @return Linux File System path for GPIO
+     */
+    public String getSystemPath(){
+        return this.systemPath;
+    }
+
+    /**
+     * Get Linux File System path for this GPIO pin instance
+     * @return Linux File System path for this GPIO pin instance
+     */
+    public String pinPath(){
+        return getPinPath();
+    }
+
+    /**
+     * Get Linux File System path for this GPIO pin instance
+     * @return Linux File System path for this GPIO pin instance
+     */
+    public String getPinPath(){
+        return this.pinPath;
+    }
 }
