@@ -29,6 +29,7 @@ package com.pi4j.plugin.linuxfs;
 
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
+import com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio;
 import com.pi4j.plugin.linuxfs.provider.i2c.LinuxFsI2CProvider;
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalInputProvider;
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalOutputProvider;
@@ -101,14 +102,26 @@ public class LinuxFsPlugin implements Plugin {
 //    public static final String SERIAL_PROVIDER_NAME = NAME + " Serial Provider";
 //    public static final String SERIAL_PROVIDER_ID = ID + "-serial";
 
+    /** Constant <code>DEFAULT_GPIO_FILESYSTEM_PATH="/sys/class/gpio"</code> */
+    public static String DEFAULT_GPIO_FILESYSTEM_PATH = LinuxGpio.DEFAULT_SYSTEM_PATH;
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void initialize(PluginService service) {
 
-        Provider[] providers = { LinuxFsDigitalInputProvider.newInstance(),
-            LinuxFsDigitalOutputProvider.newInstance(),
+        // get Linux file system path for GPIO
+        String gpioFileSystemPath = DEFAULT_GPIO_FILESYSTEM_PATH;
+
+        // get overriding custom 'linux.gpio.system.path' setting from Pi4J context
+        if(service.context().properties().has("linux.gpio.system.path")){
+            gpioFileSystemPath = service.context().properties().get("linux.gpio.system.path", gpioFileSystemPath);
+        }
+
+        Provider[] providers = {
+            LinuxFsDigitalInputProvider.newInstance(gpioFileSystemPath),
+            LinuxFsDigitalOutputProvider.newInstance(gpioFileSystemPath),
             LinuxFsI2CProvider.newInstance()
         };
 

@@ -42,20 +42,23 @@ import java.io.IOException;
  */
 public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase implements LinuxFsDigitalOutputProvider {
 
+    final String gpioFileSystemPath;
 
     /**
      * <p>Constructor for LinuxFsDigitalOutputProviderImpl.</p>
      */
-    public LinuxFsDigitalOutputProviderImpl(){
+    public LinuxFsDigitalOutputProviderImpl(String gpioFileSystemPath){
         this.id = ID;
         this.name = NAME;
+        this.gpioFileSystemPath = gpioFileSystemPath;
     }
 
     /** {@inheritDoc} */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
+
         // create filesystem based GPIO instance using instance address (GPIO NUMBER)
-        LinuxGpio gpio = new LinuxGpio(LinuxGpio.DEFAULT_SYSTEM_PATH, config.address());
+        LinuxGpio gpio = new LinuxGpio(this.gpioFileSystemPath, config.address());
         return new LinuxFsDigitalOutput(gpio, this, config);
     }
 }

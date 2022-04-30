@@ -30,6 +30,7 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
+import com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio;
 
 /**
  * <p>LinuxFsDigitalInputProviderImpl class.</p>
@@ -39,17 +40,23 @@ import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
  */
 public class LinuxFsDigitalInputProviderImpl extends DigitalInputProviderBase implements LinuxFsDigitalInputProvider {
 
+    final String gpioFileSystemPath;
+
     /**
      * <p>Constructor for LinuxFsDigitalInputProviderImpl.</p>
      */
-    public LinuxFsDigitalInputProviderImpl(){
+    public LinuxFsDigitalInputProviderImpl(String gpioFileSystemPath){
         this.id = ID;
         this.name = NAME;
+        this.gpioFileSystemPath = gpioFileSystemPath;
     }
 
     /** {@inheritDoc} */
     @Override
     public DigitalInput create(DigitalInputConfig config) {
-        return new LinuxFsDigitalInput(this, config);
+        // create filesystem based GPIO instance using instance address (GPIO NUMBER)
+        LinuxGpio gpio = new LinuxGpio(this.gpioFileSystemPath, config.address());
+
+        return new LinuxFsDigitalInput(gpio, this, config);
     }
 }

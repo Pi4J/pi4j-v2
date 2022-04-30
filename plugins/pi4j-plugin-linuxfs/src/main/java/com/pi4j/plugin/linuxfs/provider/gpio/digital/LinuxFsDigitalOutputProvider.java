@@ -46,7 +46,7 @@ public interface LinuxFsDigitalOutputProvider extends DigitalOutputProvider {
      *
      * @return a {@link com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalOutputProvider} object.
      */
-    static LinuxFsDigitalOutputProvider newInstance() {
-        return new LinuxFsDigitalOutputProviderImpl();
+    static LinuxFsDigitalOutputProvider newInstance(String gpioFileSystemPath) {
+        return new LinuxFsDigitalOutputProviderImpl(gpioFileSystemPath);
     }
 }

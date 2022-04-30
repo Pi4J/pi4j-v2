@@ -28,7 +28,14 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
  */
 
 
+import com.pi4j.context.Context;
+import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
+import com.pi4j.io.exception.IOException;
 import com.pi4j.io.gpio.digital.*;
+import com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>LinuxFsDigitalInput class.</p>
@@ -38,21 +45,92 @@ import com.pi4j.io.gpio.digital.*;
  */
 public class LinuxFsDigitalInput extends DigitalInputBase implements DigitalInput {
 
-    private DigitalState state = DigitalState.LOW;
+    protected final LinuxGpio gpio;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * <p>Constructor for LinuxFsDigitalInput.</p>
      *
+     * @param gpio a {@link com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio} linux file system GPIO object.
      * @param provider a {@link com.pi4j.io.gpio.digital.DigitalInputProvider} object.
      * @param config a {@link com.pi4j.io.gpio.digital.DigitalInputConfig} object.
      */
-    public LinuxFsDigitalInput(DigitalInputProvider provider, DigitalInputConfig config){
+    public LinuxFsDigitalInput(LinuxGpio gpio, DigitalInputProvider provider, DigitalInputConfig config){
         super(provider, config);
+        this.gpio = gpio;
+    }
+
+    @Override
+    public DigitalInput initialize(Context context) throws InitializeException {
+        logger.trace("initializing GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+
+        // [EXPORT] requested GPIO pin if its not already exported
+        try {
+            if(!gpio.isExported()) {
+                logger.trace("exporting GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+                gpio.export();
+            } else{
+                logger.trace("GPIO [" + this.config.address() + "] is already exported; " + gpio.getPinPath());
+            }
+        } catch (java.io.IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new InitializeException("Unable to export GPIO [" + config.address() + "] @ <" + gpio.systemPath() + ">; " + e.getMessage(), e);
+        }
+
+        // [INPUT] configure GPIO pin direction as digital input
+        try {
+            logger.trace("set direction [IN] on GPIO " + gpio.getPinPath());
+            gpio.direction(LinuxGpio.Direction.IN);
+        } catch (java.io.IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new InitializeException("Unable to set GPIO [" + config.address() + "] DIRECTION=[IN] @ <" + gpio.pinPath() + ">; " + e.getMessage(), e);
+        }
+
+        // GPIO PIN PULL UP/DOWN
+        if(this.config.pull() == PullResistance.PULL_DOWN){
+            // TODO :: IMPLEMENT GPIO PULL DOWN
+        }
+        else if(this.config.pull() == PullResistance.PULL_UP){
+            // TODO :: IMPLEMENT GPIO PULL UP
+        }
+        else if(this.config.pull() == PullResistance.OFF){
+            // TODO :: IMPLEMENT GPIO PULL OFF
+        }
+
+        // [INITIALIZE] perform any further initialization on GPIO  via superclass impl
+        return super.initialize(context);
     }
 
     /** {@inheritDoc} */
     @Override
+    public DigitalInput shutdown(Context context) throws ShutdownException {
+        logger.trace("shutdown GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+
+        // perform any shutdown cleanup via superclass
+        super.shutdown(context);
+
+        // un-export the GPIO pin from the Linux file system impl
+        try {
+            logger.trace("un-exporting GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+            gpio.unexport();
+        } catch (java.io.IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new ShutdownException("Failed to UN-EXPORT GPIO [" + config().address() + "] @ <" + gpio.systemPath() + ">; " + e.getMessage(), e);
+        }
+
+        // return this digital input instance
+        return this;
+    }
+
+    @Override
     public DigitalState state() {
-        return this.state;
+        logger.trace("get state on GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+        try {
+            // acquire actual GPIO state directly from Linux file system impl
+            return gpio.state();
+        } catch (java.io.IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 }

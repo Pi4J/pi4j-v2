@@ -121,11 +121,11 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
 
         // otherwise ... un-export the GPIO pin from the Linux file system impl
         try {
-            logger.trace("unexporting GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+            logger.trace("un-exporting GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
             gpio.unexport();
         } catch (java.io.IOException e) {
             logger.error(e.getMessage(), e);
-            throw new ShutdownException("Failed to UNEXPORT GPIO [" + config().address() + "] @ <" + gpio.systemPath() + ">; " + e.getMessage(), e);
+            throw new ShutdownException("Failed to UN-EXPORT GPIO [" + config().address() + "] @ <" + gpio.systemPath() + ">; " + e.getMessage(), e);
         }
 
         // return this digital output instance
