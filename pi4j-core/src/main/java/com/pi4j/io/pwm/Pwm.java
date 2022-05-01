@@ -29,6 +29,7 @@ import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 import com.pi4j.io.OnOff;
 import com.pi4j.io.exception.IOException;
+import com.pi4j.util.Frequency;
 
 import java.util.Map;
 
@@ -39,6 +40,10 @@ import java.util.Map;
  * @version $Id: $Id
  */
 public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider>, OnOff<Pwm> {
+
+    static final long MEGAHERTZ = Frequency.MEGAHERTZ;
+    static final long KILOHERTZ = Frequency.KILOHERTZ;
+    static final long HERTZ = Frequency.HERTZ;
 
     /**
      * <p>newConfigBuilder.</p>
@@ -120,6 +125,25 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider>, OnOff<Pwm> {
      */
     default PwmType getPwmType(){
         return pwmType();
+    }
+
+
+    /**
+     * Get the polarity of this PWM instance. (Normal/Inversed)
+     *
+     * @return the polarity of this PWM instance.
+     */
+    default PwmPolarity polarity(){
+        return config().getPolarity();
+    }
+
+    /**
+     * Get the polarity of this PWM instance. (Normal/Inversed)
+     *
+     * @return the polarity of this PWM instance.
+     */
+    default PwmPolarity getPolarity(){
+        return polarity();
     }
 
     /**

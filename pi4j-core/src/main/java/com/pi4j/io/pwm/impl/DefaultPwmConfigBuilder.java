@@ -27,10 +27,7 @@ package com.pi4j.io.pwm.impl;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.impl.IOAddressConfigBuilderBase;
-import com.pi4j.io.pwm.PwmConfig;
-import com.pi4j.io.pwm.PwmConfigBuilder;
-import com.pi4j.io.pwm.PwmPreset;
-import com.pi4j.io.pwm.PwmType;
+import com.pi4j.io.pwm.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +83,13 @@ public class DefaultPwmConfigBuilder
     @Override
     public PwmConfigBuilder pwmType(PwmType pwmType) {
         this.properties.put(PwmConfig.PWM_TYPE_KEY, pwmType.toString());
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public PwmConfigBuilder polarity(PwmPolarity polarity) {
+        this.properties.put(PwmConfig.POLARITY_KEY, polarity.toString());
         return this;
     }
 

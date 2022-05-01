@@ -32,6 +32,7 @@ import com.pi4j.exception.InitializeException;
 import com.pi4j.io.exception.IOException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
+import com.pi4j.io.pwm.PwmPolarity;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
@@ -93,6 +94,13 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
 //                throw new IOException("<PIGPIO> UNSUPPORTED HARDWARE PWM PIN: " + this.address());
 //            }
 
+            // inversed polarity is not supported
+            if (config.polarity() != null) {
+                if(config.polarity() == PwmPolarity.INVERSED){
+                    throw new IOException("<PIGPIO> INVERSED POLARITY UNSUPPORTED; PWM PIN: " + this.address());
+                }
+            }
+
             // set pin mode to output
             piGpio.gpioSetMode(this.address(), PiGpioMode.OUTPUT);
 
@@ -114,8 +122,18 @@ public class PiGpioPwmHardware extends PiGpioPwmBase implements Pwm {
                 this.dutyCycle = 50;  // default duty-cycle is 50% of total range
             }
 
-            // initialize
-            super.initialize(context);
+            // apply an initial value if configured
+            if(config.initialValue() != null){
+                try {
+                    if(this.config.initialValue() <= 0){
+                        this.off();
+                    } else {
+                        this.on(this.config.initialValue());
+                    }
+                } catch (IOException e) {
+                    throw new InitializeException(e);
+                }
+            }
 
             // done initializing
             initializing = false;
