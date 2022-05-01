@@ -38,8 +38,12 @@ import com.pi4j.io.IOConfig;
 public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig> {
     /** Constant <code>BAUD_KEY="baud"</code> */
     String BAUD_KEY = "baud";
+    /** Constant <code>BUS_KEY="bus"</code> */
+    String BUS_KEY = "bus";
     /** Constant <code>MODE_KEY="mode"</code> */
     String MODE_KEY = "mode";
+    /** Constant <code>FLAGS_KEY="flags"</code> */
+    String FLAGS_KEY = "flags";
 
     /**
      * <p>newBuilder.</p>
@@ -67,6 +71,21 @@ public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig>
     /**
      * <p>mode.</p>
      *
+     * @return a {@link com.pi4j.io.spi.SpiBus} object.
+     */
+    SpiBus bus();
+    /**
+     * <p>getMode.</p>
+     *
+     * @return a {@link com.pi4j.io.spi.SpiBus} object.
+     */
+    default SpiBus getBus() {
+        return bus();
+    }
+
+    /**
+     * <p>mode.</p>
+     *
      * @return a {@link com.pi4j.io.spi.SpiMode} object.
      */
     SpiMode mode();
@@ -79,4 +98,51 @@ public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig>
         return mode();
     }
 
+    /**
+     * <p>flags.</p>
+     *
+     * @return a {@link java.lang.Long} object.
+     */
+    Long flags();
+
+    /**
+     * <p>getFlags.</p>
+     *
+     * @return a {@link java.lang.Long} object.
+     */
+    default Long getFlags() {
+        return flags();
+    }
+
+    /**
+     * <p>channel. (ALIAS for 'address')</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
+    Integer channel();
+
+    /**
+     * <p>getFlags. (ALIAS for 'getAddress')</p>
+     *
+     * @return a {@link java.lang.Long} object.
+     */
+    default Integer getChannel() {
+        return channel();
+    }
+
+    /**
+     * <p>chipSelect. (ALIAS for 'address')</p>
+     *
+     * @return a {@link com.pi4j.io.spi.SpiChipSelect} object.
+     */
+    SpiChipSelect chipSelect();
+
+    /**
+     * <p>getFlags. (ALIAS for 'getAddress')</p>
+     *
+     * @return a {@link com.pi4j.io.spi.SpiChipSelect} object.
+     */
+    default SpiChipSelect getChipSelect() {
+        return chipSelect();
+    }
 }
