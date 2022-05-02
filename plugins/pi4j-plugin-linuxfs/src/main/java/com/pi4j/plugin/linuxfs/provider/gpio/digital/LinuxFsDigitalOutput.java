@@ -32,7 +32,7 @@ import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.exception.IOException;
 import com.pi4j.io.gpio.digital.*;
-import com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio;
+import com.pi4j.plugin.linuxfs.internal.LinuxGpio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
     /**
      * <p>Constructor for LinuxFsDigitalOutput.</p>
      *
-     * @param gpio a {@link com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio} linux file system GPIO object.
+     * @param gpio a {@link LinuxGpio} linux file system GPIO object.
      * @param provider a {@link com.pi4j.io.gpio.digital.DigitalOutputProvider} object.
      * @param config a {@link com.pi4j.io.gpio.digital.DigitalOutputConfig} object.
      */
@@ -84,6 +84,14 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
         } catch (java.io.IOException e) {
             logger.error(e.getMessage(), e);
             throw new InitializeException("Unable to set GPIO [" + config.address() + "] DIRECTION=[OUT] @ <" + gpio.pinPath() + ">; " + e.getMessage(), e);
+        }
+
+        // [INTERRUPT] enable GPIO interrupt via Linux File System (if supported)
+        try {
+            if (gpio.isInterruptSupported()) gpio.interruptEdge(LinuxGpio.Edge.BOTH);
+        } catch (java.io.IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new InitializeException("Unable to set GPIO [" + config.address() + "] INTERRUPT EDGE=[BOTH] @ <" + gpio.pinPath() + ">; " + e.getMessage(), e);
         }
 
         // [INITIALIZE STATE] initialize GPIO pin state (via superclass impl)

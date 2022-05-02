@@ -30,7 +30,7 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
-import com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio;
+import com.pi4j.plugin.linuxfs.internal.LinuxGpio;
 
 /**
  * <p>LinuxFsDigitalInputProviderImpl class.</p>

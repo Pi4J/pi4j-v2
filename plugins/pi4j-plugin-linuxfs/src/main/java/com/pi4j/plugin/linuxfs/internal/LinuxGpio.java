@@ -1,4 +1,4 @@
-package com.pi4j.plugin.linuxfs.provider.gpio;
+package com.pi4j.plugin.linuxfs.internal;
 
 /*-
  * #%L
@@ -127,7 +127,7 @@ public class LinuxGpio {
     /**
      * <p>direction.</p>
      *
-     * @param direction a {@link com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio.Direction} object.
+     * @param direction a {@link LinuxGpio.Direction} object.
      * @throws java.io.IOException if any.
      */
     public void direction(Direction direction) throws IOException {
@@ -136,7 +136,7 @@ public class LinuxGpio {
     /**
      * <p>setDirection.</p>
      *
-     * @param direction a {@link com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio.Direction} object.
+     * @param direction a {@link LinuxGpio.Direction} object.
      * @throws java.io.IOException if any.
      */
     public void setDirection(Direction direction) throws IOException {
@@ -147,7 +147,7 @@ public class LinuxGpio {
     /**
      * <p>direction.</p>
      *
-     * @return a {@link com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio.Direction} object.
+     * @return a {@link LinuxGpio.Direction} object.
      * @throws java.io.IOException if any.
      */
     public Direction direction() throws IOException {
@@ -156,7 +156,7 @@ public class LinuxGpio {
     /**
      * <p>getDirection.</p>
      *
-     * @return a {@link com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio.Direction} object.
+     * @return a {@link LinuxGpio.Direction} object.
      * @throws java.io.IOException if any.
      */
     public Direction getDirection() throws IOException {
@@ -211,7 +211,7 @@ public class LinuxGpio {
     /**
      * <p>interruptEdge.</p>
      *
-     * @param edge a {@link com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio.Edge} object.
+     * @param edge a {@link LinuxGpio.Edge} object.
      * @throws java.io.IOException if any.
      */
     public void interruptEdge(Edge edge) throws IOException {
@@ -220,7 +220,7 @@ public class LinuxGpio {
     /**
      * <p>setInterruptEdge.</p>
      *
-     * @param edge a {@link com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio.Edge} object.
+     * @param edge a {@link LinuxGpio.Edge} object.
      * @throws java.io.IOException if any.
      */
     public void setInterruptEdge(Edge edge) throws IOException {
@@ -232,7 +232,7 @@ public class LinuxGpio {
     /**
      * <p>interruptEdge.</p>
      *
-     * @return a {@link com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio.Edge} object.
+     * @return a {@link LinuxGpio.Edge} object.
      * @throws java.io.IOException if any.
      */
     public Edge interruptEdge() throws IOException {
@@ -241,7 +241,7 @@ public class LinuxGpio {
     /**
      * <p>getInterruptEdge.</p>
      *
-     * @return a {@link com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio.Edge} object.
+     * @return a {@link LinuxGpio.Edge} object.
      * @throws java.io.IOException if any.
      */
     public Edge getInterruptEdge() throws IOException {

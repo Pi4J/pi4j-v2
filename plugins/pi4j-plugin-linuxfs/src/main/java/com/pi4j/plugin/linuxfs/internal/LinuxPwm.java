@@ -1,4 +1,4 @@
-package com.pi4j.plugin.linuxfs.provider.pwm;
+package com.pi4j.plugin.linuxfs.internal;
 
 /*-
  * #%L

@@ -32,6 +32,7 @@ import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProviderBase;
 import com.pi4j.io.pwm.PwmType;
+import com.pi4j.plugin.linuxfs.internal.LinuxPwm;
 
 /**
  * <p>LinuxFsPwmProviderImpl class.</p>

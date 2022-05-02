@@ -29,12 +29,12 @@ package com.pi4j.plugin.linuxfs;
 
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
-import com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio;
+import com.pi4j.plugin.linuxfs.internal.LinuxGpio;
 import com.pi4j.plugin.linuxfs.provider.i2c.LinuxFsI2CProvider;
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalInputProvider;
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalOutputProvider;
 import com.pi4j.plugin.linuxfs.provider.pwm.LinuxFsPwmProvider;
-import com.pi4j.plugin.linuxfs.provider.pwm.LinuxPwm;
+import com.pi4j.plugin.linuxfs.internal.LinuxPwm;
 import com.pi4j.provider.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -30,9 +30,7 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
-import com.pi4j.plugin.linuxfs.provider.gpio.LinuxGpio;
-
-import java.io.IOException;
+import com.pi4j.plugin.linuxfs.internal.LinuxGpio;
 
 /**
  * <p>LinuxFsDigitalOutputProviderImpl class.</p>

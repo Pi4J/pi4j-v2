@@ -32,6 +32,7 @@ import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.exception.IOException;
 import com.pi4j.io.pwm.*;
+import com.pi4j.plugin.linuxfs.internal.LinuxPwm;
 import com.pi4j.util.Frequency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,7 @@ public class LinuxFsPwm extends PwmBase implements Pwm {
     /**
      * <p>Constructor for PiGpioPwmHardware.</p>
      *
-     * @param pwm a {@link com.pi4j.plugin.linuxfs.provider.pwm.LinuxPwm} object.
+     * @param pwm a {@link LinuxPwm} object.
      * @param provider a {@link PwmProvider} object.
      * @param config a {@link PwmConfig} object.
      */
