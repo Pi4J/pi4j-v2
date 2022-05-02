@@ -5,7 +5,7 @@ package com.pi4j.test.runtime;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: TESTING  :: Unit/Integration Tests
- * FILENAME      :  RutimeTest.java
+ * FILENAME      :  RuntimeTest.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -39,9 +39,9 @@ import org.slf4j.LoggerFactory;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(Lifecycle.PER_CLASS)
-public class RutimeTest {
+public class RuntimeTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(RutimeTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(RuntimeTest.class);
     private boolean beforeShutdownEventFired = false;
     private boolean afterShutdownEventFired = false;
 
