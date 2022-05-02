@@ -146,7 +146,6 @@ public class LinuxFsDigitalInput extends DigitalInputBase implements DigitalInpu
                 // dispatch value change event
                 while ((key = watchService.take()) != null) {
                     for (WatchEvent<?> event : key.pollEvents()) {
-                        System.out.println(event.kind() + " / " + event.context());
                         if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
                             if (event.context().toString().equalsIgnoreCase("value")) {
                                 // filter out any redundant event notifications for same state
