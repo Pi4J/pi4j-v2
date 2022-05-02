@@ -27,4 +27,5 @@ package com.pi4j.event;
 
 public interface ShutdownListener extends Listener {
     void onShutdown(ShutdownEvent event);
+    default void beforeShutdown(ShutdownEvent event) { };
 }

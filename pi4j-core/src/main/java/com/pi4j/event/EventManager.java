@@ -61,6 +61,18 @@ public class EventManager<SOURCE_TYPE, LISTENER_TYPE extends Listener, EVENT_TYP
     public SOURCE_TYPE dispatch(EVENT_TYPE event){
         listeners.forEach(listener->{
             try {
+                this.delegate.dispatch(listener, event);
+            }
+            catch (Exception e){
+                logger.error(e.getMessage(), e);
+            }
+        });
+        return this.source;
+    }
+
+    public SOURCE_TYPE dispatch(EVENT_TYPE event, EventDelegate<LISTENER_TYPE,EVENT_TYPE> delegate){
+        listeners.forEach(listener->{
+            try {
                 delegate.dispatch(listener, event);
             }
             catch (Exception e){
@@ -69,4 +81,5 @@ public class EventManager<SOURCE_TYPE, LISTENER_TYPE extends Listener, EVENT_TYP
         });
         return this.source;
     }
+
 }

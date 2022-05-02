@@ -142,6 +142,11 @@ public class DefaultRuntime implements Runtime {
         if(!isShutdown) { // re-entrant calls should not perform shutdown again
             isShutdown = true;
             logger.trace("invoked 'shutdown();'");
+
+            // notify before shutdown event listeners (requires custom delegate to invoke appropriate listener method)
+            shutdownEventManager.dispatch(new ShutdownEvent(this.context),
+                (EventDelegate<ShutdownListener, ShutdownEvent>) (listener, event) -> listener.beforeShutdown(event));
+
             try {
                 // remove shutdown monitoring thread
                 //java.lang.Runtime.getRuntime().removeShutdownHook(this.shutdownThread);
