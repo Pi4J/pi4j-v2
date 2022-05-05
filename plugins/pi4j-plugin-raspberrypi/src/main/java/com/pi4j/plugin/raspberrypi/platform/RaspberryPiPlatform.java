@@ -59,7 +59,7 @@ public class RaspberryPiPlatform extends PlatformBase<RaspberryPiPlatform> imple
     /** {@inheritDoc} */
     @Override
     public int priority() {
-        // this platform has a priority of 5 to indicate that it is lickely to be used
+        // this platform has a priority of 5 to indicate that it is likely to be used
         // in the case where other platforms are not found in the classpath
         return 5;
     }
