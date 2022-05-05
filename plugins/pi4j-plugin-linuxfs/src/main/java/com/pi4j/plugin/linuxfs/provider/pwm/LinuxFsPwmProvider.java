@@ -50,4 +50,13 @@ public interface LinuxFsPwmProvider extends PwmProvider {
     static LinuxFsPwmProvider newInstance(String pwmFileSystemPath, int pwmChip) {
         return new LinuxFsPwmProviderImpl(pwmFileSystemPath, pwmChip);
     }
+
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link LinuxFsPwmProvider} object.
+     */
+    static LinuxFsPwmProvider newInstance(int pwmChip) {
+        return new LinuxFsPwmProviderImpl(LinuxFsPlugin.DEFAULT_PWM_FILESYSTEM_PATH, pwmChip);
+    }
 }
