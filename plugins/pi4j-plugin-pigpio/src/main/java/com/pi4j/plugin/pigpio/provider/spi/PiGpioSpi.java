@@ -113,7 +113,7 @@ public class PiGpioSpi extends SpiBase implements Spi {
         }
 
         // SPI MODE_1 and MODE_2 are not supported on the AUX SPI BUS_1 by PiGPIO
-        if(bus == SpiBus.BUS_0 && (mode == SpiMode.MODE_1 || mode == SpiMode.MODE_3)) {
+        if(bus == SpiBus.BUS_1 && (mode == SpiMode.MODE_1 || mode == SpiMode.MODE_3)) {
             throw new IOException("Unsupported SPI mode on AUX SPI BUS_1: mode=" + mode.toString());
         }
 
