@@ -112,14 +112,16 @@ public class PiGpioSpi extends SpiBase implements Spi {
             throw new IOException("Unsupported SPI channel (chip select) on SPI BUS_0 bus: address=" + config.address() );
         }
 
-        // SPI MODE_1 and MODE_2 are not supported on the AUX SPI BUS_1 by PiGPIO
-        if(bus == SpiBus.BUS_0 && (mode == SpiMode.MODE_1 || mode == SpiMode.MODE_3)) {
+        // Comments on the PiGPIO web https://abyz.me.uk/rpi/pigpio/cif.html#spiOpen as follows:
+        // "Warning: modes 1 and 3 do not appear to work on the auxiliary SPI."
+        // SPI MODE_1 and MODE_3 are not supported on the AUX SPI BUS_1 by PiGPIO
+        if(bus == SpiBus.BUS_1 && (mode == SpiMode.MODE_1 || mode == SpiMode.MODE_3)) {
             throw new IOException("Unsupported SPI mode on AUX SPI BUS_1: mode=" + mode.toString());
         }
 
         // update flags value with BUS bit ('A' 0x0000=BUS0; 0x0100=BUS1)
         if(bus == SpiBus.BUS_0) {
-            flags = (flags & (0xFFFFFFFF ^ SPI_BUS_MASK)) & SPI_BUS_MASK; // clear AUX bit
+            flags = (flags & (0xFFFFFFFF ^ SPI_BUS_MASK)); // clear AUX bit
         }
         else if(bus == SpiBus.BUS_1) {
             flags = (flags & (0xFFFFFFFF ^ SPI_BUS_MASK)) | SPI_BUS_MASK; // set AUX bit
