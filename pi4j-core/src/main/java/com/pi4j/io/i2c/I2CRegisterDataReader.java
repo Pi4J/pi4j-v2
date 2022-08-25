@@ -133,22 +133,16 @@ public interface I2CRegisterDataReader {
             length = buffer.capacity()-offset;
         }
 
-        // create a temporary byte array to read in the length of data bytes
-        byte[] temp = new byte[length];
-        int actualLength = readRegister(register, temp, 0 ,length);
+        int actualLength = readRegister(register, buffer.array(), offset, length);
 
-        // return any error codes ( < 0)
+        // return any error codes (result < 0)
         if(actualLength < 0) return actualLength;
 
-        // perform bounds checking on number of bytes read versus the length requested
-        if(actualLength < length) length = actualLength;
-
         // copy the data from the temporary byte array into the return buffer at the given offset
-        buffer.position(offset);
-        buffer.put(temp, 0, length);
+        buffer.position(offset + actualLength);
 
         // return actual number of bytes read
-        return length;
+        return actualLength;
     }
 
     /**
