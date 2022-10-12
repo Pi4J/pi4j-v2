@@ -124,13 +124,23 @@ public class NativeLibraryLoader {
                     // load library from user defined absolute path provided via pi4j.library.path}
                     System.load(path);
                 }
-                catch (Exception ex){
-                    //throw this error
-                    throw new UnsatisfiedLinkError("Pi4J was unable load the native library [" +
-                        libName + "] from the user defined library path.  The system property 'pi4j.library.path' is defined as [" +
-                        libpath + "]. Please make sure the defined the 'pi4j.library.path' " +
-                        "system property contains the correct absolute library path." +
-                        "; UNDERLYING EXCEPTION: [" + ex.getClass().getName() + "]=" + ex.getMessage());
+                catch (Exception  | UnsatisfiedLinkError ex){
+                    String exceptMessage;
+                    if (ex.getMessage().contains("wrong ELF class")) {
+                        exceptMessage = "Pi4J was unable to link the native library [" +
+                            path + "] embedded  inside this JAR [" +
+                            NativeLibraryLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath() +
+                            "].  The exception indicates a mismatch of architecture. armhf/ELFCLASS32 aarch64/ELFCLASS64 \n" +
+                            " UNDERLYING EXCEPTION: [" + ex.getClass().getName() + "]=" + ex.getMessage();
+                    }else{
+                        exceptMessage = "Pi4J was unable to extract and load the native library [" +
+                            path + "] from the embedded resources inside this JAR [" +
+                            NativeLibraryLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath() +
+                            "]. to a temporary location on this system.  You can alternatively define the 'pi4j.library.path' " +
+                            "system property to override this behavior and specify the library path.\n" +
+                            " UNDERLYING EXCEPTION: [" + ex.getClass().getName() + "]=" + ex.getMessage();
+                    }
+                    throw new UnsatisfiedLinkError(exceptMessage);
                 }
             }
         }
@@ -164,19 +174,30 @@ public class NativeLibraryLoader {
             } catch (Exception | UnsatisfiedLinkError e) {
                 logger.error("Unable to load [" + fileName + "] using path: [" + path + "]", e);
 
-                //throw this error
-                throw new UnsatisfiedLinkError("Pi4J was unable to extract and load the native library [" +
-                    path + "] from the embedded resources inside this JAR [" +
-                    NativeLibraryLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath() +
-                    "]. to a temporary location on this system.  You can alternatively define the 'pi4j.library.path' " +
-                    "system property to override this behavior and specify the library path.");
+                String exceptMessage;
+                if (e.getMessage().contains("wrong ELF class")) {
+                    exceptMessage = "Pi4J was unable to link the native library [" +
+                        path + "] embedded  inside this JAR [" +
+                        NativeLibraryLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath() +
+                        "].  The exception indicates a mismatch of architecture. armhf/ELFCLASS32 aarch64/ELFCLASS64 \n" +
+                        " All native libraries must be of architecture " + osArch + " \n" +
+                        " UNDERLYING EXCEPTION: [" + e.getClass().getName() + "]=" + e.getMessage();
+                }else{
+                    exceptMessage = "Pi4J was unable to extract and load the native library [" +
+                        path + "] from the embedded resources inside this JAR [" +
+                        NativeLibraryLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath() +
+                        "]. to a temporary location on this system.  You can alternatively define the 'pi4j.library.path' " +
+                        "system property to override this behavior and specify the library path.\n"  +
+                        " UNDERLYING EXCEPTION: [" + e.getClass().getName() + "]=" + e.getMessage();
+                }
+                throw new UnsatisfiedLinkError(exceptMessage);
             }
         }
 	}
 
 	/**
 	 * Loads library from classpath
-	 *
+     *
 	 * The file from classpath is copied into system temporary directory and then loaded. The temporary file is
      * deleted after exiting. Method uses String as filename because the pathname is
 	 * "abstract", not system-dependent.
