@@ -26,7 +26,7 @@ package com.pi4j.library.pigpio.util;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-
+ 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
