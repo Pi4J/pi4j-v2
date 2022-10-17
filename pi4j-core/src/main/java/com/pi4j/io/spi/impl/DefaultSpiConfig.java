@@ -44,7 +44,9 @@ public class DefaultSpiConfig
     // private configuration properties
     protected final Integer baud;
     protected final SpiMode mode;
+    protected boolean modeUserProvided = false;  // indicate user supplied the value
     protected final SpiBus bus;
+    protected boolean busUserProvided = false;  // indicate user supplied the value
     protected final Long flags;
 
     /**
@@ -65,15 +67,19 @@ public class DefaultSpiConfig
         // load optional BUS from properties
         if(properties.containsKey(BUS_KEY)){
             this.bus = SpiBus.parse(properties.get(BUS_KEY));
+            this.busUserProvided = true;
         } else {
             this.bus = Spi.DEFAULT_BUS;
+            this.busUserProvided = false;
         }
 
         // load optional MODE from properties
         if(properties.containsKey(MODE_KEY)){
             this.mode = SpiMode.parse(properties.get(MODE_KEY));
+            this.modeUserProvided = true;
         } else {
             this.mode = Spi.DEFAULT_MODE;
+            this.modeUserProvided = false;
         }
 
         // load optional FLAGS BITS from properties
@@ -93,6 +99,21 @@ public class DefaultSpiConfig
     @Override
     public Integer baud() {
         return this.baud;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean busUserProvided() {
+        return this.busUserProvided;
+    }
+
+
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean modeUserProvided()
+    {
+        return this.modeUserProvided;
     }
 
     /** {@inheritDoc} */

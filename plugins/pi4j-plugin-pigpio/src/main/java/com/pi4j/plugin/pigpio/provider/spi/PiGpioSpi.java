@@ -119,25 +119,28 @@ public class PiGpioSpi extends SpiBase implements Spi {
             throw new IOException("Unsupported SPI mode on AUX SPI BUS_1: mode=" + mode.toString());
         }
 
-        // update flags value with BUS bit ('A' 0x0000=BUS0; 0x0100=BUS1)
-        if(bus == SpiBus.BUS_0) {
-            flags = (flags & (0xFFFFFFFF ^ SPI_BUS_MASK)); // clear AUX bit
+
+        if(config.busUserProvided()) {  // user provided, overwrite flags
+            // update flags value with BUS bit ('A' 0x0000=BUS0; 0x0100=BUS1)
+            if (bus == SpiBus.BUS_0) {
+                flags = (flags & (0xFFFFFFFF ^ SPI_BUS_MASK)); // clear AUX bit
+            } else if (bus == SpiBus.BUS_1) {
+                flags = (flags & (0xFFFFFFFF ^ SPI_BUS_MASK)) | SPI_BUS_MASK; // set AUX bit
+            }
         }
-        else if(bus == SpiBus.BUS_1) {
-            flags = (flags & (0xFFFFFFFF ^ SPI_BUS_MASK)) | SPI_BUS_MASK; // set AUX bit
+
+        if(config.modeUserProvided()) {  // user provided, overwrite flags
+            // update flags value with MODE bits ('mm' 0x03)
+            flags = (flags & (0xFFFFFFFF ^ SPI_MODE_MASK)) | mode.getMode(); // set MODE bits
         }
+            // create SPI instance of PiGPIO SPI
+       this.handle = piGpio.spiOpen(
+            config.address(),
+            config.baud(),
+            flags);
 
-        // update flags value with MODE bits ('mm' 0x03)
-        flags = (flags & (0xFFFFFFFF ^ SPI_MODE_MASK)) | mode.getMode(); // set MODE bits
-
-        // create SPI instance of PiGPIO SPI
-        this.handle = piGpio.spiOpen(
-                config.address(),
-                config.baud(),
-                flags);
-
-        // set open state flag
-        this.isOpen = true;
+       // set open state flag
+       this.isOpen = true;
     }
 
     /** {@inheritDoc} */
