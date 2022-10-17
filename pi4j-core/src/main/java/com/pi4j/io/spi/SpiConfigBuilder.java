@@ -57,7 +57,9 @@ public interface SpiConfigBuilder extends
 
     /**
      * <p>bus.</p>
-     *
+     * <p>If the Bus value is configured, that SpiBus
+     * value will be set in the flags {@link #flags(Long)}   bit 'A' 8
+     * </p>
      * @param bus a {@link com.pi4j.io.spi.SpiBus} object.
      * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.
      */
@@ -73,6 +75,9 @@ public interface SpiConfigBuilder extends
 
     /**
      * <p>mode.</p>
+     *<p>If the Mode value is configured, that SpiMode
+     * value will be set in the flags  {@link #flags(Long)}  bit 'm m' 1:0
+     * </p>
      *
      * @param mode a {@link com.pi4j.io.spi.SpiMode} object.
      * @return a {@link com.pi4j.io.spi.SpiConfigBuilder} object.

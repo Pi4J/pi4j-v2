@@ -69,13 +69,16 @@ public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig>
     default Integer getBaud() { return baud(); }
 
     /**
-     * <p>mode.</p>
+     * <p>bus.</p>
+     * <p>If the Bus value is configured, that SpiBus
+     * value will be set in the flags {@link #flags()}   bit 'A' 8
+     * </p>
      *
      * @return a {@link com.pi4j.io.spi.SpiBus} object.
      */
     SpiBus bus();
     /**
-     * <p>getMode.</p>
+     * <p>getBus.</p>
      *
      * @return a {@link com.pi4j.io.spi.SpiBus} object.
      */
@@ -84,7 +87,25 @@ public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig>
     }
 
     /**
+     * <p>busUserProvided.</p>
+     * @return  a boolean.
+     */
+    boolean busUserProvided();
+
+    /**
+     * <p>getBusUserProvided.</p>
+     * @return  a {@link java.lang.Boolean} object.
+     */
+    default boolean getBusUserProvided(){
+        return busUserProvided();
+    }
+
+
+    /**
      * <p>mode.</p>
+     * <p>If the Mode value is configured, that SpiMode
+     * value will be set in the flags  {@link #mode()}  bit 'm m' 1:0
+     * </p>
      *
      * @return a {@link com.pi4j.io.spi.SpiMode} object.
      */
@@ -96,6 +117,20 @@ public interface SpiConfig extends AddressConfig<SpiConfig>, IOConfig<SpiConfig>
      */
     default SpiMode getMode() {
         return mode();
+    }
+
+    /**
+     * <p>modeUserProvided.</p>
+     * @return  a boolean.
+     */
+    boolean modeUserProvided();
+
+    /**
+     * <p>bgetModeUserProvided.</p>
+     * @return  a {@link java.lang.Boolean} object.
+     */
+    default boolean getModeUserProvided(){
+        return modeUserProvided();
     }
 
     /**
