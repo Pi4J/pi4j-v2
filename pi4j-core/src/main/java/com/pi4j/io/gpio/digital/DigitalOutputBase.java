@@ -74,7 +74,7 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
     @Override
     public DigitalOutput state(DigitalState state) throws IOException {
 
-        if(!this.equals(state)){
+        if(!this.state.equals(state)){
             this.state = state;
             this.dispatch(new DigitalStateChangeEvent<DigitalOutputBase>(this, this.state));
         }
@@ -128,10 +128,100 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
     }
 
     /** {@inheritDoc} */
+    /**
+     * This method will blink an output pin of the RPi according the given specifications.
+     * The pin itself is created while creating a DigitalOutput configuration where one of
+     * the parameters is an address (= a BCM pin number).
+     *
+     * @param delay - The toggle time.
+     * @param duration - The amount of times the output has to toggle.
+     *
+     * Representation:
+     *
+     *   HIGH +-----+     +-----+     +-----+
+     *        |     |     |     |     |     |
+     *   LOW  +     +-----+     +-----+     +-----+
+     *        ^                                   ^
+     * start -┘                                   └- stop
+     *         \___/ \___/
+     *         delay  delay
+     *
+     *        \___________________________________/
+     *                      duration
+     *
+     * Example: Delay = 1 sec / duration = 10
+     *          Output will be like so (suppose the initial state is ON):
+     *          1 - 0 - 1 - 0 - 1 - 0 - 1 - 0 - 1 - 0 with each state lasting for 1 second.
+     *          So, if you would connect a LED to the pin, you would see the LED switching
+     *          on and off for 5 times, NOT 10 times!!!
+     *
+     * @param unit - The time unit used to calculate the delay.
+     * @param state - The initial state of the pin.
+     * @param callback - The method to call, if any, once the blinking is done.
+     * @return - The DigitalOutput object itself.
+     */
     @Override
     public DigitalOutput blink(int delay, int duration, TimeUnit unit, DigitalState state, Callable<Void> callback) {
-        // TODO :: IMPLEMENT DIGITAL OUTPUT BLINK
-        throw new UnsupportedOperationException("BLINK has not yet been implemented!");
+        int millis = 0;
+
+        if (delay <= 0) {
+            throw new IllegalArgumentException("A delay of zero or less is not supported.");
+        }
+        if (duration <= 0) {
+            throw new IllegalArgumentException("A duration of zero or less is not supported.");
+        }
+
+        switch (unit) {
+            case MICROSECONDS:
+                throw new IllegalArgumentException("TimeUnit.MICROSECONDS is not supported.");
+
+            case MILLISECONDS:
+                millis = delay;
+                break;
+
+            case SECONDS:
+                millis = (delay * 1000);
+                break;
+
+            case MINUTES:
+                millis = (delay * 1000 * 60);
+                break;
+
+            case HOURS:
+                millis = (delay * 1000 * 60 * 24);
+                break;
+
+            default:
+                throw new IllegalArgumentException("TimeUnit provided is not supported.");
+        }
+
+        this.state(state);
+
+        for (int i = 0; i < duration; i++) {
+            // block the current thread for the pulse duration
+            try {
+                Thread.sleep(millis);
+            }
+            catch (InterruptedException e) {
+                throw new RuntimeException("Pulse blocking thread interrupted. Exception message: [" + e.getMessage() + "].");
+            }
+
+
+            // toggle the pulse state
+            this.state(DigitalState.getInverseState(this.state));
+        }
+
+        // invoke callback if one was defined
+        if (callback != null) {
+            try {
+                callback.call();
+            }
+            catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+
+        return this;
     }
 
     /** {@inheritDoc} */
