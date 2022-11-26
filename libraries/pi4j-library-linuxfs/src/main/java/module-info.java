@@ -32,6 +32,9 @@ module com.pi4j.library.linuxfs {
     // PI4J
     requires com.pi4j;
 
+    // JNA
+    requires  com.sun.jna;
+
     // EXPORTS
     exports com.pi4j.library.linuxfs;
 }

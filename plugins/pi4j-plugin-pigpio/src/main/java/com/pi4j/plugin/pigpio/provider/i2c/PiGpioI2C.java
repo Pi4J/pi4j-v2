@@ -150,6 +150,19 @@ public class PiGpioI2C extends I2CBase implements I2C {
         return length;
     }
 
+    @Override
+    /**
+     * {@inheritDoc}
+     * <p> Note: Function not supported with PIGPIO provider.
+     * This method 'is' supported in the LinuxFS provider
+     * </p>
+     */
+    public int writeRegister(byte[] register, byte[] data, int offset, int length) {
+        // TODO should we throw an exception,  saying use LinuxFS ?  What exception
+        // TODO any what to force a compile error in user code ??
+        return -1;
+    }
+
     // -------------------------------------------------------------------
     // DEVICE REGISTER READ FUNCTIONS
     // -------------------------------------------------------------------
@@ -158,6 +171,19 @@ public class PiGpioI2C extends I2CBase implements I2C {
     @Override
     public int readRegister(int register) {
         return piGpio.i2cReadByteData(this.handle, register);
+    }
+
+    @Override
+    /**
+     * {@inheritDoc}
+     * <p> Note: Function not supported with PIGPIO provider.
+     * This method 'is' supported in the LinuxFS provider
+     * </p>
+     */
+    public int readRegister(byte[] register, byte[] buffer, int offset, int length) {
+        // TODO should we throw an exception,  saying use LinuxFS ?  What exception
+        // TODO any what to force a compile error in user code ??
+        return -1;
     }
 
     /** {@inheritDoc} */

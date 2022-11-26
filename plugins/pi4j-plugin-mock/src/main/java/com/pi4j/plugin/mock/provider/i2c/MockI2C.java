@@ -254,6 +254,11 @@ public class MockI2C extends I2CBase implements I2C {
         return length;
     }
 
+    @Override
+    public int writeRegister(byte[] register, byte[] data, int offset, int length) {
+        return 0;
+    }
+
     /** {@inheritDoc} */
     @Override
     public int writeRegister(int register, Charset charset, CharSequence data) {
@@ -298,6 +303,11 @@ public class MockI2C extends I2CBase implements I2C {
         logger.info(StringUtil.toHexString(b));
         logger.info(")");
         return b;
+    }
+
+    @Override
+    public int readRegister(byte[] register, byte[] buffer, int offset, int length) {
+        return 0;
     }
 
     /** {@inheritDoc} */

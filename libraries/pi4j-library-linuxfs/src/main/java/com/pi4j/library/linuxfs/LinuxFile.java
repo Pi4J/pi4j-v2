@@ -108,9 +108,9 @@ public class LinuxFile extends RandomAccessFile {
      * @param command
      *     ioctl command
      * @param data
-     *     values in bytes for all structures, with 4 or 8 byte size holes for pointers
+     *     values in bytes for all structures, with 4 or 8 byte alignment enforced by filling holes before pointers
      * @param offsets
-     *     byte offsets of pointer at given index
+     *     ByteBuffer: offsets of pointer/ byte offset of pointedToData
      *
      * @throws IOException
      *     when something goes wrong
@@ -164,9 +164,9 @@ public class LinuxFile extends RandomAccessFile {
             if ((ptrOffset + wordSize) > data.capacity() || ptrOffset < 0)
                 throw new IndexOutOfBoundsException("invalid pointer offset specified in buffer: " + ptrOffset);
         }
-
-        final int response = directIOCTLStructure(this.fdHandle, command, data, data.position(), offsets,
-            offsets.position(), offsets.remaining());
+        int posFD = this.getPosixFD();
+        final int response = directIOCTLStructure(posFD, command, data, data.position(), offsets,
+            offsets.position(), offsets.limit());
 
         if (response < 0)
             throw new LinuxFileException();
@@ -228,14 +228,15 @@ public class LinuxFile extends RandomAccessFile {
         return buf;
     }
 
-    protected synchronized ByteBuffer getDataBuffer(int size) {
+
+    protected  synchronized ByteBuffer getDataBuffer(int size) {
         ByteBuffer buf = localDataBuffer.get();
 
         if (size > localBufferSize)
             throw new ScratchBufferOverrun();
 
         if (buf == null) {
-            buf = ByteBuffer.allocateDirect(localBufferSize);
+            buf = ByteBuffer.allocateDirect(size);
             localDataBuffer.set(buf);
         }
 

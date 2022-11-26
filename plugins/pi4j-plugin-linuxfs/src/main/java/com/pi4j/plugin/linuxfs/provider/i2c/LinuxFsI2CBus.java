@@ -2,6 +2,8 @@ package com.pi4j.plugin.linuxfs.provider.i2c;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -65,6 +67,51 @@ public class LinuxFsI2CBus {
         this.lastAddress = i2c.device();
         this.file.ioctl(I2CConstants.I2C_SLAVE, i2c.device() & 0xFF);
     }
+
+
+
+
+    /**
+     *
+     * @param i2c
+     * @param command   From I2CConstants
+     * @param data  values in bytes for all structures, with 4 or 8 byte alignment enforced by filling holes before pointers
+     * @param offsets   ByteBuffer: offsets of pointer/ byte offset of pointedToData
+     *
+     * @return    0 if success, else -1
+     */
+    public int executeIOCTL(final I2C i2c, long command, ByteBuffer data, IntBuffer offsets){
+        int rc = -1;
+        if (this.lastAddress != i2c.device()) {
+            this.lastAddress = i2c.device();
+        }
+        try {
+            if (this.lock.tryLock() || this.lock.tryLock(this.lockAquireTimeout, this.lockAquireTimeoutUnit)) {
+
+                try {
+                    selectBusSlave(i2c);
+                    this.file.ioctl( command, data, offsets);
+                    rc = 0; //had there been any failure an exception would bypass this statement
+                    } finally {
+                    while (this.lock.isHeldByCurrentThread())
+                        this.lock.unlock();
+                }
+
+            } else {
+                throw new Pi4JException(
+                    "Failed to get I2C lock on bus " + this.bus + " after " + this.lockAquireTimeout + " "
+                        + this.lockAquireTimeoutUnit);
+            }
+        } catch (InterruptedException e) {
+            logger.error("Failed locking " + getClass().getSimpleName() + "-" + this.bus, e);
+            throw new RuntimeException("Could not obtain an access-lock!", e);
+        } catch (Exception e) {
+            throw new Pi4JException("Failed to execute action for device " + i2c.device() + " on bus " + this.bus, e);
+        }
+
+        return(rc);
+    }
+
 
     public <R> R execute(final I2C i2c, final CheckedFunction<LinuxFile, R> action) {
         if (i2c == null)

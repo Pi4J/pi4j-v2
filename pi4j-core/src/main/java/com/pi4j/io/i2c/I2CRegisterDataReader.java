@@ -63,6 +63,51 @@ public interface I2CRegisterDataReader {
     // BYTE ARRAY
     // ------------------------------------------------------------------------------------
 
+
+    /**
+     * Read data from the I2C device register into the provided byte array at the given
+     * offset and up to the specified data length (number of bytes).
+     *
+     * @param register Byte array I2C device register address to write to.
+     * @param buffer the byte array/buffer the read data will be copied/inserted into
+     * @param offset the offset index in the data buffer to start copying read data
+     * @param length the number of bytes to read
+     * @return If successful, return the number of bytes read from the I/O device;
+     *         else on a read error, return a negative error code.
+     */
+    int readRegister(byte[] register, byte[] buffer, int offset, int length);
+
+
+    /**
+     * Note: This interface follow the Phillips I2C spec to use a RESTART
+     * ie;  START(W) [ Write register data] RESTART(R) [read length bytes]  STOP
+     * Read data from the I2C device register into the provided byte array starting at the zero
+     * index (first byte) and up to the specified data length (number of bytes).
+     *
+     * @param register Byte array I2C device register address to write access.
+     * @param buffer the byte array/buffer the read data will be copied/inserted into
+     * @param length the number of bytes to read
+     * @return If successful, return the number of bytes read from the I/O device;
+     *         else on a read error, return a negative error code.
+     */
+    default int readRegister(byte[] register, byte[] buffer, int length) {
+        return readRegister(register, buffer, 0, length);
+    }
+
+
+    /**
+     * Read data from the I2C device register into the provided byte array starting at the zero
+     * index (first byte) and up to the available space in the buffer.
+     *
+     * @param register Byte array I2C device register address to write to.
+     * @param buffer the byte array/buffer the read data will be copied/inserted into
+     * @return If successful, return the number of bytes read from the I/O device;
+     *         else on a read error, return a negative error code.
+     */
+    default int readRegister(byte[] register, byte[] buffer) {
+        return readRegister(register, buffer, buffer.length);
+    }
+
     /**
      * Read data from the I2C device register into the provided byte array at the given
      * offset and up to the specified data length (number of bytes).
@@ -90,11 +135,13 @@ public interface I2CRegisterDataReader {
         return readRegister(register, buffer, 0, length);
     }
 
+
+
     /**
      * Read data from the I2C device register into the provided byte array starting at the zero
      * index (first byte) and up to the available space in the buffer.
      *
-     * @param register The I2C device register address to write to.
+     * @param register  I2C device register address to write to.
      * @param buffer the byte array/buffer the read data will be copied/inserted into
      * @return If successful, return the number of bytes read from the I/O device;
      *         else on a read error, return a negative error code.
@@ -102,7 +149,6 @@ public interface I2CRegisterDataReader {
     default int readRegister(int register, byte[] buffer) {
         return readRegister(register, buffer, buffer.length);
     }
-
 
     // ------------------------------------------------------------------------------------
     // BYTE BUFFER
@@ -128,6 +174,44 @@ public interface I2CRegisterDataReader {
      *         else on a read error, return a negative error code.
      */
     default int readRegister(int register, ByteBuffer buffer, int offset, int length) {
+        // perform bounds checking on requested length versus total remaining size available
+        if(length > (buffer.capacity()-offset)){
+            length = buffer.capacity()-offset;
+        }
+
+        int actualLength = readRegister(register, buffer.array(), offset, length);
+
+        // return any error codes (result < 0)
+        if(actualLength < 0) return actualLength;
+
+        // copy the data from the temporary byte array into the return buffer at the given offset
+        buffer.position(offset + actualLength);
+
+        // return actual number of bytes read
+        return actualLength;
+    }
+
+
+    /**
+     * Read data from the I2C device register into the provided byte buffer at the given
+     * offset and up to the specified data length (number of bytes).
+     *
+     * NOTE:  The buffer's internal position tracking is not
+     *        used but rather only the explicit offset and
+     *        length provided.  If the requested length is
+     *        greater than the buffers capacity (minus offset)
+     *        then the specified length will be ignored and
+     *        this function will only write the number of
+     *        bytes up to the buffers' available space.
+     *
+     * @param register Multi-byte I2C device register address to write to.
+     * @param buffer the byte buffer the read data will be copied/inserted into
+     * @param offset the offset index in the data buffer to start copying read data
+     * @param length the number of bytes to read
+     * @return If successful, return the number of bytes read from the I2C device register;
+     *         else on a read error, return a negative error code.
+     */
+    default int readRegister(byte[] register, ByteBuffer buffer, int offset, int length) {
         // perform bounds checking on requested length versus total remaining size available
         if(length > (buffer.capacity()-offset)){
             length = buffer.capacity()-offset;

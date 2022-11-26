@@ -36,6 +36,8 @@
 #include <errno.h>
 #include <stdint.h>
 #include <sys/mman.h>
+#include <linux/i2c-dev.h>
+
 
 #include "com_pi4j_library_linuxfs_internal_LinuxFS.h"
 
@@ -110,7 +112,6 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_linuxfs_LinuxFile_directIOCTLStruct
 int directIOCTLStructure (int fd, unsigned long command, void *data, size_t headOffset, uint32_t *offsetMap, uint32_t offsetSize) {
     uint32_t i;
 
-    //iterate through offsets, convert and apply pointers
     for(i = 0 ; i < offsetSize ; i += 2) {
       uint32_t pointerOffset = offsetMap[i];
       uint32_t pointingOffset = offsetMap[i + 1];
@@ -121,5 +122,11 @@ int directIOCTLStructure (int fd, unsigned long command, void *data, size_t head
       *ptr = data + pointingOffset;
     }
 
-    return ioctl(fd, command, data + headOffset);
+
+    if(command == I2C_RDWR){  // special command using I2C RESTART
+       struct i2c_rdwr_ioctl_data ioctl_data_struct = { (data + headOffset), offsetSize/2 };
+       return ioctl(fd, command, &ioctl_data_struct);
+    } else{
+       return ioctl(fd, command, data + headOffset);
+    }
 }
