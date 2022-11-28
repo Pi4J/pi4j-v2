@@ -36,8 +36,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.pi4j.library.pigpio.PiGpioConst.PI_DISABLE_FIFO_IF;
-import static com.pi4j.library.pigpio.PiGpioConst.PI_DISABLE_SOCK_IF;
+import static com.pi4j.library.pigpio.PiGpioConst.PI_IF_DISABLE_FIFO;
+import static com.pi4j.library.pigpio.PiGpioConst.PI_IF_DISABLE_SOCK;
 import static com.pi4j.library.pigpio.PiGpioConst.PI_TIME_RELATIVE;
 
 /**
@@ -90,7 +90,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
 
         if(!this.initialized) {
             // disable socket and pipes interfaces
-            int rslt = PIGPIO.gpioCfgInterfaces(PI_DISABLE_FIFO_IF | PI_DISABLE_SOCK_IF);
+            int rslt = PIGPIO.gpioCfgInterfaces(PI_IF_DISABLE_FIFO | PI_IF_DISABLE_SOCK);
             validateResult(rslt);
 
             // initialize the PiGpio native library

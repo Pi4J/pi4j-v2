@@ -418,8 +418,8 @@ public interface PiGpioConst {
     // ----------------------------------
     // IF FLAGS
     // ----------------------------------
-    int PI_DISABLE_FIFO_IF = 1;
-    int PI_DISABLE_SOCK_IF = 2;
-    int PI_LOCALHOST_SOCK_IF = 4;
+    int PI_IF_DISABLE_FIFO = 1; // PI_DISABLE_FIFO_IF in pigpio.h
+    int PI_IF_DISABLE_SOCK = 2; // PI_DISABLE_SOCK_IF in pigpio.h
+    int PI_IF_LOCALHOST_SOCK = 4; // PI_LOCALHOST_SOCK_IF in pigpio.h
     int PI_DISABLE_ALERT = 8;
 }
