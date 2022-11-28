@@ -414,4 +414,12 @@ public interface PiGpioConst {
     int SIGTERM = 15;
     int SIGSTOP = 19;
     int SIGTSTP = 20;
+
+    // ----------------------------------
+    // IF FLAGS
+    // ----------------------------------
+    int PI_DISABLE_FIFO_IF = 1;
+    int PI_DISABLE_SOCK_IF = 2;
+    int PI_LOCALHOST_SOCK_IF = 4;
+    int PI_DISABLE_ALERT = 8;
 }
