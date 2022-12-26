@@ -126,7 +126,7 @@ public class LinuxFsI2C extends I2CBase implements I2C {
         Objects.checkFromIndexSize(offset, length, data.length);
         byte[] tmp = new byte[length + 1];
         tmp[0] = (byte) register;
-        System.arraycopy(data, 0, tmp, 1, length);
+        System.arraycopy(data, offset, tmp, 1, length);
         return write(tmp);
     }
 
