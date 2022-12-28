@@ -158,9 +158,7 @@ public class PiGpioI2C extends I2CBase implements I2C {
      * </p>
      */
     public int writeRegister(byte[] register, byte[] data, int offset, int length) {
-        // TODO should we throw an exception,  saying use LinuxFS ?  What exception
-        // TODO any what to force a compile error in user code ??
-        return -1;
+        throw new IllegalStateException("Not supported, please use LinuxFS plugin");
     }
 
     // -------------------------------------------------------------------
@@ -181,10 +179,8 @@ public class PiGpioI2C extends I2CBase implements I2C {
      * </p>
      */
     public int readRegister(byte[] register, byte[] buffer, int offset, int length) {
-        // TODO should we throw an exception,  saying use LinuxFS ?  What exception
-        // TODO any what to force a compile error in user code ??
-        return -1;
-    }
+        throw new IllegalStateException("Not supported, please use LinuxFS plugin");
+     }
 
     /** {@inheritDoc} */
     @Override
