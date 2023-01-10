@@ -15,8 +15,7 @@
     </parent>
 
     <!-- PROJECT DEPENDENCIES -->
-    <dependencies>
-    </dependencies>
+
 
     <!-- BUILD INSTRUCTIONS -->
     <build>

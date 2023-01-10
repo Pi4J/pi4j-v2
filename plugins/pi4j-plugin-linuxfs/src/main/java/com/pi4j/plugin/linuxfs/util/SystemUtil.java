@@ -1,11 +1,11 @@
-import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
+package com.pi4j.plugin.linuxfs.util;
 
-/*-
+/*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
- * FILENAME      :  module-info.java
+ * PROJECT       :  Pi4J :: LIBRARY  :: LinuxFS Plugin Library
+ * FILENAME      :  SystemUtil.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -26,19 +26,18 @@ import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-module com.pi4j.plugin.linuxfs {
 
-    // depends on SLF4J
-    requires org.slf4j;
+public class SystemUtil {
 
-    requires com.pi4j;
-    requires com.pi4j.library.linuxfs;
-    requires jsch;
 
-    exports com.pi4j.plugin.linuxfs;
-    exports com.pi4j.plugin.linuxfs.provider.gpio.digital;
-    exports com.pi4j.plugin.linuxfs.provider.i2c;
+    /**
+     *
+      * @return 4 if machine is 32 bit, else 8
+     */
+    public static int getWordSize() {
+        final String archDataModel = System.getProperty("sun.arch.data.model");
+        return "64".equals(archDataModel) ? 8 : 4;
+    }
 
-    provides com.pi4j.extension.Plugin
-            with LinuxFsPlugin;
+
 }
