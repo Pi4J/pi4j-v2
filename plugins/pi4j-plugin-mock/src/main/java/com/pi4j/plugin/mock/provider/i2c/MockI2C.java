@@ -350,7 +350,6 @@ public class MockI2C extends I2CBase implements I2C, I2CRegisterDataReader, I2CR
         logger.info(StringUtil.toHexString(register, 0, register.length));
         logger.info("offset = " + String.format("%02X", offset));
         logger.info("Chip register offset Decimal : " + internalOffset + "  Hex : " +  String.format("%02X", internalOffset));
-        logger.info(String.valueOf(register));
         logger.info(", 0x");
         logger.info(StringUtil.toHexString(buffer, offset, length));
         logger.info(")");

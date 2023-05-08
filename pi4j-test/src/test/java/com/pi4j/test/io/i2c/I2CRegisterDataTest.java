@@ -189,8 +189,8 @@ public class I2CRegisterDataTest {
                 if(rc != 0x10){
                     Assertions.fail("readRegisterData: fail  RC switchNumber : "  + sample.switchNumber);
                 }
-                compare = this.compArray(sample.bigArray, readData, 0x0, 0x10);
-                if(compare == false){
+                compare = this.compareArray(sample.bigArray, readData, 0x0, 0x10);
+                if(!compare){
                     Assertions.fail("readRegisterData: fail  switchNumber : "  + sample.switchNumber);
                 }
                 break;
@@ -203,8 +203,8 @@ public class I2CRegisterDataTest {
                 if(rc != 0x10){
                     Assertions.fail("readRegisterData: fail  RC switchNumber : "  + sample.switchNumber);
                 }
-                compare = this.compArray(sample.bigArray, readData, 0x0, 0x10);
-                if(compare == false){
+                compare = this.compareArray(sample.bigArray, readData, 0x0, 0x10);
+                if(!compare){
                     Assertions.fail("readRegisterData: fail  switchNumber : "  + sample.switchNumber);
                 }
                 break;
@@ -217,8 +217,8 @@ public class I2CRegisterDataTest {
                 if(rc != 0x10){
                     Assertions.fail("readRegisterData: fail  RC switchNumber : "  + sample.switchNumber);
                 }
-                compare = this.compArray(sample.bigArray, readData, 0x5, 0x10);
-                if(compare == false){
+                compare = this.compareArray(sample.bigArray, readData, 0x5, 0x10);
+                if(!compare){
                     Assertions.fail("readRegisterData: fail  switchNumber : "  + sample.switchNumber);
                 }
                 break;
@@ -232,8 +232,8 @@ public class I2CRegisterDataTest {
                 if(rc != 0x10){
                     Assertions.fail("readRegisterData: fail  RC switchNumber : "  + sample.switchNumber);
                 }
-                compare = this.compArray(sample.bigArray, readData, 0x05, 0x10);
-                if(compare == false){
+                compare = this.compareArray(sample.bigArray, readData, 0x05, 0x10);
+                if(!compare){
                     Assertions.fail("readRegisterData: fail  switchNumber : "  + sample.switchNumber);
                 }
                 break;
@@ -252,7 +252,7 @@ public class I2CRegisterDataTest {
             case 10:
                 break;
             default:
-                ;//Assertions.fail("readRegisterData: invalid switchNumber");
+                ;
         }
     }
 
@@ -333,7 +333,7 @@ public class I2CRegisterDataTest {
      * @param numBytes  How many bytes to compare
      * @return          If comparison equal, true, else false
      */
-    public boolean compArray( byte[] a, byte[]b, int aOffset, int numBytes){
+    public boolean compareArray( byte[] a, byte[]b, int aOffset, int numBytes){
         boolean rval = true;
         if((a.length >= (aOffset + numBytes)) && (b.length >= numBytes)) {
             for (int c = 0; c < numBytes; c++) {
