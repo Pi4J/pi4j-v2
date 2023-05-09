@@ -89,6 +89,17 @@ public interface PwmConfigBuilder extends GpioConfigBuilder<PwmConfigBuilder, Pw
     PwmConfigBuilder pwmType(PwmType pwmType);
 
     /**
+     * Set the polarity of this PWM instance. (Normal/Inversed)
+     * Please note that not all PWM providers support polarity.  Please
+     * consult the documentation for your PWM provider to determine
+     * what support is available and what limitations may apply.
+     *
+     * @return this builder instance
+     * @param polarity a {@link com.pi4j.io.pwm.PwmPolarity} object.
+     */
+    PwmConfigBuilder polarity(PwmPolarity polarity);
+
+    /**
      * Optionally configure a PWM duty-cycle value that should automatically
      * be applied to the PWM instance when the Pi4J context is shutdown.
      * This option can be helpful if you wish to do something like stop a PWM

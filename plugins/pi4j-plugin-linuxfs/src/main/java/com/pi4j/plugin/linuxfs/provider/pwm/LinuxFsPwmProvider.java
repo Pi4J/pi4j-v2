@@ -1,11 +1,11 @@
-package com.pi4j.plugin.linuxfs.provider.gpio.digital;
+package com.pi4j.plugin.linuxfs.provider.pwm;
 
 /*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: PLUGIN   :: LinuxFS I/O Providers
- * FILENAME      :  LinuxFsDigitalInputProviderImpl.java
+ * FILENAME      :  LinuxFsPwmProvider.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -27,36 +27,36 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
  * #L%
  */
 
-import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.io.gpio.digital.DigitalInputConfig;
-import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
-import com.pi4j.plugin.linuxfs.internal.LinuxGpio;
+import com.pi4j.io.pwm.PwmProvider;
+import com.pi4j.plugin.linuxfs.LinuxFsPlugin;
 
 /**
- * <p>LinuxFsDigitalInputProviderImpl class.</p>
+ * <p>LinuxFsPwmProvider interface.</p>
  *
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class LinuxFsDigitalInputProviderImpl extends DigitalInputProviderBase implements LinuxFsDigitalInputProvider {
-
-    final String gpioFileSystemPath;
+public interface LinuxFsPwmProvider extends PwmProvider {
+    /** Constant <code>NAME="PiGpioPlugin.PWM_PROVIDER_NAME"</code> */
+    String NAME = LinuxFsPlugin.PWM_PROVIDER_NAME;
+    /** Constant <code>ID="PiGpioPlugin.PWM_PROVIDER_ID"</code> */
+    String ID = LinuxFsPlugin.PWM_PROVIDER_ID;
 
     /**
-     * <p>Constructor for LinuxFsDigitalInputProviderImpl.</p>
+     * <p>newInstance.</p>
+     *
+     * @return a {@link LinuxFsPwmProvider} object.
      */
-    public LinuxFsDigitalInputProviderImpl(String gpioFileSystemPath){
-        this.id = ID;
-        this.name = NAME;
-        this.gpioFileSystemPath = gpioFileSystemPath;
+    static LinuxFsPwmProvider newInstance(String pwmFileSystemPath, int pwmChip) {
+        return new LinuxFsPwmProviderImpl(pwmFileSystemPath, pwmChip);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public DigitalInput create(DigitalInputConfig config) {
-        // create filesystem based GPIO instance using instance address (GPIO NUMBER)
-        LinuxGpio gpio = new LinuxGpio(this.gpioFileSystemPath, config.address());
-
-        return new LinuxFsDigitalInput(gpio, this, config);
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link LinuxFsPwmProvider} object.
+     */
+    static LinuxFsPwmProvider newInstance(int pwmChip) {
+        return new LinuxFsPwmProviderImpl(LinuxFsPlugin.DEFAULT_PWM_FILESYSTEM_PATH, pwmChip);
     }
 }

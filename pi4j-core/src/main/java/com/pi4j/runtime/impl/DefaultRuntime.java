@@ -66,7 +66,7 @@ public class DefaultRuntime implements Runtime {
     private final RuntimePlatforms platforms;
     private final RuntimeProperties properties;
     private final List<Plugin> plugins = new ArrayList<>();
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "Pi4J.RUNTIME"));
     private boolean isShutdown = false;
     private final EventManager<Runtime, ShutdownListener, ShutdownEvent> shutdownEventManager;
     private final EventManager<Runtime, InitializedListener, InitializedEvent> initializedEventManager;

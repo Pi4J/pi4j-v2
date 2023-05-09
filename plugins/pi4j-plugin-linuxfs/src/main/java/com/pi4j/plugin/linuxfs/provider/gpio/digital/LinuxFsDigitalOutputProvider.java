@@ -41,12 +41,22 @@ public interface LinuxFsDigitalOutputProvider extends DigitalOutputProvider {
     String NAME = LinuxFsPlugin.DIGITAL_OUTPUT_PROVIDER_NAME;
     /** Constant <code>ID="LinuxFs.DIGITAL_OUTPUT_PROVIDER_ID"</code> */
     String ID = LinuxFsPlugin.DIGITAL_OUTPUT_PROVIDER_ID;
+
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalOutputProvider} object.
+     */
+    static LinuxFsDigitalOutputProvider newInstance(String gpioFileSystemPath) {
+        return new LinuxFsDigitalOutputProviderImpl(gpioFileSystemPath);
+    }
+
     /**
      * <p>newInstance.</p>
      *
      * @return a {@link com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalOutputProvider} object.
      */
     static LinuxFsDigitalOutputProvider newInstance() {
-        return new LinuxFsDigitalOutputProviderImpl();
+        return new LinuxFsDigitalOutputProviderImpl(LinuxFsPlugin.DEFAULT_GPIO_FILESYSTEM_PATH);
     }
 }

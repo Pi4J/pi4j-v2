@@ -30,6 +30,7 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
+import com.pi4j.plugin.linuxfs.internal.LinuxGpio;
 
 /**
  * <p>LinuxFsDigitalOutputProviderImpl class.</p>
@@ -39,24 +40,23 @@ import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
  */
 public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase implements LinuxFsDigitalOutputProvider {
 
+    final String gpioFileSystemPath;
+
     /**
      * <p>Constructor for LinuxFsDigitalOutputProviderImpl.</p>
      */
-    public LinuxFsDigitalOutputProviderImpl(){
+    public LinuxFsDigitalOutputProviderImpl(String gpioFileSystemPath){
         this.id = ID;
         this.name = NAME;
+        this.gpioFileSystemPath = gpioFileSystemPath;
     }
 
     /** {@inheritDoc} */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
 
-        // export GPIO pin
-        // /sys/class/gpio
-
-        // set GPIO pin direction
-        // /sys/class/gpio/gpio{0}
-
-        return new LinuxFsDigitalOutput(this, config);
+        // create filesystem based GPIO instance using instance address (GPIO NUMBER)
+        LinuxGpio gpio = new LinuxGpio(this.gpioFileSystemPath, config.address());
+        return new LinuxFsDigitalOutput(gpio, this, config);
     }
 }

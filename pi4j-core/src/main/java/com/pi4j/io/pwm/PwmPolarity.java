@@ -7,7 +7,7 @@ import java.util.EnumSet;
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: LIBRARY  :: Java Library (CORE)
- * FILENAME      :  PwmType.java
+ * FILENAME      :  PwmPolarity.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
@@ -28,20 +28,20 @@ import java.util.EnumSet;
  */
 
 /**
- * PWM Type Enumerations
+ * PWM Polarity Enumerations
  *
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public enum PwmType {
-    SOFTWARE(0, "software"),
-    HARDWARE(1, "hardware");
+public enum PwmPolarity {
+    NORMAL(0, "normal"),
+    INVERSED(1, "inversed");
 
     private final int value;
     private final String name;
 
-    private PwmType(int value, String name) {
+    private PwmPolarity(int value, String name) {
         this.value = value;
         this.name = name;
     }
@@ -58,7 +58,7 @@ public enum PwmType {
     /**
      * <p>Getter for the field <code>name</code>.</p>
      *
-     * @return a {@link java.lang.String} object.
+     * @return a {@link String} object.
      */
     public String getName() {
         return name;
@@ -73,23 +73,23 @@ public enum PwmType {
     /**
      * <p>all.</p>
      *
-     * @return a {@link java.util.EnumSet} object.
+     * @return a {@link EnumSet} object.
      */
-    public static EnumSet<PwmType> all() {
-        return EnumSet.allOf(PwmType.class);
+    public static EnumSet<PwmPolarity> all() {
+        return EnumSet.allOf(PwmPolarity.class);
     }
 
     /**
      * <p>parse.</p>
      *
-     * @param pwmType a {@link java.lang.String} object.
-     * @return a {@link com.pi4j.io.pwm.PwmType} object.
+     * @param polarity a {@link String} object.
+     * @return a {@link PwmPolarity} object.
      */
-    public static PwmType parse(String pwmType) {
-        if(pwmType.equalsIgnoreCase("0")) return PwmType.SOFTWARE;
-        if(pwmType.equalsIgnoreCase("1")) return PwmType.HARDWARE;
-        if(pwmType.toLowerCase().startsWith("h")) return PwmType.HARDWARE;
-        if(pwmType.toLowerCase().startsWith("s")) return PwmType.SOFTWARE;
-        return PwmType.SOFTWARE; // default
+    public static PwmPolarity parse(String polarity) {
+        if(polarity.equalsIgnoreCase("0")) return PwmPolarity.NORMAL;
+        if(polarity.equalsIgnoreCase("1")) return PwmPolarity.INVERSED;
+        if(polarity.toLowerCase().startsWith("n")) return PwmPolarity.NORMAL;
+        if(polarity.toLowerCase().startsWith("i")) return PwmPolarity.INVERSED;
+        return PwmPolarity.NORMAL; // default
     }
 }

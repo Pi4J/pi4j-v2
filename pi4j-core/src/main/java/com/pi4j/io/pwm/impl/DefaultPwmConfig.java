@@ -28,6 +28,7 @@ package com.pi4j.io.pwm.impl;
 import com.pi4j.io.gpio.digital.PullResistance;
 import com.pi4j.io.impl.IOAddressConfigBase;
 import com.pi4j.io.pwm.PwmConfig;
+import com.pi4j.io.pwm.PwmPolarity;
 import com.pi4j.io.pwm.PwmPreset;
 import com.pi4j.io.pwm.PwmType;
 import com.pi4j.util.StringUtil;
@@ -51,6 +52,7 @@ public class DefaultPwmConfig
     protected Float dutyCycle = null;
     protected Integer frequency = null;
     protected PwmType pwmType = PwmType.SOFTWARE;
+    protected PwmPolarity polarity = PwmPolarity.NORMAL;
     protected Float shutdownValue = null;
     protected Float initialValue = null;
     protected List<PwmPreset> presets = new ArrayList<>();
@@ -104,6 +106,11 @@ public class DefaultPwmConfig
             this.pwmType = PwmType.parse(properties.get(PWM_TYPE_KEY));
         }
 
+        // load optional pwm type from properties
+        if(properties.containsKey(POLARITY_KEY)){
+            this.polarity = PwmPolarity.parse(properties.get(POLARITY_KEY));
+        }
+
         // load initial value property
         if(properties.containsKey(INITIAL_VALUE_KEY)){
             this.initialValue = Float.parseFloat(properties.get(INITIAL_VALUE_KEY));
@@ -139,6 +146,12 @@ public class DefaultPwmConfig
     @Override
     public PwmType pwmType() {
         return this.pwmType;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public PwmPolarity polarity() {
+        return this.polarity;
     }
 
     /** {@inheritDoc} */
