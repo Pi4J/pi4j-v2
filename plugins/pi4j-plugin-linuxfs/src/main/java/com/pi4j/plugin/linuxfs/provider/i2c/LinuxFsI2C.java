@@ -138,7 +138,7 @@ public class LinuxFsI2C extends I2CBase implements I2C {
     public int writeRegister(byte[] register, byte[] data, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, data.length);
         byte[] tmp = new byte[length + register.length];
-        System.arraycopy(register,0, tmp, 0, length);
+        System.arraycopy(register,0, tmp, 0, register.length);
         System.arraycopy(data, offset, tmp, register.length, length);
         int rc = write(tmp);
         return (rc - register.length);  // do not include the register bytes as what was written...
