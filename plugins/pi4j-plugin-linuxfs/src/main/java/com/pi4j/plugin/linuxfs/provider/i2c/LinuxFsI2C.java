@@ -264,8 +264,6 @@ public class LinuxFsI2C extends I2CBase implements I2C {
         byte[] wrtPtrData = new byte[SystemUtil.getWordSize()];
         ioctlData.put(wrtPtrData);
 
-
-
         // second message to read back from device
         short readFlags = (short) (I2CConstants.I2C_M_RD & 0xff);
         short readLength = (short) length;
@@ -328,5 +326,12 @@ public class LinuxFsI2C extends I2CBase implements I2C {
             writeRegisterWord(register, word);
             return readRegisterWord(register);
         });
+    }
+
+    @Override
+    public void close() {
+        if (this.i2CBus != null)
+            this.i2CBus.close();
+        super.close();
     }
 }

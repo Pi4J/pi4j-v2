@@ -68,9 +68,6 @@ public class LinuxFsI2CBus {
         this.file.ioctl(I2CConstants.I2C_SLAVE, i2c.device() & 0xFF);
     }
 
-
-
-
     /**
      *
      * @param i2c
@@ -112,7 +109,6 @@ public class LinuxFsI2CBus {
         return(rc);
     }
 
-
     public <R> R execute(final I2C i2c, final CheckedFunction<LinuxFile, R> action) {
         if (i2c == null)
             throw new NullPointerException("Parameter 'i2c' is mandatory!");
@@ -140,6 +136,17 @@ public class LinuxFsI2CBus {
             throw new RuntimeException("Could not obtain an access-lock!", e);
         } catch (Exception e) {
             throw new Pi4JException("Failed to execute action for device " + i2c.device() + " on bus " + this.bus, e);
+        }
+    }
+
+    public void close() {
+        if (this.file != null) {
+            try {
+                this.file.close();
+            } catch (IOException e) {
+                logger.error(
+                        "Failed to close file " + this.file + " for " + getClass().getSimpleName() + "-" + this.bus, e);
+            }
         }
     }
 }
