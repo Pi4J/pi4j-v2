@@ -14,9 +14,6 @@ Project Map: [![Project Map](https://sourcespy.com/shield.svg)](https://sourcesp
 [![Site](https://img.shields.io/badge/Website-pi4j.com-green)](https://pi4j.com)
 [![Twitter Follow](https://img.shields.io/twitter/follow/pi4j?label=Pi4J&style=social)](https://twitter.com/pi4j)
 
-<a href="https://foojay.io/today/works-with-openjdk"><img align="left" src="https://github.com/foojayio/badges/raw/main/works_with_openjdk/Works-with-OpenJDK.png" width="100"></a>
-<br><br><br>
-
 ---
 
 ## PROJECT INFORMATION for V2 of Pi4J
