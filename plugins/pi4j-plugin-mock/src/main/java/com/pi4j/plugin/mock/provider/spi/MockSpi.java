@@ -82,14 +82,20 @@ public class MockSpi extends SpiBase implements Spi {
     /** {@inheritDoc} */
     @Override
     public int transfer(byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) {
-        int readIndex = readOffset;
-        // simply just echo out the write data back to the read buffer
-        for(int n = writeOffset; n < numberOfBytes - writeOffset; n++){
-            read[readIndex] = write[n];
-            readIndex++;
+        byte[] prepared = new byte[numberOfBytes];
+        // read the (potentially) prepared mock data
+        read(prepared,0,numberOfBytes);
+        //write the provided data for later verification
+        write(write, writeOffset, numberOfBytes);
+
+        // for every byte of the 'write' buffer, transfer a byte
+        // from the prepared data to the 'read' buffer.
+        int offsetIndex = readOffset;
+        for (byte preparedByte : prepared) {
+            read[offsetIndex++] = preparedByte;
         }
-        // return number of byte returned
-        return readIndex - readOffset;
+        // code for 'OK'
+        return 0;
     }
 
     /** {@inheritDoc} */
