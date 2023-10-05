@@ -67,6 +67,24 @@ public class MockSpi extends SpiBase implements Spi {
         logger.info("] :: OPEN(CHANNEL=" + config.address() + "; BAUD=" + config.baud() + ")");
         logger.info("");
     }
+
+    /**
+     * <p>Lets the tester read all the data in this mocks raw buffer.</p>
+     *
+     * It returns all the data that has been accumulated by write() or transfer() calls
+     * and not yet been consumed by read() or transfer() calls.
+     *
+     * @return the bytes in the buffer
+     */
+    public byte[] readEntireMockBuffer() {
+        var bytes = new byte[raw.size()];
+        for(int i = 0;!raw.isEmpty();++i){
+            bytes[i] = raw.pop();
+        }
+        logger.info(" [{}::{}] :: READALL (0x{})",Mock.SPI_PROVIDER_NAME,this.id,StringUtil.toHexString(bytes));
+        return bytes;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void close() {
