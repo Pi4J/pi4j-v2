@@ -57,17 +57,17 @@ public class MockSpi extends SpiBase implements Spi {
      * <p>Constructor for MockSpi.</p>
      *
      * @param provider a {@link com.pi4j.io.spi.SpiProvider} object.
-     * @param config a {@link com.pi4j.io.spi.SpiConfig} object.
+     * @param config   a {@link com.pi4j.io.spi.SpiConfig} object.
      */
     public MockSpi(SpiProvider provider, SpiConfig config) {
         super(provider, config);
-        logPreamble = "["+Mock.SPI_PROVIDER_NAME+"::"+this.id+"] ::";
+        logPreamble = "[" + Mock.SPI_PROVIDER_NAME + "::" + this.id + "] ::";
         logger.info("{} OPEN(CHANNEL={}; BAUD={})", logPreamble, config.address(), config.baud());
     }
 
     /**
      * <p>Lets the tester read all the data in this mocks raw buffer.</p>
-     *
+     * <p>
      * It returns all the data that has been accumulated by write() or transfer() calls
      * and not yet been consumed by read() or transfer() calls.
      *
@@ -75,26 +75,30 @@ public class MockSpi extends SpiBase implements Spi {
      */
     public byte[] readEntireMockBuffer() {
         var bytes = new byte[raw.size()];
-        for(int i = 0;!raw.isEmpty();++i){
+        for (int i = 0; !raw.isEmpty(); ++i) {
             bytes[i] = raw.pop();
         }
         logger.info("{} READALL (0x{})", logPreamble, StringUtil.toHexString(bytes));
         return bytes;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void close() {
         logger.info("{} CLOSE(CHANNEL={}; BAUD={})", logPreamble, config.address(), config.baud());
         super.close();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int transfer(byte[] write, int writeOffset, byte[] read, int readOffset, int numberOfBytes) {
         byte[] prepared = new byte[numberOfBytes];
         // read the (potentially) prepared mock data
-        readNoLogging(prepared,0,numberOfBytes);
+        readNoLogging(prepared, 0, numberOfBytes);
         //write the provided data for later verification
         writeNoLogging(write, writeOffset, numberOfBytes);
 
@@ -109,7 +113,9 @@ public class MockSpi extends SpiBase implements Spi {
         return 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int write(byte b) {
         raw.add(b);
@@ -117,7 +123,9 @@ public class MockSpi extends SpiBase implements Spi {
         return 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int write(byte[] data, int offset, int length) {
         writeNoLogging(data, offset, length);
@@ -127,32 +135,38 @@ public class MockSpi extends SpiBase implements Spi {
 
     private void writeNoLogging(byte[] data, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, data.length);
-        for(int p = offset; p-offset < length; p++){
+        for (int p = offset; p - offset < length; p++) {
             raw.add(data[p]); // add to internal buffer
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int write(Charset charset, CharSequence data) {
         byte[] buffer = data.toString().getBytes(charset);
-        for(int p = 0; p < buffer.length; p++){
+        for (int p = 0; p < buffer.length; p++) {
             raw.add(buffer[p]); // add to internal buffer
         }
         logger.info("{} WRITE(\"{}\")", logPreamble, data);
         return data.length();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int read() {
-        if(raw.isEmpty()) return -1;
+        if (raw.isEmpty()) return -1;
         byte b = raw.pop();
         logger.info("{} READ (0x{})", logPreamble, StringUtil.toHexString(b));
         return b;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int read(byte[] buffer, int offset, int length) {
         Integer counter = readNoLogging(buffer, offset, length);
@@ -166,11 +180,11 @@ public class MockSpi extends SpiBase implements Spi {
     private Integer readNoLogging(byte[] buffer, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, buffer.length);
 
-        if(raw.isEmpty()) return null;
+        if (raw.isEmpty()) return null;
         int counter = 0;
-        for(int p = 0; p < length; p++) {
-            if(p+ offset > buffer.length) break;
-            if(raw.isEmpty()) break;
+        for (int p = 0; p < length; p++) {
+            if (p + offset > buffer.length) break;
+            if (raw.isEmpty()) break;
             buffer[offset + p] = raw.pop();
             counter++;
         }
