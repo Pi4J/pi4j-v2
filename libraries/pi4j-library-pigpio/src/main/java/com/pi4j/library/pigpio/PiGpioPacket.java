@@ -350,23 +350,17 @@ public class PiGpioPacket {
      * @throws IOException if an error occurs accessing {@code stream}.
      */
     public static PiGpioPacket decode(InputStream stream) throws IOException {
-        return PiGpioPacket.decode(stream.readNBytes(stream.available()));
-    }
-
-    /**
-     * <p>decode.</p>
-     *
-     * @param data an array of {@link byte} objects.
-     * @return a {@link com.pi4j.library.pigpio.PiGpioPacket} object.
-     */
-    public static PiGpioPacket decode(byte[] data) {
-        ByteBuffer rx = ByteBuffer.wrap(data);
-        rx.order(ByteOrder.LITTLE_ENDIAN);
-
         // check data length for minimum package size
-        if(data.length < 16){
-            throw new IllegalArgumentException("Insufficient number of data bytes bytes received; COUNT=" + data.length);
-        }
+//        int available = stream.available();
+//        if(available < 16){
+//            throw new IllegalArgumentException("Insufficient number of data bytes bytes received; COUNT=" + available);
+//        }
+
+        // read only header bytes
+        byte[] header = stream.readNBytes(16);
+
+        ByteBuffer rx = ByteBuffer.wrap(header);
+        rx.order(ByteOrder.LITTLE_ENDIAN);
 
         // parse packet parameters from raw received bytes
         PiGpioCmd cmd = PiGpioCmd.from(rx.getInt()); // CMD <4 bytes :: 0-3>
@@ -376,21 +370,35 @@ public class PiGpioPacket {
 
         // create new packet
         PiGpioPacket packet = new PiGpioPacket(cmd, p1, p2)
-                .p3(p3); // set RAW P3 value
+            .p3(p3); // set RAW P3 value
 
-        // apply any extra payload data (if available)
-        int remaining = rx.remaining();
+        int remaining = bytesToRead(packet, stream);
 
-        // bounds check remaining byte count
-        if(p3 < remaining) remaining = p3;
-
-        //logger.info("HAS-REMAINING: " + remaining);
-        if(remaining > 0){
-            var temp = new byte[remaining];
-            rx.get(temp, 0, remaining);
+        if(remaining > 0) {
+            var temp = stream.readNBytes(remaining);
             packet.data(temp);
         }
         return packet;
+    }
+
+    /**
+     * The packet may indicate the number of bytes to expect from the stream.
+     *
+     * E.g. I2C packets provide this value via {@link PiGpioPacket#p3}
+     *
+     * @param packet the packet being read
+     * @param stream incoming data
+     * @return the number of bytes to expect to read from the input stream
+     * @throws IOException
+     */
+    static int bytesToRead(PiGpioPacket packet, InputStream stream) throws IOException {
+        switch (packet.cmd) {
+            case I2CRI:
+            case I2CRD:
+                return packet.p3;
+            default:
+                return stream.available();
+        }
     }
 
     /**
@@ -428,5 +436,3 @@ public class PiGpioPacket {
             return String.format("CMD=%s(%d); P1=%d; P2=%d; P3=%d", cmd().name(), cmd().value(), p1(), p2(), p3());
     }
 }
-
-
