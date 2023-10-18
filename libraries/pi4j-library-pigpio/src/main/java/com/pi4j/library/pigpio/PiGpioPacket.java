@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -350,12 +351,6 @@ public class PiGpioPacket {
      * @throws IOException if an error occurs accessing {@code stream}.
      */
     public static PiGpioPacket decode(InputStream stream) throws IOException {
-        // check data length for minimum package size
-//        int available = stream.available();
-//        if(available < 16){
-//            throw new IllegalArgumentException("Insufficient number of data bytes bytes received; COUNT=" + available);
-//        }
-
         // read only header bytes
         byte[] header = stream.readNBytes(16);
 
