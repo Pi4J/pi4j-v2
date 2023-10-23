@@ -10,7 +10,7 @@ package com.pi4j.library.pigpio.impl;
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
  * **********************************************************************
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -211,21 +211,6 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
                 out.write(PiGpioPacket.encode(tx));
                 out.flush();
 
-                // wait until data has been received (timeout after 500 ms and throw exception)
-                int millis = 0;
-                try {
-                    while (in.available() < 16) {
-                        if (millis > 500) {   // timeout exception
-                            throw new PiGpioException("Command timed out; no response from host in 500 milliseconds");
-                        }
-                        millis += 5;
-                        Thread.sleep(5); // ... take a breath ..
-                    }
-                } catch (Exception e) {
-                    // wrap exception
-                    throw new PiGpioException(e.getMessage(), e);
-                }
-
                 // read receive packet
                 PiGpioPacket rx = PiGpioPacket.decode(in);
                 logger.trace("[RX] <- " + rx.toString());
@@ -278,6 +263,7 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
             // attempt to connect to PiGpio Daemon on remote Raspberry Pi
             try {
                 this.socket = new Socket(host, port);
+                this.socket.setSoTimeout(500);
             } catch (IOException e) {
                 throw new PiGpioException(e);
             }
