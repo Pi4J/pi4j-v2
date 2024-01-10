@@ -341,7 +341,7 @@ public class DefaultRuntime implements Runtime {
     }
 
     private void notifyInitListeners() {
-        // TODO
+        initializedEventManager.dispatch(new InitializedEvent(this.context));
     }
 
     @Override
