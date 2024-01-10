@@ -29,6 +29,7 @@
     <modules>
         <module>../pi4j-library-pigpio</module>
         <module>../pi4j-library-linuxfs</module>
+        <module>../pi4j-library-gpiod</module>
     </modules>
 
     <!-- BUILD INSTRUCTIONS -->
