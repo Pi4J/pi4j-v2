@@ -55,6 +55,12 @@ public class LinuxFsPwmProviderImpl extends PwmProviderBase implements LinuxFsPw
         this.pwmChip = pwmChip;
     }
 
+    @Override
+    public int getPriority() {
+        // the linux FS PWM driver should not be used over the pigpio
+        return 50;
+    }
+
     /**
      * <p>Constructor for LinuxFsPwmProviderImpl.</p>
      */

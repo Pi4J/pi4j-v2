@@ -38,6 +38,7 @@ import com.pi4j.exception.ShutdownException;
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.impl.DefaultPluginService;
 import com.pi4j.extension.impl.PluginStore;
+import com.pi4j.io.IOType;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.impl.DefaultRuntimePlatforms;
 import com.pi4j.platform.impl.RuntimePlatforms;
@@ -216,14 +217,12 @@ public class DefaultRuntime implements Runtime {
             plugins.clear();
 
             // container sets for providers and platforms to load
-            Set<Provider> providers = Collections.synchronizedSet(new HashSet<>());
-            Set<Platform> platforms = Collections.synchronizedSet(new HashSet<>());
-
             // copy all configured platforms and providers defined in the context configuration
-            providers.addAll(context().config().getProviders());
-            platforms.addAll(context().config().getPlatforms());
+            Set<Platform> platforms = new HashSet<>(context().config().getPlatforms());
+            Map<IOType, Provider> providers = new HashMap<>();
+            context().config().getProviders().forEach(provider -> addProvider(provider, providers));
 
-            // only attempt to load platforms and providers from the classpath if an auto detect option is enabled
+			// only attempt to load platforms and providers from the classpath if an auto detect option is enabled
             ContextConfig config = context.config();
             if(config.autoDetectPlatforms() || config.autoDetectProviders()) {
 
@@ -249,13 +248,15 @@ public class DefaultRuntime implements Runtime {
 
                         // if auto-detect providers is enabled,
                         // then add any detected providers to the collection to load
-                        if (config.autoDetectProviders())
-                            providers.addAll(store.providers);
+                        if (config.autoDetectProviders()) {
+							store.providers.forEach(provider -> addProvider(provider, providers));
+                        }
 
                         // if auto-detect platforms is enabled,
                         // then add any detected platforms to the collection to load
-                        if (config.autoDetectPlatforms())
-                            platforms.addAll(store.platforms);
+                        if (config.autoDetectPlatforms()) {
+							platforms.addAll(store.platforms);
+						}
 
                     } catch (Exception ex) {
                         // unable to initialize this provider instance
@@ -269,7 +270,7 @@ public class DefaultRuntime implements Runtime {
             this.registry.initialize();
 
             // initialize all providers
-            this.providers.initialize(providers);
+            this.providers.initialize(providers.values());
 
             // initialize all platforms
             this.platforms.initialize(platforms);
@@ -310,6 +311,33 @@ public class DefaultRuntime implements Runtime {
         notifyInitListeners();
 
         return this;
+    }
+
+    /**
+     * <p>Adds providers to the given collection, to later be used in the runtime after initialization.</p>
+     * <p>This method validates the priority of a {@link Provider}, and guarantees, that we don't have multiple
+     * providers for the same {@link IOType}</p>
+     *
+     * @param provider
+     * @param providers
+     */
+    private void addProvider(Provider provider, Map<IOType, Provider> providers) {
+        if (!providers.containsKey(provider.getType())) {
+            providers.put(provider.getType(), provider);
+        } else {
+            Provider existingProvider = providers.get(provider.getType());
+            if (provider.getPriority() <= existingProvider.getPriority()) {
+                if (existingProvider.getName().equals(provider.getName()))
+                    throw new InitializeException(
+                        provider.getType() + " with name " + provider.getName() + " is already registered.");
+                logger.warn("Ignoring provider {} {} as it has <= priority than {}", provider.getType(),
+                    provider.getName(), existingProvider.getName());
+            } else {
+                logger.warn("Overriding provider {} as it has > priority than {}", existingProvider.getName(),
+                    provider.getName());
+                providers.put(provider.getType(), provider);
+            }
+        }
     }
 
     private void notifyInitListeners() {

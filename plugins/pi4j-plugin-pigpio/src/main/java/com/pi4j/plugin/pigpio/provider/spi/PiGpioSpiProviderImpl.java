@@ -53,6 +53,12 @@ public class PiGpioSpiProviderImpl extends SpiProviderBase implements PiGpioSpiP
         this.piGpio = piGpio;
     }
 
+    @Override
+    public int getPriority() {
+        // the pigpio SPI driver should be used over the default
+        return 100;
+    }
+
     /** {@inheritDoc} */
     @Override
     public Spi create(SpiConfig config) {

@@ -53,6 +53,12 @@ public class PiGpioDigitalInputProviderImpl extends DigitalInputProviderBase imp
         this.piGpio = piGpio;
     }
 
+    @Override
+    public int getPriority() {
+        // the pigpio DI driver should be used over the default
+        return 100;
+    }
+
     /** {@inheritDoc} */
     @Override
     public DigitalInput create(DigitalInputConfig config) {

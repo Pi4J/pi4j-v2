@@ -47,6 +47,12 @@ public class MockDigitalInputProviderImpl extends DigitalInputProviderBase imple
         this.name = NAME;
     }
 
+    @Override
+    public int getPriority() {
+        // if the mock is loaded, then we most probably want to use it for testing
+        return 1000;
+    }
+
     /** {@inheritDoc} */
     @Override
     public DigitalInput create(DigitalInputConfig config) {

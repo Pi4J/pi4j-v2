@@ -48,6 +48,12 @@ public class MockSerialProviderImpl extends SerialProviderBase implements MockSe
         this.name = NAME;
     }
 
+    @Override
+    public int getPriority() {
+        // if the mock is loaded, then we most probably want to use it for testing
+        return 1000;
+    }
+
     /** {@inheritDoc} */
     @Override
     public Serial create(SerialConfig config) {

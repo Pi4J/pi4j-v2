@@ -47,6 +47,12 @@ public class MockI2CProviderImpl extends I2CProviderBase implements MockI2CProvi
         this.name = NAME;
     }
 
+    @Override
+    public int getPriority() {
+        // if the mock is loaded, then we most probably want to use it for testing
+        return 1000;
+    }
+
     /** {@inheritDoc} */
     @Override
     public I2C create(I2CConfig config) {
