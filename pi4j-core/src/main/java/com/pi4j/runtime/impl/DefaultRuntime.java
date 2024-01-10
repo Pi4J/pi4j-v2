@@ -217,10 +217,8 @@ public class DefaultRuntime implements Runtime {
             plugins.clear();
 
             // container sets for providers and platforms to load
-            // copy all configured platforms and providers defined in the context configuration
-            Set<Platform> platforms = new HashSet<>(context().config().getPlatforms());
+            Set<Platform> platforms = new HashSet<>();
             Map<IOType, Provider> providers = new HashMap<>();
-            context().config().getProviders().forEach(provider -> addProvider(provider, providers));
 
 			// only attempt to load platforms and providers from the classpath if an auto detect option is enabled
             ContextConfig config = context.config();
@@ -265,6 +263,16 @@ public class DefaultRuntime implements Runtime {
                     }
 				}
             }
+
+            // now add the explicit platforms and providers
+            platforms.addAll(context().config().getPlatforms());
+            context().config().getProviders().forEach(provider -> {
+                Provider replaced = providers.put(provider.getType(), provider);
+                if (replaced != null) {
+                    logger.warn("Replacing auto detected provider {} {} with provider {} from context config",
+                        provider.getType(), provider.getName(), replaced.getName());
+                }
+            });
 
             // initialize I/O registry
             this.registry.initialize();
