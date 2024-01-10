@@ -50,6 +50,7 @@ public class DefaultContextBuilder implements ContextBuilder {
     protected Logger logger = LoggerFactory.getLogger(DefaultContextBuilder.class);
 
     // auto detection flags
+    protected boolean autoDetectMockPlugins = false;
     protected boolean autoDetectPlatforms = false;
     protected boolean autoDetectProviders = false;
     protected boolean autoInject = false;
@@ -106,6 +107,11 @@ public class DefaultContextBuilder implements ContextBuilder {
     @Override
     public ContextBuilder defaultPlatform(String platformId) {
         this.defaultPlatformId = platformId;
+        return this;
+    }
+
+    public ContextBuilder autoDetectMockPlugins() {
+        this.autoDetectMockPlugins = true;
         return this;
     }
 
@@ -248,6 +254,10 @@ public class DefaultContextBuilder implements ContextBuilder {
                 return builder.defaultPlatformId;
             }
 
+            @Override
+            public boolean autoDetectMockPlugins() {
+                return builder.autoDetectMockPlugins;
+            }
             @Override
             public boolean autoDetectPlatforms() {
                 return builder.autoDetectPlatforms;

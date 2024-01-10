@@ -31,6 +31,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import com.pi4j.context.Context;
+import com.pi4j.context.ContextConfig;
 import com.pi4j.event.*;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
@@ -223,39 +224,45 @@ public class DefaultRuntime implements Runtime {
             platforms.addAll(context().config().getPlatforms());
 
             // only attempt to load platforms and providers from the classpath if an auto detect option is enabled
-            if(context.config().autoDetectPlatforms() || context.config().autoDetectProviders()) {
+            ContextConfig config = context.config();
+            if(config.autoDetectPlatforms() || config.autoDetectProviders()) {
 
                 // detect available Pi4J Plugins by scanning the classpath looking for plugin instances
-                var plugins = ServiceLoader.load(Plugin.class);
-                for (var plugin : plugins) {
-                    if (plugin != null) {
-                        logger.trace("detected plugin: [{}] in classpath; calling 'initialize()'",
-                                plugin.getClass().getName());
-                        try {
-                            // add plugin to internal cache
-                            this.plugins.add(plugin);
+				ServiceLoader<Plugin> plugins = ServiceLoader.load(Plugin.class);
+                for (Plugin plugin : plugins) {
+					if (plugin == null)
+                        continue;
 
-                            PluginStore store = new PluginStore();
-                            plugin.initialize(DefaultPluginService.newInstance(this.context(), store));
-
-                            // if auto-detect providers is enabled,
-                            // then add any detected providers to the collection to load
-                            if(context.config().autoDetectProviders())
-                                providers.addAll(store.providers);
-
-                            // if auto-detect platforms is enabled,
-                            // then add any detected platforms to the collection to load
-                            if(context.config().autoDetectPlatforms())
-                                platforms.addAll(store.platforms);
-
-                        } catch (Exception ex) {
-                            // unable to initialize this provider instance
-                            logger.error("unable to 'initialize()' plugin: [{}]; {}",
-                                    plugin.getClass().getName(), ex.getMessage(), ex);
-                            continue;
-                        }
+                    if (!config.autoDetectMockPlugins() && plugin.isMock()) {
+                        logger.trace("Ignoring mock plugin: [{}] in classpath", plugin.getClass().getName());
+                        continue;
                     }
-                }
+
+                    logger.trace("detected plugin: [{}] in classpath; calling 'initialize()'",
+                            plugin.getClass().getName());
+                    try {
+                        // add plugin to internal cache
+                        this.plugins.add(plugin);
+
+                        PluginStore store = new PluginStore();
+                        plugin.initialize(DefaultPluginService.newInstance(this.context(), store));
+
+                        // if auto-detect providers is enabled,
+                        // then add any detected providers to the collection to load
+                        if (config.autoDetectProviders())
+                            providers.addAll(store.providers);
+
+                        // if auto-detect platforms is enabled,
+                        // then add any detected platforms to the collection to load
+                        if (config.autoDetectPlatforms())
+                            platforms.addAll(store.platforms);
+
+                    } catch (Exception ex) {
+                        // unable to initialize this provider instance
+                        logger.error("unable to 'initialize()' plugin: [{}]; {}",
+                                plugin.getClass().getName(), ex.getMessage(), ex);
+                    }
+				}
             }
 
             // initialize I/O registry

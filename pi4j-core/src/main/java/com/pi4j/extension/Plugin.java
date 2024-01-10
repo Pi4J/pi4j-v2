@@ -53,4 +53,13 @@ public interface Plugin  {
     default void shutdown(Context context) throws ShutdownException {
         // do nothing <optional override>
     }
+
+    /**
+     * <p>Returns true if this plugin is a mock plugin, and shouldn't generally be used</p>
+     *
+     * @return a boolean
+     */
+    default boolean isMock() {
+        return false;
+    }
 }
