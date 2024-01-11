@@ -67,6 +67,16 @@ public interface Provider<PROVIDER_TYPE extends Provider, IO_TYPE extends IO, CO
      * @return a {@link com.pi4j.io.IOType} object.
      */
     default IOType getType() { return type(); }
+
+    /**
+     * Returns the priority for this provider, defaults to 0
+     *
+     * @return an integer
+     */
+    default int getPriority() {
+        return 0;
+    }
+
     /**
      * <p>isType.</p>
      *

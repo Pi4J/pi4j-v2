@@ -86,6 +86,13 @@ public interface ContextBuilder extends Builder<Context> {
     ContextBuilder defaultPlatform(String platformId);
 
     /**
+     * <p>autoDetectMockPlugins.</p>
+     *
+     * @return a {@link com.pi4j.context.ContextBuilder} object.
+     */
+    ContextBuilder autoDetectMockPlugins();
+
+    /**
      * <p>autoDetectPlatforms.</p>
      *
      * @return a {@link com.pi4j.context.ContextBuilder} object.

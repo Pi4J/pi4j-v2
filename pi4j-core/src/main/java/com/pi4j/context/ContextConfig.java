@@ -57,6 +57,12 @@ public interface ContextConfig {
         return platforms();
     }
     /**
+     * <p>autoDetectMockPlugins.</p>
+     *
+     * @return a boolean.
+     */
+    boolean autoDetectMockPlugins();
+    /**
      * <p>autoDetectPlatforms.</p>
      *
      * @return a boolean.

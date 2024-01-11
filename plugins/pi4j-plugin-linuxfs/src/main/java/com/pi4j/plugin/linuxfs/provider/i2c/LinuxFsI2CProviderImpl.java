@@ -45,6 +45,12 @@ public class LinuxFsI2CProviderImpl extends I2CProviderBase implements LinuxFsI2
     }
 
     @Override
+    public int getPriority() {
+        // the linux FS I2C driver should be used over the pigpio
+        return 150;
+    }
+
+    @Override
     public I2C create(I2CConfig config) {
         synchronized (this) {
             LinuxFsI2CBus i2CBus = this.i2CBusMap.computeIfAbsent(config.getBus(), busNr -> new LinuxFsI2CBus(config));

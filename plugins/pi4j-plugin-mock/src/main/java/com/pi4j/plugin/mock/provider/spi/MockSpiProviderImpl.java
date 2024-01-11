@@ -47,6 +47,12 @@ public class MockSpiProviderImpl extends SpiProviderBase implements MockSpiProvi
         this.name = NAME;
     }
 
+    @Override
+    public int getPriority() {
+        // if the mock is loaded, then we most probably want to use it for testing
+        return 1000;
+    }
+
     /** {@inheritDoc} */
     @Override
     public Spi create(SpiConfig config) {

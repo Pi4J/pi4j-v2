@@ -54,6 +54,12 @@ public class PiGpioPwmProviderImpl extends PwmProviderBase implements PiGpioPwmP
         this.piGpio = piGpio;
     }
 
+    @Override
+    public int getPriority() {
+        // the pigpio PWM driver should be used over the default
+        return 100;
+    }
+
     /** {@inheritDoc} */
     @Override
     public Pwm create(PwmConfig config) {

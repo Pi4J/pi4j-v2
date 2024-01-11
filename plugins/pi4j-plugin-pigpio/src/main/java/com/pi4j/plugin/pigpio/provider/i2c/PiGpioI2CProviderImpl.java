@@ -53,6 +53,12 @@ public class PiGpioI2CProviderImpl extends I2CProviderBase implements PiGpioI2CP
         this.piGpio = piGpio;
     }
 
+    @Override
+    public int getPriority() {
+        // the pigpio I2C driver should be used over the default
+        return 100;
+    }
+
     /** {@inheritDoc} */
     @Override
     public I2C create(I2CConfig config) {

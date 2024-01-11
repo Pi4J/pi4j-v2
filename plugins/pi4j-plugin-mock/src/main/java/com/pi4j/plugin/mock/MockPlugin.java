@@ -48,7 +48,7 @@ import com.pi4j.provider.Provider;
  */
 public class MockPlugin implements Plugin {
 
-    private Provider providers[] = {
+    private final Provider[] providers = {
             MockAnalogInputProvider.newInstance(),
             MockAnalogOutputProvider.newInstance(),
             MockDigitalInputProvider.newInstance(),
@@ -59,13 +59,16 @@ public class MockPlugin implements Plugin {
             MockSerialProvider.newInstance(),
     };
 
+    @Override
+    public boolean isMock() {
+        return true;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void initialize(PluginService service) {
 
         // register the Mock Platform and all Mock I/O Providers with the plugin service
-        service.register(new MockPlatform())
-               .register(providers);
-
+        service.register(new MockPlatform()).register(providers);
     }
 }

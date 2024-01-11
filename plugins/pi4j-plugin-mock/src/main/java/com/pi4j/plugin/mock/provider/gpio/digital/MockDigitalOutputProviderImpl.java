@@ -47,6 +47,12 @@ public class MockDigitalOutputProviderImpl extends DigitalOutputProviderBase imp
         this.name = NAME;
     }
 
+    @Override
+    public int getPriority() {
+        // if the mock is loaded, then we most probably want to use it for testing
+        return 1000;
+    }
+
     /** {@inheritDoc} */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
