@@ -135,6 +135,13 @@ public class GpioLine {
         return GpioD.lineEventWait(this, timeoutNs);
     }
 
-    //TODO event read
+    public GpioLineEvent eventRead() {
+        GpioLineEvent event = new GpioLineEvent();
+        GpioD.lineEventRead(this, event);
+        return event;
+    }
 
+    public GpioLineEvent[] eventReadMultiple(int maxRead) {
+        return GpioD.lineEventReadMultiple(this, maxRead);
+    }
 }

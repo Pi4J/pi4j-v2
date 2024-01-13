@@ -583,7 +583,7 @@ public class GpioD {
             this.val = val;
         }
 
-        static LINE_EVENT fromByte(byte val) {
+        static LINE_EVENT fromInt(int val) {
             for (LINE_EVENT dir : LINE_EVENT.values()) {
                 if (dir.val == val) {
                     return dir;
@@ -613,7 +613,7 @@ public class GpioD {
 
     private static native int c_gpiod_line_event_wait_bulk(long lineBulkPtr, long timeoutNs, long eventBulkPtr);
 
-    static boolean lineBulkEventRead(GpioLine line, GpioLineEvent event) {
+    static boolean lineEventRead(GpioLine line, GpioLineEvent event) {
         int result = c_gpiod_line_event_read(line.getCPtr(), event.getCPtr());
         if(result < 0) {
             throw new GpioDException("c_gpiod_line_event_read failed!");
@@ -623,13 +623,25 @@ public class GpioD {
 
     private static native int c_gpiod_line_event_read(long linePtr, long eventPtr);
 
-    static int lineBulkEventRead(GpioLine line, GpioLineEvent[] event) {
-        int num_read = c_gpiod_line_event_read_multiple(line.getCPtr(),
-            Arrays.stream(event).mapToLong(GpioLineEvent::getCPtr).toArray(), event.length);
-        if(num_read < 0) {
+    static GpioLineEvent[] lineEventReadMultiple(GpioLine line, int maxRead) {
+        GpioLineEvent[] events = new GpioLineEvent[maxRead];
+        for(int i = 0; i < events.length; i++) {
+            events[i] = new GpioLineEvent();
+        }
+
+        int numRead = c_gpiod_line_event_read_multiple(line.getCPtr(),
+            Arrays.stream(events).mapToLong(GpioLineEvent::getCPtr).toArray(), events.length);
+        if(numRead < 0) {
             throw new GpioDException("c_gpiod_line_event_read_multiple failed!");
         }
-        return num_read;
+
+        GpioLineEvent[] result = new GpioLineEvent[numRead];
+        if(numRead == maxRead) {
+            result = events;
+        } else {
+            System.arraycopy(events, 0, result, 0, result.length);
+        }
+        return result;
     }
 
     private static native int c_gpiod_line_event_read_multiple(long linePtr, long[] eventPtr, int num_events);
@@ -733,6 +745,34 @@ public class GpioD {
     }
 
     private static native Long gpiod_line_iter_next(long lineIterPtr);
+
+    static long lineEventGetTimespec(GpioLineEvent event) {
+        return c_gpiod_line_event_get_timespec(event.getCPtr());
+    }
+
+    private static native long c_gpiod_line_event_get_timespec(long lineEventPtr);
+
+    static LINE_EVENT lineEventGetType(GpioLineEvent event) {
+        return LINE_EVENT.fromInt(c_gpiod_line_event_get_type(event.getCPtr()));
+    }
+
+    private static native int c_gpiod_line_event_get_type(long lineEventPtr);
+
+    static long lineEventNew() {
+        Long ptr = c_gpiod_line_event_new();
+        if(ptr == null) {
+            throw new GpioDException("c_gpiod_line_event_new failed!");
+        }
+        return ptr;
+    }
+
+    private static native Long c_gpiod_line_event_new();
+
+    static void lineEventFree(GpioLineEvent event) {
+        c_gpiod_line_event_free(event.getCPtr());
+    }
+
+    private static native void c_gpiod_line_event_free(long eventPtr);
 
     static String getVersion() {
         return c_gpiod_version_string();

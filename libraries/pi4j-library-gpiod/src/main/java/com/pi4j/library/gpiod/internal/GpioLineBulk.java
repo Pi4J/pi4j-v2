@@ -106,13 +106,8 @@ public class GpioLineBulk {
 
     public GpioLineBulk eventWait(long timeoutNs) {
         GpioLineBulk bulk = new GpioLineBulk();
-        if(GpioD.lineBulkEventWait(this, timeoutNs, bulk)) {
-            return bulk;
-        }
-        return null;
+        GpioD.lineBulkEventWait(this, timeoutNs, bulk);
+        return bulk;
     }
-
-    //TODO event read
-
 
 }
