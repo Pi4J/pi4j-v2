@@ -104,5 +104,15 @@ public class GpioLineBulk {
         GpioD.lineSetDirectionOutputBulk(this, values);
     }
 
+    public GpioLineBulk eventWait(long timeoutNs) {
+        GpioLineBulk bulk = new GpioLineBulk();
+        if(GpioD.lineBulkEventWait(this, timeoutNs, bulk)) {
+            return bulk;
+        }
+        return null;
+    }
+
+    //TODO event read
+
 
 }
