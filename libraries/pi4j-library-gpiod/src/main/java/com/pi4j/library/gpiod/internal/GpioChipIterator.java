@@ -13,6 +13,10 @@ public class GpioChipIterator implements Iterator<GpioChip> {
         this.cPtr = cPtr;
     }
 
+    public GpioChipIterator() {
+        this(GpioD.chipIterNew());
+    }
+
     long getCPtr() {
         return this.cPtr;
     }

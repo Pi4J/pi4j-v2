@@ -666,12 +666,12 @@ public class GpioD {
 
     private static native long gpiod_line_get_chip(long linePtr);
 
-    static GpioChipIterator chipIterNew() {
+    static long chipIterNew() {
         Long ptr = gpiod_chip_iter_new();
         if(ptr == null) {
             throw new GpioDException("gpiod_chip_iter_new failed!");
         }
-        return new GpioChipIterator(ptr);
+        return ptr;
     }
 
     private static native Long gpiod_chip_iter_new();
@@ -708,12 +708,12 @@ public class GpioD {
 
     private static native Long c_gpiod_chip_iter_next_noclose(long chipIterPtr);
 
-    static GpioLineIterator lineIterNew(GpioChip chip) {
+    static long lineIterNew(GpioChip chip) {
         Long ptr = gpiod_line_iter_new(chip.getCPtr());
         if(ptr == null) {
             throw new GpioDException("gpiod_line_iter_new failed!");
         }
-        return new GpioLineIterator(ptr);
+        return ptr;
     }
 
     private static native Long gpiod_line_iter_new(long chipPtr);
