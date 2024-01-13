@@ -15,8 +15,8 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1c
     if(chip == NULL) {
       return NULL;
     }
-    jclass cls = (*env)->FindClass(env,"java/lang/Long");
-    jmethodID longConstructor = (*env)->GetMethodID(env,cls,"<init>","(J)V");
+    jclass cls = (*env)->FindClass(env, "java/lang/Long");
+    jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>", "(J)V");
     return (*env)->NewObject(env, cls, longConstructor, (jlong) chip);
 }
 
@@ -67,3 +67,39 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip
     return returnVal;
 }
 
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip_1get_1all_1lines
+  (JNIEnv* env, jclass javaClass, jlong chipPtr, jlong lineBulkPtr) {
+    return gpiod_chip_get_all_lines((struct gpiod_chip*) chipPtr, (struct gpiod_line_bulk*) lineBulkPtr);
+}
+
+JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip_1find_1line
+  (JNIEnv* env, jclass javaClass, jlong chipPtr, jstring name) {
+  const char* c_name = (*env)->GetStringUTFChars(env, name, NULL);
+  struct gpiod_line* line = gpiod_chip_find_line((struct gpiod_chip*) chipPtr, c_name);
+  (*env)->ReleaseStringUTFChars(env, name, c_name);
+
+  if(line == NULL) {
+    return NULL;
+  }
+  jclass cls = (*env)->FindClass(env, "java/lang/Long");
+  jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>","(J)V");
+  return (*env)->NewObject(env, cls, longConstructor, (jlong) line);
+}
+
+JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1bulk_1free
+  (JNIEnv* env, jclass javaClass, jlong bulkPtr) {
+    free((struct gpiod_line_bulk*) bulkPtr);
+}
+
+JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1bulk_1init
+  (JNIEnv* env, jclass javaClass, jlong bulkPtr) {
+    gpiod_line_bulk_init((struct gpiod_line_bulk*) bulkPtr);
+}
+
+JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1bulk_1new
+  (JNIEnv* env, jclass javaClass) {
+    struct gpiod_line_bulk* bulkPtr = (struct gpiod_line_bulk*) malloc(sizeof(struct gpiod_line_bulk));
+    jclass cls = (*env)->FindClass(env, "java/lang/Long");
+    jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>","(J)V");
+    return (*env)->NewObject(env, cls, longConstructor, (jlong) bulkPtr);
+}

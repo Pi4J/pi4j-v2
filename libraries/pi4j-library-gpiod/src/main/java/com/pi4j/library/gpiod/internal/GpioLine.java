@@ -1,5 +1,7 @@
 package com.pi4j.library.gpiod.internal;
 
+import java.util.Objects;
+
 public class GpioLine {
     private final long cPtr;
 
@@ -143,5 +145,18 @@ public class GpioLine {
 
     public GpioLineEvent[] eventReadMultiple(int maxRead) {
         return GpioD.lineEventReadMultiple(this, maxRead);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GpioLine gpioLine = (GpioLine) o;
+        return cPtr == gpioLine.cPtr;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cPtr);
     }
 }
