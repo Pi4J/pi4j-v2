@@ -5,6 +5,9 @@ import java.util.Iterator;
 public class GpioChipIterator implements Iterator<GpioChip> {
 
     private final long cPtr;
+    private boolean noCoseCurrent;
+    private GpioChip next;
+    private GpioChip current;
 
     GpioChipIterator(long cPtr) {
         this.cPtr = cPtr;
@@ -15,12 +18,42 @@ public class GpioChipIterator implements Iterator<GpioChip> {
     }
 
     @Override
+    protected void finalize() {
+        if(noCoseCurrent) {
+            GpioD.chipIterFreeNoClose(this);
+        } else {
+            GpioD.chipIterFree(this);
+        }
+    }
+
+    @Override
     public boolean hasNext() {
-        return false;
+        if(next == null) {
+            next = GpioD.chipIterNextNoClose(this);
+        }
+        return next != null;
     }
 
     @Override
     public GpioChip next() {
-        return null;
+        if(next == null) {
+            if(noCoseCurrent) {
+                current = GpioD.chipIterNextNoClose(this);
+            } else {
+                current = GpioD.chipIterNext(this);
+            }
+        } else {
+            if(current != null && !noCoseCurrent) {
+                GpioD.chipClose(current);
+            }
+            current = next;
+            noCoseCurrent = false;
+            next = null;
+        }
+        return current;
+    }
+
+    public void noCloseCurrent() {
+        this.noCoseCurrent = true;
     }
 }
