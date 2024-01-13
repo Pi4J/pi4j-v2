@@ -75,6 +75,25 @@ public class GpioD {
 
     private static native Long c_gpiod_chip_find_line(long chipPtr, String name);
 
+    static void lineBulkFree(GpioLineBulk lineBulk) {
+        c_gpiod_line_bulk_free(lineBulk.getCPtr());
+    }
+
+    private static native Long c_gpiod_line_bulk_free(long lineBulkPtr);
+
+    private static native void gpiod_line_bulk_init(long lineBulkPtr);
+
+    static long lineBulkNew() {
+        Long ptr = c_gpiod_line_bulk_new();
+        if(ptr == null) {
+            throw new GpioDException("c_gpiod_line_bulk_new failed!");
+        }
+        gpiod_line_bulk_init(ptr);
+        return ptr;
+    }
+
+    private static native Long c_gpiod_line_bulk_new();
+
     static void lineBulkAdd(GpioLineBulk lineBulk, GpioLine line) {
         c_gpiod_line_bulk_add(lineBulk.getCPtr(), line.getCPtr());
     }
@@ -161,6 +180,12 @@ public class GpioD {
 
     private static native String c_gpiod_line_name(long linePtr);
 
+    static String lineGetConsumer(GpioLine line) {
+        return gpiod_line_consumer(line.getCPtr());
+    }
+
+    private static native String gpiod_line_consumer(long linePtr);
+
     static LINE_DIRECTION lineGetDirection(GpioLine line) {
         return LINE_DIRECTION.fromInt(c_gpiod_line_direction(line.getCPtr()));
     }
@@ -197,8 +222,10 @@ public class GpioD {
 
     private static native boolean c_gpiod_line_is_open_source(long linePtr);
 
-    static  int lineUpdate(GpioLine line) {
-        return c_gpiod_line_update(line.getCPtr());
+    static void lineUpdate(GpioLine line) {
+        if(c_gpiod_line_update(line.getCPtr()) < 0) {
+            throw new GpioDException("c_gpiod_line_update failed!");
+        }
     }
 
     private static native int c_gpiod_line_update(long linePtr);
@@ -335,8 +362,8 @@ public class GpioD {
 
     private static native int c_gpiod_line_request_both_edges_events_flags(long linePtr, String consumer, int flags);
 
-    static void lineRequestBulk(GpioLineBulk lineBulk, GpioLine line, int[] defaultVals) {
-        if(c_gpiod_line_request_bulk(lineBulk.getCPtr(), line.getCPtr(), defaultVals) < 0) {
+    static void lineRequestBulk(GpioLineBulk lineBulk, GpioLineRequest lineRequest, int[] defaultVals) {
+        if(c_gpiod_line_request_bulk(lineBulk.getCPtr(), lineRequest.getCPtr(), defaultVals) < 0) {
             throw new GpioDException("c_gpiod_line_request_bulk failed!");
         }
     }
@@ -351,7 +378,7 @@ public class GpioD {
 
     private static native int c_gpiod_line_request_bulk_input(long lineBulkPtr, String consumer);
 
-    static void lineRequestBulk(GpioLineBulk lineBulk, String consumer, int[] defaultVals) {
+    static void lineRequestBulkOutput(GpioLineBulk lineBulk, String consumer, int[] defaultVals) {
         if(c_gpiod_line_request_bulk_output(lineBulk.getCPtr(), consumer, defaultVals) < 0) {
             throw new GpioDException("c_gpiod_line_request_bulk_output failed!");
         }
@@ -435,8 +462,8 @@ public class GpioD {
 
     private static native void c_gpiod_line_release_bulk(long lineBulkPtr);
 
-    static void lineIsRequested(GpioLine line) {
-        c_gpiod_line_is_requested(line.getCPtr());
+    static boolean lineIsRequested(GpioLine line) {
+        return c_gpiod_line_is_requested(line.getCPtr());
     }
 
     private static native boolean c_gpiod_line_is_requested(long linePtr);
@@ -448,7 +475,11 @@ public class GpioD {
     private static native boolean c_gpiod_line_is_free(long linePtr);
 
     static int lineGetValue(GpioLine line) {
-        return c_gpiod_line_get_value(line.getCPtr());
+        int result = c_gpiod_line_get_value(line.getCPtr());
+        if(result < 0) {
+            throw new GpioDException("c_gpiod_line_get_value failed!");
+        }
+        return result;
     }
 
     private static native int c_gpiod_line_get_value(long linePtr);
@@ -472,24 +503,24 @@ public class GpioD {
 
     private static native int c_gpiod_line_set_value(long linePtr, int value);
 
-    static void lineBulkSetValue(GpioLine line, int[] values) {
-        if(c_gpiod_line_set_value_bulk(line.getCPtr(), values) < 0) {
+    static void lineBulkSetValue(GpioLineBulk lineBulk, int[] values) {
+        if(c_gpiod_line_set_value_bulk(lineBulk.getCPtr(), values) < 0) {
             throw new GpioDException("c_gpiod_line_set_value_bulk failed!");
         }
     }
 
     private static native int c_gpiod_line_set_value_bulk(long lineBulkPtr, int[] values);
 
-    static void lineSetConfig(GpioLine line, int direction, int flags, int value) {
-        if(c_gpiod_line_set_config(line.getCPtr(), direction, flags, value) < 0) {
+    static void lineSetConfig(GpioLine line, LINE_REQUEST direction, int flags, int value) {
+        if(c_gpiod_line_set_config(line.getCPtr(), direction.val, flags, value) < 0) {
             throw new GpioDException("c_gpiod_line_set_config failed!");
         }
     }
 
     private static native int c_gpiod_line_set_config(long linePtr, int direction, int flags, int value);
 
-    static void lineBulkSetConfig(GpioLineBulk lineBulk, int direction, int flags, int[] values) {
-        if(c_gpiod_line_set_config_bulk(lineBulk.getCPtr(), direction, flags, values) < 0) {
+    static void lineBulkSetConfig(GpioLineBulk lineBulk, LINE_REQUEST direction, int flags, int[] values) {
+        if(c_gpiod_line_set_config_bulk(lineBulk.getCPtr(), direction.val, flags, values) < 0) {
             throw new GpioDException("c_gpiod_line_set_config_bulk failed!");
         }
     }
@@ -520,7 +551,7 @@ public class GpioD {
 
     private static native int c_gpiod_line_set_direction_input(long linePtr);
 
-    static void lineSetDirectionInputBulk(GpioLineBulk lineBulk) {
+    static void lineSetDirectionOutputBulk(GpioLineBulk lineBulk) {
         if(c_gpiod_line_set_direction_input_bulk(lineBulk.getCPtr()) < 0) {
             throw new GpioDException("c_gpiod_line_set_direction_input_bulk failed!");
         }
@@ -536,7 +567,7 @@ public class GpioD {
 
     private static native int c_gpiod_line_set_direction_output(long linePtr, int value);
 
-    static void lineSetDirectionInputBulk(GpioLineBulk lineBulk, int[] values) {
+    static void lineSetDirectionOutputBulk(GpioLineBulk lineBulk, int[] values) {
         if(c_gpiod_line_set_direction_output_bulk(lineBulk.getCPtr(), values) < 0) {
             throw new GpioDException("c_gpiod_line_set_direction_output_bulk failed!");
         }

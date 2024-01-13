@@ -19,9 +19,16 @@ public class GpioChipIterator implements Iterator<GpioChip> {
 
     @Override
     protected void finalize() {
-        if(noCoseCurrent) {
-            GpioD.chipIterFreeNoClose(this);
+        if(next == null) {
+            if(noCoseCurrent) {
+                GpioD.chipIterFreeNoClose(this);
+            } else {
+                GpioD.chipIterFree(this);
+            }
         } else {
+            if(!noCoseCurrent) {
+                GpioD.chipClose(current);
+            }
             GpioD.chipIterFree(this);
         }
     }

@@ -1,6 +1,8 @@
 package com.pi4j.library.gpiod.internal;
 
-public class GpioChip {
+import java.io.Closeable;
+
+public class GpioChip implements Closeable {
     private final long cPtr;
 
     GpioChip(long cPtr) {
@@ -10,4 +12,41 @@ public class GpioChip {
     long getCPtr() {
         return this.cPtr;
     }
+
+    public void close() {
+        GpioD.chipClose(this);
+    }
+
+    public String getName() {
+        return GpioD.chipGetName(this);
+    }
+
+    public String getLabel() {
+        return GpioD.chipGetLabel(this);
+    }
+
+    public int getNumLines() {
+        return GpioD.chipGetNumLines(this);
+    }
+
+    public GpioLine getLine(int offset) {
+        return GpioD.chipGetLine(this, offset);
+    }
+
+    public GpioLineBulk getLines(int[] offsets) {
+        GpioLineBulk bulk = new GpioLineBulk();
+        GpioD.chipGetLines(this, offsets, bulk);
+        return bulk;
+    }
+
+    public GpioLineBulk getLines() {
+        GpioLineBulk bulk = new GpioLineBulk();
+        GpioD.chipGetAllLines(this, bulk);
+        return bulk;
+    }
+
+    public GpioLine getLine(String name) {
+        return GpioD.chipGetLine(this, name);
+    }
+
 }
