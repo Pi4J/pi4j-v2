@@ -1,10 +1,12 @@
 package com.pi4j.library.gpiod.internal;
 
+import java.util.Arrays;
+
 public class GpioD {
     // C library: https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/include/gpiod.h?h=v1.6.x
 
 
-    GpioChip chipOpen(String path) {
+    static GpioChip chipOpen(String path) {
         Long ptr = c_gpiod_chip_open(path);
         if(ptr == null) {
             throw new GpioDException("c_gpiod_chip_open failed!");
@@ -12,58 +14,58 @@ public class GpioD {
         return new GpioChip(ptr);
     }
 
-    private native Long c_gpiod_chip_open(String path);
+    private static native Long c_gpiod_chip_open(String path);
 
-    void chipClose(GpioChip chip) {
+    static void chipClose(GpioChip chip) {
         c_gpiod_chip_close(chip.getCPtr());
     }
 
-    private native void c_gpiod_chip_close(long chipPtr);
+    private static native void c_gpiod_chip_close(long chipPtr);
 
-    String chipGetName(GpioChip chip) {
+    static String chipGetName(GpioChip chip) {
         return c_gpiod_chip_name(chip.getCPtr());
     }
 
-    private native String c_gpiod_chip_name(long chipPtr);
+    private static native String c_gpiod_chip_name(long chipPtr);
 
-    String chipGetLabel(GpioChip chip) {
+    static String chipGetLabel(GpioChip chip) {
         return c_gpiod_chip_label(chip.getCPtr());
     }
 
-    private native String c_gpiod_chip_label(long chipPtr);
+    private static native String c_gpiod_chip_label(long chipPtr);
 
-    int chipGetNumLines(GpioChip chip) {
+    static int chipGetNumLines(GpioChip chip) {
         return c_gpiod_chip_num_lines(chip.getCPtr());
     }
 
-    private native int c_gpiod_chip_num_lines(long chipPtr);
+    private static native int c_gpiod_chip_num_lines(long chipPtr);
 
-    GpioLine chipGetLine(GpioChip chip, int offset) {
+    static GpioLine chipGetLine(GpioChip chip, int offset) {
         Long linePtr = c_gpiod_chip_get_line(chip.getCPtr(), offset);
         if (linePtr == null) {
             throw new GpioDException("c_gpiod_chip_get_line failed!");
         }
         return new GpioLine(linePtr);
     }
-    private native Long c_gpiod_chip_get_line(long chipPtr, int offset);
+    private static native Long c_gpiod_chip_get_line(long chipPtr, int offset);
 
-    void chipGetLines(GpioChip chip, int[] offsets, GpioLineBulk lineBulk) {
+    static void chipGetLines(GpioChip chip, int[] offsets, GpioLineBulk lineBulk) {
         if(c_gpiod_chip_get_lines(chip.getCPtr(), offsets, offsets.length, lineBulk.getCPtr()) < 0) {
             throw new GpioDException("c_gpiod_chip_get_lines failed!");
         }
     }
 
-    private native int c_gpiod_chip_get_lines(long chipPtr, int[] offsets, int numOffsets, long lineBulkPtr);
+    private static native int c_gpiod_chip_get_lines(long chipPtr, int[] offsets, int numOffsets, long lineBulkPtr);
 
-    void chipGetAllLines(GpioChip chip, GpioLineBulk lineBulk) {
+    static void chipGetAllLines(GpioChip chip, GpioLineBulk lineBulk) {
         if(c_gpiod_chip_get_all_lines(chip.getCPtr(), lineBulk.getCPtr()) < 0) {
             throw new GpioDException("c_gpiod_chip_get_all_lines failed!");
         }
     }
 
-    private native int c_gpiod_chip_get_all_lines(long chipPtr, long lineBulkPtr);
+    private static native int c_gpiod_chip_get_all_lines(long chipPtr, long lineBulkPtr);
 
-    GpioLine chipGetLine(GpioChip chip, String name) {
+    static GpioLine chipGetLine(GpioChip chip, String name) {
         Long linePtr = c_gpiod_chip_find_line(chip.getCPtr(), name);
         if (linePtr == null) {
             throw new GpioDException("c_gpiod_chip_find_line failed!");
@@ -71,13 +73,26 @@ public class GpioD {
         return new GpioLine(linePtr);
     }
 
-    private native Long c_gpiod_chip_find_line(long chipPtr, String name);
+    private static native Long c_gpiod_chip_find_line(long chipPtr, String name);
 
-    private native void c_gpiod_line_bulk_add(long lineBulkPtr, long linePtr);
+    static void lineBulkAdd(GpioLineBulk lineBulk, GpioLine line) {
+        c_gpiod_line_bulk_add(lineBulk.getCPtr(), line.getCPtr());
+    }
 
-    private native long c_gpiod_line_bulk_get_line(long lineBulkPtr, int offset);
+    private static native void c_gpiod_line_bulk_add(long lineBulkPtr, long linePtr);
 
-    private native int c_gpiod_line_bulk_num_lines(long lineBulkPtr);
+    static GpioLine lineBulkGetLine(GpioLineBulk lineBulk, int offset) {
+        //TODO can be Null (?) or worse if array out of bounds? Maybe also return the same object if object with same pointer exists already.
+        return new GpioLine(c_gpiod_line_bulk_get_line(lineBulk.getCPtr(), offset));
+    }
+
+    private static native long c_gpiod_line_bulk_get_line(long lineBulkPtr, int offset);
+
+    static int lineBulkGetNumLines(GpioLineBulk lineBulk) {
+        return c_gpiod_line_bulk_num_lines(lineBulk.getCPtr());
+    }
+
+    private static native int c_gpiod_line_bulk_num_lines(long lineBulkPtr);
 
 
     enum LINE_DIRECTION {
@@ -134,25 +149,65 @@ public class GpioD {
         }
     }
 
-    private native int gpiod_line_offset(long linePtr);
+    static int lineGetOffset(GpioLine line) {
+        return c_gpiod_line_offset(line.getCPtr());
+    }
 
-    private native String gpiod_line_name(long linePtr);
+    private static native int c_gpiod_line_offset(long linePtr);
 
-    private native int gpiod_line_direction(long linePtr);
+    static String lineGetName(GpioLine line) {
+        return c_gpiod_line_name(line.getCPtr());
+    }
 
-    private native int gpiod_line_active_state(long linePtr);
+    private static native String c_gpiod_line_name(long linePtr);
 
-    private native int gpiod_line_bias(long linePtr);
+    static LINE_DIRECTION lineGetDirection(GpioLine line) {
+        return LINE_DIRECTION.fromInt(c_gpiod_line_direction(line.getCPtr()));
+    }
 
-    private native boolean gpiod_line_is_used(long linePtr);
+    private static native int c_gpiod_line_direction(long linePtr);
 
-    private native boolean gpiod_line_is_open_drain(long linePtr);
+    static LINE_ACTIVE_STATE lineGetActiveState(GpioLine line) {
+        return LINE_ACTIVE_STATE.fromInt(c_gpiod_line_active_state(line.getCPtr()));
+    }
 
-    private native boolean gpiod_line_is_open_source(long linePtr);
+    private static native int c_gpiod_line_active_state(long linePtr);
 
-    private native int gpiod_line_update(long linePtr);
+    static LINE_BIAS lineGetBias(GpioLine line) {
+        return LINE_BIAS.fromInt(c_gpiod_line_bias(line.getCPtr()));
+    }
 
-    private native boolean gpiod_line_needs_update(long linePtr);
+    private static native int c_gpiod_line_bias(long linePtr);
+
+    static boolean lineIsUsed(GpioLine line) {
+        return c_gpiod_line_is_used(line.getCPtr());
+    }
+
+    private static native boolean c_gpiod_line_is_used(long linePtr);
+
+    static  boolean lineIsOpenDrain(GpioLine line) {
+        return c_gpiod_line_is_open_drain(line.getCPtr());
+    }
+
+    private static native boolean c_gpiod_line_is_open_drain(long linePtr);
+
+    static  boolean lineIsOpenSource(GpioLine line) {
+        return c_gpiod_line_is_open_source(line.getCPtr());
+    }
+
+    private static native boolean c_gpiod_line_is_open_source(long linePtr);
+
+    static  int lineUpdate(GpioLine line) {
+        return c_gpiod_line_update(line.getCPtr());
+    }
+
+    private static native int c_gpiod_line_update(long linePtr);
+
+    static  boolean lineIsNeedsUpdate(GpioLine line) {
+        return c_gpiod_line_needs_update(line.getCPtr());
+    }
+
+    private static native boolean c_gpiod_line_needs_update(long linePtr);
 
     enum LINE_REQUEST {
         DIRECTION_AS_IS(1), DIRECTION_INPUT(2), DIRECTION_OUTPUT(3), EVENT_FALLING_EDGE(4),
@@ -191,5 +246,467 @@ public class GpioD {
             throw new IllegalStateException("Unexpected LINE_REQUEST_FLAG value: " + val);
         }
     }
+
+    static void lineRequest(GpioLine line, GpioLineRequest request, int defaultVal) {
+        if(c_gpiod_line_request(line.getCPtr(), request.getCPtr(), defaultVal) < 0) {
+            throw new GpioDException("c_gpiod_line_request failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request(long linePtr, long lineRequestPtr, int default_val);
+
+    static void lineRequestInput(GpioLine line, String consumer) {
+        if(c_gpiod_line_request_input(line.getCPtr(), consumer) < 0) {
+            throw new GpioDException("c_gpiod_line_request_input failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_input(long linePtr, String consumer);
+
+    static void lineRequestOutput(GpioLine line, String consumer, int defaultVal) {
+        if(c_gpiod_line_request_output(line.getCPtr(), consumer, defaultVal) < 0) {
+            throw new GpioDException("c_gpiod_line_request_output failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_output(long linePtr, String consumer, int default_val);
+
+    static void lineRequestRisingEdgeEvents(GpioLine line, String consumer) {
+        if(c_gpiod_line_request_rising_edge_events(line.getCPtr(), consumer) < 0) {
+            throw new GpioDException("c_gpiod_line_request_rising_edge_events failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_rising_edge_events(long linePtr, String consumer);
+
+    static void lineRequestFallingEdgeEvents(GpioLine line, String consumer) {
+        if(c_gpiod_line_request_falling_edge_events(line.getCPtr(), consumer) < 0) {
+            throw new GpioDException("c_gpiod_line_request_falling_edge_events failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_falling_edge_events(long linePtr, String consumer);
+
+    static void lineRequestBothEdgeEvents(GpioLine line, String consumer) {
+        if(c_gpiod_line_request_both_edges_events(line.getCPtr(), consumer) < 0) {
+            throw new GpioDException("c_gpiod_line_request_both_edges_events failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_both_edges_events(long linePtr, String consumer);
+
+    static void lineRequestInputFlags(GpioLine line, String consumer, int flags) {
+        if(c_gpiod_line_request_input_flags(line.getCPtr(), consumer, flags) < 0) {
+            throw new GpioDException("c_gpiod_line_request_input_flags failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_input_flags(long linePtr, String consumer, int flags);
+
+    static void lineRequestOutputFlags(GpioLine line, String consumer, int flags, int defaultVal) {
+        if(c_gpiod_line_request_output_flags(line.getCPtr(), consumer, flags, defaultVal) < 0) {
+            throw new GpioDException("c_gpiod_line_request_output_flags failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_output_flags(long linePtr, String consumer, int flags, int default_val);
+
+    static void lineRequestRisingEdgeEventsFlags(GpioLine line, String consumer, int flags) {
+        if(c_gpiod_line_request_rising_edge_events_flags(line.getCPtr(), consumer, flags) < 0) {
+            throw new GpioDException("c_gpiod_line_request_rising_edge_events_flags failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_rising_edge_events_flags(long linePtr, String consumer, int flags);
+
+    static void lineRequestFallingEdgeEventsFlags(GpioLine line, String consumer, int flags) {
+        if(c_gpiod_line_request_falling_edge_events_flags(line.getCPtr(), consumer, flags) < 0) {
+            throw new GpioDException("c_gpiod_line_request_falling_edge_events_flags failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_falling_edge_events_flags(long linePtr, String consumer, int flags);
+
+    static void lineRequestBothEdgeEventsFlags(GpioLine line, String consumer, int flags) {
+        if(c_gpiod_line_request_both_edges_events_flags(line.getCPtr(), consumer, flags) < 0) {
+            throw new GpioDException("c_gpiod_line_request_both_edges_events_flags failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_both_edges_events_flags(long linePtr, String consumer, int flags);
+
+    static void lineRequestBulk(GpioLineBulk lineBulk, GpioLine line, int[] defaultVals) {
+        if(c_gpiod_line_request_bulk(lineBulk.getCPtr(), line.getCPtr(), defaultVals) < 0) {
+            throw new GpioDException("c_gpiod_line_request_bulk failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_bulk(long lineBulkPtr, long lineRequestPtr, int[] default_vals);
+
+    static void lineRequestBulkInput(GpioLineBulk lineBulk, String consumer) {
+        if(c_gpiod_line_request_bulk_input(lineBulk.getCPtr(), consumer) < 0) {
+            throw new GpioDException("c_gpiod_line_request_bulk_input failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_bulk_input(long lineBulkPtr, String consumer);
+
+    static void lineRequestBulk(GpioLineBulk lineBulk, String consumer, int[] defaultVals) {
+        if(c_gpiod_line_request_bulk_output(lineBulk.getCPtr(), consumer, defaultVals) < 0) {
+            throw new GpioDException("c_gpiod_line_request_bulk_output failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_bulk_output(long lineBulkPtr, String consumer, int[] default_vals);
+
+    static void lineRequestBulkRisingEdgeEvents(GpioLineBulk lineBulk, String consumer) {
+        if(c_gpiod_line_request_bulk_rising_edge_events(lineBulk.getCPtr(), consumer) < 0) {
+            throw new GpioDException("c_gpiod_line_request_bulk_rising_edge_events failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_bulk_rising_edge_events(long lineBulkPtr, String consumer);
+
+    static void lineRequestBulkFallingEdgeEvents(GpioLineBulk lineBulk, String consumer) {
+        if(c_gpiod_line_request_bulk_falling_edge_events(lineBulk.getCPtr(), consumer) < 0) {
+            throw new GpioDException("c_gpiod_line_request_bulk_falling_edge_events failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_bulk_falling_edge_events(long lineBulkPtr, String consumer);
+
+    static void lineRequestBulkBothEdgeEvents(GpioLineBulk lineBulk, String consumer) {
+        if(c_gpiod_line_request_bulk_both_edges_events(lineBulk.getCPtr(), consumer) < 0) {
+            throw new GpioDException("c_gpiod_line_request_bulk_both_edges_events failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_bulk_both_edges_events(long lineBulkPtr, String consumer);
+
+    static void lineRequestBulkInputFlags(GpioLineBulk lineBulk, String consumer, int flags) {
+        if(c_gpiod_line_request_bulk_input_flags(lineBulk.getCPtr(), consumer, flags) < 0) {
+            throw new GpioDException("c_gpiod_line_request_bulk_input_flags failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_bulk_input_flags(long lineBulkPtr, String consumer, int flags);
+
+    static void lineRequestBulkOutputFlags(GpioLineBulk lineBulk, String consumer, int flags, int[] defaultVals) {
+        if(c_gpiod_line_request_bulk_output_flags(lineBulk.getCPtr(), consumer, flags, defaultVals) < 0) {
+            throw new GpioDException("c_gpiod_line_request_bulk_output_flags failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_bulk_output_flags(long lineBulkPtr, String consumer, int flags, int[] default_vals);
+
+    static void lineRequestBulkRisingEdgeEventFlags(GpioLineBulk lineBulk, String consumer, int flags) {
+        if(c_gpiod_line_request_bulk_rising_edge_events_flags(lineBulk.getCPtr(), consumer, flags) < 0) {
+            throw new GpioDException("c_gpiod_line_request_bulk_rising_edge_events_flags failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_bulk_rising_edge_events_flags(long lineBulkPtr, String consumer, int flags);
+
+    static void lineRequestBulkFallingEdgeEventFlags(GpioLineBulk lineBulk, String consumer, int flags) {
+        if(c_gpiod_line_request_bulk_falling_edge_events_flags(lineBulk.getCPtr(), consumer, flags) < 0) {
+            throw new GpioDException("c_gpiod_line_request_bulk_falling_edge_events_flags failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_bulk_falling_edge_events_flags(long lineBulkPtr, String consumer, int flags);
+
+    static void lineRequestBulkBothEdgeEventFlags(GpioLineBulk lineBulk, String consumer, int flags) {
+        if(c_gpiod_line_request_bulk_both_edges_events_flags(lineBulk.getCPtr(), consumer, flags) < 0) {
+            throw new GpioDException("c_gpiod_line_request_bulk_both_edges_events_flags failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_request_bulk_both_edges_events_flags(long lineBulkPtr, String consumer, int flags);
+
+    static void lineRelease(GpioLine line) {
+        c_gpiod_line_release(line.getCPtr());
+    }
+
+    private static native void c_gpiod_line_release(long linePtr);
+
+    static void lineBulkRelease(GpioLineBulk lineBulk) {
+        c_gpiod_line_release_bulk(lineBulk.getCPtr());
+    }
+
+    private static native void c_gpiod_line_release_bulk(long lineBulkPtr);
+
+    static void lineIsRequested(GpioLine line) {
+        c_gpiod_line_is_requested(line.getCPtr());
+    }
+
+    private static native boolean c_gpiod_line_is_requested(long linePtr);
+
+    static boolean lineIsFree(GpioLine line) {
+        return c_gpiod_line_is_free(line.getCPtr());
+    }
+
+    private static native boolean c_gpiod_line_is_free(long linePtr);
+
+    static int lineGetValue(GpioLine line) {
+        return c_gpiod_line_get_value(line.getCPtr());
+    }
+
+    private static native int c_gpiod_line_get_value(long linePtr);
+
+    static int[] lineBulkGetValues(GpioLineBulk lineBulk) {
+        int numVals = lineBulkGetNumLines(lineBulk);
+        int[] vals = new int[numVals];
+        if(c_gpiod_line_get_value_bulk(lineBulk.getCPtr(), vals) < 0) {
+            throw new GpioDException("c_gpiod_line_get_value_bulk failed!");
+        }
+        return vals;
+    }
+
+    private static native int c_gpiod_line_get_value_bulk(long lineBulkPtr, int[] values);
+
+    static void lineSetValue(GpioLine line, int value) {
+        if(c_gpiod_line_set_value(line.getCPtr(), value) < 0) {
+            throw new GpioDException("c_gpiod_line_set_value failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_set_value(long linePtr, int value);
+
+    static void lineBulkSetValue(GpioLine line, int[] values) {
+        if(c_gpiod_line_set_value_bulk(line.getCPtr(), values) < 0) {
+            throw new GpioDException("c_gpiod_line_set_value_bulk failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_set_value_bulk(long lineBulkPtr, int[] values);
+
+    static void lineSetConfig(GpioLine line, int direction, int flags, int value) {
+        if(c_gpiod_line_set_config(line.getCPtr(), direction, flags, value) < 0) {
+            throw new GpioDException("c_gpiod_line_set_config failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_set_config(long linePtr, int direction, int flags, int value);
+
+    static void lineBulkSetConfig(GpioLineBulk lineBulk, int direction, int flags, int[] values) {
+        if(c_gpiod_line_set_config_bulk(lineBulk.getCPtr(), direction, flags, values) < 0) {
+            throw new GpioDException("c_gpiod_line_set_config_bulk failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_set_config_bulk(long lineBulkPtr, int direction, int flags, int[] values);
+
+    static void lineSetFlags(GpioLine line, int flags) {
+        if(c_gpiod_line_set_flags(line.getCPtr(), flags) < 0) {
+            throw new GpioDException("c_gpiod_line_set_flags failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_set_flags(long linePtr, int flags);
+
+    static void lineBulkSetFlags(GpioLineBulk lineBulk, int flags) {
+        if(c_gpiod_line_set_flags_bulk(lineBulk.getCPtr(), flags) < 0) {
+            throw new GpioDException("c_gpiod_line_set_flags_bulk failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_set_flags_bulk(long lineBulkPtr, int flags);
+
+    static void lineSetDirectionInput(GpioLine line) {
+        if(c_gpiod_line_set_direction_input(line.getCPtr()) < 0) {
+            throw new GpioDException("c_gpiod_line_set_direction_input failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_set_direction_input(long linePtr);
+
+    static void lineSetDirectionInputBulk(GpioLineBulk lineBulk) {
+        if(c_gpiod_line_set_direction_input_bulk(lineBulk.getCPtr()) < 0) {
+            throw new GpioDException("c_gpiod_line_set_direction_input_bulk failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_set_direction_input_bulk(long lineBulkPtr);
+
+    static void lineSetDirectionOutput(GpioLine line, int value) {
+        if(c_gpiod_line_set_direction_output(line.getCPtr(), value) < 0) {
+            throw new GpioDException("c_gpiod_line_set_direction_output failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_set_direction_output(long linePtr, int value);
+
+    static void lineSetDirectionInputBulk(GpioLineBulk lineBulk, int[] values) {
+        if(c_gpiod_line_set_direction_output_bulk(lineBulk.getCPtr(), values) < 0) {
+            throw new GpioDException("c_gpiod_line_set_direction_output_bulk failed!");
+        }
+    }
+
+    private static native int c_gpiod_line_set_direction_output_bulk(long lineBulkPtr, int[] values);
+
+    enum LINE_EVENT {
+        RISING_EDGE(1), FALLING_EDGE(2);
+        final int val;
+
+        LINE_EVENT(int val) {
+            this.val = val;
+        }
+
+        static LINE_EVENT fromByte(byte val) {
+            for (LINE_EVENT dir : LINE_EVENT.values()) {
+                if (dir.val == val) {
+                    return dir;
+                }
+            }
+            throw new IllegalStateException("Unexpected LINE_EVENT value: " + val);
+        }
+    }
+
+    static boolean lineEventWait(GpioLine line, long timeoutNs) {
+        int result = c_gpiod_line_event_wait(line.getCPtr(), timeoutNs);
+        if(result < 0) {
+            throw new GpioDException("c_gpiod_line_event_wait failed!");
+        }
+        return result > 0;
+    }
+
+    private static native int c_gpiod_line_event_wait(long linePtr, long timeoutNs);
+
+    static boolean lineBulkEventWait(GpioLineBulk lineBulk, long timeoutNs, GpioLineBulk eventBulk) {
+        int result = c_gpiod_line_event_wait_bulk(lineBulk.getCPtr(), timeoutNs, eventBulk.getCPtr());
+        if(result < 0) {
+            throw new GpioDException("c_gpiod_line_event_wait_bulk failed!");
+        }
+        return result > 0;
+    }
+
+    private static native int c_gpiod_line_event_wait_bulk(long lineBulkPtr, long timeoutNs, long eventBulkPtr);
+
+    static boolean lineBulkEventRead(GpioLine line, GpioLineEvent event) {
+        int result = c_gpiod_line_event_read(line.getCPtr(), event.getCPtr());
+        if(result < 0) {
+            throw new GpioDException("c_gpiod_line_event_read failed!");
+        }
+        return result > 0;
+    }
+
+    private static native int c_gpiod_line_event_read(long linePtr, long eventPtr);
+
+    static int lineBulkEventRead(GpioLine line, GpioLineEvent[] event) {
+        int num_read = c_gpiod_line_event_read_multiple(line.getCPtr(),
+            Arrays.stream(event).mapToLong(GpioLineEvent::getCPtr).toArray(), event.length);
+        if(num_read < 0) {
+            throw new GpioDException("c_gpiod_line_event_read_multiple failed!");
+        }
+        return num_read;
+    }
+
+    private static native int c_gpiod_line_event_read_multiple(long linePtr, long[] eventPtr, int num_events);
+
+    static GpioLine lineGet(String device, int offset) {
+        Long ptr = c_gpiod_line_get(device, offset);
+        if(ptr == null) {
+            throw new GpioDException("c_gpiod_line_get failed!");
+        }
+        return new GpioLine(ptr);
+    }
+
+    private static native Long c_gpiod_line_get(String device, int offset);
+
+    static GpioLine lineFind(String name) {
+        Long ptr = gpiod_line_find(name);
+        if(ptr == null) {
+            throw new GpioDException("gpiod_line_find failed!");
+        }
+        return new GpioLine(ptr);
+    }
+
+    private static native Long gpiod_line_find(String name);
+
+    static void lineCloseChip(GpioLine line) {
+        c_gpiod_line_close_chip(line.getCPtr());
+    }
+
+    private static native void c_gpiod_line_close_chip(long linePtr);
+
+    static GpioChip lineGetChip(GpioLine line) {
+        return new GpioChip(gpiod_line_get_chip(line.getCPtr()));
+    }
+
+    private static native long gpiod_line_get_chip(long linePtr);
+
+    static GpioChipIterator chipIterNew() {
+        Long ptr = gpiod_chip_iter_new();
+        if(ptr == null) {
+            throw new GpioDException("gpiod_chip_iter_new failed!");
+        }
+        return new GpioChipIterator(ptr);
+    }
+
+    private static native Long gpiod_chip_iter_new();
+
+    static void chipIterFree(GpioChipIterator iter) {
+        c_gpiod_chip_iter_free(iter.getCPtr());
+    }
+
+    private static native void c_gpiod_chip_iter_free(long chipIterPtr);
+
+    static void chipIterFreeNoClose(GpioChipIterator iter) {
+        c_gpiod_chip_iter_free_noclose(iter.getCPtr());
+    }
+
+    private static native void c_gpiod_chip_iter_free_noclose(long chipIterPtr);
+
+    static GpioChip chipIterNext(GpioChipIterator iter) {
+        Long ptr = c_gpiod_chip_iter_next(iter.getCPtr());
+        if(ptr == null) {
+            return null;
+        }
+        return new GpioChip(ptr);
+    }
+
+    private static native Long c_gpiod_chip_iter_next(long chipIterPtr);
+
+    static GpioChip chipIterNextNoClose(GpioChipIterator iter) {
+        Long ptr = c_gpiod_chip_iter_next_noclose(iter.getCPtr());
+        if(ptr == null) {
+            return null;
+        }
+        return new GpioChip(ptr);
+    }
+
+    private static native Long c_gpiod_chip_iter_next_noclose(long chipIterPtr);
+
+    static GpioLineIterator lineIterNew(GpioChip chip) {
+        Long ptr = gpiod_line_iter_new(chip.getCPtr());
+        if(ptr == null) {
+            throw new GpioDException("gpiod_line_iter_new failed!");
+        }
+        return new GpioLineIterator(ptr);
+    }
+
+    private static native Long gpiod_line_iter_new(long chipPtr);
+
+    static void lineIterFree(GpioLineIterator iter) {
+        gpiod_line_iter_free(iter.getCPtr());
+    }
+
+    private static native void gpiod_line_iter_free(long lineIterPtr);
+
+    static GpioLine lineIterNext(GpioLineIterator iter) {
+        Long ptr = gpiod_line_iter_next(iter.getCPtr());
+        if(ptr == null) {
+            return null;
+        }
+        return new GpioLine(ptr);
+    }
+
+    private static native Long gpiod_line_iter_next(long lineIterPtr);
+
+    static String getVersion() {
+        return c_gpiod_version_string();
+    }
+
+    private static native String c_gpiod_version_string();
 
 }
