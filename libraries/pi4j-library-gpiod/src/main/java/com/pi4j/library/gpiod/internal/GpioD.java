@@ -111,7 +111,6 @@ public class GpioD {
     private static native void c_gpiod_line_bulk_add(long lineBulkPtr, long linePtr);
 
     static GpioLine lineBulkGetLine(GpioLineBulk lineBulk, int offset) {
-        //TODO can be Null (?) or worse if array out of bounds? Maybe also return the same object if object with same pointer exists already.
         return new GpioLine(c_gpiod_line_bulk_get_line(lineBulk.getCPtr(), offset));
     }
 
