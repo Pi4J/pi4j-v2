@@ -1,10 +1,20 @@
 package com.pi4j.library.gpiod.internal;
 
+import com.pi4j.library.gpiod.util.NativeLibraryLoader;
+
 import java.util.Arrays;
 
 public class GpioD {
     // C library: https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/include/gpiod.h?h=v1.6.x
 
+    private GpioD() {
+        // forbid object construction
+    }
+
+    static {
+        // Load the platform library
+        NativeLibraryLoader.load("libpi4j-gpiod.so", "pi4j-gpiod");
+    }
 
     static GpioChip chipOpen(String path) {
         Long ptr = c_gpiod_chip_open(path);
