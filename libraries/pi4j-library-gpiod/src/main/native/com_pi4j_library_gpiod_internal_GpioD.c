@@ -56,3 +56,14 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1c
     jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>","(J)V");
     return (*env)->NewObject(env, cls, longConstructor, (jlong) line);
 }
+
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip_1get_1lines
+  (JNIEnv* env, jclass javaClass, jlong chipPtr, jintArray offsets, jint num_offsets, jlong lineBulkPtr) {
+    jint* c_offsets = (*env)->GetIntArrayElements(env, offsets, 0);
+
+
+    int returnVal = gpiod_chip_get_lines((struct gpiod_chip*) chipPtr, c_offsets, num_offsets, (struct gpiod_line_bulk*) lineBulkPtr);
+    (*env)->ReleaseIntArrayElements(env, offsets, c_offsets, 0);
+    return returnVal;
+}
+
