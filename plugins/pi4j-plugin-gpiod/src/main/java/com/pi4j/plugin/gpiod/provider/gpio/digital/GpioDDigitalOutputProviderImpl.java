@@ -38,7 +38,6 @@ import com.pi4j.library.gpiod.internal.GpioChip;
 import com.pi4j.library.gpiod.internal.GpioChipIterator;
 import com.pi4j.library.gpiod.internal.GpioLine;
 
-import java.util.Map;
 
 /**
  * <p>PiGpioDigitalOutputProviderImpl class.</p>
@@ -88,11 +87,10 @@ public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase im
     }
 
     @Override
-    public GpioDDigitalOutputProviderImpl shutdown(Context context) throws ShutdownException {
+    public DigitalOutputProvider shutdown(Context context) throws ShutdownException {
         if(gpioChip != null) {
             this.gpioChip.close();
         }
-        super.shutdown(context);
+        return super.shutdown(context);
     }
-
 }
