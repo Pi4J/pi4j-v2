@@ -239,12 +239,6 @@ public class GpioD {
 
     private static native int c_gpiod_line_update(long linePtr);
 
-    static  boolean lineIsNeedsUpdate(GpioLine line) {
-        return c_gpiod_line_needs_update(line.getCPtr());
-    }
-
-    private static native boolean c_gpiod_line_needs_update(long linePtr);
-
     enum LINE_REQUEST {
         DIRECTION_AS_IS(1), DIRECTION_INPUT(2), DIRECTION_OUTPUT(3), EVENT_FALLING_EDGE(4),
         EVENT_RISING_EDGE(5), EVENT_BOTH_EDGES(6);

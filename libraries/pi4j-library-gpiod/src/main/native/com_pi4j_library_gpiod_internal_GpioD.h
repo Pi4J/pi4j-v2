@@ -209,14 +209,6 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
 
 /*
  * Class:     com_pi4j_library_gpiod_internal_GpioD
- * Method:    c_gpiod_line_needs_update
- * Signature: (J)Z
- */
-JNIEXPORT jboolean JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1needs_1update
-  (JNIEnv *, jclass, jlong);
-
-/*
- * Class:     com_pi4j_library_gpiod_internal_GpioD
  * Method:    c_gpiod_line_request
  * Signature: (JJI)I
  */
