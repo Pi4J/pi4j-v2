@@ -103,3 +103,120 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1l
     jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>","(J)V");
     return (*env)->NewObject(env, cls, longConstructor, (jlong) bulkPtr);
 }
+
+JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1bulk_1add
+  (JNIEnv* env, jclass javaClass, jlong lineBulkPtr, jlong linePtr) {
+    gpiod_line_bulk_add((struct gpiod_line_bulk*) lineBulkPtr, (struct gpiod_line*) linePtr);
+}
+
+JNIEXPORT jlong JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1bulk_1get_1line
+  (JNIEnv* env, jclass javaClass, jlong lineBulkPtr, jint offset) {
+    return (jlong) gpiod_line_bulk_get_line((struct gpiod_line_bulk*) lineBulkPtr, offset);
+}
+
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1bulk_1num_1lines
+  (JNIEnv* env, jclass javaClass, jlong lineBulkPtr) {
+    return gpiod_line_bulk_num_lines((struct gpiod_line_bulk*) lineBulkPtr);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_offset
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1offset
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    return gpiod_line_offset((struct gpiod_line*) linePtr);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_name
+ * Signature: (J)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1name
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    const char* c_name = gpiod_line_name((struct gpiod_line*) linePtr);
+    return (*env)->NewStringUTF(env, c_name);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    gpiod_line_consumer
+ * Signature: (J)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1consumer
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    const char* c_name = gpiod_line_consumer((struct gpiod_line*) linePtr);
+    return (*env)->NewStringUTF(env, c_name);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_direction
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1direction
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    return gpiod_line_direction((struct gpiod_line*) linePtr);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_active_state
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1active_1state
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    return gpiod_line_active_state((struct gpiod_line*) linePtr);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_bias
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1bias
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    return gpiod_line_bias((struct gpiod_line*) linePtr);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_is_used
+ * Signature: (J)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1is_1used
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    return gpiod_line_is_used((struct gpiod_line*) linePtr);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_is_open_drain
+ * Signature: (J)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1is_1open_1drain
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    return gpiod_line_is_open_drain((struct gpiod_line*) linePtr);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_is_open_source
+ * Signature: (J)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1is_1open_1source
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    return gpiod_line_is_open_source((struct gpiod_line*) linePtr);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_update
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1update
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    return gpiod_line_update((struct gpiod_line*) linePtr);
+}
