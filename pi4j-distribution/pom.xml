@@ -52,6 +52,11 @@
             <artifactId>pi4j-plugin-linuxfs</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-plugin-gpiod</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- include Pi4J Plugins (Platforms and I/O Providers) -->
         <dependency>
@@ -62,6 +67,11 @@
         <dependency>
             <groupId>com.pi4j</groupId>
             <artifactId>pi4j-library-linuxfs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-gpiod</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -95,6 +105,22 @@
         <dependency>
             <groupId>com.pi4j</groupId>
             <artifactId>pi4j-library-linuxfs</artifactId>
+            <version>${project.version}</version>
+            <classifier>aarch64</classifier>
+            <type>so</type>
+        </dependency>
+
+        <!-- gpiod -->
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-gpiod</artifactId>
+            <version>${project.version}</version>
+            <classifier>armhf</classifier>
+            <type>so</type>
+        </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-gpiod</artifactId>
             <version>${project.version}</version>
             <classifier>aarch64</classifier>
             <type>so</type>
