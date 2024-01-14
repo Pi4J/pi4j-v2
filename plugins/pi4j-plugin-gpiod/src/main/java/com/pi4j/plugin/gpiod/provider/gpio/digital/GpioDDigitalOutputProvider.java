@@ -33,7 +33,7 @@ import com.pi4j.plugin.gpiod.GpioDPlugin;
 /**
  * <p>PiGpioDigitalOutputProvider interface.</p>
  *
- * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
  * @version $Id: $Id
  */
 public interface GpioDDigitalOutputProvider extends DigitalOutputProvider {

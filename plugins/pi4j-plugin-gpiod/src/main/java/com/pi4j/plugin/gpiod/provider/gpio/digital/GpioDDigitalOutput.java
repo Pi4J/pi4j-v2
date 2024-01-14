@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 /**
  * <p>PiGpioDigitalOutput class.</p>
  *
- * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
  * @version $Id: $Id
  */
 public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutput {
@@ -51,7 +51,7 @@ public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutp
     /**
      * <p>Constructor for PiGpioDigitalOutput.</p>
      *
-     * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
+     * @param line a {@link com.pi4j.library.gpiod.internal.GpioLine} object.
      * @param provider a {@link DigitalOutputProvider} object.
      * @param config a {@link DigitalOutputConfig} object.
      */

@@ -42,7 +42,7 @@ import com.pi4j.library.gpiod.internal.GpioLine;
 /**
  * <p>PiGpioDigitalOutputProviderImpl class.</p>
  *
- * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
+ * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
  * @version $Id: $Id
  */
 public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase implements GpioDDigitalOutputProvider {
