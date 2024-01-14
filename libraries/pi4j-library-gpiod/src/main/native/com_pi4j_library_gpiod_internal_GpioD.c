@@ -60,8 +60,6 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1c
 JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip_1get_1lines
   (JNIEnv* env, jclass javaClass, jlong chipPtr, jintArray offsets, jint num_offsets, jlong lineBulkPtr) {
     jint* c_offsets = (*env)->GetIntArrayElements(env, offsets, 0);
-
-
     int returnVal = gpiod_chip_get_lines((struct gpiod_chip*) chipPtr, c_offsets, num_offsets, (struct gpiod_line_bulk*) lineBulkPtr);
     (*env)->ReleaseIntArrayElements(env, offsets, c_offsets, 0);
     return returnVal;
@@ -625,4 +623,277 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
 JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1set_1flags
   (JNIEnv* env, jclass javaClass, jlong linePtr, jint flags) {
     return gpiod_line_set_flags((struct gpiod_line*) linePtr, flags);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_set_flags_bulk
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1set_1flags_1bulk
+  (JNIEnv* env, jclass javaClass, jlong lineBulkPtr, jint flags) {
+    return gpiod_line_set_flags_bulk((struct gpiod_line_bulk*) lineBulkPtr, flags);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_set_direction_input
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1set_1direction_1input
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    return gpiod_line_set_direction_input((struct gpiod_line*) linePtr);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_set_direction_input_bulk
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1set_1direction_1input_1bulk
+  (JNIEnv* env, jclass javaClass, jlong lineBulkPtr) {
+    return gpiod_line_set_direction_input_bulk((struct gpiod_line_bulk*) lineBulkPtr);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_set_direction_output
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1set_1direction_1output
+  (JNIEnv* env, jclass javaClass, jlong linePtr, jint value) {
+    return gpiod_line_set_direction_output((struct gpiod_line*) linePtr, value);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_set_direction_output_bulk
+ * Signature: (J[I)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1set_1direction_1output_1bulk
+  (JNIEnv* env, jclass javaClass, jlong lineBulkPtr, jintArray values) {
+    jint* c_values = (*env)->GetIntArrayElements(env, values, 0);
+    int result = gpiod_line_set_direction_output_bulk((struct gpiod_line_bulk*) lineBulkPtr, c_values);
+    (*env)->ReleaseIntArrayElements(env, values, c_values, 0);
+    return result;
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_event_wait
+ * Signature: (JJ)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1event_1wait
+  (JNIEnv* env, jclass javaClass, jlong linePtr, jlong timeoutNs) {
+    struct timespec timeout;
+    timeout.tv_sec = timeoutNs / 1000000000;
+    timeout.tv_nsec = timeoutNs % 1000000000;
+    return gpiod_line_event_wait((struct gpiod_line*) linePtr, &timeout);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_event_wait_bulk
+ * Signature: (JJJ)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1event_1wait_1bulk
+  (JNIEnv* env, jclass javaClass, jlong lineBulkPtr, jlong timeoutNs, jlong eventBulkPtr) {
+    struct timespec timeout;
+    timeout.tv_sec = timeoutNs / 1000000000;
+    timeout.tv_nsec = timeoutNs % 1000000000;
+    int result = gpiod_line_event_wait_bulk((struct gpiod_line_bulk*) lineBulkPtr, &timeout, (struct gpiod_line_bulk*) eventBulkPtr);
+    return result;
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_event_read
+ * Signature: (JJ)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1event_1read
+  (JNIEnv* env, jclass javaClass, jlong linePtr, jlong eventPtr) {
+    return gpiod_line_event_read((struct gpiod_line*) linePtr, (struct gpiod_line_event*) eventPtr);
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_event_read_multiple
+ * Signature: (J[JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1event_1read_1multiple
+  (JNIEnv* env, jclass javaClass, jlong linePtr, jlongArray events, jint numEvents) {
+    jlong* c_events = (*env)->GetLongArrayElements(env, events, 0);
+    int result = gpiod_line_event_read_multiple((struct gpiod_line*) linePtr, (struct gpiod_line_event*) c_events, numEvents);
+    (*env)->ReleaseLongArrayElements(env, events, c_events, 0);
+    return result;
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_get
+ * Signature: (Ljava/lang/String;I)Ljava/lang/Long;
+ */
+JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1get
+  (JNIEnv* env, jclass javaClass, jstring, jint) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    gpiod_line_find
+ * Signature: (Ljava/lang/String;)Ljava/lang/Long;
+ */
+JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1find
+  (JNIEnv* env, jclass javaClass, jstring) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_close_chip
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1close_1chip
+  (JNIEnv* env, jclass javaClass, jlong) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    gpiod_line_get_chip
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1get_1chip
+  (JNIEnv* env, jclass javaClass, jlong) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    gpiod_chip_iter_new
+ * Signature: ()Ljava/lang/Long;
+ */
+JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1chip_1iter_1new
+  (JNIEnv* env, jclass javaClass) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_chip_iter_free
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip_1iter_1free
+  (JNIEnv* env, jclass javaClass, jlong) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_chip_iter_free_noclose
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip_1iter_1free_1noclose
+  (JNIEnv* env, jclass javaClass, jlong) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_chip_iter_next
+ * Signature: (J)Ljava/lang/Long;
+ */
+JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip_1iter_1next
+  (JNIEnv* env, jclass javaClass, jlong) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_chip_iter_next_noclose
+ * Signature: (J)Ljava/lang/Long;
+ */
+JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip_1iter_1next_1noclose
+  (JNIEnv* env, jclass javaClass, jlong) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    gpiod_line_iter_new
+ * Signature: (J)Ljava/lang/Long;
+ */
+JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1iter_1new
+  (JNIEnv* env, jclass javaClass, jlong) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    gpiod_line_iter_free
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1iter_1free
+  (JNIEnv* env, jclass javaClass, jlong) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    gpiod_line_iter_next
+ * Signature: (J)Ljava/lang/Long;
+ */
+JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1iter_1next
+  (JNIEnv* env, jclass javaClass, jlong) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_event_get_timespec
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1event_1get_1timespec
+  (JNIEnv* env, jclass javaClass, jlong) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_event_get_type
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1event_1get_1type
+  (JNIEnv* env, jclass javaClass, jlong) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_event_new
+ * Signature: ()Ljava/lang/Long;
+ */
+JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1event_1new
+  (JNIEnv* env, jclass javaClass) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_line_event_free
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1event_1free
+  (JNIEnv* env, jclass javaClass, jlong) {
+
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_version_string
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1version_1string
+  (JNIEnv* env, jclass javaClass) {
+
 }
