@@ -84,7 +84,7 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1c
   return (*env)->NewObject(env, cls, longConstructor, (jlong) line);
 }
 
-JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1bulk_1free
+JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1bulk_1free
   (JNIEnv* env, jclass javaClass, jlong bulkPtr) {
     free((struct gpiod_line_bulk*) bulkPtr);
 }

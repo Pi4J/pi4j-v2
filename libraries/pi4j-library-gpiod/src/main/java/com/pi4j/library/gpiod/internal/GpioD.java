@@ -89,7 +89,7 @@ public class GpioD {
         c_gpiod_line_bulk_free(lineBulk.getCPtr());
     }
 
-    private static native Long c_gpiod_line_bulk_free(long lineBulkPtr);
+    private static native void c_gpiod_line_bulk_free(long lineBulkPtr);
 
     private static native void gpiod_line_bulk_init(long lineBulkPtr);
 

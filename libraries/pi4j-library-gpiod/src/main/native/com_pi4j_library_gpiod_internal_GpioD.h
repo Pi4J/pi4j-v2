@@ -84,7 +84,7 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1c
  * Method:    c_gpiod_line_bulk_free
  * Signature: (J)Ljava/lang/Long;
  */
-JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1bulk_1free
+JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1bulk_1free
   (JNIEnv *, jclass, jlong);
 
 /*
