@@ -734,8 +734,17 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
  * Signature: (Ljava/lang/String;I)Ljava/lang/Long;
  */
 JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1get
-  (JNIEnv* env, jclass javaClass, jstring, jint) {
+  (JNIEnv* env, jclass javaClass, jstring device, jint offset) {
+    const char* c_device = (*env)->GetStringUTFChars(env, device, NULL);
+    struct gpiod_line* found = gpiod_line_get(c_device, offset);
+    (*env)->ReleaseStringUTFChars(env, device, c_device);
 
+    if(found == NULL) {
+      return NULL;
+    }
+    jclass cls = (*env)->FindClass(env, "java/lang/Long");
+    jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>", "(J)V");
+    return (*env)->NewObject(env, cls, longConstructor, (jlong) found);
 }
 
 /*
@@ -744,8 +753,17 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1l
  * Signature: (Ljava/lang/String;)Ljava/lang/Long;
  */
 JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1find
-  (JNIEnv* env, jclass javaClass, jstring) {
+  (JNIEnv* env, jclass javaClass, jstring name) {
+    const char* c_name = (*env)->GetStringUTFChars(env, name, NULL);
+    struct gpiod_line* found = gpiod_line_find(c_name);
+    (*env)->ReleaseStringUTFChars(env, name, c_name);
 
+    if(found == NULL) {
+      return NULL;
+    }
+    jclass cls = (*env)->FindClass(env, "java/lang/Long");
+    jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>", "(J)V");
+    return (*env)->NewObject(env, cls, longConstructor, (jlong) found);
 }
 
 /*
@@ -754,8 +772,8 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1close_1chip
-  (JNIEnv* env, jclass javaClass, jlong) {
-
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    gpiod_line_close_chip((struct gpiod_line*) linePtr);
 }
 
 /*
@@ -764,8 +782,8 @@ JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1get_1chip
-  (JNIEnv* env, jclass javaClass, jlong) {
-
+  (JNIEnv* env, jclass javaClass, jlong linePtr) {
+    return (jlong) gpiod_line_get_chip((struct gpiod_line*) linePtr);
 }
 
 /*
@@ -775,7 +793,14 @@ JNIEXPORT jlong JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1
  */
 JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1chip_1iter_1new
   (JNIEnv* env, jclass javaClass) {
+    struct gpiod_chip_iter* iter = gpiod_chip_iter_new();
 
+    if(iter == NULL) {
+      return NULL;
+    }
+    jclass cls = (*env)->FindClass(env, "java/lang/Long");
+    jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>", "(J)V");
+    return (*env)->NewObject(env, cls, longConstructor, (jlong) iter);
 }
 
 /*
@@ -784,8 +809,8 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1chip
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip_1iter_1free
-  (JNIEnv* env, jclass javaClass, jlong) {
-
+  (JNIEnv* env, jclass javaClass, jlong chipIterPtr) {
+    gpiod_chip_iter_free((struct gpiod_chip_iter*) chipIterPtr);
 }
 
 /*
@@ -794,8 +819,8 @@ JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip_1iter_1free_1noclose
-  (JNIEnv* env, jclass javaClass, jlong) {
-
+  (JNIEnv* env, jclass javaClass, jlong chipIterPtr) {
+    gpiod_chip_iter_free_noclose((struct gpiod_chip_iter*) chipIterPtr);
 }
 
 /*
@@ -804,8 +829,15 @@ JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip
  * Signature: (J)Ljava/lang/Long;
  */
 JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip_1iter_1next
-  (JNIEnv* env, jclass javaClass, jlong) {
+  (JNIEnv* env, jclass javaClass, jlong chipIterPtr) {
+    struct gpiod_chip* chip = gpiod_chip_iter_next((struct gpiod_chip_iter*) chipIterPtr);
 
+    if(chip == NULL) {
+      return NULL;
+    }
+    jclass cls = (*env)->FindClass(env, "java/lang/Long");
+    jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>", "(J)V");
+    return (*env)->NewObject(env, cls, longConstructor, (jlong) chip);
 }
 
 /*
@@ -814,8 +846,15 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1c
  * Signature: (J)Ljava/lang/Long;
  */
 JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip_1iter_1next_1noclose
-  (JNIEnv* env, jclass javaClass, jlong) {
+  (JNIEnv* env, jclass javaClass, jlong chipIterPtr) {
+    struct gpiod_chip* chip = gpiod_chip_iter_next_noclose((struct gpiod_chip_iter*) chipIterPtr);
 
+    if(chip == NULL) {
+      return NULL;
+    }
+    jclass cls = (*env)->FindClass(env, "java/lang/Long");
+    jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>", "(J)V");
+    return (*env)->NewObject(env, cls, longConstructor, (jlong) chip);
 }
 
 /*
@@ -824,8 +863,15 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1c
  * Signature: (J)Ljava/lang/Long;
  */
 JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1iter_1new
-  (JNIEnv* env, jclass javaClass, jlong) {
+  (JNIEnv* env, jclass javaClass, jlong lineIterPtr) {
+    struct gpiod_line_iter* iter = gpiod_line_iter_new((struct gpiod_chip*) lineIterPtr);
 
+    if(iter == NULL) {
+      return NULL;
+    }
+    jclass cls = (*env)->FindClass(env, "java/lang/Long");
+    jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>", "(J)V");
+    return (*env)->NewObject(env, cls, longConstructor, (jlong) iter);
 }
 
 /*
@@ -834,8 +880,8 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1iter_1free
-  (JNIEnv* env, jclass javaClass, jlong) {
-
+  (JNIEnv* env, jclass javaClass, jlong lineIterPtr) {
+    gpiod_line_iter_free((struct gpiod_line_iter*) lineIterPtr);
 }
 
 /*
@@ -844,8 +890,15 @@ JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1i
  * Signature: (J)Ljava/lang/Long;
  */
 JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line_1iter_1next
-  (JNIEnv* env, jclass javaClass, jlong) {
+  (JNIEnv* env, jclass javaClass, jlong lineIterPtr) {
+    struct gpiod_line* line = gpiod_line_iter_next((struct gpiod_line_iter*) lineIterPtr);
 
+    if(line == NULL) {
+      return NULL;
+    }
+    jclass cls = (*env)->FindClass(env, "java/lang/Long");
+    jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>", "(J)V");
+    return (*env)->NewObject(env, cls, longConstructor, (jlong) line);
 }
 
 /*
@@ -854,8 +907,11 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_gpiod_1line
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1event_1get_1timespec
-  (JNIEnv* env, jclass javaClass, jlong) {
-
+  (JNIEnv* env, jclass javaClass, jlong eventPtr) {
+    struct timespec ts = ((struct gpiod_line_event*) eventPtr)->ts;
+    jlong tsNs = ts.tv_nsec;
+    tsNs += ts.tv_sec * 1000000000;
+    return tsNs;
 }
 
 /*
@@ -864,8 +920,8 @@ JNIEXPORT jlong JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1lin
  * Signature: (J)I
  */
 JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1event_1get_1type
-  (JNIEnv* env, jclass javaClass, jlong) {
-
+  (JNIEnv* env, jclass javaClass, jlong eventPtr) {
+    return ((struct gpiod_line_event*) eventPtr)->event_type;
 }
 
 /*
@@ -875,7 +931,13 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
  */
 JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1event_1new
   (JNIEnv* env, jclass javaClass) {
-
+    struct gpiod_line_event* eventPtr = (struct gpiod_line_event*) malloc(sizeof(struct gpiod_line_event));
+    if(eventPtr == NULL) {
+      return NULL;
+    }
+    jclass cls = (*env)->FindClass(env, "java/lang/Long");
+    jmethodID longConstructor = (*env)->GetMethodID(env, cls, "<init>","(J)V");
+    return (*env)->NewObject(env, cls, longConstructor, (jlong) eventPtr);
 }
 
 /*
@@ -884,8 +946,8 @@ JNIEXPORT jobject JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1l
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1event_1free
-  (JNIEnv* env, jclass javaClass, jlong) {
-
+  (JNIEnv* env, jclass javaClass, jlong eventPtr) {
+    free((struct gpiod_line_event*) eventPtr);
 }
 
 /*
@@ -895,5 +957,5 @@ JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
  */
 JNIEXPORT jstring JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1version_1string
   (JNIEnv* env, jclass javaClass) {
-
+    return (*env)->NewStringUTF(env, gpiod_version_string());
 }
