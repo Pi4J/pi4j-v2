@@ -30,12 +30,11 @@ package com.pi4j.plugin.gpiod.provider.gpio.digital;
 
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.exception.IOException;
 import com.pi4j.io.gpio.digital.*;
-import com.pi4j.library.pigpio.PiGpio;
-import com.pi4j.library.pigpio.PiGpioException;
-import com.pi4j.library.pigpio.PiGpioMode;
-import com.pi4j.library.pigpio.PiGpioState;
+import com.pi4j.library.gpiod.internal.GpioDException;
+import com.pi4j.library.gpiod.internal.GpioLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +45,8 @@ import org.slf4j.LoggerFactory;
  * @version $Id: $Id
  */
 public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutput {
-    private final int pin;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final GpioLine line;
 
     /**
      * <p>Constructor for PiGpioDigitalOutput.</p>
@@ -56,32 +55,37 @@ public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutp
      * @param provider a {@link DigitalOutputProvider} object.
      * @param config a {@link DigitalOutputConfig} object.
      */
-    public GpioDDigitalOutput(PiGpio piGpio, DigitalOutputProvider provider, DigitalOutputConfig config) {
+    public GpioDDigitalOutput(GpioLine line, DigitalOutputProvider provider, DigitalOutputConfig config) {
         super(provider, config);
-        this.piGpio = piGpio;
-        this.pin = config.address().intValue();
+        this.line = line;
     }
 
     /** {@inheritDoc} */
     @Override
     public DigitalOutput initialize(Context context) throws InitializeException {
         super.initialize(context);
+
         try {
-            // configure GPIO pin as an OUTPUT pin
-            this.piGpio.gpioSetMode(pin, PiGpioMode.OUTPUT);
-        } catch (PiGpioException e) {
+            this.line.requestOutput(config.getId(), config.initialState().value().intValue());
+        } catch (GpioDException e) {
             logger.error(e.getMessage(), e);
             throw new InitializeException(e);
         }
         return this;
     }
 
+    @Override
+    public DigitalOutput shutdown(Context context) throws ShutdownException {
+        this.line.release();
+        return super.shutdown(context);
+    }
+
     /** {@inheritDoc} */
     @Override
     public DigitalOutput state(DigitalState state) throws IOException {
         try {
-            this.piGpio.gpioWrite(pin, PiGpioState.from(state.value()));
-        } catch (PiGpioException e) {
+            this.line.setValue(state.value().intValue());
+        } catch (GpioDException e) {
             logger.error(e.getMessage(), e);
             throw new IOException(e.getMessage(), e);
         }

@@ -28,9 +28,7 @@ package com.pi4j.plugin.gpiod.provider.gpio.digital;
  */
 
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
-import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.plugin.gpiod.GpioDPlugin;
-import com.pi4j.plugin.pigpio.PiGpioPlugin;
 
 /**
  * <p>PiGpioDigitalOutputProvider interface.</p>

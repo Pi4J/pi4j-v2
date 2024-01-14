@@ -7,6 +7,9 @@ import com.pi4j.provider.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GpioDPlugin implements Plugin {
 
     /**
@@ -35,7 +38,6 @@ public class GpioDPlugin implements Plugin {
      */
     @Override
     public void initialize(PluginService service) {
-
         Provider[] providers = {
             GpioDDigitalOutputProvider.newInstance()
         };
