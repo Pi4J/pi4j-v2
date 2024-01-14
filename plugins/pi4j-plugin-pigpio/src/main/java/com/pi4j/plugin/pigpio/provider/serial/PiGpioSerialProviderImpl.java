@@ -53,6 +53,12 @@ public class PiGpioSerialProviderImpl extends SerialProviderBase implements PiGp
         this.piGpio = piGpio;
     }
 
+    @Override
+    public int getPriority() {
+        // the pigpio Serial driver should be used over the default
+        return 100;
+    }
+
     /** {@inheritDoc} */
     @Override
     public Serial create(SerialConfig config) {

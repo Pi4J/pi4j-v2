@@ -53,6 +53,12 @@ public class PiGpioDigitalOutputProviderImpl extends DigitalOutputProviderBase i
         this.piGpio = piGpio;
     }
 
+    @Override
+    public int getPriority() {
+        // the pigpio DO driver should be used over the default
+        return 100;
+    }
+
     /** {@inheritDoc} */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {

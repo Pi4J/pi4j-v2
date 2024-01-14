@@ -48,12 +48,11 @@ public class RuntimeTest {
     @Test
     public void testRuntimeShutdownEvents() throws Pi4JException {
 
-
         // initialize Pi4J with an auto context
         // An auto context includes AUTO-DETECT BINDINGS enabled
         // which will load all detected Pi4J extension libraries
         // (Platforms and Providers) in the class path
-        Context pi4j = Pi4J.newAutoContext();
+        Context pi4j = Pi4J.newAutoContextAllowMocks();
 
         logger.info("-------------------------------------------------");
         logger.info("Pi4J CONTEXT <acquired via factory accessor>");

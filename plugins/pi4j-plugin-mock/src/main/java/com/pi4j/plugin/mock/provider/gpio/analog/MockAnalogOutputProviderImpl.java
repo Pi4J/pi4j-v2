@@ -48,10 +48,15 @@ public class MockAnalogOutputProviderImpl extends AnalogOutputProviderBase imple
         this.name = NAME;
     }
 
+    @Override
+    public int getPriority() {
+        // if the mock is loaded, then we most probably want to use it for testing
+        return 1000;
+    }
+
     /** {@inheritDoc} */
     @Override
     public AnalogOutput create(AnalogOutputConfig config) {
         return new MockAnalogOutput(this, config);
     }
-
 }

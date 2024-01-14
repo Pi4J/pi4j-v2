@@ -51,6 +51,12 @@ public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase 
         this.gpioFileSystemPath = gpioFileSystemPath;
     }
 
+    @Override
+    public int getPriority() {
+        // the linux FS DO driver should not be used over the pigpio
+        return 50;
+    }
+
     /** {@inheritDoc} */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {

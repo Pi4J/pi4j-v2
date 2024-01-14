@@ -59,16 +59,33 @@ public class Pi4J {
     }
 
     /**
-     * Returns a new 'Context' instance which represents the Pi4J runtime
+     * <p>Returns a new 'Context' instance which represents the Pi4J runtime
      * state and lifecycle.   This 'Context' instance will automatically
      * load all detected 'Platforms' and 'Providers' that are detected
-     * in the application's class-path.
+     * in the application's class-path.</p>
+     *
+     * <p>This method does not allow mock plugins to be used. If this is required, e.g. for testing then use {@link #newAutoContextAllowMocks()}</p>
      *
      * @return Context
      */
     public static Context newAutoContext() {
         logger.info("New auto context");
         return newContextBuilder().autoDetect().build();
+    }
+
+    /**
+     * <p>Returns a new 'Context' instance which represents the Pi4J runtime
+     * state and lifecycle.   This 'Context' instance will automatically
+     * load all detected 'Platforms' and 'Providers' that are detected
+     * in the application's class-path.</p>
+     *
+     * <p>In contrast to {@link #newAutoContext()} this method will allow mocks to be added to the runtime.</p>
+     *
+     * @return Context
+     */
+    public static Context newAutoContextAllowMocks() {
+        logger.info("New auto context");
+        return newContextBuilder().autoDetect().autoDetectMockPlugins().build();
     }
 
     /**

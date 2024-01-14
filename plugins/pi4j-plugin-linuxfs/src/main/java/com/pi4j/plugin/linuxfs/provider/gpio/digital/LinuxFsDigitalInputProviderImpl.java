@@ -51,6 +51,12 @@ public class LinuxFsDigitalInputProviderImpl extends DigitalInputProviderBase im
         this.gpioFileSystemPath = gpioFileSystemPath;
     }
 
+    @Override
+    public int getPriority() {
+        // the linux FS DI driver should not be used over the pigpio
+        return 50;
+    }
+
     /** {@inheritDoc} */
     @Override
     public DigitalInput create(DigitalInputConfig config) {

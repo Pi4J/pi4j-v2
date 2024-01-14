@@ -31,12 +31,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import com.pi4j.context.Context;
+import com.pi4j.context.ContextConfig;
 import com.pi4j.event.*;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.impl.DefaultPluginService;
 import com.pi4j.extension.impl.PluginStore;
+import com.pi4j.io.IOType;
 import com.pi4j.platform.Platform;
 import com.pi4j.platform.impl.DefaultRuntimePlatforms;
 import com.pi4j.platform.impl.RuntimePlatforms;
@@ -215,54 +217,68 @@ public class DefaultRuntime implements Runtime {
             plugins.clear();
 
             // container sets for providers and platforms to load
-            Set<Provider> providers = Collections.synchronizedSet(new HashSet<>());
-            Set<Platform> platforms = Collections.synchronizedSet(new HashSet<>());
+            Set<Platform> platforms = new HashSet<>();
+            Map<IOType, Provider> providers = new HashMap<>();
 
-            // copy all configured platforms and providers defined in the context configuration
-            providers.addAll(context().config().getProviders());
-            platforms.addAll(context().config().getPlatforms());
-
-            // only attempt to load platforms and providers from the classpath if an auto detect option is enabled
-            if(context.config().autoDetectPlatforms() || context.config().autoDetectProviders()) {
+			// only attempt to load platforms and providers from the classpath if an auto detect option is enabled
+            ContextConfig config = context.config();
+            if(config.autoDetectPlatforms() || config.autoDetectProviders()) {
 
                 // detect available Pi4J Plugins by scanning the classpath looking for plugin instances
-                var plugins = ServiceLoader.load(Plugin.class);
-                for (var plugin : plugins) {
-                    if (plugin != null) {
-                        logger.trace("detected plugin: [{}] in classpath; calling 'initialize()'",
-                                plugin.getClass().getName());
-                        try {
-                            // add plugin to internal cache
-                            this.plugins.add(plugin);
+				ServiceLoader<Plugin> plugins = ServiceLoader.load(Plugin.class);
+                for (Plugin plugin : plugins) {
+					if (plugin == null)
+                        continue;
 
-                            PluginStore store = new PluginStore();
-                            plugin.initialize(DefaultPluginService.newInstance(this.context(), store));
-
-                            // if auto-detect providers is enabled,
-                            // then add any detected providers to the collection to load
-                            if(context.config().autoDetectProviders())
-                                providers.addAll(store.providers);
-
-                            // if auto-detect platforms is enabled,
-                            // then add any detected platforms to the collection to load
-                            if(context.config().autoDetectPlatforms())
-                                platforms.addAll(store.platforms);
-
-                        } catch (Exception ex) {
-                            // unable to initialize this provider instance
-                            logger.error("unable to 'initialize()' plugin: [{}]; {}",
-                                    plugin.getClass().getName(), ex.getMessage(), ex);
-                            continue;
-                        }
+                    if (!config.autoDetectMockPlugins() && plugin.isMock()) {
+                        logger.trace("Ignoring mock plugin: [{}] in classpath", plugin.getClass().getName());
+                        continue;
                     }
-                }
+
+                    logger.trace("detected plugin: [{}] in classpath; calling 'initialize()'",
+                            plugin.getClass().getName());
+                    try {
+                        // add plugin to internal cache
+                        this.plugins.add(plugin);
+
+                        PluginStore store = new PluginStore();
+                        plugin.initialize(DefaultPluginService.newInstance(this.context(), store));
+
+                        // if auto-detect providers is enabled,
+                        // then add any detected providers to the collection to load
+                        if (config.autoDetectProviders()) {
+							store.providers.forEach(provider -> addProvider(provider, providers));
+                        }
+
+                        // if auto-detect platforms is enabled,
+                        // then add any detected platforms to the collection to load
+                        if (config.autoDetectPlatforms()) {
+							platforms.addAll(store.platforms);
+						}
+
+                    } catch (Exception ex) {
+                        // unable to initialize this provider instance
+                        logger.error("unable to 'initialize()' plugin: [{}]; {}",
+                                plugin.getClass().getName(), ex.getMessage(), ex);
+                    }
+				}
             }
+
+            // now add the explicit platforms and providers
+            platforms.addAll(context().config().getPlatforms());
+            context().config().getProviders().forEach(provider -> {
+                Provider replaced = providers.put(provider.getType(), provider);
+                if (replaced != null) {
+                    logger.warn("Replacing auto detected provider {} {} with provider {} from context config",
+                        provider.getType(), provider.getName(), replaced.getName());
+                }
+            });
 
             // initialize I/O registry
             this.registry.initialize();
 
             // initialize all providers
-            this.providers.initialize(providers);
+            this.providers.initialize(providers.values());
 
             // initialize all platforms
             this.platforms.initialize(platforms);
@@ -305,8 +321,35 @@ public class DefaultRuntime implements Runtime {
         return this;
     }
 
+    /**
+     * <p>Adds providers to the given collection, to later be used in the runtime after initialization.</p>
+     * <p>This method validates the priority of a {@link Provider}, and guarantees, that we don't have multiple
+     * providers for the same {@link IOType}</p>
+     *
+     * @param provider
+     * @param providers
+     */
+    private void addProvider(Provider provider, Map<IOType, Provider> providers) {
+        if (!providers.containsKey(provider.getType())) {
+            providers.put(provider.getType(), provider);
+        } else {
+            Provider existingProvider = providers.get(provider.getType());
+            if (provider.getPriority() <= existingProvider.getPriority()) {
+                if (existingProvider.getName().equals(provider.getName()))
+                    throw new InitializeException(
+                        provider.getType() + " with name " + provider.getName() + " is already registered.");
+                logger.warn("Ignoring provider {} {} as it has <= priority than {}", provider.getType(),
+                    provider.getName(), existingProvider.getName());
+            } else {
+                logger.warn("Overriding provider {} as it has > priority than {}", existingProvider.getName(),
+                    provider.getName());
+                providers.put(provider.getType(), provider);
+            }
+        }
+    }
+
     private void notifyInitListeners() {
-        // TODO
+        initializedEventManager.dispatch(new InitializedEvent(this.context));
     }
 
     @Override
