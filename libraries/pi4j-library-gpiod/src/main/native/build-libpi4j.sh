@@ -42,6 +42,13 @@ echo " - USING CROSS PREFIX : ${CROSS_PREFIX}"
 echo "-----------------------------------------------------------------------------"
 echo
 
+# determine if the pigpio library has already been cloned and compiled on this system
+if [[ -d "gpiod" ]] && [[ -f "lib/$ARCH/libgpiod.so" ]] ; then
+    echo "The 'pigpio' library already exists; if you wish to rebuild, run a CLEAN build."
+else
+    ./build-libgpiod.sh $@
+fi
+
 # ------------------------------------------------------
 # BUILD LIBPI4J-GPIOD
 # ------------------------------------------------------

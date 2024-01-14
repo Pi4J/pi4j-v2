@@ -82,4 +82,40 @@ if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
   else
     echo " [PREREQUISITE] 'libgpiod-dev' already installed.";
   fi
+
+  # autoconf
+  LIBGPIOD_DEV_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' autoconf)
+  if [[ "$?" == "1" ]] ; then
+    echo " [PREREQUISITE] installing 'autoconf'...";
+    sudo apt-get --force-yes --yes install autoconf
+  else
+    echo " [PREREQUISITE] 'autoconf' already installed.";
+  fi
+
+  # pkg-config
+  PKG_CONFIG_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' pkg-config)
+  if [[ "$?" == "1" ]] ; then
+    echo " [PREREQUISITE] installing 'pkg-config'...";
+    sudo apt-get --force-yes --yes install pkg-config
+  else
+    echo " [PREREQUISITE] 'pkg-config' already installed.";
+  fi
+
+  # libtool
+  LIBTOOL_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' libtool)
+  if [[ "$?" == "1" ]] ; then
+    echo " [PREREQUISITE] installing 'libtool'...";
+    sudo apt-get --force-yes --yes install libtool
+  else
+    echo " [PREREQUISITE] 'libtool' already installed.";
+  fi
+
+  # autoconf
+  AUTOCONF_ARCHIVE_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' autoconf-archive)
+  if [[ "$?" == "1" ]] ; then
+    echo " [PREREQUISITE] installing 'autoconf-archive'...";
+    sudo apt-get --force-yes --yes install autoconf-archive
+  else
+    echo " [PREREQUISITE] 'autoconf-archive' already installed.";
+  fi
 fi

@@ -105,6 +105,7 @@ fi
 export CROSS_PREFIX=arm-linux-gnueabihf-
 export CC=arm-linux-gnueabihf-gcc
 export ARCH=armhf
+export HOST=arm-linux-gnueabihf
 ./build-libpi4j.sh $@
 
 # ------------------------------------------------------
@@ -114,6 +115,7 @@ export ARCH=armhf
 export CROSS_PREFIX=aarch64-linux-gnu-
 export CC=aarch64-linux-gnu-gcc
 export ARCH=aarch64
+export HOST=aarch64-linux-gnu
 ./build-libpi4j.sh $@
 
 echo "======================================"
