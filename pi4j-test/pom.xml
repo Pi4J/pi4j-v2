@@ -31,6 +31,75 @@
             <artifactId>pi4j-plugin-mock</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- include Pi4J Plugins (Platforms and I/O Providers) -->
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-pigpio</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-linuxfs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-gpiod</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!--
+            include Pi4J native libraries
+        -->
+        <!-- pigpio -->
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-pigpio</artifactId>
+            <version>${project.version}</version>
+            <classifier>armhf</classifier>
+            <type>so</type>
+        </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-pigpio</artifactId>
+            <version>${project.version}</version>
+            <classifier>aarch64</classifier>
+            <type>so</type>
+        </dependency>
+
+        <!-- linuxfs -->
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-linuxfs</artifactId>
+            <version>${project.version}</version>
+            <classifier>armhf</classifier>
+            <type>so</type>
+        </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-linuxfs</artifactId>
+            <version>${project.version}</version>
+            <classifier>aarch64</classifier>
+            <type>so</type>
+        </dependency>
+
+        <!-- gpiod -->
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-gpiod</artifactId>
+            <version>${project.version}</version>
+            <classifier>armhf</classifier>
+            <type>so</type>
+        </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-gpiod</artifactId>
+            <version>${project.version}</version>
+            <classifier>aarch64</classifier>
+            <type>so</type>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -107,47 +176,98 @@
                     </arguments>
                 </configuration>
             </plugin>
-
-            <!-- OPTIONALLY DEPLOY THE FINAL JAR TO THE RASPBERRY PI -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-
-                    <!-- copy the compiled JAR file to the Raspberry Pi platform platform -->
-                    <execution>
-                        <id>transfer-compiled-pi4j-jar</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath" />
-                                <if>
-                                    <equals arg1="${pi4j.dev.transfer}" arg2="true" />
-                                    <then>
-                                        <!-- ensure the target directory exists on the Raspberry Pi -->
-                                        <sshexec host="${pi4j.dev.host}" port="${pi4j.dev.port}" username="${pi4j.dev.user}"
-                                                 password="${pi4j.dev.password}" trust="true" failonerror="false"
-                                                 verbose="false" command="mkdir --parents ${pi4j.dev.directory}" />
-
-                                        <!-- copy the JAR file to the Raspberry Pi -->
-                                        <scp file="${project.build.directory}/${project.build.finalName}.jar"
-                                             todir="${pi4j.dev.user}:${pi4j.dev.password}@${pi4j.dev.host}:${pi4j.dev.directory}"
-                                             port="${pi4j.dev.port}" trust="true" verbose="false" failonerror="true">
-                                        </scp>
-                                    </then>
-                                </if>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 
+    <profiles>
+        <!-- Transfer and run JAR with dependencies on remote Raspberry Pi -->
+        <profile>
+            <id>remote-run</id>
+            <build>
+                <plugins>
+                    <!-- Copy runtime dependencies into distribution folder -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-dependencies</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/distribution</outputDirectory>
+                                    <includeScope>runtime</includeScope>
+                                    <excludeTransitive>false</excludeTransitive>
+                                    <overWriteReleases>false</overWriteReleases>
+                                    <overWriteSnapshots>true</overWriteSnapshots>
+                                    <overWriteIfNewer>true</overWriteIfNewer>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Build final JAR file -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/distribution</outputDirectory>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>transfer</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <!-- Stop all running Java processes -->
+                                        <sshexec host="${raspberrypi.ipnumber}" port="${raspberrypi.port}"
+                                                 username="${raspberrypi.username}" password="${raspberrypi.password}" trust="true"
+                                                 failonerror="false" usepty="true" useSystemIn="false"
+                                                 suppresssystemerr="true" suppresssystemout="true"
+                                                 command="sudo killall -9 java"/>
+
+                                        <!-- Ensure target directory exists on raspberrypi -->
+                                        <sshexec host="${raspberrypi.ipnumber}" port="${raspberrypi.port}"
+                                                 username="${raspberrypi.username}" password="${raspberrypi.password}"
+                                                 trust="true" command="mkdir --parents ${raspberrypi.deploydirectory}; rm -f ${raspberrypi.deploydirectory}/*"/>
+
+                                        <!-- Transfer distribution folder to raspberrypi via SCP -->
+                                        <scp trust="true"
+                                             todir="${raspberrypi.username}:${raspberrypi.password}@${raspberrypi.ipnumber}:${raspberrypi.deploydirectory}"
+                                             port="${raspberrypi.port}">
+                                            <fileset dir="${project.build.directory}/distribution"/>
+                                        </scp>
+
+                                        <!-- Run application on Raspberry Pi -->
+                                        <sshexec host="${raspberrypi.ipnumber}" port="${raspberrypi.port}"
+                                                 username="${raspberrypi.username}" password="${raspberrypi.password}" trust="true"
+                                                 failonerror="false" usepty="true" useSystemIn="true"
+                                                 command="sudo java ${raspberrypi.jvmOptions} --module-path ${raspberrypi.deploydirectory} --module ${launcher.class} ${launcher.args}"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.ant</groupId>
+                                <artifactId>ant-jsch</artifactId>
+                                <version>${ant-jsch.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

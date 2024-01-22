@@ -31,7 +31,7 @@
 echo
 echo "**********************************************************************"
 echo "*                                                                    *"
-echo "*            Pi4J GPIOD LIBRARY NATIVE BUILD <STARTED>              *"
+echo "*            Pi4J GPIOD LIBRARY NATIVE BUILD <STARTED>               *"
 echo "*                                                                    *"
 echo "**********************************************************************"
 echo
