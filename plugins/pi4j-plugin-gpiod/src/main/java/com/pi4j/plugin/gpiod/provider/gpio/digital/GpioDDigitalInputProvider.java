@@ -8,7 +8,7 @@ import com.pi4j.plugin.gpiod.GpioDPlugin;
  * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
  * @version $Id: $Id
  */
-public class GpioDDigitalInputProvider {
+public interface GpioDDigitalInputProvider {
     /** Constant <code>NAME="GpioDPlugin.DIGITAL_INPUT_PROVIDER_NAME"</code> */
     String NAME = GpioDPlugin.DIGITAL_INPUT_PROVIDER_NAME;
     /** Constant <code>ID="GpioDPlugin.DIGITAL_INPUT_PROVIDER_ID"</code> */
