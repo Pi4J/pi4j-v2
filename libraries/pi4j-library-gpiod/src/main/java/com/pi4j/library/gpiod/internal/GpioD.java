@@ -123,9 +123,13 @@ public class GpioD {
     private static native int c_gpiod_line_bulk_num_lines(long lineBulkPtr);
 
 
-    enum LINE_DIRECTION {
+    public enum LINE_DIRECTION {
         INPUT(1), OUTPUT(2);
         final int val;
+
+        public int getVal() {
+            return val;
+        }
 
         LINE_DIRECTION(int val) {
             this.val = val;
@@ -141,9 +145,13 @@ public class GpioD {
         }
     }
 
-    enum LINE_ACTIVE_STATE {
+    public enum LINE_ACTIVE_STATE {
         HIGH(1), LOW(2);
         final int val;
+
+        public int getVal() {
+            return val;
+        }
 
         LINE_ACTIVE_STATE(int val) {
             this.val = val;
@@ -159,9 +167,13 @@ public class GpioD {
         }
     }
 
-    enum LINE_BIAS {
+    public enum LINE_BIAS {
         AS_IS(1), DISABLE(2), PULL_UP(3), PULL_DOWN(4);
         final int val;
+
+        public int getVal() {
+            return val;
+        }
 
         LINE_BIAS(int val) {
             this.val = val;
@@ -239,10 +251,14 @@ public class GpioD {
 
     private static native int c_gpiod_line_update(long linePtr);
 
-    enum LINE_REQUEST {
+    public enum LINE_REQUEST {
         DIRECTION_AS_IS(1), DIRECTION_INPUT(2), DIRECTION_OUTPUT(3), EVENT_FALLING_EDGE(4),
         EVENT_RISING_EDGE(5), EVENT_BOTH_EDGES(6);
         final int val;
+
+        public int getVal() {
+            return val;
+        }
 
         LINE_REQUEST(int val) {
             this.val = val;
@@ -258,13 +274,17 @@ public class GpioD {
         }
     }
 
-    enum LINE_REQUEST_FLAG {
+    public enum LINE_REQUEST_FLAG {
         OPEN_DRAIN((byte) 1), OPEN_SOURCE((byte) (1 << 1)), ACTIVE_LOW((byte) (1 << 2)), BIAS_DISABLE((byte) (1 << 3)),
         PULL_DOWN((byte) (1 << 4)), PULL_UP((byte) (1 << 5));
         final byte val;
 
         LINE_REQUEST_FLAG(byte val) {
             this.val = val;
+        }
+
+        public byte getVal() {
+            return val;
         }
 
         static LINE_REQUEST_FLAG fromByte(byte val) {
@@ -578,9 +598,13 @@ public class GpioD {
 
     private static native int c_gpiod_line_set_direction_output_bulk(long lineBulkPtr, int[] values);
 
-    enum LINE_EVENT {
+    public enum LINE_EVENT {
         RISING_EDGE(1), FALLING_EDGE(2);
         final int val;
+
+        public int getVal() {
+            return val;
+        }
 
         LINE_EVENT(int val) {
             this.val = val;

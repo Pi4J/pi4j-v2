@@ -49,7 +49,7 @@ public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutp
     private final GpioLine line;
 
     /**
-     * <p>Constructor for PiGpioDigitalOutput.</p>
+     * <p>Constructor for GpioDDigitalOutput.</p>
      *
      * @param line a {@link com.pi4j.library.gpiod.internal.GpioLine} object.
      * @param provider a {@link DigitalOutputProvider} object.

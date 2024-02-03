@@ -34,6 +34,16 @@ public class GpioDPlugin implements Plugin {
      */
     public static final String DIGITAL_OUTPUT_PROVIDER_ID = ID + "-digital-output";
 
+    /**
+     * Constant <code>DIGITAL_INPUT_PROVIDER_NAME="NAME +   Digital Input (GPIO) Provider"</code>
+     */
+    public static final String DIGITAL_INPUT_PROVIDER_NAME = NAME + " Digital Input (GPIO) Provider";
+    /**
+     * Constant <code>DIGITAL_INPUT_PROVIDER_ID="ID + -digital-input"</code>
+     */
+    public static final String DIGITAL_INPUT_PROVIDER_ID = ID + "-digital-input";
+
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**

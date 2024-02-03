@@ -46,7 +46,7 @@ import com.pi4j.library.gpiod.internal.GpioLine;
  * @version $Id: $Id
  */
 public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase implements GpioDDigitalOutputProvider {
-    private GpioChip gpioChip;
+    private ActiveGpioChip chipClaim;
 
 
     /**
@@ -62,34 +62,21 @@ public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase im
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
         // create new I/O instance based on I/O config
-        GpioLine line = this.gpioChip.getLine(config.address());
+        GpioLine line = this.chipClaim.getGpioChip().getLine(config.address());
         return new GpioDDigitalOutput(line, this, config);
     }
 
     @Override
     public DigitalOutputProvider initialize(Context context) throws InitializeException {
         DigitalOutputProvider provider = super.initialize(context);
-        GpioChipIterator iterator = new GpioChipIterator();
-        GpioChip found = null;
-        while (iterator.hasNext()) {
-            GpioChip current = iterator.next();
-            if(current.getLabel().contains("pinctrl")) {
-                found = current;
-                iterator.noCloseCurrent();
-                break;
-            }
-        }
-        if(found == null) {
-            throw new IllegalStateException("Couldn't identify gpiochip!");
-        }
-        this.gpioChip = found;
+        this.chipClaim = new ActiveGpioChip();
         return provider;
     }
 
     @Override
     public DigitalOutputProvider shutdown(Context context) throws ShutdownException {
-        if(gpioChip != null) {
-            this.gpioChip.close();
+        if(chipClaim.getGpioChip() != null) {
+            this.chipClaim.close();
         }
         return super.shutdown(context);
     }
