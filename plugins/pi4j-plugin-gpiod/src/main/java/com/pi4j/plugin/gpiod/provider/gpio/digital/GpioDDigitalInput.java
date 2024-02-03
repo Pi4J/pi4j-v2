@@ -43,16 +43,15 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
     @Override
     public DigitalInput initialize(Context context) throws InitializeException {
         try {
-            this.line.requestInput(config.getId());
             switch (config.getPull()) {
                 case PULL_UP:
-                    this.line.requestInputFlags(config.getId(), GpioD.LINE_BIAS.PULL_UP.getVal());
+                    this.line.requestBothEdgeEventsFlags(config.getId(), GpioD.LINE_REQUEST_FLAG.BIAS_PULL_UP.getVal());
                     break;
                 case PULL_DOWN:
-                    this.line.requestInputFlags(config.getId(), GpioD.LINE_BIAS.PULL_DOWN.getVal());
+                    this.line.requestBothEdgeEventsFlags(config.getId(), GpioD.LINE_REQUEST_FLAG.BIAS_PULL_DOWN.getVal());
                     break;
                 case OFF:
-                    this.line.requestInputFlags(config.getId(), GpioD.LINE_BIAS.DISABLE.getVal());
+                    this.line.requestBothEdgeEventsFlags(config.getId(), GpioD.LINE_REQUEST_FLAG.BIAS_DISABLE.getVal());
                     break;
             }
         } catch (GpioDException e) {

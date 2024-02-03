@@ -276,7 +276,7 @@ public class GpioD {
 
     public enum LINE_REQUEST_FLAG {
         OPEN_DRAIN((byte) 1), OPEN_SOURCE((byte) (1 << 1)), ACTIVE_LOW((byte) (1 << 2)), BIAS_DISABLE((byte) (1 << 3)),
-        PULL_DOWN((byte) (1 << 4)), PULL_UP((byte) (1 << 5));
+        BIAS_PULL_DOWN((byte) (1 << 4)),  BIAS_PULL_UP((byte) (1 << 5));
         final byte val;
 
         LINE_REQUEST_FLAG(byte val) {

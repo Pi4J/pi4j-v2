@@ -25,8 +25,8 @@ public class ActiveGpioChip implements Closeable {
                 throw new IllegalStateException("Couldn't identify gpiochip!");
             }
             ActiveGpioChip.gpioChip = found;
-            ActiveGpioChip.chipsOpen += 1;
         }
+        ActiveGpioChip.chipsOpen += 1;
     }
 
     public GpioChip getGpioChip() {

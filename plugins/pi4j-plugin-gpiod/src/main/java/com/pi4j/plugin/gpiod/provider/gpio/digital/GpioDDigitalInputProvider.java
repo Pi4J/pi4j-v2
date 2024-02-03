@@ -1,5 +1,6 @@
 package com.pi4j.plugin.gpiod.provider.gpio.digital;
 
+import com.pi4j.io.gpio.digital.DigitalInputProvider;
 import com.pi4j.plugin.gpiod.GpioDPlugin;
 
 /**
@@ -8,7 +9,7 @@ import com.pi4j.plugin.gpiod.GpioDPlugin;
  * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
  * @version $Id: $Id
  */
-public interface GpioDDigitalInputProvider {
+public interface GpioDDigitalInputProvider extends DigitalInputProvider  {
     /** Constant <code>NAME="GpioDPlugin.DIGITAL_INPUT_PROVIDER_NAME"</code> */
     String NAME = GpioDPlugin.DIGITAL_INPUT_PROVIDER_NAME;
     /** Constant <code>ID="GpioDPlugin.DIGITAL_INPUT_PROVIDER_ID"</code> */
