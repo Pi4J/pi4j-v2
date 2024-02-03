@@ -63,21 +63,21 @@ public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutp
     /** {@inheritDoc} */
     @Override
     public DigitalOutput initialize(Context context) throws InitializeException {
-        super.initialize(context);
-
         try {
             this.line.requestOutput(config.getId(), config.initialState().value().intValue());
         } catch (GpioDException e) {
             logger.error(e.getMessage(), e);
             throw new InitializeException(e);
         }
+        super.initialize(context);
         return this;
     }
 
     @Override
     public DigitalOutput shutdown(Context context) throws ShutdownException {
+        DigitalOutput returnMe = super.shutdown(context);
         this.line.release();
-        return super.shutdown(context);
+        return returnMe;
     }
 
     /** {@inheritDoc} */
