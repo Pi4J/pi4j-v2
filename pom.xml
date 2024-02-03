@@ -298,11 +298,11 @@
         <!-- <launcher.args>ButtonApp</launcher.args>  -->
 
         <!-- Raspberry Pi Setup -->
-        <raspberrypi.ipnumber>10.42.0.70</raspberrypi.ipnumber>
+        <raspberrypi.ipnumber>cocktailpi.local</raspberrypi.ipnumber>
         <raspberrypi.port>22</raspberrypi.port>
-        <raspberrypi.username>eitch</raspberrypi.username>
-        <raspberrypi.password>Testing1!</raspberrypi.password>
-        <raspberrypi.deploydirectory>/home/eitch/deploy</raspberrypi.deploydirectory>
+        <raspberrypi.username>pi</raspberrypi.username>
+        <raspberrypi.password>raspberry</raspberrypi.password>
+        <raspberrypi.deploydirectory>/home/pi/deploy</raspberrypi.deploydirectory>
         <raspberrypi.jvmOptions/>
 
 	</properties>
