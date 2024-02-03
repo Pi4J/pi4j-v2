@@ -37,6 +37,7 @@ public class ActiveGpioChip implements Closeable {
         ActiveGpioChip.claimsOpen -= 1;
         if(ActiveGpioChip.claimsOpen == 0) {
             ActiveGpioChip.gpioChip.close();
+            ActiveGpioChip.gpioChip = null;
         } else if (ActiveGpioChip.claimsOpen < 0) {
             ActiveGpioChip.claimsOpen = 0;
             throw new IllegalStateException("ActiveGpioChip.chipsOpen < 0");
