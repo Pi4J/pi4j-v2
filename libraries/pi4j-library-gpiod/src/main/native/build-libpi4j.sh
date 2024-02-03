@@ -58,12 +58,13 @@ echo "BUILDING: ${ARCH}/libpi4j-gpiod"
 echo "====================================="
 
 # perform compile
+mkdir -p lib/${ARCH}/pi4j-gpiod
 make clean all \
   --always-make \
   CROSS_PREFIX=${CROSS_PREFIX} \
   CC=${CC} \
   ARCH=${ARCH} \
-  TARGET=lib/${ARCH}/libpi4j-gpiod.so $@
+  TARGET=lib/${ARCH}/pi4j-gpiod/libpi4j-gpiod.so $@
 
 echo
 echo "-----------------------------------------------------------------------------"
