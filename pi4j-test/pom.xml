@@ -99,6 +99,16 @@
             <classifier>aarch64</classifier>
             <type>so</type>
         </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-plugin-gpiod</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-plugin-linuxfs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
     </dependencies>
 
@@ -252,7 +262,7 @@
                                         <sshexec host="${raspberrypi.ipnumber}" port="${raspberrypi.port}"
                                                  username="${raspberrypi.username}" password="${raspberrypi.password}" trust="true"
                                                  failonerror="false" usepty="true" useSystemIn="true"
-                                                 command="sudo java ${raspberrypi.jvmOptions} --module-path ${raspberrypi.deploydirectory} --module ${launcher.class} ${launcher.args}"/>
+                                                 command="sudo java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 --module-path ${raspberrypi.deploydirectory} --module ${launcher.class} ${launcher.args}"/>
                                     </target>
                                 </configuration>
                             </execution>

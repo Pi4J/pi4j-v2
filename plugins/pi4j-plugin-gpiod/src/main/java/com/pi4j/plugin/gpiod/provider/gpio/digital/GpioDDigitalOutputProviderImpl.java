@@ -73,7 +73,7 @@ public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase im
         GpioChip found = null;
         while (iterator.hasNext()) {
             GpioChip current = iterator.next();
-            if(current.getName().contains("pinctrl")) {
+            if(current.getLabel().contains("pinctrl")) {
                 found = current;
                 iterator.noCloseCurrent();
                 break;
