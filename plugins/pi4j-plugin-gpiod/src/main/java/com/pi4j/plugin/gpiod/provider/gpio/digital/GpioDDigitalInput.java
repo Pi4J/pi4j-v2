@@ -67,26 +67,29 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
         Runnable monitorThread = new Runnable() {
             @Override
             public void run() {
+                DigitalState lastState = null;
                 while (true) {
                     long debounceNs = GpioDDigitalInput.this.debounceNs;
                     GpioLineEvent lastEvent = GpioDDigitalInput.this.line.eventRead();
                     long currentTime = System.nanoTime();
 
                     //If the event is too new to be sure that it is debounced then ...
-                    while (lastEvent.getTimeNs() + debounceNs > currentTime) {
-                        // ... wait for remaining debounce time and watch out for new events
-                        int nrDebounceEvents = GpioDDigitalInput.this.line.eventWait(lastEvent.getTimeNs() + debounceNs - currentTime);
-                        // Repeat if at least one event occurred. (Debounce newest event)
-                        if(nrDebounceEvents > 0) {
-                            GpioLineEvent[] debounceEvents = GpioDDigitalInput.this.line.eventReadMultiple(nrDebounceEvents);
-                            lastEvent = debounceEvents[nrDebounceEvents - 1];
+                    while (lastEvent.getTimeNs() + debounceNs >= currentTime) {
+                        // ... wait for remaining debounce time and watch out for new event(s)
+                        if(GpioDDigitalInput.this.line.eventWait(lastEvent.getTimeNs() + debounceNs - currentTime)) {
+                            // Repeat if a second event occurred withing debounce interval
+                            lastEvent = GpioDDigitalInput.this.line.eventRead();
                         }
+
                         currentTime = System.nanoTime();
                     }
 
                     // Apply event only, if it is the newest event and at least debounceNs old.
                     DigitalState newState = DigitalState.getState(lastEvent.getType() == GpioD.LINE_EVENT.RISING_EDGE);
-                    GpioDDigitalInput.this.dispatch(new DigitalStateChangeEvent(GpioDDigitalInput.this, newState));
+                    if(lastState != newState) {
+                        lastState = newState;
+                        GpioDDigitalInput.this.dispatch(new DigitalStateChangeEvent(GpioDDigitalInput.this, newState));
+                    }
 
                 }
             }

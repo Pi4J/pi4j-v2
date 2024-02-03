@@ -51,8 +51,8 @@ public class GpiodTest {
         DigitalInput iPin = pi4j.create(inConfig);
         AtomicLong lastEvent = new AtomicLong();
         iPin.addListener(event -> {
-            System.out.println(lastEvent.get() + ": " + event.state());
-            lastEvent.set((System.currentTimeMillis()) - lastEvent.get());
+            System.out.println((System.currentTimeMillis() - lastEvent.get()) + ": " + event.state());
+            lastEvent.set(System.currentTimeMillis());
         });
         Thread.sleep(1000 * 60);
         /*
