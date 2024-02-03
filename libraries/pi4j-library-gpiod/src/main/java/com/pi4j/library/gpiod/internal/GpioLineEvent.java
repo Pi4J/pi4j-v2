@@ -1,5 +1,11 @@
 package com.pi4j.library.gpiod.internal;
 
+/**
+ * <p>GpioLineEvent</p>
+ *
+ * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
+ * @version $Id: $Id
+ */
 public class GpioLineEvent {
     private final long cPtr;
 

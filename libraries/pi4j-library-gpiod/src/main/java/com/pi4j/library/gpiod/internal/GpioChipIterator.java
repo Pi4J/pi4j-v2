@@ -2,6 +2,12 @@ package com.pi4j.library.gpiod.internal;
 
 import java.util.Iterator;
 
+/**
+ * <p>GpioChipIterator</p>
+ *
+ * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
+ * @version $Id: $Id
+ */
 public class GpioChipIterator implements Iterator<GpioChip> {
 
     private final long cPtr;

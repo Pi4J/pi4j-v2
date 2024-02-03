@@ -4,6 +4,12 @@ import com.pi4j.library.gpiod.util.NativeLibraryLoader;
 
 import java.util.Arrays;
 
+/**
+ * <p>GpioD interface.</p>
+ *
+ * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
+ * @version $Id: $Id
+ */
 public class GpioD {
     // C library: https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/include/gpiod.h?h=v1.6.x
 

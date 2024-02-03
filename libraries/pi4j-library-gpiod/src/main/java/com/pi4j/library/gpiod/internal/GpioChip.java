@@ -2,6 +2,12 @@ package com.pi4j.library.gpiod.internal;
 
 import java.io.Closeable;
 
+/**
+ * <p>GpioChip</p>
+ *
+ * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
+ * @version $Id: $Id
+ */
 public class GpioChip implements Closeable {
     private final long cPtr;
 
