@@ -45,7 +45,7 @@ public class GpiodTest {
         DigitalInputConfig inConfig = DigitalInput
             .newConfigBuilder(pi4j)
             .address(27)
-            .debounce(1000 * 1000L)
+            .debounce(0L)
             .pull(PullResistance.PULL_UP)
             .build();
         DigitalInput iPin = pi4j.create(inConfig);

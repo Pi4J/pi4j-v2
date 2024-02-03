@@ -7,7 +7,7 @@ import java.io.Closeable;
 
 public class ActiveGpioChip implements Closeable {
     private static GpioChip gpioChip;
-    private static int chipsOpen = 0;
+    private static int claimsOpen = 0;
 
     public ActiveGpioChip() {
         if(gpioChip == null) {
@@ -26,7 +26,7 @@ public class ActiveGpioChip implements Closeable {
             }
             ActiveGpioChip.gpioChip = found;
         }
-        ActiveGpioChip.chipsOpen += 1;
+        ActiveGpioChip.claimsOpen += 1;
     }
 
     public GpioChip getGpioChip() {
@@ -34,11 +34,11 @@ public class ActiveGpioChip implements Closeable {
     }
 
     public void close() {
-        ActiveGpioChip.chipsOpen -= 1;
-        if(ActiveGpioChip.chipsOpen == 0) {
+        ActiveGpioChip.claimsOpen -= 1;
+        if(ActiveGpioChip.claimsOpen == 0) {
             ActiveGpioChip.gpioChip.close();
-        } else if (ActiveGpioChip.chipsOpen < 0) {
-            ActiveGpioChip.chipsOpen = 0;
+        } else if (ActiveGpioChip.claimsOpen < 0) {
+            ActiveGpioChip.claimsOpen = 0;
             throw new IllegalStateException("ActiveGpioChip.chipsOpen < 0");
         }
     }

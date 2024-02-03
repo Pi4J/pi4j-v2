@@ -73,7 +73,8 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
                     GpioLineEvent lastEvent = GpioDDigitalInput.this.line.eventRead();
                     long currentTime = System.nanoTime();
 
-                    //If the event is too new to be sure that it is debounced then ...
+                    // Perform debouncing
+                    // If the event is too new to be sure that it is debounced then ...
                     while (lastEvent.getTimeNs() + debounceNs >= currentTime) {
                         // ... wait for remaining debounce time and watch out for new event(s)
                         if(GpioDDigitalInput.this.line.eventWait(lastEvent.getTimeNs() + debounceNs - currentTime)) {
@@ -84,7 +85,7 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
                         currentTime = System.nanoTime();
                     }
 
-                    // Apply event only, if it is the newest event and at least debounceNs old.
+                    // Apply event only if the new state is not the same as the last state.
                     DigitalState newState = DigitalState.getState(lastEvent.getType() == GpioD.LINE_EVENT.RISING_EDGE);
                     if(lastState != newState) {
                         lastState = newState;
