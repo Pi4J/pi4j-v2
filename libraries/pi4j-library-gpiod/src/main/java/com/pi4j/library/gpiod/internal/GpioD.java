@@ -620,12 +620,12 @@ public class GpioD {
         }
     }
 
-    static boolean lineEventWait(GpioLine line, long timeoutNs) {
+    static int lineEventWait(GpioLine line, long timeoutNs) {
         int result = c_gpiod_line_event_wait(line.getCPtr(), timeoutNs);
         if(result < 0) {
             throw new GpioDException("c_gpiod_line_event_wait failed!");
         }
-        return result > 0;
+        return result;
     }
 
     private static native int c_gpiod_line_event_wait(long linePtr, long timeoutNs);

@@ -133,7 +133,7 @@ public class GpioLine {
         GpioD.lineSetDirectionOutput(this, value);
     }
 
-    public boolean eventWait(long timeoutNs) {
+    public int eventWait(long timeoutNs) {
         return GpioD.lineEventWait(this, timeoutNs);
     }
 

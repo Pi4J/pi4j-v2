@@ -24,6 +24,7 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     protected ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "Pi4J.GPIO.Monitor"));
     private final GpioLine line;
+    private final long debounceNs;
 
     /**
      * <p>Constructor for GpioDDigitalInput.</p>
@@ -35,8 +36,11 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
     public GpioDDigitalInput(GpioLine line, DigitalInputProvider provider, DigitalInputConfig config) {
         super(provider, config);
         this.line = line;
-        if(config.getDebounce() != null && config.getDebounce() != 0) {
-            throw new IllegalArgumentException("Debouncing is not supported yet!");
+        if(config.getDebounce() == 0) {
+            debounceNs = 0;
+        } else {
+            // Convert microseconds to nanoseconds
+            debounceNs = 1000 * config.getDebounce();
         }
     }
 
@@ -60,19 +64,34 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
         }
         super.initialize(context);
 
-        Runnable monitorThread = () -> {
-            while (true) {
-                GpioLineEvent event = this.line.eventRead();
-                DigitalState newState;
-                if(event.getType() == GpioD.LINE_EVENT.RISING_EDGE) {
-                    newState = DigitalState.HIGH;
-                } else {
-                    newState = DigitalState.LOW;
-                }
-                GpioDDigitalInput.this.dispatch(new DigitalStateChangeEvent(GpioDDigitalInput.this, newState));
+        Runnable monitorThread = new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    long debounceNs = GpioDDigitalInput.this.debounceNs;
+                    GpioLineEvent lastEvent = GpioDDigitalInput.this.line.eventRead();
+                    long currentTime = System.nanoTime();
 
+                    //If the event is too new to be sure that it is debounced then ...
+                    while (lastEvent.getTimeNs() + debounceNs > currentTime) {
+                        // ... wait for remaining debounce time and watch out for new events
+                        int nrDebounceEvents = GpioDDigitalInput.this.line.eventWait(lastEvent.getTimeNs() + debounceNs - currentTime);
+                        // Repeat if at least one event occurred. (Debounce newest event)
+                        if(nrDebounceEvents > 0) {
+                            GpioLineEvent[] debounceEvents = GpioDDigitalInput.this.line.eventReadMultiple(nrDebounceEvents);
+                            lastEvent = debounceEvents[nrDebounceEvents - 1];
+                        }
+                        currentTime = System.nanoTime();
+                    }
+
+                    // Apply event only, if it is the newest event and at least debounceNs old.
+                    DigitalState newState = DigitalState.getState(lastEvent.getType() == GpioD.LINE_EVENT.RISING_EDGE);
+                    GpioDDigitalInput.this.dispatch(new DigitalStateChangeEvent(GpioDDigitalInput.this, newState));
+
+                }
             }
         };
+
         executor.submit(monitorThread);
         return this;
     }

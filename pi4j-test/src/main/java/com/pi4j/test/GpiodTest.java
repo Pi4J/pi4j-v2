@@ -8,6 +8,8 @@ import com.pi4j.plugin.gpiod.provider.gpio.digital.GpioDDigitalOutputProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 public class GpiodTest {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -43,15 +45,22 @@ public class GpiodTest {
         DigitalInputConfig inConfig = DigitalInput
             .newConfigBuilder(pi4j)
             .address(27)
-            .debounce(0L)
+            .debounce(1000 * 1000L)
             .pull(PullResistance.PULL_UP)
             .build();
         DigitalInput iPin = pi4j.create(inConfig);
-        //iPin.addListener(event -> System.out.println(event.state()));
+        AtomicLong lastEvent = new AtomicLong();
+        iPin.addListener(event -> {
+            System.out.println(lastEvent.get() + ": " + event.state());
+            lastEvent.set((System.currentTimeMillis()) - lastEvent.get());
+        });
+        Thread.sleep(1000 * 60);
+        /*
         for(int i = 0; i < 10; i++) {
             Thread.sleep(2000);
             System.out.println(iPin.isHigh());
         }
+         */
 
         // shutdown Pi4J
         pi4j.shutdown();
