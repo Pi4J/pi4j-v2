@@ -47,8 +47,11 @@ public class GpiodTest {
             .pull(PullResistance.PULL_UP)
             .build();
         DigitalInput iPin = pi4j.create(inConfig);
-        iPin.addListener(event -> System.out.println(event.state()));
-        Thread.sleep(1000 * 60);
+        //iPin.addListener(event -> System.out.println(event.state()));
+        for(int i = 0; i < 10; i++) {
+            Thread.sleep(2000);
+            System.out.println(iPin.isHigh());
+        }
 
         // shutdown Pi4J
         pi4j.shutdown();
