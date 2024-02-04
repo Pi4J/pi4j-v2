@@ -54,7 +54,7 @@ echo "HOST ARCHITECTURE: ${HOST}"
 # clone GPIOD from github
 # ----------------------------------
 rm -rf $GPIOD_DIRECTORY
-git -c http.sslVerify=false clone $GPIOD_REPO -b $GPIOD_BRANCH $GPIOD_DIRECTORY --single-branch --depth 1
+git clone $GPIOD_REPO -b $GPIOD_BRANCH $GPIOD_DIRECTORY --single-branch --depth 1
 
 #rm -f pigpio.tar
 #wget abyz.me.uk/rpi/pigpio/pigpio.tar

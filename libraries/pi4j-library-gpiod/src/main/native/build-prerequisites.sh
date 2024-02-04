@@ -83,6 +83,24 @@ if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
     echo " [PREREQUISITE] 'libgpiod-dev' already installed.";
   fi
 
+  # libgpiod-dev
+  LIBGPIOD_2_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' libgpiod-dev)
+  if [[ "$?" == "1" ]] ; then
+    echo " [PREREQUISITE] installing 'libgpiod-dev'...";
+    sudo apt-get --force-yes --yes install libgpiod-dev
+  else
+    echo " [PREREQUISITE] 'libgpiod-dev' already installed.";
+  fi
+
+  # gpiod
+  GPIOD_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gpiod)
+  if [[ "$?" == "1" ]] ; then
+    echo " [PREREQUISITE] installing 'gpiod'...";
+    sudo apt-get --force-yes --yes install gpiod
+  else
+    echo " [PREREQUISITE] 'gpiod' already installed.";
+  fi
+
   # autoconf
   LIBGPIOD_DEV_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' autoconf)
   if [[ "$?" == "1" ]] ; then
