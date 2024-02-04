@@ -27,7 +27,7 @@ INCLUDE	     = -I. -Igpiod                                               \
                -I/usr/include
 
 CFLAGS      := $(DEBUG) -Wall $(INCLUDE) -Winline -pipe $(CARGS) -fPIC
-LIBS         =  -L lib/$(ARCH)/pi4j-gpiod -lrt
+LIBS         =  -L lib/$(ARCH)/pi4j-gpiod -L gpiod -lgpiod -lrt
 
 TARGET=libpi4j-gpiod.so
 
