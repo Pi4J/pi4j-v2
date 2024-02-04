@@ -34,7 +34,7 @@
 
 echo
 echo "============================================================================="
-echo " STARTED BUILDING Pi4J-PIGPIO JNI NATIVE LIBRARY: ('${ARCH}/libpi4j-gpiod')"
+echo " STARTED BUILDING Pi4J-PIGPIO JNI NATIVE LIBRARY: ('${ARCH}/pi4j-gpiod/libpi4j-gpiod')"
 echo "============================================================================="
 echo " - FOR ARCHITECTURE   : ${ARCH}"
 echo " - USING COMPILER     : ${CC}"
@@ -43,7 +43,7 @@ echo "--------------------------------------------------------------------------
 echo
 
 # determine if the gpiod library has already been cloned and compiled on this system
-if [[ -d "gpiod" ]] && [[ -f "lib/$ARCH/libgpiod.so" ]] ; then
+if [[ -d "gpiod" ]] && [[ -f "lib/$ARCH/pi4j-gpiod/libgpiod.so" ]] ; then
     echo "The 'gpiod' library already exists; if you wish to rebuild, run a CLEAN build."
 else
     ./build-libgpiod.sh $@
@@ -54,7 +54,7 @@ fi
 # ------------------------------------------------------
 echo
 echo "====================================="
-echo "BUILDING: ${ARCH}/libpi4j-gpiod"
+echo "BUILDING: ${ARCH}/pi4j-gpiod/libpi4j-gpiod"
 echo "====================================="
 
 # perform compile

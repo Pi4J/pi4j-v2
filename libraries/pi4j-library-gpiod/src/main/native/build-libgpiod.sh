@@ -54,7 +54,7 @@ echo "HOST ARCHITECTURE: ${HOST}"
 # clone GPIOD from github
 # ----------------------------------
 rm -rf $GPIOD_DIRECTORY
-git clone $GPIOD_REPO -b $GPIOD_BRANCH $GPIOD_DIRECTORY --single-branch --depth 1
+git -c http.sslVerify=false clone $GPIOD_REPO -b $GPIOD_BRANCH $GPIOD_DIRECTORY --single-branch --depth 1
 
 #rm -f pigpio.tar
 #wget abyz.me.uk/rpi/pigpio/pigpio.tar
@@ -73,5 +73,5 @@ make clean all install \
   ARCH=$ARCH
 
 #echo "Copying GPIOD library files to parent 'lib' folder"
-mkdir -p ../lib/${ARCH}
-cp install/lib/libgpiod.so ../lib/${ARCH}/libgpiod.so
+mkdir -p ../lib/${ARCH}/pi4j-gpiod
+cp install/lib/libgpiod.so ../lib/${ARCH}/pi4j-gpiod/libgpiod.so
