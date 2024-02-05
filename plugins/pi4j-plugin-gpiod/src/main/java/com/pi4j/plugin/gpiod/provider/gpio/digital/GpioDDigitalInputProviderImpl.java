@@ -25,6 +25,12 @@ public class GpioDDigitalInputProviderImpl extends DigitalInputProviderBase impl
         return new GpioDDigitalInput(line, this, config);
     }
 
+    @Override
+    public int getPriority() {
+        // GpioD should be used if available
+        return 150;
+    }
+
     /** {@inheritDoc} */
     @Override
     public DigitalInputProvider initialize(Context context) throws InitializeException {

@@ -67,6 +67,12 @@ public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase im
     }
 
     @Override
+    public int getPriority() {
+        // GpioD should be used if available
+        return 150;
+    }
+
+    @Override
     public DigitalOutputProvider initialize(Context context) throws InitializeException {
         DigitalOutputProvider provider = super.initialize(context);
         this.chipClaim = new ActiveGpioChip();
