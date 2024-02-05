@@ -22,6 +22,7 @@ import java.util.concurrent.Executors;
  */
 public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final long inputMaxWaitNs = 500 * 1000 * 1000; // 0,5 seconds
     protected ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "Pi4J.GPIO.Monitor"));
     private final GpioLine line;
     private final long debounceNs;
@@ -70,6 +71,11 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
                 DigitalState lastState = null;
                 while (true) {
                     long debounceNs = GpioDDigitalInput.this.debounceNs;
+                    // We have to use this function before calling eventRead() directly, since native methods can't be interrupted.
+                    // eventRead() is blocking and prevents thread interrupt while running
+                    while (!GpioDDigitalInput.this.line.eventWait(inputMaxWaitNs)) {
+                        continue;
+                    }
                     GpioLineEvent lastEvent = GpioDDigitalInput.this.line.eventRead();
                     long currentTime = System.nanoTime();
 
@@ -77,7 +83,7 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
                     // If the event is too new to be sure that it is debounced then ...
                     while (lastEvent.getTimeNs() + debounceNs >= currentTime) {
                         // ... wait for remaining debounce time and watch out for new event(s)
-                        if(GpioDDigitalInput.this.line.eventWait(lastEvent.getTimeNs() + debounceNs - currentTime)) {
+                        if(GpioDDigitalInput.this.line.eventWait(Math.min(inputMaxWaitNs, lastEvent.getTimeNs() + debounceNs - currentTime))) {
                             // Repeat if a second event occurred withing debounce interval
                             lastEvent = GpioDDigitalInput.this.line.eventRead();
                         }
