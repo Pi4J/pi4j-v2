@@ -10,7 +10,7 @@ jobs:
     name: Build Snapshot
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Get latest Docker image
       run: docker pull pi4j/pi4j-builder:2.0
     - name: Build entire Pi4J Project in Docker
@@ -25,7 +25,7 @@ jobs:
         cp -r pi4j-distribution/target/*.deb staging
         cp -r pi4j-distribution/target/*.zip staging    
     - name: Upload distribution files to staging
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: pi4j-v2-dist
         path: staging
