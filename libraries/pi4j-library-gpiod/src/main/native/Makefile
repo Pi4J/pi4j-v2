@@ -13,7 +13,7 @@ SIZE         = $(CROSS_PREFIX)size
 STRIP        = $(CROSS_PREFIX)strip
 SHLIB        = $(CC) -shared
 STRIPLIB     = $(STRIP) --strip-unneeded
-INCLUDE	     = -I. -Igpiod                                               \
+INCLUDE	     = -I.                                                       \
                -I/$(JAVA_HOME)/include                                   \
                -I/$(JAVA_HOME)/include/linux                             \
                -I/usr/lib/jvm/jdk-11-oracle/include                      \
@@ -27,7 +27,7 @@ INCLUDE	     = -I. -Igpiod                                               \
                -I/usr/include
 
 CFLAGS      := $(DEBUG) -Wall $(INCLUDE) -Winline -pipe $(CARGS) -fPIC
-LIBS         =  -L lib/$(ARCH)/pi4j-gpiod -L /tmp -L gpiod -lgpiod -lrt
+LIBS         = -L lib/$(ARCH)/pi4j-gpiod -L gpiod -lgpiod -lrt
 
 TARGET=libpi4j-gpiod.so
 
