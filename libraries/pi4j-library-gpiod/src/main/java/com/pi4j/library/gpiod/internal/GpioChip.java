@@ -8,15 +8,10 @@ import java.io.Closeable;
  * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
  * @version $Id: $Id
  */
-public class GpioChip implements Closeable {
-    private final long cPtr;
+public class GpioChip extends CWrapper implements Closeable {
 
-    GpioChip(long cPtr) {
-        this.cPtr = cPtr;
-    }
-
-    long getCPtr() {
-        return this.cPtr;
+    public GpioChip(long cPointer) {
+        super(cPointer);
     }
 
     public void close() {

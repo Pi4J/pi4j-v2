@@ -6,24 +6,19 @@ package com.pi4j.library.gpiod.internal;
  * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
  * @version $Id: $Id
  */
-public class GpioLineEvent {
-    private final long cPtr;
+public class GpioLineEvent extends CWrapper {
 
-    GpioLineEvent(long cPtr) {
-        this.cPtr = cPtr;
+    GpioLineEvent(long cPointer) {
+        super(cPointer);
     }
 
     public GpioLineEvent() {
-        cPtr = GpioD.lineEventNew();
+        this(GpioD.lineEventNew());
     }
 
     @Override
     protected void finalize() {
         GpioD.lineEventFree(this);
-    }
-
-    long getCPtr() {
-        return this.cPtr;
     }
 
     public long getTimeNs() {

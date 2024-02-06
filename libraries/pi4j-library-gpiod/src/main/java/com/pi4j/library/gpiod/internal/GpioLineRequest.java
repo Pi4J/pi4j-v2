@@ -6,14 +6,10 @@ package com.pi4j.library.gpiod.internal;
  * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
  * @version $Id: $Id
  */
-public class GpioLineRequest {
-    private final long cPtr;
+public class GpioLineRequest extends CWrapper {
 
-    GpioLineRequest(long cPtr) {
-        this.cPtr = cPtr;
+    GpioLineRequest(long cPointer) {
+        super(cPointer);
     }
 
-    long getCPtr() {
-        return this.cPtr;
-    }
 }

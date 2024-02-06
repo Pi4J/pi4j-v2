@@ -52,5 +52,5 @@ chmod +x build.sh
 #   FOR ARMv6,ARMv7, ARMv8  32-BIT (ARMHF)
 #   FOR ARMv8               64-BIT (ARM64)
 # -------------------------------------------------------------
-#docker pull pi4j/pi4j-builder-native:2.0
+docker pull pi4j/pi4j-builder-native:2.0
 docker run --user "$(id -u):$(id -g)" --rm --volume $(pwd):/build pi4j/pi4j-builder-native:2.0 $@

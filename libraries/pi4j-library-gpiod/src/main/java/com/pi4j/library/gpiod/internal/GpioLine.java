@@ -8,15 +8,10 @@ import java.util.Objects;
  * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
  * @version $Id: $Id
  */
-public class GpioLine {
-    private final long cPtr;
+public class GpioLine extends CWrapper {
 
-    GpioLine(long cPtr) {
-        this.cPtr = cPtr;
-    }
-
-    long getCPtr() {
-        return this.cPtr;
+    GpioLine(long cPointer) {
+        super(cPointer);
     }
 
     public int getOffset() {
@@ -153,16 +148,4 @@ public class GpioLine {
         return GpioD.lineEventReadMultiple(this, maxRead);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GpioLine gpioLine = (GpioLine) o;
-        return cPtr == gpioLine.cPtr;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(cPtr);
-    }
 }

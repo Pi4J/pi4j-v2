@@ -6,11 +6,10 @@ package com.pi4j.library.gpiod.internal;
  * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
  * @version $Id: $Id
  */
-public class GpioLineBulk {
-    private final long cPtr;
+public class GpioLineBulk extends CWrapper {
 
-    GpioLineBulk(long cPtr) {
-        this.cPtr = cPtr;
+    GpioLineBulk(long cPointer) {
+        super(cPointer);
     }
 
     public GpioLineBulk() {
@@ -20,10 +19,6 @@ public class GpioLineBulk {
     @Override
     protected void finalize() {
         GpioD.lineBulkFree(this);
-    }
-
-    long getCPtr() {
-        return this.cPtr;
     }
 
     public void add(GpioLine line) {

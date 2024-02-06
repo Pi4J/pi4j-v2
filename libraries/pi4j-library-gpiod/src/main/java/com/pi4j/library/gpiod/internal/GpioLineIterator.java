@@ -8,21 +8,16 @@ import java.util.Iterator;
  * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
  * @version $Id: $Id
  */
-public class GpioLineIterator implements Iterator<GpioLine> {
+public class GpioLineIterator extends CWrapper implements Iterator<GpioLine> {
 
-    private final long cPtr;
     private GpioLine next;
 
-    GpioLineIterator(long cPtr) {
-        this.cPtr = cPtr;
+    GpioLineIterator(long cPointer) {
+        super(cPointer);
     }
 
     public GpioLineIterator(GpioChip chip) {
         this(GpioD.lineIterNew(chip));
-    }
-
-    long getCPtr() {
-        return this.cPtr;
     }
 
     @Override

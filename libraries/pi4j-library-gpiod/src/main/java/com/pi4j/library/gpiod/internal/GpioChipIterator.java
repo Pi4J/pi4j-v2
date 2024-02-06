@@ -8,35 +8,31 @@ import java.util.Iterator;
  * @author Alexander Liggesmeyer (<a href="https://alexander.liggesmeyer.net/">https://alexander.liggesmeyer.net/</a>)
  * @version $Id: $Id
  */
-public class GpioChipIterator implements Iterator<GpioChip> {
+public class GpioChipIterator extends CWrapper implements Iterator<GpioChip> {
 
-    private final long cPtr;
-    private boolean noCoseCurrent;
+    private boolean noCloseCurrent;
     private GpioChip next;
     private GpioChip current;
 
-    GpioChipIterator(long cPtr) {
-        this.cPtr = cPtr;
+    GpioChipIterator(long cPointer) {
+        super(cPointer);
     }
 
     public GpioChipIterator() {
         this(GpioD.chipIterNew());
     }
 
-    long getCPtr() {
-        return this.cPtr;
-    }
 
     @Override
     protected void finalize() {
         if(next == null) {
-            if(noCoseCurrent) {
+            if(noCloseCurrent) {
                 GpioD.chipIterFreeNoClose(this);
             } else {
                 GpioD.chipIterFree(this);
             }
         } else {
-            if(!noCoseCurrent) {
+            if(!noCloseCurrent) {
                 GpioD.chipClose(current);
             }
             GpioD.chipIterFree(this);
@@ -54,23 +50,23 @@ public class GpioChipIterator implements Iterator<GpioChip> {
     @Override
     public GpioChip next() {
         if(next == null) {
-            if(noCoseCurrent) {
+            if(noCloseCurrent) {
                 current = GpioD.chipIterNextNoClose(this);
             } else {
                 current = GpioD.chipIterNext(this);
             }
         } else {
-            if(current != null && !noCoseCurrent) {
+            if(current != null && !noCloseCurrent) {
                 GpioD.chipClose(current);
             }
             current = next;
-            noCoseCurrent = false;
+            noCloseCurrent = false;
             next = null;
         }
         return current;
     }
 
     public void noCloseCurrent() {
-        this.noCoseCurrent = true;
+        this.noCloseCurrent = true;
     }
 }
