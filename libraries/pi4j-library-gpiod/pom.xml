@@ -44,7 +44,9 @@
                     <include>NOTICE.txt</include>
                     <include>README.md</include>
                     <include>lib/armhf/pi4j-gpiod/libpi4j-gpiod.so</include> <!-- include the native 32-bit JNI library as a resource -->
+                    <include>lib/armhf/pi4j-gpiod/libgpiod.so</include>
                     <include>lib/aarch64/pi4j-gpiod/libpi4j-gpiod.so</include> <!-- include the native 64-bit JNI library as a resource -->
+                    <include>lib/aarch64/pi4j-gpiod/libgpiod.so</include>
                 </includes>
             </resource>
             <resource>
@@ -74,8 +76,10 @@
                                     <files>
                                         <!-- include 32-bit (ARMHF) Pi4J GpioD JNI Library  -->
                                         <file>${project.build.outputDirectory}/lib/armhf/pi4j-gpiod/libpi4j-gpiod.so</file>
+                                        <file>${project.build.outputDirectory}/lib/armhf/pi4j-gpiod/libgpiod.so</file>
                                         <!-- include 64-bit (AARCH64) Pi4J GpioD JNI Library  -->
                                         <file>${project.build.outputDirectory}/lib/aarch64/pi4j-gpiod/libpi4j-gpiod.so</file>
+                                        <file>${project.build.outputDirectory}/lib/aarch64/pi4j-gpiod/libgpiod.so</file>
                                     </files>
                                 </requireFilesExist>
                             </rules>
@@ -134,8 +138,10 @@
                                           classpathref="maven.plugin.classpath"/>
                                 <!-- attach 32-bit (ARMHF) Pi4J GpioD JNI Library  -->
                                 <attachartifact file="${project.build.directory}/lib/armhf/pi4j-gpiod/libpi4j-gpiod.so" classifier="armhf" type="so"/>
+                                <attachartifact file="${project.build.directory}/lib/armhf/pi4j-gpiod/libgpiod.so" classifier="armhf" type="so"/>
                                 <!-- attach 64-bit (AARCH64) Pi4J GpioD JNI Library  -->
                                 <attachartifact file="${project.build.directory}/lib/aarch64/pi4j-gpiod/libpi4j-gpiod.so" classifier="aarch64" type="so"/>
+                                <attachartifact file="${project.build.directory}/lib/aarch64/pi4j-gpiod/libgpiod.so" classifier="aarch64" type="so"/>
                             </target>
                         </configuration>
                     </execution>
@@ -210,6 +216,16 @@
                                             <outputDirectory>${project.build.directory}/lib/armhf/pi4j-gpiod</outputDirectory>
                                             <destFileName>libpi4j-gpiod.so</destFileName>
                                         </artifactItem>
+                                        <artifactItem>
+                                            <groupId>${project.groupId}</groupId>
+                                            <artifactId>${project.artifactId}</artifactId>
+                                            <version>${project.version}</version>
+                                            <classifier>armhf</classifier>
+                                            <type>so</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${project.build.directory}/lib/armhf/pi4j-gpiod</outputDirectory>
+                                            <destFileName>libgpiod.so</destFileName>
+                                        </artifactItem>
 
                                         <!-- LIBPI4J-GpioD for the Raspberry-Pi 64-bit (AARCH64) platform -->
                                         <!-- (download the JNI native library to a staging directory -->
@@ -223,6 +239,16 @@
                                             <overWrite>true</overWrite>
                                             <outputDirectory>${project.build.directory}/lib/aarch64/pi4j-gpiod</outputDirectory>
                                             <destFileName>libpi4j-gpiod.so</destFileName>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>${project.groupId}</groupId>
+                                            <artifactId>${project.artifactId}</artifactId>
+                                            <version>${project.version}</version>
+                                            <type>so</type>
+                                            <classifier>aarch64</classifier>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${project.build.directory}/lib/aarch64/pi4j-gpiod</outputDirectory>
+                                            <destFileName>libgpiod.so</destFileName>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
@@ -316,10 +342,16 @@
                                         <copy failonerror="true" includeEmptyDirs="false"
                                               file="${project.build.directory}/build/native/lib/armhf/pi4j-gpiod/libpi4j-gpiod.so"
                                               todir="${project.build.directory}/lib/armhf/pi4j-gpiod"/>
+                                        <copy failonerror="true" includeEmptyDirs="false"
+                                              file="${project.build.directory}/build/native/lib/armhf/pi4j-gpiod/libgpiod.so"
+                                              todir="${project.build.directory}/lib/armhf/pi4j-gpiod"/>
 
                                         <!-- copy compiled 64-bit (AARCH64) Pi4J GpioD JNI Library  -->
                                         <copy failonerror="true" includeEmptyDirs="false"
                                               file="${project.build.directory}/build/native/lib/aarch64/pi4j-gpiod/libpi4j-gpiod.so"
+                                              todir="${project.build.directory}/lib/aarch64/pi4j-gpiod"/>
+                                        <copy failonerror="true" includeEmptyDirs="false"
+                                              file="${project.build.directory}/build/native/lib/aarch64/pi4j-gpiod/libgpiod.so"
                                               todir="${project.build.directory}/lib/aarch64/pi4j-gpiod"/>
                                     </target>
                                 </configuration>

@@ -19,6 +19,7 @@ public class GpioD {
 
     static {
         // Load the platform library
+        NativeLibraryLoader.load("libgpiod.so", "pi4j-gpiod");
         NativeLibraryLoader.load("libpi4j-gpiod.so", "pi4j-gpiod");
     }
 

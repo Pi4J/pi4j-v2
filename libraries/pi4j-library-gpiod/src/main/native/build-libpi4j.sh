@@ -42,12 +42,7 @@ echo " - USING CROSS PREFIX : ${CROSS_PREFIX}"
 echo "-----------------------------------------------------------------------------"
 echo
 
-# determine if the gpiod library has already been cloned and compiled on this system
-if [[ -d "gpiod" ]] && [[ -f "lib/$ARCH/pi4j-gpiod/libgpiod.so" ]] ; then
-    echo "The 'gpiod' library already exists; if you wish to rebuild, run a CLEAN build."
-else
-    ./build-libgpiod.sh $@
-fi
+./build-libgpiod.sh $@
 
 # ------------------------------------------------------
 # BUILD LIBPI4J-GPIOD
