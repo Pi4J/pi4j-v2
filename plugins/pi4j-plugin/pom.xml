@@ -31,6 +31,7 @@
         <module>../pi4j-plugin-pigpio</module>
         <module>../pi4j-plugin-raspberrypi</module>
         <module>../pi4j-plugin-linuxfs</module>
+        <module>../pi4j-plugin-gpiod</module>
     </modules>
 
     <!-- BUILD INSTRUCTIONS -->
