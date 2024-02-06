@@ -24,7 +24,7 @@ INCLUDE	     = -I.                                                       \
                -I/usr/lib/jvm/java-11-openjdk-amd64/include/linux        \
                -I/usr/lib/jvm/java-11-openjdk-armhf/include              \
                -I/usr/lib/jvm/java-11-openjdk-armhf/include/linux        \
-               -I/usr/include
+               -I/usr/include -I./gpiod/install/include
 
 CFLAGS      := $(DEBUG) -Wall $(INCLUDE) -Winline -pipe $(CARGS) -fPIC
 LIBS         = -L lib/$(ARCH)/pi4j-gpiod -L gpiod -lgpiod -lrt
