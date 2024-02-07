@@ -25,11 +25,6 @@ package com.pi4j.runtime.impl;
  * #L%
  */
 
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
 import com.pi4j.event.*;
@@ -52,6 +47,11 @@ import com.pi4j.runtime.RuntimeProperties;
 import com.pi4j.util.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * <p>DefaultRuntime class.</p>
@@ -93,9 +93,9 @@ public class DefaultRuntime implements Runtime {
         this.providers = DefaultRuntimeProviders.newInstance(this);
         this.platforms = DefaultRuntimePlatforms.newInstance(this);
         this.shutdownEventManager = new EventManager(this,
-                (EventDelegate<ShutdownListener, ShutdownEvent>) (listener, event) -> listener.onShutdown(event));
+            (EventDelegate<ShutdownListener, ShutdownEvent>) (listener, event) -> listener.onShutdown(event));
         this.initializedEventManager = new EventManager(this,
-                (EventDelegate<InitializedListener, InitializedEvent>) (listener, event) -> listener.onInitialized(event));
+            (EventDelegate<InitializedListener, InitializedEvent>) (listener, event) -> listener.onInitialized(event));
 
         logger.debug("Pi4J runtime context successfully created & initialized.'");
 
@@ -141,7 +141,7 @@ public class DefaultRuntime implements Runtime {
     /** {@inheritDoc} */
     @Override
     public Runtime shutdown() throws ShutdownException {
-        if(!isShutdown) { // re-entrant calls should not perform shutdown again
+        if (!isShutdown) { // re-entrant calls should not perform shutdown again
             isShutdown = true;
             logger.trace("invoked 'shutdown();'");
 
@@ -183,7 +183,7 @@ public class DefaultRuntime implements Runtime {
             // remove all shutdown event listeners
             this.shutdownEventManager.clear();
 
-        } else{
+        } else {
             logger.debug("Pi4J context/runtime is already shutdown.'");
         }
 
@@ -195,8 +195,7 @@ public class DefaultRuntime implements Runtime {
         return executor.submit(() -> {
             try {
                 shutdown();
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
             return context;
@@ -220,14 +219,14 @@ public class DefaultRuntime implements Runtime {
             Set<Platform> platforms = new HashSet<>();
             Map<IOType, Provider> providers = new HashMap<>();
 
-			// only attempt to load platforms and providers from the classpath if an auto detect option is enabled
+            // only attempt to load platforms and providers from the classpath if an auto detect option is enabled
             ContextConfig config = context.config();
-            if(config.autoDetectPlatforms() || config.autoDetectProviders()) {
+            if (config.autoDetectPlatforms() || config.autoDetectProviders()) {
 
                 // detect available Pi4J Plugins by scanning the classpath looking for plugin instances
-				ServiceLoader<Plugin> plugins = ServiceLoader.load(Plugin.class);
+                ServiceLoader<Plugin> plugins = ServiceLoader.load(Plugin.class);
                 for (Plugin plugin : plugins) {
-					if (plugin == null)
+                    if (plugin == null)
                         continue;
 
                     if (!config.autoDetectMockPlugins() && plugin.isMock()) {
@@ -236,7 +235,7 @@ public class DefaultRuntime implements Runtime {
                     }
 
                     logger.trace("detected plugin: [{}] in classpath; calling 'initialize()'",
-                            plugin.getClass().getName());
+                        plugin.getClass().getName());
                     try {
                         // add plugin to internal cache
                         this.plugins.add(plugin);
@@ -247,21 +246,21 @@ public class DefaultRuntime implements Runtime {
                         // if auto-detect providers is enabled,
                         // then add any detected providers to the collection to load
                         if (config.autoDetectProviders()) {
-							store.providers.forEach(provider -> addProvider(provider, providers));
+                            store.providers.forEach(provider -> addProvider(provider, providers));
                         }
 
                         // if auto-detect platforms is enabled,
                         // then add any detected platforms to the collection to load
                         if (config.autoDetectPlatforms()) {
-							platforms.addAll(store.platforms);
-						}
+                            platforms.addAll(store.platforms);
+                        }
 
                     } catch (Exception ex) {
                         // unable to initialize this provider instance
-                        logger.error("unable to 'initialize()' plugin: [{}]; {}",
-                                plugin.getClass().getName(), ex.getMessage(), ex);
+                        logger.error("unable to 'initialize()' plugin: [{}]; {}", plugin.getClass().getName(),
+                            ex.getMessage(), ex);
                     }
-				}
+                }
             }
 
             // now add the explicit platforms and providers
@@ -270,7 +269,7 @@ public class DefaultRuntime implements Runtime {
                 Provider replaced = providers.put(provider.getType(), provider);
                 if (replaced != null) {
                     logger.warn("Replacing auto detected provider {} {} with provider {} from context config",
-                        provider.getType(), provider.getName(), replaced.getName());
+                        replaced.getType(), replaced.getName(), provider.getName());
                 }
             });
 
@@ -286,16 +285,18 @@ public class DefaultRuntime implements Runtime {
             // now auto-load any defined I/O injection instances available in the context config
             try {
                 // ensure that the auto-injection option is enabled for this context
-                if(this.context().config().autoInject()) {
+                if (this.context().config().autoInject()) {
 
                     // get potential injection candidates
-                    Map<String,String> candidates = PropertiesUtil.keysEndsWith(this.context().properties().all(), "inject");
+                    Map<String, String> candidates = PropertiesUtil.keysEndsWith(this.context().properties().all(),
+                        "inject");
 
                     // iterate over injection candidate and determine if it is configured/enabled for injection and perform injection
                     for (String candidateKey : candidates.keySet()) {
                         try {
-                            boolean candidateInject =  Boolean.parseBoolean(candidates.getOrDefault(candidateKey, "false"));
-                            if(candidateInject) {
+                            boolean candidateInject = Boolean.parseBoolean(
+                                candidates.getOrDefault(candidateKey, "false"));
+                            if (candidateInject) {
                                 this.context().create(candidateKey);
                             }
                         } catch (Exception e) {
@@ -304,7 +305,7 @@ public class DefaultRuntime implements Runtime {
                         }
                     }
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
 
@@ -338,11 +339,13 @@ public class DefaultRuntime implements Runtime {
                 if (existingProvider.getName().equals(provider.getName()))
                     throw new InitializeException(
                         provider.getType() + " with name " + provider.getName() + " is already registered.");
-                logger.warn("Ignoring provider {} {} as it has <= priority than {}", provider.getType(),
-                    provider.getName(), existingProvider.getName());
+                logger.warn("Ignoring provider {} {} with priority {} as it has <= priority than {} with priority {}",
+                    provider.getType(), provider.getName(), provider.getPriority(), existingProvider.getName(),
+                    existingProvider.getPriority());
             } else {
-                logger.warn("Overriding provider {} as it has > priority than {}", existingProvider.getName(),
-                    provider.getName());
+                logger.warn("Overriding provider {} {} with priority {} as it has > priority than {} with priority {}",
+                    existingProvider.getType(), existingProvider.getName(), existingProvider.getPriority(), provider.getName(),
+                    provider.getPriority());
                 providers.put(provider.getType(), provider);
             }
         }
