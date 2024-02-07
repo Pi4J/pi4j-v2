@@ -33,7 +33,6 @@ module com.pi4j.plugin.gpiod {
 
     requires com.pi4j;
     requires com.pi4j.library.gpiod;
-    requires jsch;
 
     exports com.pi4j.plugin.gpiod;
     exports com.pi4j.plugin.gpiod.provider.gpio.digital;
