@@ -34,10 +34,7 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
-import com.pi4j.library.gpiod.internal.GpioChip;
-import com.pi4j.library.gpiod.internal.GpioChipIterator;
 import com.pi4j.library.gpiod.internal.GpioLine;
-
 
 /**
  * <p>PiGpioDigitalOutputProviderImpl class.</p>
@@ -48,17 +45,17 @@ import com.pi4j.library.gpiod.internal.GpioLine;
 public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase implements GpioDDigitalOutputProvider {
     private ActiveGpioChip chipClaim;
 
-
     /**
      * <p>Constructor for PiGpioDigitalOutputProviderImpl.</p>
-     *
      */
-    public GpioDDigitalOutputProviderImpl(){
+    public GpioDDigitalOutputProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
         // create new I/O instance based on I/O config
@@ -75,15 +72,14 @@ public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase im
     @Override
     public DigitalOutputProvider initialize(Context context) throws InitializeException {
         DigitalOutputProvider provider = super.initialize(context);
-        this.chipClaim = new ActiveGpioChip();
+        this.chipClaim = ActiveGpioChip.getInstance();
         return provider;
     }
 
     @Override
     public DigitalOutputProvider shutdown(Context context) throws ShutdownException {
-        if(chipClaim.getGpioChip() != null) {
+        if (this.chipClaim != null)
             this.chipClaim.close();
-        }
         return super.shutdown(context);
     }
 }

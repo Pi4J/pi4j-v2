@@ -10,12 +10,22 @@ import java.io.Closeable;
  */
 public class GpioChip extends CWrapper implements Closeable {
 
+    private boolean open;
+
     public GpioChip(long cPointer) {
         super(cPointer);
+        this.open = true;
+    }
+
+    public boolean isOpen() {
+        return this.open;
     }
 
     public void close() {
+        if (!this.open)
+            return;
         GpioD.chipClose(this);
+        this.open = false;
     }
 
     public String getName() {
@@ -49,5 +59,4 @@ public class GpioChip extends CWrapper implements Closeable {
     public GpioLine getLine(String name) {
         return GpioD.chipGetLine(this, name);
     }
-
 }

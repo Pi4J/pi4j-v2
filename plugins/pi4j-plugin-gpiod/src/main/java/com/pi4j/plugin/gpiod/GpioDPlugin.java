@@ -5,8 +5,6 @@ import com.pi4j.extension.PluginService;
 import com.pi4j.plugin.gpiod.provider.gpio.digital.GpioDDigitalInputProvider;
 import com.pi4j.plugin.gpiod.provider.gpio.digital.GpioDDigitalOutputProvider;
 import com.pi4j.provider.Provider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>GpioDPlugin class.</p>
@@ -43,8 +41,6 @@ public class GpioDPlugin implements Plugin {
      * Constant <code>DIGITAL_INPUT_PROVIDER_ID="ID + -digital-input"</code>
      */
     public static final String DIGITAL_INPUT_PROVIDER_ID = ID + "-digital-input";
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * {@inheritDoc}

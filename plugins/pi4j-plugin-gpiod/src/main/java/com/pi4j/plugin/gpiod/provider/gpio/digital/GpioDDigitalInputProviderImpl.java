@@ -12,12 +12,14 @@ public class GpioDDigitalInputProviderImpl extends DigitalInputProviderBase impl
     /**
      * <p>Constructor for GpioDDigitalInputProviderImpl.</p>
      */
-    public GpioDDigitalInputProviderImpl(){
+    public GpioDDigitalInputProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalInput create(DigitalInputConfig config) {
         // create new I/O instance based on I/O config
@@ -31,19 +33,20 @@ public class GpioDDigitalInputProviderImpl extends DigitalInputProviderBase impl
         return 150;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalInputProvider initialize(Context context) throws InitializeException {
         DigitalInputProvider provider = super.initialize(context);
-        this.chipClaim = new ActiveGpioChip();
+        this.chipClaim = ActiveGpioChip.getInstance();
         return provider;
     }
 
     @Override
     public DigitalInputProvider shutdown(Context context) throws ShutdownException {
-        if(chipClaim.getGpioChip() != null) {
+        if (this.chipClaim != null)
             this.chipClaim.close();
-        }
         return super.shutdown(context);
     }
 }
