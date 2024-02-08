@@ -44,11 +44,9 @@ import com.pi4j.provider.exception.ProviderAlreadyExistsException;
 import com.pi4j.provider.exception.ProviderInitializeException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
 import com.pi4j.runtime.Runtime;
-import com.pi4j.util.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -157,17 +155,8 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
         // create a map <io-id, io-instance> of providers that extend of the given io class
         var result = new ConcurrentHashMap<String, T>();
         providers.values().stream().forEach(p -> {
-            // check for Proxied provider instances, if a Proxy, then also check the underlying handlers source class
-            if (Proxy.isProxyClass(p.getClass())) {
-                if(Proxy.getInvocationHandler(p).getClass().isAssignableFrom(ProviderProxyHandler.class)){
-                    ProviderProxyHandler pp = (ProviderProxyHandler) Proxy.getInvocationHandler(p);
-                    if(providerClass.isAssignableFrom(pp.provider().getClass())){
-                        result.put(p.id(), (T)p);
-                    }
-                }
-            }
-            else if(providerClass.isInstance(p)) {
-                result.put(p.id(), (T)p);
+            if (providerClass.isInstance(p)) {
+                result.put(p.id(), (T) p);
             }
         });
         return Collections.unmodifiableMap(result);
@@ -247,35 +236,29 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
 
         // iterate the given provider collection
         for(var providerInstance : provider) {
+			if (providerInstance == null)
+				continue;
 
-            if(providerInstance != null) {
-                logger.trace("adding provider to managed io map [id={}; name={}; class={}]",
-                        providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
+			logger.trace("adding provider to managed io map [id={}; name={}; class={}]",
+					providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
 
-                // ensure requested io id does not already exist in the managed set
-                if (exists(providerInstance.id())) {
-                    throw new ProviderAlreadyExistsException(providerInstance.id());
-                }
+			// ensure requested io id does not already exist in the managed set
+			if (exists(providerInstance.id())) {
+				throw new ProviderAlreadyExistsException(providerInstance.id());
+			}
 
-                // attempt to initialize the new io instance
-                initializeProvider(providerInstance);
+			// attempt to initialize the new io instance
+			initializeProvider(providerInstance);
 
-//                logger.info("INTERFACES :: " + ReflectionUtil.getAllInterfaces(providerInstance));
-//                logger.info("CLASSES :: " + ReflectionUtil.getAllClasses(providerInstance));
+			//                logger.info("INTERFACES :: " + ReflectionUtil.getAllInterfaces(providerInstance));
+			//                logger.info("CLASSES :: " + ReflectionUtil.getAllClasses(providerInstance));
 
-                ProviderProxyHandler handler = new ProviderProxyHandler(runtime, providerInstance);
-                var providerProxy = Proxy.newProxyInstance(
-                        Thread.currentThread().getContextClassLoader(),
-                        ReflectionUtil.getAllInterfacesSorted(providerInstance).toArray(new Class[]{}),
-                        handler);
+			// add new io to managed set
+			providers.put(providerInstance.id(), providerInstance);
 
-                // add new io to managed set
-                providers.put(providerInstance.id(), (T)providerProxy);
-
-                logger.debug("added io to managed provider map [id={}; name={}; class={}]",
-                        providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
-            }
-        }
+			logger.debug("added io to managed provider map [id={}; name={}; class={}]",
+					providerInstance.id(), providerInstance.name(), providerInstance.getClass().getName());
+		}
 
         return this;
     }

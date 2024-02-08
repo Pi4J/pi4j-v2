@@ -39,13 +39,11 @@ import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderException;
 import com.pi4j.provider.exception.ProviderInterfaceException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
-import com.pi4j.provider.impl.ProviderProxyHandler;
 import com.pi4j.util.PropertiesUtil;
 import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -116,23 +114,12 @@ public abstract class PlatformBase<PLATFORM extends Platform>
                     " and may not return a valid provider or may not be able to cast to the concrete class.");
         }
 
-        for(Provider p : providers.values()){
-            if(providerClass.isAssignableFrom(p.getClass())){
-                return (T)p;
-            }
-
-            // check for Proxied provider instances, if a Proxy, then also check the underlying handlers source class
-            if (Proxy.isProxyClass(p.getClass())) {
-                if(Proxy.getInvocationHandler(p).getClass().isAssignableFrom(ProviderProxyHandler.class)){
-                    ProviderProxyHandler pp = (ProviderProxyHandler) Proxy.getInvocationHandler(p);
-                    if(providerClass.isAssignableFrom(pp.provider().getClass())){
-                        return (T) p;
-                    }
-                }
-            }
+        for (Provider p : providers.values()) {
+            if (providerClass.isAssignableFrom(p.getClass()))
+                return (T) p;
         }
 
-        if(providerClass.isInterface()){
+        if (providerClass.isInterface()) {
             throw new ProviderNotFoundException(providerClass);
         } else {
             throw new ProviderInterfaceException(providerClass);
