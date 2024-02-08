@@ -45,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultRuntimeRegistry implements RuntimeRegistry {
 
-    private static final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(DefaultRuntimeRegistry.class);
     private Runtime runtime;
     private final Map<String, IO> instances;
     private final Set<Integer> usedAddresses;
@@ -172,7 +172,6 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
     }
 
     /** {@inheritDoc} */
-    @Override
     public synchronized boolean exists(String id, Class<? extends IO> type){
         String _id = null;
         try {
