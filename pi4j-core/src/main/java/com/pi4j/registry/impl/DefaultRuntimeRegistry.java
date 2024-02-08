@@ -34,10 +34,7 @@ import com.pi4j.runtime.Runtime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 /**
  * <p>DefaultRuntimeRegistry class.</p>
@@ -53,23 +50,24 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
     private final Set<Integer> usedAddresses;
 
     // static singleton instance
+
     /**
      * <p>newInstance.</p>
      *
      * @param runtime a {@link com.pi4j.runtime.Runtime} object.
      * @return a {@link com.pi4j.registry.impl.RuntimeRegistry} object.
      */
-    public static RuntimeRegistry newInstance(Runtime runtime){
+    public static RuntimeRegistry newInstance(Runtime runtime) {
         return new DefaultRuntimeRegistry(runtime);
     }
 
     // private constructor
     private DefaultRuntimeRegistry(Runtime runtime) {
         // set local runtime reference
-        this.instances = new ConcurrentHashMap<>();
-        this.usedAddresses = ConcurrentHashMap.newKeySet();
+        this.instances = new HashMap<>();
+        this.usedAddresses = new HashSet();
         this.runtime = runtime;
-	}
+    }
 
     @Override
     public synchronized RuntimeRegistry add(IO instance) throws IOInvalidIDException, IOAlreadyExistsException {
@@ -78,11 +76,11 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         String _id = validateId(instance.id());
 
         // first test to make sure this id does not already exist in the registry
-        if(instances.containsKey(_id))
+        if (instances.containsKey(_id))
             throw new IOAlreadyExistsException(_id);
-        if(instance.config() instanceof AddressConfig<?>) {
+        if (instance.config() instanceof AddressConfig<?>) {
             AddressConfig<?> addressConfig = (AddressConfig<?>) instance.config();
-            if(exists(addressConfig.address())) {
+            if (exists(addressConfig.address())) {
                 throw new IOAlreadyExistsException(addressConfig.address());
             }
             this.usedAddresses.add(addressConfig.address());
@@ -94,61 +92,68 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized <T extends IO> T get(String id, Class<T> type) throws IOInvalidIDException, IONotFoundException {
         String _id = validateId(id);
 
         // first test to make sure this id is included in the registry
-        if(!instances.containsKey(_id))
+        if (!instances.containsKey(_id))
             throw new IONotFoundException(_id);
-        return (T)instances.get(_id);
+        return (T) instances.get(_id);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized <T extends IO> T get(String id) throws IOInvalidIDException, IONotFoundException {
         String _id = validateId(id);
 
         // first test to make sure this id is included in the registry
-        if(!instances.containsKey(_id))
+        if (!instances.containsKey(_id))
             throw new IONotFoundException(_id);
 
-        return (T)instances.get(_id);
+        return (T) instances.get(_id);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized <T extends IO> T remove(String id) throws IONotFoundException, IOInvalidIDException, IOShutdownException {
         String _id = validateId(id);
         IO shutdownInstance = null;
 
         // first test to make sure this id is included in the registry
-        if(!exists(_id))
+        if (!exists(_id))
             throw new IONotFoundException(_id);
 
         // shutdown instance
         try {
             shutdownInstance = instances.get(_id);
             shutdownInstance.shutdown(runtime.context());
-        }
-        catch (LifecycleException e){
+        } catch (LifecycleException e) {
             logger.error(e.getMessage(), e);
             throw new IOShutdownException(shutdownInstance, e);
         }
 
         // remove the shutdown instance from the registry
-        if(shutdownInstance.config() instanceof AddressConfig<?>) {
+        if (shutdownInstance.config() instanceof AddressConfig<?>) {
             AddressConfig<?> addressConfig = (AddressConfig<?>) shutdownInstance.config();
             this.usedAddresses.remove(addressConfig.address());
         }
         this.instances.remove(_id);
 
         // return the shutdown I/O provider instances
-        return (T)shutdownInstance;
+        return (T) shutdownInstance;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized boolean exists(String id) {
         String _id = null;
@@ -167,25 +172,29 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         return usedAddresses.contains(address);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized Map<String, ? extends IO> all() {
         return Collections.unmodifiableMap(this.instances);
     }
 
     private String validateId(String id) throws IOInvalidIDException {
-        if(id == null)
-             throw new IOInvalidIDException();
+        if (id == null)
+            throw new IOInvalidIDException();
         String validatedId = id.trim();
-        if(validatedId.isEmpty())
+        if (validatedId.isEmpty())
             throw new IOInvalidIDException();
         return validatedId;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized RuntimeRegistry shutdown() {
-        all().values().forEach(instance->{
+        all().values().forEach(instance -> {
             try {
                 remove(instance.id());
             } catch (IOException e) {
@@ -195,7 +204,9 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RuntimeRegistry initialize() throws InitializeException {
         // NOTHING TO INITIALIZE
