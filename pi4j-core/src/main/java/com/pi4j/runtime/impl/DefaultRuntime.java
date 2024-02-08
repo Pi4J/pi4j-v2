@@ -77,6 +77,7 @@ public class DefaultRuntime implements Runtime {
      * <p>newInstance.</p>
      *
      * @param context a {@link com.pi4j.context.Context} object.
+     *
      * @return a {@link com.pi4j.runtime.Runtime} object.
      */
     public static Runtime newInstance(Context context) {
@@ -104,88 +105,103 @@ public class DefaultRuntime implements Runtime {
         java.lang.Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 // shutdown Pi4J
-                if(!isShutdown) shutdown();
-            }
-            catch (Exception e) {
+                if (!isShutdown)
+                    shutdown();
+            } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
         }, "pi4j-shutdown"));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Context context() { return this.context; }
+    public Context context() {
+        return this.context;
+    }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public RuntimeRegistry registry() { return this.registry; }
+    public RuntimeRegistry registry() {
+        return this.registry;
+    }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RuntimeProviders providers() {
         return this.providers;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RuntimePlatforms platforms() {
         return this.platforms;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RuntimeProperties properties() {
         return this.properties;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Runtime shutdown() throws ShutdownException {
-        if (!isShutdown) { // re-entrant calls should not perform shutdown again
-            isShutdown = true;
-            logger.trace("invoked 'shutdown();'");
-
-            // notify before shutdown event listeners (requires custom delegate to invoke appropriate listener method)
-            shutdownEventManager.dispatch(new ShutdownEvent(this.context),
-                (EventDelegate<ShutdownListener, ShutdownEvent>) (listener, event) -> listener.beforeShutdown(event));
-
-            try {
-                // remove shutdown monitoring thread
-                //java.lang.Runtime.getRuntime().removeShutdownHook(this.shutdownThread);
-
-                // remove all I/O instances
-                this.registry.shutdown();
-
-                // shutdown platforms
-                this.platforms.shutdown();
-
-                // shutdown all providers
-                this.providers.shutdown();
-
-                // shutdown all plugins
-                for (Plugin plugin : this.plugins) {
-                    try {
-                        plugin.shutdown(this.context);
-                    } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
-                    }
-                }
-            } catch (Exception e) {
-                logger.error("failed to 'shutdown(); '", e);
-                throw new ShutdownException(e);
-            }
-
-            logger.debug("Pi4J context/runtime successfully shutdown.'");
-
-            // notify shutdown event listeners
-            shutdownEventManager.dispatch(new ShutdownEvent(this.context));
-
-            // remove all shutdown event listeners
-            this.shutdownEventManager.clear();
-
-        } else {
-            logger.debug("Pi4J context/runtime is already shutdown.'");
+        if (isShutdown) {
+            logger.warn("Pi4J context/runtime is already shutdown.'");
+            return this;
         }
+
+        isShutdown = true;
+        logger.info("Shutting down Pi4J context/runtime...");
+
+        // notify before shutdown event listeners (requires custom delegate to invoke appropriate listener method)
+        shutdownEventManager.dispatch(new ShutdownEvent(this.context), ShutdownListener::beforeShutdown);
+
+        try {
+            // remove shutdown monitoring thread
+            //java.lang.Runtime.getRuntime().removeShutdownHook(this.shutdownThread);
+
+            // remove all I/O instances
+            this.registry.shutdown();
+
+            // shutdown platforms
+            this.platforms.shutdown();
+
+            // shutdown all providers
+            this.providers.shutdown();
+
+            // shutdown all plugins
+            for (Plugin plugin : this.plugins) {
+                try {
+                    plugin.shutdown(this.context);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("failed to 'shutdown(); '", e);
+            throw new ShutdownException(e);
+        }
+
+        logger.info("Pi4J context/runtime successfully shutdown. Dispatching shutdown event.");
+
+        // notify shutdown event listeners
+        shutdownEventManager.dispatch(new ShutdownEvent(this.context));
+
+        // remove all shutdown event listeners
+        this.shutdownEventManager.clear();
 
         return this;
     }
@@ -207,10 +223,12 @@ public class DefaultRuntime implements Runtime {
         return isShutdown;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Runtime initialize() throws InitializeException {
-        logger.trace("invoked 'initialize();'");
+        logger.info("Initializing Pi4J context/runtime...");
         try {
             // clear plugins container
             plugins.clear();
@@ -314,7 +332,7 @@ public class DefaultRuntime implements Runtime {
             throw new InitializeException(e);
         }
 
-        logger.debug("Pi4J context/runtime successfully initialized.'");
+        logger.info("Pi4J context/runtime successfully initialized.");
 
         // notify initialized event listeners
         notifyInitListeners();
@@ -344,8 +362,8 @@ public class DefaultRuntime implements Runtime {
                     existingProvider.getPriority());
             } else {
                 logger.warn("Replacing provider {} {} with priority {} with provider {} with higher priority {}",
-                    existingProvider.getType(), existingProvider.getName(), existingProvider.getPriority(), provider.getName(),
-                    provider.getPriority());
+                    existingProvider.getType(), existingProvider.getName(), existingProvider.getPriority(),
+                    provider.getName(), provider.getPriority());
                 providers.put(provider.getType(), provider);
             }
         }
