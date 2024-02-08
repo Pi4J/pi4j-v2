@@ -47,15 +47,6 @@ import java.util.stream.Collectors;
  * @version $Id: $Id
  */
 public interface Registry extends Describable {
-
-    /**
-     * <p>exists.</p>
-     *
-     * @param id a {@link java.lang.String} object.
-     * @param type a {@link java.lang.Class} object.
-     * @return a boolean.
-     */
-    boolean exists(String id, Class<? extends IO> type);
     /**
      * <p>exists.</p>
      *
