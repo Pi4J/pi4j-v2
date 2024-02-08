@@ -27,7 +27,6 @@ package com.pi4j.plugin.gpiod.provider.gpio.digital;
  * #L%
  */
 
-
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
@@ -51,20 +50,27 @@ public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutp
     /**
      * <p>Constructor for GpioDDigitalOutput.</p>
      *
-     * @param line a {@link com.pi4j.library.gpiod.internal.GpioLine} object.
+     * @param line     a {@link com.pi4j.library.gpiod.internal.GpioLine} object.
      * @param provider a {@link DigitalOutputProvider} object.
-     * @param config a {@link DigitalOutputConfig} object.
+     * @param config   a {@link DigitalOutputConfig} object.
      */
     public GpioDDigitalOutput(GpioLine line, DigitalOutputProvider provider, DigitalOutputConfig config) {
         super(provider, config);
         this.line = line;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalOutput initialize(Context context) throws InitializeException {
         try {
-            this.line.requestOutput(config.getId(), config.initialState().value().intValue());
+            int initialState;
+            if (config.getInitialState() == null)
+                initialState = DigitalState.LOW.value().intValue();
+            else
+                initialState = config.initialState().value().intValue();
+            this.line.requestOutput(config.getId(), initialState);
         } catch (GpioDException e) {
             logger.error(e.getMessage(), e);
             throw new InitializeException(e);
@@ -80,7 +86,9 @@ public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutp
         return returnMe;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalOutput state(DigitalState state) throws IOException {
         try {
