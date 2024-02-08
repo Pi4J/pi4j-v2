@@ -65,12 +65,6 @@ public class DefaultRegistry implements Registry {
 
     /** {@inheritDoc} */
     @Override
-    public boolean exists(String id, Class<? extends IO> type) {
-        return registry.exists(id, type);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public boolean exists(String id) {
         return registry.exists(id);
     }

@@ -45,10 +45,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultRuntimeRegistry implements RuntimeRegistry {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private Runtime runtime = null;
-    private final Map<String, IO> instances = new ConcurrentHashMap<>();
-    private final Set<Integer> usedAddresses = ConcurrentHashMap.newKeySet();
+    private static final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Runtime runtime;
+    private final Map<String, IO> instances;
+    private final Set<Integer> usedAddresses;
 
     // static singleton instance
     /**
@@ -63,13 +63,12 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
 
     // private constructor
     private DefaultRuntimeRegistry(Runtime runtime) {
-        // forbid object construction
-
         // set local runtime reference
+        this.instances = new ConcurrentHashMap<>();
+        this.usedAddresses = ConcurrentHashMap.newKeySet();
         this.runtime = runtime;
-    }
+	}
 
-    /** {@inheritDoc} */
     @Override
     public synchronized RuntimeRegistry add(IO instance) throws IOInvalidIDException, IOAlreadyExistsException {
 
@@ -222,5 +221,4 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
         // NOTHING TO INITIALIZE
         return this;
     }
-
 }
