@@ -3,7 +3,11 @@ package com.pi4j.plugin.gpiod.provider.gpio.digital;
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
-import com.pi4j.io.gpio.digital.*;
+import com.pi4j.io.exception.IOAlreadyExistsException;
+import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalInputConfig;
+import com.pi4j.io.gpio.digital.DigitalInputProvider;
+import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
 import com.pi4j.library.gpiod.internal.GpioLine;
 
 public class GpioDDigitalInputProviderImpl extends DigitalInputProviderBase implements GpioDDigitalInputProvider {
@@ -24,7 +28,12 @@ public class GpioDDigitalInputProviderImpl extends DigitalInputProviderBase impl
     public DigitalInput create(DigitalInputConfig config) {
         // create new I/O instance based on I/O config
         GpioLine line = this.chipClaim.getGpioChip().getLine(config.address());
-        return new GpioDDigitalInput(line, this, config);
+        GpioDDigitalInput digitalInput = new GpioDDigitalInput(line, this, config);
+        if (this.context.registry().exists(digitalInput.id()))
+            throw new IOAlreadyExistsException(config.id());
+        digitalInput.initialize(this.context);
+        this.context.registry().add(digitalInput);
+        return digitalInput;
     }
 
     @Override

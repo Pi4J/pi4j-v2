@@ -27,6 +27,7 @@ package com.pi4j.plugin.pigpio.provider.gpio.digital;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
@@ -47,7 +48,7 @@ public class PiGpioDigitalOutputProviderImpl extends DigitalOutputProviderBase i
      *
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      */
-    public PiGpioDigitalOutputProviderImpl(PiGpio piGpio){
+    public PiGpioDigitalOutputProviderImpl(PiGpio piGpio) {
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
@@ -59,13 +60,23 @@ public class PiGpioDigitalOutputProviderImpl extends DigitalOutputProviderBase i
         return 100;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
-        // initialize the PIGPIO library
-        if(!piGpio.isInitialized()) piGpio.initialize();
+        synchronized (this.piGpio) {
+            // initialize the PIGPIO library
+            if (!piGpio.isInitialized())
+                piGpio.initialize();
 
-        // create new I/O instance based on I/O config
-        return new PiGpioDigitalOutput(piGpio,this, config);
+            // create new I/O instance based on I/O config
+            PiGpioDigitalOutput digitalOutput = new PiGpioDigitalOutput(piGpio, this, config);
+            if (this.context.registry().exists(digitalOutput.id()))
+                throw new IOAlreadyExistsException(config.id());
+            digitalOutput.initialize(this.context);
+            this.context.registry().add(digitalOutput);
+            return digitalOutput;
+        }
     }
 }

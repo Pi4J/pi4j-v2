@@ -27,6 +27,7 @@ package com.pi4j.plugin.pigpio.provider.i2c;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProviderBase;
@@ -47,7 +48,7 @@ public class PiGpioI2CProviderImpl extends I2CProviderBase implements PiGpioI2CP
      *
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      */
-    public PiGpioI2CProviderImpl(PiGpio piGpio){
+    public PiGpioI2CProviderImpl(PiGpio piGpio) {
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
@@ -59,13 +60,23 @@ public class PiGpioI2CProviderImpl extends I2CProviderBase implements PiGpioI2CP
         return 100;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public I2C create(I2CConfig config) {
-        // initialize the PIGPIO library
-        if(!piGpio.isInitialized()) piGpio.initialize();
+        synchronized (this.piGpio) {
+            // initialize the PIGPIO library
+            if (!piGpio.isInitialized())
+                piGpio.initialize();
 
-        // create new I/O instance based on I/O config
-        return new PiGpioI2C(piGpio,this, config);
+            // create new I/O instance based on I/O config
+            PiGpioI2C i2C = new PiGpioI2C(piGpio, this, config);
+            if (this.context.registry().exists(i2C.id()))
+                throw new IOAlreadyExistsException(config.id());
+            i2C.initialize(this.context);
+            this.context.registry().add(i2C);
+            return i2C;
+        }
     }
 }

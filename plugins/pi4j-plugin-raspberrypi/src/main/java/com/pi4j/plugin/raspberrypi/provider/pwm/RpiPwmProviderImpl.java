@@ -27,6 +27,7 @@ package com.pi4j.plugin.raspberrypi.provider.pwm;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProviderBase;
@@ -42,14 +43,21 @@ public class RpiPwmProviderImpl extends PwmProviderBase implements RpiPwmProvide
     /**
      * <p>Constructor for RpiPwmProviderImpl.</p>
      */
-    public RpiPwmProviderImpl(){
+    public RpiPwmProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Pwm create(PwmConfig config) {
-        return new RpiPwm(this, config);
+        RpiPwm pwm = new RpiPwm(this, config);
+        if (this.context.registry().exists(pwm.id()))
+            throw new IOAlreadyExistsException(config.id());
+        pwm.initialize(this.context);
+        this.context.registry().add(pwm);
+        return pwm;
     }
 }

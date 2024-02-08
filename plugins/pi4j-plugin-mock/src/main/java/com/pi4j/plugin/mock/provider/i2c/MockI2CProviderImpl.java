@@ -10,7 +10,7 @@ package com.pi4j.plugin.mock.provider.i2c;
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
  * **********************************************************************
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -27,6 +27,7 @@ package com.pi4j.plugin.mock.provider.i2c;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProviderBase;
@@ -42,7 +43,7 @@ public class MockI2CProviderImpl extends I2CProviderBase implements MockI2CProvi
     /**
      * <p>Constructor for MockI2CProviderImpl.</p>
      */
-    public MockI2CProviderImpl(){
+    public MockI2CProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
@@ -53,9 +54,16 @@ public class MockI2CProviderImpl extends I2CProviderBase implements MockI2CProvi
         return 1000;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public I2C create(I2CConfig config) {
-        return new MockI2C(this, config);
+        MockI2C i2C = new MockI2C(this, config);
+        if (this.context.registry().exists(i2C.id()))
+            throw new IOAlreadyExistsException(config.id());
+        i2C.initialize(this.context);
+        this.context.registry().add(i2C);
+        return i2C;
     }
 }

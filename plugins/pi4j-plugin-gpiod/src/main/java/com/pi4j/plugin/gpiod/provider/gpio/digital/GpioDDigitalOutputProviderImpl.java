@@ -30,6 +30,7 @@ package com.pi4j.plugin.gpiod.provider.gpio.digital;
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
@@ -60,7 +61,12 @@ public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase im
     public DigitalOutput create(DigitalOutputConfig config) {
         // create new I/O instance based on I/O config
         GpioLine line = this.chipClaim.getGpioChip().getLine(config.address());
-        return new GpioDDigitalOutput(line, this, config);
+        GpioDDigitalOutput digitalOutput = new GpioDDigitalOutput(line, this, config);
+        if (this.context.registry().exists(digitalOutput.id()))
+            throw new IOAlreadyExistsException(config.id());
+        digitalOutput.initialize(this.context);
+        this.context.registry().add(digitalOutput);
+        return digitalOutput;
     }
 
     @Override

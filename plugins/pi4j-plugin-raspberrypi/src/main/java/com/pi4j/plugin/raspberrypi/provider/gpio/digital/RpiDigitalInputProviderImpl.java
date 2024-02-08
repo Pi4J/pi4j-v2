@@ -10,7 +10,7 @@ package com.pi4j.plugin.raspberrypi.provider.gpio.digital;
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
  * **********************************************************************
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -27,6 +27,7 @@ package com.pi4j.plugin.raspberrypi.provider.gpio.digital;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
@@ -42,14 +43,21 @@ public class RpiDigitalInputProviderImpl extends DigitalInputProviderBase implem
     /**
      * <p>Constructor for RpiDigitalInputProviderImpl.</p>
      */
-    public RpiDigitalInputProviderImpl(){
+    public RpiDigitalInputProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalInput create(DigitalInputConfig config) {
-        return new RpiDigitalInput(this, config);
+        RpiDigitalInput input = new RpiDigitalInput(this, config);
+        if (this.context.registry().exists(input.id()))
+            throw new IOAlreadyExistsException(config.id());
+        input.initialize(this.context);
+        this.context.registry().add(input);
+        return input;
     }
 }

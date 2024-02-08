@@ -27,10 +27,10 @@ package com.pi4j.plugin.mock.provider.serial;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProviderBase;
-
 
 /**
  * <p>MockSerialProviderImpl class.</p>
@@ -43,7 +43,7 @@ public class MockSerialProviderImpl extends SerialProviderBase implements MockSe
     /**
      * <p>Constructor for MockSerialProviderImpl.</p>
      */
-    public MockSerialProviderImpl(){
+    public MockSerialProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
@@ -54,9 +54,16 @@ public class MockSerialProviderImpl extends SerialProviderBase implements MockSe
         return 1000;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Serial create(SerialConfig config) {
-        return new MockSerial(this, config);
+        MockSerial serial = new MockSerial(this, config);
+        if (this.context.registry().exists(serial.id()))
+            throw new IOAlreadyExistsException(config.id());
+        serial.initialize(this.context);
+        this.context.registry().add(serial);
+        return serial;
     }
 }

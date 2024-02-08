@@ -27,6 +27,7 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
@@ -38,14 +39,15 @@ import com.pi4j.plugin.linuxfs.internal.LinuxGpio;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase implements LinuxFsDigitalOutputProvider {
+public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase
+    implements LinuxFsDigitalOutputProvider {
 
     final String gpioFileSystemPath;
 
     /**
      * <p>Constructor for LinuxFsDigitalOutputProviderImpl.</p>
      */
-    public LinuxFsDigitalOutputProviderImpl(String gpioFileSystemPath){
+    public LinuxFsDigitalOutputProviderImpl(String gpioFileSystemPath) {
         this.id = ID;
         this.name = NAME;
         this.gpioFileSystemPath = gpioFileSystemPath;
@@ -57,12 +59,18 @@ public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase 
         return 50;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
-
         // create filesystem based GPIO instance using instance address (GPIO NUMBER)
         LinuxGpio gpio = new LinuxGpio(this.gpioFileSystemPath, config.address());
-        return new LinuxFsDigitalOutput(gpio, this, config);
+        LinuxFsDigitalOutput digitalOutput = new LinuxFsDigitalOutput(gpio, this, config);
+        if (this.context.registry().exists(digitalOutput.id()))
+            throw new IOAlreadyExistsException(config.id());
+        digitalOutput.initialize(this.context);
+        this.context.registry().add(digitalOutput);
+        return digitalOutput;
     }
 }

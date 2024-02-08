@@ -27,6 +27,7 @@ package com.pi4j.plugin.mock.provider.gpio.digital;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
@@ -42,7 +43,7 @@ public class MockDigitalInputProviderImpl extends DigitalInputProviderBase imple
     /**
      * <p>Constructor for MockDigitalInputProviderImpl.</p>
      */
-    public MockDigitalInputProviderImpl(){
+    public MockDigitalInputProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
@@ -53,9 +54,16 @@ public class MockDigitalInputProviderImpl extends DigitalInputProviderBase imple
         return 1000;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalInput create(DigitalInputConfig config) {
-        return new MockDigitalInput(this, config);
+        MockDigitalInput input = new MockDigitalInput(this, config);
+        if (this.context.registry().exists(input.id()))
+            throw new IOAlreadyExistsException(config.id());
+        input.initialize(this.context);
+        this.context.registry().add(input);
+        return input;
     }
 }

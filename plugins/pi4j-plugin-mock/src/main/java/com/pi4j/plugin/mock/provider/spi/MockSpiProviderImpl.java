@@ -27,6 +27,7 @@ package com.pi4j.plugin.mock.provider.spi;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProviderBase;
@@ -37,12 +38,12 @@ import com.pi4j.io.spi.SpiProviderBase;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class MockSpiProviderImpl extends SpiProviderBase implements MockSpiProvider{
+public class MockSpiProviderImpl extends SpiProviderBase implements MockSpiProvider {
 
     /**
      * <p>Constructor for MockSpiProviderImpl.</p>
      */
-    public MockSpiProviderImpl(){
+    public MockSpiProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
@@ -53,9 +54,16 @@ public class MockSpiProviderImpl extends SpiProviderBase implements MockSpiProvi
         return 1000;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Spi create(SpiConfig config) {
-        return new MockSpi(this, config);
+        MockSpi spi = new MockSpi(this, config);
+        if (this.context.registry().exists(spi.id()))
+            throw new IOAlreadyExistsException(config.id());
+        spi.initialize(this.context);
+        this.context.registry().add(spi);
+        return spi;
     }
 }

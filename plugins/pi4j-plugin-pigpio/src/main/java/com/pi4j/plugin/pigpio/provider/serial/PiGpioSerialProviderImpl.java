@@ -27,6 +27,7 @@ package com.pi4j.plugin.pigpio.provider.serial;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProviderBase;
@@ -47,7 +48,7 @@ public class PiGpioSerialProviderImpl extends SerialProviderBase implements PiGp
      *
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      */
-    public PiGpioSerialProviderImpl(PiGpio piGpio){
+    public PiGpioSerialProviderImpl(PiGpio piGpio) {
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
@@ -59,13 +60,23 @@ public class PiGpioSerialProviderImpl extends SerialProviderBase implements PiGp
         return 100;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Serial create(SerialConfig config) {
-        // initialize the PIGPIO library
-        if(!piGpio.isInitialized()) piGpio.initialize();
+        synchronized (this.piGpio) {
+            // initialize the PIGPIO library
+            if (!piGpio.isInitialized())
+                piGpio.initialize();
 
-        // create new I/O instance based on I/O config
-        return new PiGpioSerial(piGpio,this, config);
+            // create new I/O instance based on I/O config
+            PiGpioSerial serial = new PiGpioSerial(piGpio, this, config);
+            if (this.context.registry().exists(serial.id()))
+                throw new IOAlreadyExistsException(config.id());
+            serial.initialize(this.context);
+            this.context.registry().add(serial);
+            return serial;
+        }
     }
 }

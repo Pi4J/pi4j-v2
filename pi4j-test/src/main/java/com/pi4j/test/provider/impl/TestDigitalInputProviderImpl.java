@@ -25,6 +25,7 @@ package com.pi4j.test.provider.impl;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
@@ -42,30 +43,39 @@ public class TestDigitalInputProviderImpl extends DigitalInputProviderBase imple
     /**
      * <p>Constructor for TestDigitalInputProviderImpl.</p>
      */
-    public TestDigitalInputProviderImpl(){ super(); }
+    public TestDigitalInputProviderImpl() {
+        super();
+    }
 
     /**
      * <p>Constructor for TestDigitalInputProviderImpl.</p>
      *
      * @param id a {@link java.lang.String} object.
      */
-    public TestDigitalInputProviderImpl(String id){
+    public TestDigitalInputProviderImpl(String id) {
         super(id);
     }
 
     /**
      * <p>Constructor for TestDigitalInputProviderImpl.</p>
      *
-     * @param id a {@link java.lang.String} object.
+     * @param id   a {@link java.lang.String} object.
      * @param name a {@link java.lang.String} object.
      */
-    public TestDigitalInputProviderImpl(String id, String name){
+    public TestDigitalInputProviderImpl(String id, String name) {
         super(id, name);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalInput create(DigitalInputConfig config) {
-        return new TestDigitalInput(this, config);
+        TestDigitalInput input = new TestDigitalInput(this, config);
+        if (this.context.registry().exists(input.id()))
+            throw new IOAlreadyExistsException(config.id());
+        input.initialize(this.context);
+        this.context.registry().add(input);
+        return input;
     }
 }

@@ -27,12 +27,13 @@ package com.pi4j.plugin.linuxfs.provider.i2c;
  * #L%
  */
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProviderBase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LinuxFsI2CProviderImpl extends I2CProviderBase implements LinuxFsI2CProvider {
 
@@ -51,12 +52,14 @@ public class LinuxFsI2CProviderImpl extends I2CProviderBase implements LinuxFsI2
     }
 
     @Override
-    public I2C create(I2CConfig config) {
-        synchronized (this) {
-            LinuxFsI2CBus i2CBus = this.i2CBusMap.computeIfAbsent(config.getBus(), busNr -> new LinuxFsI2CBus(config));
-
-            // create new I/O instance based on I/O config
-            return new LinuxFsI2C(i2CBus, this, config);
-        }
+    public synchronized I2C create(I2CConfig config) {
+        LinuxFsI2CBus i2CBus = this.i2CBusMap.computeIfAbsent(config.getBus(), busNr -> new LinuxFsI2CBus(config));
+        // create new I/O instance based on I/O config
+        LinuxFsI2C i2C = new LinuxFsI2C(i2CBus, this, config);
+        if (this.context.registry().exists(i2C.id()))
+            throw new IOAlreadyExistsException(config.id());
+        i2C.initialize(this.context);
+        this.context.registry().add(i2C);
+        return i2C;
     }
 }

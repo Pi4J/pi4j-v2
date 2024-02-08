@@ -25,6 +25,7 @@ package com.pi4j.test.provider.impl;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
@@ -42,30 +43,39 @@ public class TestAnalogInputProviderImpl extends AnalogInputProviderBase impleme
     /**
      * <p>Constructor for TestAnalogInputProviderImpl.</p>
      */
-    public TestAnalogInputProviderImpl(){ super(); }
+    public TestAnalogInputProviderImpl() {
+        super();
+    }
 
     /**
      * <p>Constructor for TestAnalogInputProviderImpl.</p>
      *
      * @param id a {@link java.lang.String} object.
      */
-    public TestAnalogInputProviderImpl(String id){
+    public TestAnalogInputProviderImpl(String id) {
         super(id);
     }
 
     /**
      * <p>Constructor for TestAnalogInputProviderImpl.</p>
      *
-     * @param id a {@link java.lang.String} object.
+     * @param id   a {@link java.lang.String} object.
      * @param name a {@link java.lang.String} object.
      */
-    public TestAnalogInputProviderImpl(String id, String name){
+    public TestAnalogInputProviderImpl(String id, String name) {
         super(id, name);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AnalogInput create(AnalogInputConfig config) {
-        return new TestAnalogInput(this, config);
+        TestAnalogInput input = new TestAnalogInput(this, config);
+        if (this.context.registry().exists(input.id()))
+            throw new IOAlreadyExistsException(config.id());
+        input.initialize(this.context);
+        this.context.registry().add(input);
+        return input;
     }
 }

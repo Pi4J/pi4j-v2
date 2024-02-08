@@ -27,6 +27,7 @@ package com.pi4j.plugin.pigpio.provider.gpio.digital;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
@@ -47,7 +48,7 @@ public class PiGpioDigitalInputProviderImpl extends DigitalInputProviderBase imp
      *
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      */
-    public PiGpioDigitalInputProviderImpl(PiGpio piGpio){
+    public PiGpioDigitalInputProviderImpl(PiGpio piGpio) {
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
@@ -59,13 +60,23 @@ public class PiGpioDigitalInputProviderImpl extends DigitalInputProviderBase imp
         return 100;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalInput create(DigitalInputConfig config) {
-        // initialize the PIGPIO library
-        if(!piGpio.isInitialized()) piGpio.initialize();
+        synchronized (this.piGpio) {
+            // initialize the PIGPIO library
+            if (!this.piGpio.isInitialized())
+                this.piGpio.initialize();
 
-        // create new I/O instance based on I/O config
-        return new PiGpioDigitalInput(piGpio, this, config);
+            // create new I/O instance based on I/O config
+            PiGpioDigitalInput digitalInput = new PiGpioDigitalInput(piGpio, this, config);
+            if (this.context.registry().exists(digitalInput.id()))
+                throw new IOAlreadyExistsException(config.id());
+            digitalInput.initialize(this.context);
+            this.context.registry().add(digitalInput);
+            return digitalInput;
+        }
     }
 }

@@ -27,6 +27,7 @@ package com.pi4j.plugin.mock.provider.pwm;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProviderBase;
@@ -42,7 +43,7 @@ public class MockPwmProviderImpl extends PwmProviderBase implements MockPwmProvi
     /**
      * <p>Constructor for MockPwmProviderImpl.</p>
      */
-    public MockPwmProviderImpl(){
+    public MockPwmProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
@@ -53,9 +54,16 @@ public class MockPwmProviderImpl extends PwmProviderBase implements MockPwmProvi
         return 1000;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Pwm create(PwmConfig config) {
-        return new MockPwm(this, config);
+        MockPwm pwm = new MockPwm(this, config);
+        if (this.context.registry().exists(pwm.id()))
+            throw new IOAlreadyExistsException(config.id());
+        pwm.initialize(this.context);
+        this.context.registry().add(pwm);
+        return pwm;
     }
 }
