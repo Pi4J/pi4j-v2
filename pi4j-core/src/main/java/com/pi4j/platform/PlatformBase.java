@@ -245,9 +245,11 @@ public abstract class PlatformBase<PLATFORM extends Platform>
     public PLATFORM initialize(Context context) throws InitializeException {
         this.context = context;
         String[] provIds = getProviders();
-        for (String provId : provIds) {
+        for (String providerId : provIds) {
+            if (!context.providers().exists(providerId))
+                continue;
             try {
-                addProvider(context, provId);
+                addProvider(context, providerId);
             } catch (ProviderException e) {
                 throw new InitializeException(e.getMessage());
             }
