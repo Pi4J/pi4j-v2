@@ -34,7 +34,9 @@ import com.pi4j.runtime.Runtime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -170,27 +172,6 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
     public synchronized Map<String, ? extends IO> all() {
         return Collections.unmodifiableMap(this.instances);
     }
-
-    /** {@inheritDoc} */
-    public synchronized boolean exists(String id, Class<? extends IO> type){
-        String _id = null;
-        try {
-            _id = validateId(id);
-
-            // return 'false' if the requested ID is not found
-            if(!instances.containsKey(_id))
-                return false;
-
-            // get the I/O instance
-            IO instance = instances.get(id);
-
-            // return true if the I/O instance matches the requested I/O type
-            return type.isAssignableFrom(instance.getClass());
-        } catch (IOInvalidIDException e) {
-            return false;
-        }
-    }
-
 
     private String validateId(String id) throws IOInvalidIDException {
         if(id == null)
