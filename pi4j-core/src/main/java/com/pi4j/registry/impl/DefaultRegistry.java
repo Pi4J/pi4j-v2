@@ -26,8 +26,10 @@ package com.pi4j.registry.impl;
  */
 
 import com.pi4j.io.IO;
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.exception.IOInvalidIDException;
 import com.pi4j.io.exception.IONotFoundException;
+import com.pi4j.io.exception.IOShutdownException;
 import com.pi4j.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,5 +91,15 @@ public class DefaultRegistry implements Registry {
     @Override
     public <T extends IO> T get(String id, Class<T> type) throws IOInvalidIDException, IONotFoundException {
         return registry.get(id, type);
+    }
+
+    @Override
+    public Registry add(IO instance) throws IOAlreadyExistsException, IOInvalidIDException {
+        return this.registry.add(instance);
+    }
+
+    @Override
+    public <T extends IO> T remove(String id) throws IONotFoundException, IOInvalidIDException, IOShutdownException {
+        return this.registry.remove(id);
     }
 }
