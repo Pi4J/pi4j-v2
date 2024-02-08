@@ -339,11 +339,11 @@ public class DefaultRuntime implements Runtime {
                 if (existingProvider.getName().equals(provider.getName()))
                     throw new InitializeException(
                         provider.getType() + " with name " + provider.getName() + " is already registered.");
-                logger.warn("Ignoring provider {} {} with priority {} as it has <= priority than {} with priority {}",
+                logger.warn("Ignoring provider {} {} with priority {} as lower priority than {} which has priority {}",
                     provider.getType(), provider.getName(), provider.getPriority(), existingProvider.getName(),
                     existingProvider.getPriority());
             } else {
-                logger.warn("Overriding provider {} {} with priority {} as it has > priority than {} with priority {}",
+                logger.warn("Replacing provider {} {} with priority {} with provider {} with higher priority {}",
                     existingProvider.getType(), existingProvider.getName(), existingProvider.getPriority(), provider.getName(),
                     provider.getPriority());
                 providers.put(provider.getType(), provider);
