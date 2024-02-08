@@ -177,7 +177,7 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
      */
     @Override
     public synchronized Map<String, ? extends IO> all() {
-        return Collections.unmodifiableMap(this.instances);
+        return new HashMap<>(this.instances);
     }
 
     private String validateId(String id) throws IOInvalidIDException {
