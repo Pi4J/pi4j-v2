@@ -54,9 +54,6 @@ public class RpiSerialProviderImpl extends SerialProviderBase implements RpiSeri
     @Override
     public Serial create(SerialConfig config) {
         RpiSerial serial = new RpiSerial(this, config);
-        if (this.context.registry().exists(serial.id()))
-            throw new IOAlreadyExistsException(config.id());
-        serial.initialize(this.context);
         this.context.registry().add(serial);
         return serial;
     }

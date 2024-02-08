@@ -65,6 +65,14 @@ public interface Registry extends Describable {
     boolean exists(String id);
 
     /**
+     * <p>exists.</p>
+     *
+     * @param address an int.
+     * @return a boolean.
+     */
+    boolean exists(int address);
+
+    /**
      * <p>all.</p>
      *
      * @return a {@link java.util.Map} object.

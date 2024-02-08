@@ -60,9 +60,6 @@ public class MockDigitalInputProviderImpl extends DigitalInputProviderBase imple
     @Override
     public DigitalInput create(DigitalInputConfig config) {
         MockDigitalInput input = new MockDigitalInput(this, config);
-        if (this.context.registry().exists(input.id()))
-            throw new IOAlreadyExistsException(config.id());
-        input.initialize(this.context);
         this.context.registry().add(input);
         return input;
     }

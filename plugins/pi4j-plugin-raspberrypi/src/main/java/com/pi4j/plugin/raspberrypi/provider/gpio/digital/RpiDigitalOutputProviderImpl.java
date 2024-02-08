@@ -54,9 +54,6 @@ public class RpiDigitalOutputProviderImpl extends DigitalOutputProviderBase impl
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
         RpiDigitalOutput output = new RpiDigitalOutput(this, config);
-        if (this.context.registry().exists(output.id()))
-            throw new IOAlreadyExistsException(config.id());
-        output.initialize(this.context);
         this.context.registry().add(output);
         return output;
     }

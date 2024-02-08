@@ -72,9 +72,6 @@ public class PiGpioSpiProviderImpl extends SpiProviderBase implements PiGpioSpiP
 
             // create new I/O instance based on I/O config
             PiGpioSpi spi = new PiGpioSpi(piGpio, this, config);
-            if (this.context.registry().exists(spi.id()))
-                throw new IOAlreadyExistsException(config.id());
-            spi.initialize(this.context);
             this.context.registry().add(spi);
             return spi;
         }

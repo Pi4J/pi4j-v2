@@ -88,9 +88,6 @@ public class LinuxFsPwmProviderImpl extends PwmProviderBase implements LinuxFsPw
         // create filesystem based PWM instance using instance address (PWM PIN NUMBER)
         LinuxPwm pwm = new LinuxPwm(this.pwmFileSystemPath, this.pwmChip, config.address());
         LinuxFsPwm fsPwm = new LinuxFsPwm(pwm, this, config);
-        if (this.context.registry().exists(fsPwm.id()))
-            throw new IOAlreadyExistsException(config.id());
-        fsPwm.initialize(this.context);
         this.context.registry().add(fsPwm);
         return fsPwm;
     }

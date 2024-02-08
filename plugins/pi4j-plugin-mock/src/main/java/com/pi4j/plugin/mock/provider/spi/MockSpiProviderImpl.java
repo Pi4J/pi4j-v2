@@ -60,9 +60,6 @@ public class MockSpiProviderImpl extends SpiProviderBase implements MockSpiProvi
     @Override
     public Spi create(SpiConfig config) {
         MockSpi spi = new MockSpi(this, config);
-        if (this.context.registry().exists(spi.id()))
-            throw new IOAlreadyExistsException(config.id());
-        spi.initialize(this.context);
         this.context.registry().add(spi);
         return spi;
     }

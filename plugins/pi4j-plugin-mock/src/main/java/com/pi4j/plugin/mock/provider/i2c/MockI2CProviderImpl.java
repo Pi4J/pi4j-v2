@@ -60,9 +60,6 @@ public class MockI2CProviderImpl extends I2CProviderBase implements MockI2CProvi
     @Override
     public I2C create(I2CConfig config) {
         MockI2C i2C = new MockI2C(this, config);
-        if (this.context.registry().exists(i2C.id()))
-            throw new IOAlreadyExistsException(config.id());
-        i2C.initialize(this.context);
         this.context.registry().add(i2C);
         return i2C;
     }

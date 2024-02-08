@@ -60,9 +60,6 @@ public class MockSerialProviderImpl extends SerialProviderBase implements MockSe
     @Override
     public Serial create(SerialConfig config) {
         MockSerial serial = new MockSerial(this, config);
-        if (this.context.registry().exists(serial.id()))
-            throw new IOAlreadyExistsException(config.id());
-        serial.initialize(this.context);
         this.context.registry().add(serial);
         return serial;
     }

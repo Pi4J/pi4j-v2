@@ -67,9 +67,6 @@ public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase
         // create filesystem based GPIO instance using instance address (GPIO NUMBER)
         LinuxGpio gpio = new LinuxGpio(this.gpioFileSystemPath, config.address());
         LinuxFsDigitalOutput digitalOutput = new LinuxFsDigitalOutput(gpio, this, config);
-        if (this.context.registry().exists(digitalOutput.id()))
-            throw new IOAlreadyExistsException(config.id());
-        digitalOutput.initialize(this.context);
         this.context.registry().add(digitalOutput);
         return digitalOutput;
     }

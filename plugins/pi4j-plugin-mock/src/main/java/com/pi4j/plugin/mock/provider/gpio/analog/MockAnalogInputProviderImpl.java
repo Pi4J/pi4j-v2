@@ -60,9 +60,6 @@ public class MockAnalogInputProviderImpl extends AnalogInputProviderBase impleme
     @Override
     public AnalogInput create(AnalogInputConfig config) {
         MockAnalogInput input = new MockAnalogInput(this, config);
-        if (this.context.registry().exists(input.id()))
-            throw new IOAlreadyExistsException(config.id());
-        input.initialize(this.context);
         this.context.registry().add(input);
         return input;
     }

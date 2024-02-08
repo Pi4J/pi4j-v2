@@ -72,9 +72,6 @@ public class PiGpioDigitalOutputProviderImpl extends DigitalOutputProviderBase i
 
             // create new I/O instance based on I/O config
             PiGpioDigitalOutput digitalOutput = new PiGpioDigitalOutput(piGpio, this, config);
-            if (this.context.registry().exists(digitalOutput.id()))
-                throw new IOAlreadyExistsException(config.id());
-            digitalOutput.initialize(this.context);
             this.context.registry().add(digitalOutput);
             return digitalOutput;
         }

@@ -72,9 +72,6 @@ public class PiGpioSerialProviderImpl extends SerialProviderBase implements PiGp
 
             // create new I/O instance based on I/O config
             PiGpioSerial serial = new PiGpioSerial(piGpio, this, config);
-            if (this.context.registry().exists(serial.id()))
-                throw new IOAlreadyExistsException(config.id());
-            serial.initialize(this.context);
             this.context.registry().add(serial);
             return serial;
         }

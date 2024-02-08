@@ -54,9 +54,6 @@ public class RpiI2CProviderImpl extends I2CProviderBase implements RpiI2CProvide
     @Override
     public I2C create(I2CConfig config) {
         RpiI2C i2C = new RpiI2C(this, config);
-        if (this.context.registry().exists(i2C.id()))
-            throw new IOAlreadyExistsException(config.id());
-        i2C.initialize(this.context);
         this.context.registry().add(i2C);
         return i2C;
     }

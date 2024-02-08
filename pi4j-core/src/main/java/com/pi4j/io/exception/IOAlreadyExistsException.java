@@ -46,4 +46,8 @@ public class IOAlreadyExistsException extends IOException {
     public IOAlreadyExistsException(String id){
         super("IO instance [" + id + "] already exists in the Pi4J runtime context; unable to create a new instance using this reserved id.");
     }
+
+    public IOAlreadyExistsException(int address){
+        super("IO instance with address " + address + " already exists in the Pi4J runtime context; unable to create a new instance using this reserved id.");
+    }
 }

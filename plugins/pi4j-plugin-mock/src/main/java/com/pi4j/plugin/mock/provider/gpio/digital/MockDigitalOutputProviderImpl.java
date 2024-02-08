@@ -60,9 +60,6 @@ public class MockDigitalOutputProviderImpl extends DigitalOutputProviderBase imp
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
         MockDigitalOutput output = new MockDigitalOutput(this, config);
-        if (this.context.registry().exists(output.id()))
-            throw new IOAlreadyExistsException(config.id());
-        output.initialize(this.context);
         this.context.registry().add(output);
         return output;
     }

@@ -72,9 +72,6 @@ public class PiGpioDigitalInputProviderImpl extends DigitalInputProviderBase imp
 
             // create new I/O instance based on I/O config
             PiGpioDigitalInput digitalInput = new PiGpioDigitalInput(piGpio, this, config);
-            if (this.context.registry().exists(digitalInput.id()))
-                throw new IOAlreadyExistsException(config.id());
-            digitalInput.initialize(this.context);
             this.context.registry().add(digitalInput);
             return digitalInput;
         }

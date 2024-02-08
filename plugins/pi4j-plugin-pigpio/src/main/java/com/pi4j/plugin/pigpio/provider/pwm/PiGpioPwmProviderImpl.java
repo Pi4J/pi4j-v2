@@ -78,10 +78,6 @@ public class PiGpioPwmProviderImpl extends PwmProviderBase implements PiGpioPwmP
             } else {
                 pwm = new PiGpioPwmSoftware(piGpio, this, config);
             }
-
-            if (this.context.registry().exists(pwm.id()))
-                throw new IOAlreadyExistsException(config.id());
-            pwm.initialize(this.context);
             this.context.registry().add(pwm);
             return pwm;
         }

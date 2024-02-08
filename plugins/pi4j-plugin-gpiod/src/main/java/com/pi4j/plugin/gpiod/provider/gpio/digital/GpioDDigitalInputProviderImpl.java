@@ -29,9 +29,6 @@ public class GpioDDigitalInputProviderImpl extends DigitalInputProviderBase impl
         // create new I/O instance based on I/O config
         GpioLine line = this.chipClaim.getGpioChip().getLine(config.address());
         GpioDDigitalInput digitalInput = new GpioDDigitalInput(line, this, config);
-        if (this.context.registry().exists(digitalInput.id()))
-            throw new IOAlreadyExistsException(config.id());
-        digitalInput.initialize(this.context);
         this.context.registry().add(digitalInput);
         return digitalInput;
     }

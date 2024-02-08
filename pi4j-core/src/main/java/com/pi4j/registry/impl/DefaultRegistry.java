@@ -75,6 +75,11 @@ public class DefaultRegistry implements Registry {
         return registry.exists(id);
     }
 
+    @Override
+    public boolean exists(int address) {
+        return registry.exists(address);
+    }
+
     /** {@inheritDoc} */
     @Override
     public Map<String, ? extends IO> all() {

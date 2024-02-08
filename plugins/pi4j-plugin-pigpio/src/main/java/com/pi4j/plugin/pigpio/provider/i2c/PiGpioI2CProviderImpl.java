@@ -72,9 +72,6 @@ public class PiGpioI2CProviderImpl extends I2CProviderBase implements PiGpioI2CP
 
             // create new I/O instance based on I/O config
             PiGpioI2C i2C = new PiGpioI2C(piGpio, this, config);
-            if (this.context.registry().exists(i2C.id()))
-                throw new IOAlreadyExistsException(config.id());
-            i2C.initialize(this.context);
             this.context.registry().add(i2C);
             return i2C;
         }

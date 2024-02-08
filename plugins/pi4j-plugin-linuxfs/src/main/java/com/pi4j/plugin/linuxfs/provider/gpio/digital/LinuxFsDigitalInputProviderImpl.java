@@ -66,9 +66,6 @@ public class LinuxFsDigitalInputProviderImpl extends DigitalInputProviderBase im
         // create filesystem based GPIO instance using instance address (GPIO NUMBER)
         LinuxGpio gpio = new LinuxGpio(this.gpioFileSystemPath, config.address());
         LinuxFsDigitalInput digitalInput = new LinuxFsDigitalInput(gpio, this, config);
-        if (this.context.registry().exists(digitalInput.id()))
-            throw new IOAlreadyExistsException(config.id());
-        digitalInput.initialize(this.context);
         this.context.registry().add(digitalInput);
         return digitalInput;
     }

@@ -54,9 +54,6 @@ public class RpiDigitalInputProviderImpl extends DigitalInputProviderBase implem
     @Override
     public DigitalInput create(DigitalInputConfig config) {
         RpiDigitalInput input = new RpiDigitalInput(this, config);
-        if (this.context.registry().exists(input.id()))
-            throw new IOAlreadyExistsException(config.id());
-        input.initialize(this.context);
         this.context.registry().add(input);
         return input;
     }

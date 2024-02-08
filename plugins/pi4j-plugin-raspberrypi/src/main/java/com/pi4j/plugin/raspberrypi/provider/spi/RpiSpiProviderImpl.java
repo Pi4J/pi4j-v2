@@ -54,9 +54,6 @@ public class RpiSpiProviderImpl extends SpiProviderBase implements RpiSpiProvide
     @Override
     public Spi create(SpiConfig config) {
         RpiSpi spi = new RpiSpi(this, config);
-        if (this.context.registry().exists(spi.id()))
-            throw new IOAlreadyExistsException(config.id());
-        spi.initialize(this.context);
         this.context.registry().add(spi);
         return spi;
     }
