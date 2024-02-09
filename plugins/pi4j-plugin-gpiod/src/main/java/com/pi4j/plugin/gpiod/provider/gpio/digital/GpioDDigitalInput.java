@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>PiGpioDigitalOutput class.</p>
@@ -69,12 +70,14 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
             @Override
             public void run() {
                 DigitalState lastState = null;
-                while (true) {
+                while (!Thread.interrupted()) {
                     long debounceNs = GpioDDigitalInput.this.debounceNs;
                     // We have to use this function before calling eventRead() directly, since native methods can't be interrupted.
                     // eventRead() is blocking and prevents thread interrupt while running
                     while (!GpioDDigitalInput.this.line.eventWait(inputMaxWaitNs)) {
-                        continue;
+                        if (Thread.interrupted()) {
+                            return;
+                        }
                     }
                     GpioLineEvent lastEvent = GpioDDigitalInput.this.line.eventRead();
                     long currentTime = System.nanoTime();
@@ -82,6 +85,9 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
                     // Perform debouncing
                     // If the event is too new to be sure that it is debounced then ...
                     while (lastEvent.getTimeNs() + debounceNs >= currentTime) {
+                        if (Thread.interrupted()) {
+                            return;
+                        }
                         // ... wait for remaining debounce time and watch out for new event(s)
                         if(GpioDDigitalInput.this.line.eventWait(Math.min(inputMaxWaitNs, lastEvent.getTimeNs() + debounceNs - currentTime))) {
                             // Repeat if a second event occurred withing debounce interval
@@ -97,7 +103,6 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
                         lastState = newState;
                         GpioDDigitalInput.this.dispatch(new DigitalStateChangeEvent(GpioDDigitalInput.this, newState));
                     }
-
                 }
             }
         };
@@ -108,9 +113,14 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
 
     @Override
     public DigitalInput shutdown(Context context) throws ShutdownException {
-        super.shutdown(context);
-        executor.shutdown();
-        this.line.release();
+        try {
+            super.shutdown(context);
+            executor.shutdownNow();
+            executor.awaitTermination(5, TimeUnit.SECONDS);
+            this.line.release();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return this;
     }
 
