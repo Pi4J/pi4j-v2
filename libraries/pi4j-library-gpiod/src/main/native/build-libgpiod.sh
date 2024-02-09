@@ -65,13 +65,15 @@ git clone $GPIOD_REPO -b $GPIOD_BRANCH $GPIOD_DIRECTORY --single-branch --depth 
 # ----------------------------------
 cd $GPIOD_DIRECTORY
 
+echo -e "INFO: Calling autogen.sh..."
 ./autogen.sh --enable-tools=no --prefix=$(pwd)/install --host=${HOST}
 
+echo -e "INFO: Calling make clean all install..."
 make clean all install \
   CROSS_PREFIX=${CROSS_PREFIX} \
   CC=$CC \
   ARCH=$ARCH
 
-#echo "Copying GPIOD library files to parent 'lib' folder"
+echo -e "INFO: Copying GPIOD library files to parent 'lib' folder"
 mkdir -p ../lib/${ARCH}/pi4j-gpiod
 cp install/lib/libgpiod.so ../lib/${ARCH}/pi4j-gpiod/libgpiod.so

@@ -30,31 +30,31 @@
 if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
 
   # GCC
-  GCC_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc|grep "install ok installed")
-  if [[ "" == "$GCC_INSTALLED" ]]; then
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc|grep "install ok installed")
+  if [[ "$?" == "1" ]] ; then
     sudo apt-get --force-yes --yes install gcc
   else
     echo " [PREREQUISITE] 'gcc' already installed.";
   fi
 
   # GIT
-  GIT_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' git|grep "install ok installed")
-  if [[ "" == "$GIT_INSTALLED" ]]; then
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' git|grep "install ok installed")
+  if [[ "$?" == "1" ]] ; then
     sudo apt-get --force-yes --yes install git
   else
     echo " [PREREQUISITE] 'git' already installed.";
   fi
 
   # TREE
-  TREE_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' tree|grep "install ok installed")
-  if [[ "" == "$TREE_INSTALLED" ]]; then
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' tree|grep "install ok installed")
+  if [[ "$?" == "1" ]] ; then
     sudo apt-get --force-yes --yes install tree
   else
     echo " [PREREQUISITE] 'tree' already installed.";
   fi
 
   # gcc-arm-linux-gnueabihf
-  GCC_ARMHF_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc-arm-linux-gnueabihf)
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc-arm-linux-gnueabihf|grep "install ok installed")
   if [[ "$?" == "1" ]] ; then
     echo " [PREREQUISITE] installing 'gcc-arm-linux-gnueabihf'...";
     sudo apt-get --force-yes --yes install gcc-arm-linux-gnueabihf
@@ -63,7 +63,7 @@ if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
   fi
 
   # gcc-aarch64-linux-gnu
-  GCC_AARCH64_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc-aarch64-linux-gnu)
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc-aarch64-linux-gnu|grep "install ok installed")
   if [[ "$?" == "1" ]] ; then
     echo " [PREREQUISITE] installing 'gcc-aarch64-linux-gnu'...";
     sudo apt-get --force-yes --yes install gcc-aarch64-linux-gnu
