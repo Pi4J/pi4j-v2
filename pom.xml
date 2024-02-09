@@ -76,6 +76,15 @@
 			</roles>
 			<timezone>+1</timezone>
 		</developer>
+        <developer>
+            <id>alex9849</id>
+            <name>Alexander Liggesmeyer</name>
+            <url>https://alexander.liggesmeyer.net/</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
 	</developers>
     <contributors>
         <contributor>
