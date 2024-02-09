@@ -3,7 +3,7 @@
 # #%L
 # **********************************************************************
 # ORGANIZATION  :  Pi4J
-# PROJECT       :  Pi4J :: JNI Native Binding Library for PIGPIO
+# PROJECT       :  Pi4J :: JNI Native Binding Library for GPIOD
 # FILENAME      :  build-libpi4j.sh
 #
 # This file is part of the Pi4J project. More information about
@@ -29,12 +29,12 @@
 ###
 
 # ----------------------------------------------
-# build latest Pi4J PiGPIO JNI Wrapper Library
+# build latest Pi4J GPIOD JNI Wrapper Library
 # ----------------------------------------------
 
 echo
 echo "============================================================================="
-echo " STARTED BUILDING Pi4J-PIGPIO JNI NATIVE LIBRARY: ('${ARCH}/pi4j-gpiod/libpi4j-gpiod')"
+echo " STARTED BUILDING Pi4J-GPIOD JNI NATIVE LIBRARY: ('${ARCH}/pi4j-gpiod/libpi4j-gpiod')"
 echo "============================================================================="
 echo " - FOR ARCHITECTURE   : ${ARCH}"
 echo " - USING COMPILER     : ${CC}"
@@ -63,6 +63,6 @@ make clean all \
 
 echo
 echo "-----------------------------------------------------------------------------"
-echo " FINISHED BUILDING Pi4J-PIGPIO JNI NATIVE LIBRARY: ('${ARCH}/libpi4j-gpiod')"
+echo " FINISHED BUILDING Pi4J-GPIOD JNI NATIVE LIBRARY: ('${ARCH}/libpi4j-gpiod')"
 echo "-----------------------------------------------------------------------------"
 echo

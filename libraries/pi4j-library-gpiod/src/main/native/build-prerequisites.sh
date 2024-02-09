@@ -32,32 +32,40 @@
 # ----------------------------------
 if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
 
+  # build-essential
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' build-essential|grep "install ok installed")
+  if [[ "$?" == "1" ]] ; then
+    sudo apt-get --force-yes --yes install build-essential
+  else
+    echo " [PREREQUISITE] 'build-essential' already installed.";
+  fi
+
   # GCC
-  GCC_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc|grep "install ok installed")
-  if [[ "" == "$GCC_INSTALLED" ]]; then
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc|grep "install ok installed")
+  if [[ "$?" == "1" ]] ; then
     sudo apt-get --force-yes --yes install gcc
   else
     echo " [PREREQUISITE] 'gcc' already installed.";
   fi
 
   # GIT
-  GIT_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' git|grep "install ok installed")
-  if [[ "" == "$GIT_INSTALLED" ]]; then
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' git|grep "install ok installed")
+  if [[ "$?" == "1" ]] ; then
     sudo apt-get --force-yes --yes install git
   else
     echo " [PREREQUISITE] 'git' already installed.";
   fi
 
   # TREE
-  TREE_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' tree|grep "install ok installed")
-  if [[ "" == "$TREE_INSTALLED" ]]; then
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' tree|grep "install ok installed")
+  if [[ "$?" == "1" ]] ; then
     sudo apt-get --force-yes --yes install tree
   else
     echo " [PREREQUISITE] 'tree' already installed.";
   fi
 
   # gcc-arm-linux-gnueabihf
-  GCC_ARMHF_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc-arm-linux-gnueabihf)
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc-arm-linux-gnueabihf|grep "install ok installed")
   if [[ "$?" == "1" ]] ; then
     echo " [PREREQUISITE] installing 'gcc-arm-linux-gnueabihf'...";
     sudo apt-get --force-yes --yes install gcc-arm-linux-gnueabihf
@@ -66,7 +74,7 @@ if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
   fi
 
   # gcc-aarch64-linux-gnu
-  GCC_AARCH64_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc-aarch64-linux-gnu)
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gcc-aarch64-linux-gnu|grep "install ok installed")
   if [[ "$?" == "1" ]] ; then
     echo " [PREREQUISITE] installing 'gcc-aarch64-linux-gnu'...";
     sudo apt-get --force-yes --yes install gcc-aarch64-linux-gnu
@@ -75,16 +83,16 @@ if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
   fi
 
   # libgpiod2
-  LIBGPIOD_DEV_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' libgpiod-dev)
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' libgpiod2|grep "install ok installed")
   if [[ "$?" == "1" ]] ; then
-    echo " [PREREQUISITE] installing 'libgpiod-dev'...";
-    sudo apt-get --force-yes --yes install libgpiod-dev
+    echo " [PREREQUISITE] installing 'libgpiod2'...";
+    sudo apt-get --force-yes --yes install libgpiod2
   else
-    echo " [PREREQUISITE] 'libgpiod-dev' already installed.";
+    echo " [PREREQUISITE] 'libgpiod2' already installed.";
   fi
 
   # libgpiod-dev
-  LIBGPIOD_2_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' libgpiod-dev)
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' libgpiod-dev|grep "install ok installed")
   if [[ "$?" == "1" ]] ; then
     echo " [PREREQUISITE] installing 'libgpiod-dev'...";
     sudo apt-get --force-yes --yes install libgpiod-dev
@@ -93,7 +101,7 @@ if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
   fi
 
   # gpiod
-  GPIOD_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gpiod)
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' gpiod|grep "install ok installed")
   if [[ "$?" == "1" ]] ; then
     echo " [PREREQUISITE] installing 'gpiod'...";
     sudo apt-get --force-yes --yes install gpiod
@@ -102,7 +110,7 @@ if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
   fi
 
   # autoconf
-  LIBGPIOD_DEV_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' autoconf)
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' autoconf|grep "install ok installed")
   if [[ "$?" == "1" ]] ; then
     echo " [PREREQUISITE] installing 'autoconf'...";
     sudo apt-get --force-yes --yes install autoconf
@@ -110,8 +118,17 @@ if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
     echo " [PREREQUISITE] 'autoconf' already installed.";
   fi
 
+  # autoconf-archive
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' autoconf-archive|grep "install ok installed")
+  if [[ "$?" == "1" ]] ; then
+    echo " [PREREQUISITE] installing 'autoconf-archive'...";
+    sudo apt-get --force-yes --yes install autoconf-archive
+  else
+    echo " [PREREQUISITE] 'autoconf-archive' already installed.";
+  fi
+
   # pkg-config
-  PKG_CONFIG_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' pkg-config)
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' pkg-config|grep "install ok installed")
   if [[ "$?" == "1" ]] ; then
     echo " [PREREQUISITE] installing 'pkg-config'...";
     sudo apt-get --force-yes --yes install pkg-config
@@ -120,7 +137,7 @@ if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
   fi
 
   # libtool
-  LIBTOOL_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' libtool)
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' libtool|grep "install ok installed")
   if [[ "$?" == "1" ]] ; then
     echo " [PREREQUISITE] installing 'libtool'...";
     sudo apt-get --force-yes --yes install libtool
@@ -128,12 +145,12 @@ if [ ! -z "`type apt-get 2>/dev/null;`" ]; then
     echo " [PREREQUISITE] 'libtool' already installed.";
   fi
 
-  # autoconf
-  AUTOCONF_ARCHIVE_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' autoconf-archive)
+  # pkg-config
+  INSTALLED=$(dpkg-query -W --showformat='${Status}\n' pkg-config|grep "install ok installed")
   if [[ "$?" == "1" ]] ; then
-    echo " [PREREQUISITE] installing 'autoconf-archive'...";
-    sudo apt-get --force-yes --yes install autoconf-archive
+    echo " [PREREQUISITE] installing 'pkg-config'...";
+    sudo apt-get --force-yes --yes install pkg-config
   else
-    echo " [PREREQUISITE] 'autoconf-archive' already installed.";
+    echo " [PREREQUISITE] 'pkg-config' already installed.";
   fi
 fi
