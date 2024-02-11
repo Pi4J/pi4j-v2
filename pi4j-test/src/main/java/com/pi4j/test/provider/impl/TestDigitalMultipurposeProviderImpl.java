@@ -67,7 +67,7 @@ public class TestDigitalMultipurposeProviderImpl extends DigitalMultipurposeProv
 
     /** {@inheritDoc} */
     @Override
-    public DigitalMultipurpose create(DigitalMultipurposeConfig config) throws Exception {
+    public DigitalMultipurpose create(DigitalMultipurposeConfig config) {
         return new TestDigitalMultipurpose(this, config);
     }
 }
