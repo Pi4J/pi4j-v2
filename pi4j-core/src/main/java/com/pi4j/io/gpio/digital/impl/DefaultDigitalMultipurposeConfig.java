@@ -56,6 +56,7 @@ public class DefaultDigitalMultipurposeConfig
     protected DigitalState shutdownState = null;
     protected DigitalState initialState = null;
     protected DigitalMode initialMode = DigitalMode.OUTPUT;
+    protected DigitalState onState = DigitalState.HIGH;
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -94,6 +95,11 @@ public class DefaultDigitalMultipurposeConfig
         if(properties.containsKey(INITIAL_MODE_KEY)){
             this.initialMode = DigitalMode.parse(properties.get(INITIAL_MODE_KEY));
         }
+
+        // load on-state value property
+        if(properties.containsKey(ON_STATE_KEY)){
+            this.onState = DigitalState.parse(properties.get(ON_STATE_KEY));
+        }
     }
 
     /** {@inheritDoc} */
@@ -129,5 +135,10 @@ public class DefaultDigitalMultipurposeConfig
     @Override
     public DigitalState initialState() {
         return this.initialState;
+    }
+
+    @Override
+    public DigitalState onState() {
+        return this.onState;
     }
 }

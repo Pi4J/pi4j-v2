@@ -57,7 +57,7 @@ public class PiGpioDigitalMultipurposeProviderImpl extends DigitalMultipurposePr
 
     /** {@inheritDoc} */
     @Override
-    public DigitalMultipurpose create(DigitalMultipurposeConfig config) throws Exception {
+    public DigitalMultipurpose create(DigitalMultipurposeConfig config) {
         // initialize the PIGPIO library
         if(!piGpio.isInitialized()) piGpio.initialize();
 

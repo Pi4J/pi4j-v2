@@ -67,7 +67,7 @@ public class TestDigitalOutputProviderImpl extends DigitalOutputProviderBase imp
 
     /** {@inheritDoc} */
     @Override
-    public DigitalOutput create(DigitalOutputConfig config) throws Exception {
+    public DigitalOutput create(DigitalOutputConfig config) {
         return new TestDigitalOutput(this, config);
     }
 }

@@ -62,7 +62,7 @@ public class PiGpioDigitalMultipurpose extends DigitalMultipurposeBase implement
      * @param config a {@link DigitalInputConfig} object.
      * @throws IOException if any.
      */
-    public PiGpioDigitalMultipurpose(PiGpio piGpio, DigitalMultipurposeProvider provider, DigitalMultipurposeConfig config) throws IOException {
+    public PiGpioDigitalMultipurpose(PiGpio piGpio, DigitalMultipurposeProvider provider, DigitalMultipurposeConfig config) {
         super(provider, config);
         this.piGpio = piGpio;
         this.pin = config.address().intValue();
@@ -80,64 +80,49 @@ public class PiGpioDigitalMultipurpose extends DigitalMultipurposeBase implement
     /** {@inheritDoc} */
     @Override
     public DigitalMultipurpose initialize(Context context) throws InitializeException {
-        try {
-            // configure GPIO pin as an INPUT|OUTPUT pin
-            PiGpioMode pgpiomode = (mode.isOutput()) ? PiGpioMode.OUTPUT : PiGpioMode.INPUT;
-            this.piGpio.gpioSetMode(pin, pgpiomode);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-            throw new InitializeException(e);
-        }
+		// configure GPIO pin as an INPUT|OUTPUT pin
+		PiGpioMode pgpiomode = (mode.isOutput()) ? PiGpioMode.OUTPUT : PiGpioMode.INPUT;
+		this.piGpio.gpioSetMode(pin, pgpiomode);
 
-        super.initialize(context);
+		super.initialize(context);
 
-        try {
-            // if configured, set GPIO pin pull resistance
-            switch(config.pull()){
-                case PULL_DOWN:{
-                    this.piGpio.gpioSetPullUpDown(pin, PiGpioPud.DOWN);
-                    break;
-                }
-                case PULL_UP:{
-                    this.piGpio.gpioSetPullUpDown(pin, PiGpioPud.UP);
-                    break;
-                }
-            }
+		// if configured, set GPIO pin pull resistance
+		switch(config.pull()){
+			case PULL_DOWN:{
+				this.piGpio.gpioSetPullUpDown(pin, PiGpioPud.DOWN);
+				break;
+			}
+			case PULL_UP:{
+				this.piGpio.gpioSetPullUpDown(pin, PiGpioPud.UP);
+				break;
+			}
+		}
 
-            // if configured, set GPIO debounce
-            if(this.config.debounce() != null) {
-                int steadyInterval = 0;
-                if(this.config.debounce() > 300000){
-                    steadyInterval = 300000;
-                } else{
-                    steadyInterval = this.config.debounce().intValue();
-                }
-                this.piGpio.gpioNoiseFilter(pin, 0, 0);
-                this.piGpio.gpioGlitchFilter(pin, steadyInterval);
-            }
+		// if configured, set GPIO debounce
+		if(this.config.debounce() != null) {
+			int steadyInterval = 0;
+			if(this.config.debounce() > 300000){
+				steadyInterval = 300000;
+			} else{
+				steadyInterval = this.config.debounce().intValue();
+			}
+			this.piGpio.gpioNoiseFilter(pin, 0, 0);
+			this.piGpio.gpioGlitchFilter(pin, steadyInterval);
+		}
 
-            // add this pin listener
-            this.piGpio.addPinListener(pin, piGpioPinListener);
+		// add this pin listener
+		this.piGpio.addPinListener(pin, piGpioPinListener);
 
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-            throw new InitializeException(e);
-        }
-        return this;
+		return this;
     }
 
     /** {@inheritDoc} */
     @Override
     public DigitalMultipurpose mode(DigitalMode mode) throws com.pi4j.io.exception.IOException {
-        try {
-            // configure GPIO pin as an INPUT|OUTPUT pin
-            PiGpioMode pgpiomode = (mode.isOutput()) ? PiGpioMode.OUTPUT : PiGpioMode.INPUT;
-            this.piGpio.gpioSetMode(pin, pgpiomode);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-            throw new IOModeException(e.getMessage());
-        }
-        return super.mode(mode);
+		// configure GPIO pin as an INPUT|OUTPUT pin
+		PiGpioMode pgpiomode = (mode.isOutput()) ? PiGpioMode.OUTPUT : PiGpioMode.INPUT;
+		this.piGpio.gpioSetMode(pin, pgpiomode);
+		return super.mode(mode);
     }
 
     /** {@inheritDoc} */
@@ -148,13 +133,8 @@ public class PiGpioDigitalMultipurpose extends DigitalMultipurposeBase implement
             throw new IOModeException("Unable to set state [" + state.getName() +
                 "] for I/O instance [" + toString() + "]; Invalid Mode: " + mode.getName());
         }
-        try {
-            this.piGpio.gpioWrite(pin, PiGpioState.from(state.value()));
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-            throw new com.pi4j.io.exception.IOException(e.getMessage(), e);
-        }
-        return super.state(state);
+		this.piGpio.gpioWrite(pin, PiGpioState.from(state.value()));
+		return super.state(state);
     }
 
     /** {@inheritDoc} */
