@@ -32,8 +32,10 @@ import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.exception.IOException;
 import com.pi4j.io.gpio.digital.*;
+import com.pi4j.library.gpiod.internal.GpioDContext;
 import com.pi4j.library.gpiod.internal.GpioDException;
 import com.pi4j.library.gpiod.internal.GpioLine;
+import com.pi4j.library.gpiod.internal.LineDirection;
 
 /**
  * <p>PiGpioDigitalOutput class.</p>
@@ -63,11 +65,13 @@ public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutp
     public DigitalOutput initialize(Context context) throws InitializeException {
         try {
             int initialState;
-            if (config.getInitialState() == null)
+            if (this.config.getInitialState() == null)
                 initialState = DigitalState.LOW.value().intValue();
             else
-                initialState = config.initialState().value().intValue();
-            this.line.requestOutput(config.getId(), initialState);
+                initialState = this.config.initialState().value().intValue();
+            if (this.line.getDirection() == LineDirection.INPUT)
+                GpioDContext.getInstance().closeLine(this.line);
+            this.line.requestOutput(this.config.getId(), initialState);
         } catch (GpioDException e) {
             throw new InitializeException("Failed to initialize output " + this.id, e);
         }
@@ -78,7 +82,6 @@ public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutp
     @Override
     public DigitalOutput shutdown(Context context) throws ShutdownException {
         super.shutdown(context);
-        this.line.release();
         return this;
     }
 

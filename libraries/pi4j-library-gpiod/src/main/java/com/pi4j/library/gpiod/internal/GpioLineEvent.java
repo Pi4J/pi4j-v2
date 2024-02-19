@@ -12,20 +12,11 @@ public class GpioLineEvent extends CWrapper {
         super(cPointer);
     }
 
-    public GpioLineEvent() {
-        this(GpioD.lineEventNew());
-    }
-
-    @Override
-    protected void finalize() {
-        GpioD.lineEventFree(this);
-    }
-
     public long getTimeNs() {
-        return GpioD.lineEventGetTimespec(this);
+        return GpioD.lineEventGetTimespec(getCPointer());
     }
 
-    public GpioD.LINE_EVENT getType() {
-        return GpioD.lineEventGetType(this);
+    public LineEvent getType() {
+        return GpioD.lineEventGetType(getCPointer());
     }
 }

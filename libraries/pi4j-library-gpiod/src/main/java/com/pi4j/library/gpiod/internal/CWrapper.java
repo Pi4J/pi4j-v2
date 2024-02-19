@@ -3,7 +3,7 @@ package com.pi4j.library.gpiod.internal;
 import java.util.Objects;
 
 public class CWrapper {
-    private long cPointer;
+    private final long cPointer;
 
     public CWrapper(long cPointer) {
         this.cPointer = cPointer;

@@ -30,11 +30,11 @@ package com.pi4j.plugin.gpiod.provider.gpio.digital;
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
-import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
+import com.pi4j.library.gpiod.internal.GpioDContext;
 import com.pi4j.library.gpiod.internal.GpioLine;
 
 /**
@@ -44,7 +44,6 @@ import com.pi4j.library.gpiod.internal.GpioLine;
  * @version $Id: $Id
  */
 public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase implements GpioDDigitalOutputProvider {
-    private ActiveGpioChip chipClaim;
 
     /**
      * <p>Constructor for PiGpioDigitalOutputProviderImpl.</p>
@@ -60,7 +59,7 @@ public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase im
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
         // create new I/O instance based on I/O config
-        GpioLine line = this.chipClaim.getGpioChip().getLine(config.address());
+        GpioLine line = GpioDContext.getInstance().getOrOpenLine(config.address());
         GpioDDigitalOutput digitalOutput = new GpioDDigitalOutput(line, this, config);
         this.context.registry().add(digitalOutput);
         return digitalOutput;
@@ -75,14 +74,13 @@ public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase im
     @Override
     public DigitalOutputProvider initialize(Context context) throws InitializeException {
         DigitalOutputProvider provider = super.initialize(context);
-        this.chipClaim = ActiveGpioChip.getInstance();
+        GpioDContext.getInstance().initialize();
         return provider;
     }
 
     @Override
     public DigitalOutputProvider shutdown(Context context) throws ShutdownException {
-        if (this.chipClaim != null)
-            this.chipClaim.close();
+        GpioDContext.getInstance().close();
         return super.shutdown(context);
     }
 }

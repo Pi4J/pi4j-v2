@@ -62,6 +62,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1chip
   (JNIEnv* env, jclass javaClass, jlong chipPtr, jintArray offsets, jint num_offsets, jlong lineBulkPtr) {
     jint* c_offsets = (*env)->GetIntArrayElements(env, offsets, 0);
     int returnVal = gpiod_chip_get_lines((struct gpiod_chip*) (uintptr_t) chipPtr, (unsigned int*) c_offsets, num_offsets, (struct gpiod_line_bulk*) (uintptr_t) lineBulkPtr);
+    if (returnVal == -1)
+      perror("gpiod_chip_get_lines");
     (*env)->ReleaseIntArrayElements(env, offsets, c_offsets, 0);
     return returnVal;
 }
@@ -239,6 +241,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong linePtr, jstring consumer) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_input((struct gpiod_line*) (uintptr_t) linePtr, c_consumer);
+    if (result == -1)
+      perror("gpiod_line_request_input");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -252,6 +256,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong linePtr, jstring consumer, jint defaultVal) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_output((struct gpiod_line*) (uintptr_t) linePtr, c_consumer, defaultVal);
+    if (result == -1)
+      perror("gpiod_line_request_output");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -265,6 +271,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong linePtr, jstring consumer) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_rising_edge_events((struct gpiod_line*) (uintptr_t) linePtr, c_consumer);
+    if (result == -1)
+      perror("gpiod_line_request_rising_edge_events");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -278,6 +286,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong linePtr, jstring consumer) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_falling_edge_events((struct gpiod_line*) (uintptr_t) linePtr, c_consumer);
+    if (result == -1)
+      perror("gpiod_line_request_falling_edge_events");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -291,6 +301,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong linePtr, jstring consumer) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_both_edges_events((struct gpiod_line*) (uintptr_t) linePtr, c_consumer);
+    if (result == -1)
+      perror("gpiod_line_request_both_edges_events");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -304,6 +316,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong linePtr, jstring consumer, jint flags) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_input_flags((struct gpiod_line*) (uintptr_t) linePtr, c_consumer, flags);
+    if (result == -1)
+      perror("gpiod_line_request_input_flags");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -317,6 +331,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong linePtr, jstring consumer, jint flags, jint defaultVal) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_output_flags((struct gpiod_line*) (uintptr_t) linePtr, c_consumer, flags, defaultVal);
+    if (result == -1)
+      perror("gpiod_line_request_output_flags");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -330,6 +346,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong linePtr, jstring consumer, jint flags) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_rising_edge_events_flags((struct gpiod_line*) (uintptr_t) linePtr, c_consumer, flags);
+    if (result == -1)
+      perror("gpiod_line_request_rising_edge_events_flags");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -343,6 +361,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong linePtr, jstring consumer, jint flags) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_falling_edge_events_flags((struct gpiod_line*) (uintptr_t) linePtr, c_consumer, flags);
+    if (result == -1)
+      perror("gpiod_line_request_falling_edge_events_flags");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -356,6 +376,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong linePtr, jstring consumer, jint flags) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_both_edges_events_flags((struct gpiod_line*) (uintptr_t) linePtr, c_consumer, flags);
+    if (result == -1)
+      perror("gpiod_line_request_both_edges_events_flags");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -369,6 +391,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong lineBulkPtr, jlong requestConfigPtr, jintArray defaultVals) {
     jint* c_defaultVals = (*env)->GetIntArrayElements(env, defaultVals, 0);
     int result = gpiod_line_request_bulk((struct gpiod_line_bulk*) (uintptr_t) lineBulkPtr, (struct gpiod_line_request_config*) (uintptr_t) requestConfigPtr, c_defaultVals);
+    if (result == -1)
+      perror("gpiod_line_request_bulk");
     (*env)->ReleaseIntArrayElements(env, defaultVals, c_defaultVals, 0);
     return result;
 }
@@ -382,6 +406,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong bulkPtr, jstring consumer) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_bulk_input((struct gpiod_line_bulk*) (uintptr_t) bulkPtr, c_consumer);
+    if (result == -1)
+      perror("gpiod_line_request_bulk_input");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -396,6 +422,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
     jint* c_defaultVals = (*env)->GetIntArrayElements(env, defaultVals, 0);
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_bulk_output((struct gpiod_line_bulk*) (uintptr_t) bulkPtr, c_consumer, c_defaultVals);
+    if (result == -1)
+      perror("gpiod_line_request_bulk_output");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     (*env)->ReleaseIntArrayElements(env, defaultVals, c_defaultVals, 0);
     return result;
@@ -410,6 +438,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong bulkPtr, jstring consumer) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_bulk_rising_edge_events((struct gpiod_line_bulk*) (uintptr_t) bulkPtr, c_consumer);
+    if (result == -1)
+      perror("gpiod_line_request_bulk_rising_edge_events");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -423,6 +453,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong bulkPtr, jstring consumer) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_bulk_falling_edge_events((struct gpiod_line_bulk*) (uintptr_t) bulkPtr, c_consumer);
+    if (result == -1)
+      perror("gpiod_line_request_bulk_falling_edge_events");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -436,6 +468,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong bulkPtr, jstring consumer) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_bulk_both_edges_events((struct gpiod_line_bulk*) (uintptr_t) bulkPtr, c_consumer);
+    if (result == -1)
+      perror("gpiod_line_request_bulk_both_edges_events");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -449,6 +483,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong bulkPtr, jstring consumer, jint flags) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_bulk_input_flags((struct gpiod_line_bulk*) (uintptr_t) bulkPtr, c_consumer, flags);
+    if (result == -1)
+      perror("gpiod_line_request_bulk_input_flags");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -463,6 +499,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
     jint* c_defaultVals = (*env)->GetIntArrayElements(env, defaultVals, 0);
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_bulk_output_flags((struct gpiod_line_bulk*) (uintptr_t) bulkPtr, c_consumer, flags, c_defaultVals);
+    if (result == -1)
+      perror("gpiod_line_request_bulk_output_flags");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     (*env)->ReleaseIntArrayElements(env, defaultVals, c_defaultVals, 0);
     return result;
@@ -477,6 +515,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong bulkPtr, jstring consumer, jint flags) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_bulk_rising_edge_events_flags((struct gpiod_line_bulk*) (uintptr_t) bulkPtr, c_consumer, flags);
+    if (result == -1)
+      perror("gpiod_line_request_bulk_rising_edge_events_flags");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -490,6 +530,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong bulkPtr, jstring consumer, jint flags) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_bulk_falling_edge_events_flags((struct gpiod_line_bulk*) (uintptr_t) bulkPtr, c_consumer, flags);
+    if (result == -1)
+      perror("gpiod_line_request_bulk_falling_edge_events_flags");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -503,6 +545,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong bulkPtr, jstring consumer, jint flags) {
     const char* c_consumer = (*env)->GetStringUTFChars(env, consumer, NULL);
     int result = gpiod_line_request_bulk_both_edges_events_flags((struct gpiod_line_bulk*) (uintptr_t) bulkPtr, c_consumer, flags);
+    if (result == -1)
+      perror("gpiod_line_request_bulk_both_edges_events_flags");
     (*env)->ReleaseStringUTFChars(env, consumer, c_consumer);
     return result;
 }
@@ -566,6 +610,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong lineBulkPtr, jintArray values) {
     jint* c_values = (*env)->GetIntArrayElements(env, values, 0);
     int result = gpiod_line_get_value_bulk((struct gpiod_line_bulk*) (uintptr_t) lineBulkPtr, c_values);
+    if (result == -1)
+      perror("gpiod_line_get_value_bulk");
     (*env)->ReleaseIntArrayElements(env, values, c_values, 0);
     return result;
 }
@@ -589,6 +635,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong lineBulkPtr, jintArray values) {
     jint* c_values = (*env)->GetIntArrayElements(env, values, 0);
     int result = gpiod_line_set_value_bulk((struct gpiod_line_bulk*) (uintptr_t) lineBulkPtr, c_values);
+    if (result == -1)
+      perror("gpiod_line_set_value_bulk");
     (*env)->ReleaseIntArrayElements(env, values, c_values, 0);
     return result;
 }
@@ -612,6 +660,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong lineBulkPtr, jint direction, jint flags, jintArray values) {
     jint* c_values = (*env)->GetIntArrayElements(env, values, 0);
     int result = gpiod_line_set_config_bulk((struct gpiod_line_bulk*) (uintptr_t) lineBulkPtr, direction, flags, c_values);
+    if (result == -1)
+      perror("gpiod_line_set_config_bulk");
     (*env)->ReleaseIntArrayElements(env, values, c_values, 0);
     return result;
 }
@@ -643,7 +693,10 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
  */
 JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1set_1direction_1input
   (JNIEnv* env, jclass javaClass, jlong linePtr) {
-    return gpiod_line_set_direction_input((struct gpiod_line*) (uintptr_t) linePtr);
+    int result = gpiod_line_set_direction_input((struct gpiod_line*) (uintptr_t) linePtr);
+    if (result == -1)
+      perror("gpiod_line_set_direction_input");
+    return result;
 }
 
 /*
@@ -663,7 +716,10 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
  */
 JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line_1set_1direction_1output
   (JNIEnv* env, jclass javaClass, jlong linePtr, jint value) {
-    return gpiod_line_set_direction_output((struct gpiod_line*) (uintptr_t) linePtr, value);
+    int result = gpiod_line_set_direction_output((struct gpiod_line*) (uintptr_t) linePtr, value);
+    if (result == -1)
+      perror("gpiod_line_set_direction_output");
+    return result;
 }
 
 /*
@@ -675,6 +731,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong lineBulkPtr, jintArray values) {
     jint* c_values = (*env)->GetIntArrayElements(env, values, 0);
     int result = gpiod_line_set_direction_output_bulk((struct gpiod_line_bulk*) (uintptr_t) lineBulkPtr, c_values);
+    if (result == -1)
+      perror("gpiod_line_set_direction_output_bulk");
     (*env)->ReleaseIntArrayElements(env, values, c_values, 0);
     return result;
 }
@@ -725,6 +783,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
   (JNIEnv* env, jclass javaClass, jlong linePtr, jlongArray events, jint numEvents) {
     jlong* c_events = (*env)->GetLongArrayElements(env, events, 0);
     int result = gpiod_line_event_read_multiple((struct gpiod_line*) (uintptr_t) linePtr, (struct gpiod_line_event*) (uintptr_t) c_events, numEvents);
+    if (result == -1)
+      perror("gpiod_line_event_read_multiple");
     (*env)->ReleaseLongArrayElements(env, events, c_events, 0);
     return result;
 }

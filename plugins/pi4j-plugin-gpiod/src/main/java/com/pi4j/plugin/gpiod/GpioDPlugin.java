@@ -1,5 +1,7 @@
 package com.pi4j.plugin.gpiod;
 
+import com.pi4j.context.Context;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
 import com.pi4j.plugin.gpiod.provider.gpio.digital.GpioDDigitalInputProvider;
@@ -42,16 +44,24 @@ public class GpioDPlugin implements Plugin {
      */
     public static final String DIGITAL_INPUT_PROVIDER_ID = ID + "-digital-input";
 
+    private Provider<?, ?, ?>[] providers;
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void initialize(PluginService service) {
-        Provider[] providers = {
-            GpioDDigitalOutputProvider.newInstance(),
-            GpioDDigitalInputProvider.newInstance()
-        };
+        this.providers = new Provider[]{GpioDDigitalOutputProvider.newInstance(),
+            GpioDDigitalInputProvider.newInstance()};
+        service.register(this.providers);
+    }
 
-        service.register(providers);
+    @Override
+    public void shutdown(Context context) throws ShutdownException {
+        if (this.providers != null) {
+            for (Provider<?, ?, ?> provider : providers) {
+                provider.shutdown(context);
+            }
+        }
     }
 }

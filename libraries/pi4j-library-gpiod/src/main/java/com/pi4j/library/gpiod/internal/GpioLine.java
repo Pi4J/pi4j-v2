@@ -1,6 +1,7 @@
 package com.pi4j.library.gpiod.internal;
 
-import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>GpioLine</p>
@@ -9,143 +10,140 @@ import java.util.Objects;
  * @version $Id: $Id
  */
 public class GpioLine extends CWrapper {
+    private static final Logger logger = LoggerFactory.getLogger(GpioLine.class);
+    private final int offset;
 
-    GpioLine(long cPointer) {
+    GpioLine(int offset, long cPointer) {
         super(cPointer);
+        this.offset = offset;
+    }
+
+    public int getOriginalOffset() {
+        return this.offset;
     }
 
     public int getOffset() {
-        return GpioD.lineGetOffset(this);
+        return GpioD.lineGetOffset(getCPointer());
     }
 
     public String getName() {
-        return GpioD.lineGetName(this);
+        return GpioD.lineGetName(getCPointer());
     }
 
     public String getConsumer() {
-        return GpioD.lineGetConsumer(this);
+        return GpioD.lineGetConsumer(getCPointer());
     }
 
-    public GpioD.LINE_DIRECTION getDirection() {
-        return GpioD.lineGetDirection(this);
+    public LineDirection getDirection() {
+        return GpioD.lineGetDirection(getCPointer());
     }
 
-    public GpioD.LINE_ACTIVE_STATE getActiveState() {
-        return GpioD.lineGetActiveState(this);
+    public LineActiveState getActiveState() {
+        return GpioD.lineGetActiveState(getCPointer());
     }
 
-    public GpioD.LINE_BIAS getBias() {
-        return GpioD.lineGetBias(this);
+    public LineBias getBias() {
+        return GpioD.lineGetBias(getCPointer());
     }
 
     public boolean isUsed() {
-        return GpioD.lineIsUsed(this);
+        return GpioD.lineIsUsed(getCPointer());
     }
 
     public boolean isOpenDrain() {
-        return GpioD.lineIsOpenDrain(this);
+        return GpioD.lineIsOpenDrain(getCPointer());
     }
 
     public boolean isOpenSource() {
-        return GpioD.lineIsOpenSource(this);
+        return GpioD.lineIsOpenSource(getCPointer());
     }
 
     public void update() {
-        GpioD.lineUpdate(this);
-    }
-
-    public void request(GpioLineRequest config, int defaultVal) {
-        GpioD.lineRequest(this, config, defaultVal);
+        GpioD.lineUpdate(getCPointer());
     }
 
     public void requestInput(String consumer) {
-        GpioD.lineRequestInput(this, consumer);
+        GpioD.lineRequestInput(getCPointer(), consumer);
     }
 
     public void requestOutput(String consumer, int defaultVal) {
-        GpioD.lineRequestOutput(this, consumer, defaultVal);
+        GpioD.lineRequestOutput(getCPointer(), consumer, defaultVal);
     }
 
     public void requestRisingEdgeEvents(String consumer) {
-        GpioD.lineRequestRisingEdgeEvents(this, consumer);
+        GpioD.lineRequestRisingEdgeEvents(getCPointer(), consumer);
     }
 
     public void requestFallingEdgeEvents(String consumer) {
-        GpioD.lineRequestFallingEdgeEvents(this, consumer);
+        GpioD.lineRequestFallingEdgeEvents(getCPointer(), consumer);
     }
 
     public void requestBothEdgeEvents(String consumer) {
-        GpioD.lineRequestBothEdgeEvents(this, consumer);
+        GpioD.lineRequestBothEdgeEvents(getCPointer(), consumer);
     }
 
     public void requestInputFlags(String consumer, int flags) {
-        GpioD.lineRequestInputFlags(this, consumer, flags);
+        GpioD.lineRequestInputFlags(getCPointer(), consumer, flags);
     }
 
     public void requestOutputFlags(String consumer, int flags, int defaultValue) {
-        GpioD.lineRequestOutputFlags(this, consumer, flags, defaultValue);
+        GpioD.lineRequestOutputFlags(getCPointer(), consumer, flags, defaultValue);
     }
 
     public void requestRisingEdgeEventsFlags(String consumer, int flags) {
-        GpioD.lineRequestRisingEdgeEventsFlags(this, consumer, flags);
+        GpioD.lineRequestRisingEdgeEventsFlags(getCPointer(), consumer, flags);
     }
 
     public void requestFallingEdgeEventsFlags(String consumer, int flags) {
-        GpioD.lineRequestFallingEdgeEventsFlags(this, consumer, flags);
+        GpioD.lineRequestFallingEdgeEventsFlags(getCPointer(), consumer, flags);
     }
 
     public void requestBothEdgeEventsFlags(String consumer, int flags) {
-        GpioD.lineRequestBothEdgeEventsFlags(this, consumer, flags);
-    }
-
-    public void release() {
-        GpioD.lineRelease(this);
+        GpioD.lineRequestBothEdgeEventsFlags(getCPointer(), consumer, flags);
     }
 
     public boolean isRequested() {
-        return GpioD.lineIsRequested(this);
+        return GpioD.lineIsRequested(getCPointer());
     }
 
     public boolean isFree() {
-        return GpioD.lineIsFree(this);
+        return GpioD.lineIsFree(getCPointer());
     }
 
     public int getValue() {
-        return GpioD.lineGetValue(this);
+        return GpioD.lineGetValue(getCPointer());
     }
 
     public void setValue(int value) {
-        GpioD.lineSetValue(this, value);
+        GpioD.lineSetValue(getCPointer(), value);
     }
 
-    public void setConfig(GpioD.LINE_REQUEST direction, int flags, int value) {
-        GpioD.lineSetConfig(this, direction, flags, value);
+    public void setConfig(LineRequest direction, int flags, int value) {
+        GpioD.lineSetConfig(getCPointer(), direction, flags, value);
     }
 
     public void setFlags(int flags) {
-        GpioD.lineSetFlags(this, flags);
+        GpioD.lineSetFlags(getCPointer(), flags);
     }
 
     public void setDirectionInput() {
-        GpioD.lineSetDirectionInput(this);
+        GpioD.lineSetDirectionInput(getCPointer());
     }
 
     public void setDirectionOutput(int value) {
-        GpioD.lineSetDirectionOutput(this, value);
+        GpioD.lineSetDirectionOutput(getCPointer(), value);
     }
 
     public boolean eventWait(long timeoutNs) {
-        return GpioD.lineEventWait(this, timeoutNs);
+        return GpioD.lineEventWait(getCPointer(), timeoutNs);
     }
 
-    public GpioLineEvent eventRead() {
-        GpioLineEvent event = new GpioLineEvent();
-        GpioD.lineEventRead(this, event);
-        return event;
+    public GpioLineEvent eventRead(GpioLineEvent lineEvent) {
+        GpioD.lineEventRead(getCPointer(), lineEvent.getCPointer());
+        return lineEvent;
     }
 
     public GpioLineEvent[] eventReadMultiple(int maxRead) {
-        return GpioD.lineEventReadMultiple(this, maxRead);
+        return GpioD.lineEventReadMultiple(getCPointer(), maxRead);
     }
-
 }

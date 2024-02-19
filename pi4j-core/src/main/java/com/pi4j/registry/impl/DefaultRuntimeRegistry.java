@@ -34,7 +34,10 @@ import com.pi4j.runtime.Runtime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>DefaultRuntimeRegistry class.</p>
@@ -55,6 +58,7 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
      * <p>newInstance.</p>
      *
      * @param runtime a {@link com.pi4j.runtime.Runtime} object.
+     *
      * @return a {@link com.pi4j.registry.impl.RuntimeRegistry} object.
      */
     public static RuntimeRegistry newInstance(Runtime runtime) {
@@ -65,7 +69,7 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
     private DefaultRuntimeRegistry(Runtime runtime) {
         // set local runtime reference
         this.instances = new HashMap<>();
-        this.usedAddresses = new HashSet();
+        this.usedAddresses = new HashSet<>();
         this.runtime = runtime;
     }
 
@@ -85,9 +89,18 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
             }
             this.usedAddresses.add(addressConfig.address());
         }
+
         // add instance to collection
-        instance.initialize(this.runtime.context());
-        instances.put(_id, instance);
+        try {
+            instance.initialize(this.runtime.context());
+            instances.put(_id, instance);
+        } catch (InitializeException e) {
+            if (instance.config() instanceof AddressConfig<?>) {
+                AddressConfig<?> addressConfig = (AddressConfig<?>) instance.config();
+                this.usedAddresses.remove(addressConfig.address());
+            }
+            throw new IllegalStateException("Failed to initialize IO " + instance.getId(), e);
+        }
 
         return this;
     }
@@ -96,7 +109,8 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
      * {@inheritDoc}
      */
     @Override
-    public synchronized <T extends IO> T get(String id, Class<T> type) throws IOInvalidIDException, IONotFoundException {
+    public synchronized <T extends IO> T get(String id, Class<T> type)
+        throws IOInvalidIDException, IONotFoundException {
         String _id = validateId(id);
 
         // first test to make sure this id is included in the registry
@@ -123,7 +137,8 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
      * {@inheritDoc}
      */
     @Override
-    public synchronized <T extends IO> T remove(String id) throws IONotFoundException, IOInvalidIDException, IOShutdownException {
+    public synchronized <T extends IO> T remove(String id)
+        throws IONotFoundException, IOInvalidIDException, IOShutdownException {
         String _id = validateId(id);
         IO shutdownInstance = null;
 
@@ -133,8 +148,12 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
 
         // shutdown instance
         try {
+            long start = System.currentTimeMillis();
             shutdownInstance = instances.get(_id);
             shutdownInstance.shutdown(runtime.context());
+            long took = System.currentTimeMillis() - start;
+            if (took > 10)
+                logger.warn("Shutting down of IO " + shutdownInstance.getId() + " took " + took + "ms");
         } catch (LifecycleException e) {
             logger.error(e.getMessage(), e);
             throw new IOShutdownException(shutdownInstance, e);
