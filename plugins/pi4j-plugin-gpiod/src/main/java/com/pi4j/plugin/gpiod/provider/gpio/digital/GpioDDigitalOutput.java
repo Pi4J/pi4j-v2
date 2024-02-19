@@ -34,8 +34,6 @@ import com.pi4j.io.exception.IOException;
 import com.pi4j.io.gpio.digital.*;
 import com.pi4j.library.gpiod.internal.GpioDException;
 import com.pi4j.library.gpiod.internal.GpioLine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>PiGpioDigitalOutput class.</p>
@@ -44,7 +42,6 @@ import org.slf4j.LoggerFactory;
  * @version $Id: $Id
  */
 public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutput {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
     private final GpioLine line;
 
     /**
@@ -72,8 +69,7 @@ public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutp
                 initialState = config.initialState().value().intValue();
             this.line.requestOutput(config.getId(), initialState);
         } catch (GpioDException e) {
-            logger.error(e.getMessage(), e);
-            throw new InitializeException(e);
+            throw new InitializeException("Failed to initialize output " + this.id, e);
         }
         super.initialize(context);
         return this;
@@ -94,8 +90,7 @@ public class GpioDDigitalOutput extends DigitalOutputBase implements DigitalOutp
         try {
             this.line.setValue(state.value().intValue());
         } catch (GpioDException e) {
-            logger.error(e.getMessage(), e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException("Failed to set state for output " + this.id + " to " + state, e);
         }
         return super.state(state);
     }

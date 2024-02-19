@@ -28,8 +28,6 @@ package com.pi4j.context.impl;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
 import com.pi4j.context.ContextProperties;
-import com.pi4j.context.impl.DefaultContext;
-import com.pi4j.context.impl.DefaultContextProperties;
 import com.pi4j.event.InitializedListener;
 import com.pi4j.event.ShutdownListener;
 import com.pi4j.exception.LifecycleException;
@@ -43,9 +41,10 @@ import com.pi4j.registry.Registry;
 import com.pi4j.registry.impl.DefaultRegistry;
 import com.pi4j.runtime.Runtime;
 import com.pi4j.runtime.impl.DefaultRuntime;
-import java.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.Future;
 
 /**
  * <p>DefaultContext class.</p>
@@ -128,6 +127,12 @@ public class DefaultContext implements Context {
     /** {@inheritDoc} */
     @Override
     public Platforms platforms() { return this.platforms; }
+
+    /** {@inheritDoc} */
+    @Override
+    public Future<?> submitTask(Runnable task) {
+        return this.runtime.submitTask(task);
+    }
 
     /** {@inheritDoc} */
     @Override

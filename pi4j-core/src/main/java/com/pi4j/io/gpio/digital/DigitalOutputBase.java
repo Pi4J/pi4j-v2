@@ -31,10 +31,7 @@ import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.exception.IOException;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 
@@ -80,7 +77,7 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
 
         if(!this.state.equals(state)){
             this.state = state;
-            this.dispatch(new DigitalStateChangeEvent<DigitalOutputBase>(this, this.state));
+            this.dispatch(new DigitalStateChangeEvent<>(this, this.state));
         }
         return this;
     }
@@ -122,40 +119,10 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
     /** {@inheritDoc} */
     @Override
     public Future<?> pulseAsync(int interval, TimeUnit unit, DigitalState state, Callable<Void> callback) {
-
-        long millis = validateArguments(interval, unit);
-
-        this.state(state);
-
-        ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
-        Future<?> scheduledFuture = ses.schedule(new Runnable() {
-                public void run() {
-                    ses.shutdown();
-
-                    // toggle the pulse state
-                    toggle();
-
-                    // invoke callback if one was defined
-                    if (callback != null) {
-                        try {
-                            logger.info("Calling callback from non-blocking pulse() method");
-                            callback.call();
-                        }
-                        catch (Exception e) {
-                            logger.error(e.getMessage(), e);
-                        }
-                    }
-                }
-            }
-            , millis
-            , TimeUnit.MILLISECONDS
-        );
-
-
-        return scheduledFuture;
+        validateArguments(interval, unit);
+        return context().submitTask(() -> pulse(interval, unit, state, callback));
     }
 
-    /** {@inheritDoc} */
     /**
      * This method will blink an output pin of the RPi according the given specifications.
      * The pin itself is created while creating a DigitalOutput configuration where one of
@@ -237,11 +204,10 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
         return this;
     }
 
-    /** {@inheritDoc} */
     /**
-     * This method is exactly the same as the blink() method, except that this method is <b>non-blocking</b>.
+     * This method is exactly the same as the blink() method, except that this method is <b>non-blocking</b> and returns a {@link Future} with which the action can be cancelled, or it can be detected if the task is complete
      * <p>
-     * Pls. see the {@link #blink(int, int, java.util.concurrent.TimeUnit, com.pi4j.io.gpio.digital.DigitalState, java.util.concurrent.Callable) blink()}
+     * See the {@link #blink(int, int, java.util.concurrent.TimeUnit, com.pi4j.io.gpio.digital.DigitalState, java.util.concurrent.Callable) blink()}
      * method for a more detailed explanation on how the method works.
      *
      * @param delay The toggle time.
@@ -253,41 +219,8 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
      */
     @Override
     public Future<?> blinkAsync(int delay, int duration, TimeUnit unit, DigitalState state, Callable<Void> callback) {
-
-        long millis = validateArguments(delay, duration, unit);
-
-        this.state(state);
-
-        ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
-        Future<?> scheduledFuture = ses.scheduleAtFixedRate(new Runnable() {
-                int count = 0;
-
-                public void run() {
-                    count++;
-                    if (count >= (duration * 2)) {
-                        ses.shutdown();
-                        if (callback != null) {
-                            try {
-                                logger.info("Calling callback from non-blocking blink() method");
-                                callback.call();
-                            }
-                            catch (Exception e) {
-                                logger.error(e.getMessage(), e);
-                            }
-                        }
-                    }
-                    else {
-                        // toggle the pulse state
-                        toggle();
-                    }
-                }
-            }
-            , millis
-            , millis
-            , TimeUnit.MILLISECONDS
-        );
-
-        return scheduledFuture;
+        validateArguments(delay, duration, unit);
+        return context().submitTask(() -> blink(delay,  duration,  unit,  state, callback));
     }
 
     /** {@inheritDoc} */
@@ -299,7 +232,7 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
     /** {@inheritDoc} */
     @Override
     public DigitalOutput shutdown(Context context) throws ShutdownException {
-        // set pin state to shutdown state if a shutdown state is configured
+        // set pin state to the shutdown state if a shutdown state is configured
         if(config().shutdownState() != null && config().shutdownState() != DigitalState.UNKNOWN){
             try {
                 state(config().shutdownState());
@@ -400,18 +333,14 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
      * @return Number of milliseconds.
      */
     private long validateTimeUnit(int interval, TimeUnit unit) {
-        long millis = 0;
-
+        long millis;
         switch (unit) {
             case NANOSECONDS:
                 throw new IllegalArgumentException("TimeUnit.NANOSECONDS is not supported.");
-
             case MICROSECONDS:
                 throw new IllegalArgumentException("TimeUnit.MICROSECONDS is not supported.");
-
             case DAYS:
                 throw new IllegalArgumentException("TimeUnit.DAYS is not supported.");
-
             default:
                 millis = unit.toMillis(interval);
                 break;

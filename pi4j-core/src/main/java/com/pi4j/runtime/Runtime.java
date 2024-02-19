@@ -10,7 +10,7 @@ package com.pi4j.runtime;
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
  * **********************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -49,24 +49,28 @@ public interface Runtime extends InitializedEventProducer<Runtime>, ShutdownEven
      * @return a {@link com.pi4j.registry.impl.RuntimeRegistry} object.
      */
     RuntimeRegistry registry();
+
     /**
      * <p>providers.</p>
      *
      * @return a {@link com.pi4j.provider.impl.RuntimeProviders} object.
      */
     RuntimeProviders providers();
+
     /**
      * <p>platforms.</p>
      *
      * @return a {@link com.pi4j.platform.impl.RuntimePlatforms} object.
      */
     RuntimePlatforms platforms();
+
     /**
      * <p>properties.</p>
      *
      * @return a {@link com.pi4j.runtime.RuntimeProperties} object.
      */
     RuntimeProperties properties();
+
     /**
      * <p>context.</p>
      *
@@ -74,10 +78,13 @@ public interface Runtime extends InitializedEventProducer<Runtime>, ShutdownEven
      */
     Context context();
 
+    Future<?> submitTask(Runnable task);
+
     /**
      * <p>shutdown.</p>
      *
      * @return a {@link com.pi4j.runtime.Runtime} object.
+     *
      * @throws com.pi4j.exception.ShutdownException if any.
      */
     Runtime shutdown() throws ShutdownException;
@@ -85,7 +92,6 @@ public interface Runtime extends InitializedEventProducer<Runtime>, ShutdownEven
     Future<Context> asyncShutdown();
 
     /**
-     *
      * @return Flag indicating if the runtime has been shutdown
      */
     boolean isShutdown();
@@ -94,6 +100,7 @@ public interface Runtime extends InitializedEventProducer<Runtime>, ShutdownEven
      * <p>initialize.</p>
      *
      * @return a {@link com.pi4j.runtime.Runtime} object.
+     *
      * @throws com.pi4j.exception.InitializeException if any.
      */
     Runtime initialize() throws InitializeException;

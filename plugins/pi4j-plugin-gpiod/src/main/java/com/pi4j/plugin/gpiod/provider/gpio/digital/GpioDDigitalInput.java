@@ -11,9 +11,7 @@ import com.pi4j.library.gpiod.internal.GpioLineEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
 
 /**
  * <p>PiGpioDigitalOutput class.</p>
@@ -22,23 +20,23 @@ import java.util.concurrent.TimeUnit;
  * @version $Id: $Id
  */
 public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(GpioDDigitalInput.class);
     private final long inputMaxWaitNs = 500 * 1000 * 1000; // 0,5 seconds
-    protected ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "Pi4J.GPIO.Monitor"));
     private final GpioLine line;
     private final long debounceNs;
+    private Future<?> inputListener;
 
     /**
      * <p>Constructor for GpioDDigitalInput.</p>
      *
-     * @param line a {@link com.pi4j.library.gpiod.internal.GpioLine} object.
+     * @param line     a {@link com.pi4j.library.gpiod.internal.GpioLine} object.
      * @param provider a {@link DigitalInputProvider} object.
      * @param config   a {@link DigitalInputConfig} object.
      */
     public GpioDDigitalInput(GpioLine line, DigitalInputProvider provider, DigitalInputConfig config) {
         super(provider, config);
         this.line = line;
-        if(config.getDebounce() == 0) {
+        if (config.getDebounce() == 0) {
             debounceNs = 0;
         } else {
             // Convert microseconds to nanoseconds
@@ -54,73 +52,81 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
                     this.line.requestBothEdgeEventsFlags(config.getId(), GpioD.LINE_REQUEST_FLAG.BIAS_PULL_UP.getVal());
                     break;
                 case PULL_DOWN:
-                    this.line.requestBothEdgeEventsFlags(config.getId(), GpioD.LINE_REQUEST_FLAG.BIAS_PULL_DOWN.getVal());
+                    this.line.requestBothEdgeEventsFlags(config.getId(),
+                        GpioD.LINE_REQUEST_FLAG.BIAS_PULL_DOWN.getVal());
                     break;
                 case OFF:
                     this.line.requestBothEdgeEventsFlags(config.getId(), GpioD.LINE_REQUEST_FLAG.BIAS_DISABLE.getVal());
                     break;
             }
         } catch (GpioDException e) {
-            logger.error(e.getMessage(), e);
-            throw new InitializeException(e);
+            throw new InitializeException("Failed to initialize input " + this.id, e);
         }
         super.initialize(context);
 
-        Runnable monitorThread = new Runnable() {
-            @Override
-            public void run() {
-                DigitalState lastState = null;
-                while (!Thread.interrupted()) {
-                    long debounceNs = GpioDDigitalInput.this.debounceNs;
-                    // We have to use this function before calling eventRead() directly, since native methods can't be interrupted.
-                    // eventRead() is blocking and prevents thread interrupt while running
-                    while (!GpioDDigitalInput.this.line.eventWait(inputMaxWaitNs)) {
-                        if (Thread.interrupted()) {
-                            return;
-                        }
+        Runnable monitorThread = () -> {
+            DigitalState lastState = null;
+            while (!Thread.interrupted()) {
+                long debounceNs = GpioDDigitalInput.this.debounceNs;
+                // We have to use this function before calling eventRead() directly, since native methods can't be interrupted.
+                // eventRead() is blocking and prevents thread interrupt while running
+                while (!GpioDDigitalInput.this.line.eventWait(inputMaxWaitNs)) {
+                    if (Thread.interrupted()) {
+                        return;
                     }
-                    GpioLineEvent lastEvent = GpioDDigitalInput.this.line.eventRead();
-                    long currentTime = System.nanoTime();
+                }
+                GpioLineEvent lastEvent = GpioDDigitalInput.this.line.eventRead();
+                long currentTime = System.nanoTime();
 
-                    // Perform debouncing
-                    // If the event is too new to be sure that it is debounced then ...
-                    while (lastEvent.getTimeNs() + debounceNs >= currentTime) {
-                        if (Thread.interrupted()) {
-                            return;
-                        }
-                        // ... wait for remaining debounce time and watch out for new event(s)
-                        if(GpioDDigitalInput.this.line.eventWait(Math.min(inputMaxWaitNs, lastEvent.getTimeNs() + debounceNs - currentTime))) {
-                            // Repeat if a second event occurred withing debounce interval
-                            lastEvent = GpioDDigitalInput.this.line.eventRead();
-                        }
-
-                        currentTime = System.nanoTime();
+                // Perform debouncing
+                // If the event is too new to be sure that it is debounced then ...
+                while (lastEvent.getTimeNs() + debounceNs >= currentTime) {
+                    if (Thread.interrupted()) {
+                        return;
+                    }
+                    // ... wait for remaining debounce time and watch out for new event(s)
+                    if (GpioDDigitalInput.this.line.eventWait(
+                        Math.min(inputMaxWaitNs, lastEvent.getTimeNs() + debounceNs - currentTime))) {
+                        // Repeat if a second event occurred withing debounce interval
+                        lastEvent = GpioDDigitalInput.this.line.eventRead();
                     }
 
-                    // Apply event only if the new state is not the same as the last state.
-                    DigitalState newState = DigitalState.getState(lastEvent.getType() == GpioD.LINE_EVENT.RISING_EDGE);
-                    if(lastState != newState) {
-                        lastState = newState;
-                        GpioDDigitalInput.this.dispatch(new DigitalStateChangeEvent(GpioDDigitalInput.this, newState));
-                    }
+                    currentTime = System.nanoTime();
+                }
+
+                // Apply event only if the new state is not the same as the last state.
+                DigitalState newState = DigitalState.getState(lastEvent.getType() == GpioD.LINE_EVENT.RISING_EDGE);
+                if (lastState != newState) {
+                    lastState = newState;
+                    GpioDDigitalInput.this.dispatch(new DigitalStateChangeEvent<>(GpioDDigitalInput.this, newState));
                 }
             }
         };
 
-        executor.submit(monitorThread);
+        this.inputListener = context.submitTask(monitorThread);
         return this;
     }
 
     @Override
     public DigitalInput shutdown(Context context) throws ShutdownException {
-        try {
-            super.shutdown(context);
-            executor.shutdownNow();
-            executor.awaitTermination(5, TimeUnit.SECONDS);
-            this.line.release();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        super.shutdown(context);
+        if (this.inputListener != null) {
+            if (!this.inputListener.cancel(true))
+                logger.error("Failed to cancel input listener!");
+            long start = System.currentTimeMillis();
+            while (!inputListener.isDone()) {
+                if (System.currentTimeMillis() - start > 5000L)
+                    throw new IllegalArgumentException("Input listener didn't cancel in 5s");
+                try {
+                    Thread.sleep(1L);
+                } catch (InterruptedException e) {
+                    logger.warn("Interrupted, while waiting for input listener to stop");
+                }
+            }
+            logger.info("Shutdown input listener for " + this.id);
         }
+
+        this.line.release();
         return this;
     }
 
@@ -128,5 +134,4 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
     public DigitalState state() {
         return DigitalState.getState(this.line.getValue());
     }
-
 }

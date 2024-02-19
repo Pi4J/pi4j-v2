@@ -37,8 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * <p>LinuxFsDigitalInput class.</p>
@@ -50,8 +49,8 @@ public class LinuxFsDigitalInput extends DigitalInputBase implements DigitalInpu
 
     protected final LinuxGpio gpio;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    protected ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "Pi4J.GPIO.Monitor"));
     protected DigitalState state = DigitalState.UNKNOWN;
+    private Future<?> inputListener;
 
     /**
      * <p>Constructor for LinuxFsDigitalInput.</p>
@@ -123,49 +122,47 @@ public class LinuxFsDigitalInput extends DigitalInputBase implements DigitalInpu
 
         // [MONITOR] start background monitoring thread for GPIO state changes
         logger.trace("start monitoring thread for GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
-        executor.submit(monitorThread);
+        Runnable monitorTask = () -> {
+			try {
+				// create file system watcher
+				logger.trace("monitoring thread watching GPIO [" + LinuxFsDigitalInput.this.config.address() + "]; " + gpio.getPinPath());
+				WatchService watchService = FileSystems.getDefault().newWatchService();
+				WatchKey key;
+
+				// create GPIO path to monitor
+				Path path = Paths.get(gpio.getPinPath());
+
+				// only watch for modified files in this path
+				path.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+
+				// dispatch value change event
+				while ((key = watchService.take()) != null) {
+					for (WatchEvent<?> event : key.pollEvents()) {
+						if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
+							if (event.context().toString().equalsIgnoreCase("value")) {
+								// filter out any redundant event notifications for same state
+								DigitalState newState = LinuxFsDigitalInput.this.gpio.state();
+								if (newState != LinuxFsDigitalInput.this.state) {
+									LinuxFsDigitalInput.this.state = newState;
+									LinuxFsDigitalInput.this.dispatch(
+										new DigitalStateChangeEvent(LinuxFsDigitalInput.this, newState));
+								}
+							}
+						}
+					}
+					key.reset();
+				}
+			} catch (java.io.IOException e) {
+				logger.error(e.getMessage(), e);
+			} catch (InterruptedException e) {
+				// thread interrupted; likely exiting on shutdown
+			}
+		};
+        this.inputListener = context.submitTask(monitorTask);
 
         // return this I/O instance
         return this;
     }
-
-    Runnable monitorThread = new Runnable() {
-        public void run() {
-            try {
-                // create file system watcher
-                logger.trace("monitoring thread watching GPIO [" + LinuxFsDigitalInput.this.config.address() + "]; " + gpio.getPinPath());
-                WatchService watchService = FileSystems.getDefault().newWatchService();
-                WatchKey key;
-
-                // create GPIO path to monitor
-                Path path = Paths.get(gpio.getPinPath());
-
-                // only watch for modified files in this path
-                path.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
-
-                // dispatch value change event
-                while ((key = watchService.take()) != null) {
-                    for (WatchEvent<?> event : key.pollEvents()) {
-                        if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
-                            if (event.context().toString().equalsIgnoreCase("value")) {
-                                // filter out any redundant event notifications for same state
-                                DigitalState newState = LinuxFsDigitalInput.this.gpio.state();
-                                if(newState != LinuxFsDigitalInput.this.state) {
-                                    LinuxFsDigitalInput.this.state = newState;
-                                    LinuxFsDigitalInput.this.dispatch(new DigitalStateChangeEvent(LinuxFsDigitalInput.this, newState));
-                                }
-                            }
-                        }
-                    }
-                    key.reset();
-                }
-            } catch (java.io.IOException e) {
-                logger.error(e.getMessage(), e);
-            } catch (InterruptedException e) {
-                // thread interrupted; likely exiting on shutdown
-            }
-        }
-    };
 
     /** {@inheritDoc} */
     @Override
@@ -174,7 +171,10 @@ public class LinuxFsDigitalInput extends DigitalInputBase implements DigitalInpu
 
         // this line will execute immediately, not waiting for your task to complete
         logger.trace("shutdown monitoring thread for GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
-        executor.shutdown(); // tell executor no more work is coming
+        if (this.inputListener != null) {
+            if (!this.inputListener.cancel(true))
+                logger.error("Failed to cancel input listener!");
+        }
 
         // perform any shutdown cleanup via superclass
         super.shutdown(context);
