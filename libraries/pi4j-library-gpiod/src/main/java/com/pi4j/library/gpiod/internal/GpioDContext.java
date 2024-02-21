@@ -23,11 +23,11 @@ public class GpioDContext implements Closeable {
     private GpioChip gpioChip;
     private final Map<Integer, GpioLine> openLines;
 
-    private final List<Long> openLineEvents;
+    private final Set<Long> openLineEvents;
 
     public GpioDContext() {
         this.openLines = new HashMap<>();
-        this.openLineEvents = new ArrayList<>();
+        this.openLineEvents = new HashSet<>();
     }
 
     public synchronized void initialize() {
