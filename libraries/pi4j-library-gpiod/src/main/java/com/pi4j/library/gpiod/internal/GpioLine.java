@@ -142,8 +142,4 @@ public class GpioLine extends CWrapper {
         GpioD.lineEventRead(getCPointer(), lineEvent.getCPointer());
         return lineEvent;
     }
-
-    public GpioLineEvent[] eventReadMultiple(int maxRead) {
-        return GpioD.lineEventReadMultiple(getCPointer(), maxRead);
-    }
 }

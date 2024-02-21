@@ -2,8 +2,6 @@ package com.pi4j.library.gpiod.internal;
 
 import com.pi4j.library.gpiod.util.NativeLibraryLoader;
 
-import java.util.Arrays;
-
 /**
  * <p>GpioD interface.</p>
  *
@@ -309,28 +307,6 @@ public class GpioD {
     }
 
     private static native int c_gpiod_line_event_read(long linePtr, long eventPtr);
-
-    static GpioLineEvent[] lineEventReadMultiple(long linePtr, int maxRead) {
-        GpioLineEvent[] events = new GpioLineEvent[maxRead];
-        for (int i = 0; i < events.length; i++) {
-            events[i] = new GpioLineEvent(GpioD.lineEventNew());
-        }
-
-        int numRead = c_gpiod_line_event_read_multiple(linePtr,
-            Arrays.stream(events).mapToLong(GpioLineEvent::getCPointer).toArray(), events.length);
-        if (numRead < 0)
-            throw new GpioDException("c_gpiod_line_event_read_multiple failed: " + numRead);
-
-        GpioLineEvent[] result = new GpioLineEvent[numRead];
-        if (numRead == maxRead) {
-            result = events;
-        } else {
-            System.arraycopy(events, 0, result, 0, result.length);
-        }
-        return result;
-    }
-
-    private static native int c_gpiod_line_event_read_multiple(long linePtr, long[] eventPtr, int num_events);
 
     static long lineGet(String device, int offset) {
         Long ptr = c_gpiod_line_get(device, offset);
