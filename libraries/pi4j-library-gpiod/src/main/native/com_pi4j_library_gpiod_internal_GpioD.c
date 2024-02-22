@@ -1,6 +1,8 @@
 
 #include <gpiod.h>
 #include <stdint.h>
+#include <errno.h>
+#include <string.h>
 #include "com_pi4j_library_gpiod_internal_GpioD.h"
 
 // Compile using:
@@ -615,4 +617,14 @@ JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
 JNIEXPORT jstring JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1version_1string
   (JNIEnv* env, jclass javaClass) {
     return (*env)->NewStringUTF(env, gpiod_version_string());
+}
+
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_strerror
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1strerror
+  (JNIEnv* env, jclass javaClass) {
+  return (*env)->NewStringUTF(env, strerror(errno));
 }

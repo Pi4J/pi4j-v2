@@ -431,6 +431,15 @@ JNIEXPORT void JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1line
 JNIEXPORT jstring JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1version_1string
   (JNIEnv *, jclass);
 
+/*
+ * Class:     com_pi4j_library_gpiod_internal_GpioD
+ * Method:    c_gpiod_strerror
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_pi4j_library_gpiod_internal_GpioD_c_1gpiod_1strerror
+  (JNIEnv *, jclass);
+
+
 #ifdef __cplusplus
 }
 #endif

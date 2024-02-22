@@ -24,7 +24,7 @@ public class GpioD {
     static GpioChip chipOpen(String path) {
         Long ptr = c_gpiod_chip_open(path);
         if (ptr == null)
-            throw new GpioDException("c_gpiod_chip_open failed!");
+            throw new GpioDException("c_gpiod_chip_open failed! (" + c_gpiod_strerror() + ")");
         return new GpioChip(ptr);
     }
 
@@ -57,7 +57,7 @@ public class GpioD {
     static long chipGetLine(long chipPtr, int offset) {
         Long linePtr = c_gpiod_chip_get_line(chipPtr, offset);
         if (linePtr == null)
-            throw new GpioDException("c_gpiod_chip_get_line failed!");
+            throw new GpioDException("c_gpiod_chip_get_line failed! (" + c_gpiod_strerror() + ")");
         return linePtr;
     }
 
@@ -66,7 +66,7 @@ public class GpioD {
     static long chipGetLine(long chipPtr, String name) {
         Long linePtr = c_gpiod_chip_find_line(chipPtr, name);
         if (linePtr == null)
-            throw new GpioDException("c_gpiod_chip_find_line failed!");
+            throw new GpioDException("c_gpiod_chip_find_line failed! (" + c_gpiod_strerror() + ")");
         return linePtr;
     }
 
@@ -129,7 +129,7 @@ public class GpioD {
     static void lineUpdate(long linePtr) {
         int result = c_gpiod_line_update(linePtr);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_update failed: " + result);
+            throw new GpioDException("c_gpiod_line_update failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_update(long linePtr);
@@ -137,7 +137,7 @@ public class GpioD {
     static void lineRequest(long linePtr, long lineRequestPtr, int defaultVal) {
         int result = c_gpiod_line_request(linePtr, lineRequestPtr, defaultVal);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_request failed: " + result);
+            throw new GpioDException("c_gpiod_line_request failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_request(long linePtr, long lineRequestPtr, int default_val);
@@ -145,7 +145,7 @@ public class GpioD {
     static void lineRequestInput(long linePtr, String consumer) {
         int result = c_gpiod_line_request_input(linePtr, consumer);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_request_input failed: " + result);
+            throw new GpioDException("c_gpiod_line_request_input failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_request_input(long linePtr, String consumer);
@@ -153,7 +153,7 @@ public class GpioD {
     static void lineRequestOutput(long linePtr, String consumer, int defaultVal) {
         int result = c_gpiod_line_request_output(linePtr, consumer, defaultVal);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_request_output failed: " + result);
+            throw new GpioDException("c_gpiod_line_request_output failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_request_output(long linePtr, String consumer, int default_val);
@@ -161,7 +161,7 @@ public class GpioD {
     static void lineRequestRisingEdgeEvents(long linePtr, String consumer) {
         int result = c_gpiod_line_request_rising_edge_events(linePtr, consumer);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_request_rising_edge_events failed: " + result);
+            throw new GpioDException("c_gpiod_line_request_rising_edge_events failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_request_rising_edge_events(long linePtr, String consumer);
@@ -169,7 +169,7 @@ public class GpioD {
     static void lineRequestFallingEdgeEvents(long linePtr, String consumer) {
         int result = c_gpiod_line_request_falling_edge_events(linePtr, consumer);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_request_falling_edge_events failed: " + result);
+            throw new GpioDException("c_gpiod_line_request_falling_edge_events failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_request_falling_edge_events(long linePtr, String consumer);
@@ -177,7 +177,7 @@ public class GpioD {
     static void lineRequestBothEdgeEvents(long linePtr, String consumer) {
         int result = c_gpiod_line_request_both_edges_events(linePtr, consumer);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_request_both_edges_events failed: " + result);
+            throw new GpioDException("c_gpiod_line_request_both_edges_events failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_request_both_edges_events(long linePtr, String consumer);
@@ -185,7 +185,7 @@ public class GpioD {
     static void lineRequestInputFlags(long linePtr, String consumer, int flags) {
         int result = c_gpiod_line_request_input_flags(linePtr, consumer, flags);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_request_input_flags failed: " + result);
+            throw new GpioDException("c_gpiod_line_request_input_flags failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_request_input_flags(long linePtr, String consumer, int flags);
@@ -193,7 +193,7 @@ public class GpioD {
     static void lineRequestOutputFlags(long linePtr, String consumer, int flags, int defaultVal) {
         int result = c_gpiod_line_request_output_flags(linePtr, consumer, flags, defaultVal);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_request_output_flags failed: " + result);
+            throw new GpioDException("c_gpiod_line_request_output_flags failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_request_output_flags(long linePtr, String consumer, int flags,
@@ -202,7 +202,7 @@ public class GpioD {
     static void lineRequestRisingEdgeEventsFlags(long linePtr, String consumer, int flags) {
         int result = c_gpiod_line_request_rising_edge_events_flags(linePtr, consumer, flags);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_request_rising_edge_events_flags failed: " + result);
+            throw new GpioDException("c_gpiod_line_request_rising_edge_events_flags failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_request_rising_edge_events_flags(long linePtr, String consumer, int flags);
@@ -210,7 +210,7 @@ public class GpioD {
     static void lineRequestFallingEdgeEventsFlags(long linePtr, String consumer, int flags) {
         int result = c_gpiod_line_request_falling_edge_events_flags(linePtr, consumer, flags);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_request_falling_edge_events_flags failed: " + result);
+            throw new GpioDException("c_gpiod_line_request_falling_edge_events_flags failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_request_falling_edge_events_flags(long linePtr, String consumer, int flags);
@@ -218,7 +218,7 @@ public class GpioD {
     static void lineRequestBothEdgeEventsFlags(long linePtr, String consumer, int flags) {
         int result = c_gpiod_line_request_both_edges_events_flags(linePtr, consumer, flags);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_request_both_edges_events_flags failed: " + result);
+            throw new GpioDException("c_gpiod_line_request_both_edges_events_flags failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_request_both_edges_events_flags(long linePtr, String consumer, int flags);
@@ -244,7 +244,7 @@ public class GpioD {
     static int lineGetValue(long linePtr) {
         int result = c_gpiod_line_get_value(linePtr);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_get_value failed: " + result);
+            throw new GpioDException("c_gpiod_line_get_value failed: " + result + " (" + c_gpiod_strerror() + ")");
         return result;
     }
 
@@ -253,7 +253,7 @@ public class GpioD {
     static void lineSetValue(long linePtr, int value) {
         int result = c_gpiod_line_set_value(linePtr, value);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_set_value failed: " + result);
+            throw new GpioDException("c_gpiod_line_set_value failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_set_value(long linePtr, int value);
@@ -261,7 +261,7 @@ public class GpioD {
     static void lineSetConfig(long linePtr, LineRequest direction, int flags, int value) {
         int result = c_gpiod_line_set_config(linePtr, direction.val, flags, value);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_set_config failed: " + result);
+            throw new GpioDException("c_gpiod_line_set_config failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_set_config(long linePtr, int direction, int flags, int value);
@@ -269,7 +269,7 @@ public class GpioD {
     static void lineSetFlags(long linePtr, int flags) {
         int result = c_gpiod_line_set_flags(linePtr, flags);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_set_flags failed: " + result);
+            throw new GpioDException("c_gpiod_line_set_flags failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_set_flags(long linePtr, int flags);
@@ -277,7 +277,7 @@ public class GpioD {
     static void lineSetDirectionInput(long linePtr) {
         int result = c_gpiod_line_set_direction_input(linePtr);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_set_direction_input failed: " + result);
+            throw new GpioDException("c_gpiod_line_set_direction_input failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_set_direction_input(long linePtr);
@@ -285,7 +285,7 @@ public class GpioD {
     static void lineSetDirectionOutput(long linePtr, int value) {
         int result = c_gpiod_line_set_direction_output(linePtr, value);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_set_direction_output failed: " + result);
+            throw new GpioDException("c_gpiod_line_set_direction_output failed: " + result + " (" + c_gpiod_strerror() + ")");
     }
 
     private static native int c_gpiod_line_set_direction_output(long linePtr, int value);
@@ -293,7 +293,7 @@ public class GpioD {
     static boolean lineEventWait(long linePtr, long timeoutNs) {
         int result = c_gpiod_line_event_wait(linePtr, timeoutNs);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_event_wait failed: " + result);
+            throw new GpioDException("c_gpiod_line_event_wait failed: " + result + " (" + c_gpiod_strerror() + ")");
         return result > 0;
     }
 
@@ -302,7 +302,7 @@ public class GpioD {
     static boolean lineEventRead(long linePtr, long lineEventPtr) {
         int result = c_gpiod_line_event_read(linePtr, lineEventPtr);
         if (result < 0)
-            throw new GpioDException("c_gpiod_line_event_read failed: " + result);
+            throw new GpioDException("c_gpiod_line_event_read failed: " + result + " (" + c_gpiod_strerror() + ")");
         return result > 0;
     }
 
@@ -311,7 +311,7 @@ public class GpioD {
     static long lineGet(String device, int offset) {
         Long ptr = c_gpiod_line_get(device, offset);
         if (ptr == null)
-            throw new GpioDException("c_gpiod_line_get failed!");
+            throw new GpioDException("c_gpiod_line_get failed! (" + c_gpiod_strerror() + ")");
         return ptr;
     }
 
@@ -320,7 +320,7 @@ public class GpioD {
     static long lineFind(String name) {
         Long ptr = gpiod_line_find(name);
         if (ptr == null)
-            throw new GpioDException("gpiod_line_find failed!");
+            throw new GpioDException("gpiod_line_find failed! (" + c_gpiod_strerror() + ")");
         return ptr;
     }
 
@@ -341,7 +341,7 @@ public class GpioD {
     static long chipIterNew() {
         Long ptr = gpiod_chip_iter_new();
         if (ptr == null)
-            throw new GpioDException("gpiod_chip_iter_new failed!");
+            throw new GpioDException("gpiod_chip_iter_new failed! (" + c_gpiod_strerror() + ")");
         return ptr;
     }
 
@@ -382,7 +382,7 @@ public class GpioD {
     static long lineEventNew() {
         Long ptr = c_gpiod_line_event_new();
         if (ptr == null)
-            throw new GpioDException("c_gpiod_line_event_new failed!");
+            throw new GpioDException("c_gpiod_line_event_new failed! (" + c_gpiod_strerror() + ")");
         return ptr;
     }
 
@@ -399,4 +399,6 @@ public class GpioD {
     }
 
     private static native String c_gpiod_version_string();
+
+    private static native String c_gpiod_strerror();
 }
