@@ -50,7 +50,11 @@ public class GpioDContext implements Closeable {
                 break;
             }
         } finally {
-            GpioD.chipIterFree(chipIterPtr);
+            if (found != null) {
+                GpioD.chipIterFreeNoClose(chipIterPtr);
+            } else {
+                GpioD.chipIterFree(chipIterPtr);
+            }
         }
 
         if (found == null)

@@ -367,17 +367,6 @@ public class GpioD {
 
     private static native Long c_gpiod_chip_iter_next_noclose(long chipIterPtr);
 
-    static long lineIterNew(long chipPtr) {
-        Long ptr = gpiod_line_iter_new(chipPtr);
-        if (ptr == null)
-            throw new GpioDException("gpiod_line_iter_new failed!");
-        return ptr;
-    }
-
-    private static native Long gpiod_line_iter_new(long chipPtr);
-
-    private static native Long gpiod_line_iter_next(long lineIterPtr);
-
     static long lineEventGetTimespec(long lineEventPtr) {
         return c_gpiod_line_event_get_timespec(lineEventPtr);
     }
