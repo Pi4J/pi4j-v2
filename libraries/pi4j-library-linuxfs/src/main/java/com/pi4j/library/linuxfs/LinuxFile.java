@@ -211,19 +211,21 @@ public class LinuxFile extends RandomAccessFile {
     protected synchronized IntBuffer getOffsetsBuffer(int size) {
         final int byteSize = size * 4;
         IntBuffer buf = localOffsetsBuffer.get();
-
+        if (buf != null) {
+            // always reallocate buffer to ensure correct limits
+            localOffsetsBuffer.remove();
+            buf = localOffsetsBuffer.get();
+        }
         if (byteSize > localBufferSize)
             throw new ScratchBufferOverrun();
 
-        if (buf == null) {
-            ByteBuffer bb = ByteBuffer.allocateDirect(localBufferSize);
+        ByteBuffer bb = ByteBuffer.allocateDirect(localBufferSize);
 
-            //keep native order, set before cast to IntBuffer
-            bb.order(ByteOrder.nativeOrder());
+        //keep native order, set before cast to IntBuffer
+        bb.order(ByteOrder.nativeOrder());
 
-            buf = bb.asIntBuffer();
-            localOffsetsBuffer.set(buf);
-        }
+        buf = bb.asIntBuffer();
+        localOffsetsBuffer.set(buf);
 
         return buf;
     }
@@ -231,14 +233,16 @@ public class LinuxFile extends RandomAccessFile {
 
     protected  synchronized ByteBuffer getDataBuffer(int size) {
         ByteBuffer buf = localDataBuffer.get();
-
+        if (buf != null) {
+            // always reallocate buffer to ensure correct limits
+            localDataBuffer.remove();
+            buf = localDataBuffer.get();
+        }
         if (size > localBufferSize)
             throw new ScratchBufferOverrun();
 
-        if (buf == null) {
-            buf = ByteBuffer.allocateDirect(size);
-            localDataBuffer.set(buf);
-        }
+        buf = ByteBuffer.allocateDirect(size);
+        localDataBuffer.set(buf);
 
         return buf;
     }
