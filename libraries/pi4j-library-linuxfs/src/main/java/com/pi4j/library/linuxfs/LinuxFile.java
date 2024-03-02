@@ -235,13 +235,20 @@ public class LinuxFile extends RandomAccessFile {
         if (size > localBufferSize)
             throw new ScratchBufferOverrun();
 
+        // if no buffer exists, one always created.
+        // if buffer exists and limit is not equal to this requirement, allocate new
         if (buf == null) {
+            buf = ByteBuffer.allocateDirect(size);
+            localDataBuffer.set(buf);
+        } else if(buf.limit() != size){
+            localDataBuffer.remove();
             buf = ByteBuffer.allocateDirect(size);
             localDataBuffer.set(buf);
         }
 
         return buf;
     }
+
 
     public static class ScratchBufferOverrun extends IllegalArgumentException {
         private static final long serialVersionUID = -418203522640826177L;
