@@ -214,7 +214,8 @@ public class LinuxFile extends RandomAccessFile {
 
         if (byteSize > localBufferSize)
             throw new ScratchBufferOverrun();
-
+        // if no buffer exists, one always created.
+        // if buffer exists and limit is not equal to this getOffsetsBuffer, allocate new
         if (buf == null) {
             ByteBuffer bb = ByteBuffer.allocateDirect(localBufferSize);
 
@@ -223,9 +224,18 @@ public class LinuxFile extends RandomAccessFile {
 
             buf = bb.asIntBuffer();
             localOffsetsBuffer.set(buf);
-        }
+        } else if(buf.limit() != size) {
+            localOffsetsBuffer.remove();
+            ByteBuffer bb = ByteBuffer.allocateDirect(localBufferSize);
 
+            //keep native order, set before cast to IntBuffer
+            bb.order(ByteOrder.nativeOrder());
+
+            buf = bb.asIntBuffer();
+            localOffsetsBuffer.set(buf);
+        }
         return buf;
+
     }
 
 
@@ -236,7 +246,7 @@ public class LinuxFile extends RandomAccessFile {
             throw new ScratchBufferOverrun();
 
         // if no buffer exists, one always created.
-        // if buffer exists and limit is not equal to this requirement, allocate new
+        // if buffer exists and limit is not equal to this getDataBuffer, allocate new
         if (buf == null) {
             buf = ByteBuffer.allocateDirect(size);
             localDataBuffer.set(buf);

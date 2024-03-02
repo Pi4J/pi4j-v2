@@ -243,7 +243,7 @@ public class LinuxFsI2C extends I2CBase implements I2C {
         short writeLength = (short) register.length;
         // two pointers will be used so 2 pairs of offset entries
         IntBuffer offsets = IntBuffer.allocate(4);
-         // create ByteBuffer, load with write details
+         // create ByteBuffer, load with the write details
         ByteBuffer ioctlData = ByteBuffer.allocate(2048);
         // Ensures Pi BCM little_endian
         ioctlData.order(ByteOrder.nativeOrder());
