@@ -214,7 +214,7 @@ public class LinuxFile extends RandomAccessFile {
 
         if (byteSize > localBufferSize)
             throw new ScratchBufferOverrun();
-        // if no buffer exists, one always created.
+        // if no buffer currently exists, new one always created.
         // if buffer exists and limit is not equal to this getOffsetsBuffer, allocate new
         if (buf == null) {
             ByteBuffer bb = ByteBuffer.allocateDirect(localBufferSize);
