@@ -184,9 +184,6 @@ public class DefaultRuntime implements Runtime {
 
         try {
 
-            // shutdown executor pool
-            this.executorPool.destroy();
-
             // remove shutdown monitoring thread
             //java.lang.Runtime.getRuntime().removeShutdownHook(this.shutdownThread);
 
@@ -207,6 +204,10 @@ public class DefaultRuntime implements Runtime {
                     logger.error(e.getMessage(), e);
                 }
             }
+
+            // shutdown executor pool
+            this.executorPool.destroy();
+
         } catch (Exception e) {
             logger.error("failed to 'shutdown(); '", e);
             throw new ShutdownException(e);
