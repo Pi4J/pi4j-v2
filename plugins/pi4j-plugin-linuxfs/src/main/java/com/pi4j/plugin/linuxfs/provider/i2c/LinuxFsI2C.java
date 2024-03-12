@@ -325,10 +325,16 @@ public class LinuxFsI2C extends I2CBase implements I2C {
      */
     @Override
     public int writeReadRegisterWord(int register, int word) {
-        return this.i2CBus.execute(this, file -> {
-            writeRegisterWord(register, word);
-            return readRegisterWord(register);
-        });
+        byte reg[] = new byte[3];
+        reg[0] = (byte) (register & 0xff);
+        reg[1] = (byte) (word & 0xff);
+        reg[2] = (byte) ((word >> 8) & 0xff);
+        byte buff[] = new byte[2];
+
+        int rCode = this.readRegister(reg, buff, 0, buff.length);
+        word = (buff[1] << 8)  | buff[0];
+        return word;
+
     }
 
     @Override
