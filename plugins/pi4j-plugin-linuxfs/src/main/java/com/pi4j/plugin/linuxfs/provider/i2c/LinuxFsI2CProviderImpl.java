@@ -56,6 +56,8 @@ public class LinuxFsI2CProviderImpl extends I2CProviderBase implements LinuxFsI2
         LinuxFsI2CBus i2CBus = this.i2CBusMap.computeIfAbsent(config.getBus(), busNr -> new LinuxFsI2CBus(config));
         // create new I/O instance based on I/O config
         LinuxFsI2C i2C = new LinuxFsI2C(i2CBus, this, config);
+        // Workaround, needed if first LinuxFsI2C usage is ioctl (readRegister or writeRegister)
+        i2C.read();
         this.context.registry().add(i2C);
         return i2C;
     }

@@ -316,7 +316,7 @@ public class LinuxFsI2C extends I2CBase implements I2C {
             buffer[i] = ioctlData.get(readBuffPosition +i );
 ;        }
 
-        return (ioctlData.limit());
+        return (readLength);
     }
 
 
@@ -330,8 +330,6 @@ public class LinuxFsI2C extends I2CBase implements I2C {
         reg[1] = (byte) (word & 0xff);
         reg[2] = (byte) ((word >> 8) & 0xff);
         byte buff[] = new byte[2];
-
-        int rCode = this.readRegister(reg, buff, 0, buff.length);
         word = (buff[1] << 8)  | buff[0];
         return word;
 
