@@ -280,7 +280,7 @@
         <maven-release-plugin.version>3.0.0-M4</maven-release-plugin.version>
         <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
         <jdeb.version>1.8</jdeb.version>
-        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
+        <exec-maven-plugin.version>3.2.0</exec-maven-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
 
         <!-- REPORTS VERSIONS -->
