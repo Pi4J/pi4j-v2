@@ -124,7 +124,7 @@
 
 	<!-- DISTRIBUTION REPOSITORIES -->
 	<distributionManagement>
-		<downloadUrl>https://v2.pi4j.com/download</downloadUrl>
+		<downloadUrl>https://pi4j.com/download</downloadUrl>
 		<repository>
 			<id>sonatype-oss-staging</id>
 			<name>Sonatype Open Source Maven Repository</name>
