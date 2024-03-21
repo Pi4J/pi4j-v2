@@ -4,7 +4,7 @@
 
 To release pi4j use the following:
 
-    MVN_PROFILES=-Pnative,docker ./autoReleaseBranch minor develop release/<version>
+    MVN_PROFILES=-P\!default,native,docker ./autoReleaseBranch minor develop release/<version>
 
 this merges the ``develop`` branch into ``release/<version>``, increments the current tag on the ``release/<version>``
 branch and then builds it locally. It uses ``mvn versions:set``
