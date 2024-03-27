@@ -2,17 +2,17 @@
  Pi4J :: Java I/O Library for Raspberry Pi
 ==========================================================================
 
-Build state: 
-![GitHub Actions build state](https://github.com/pi4j/pi4j-v2/workflows/Continious%20Integration/badge.svg)
-
-Project Map: [![Project Map](https://sourcespy.com/shield.svg)](https://sourcespy.com/github/pi4jpi4jv2/)
-
-[![Chat on Slack](https://img.shields.io/badge/Chat-on%20Slack-blue)](https://join.slack.com/t/pi4j/shared_invite/zt-1ttqt8wgj-E6t69qaLrNuCMPLiYnBCsg)
-[![License](https://img.shields.io/github/license/pi4j/pi4j-v2)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.pi4j/pi4j-core)
 [![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.pi4j/pi4j-core?server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/#nexus-search;gav~com.pi4j~~~~)
+[![License](https://img.shields.io/github/license/pi4j/pi4j-v2)](http://www.apache.org/licenses/LICENSE-2.0)
+
 [![Site](https://img.shields.io/badge/Website-pi4j.com-green)](https://pi4j.com)
-[![Twitter Follow](https://img.shields.io/twitter/follow/pi4j?label=Pi4J&style=social)](https://twitter.com/pi4j)
+[![Chat on Slack](https://img.shields.io/badge/Chat-on%20Slack-blue)](https://join.slack.com/t/pi4j/shared_invite/zt-1ttqt8wgj-E6t69qaLrNuCMPLiYnBCsg)
+[![Pi4J on Mastodon](https://img.shields.io/badge/Mastodon-white?logo=mastodon&logoColor=black)](https://foojay.social/@pi4j)
+[![Pi4J on LinkedIn](https://img.shields.io/badge/LinkedIn-white?logo=linkedin&logoColor=black)](https://be.linkedin.com/company/pi4j)
+[![Pi4J on Twitter](https://img.shields.io/badge/Twitter-white?logo=twitter&logoColor=black)](https://twitter.com/pi4j)
+
+Project Map: [![Project Map](https://sourcespy.com/shield.svg)](https://sourcespy.com/github/pi4jpi4jv2/)
 
 ---
 
@@ -20,9 +20,11 @@ Project Map: [![Project Map](https://sourcespy.com/shield.svg)](https://sourcesp
 
 Project website: [pi4j.com](https://pi4j.com/).
 
+This project is intended to provide a **friendly object-oriented I/O API and implementation libraries for Java Programmers** to access the **full I/O capabilities of the Raspberry Pi platform**. This project abstracts the low-level native integration and interrupt monitoring to enable Java programmers to **focus on implementing their application business logic**.
+
 ![Pi4J diagram](https://pi4j.com/assets/about/home/pi4j-overview.jpg)
 
-* Pi4J V2 Discussions (replacing the Forum) (*new*): [github.com/Pi4J/pi4j-v2/discussions](https://github.com/Pi4J/pi4j-v2/discussions)
+* Pi4J V2 Discussions: [github.com/Pi4J/pi4j-v2/discussions](https://github.com/Pi4J/pi4j-v2/discussions)
 * Pi4J V2 issues: [github.com/Pi4J/pi4j-v2/issues](https://github.com/Pi4J/pi4j-v2/issues)
 
 Builds are available from:
@@ -31,8 +33,6 @@ Builds are available from:
 *  [Snapshot builds from Sonatype OSS](https://oss.sonatype.org/index.html#nexus-search;quick~pi4j)
 *  [Pi4J Downloads](https://pi4j.com/download)
 *  [APT/PPA Package Repository downloads](https://github.com/Pi4J/download)
-
-Copyright (C) 2012-2021 Pi4J
 
 ## Using Pi4J
 
@@ -105,23 +105,26 @@ the cause of the problem or even better provide a code fix!
 You want to become a member of the Pi4J-team? Great idea! Send a short message to frank@pi4j.com 
 with your experience, ideas, and what you would like to contribute to the project.
 
-## License
-
- Pi4J Version 2.0 and later is licensed under the Apache License,
- Version 2.0 (the "License"); you may not use this file except in
- compliance with the License.  You may obtain a copy of the License at:
-      http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
-  
 ## Previous Releases
+
 * **Releases**
   * V1: [github.com/Pi4J/pi4j-v1/releases](https://github.com/Pi4J/pi4j-v1/releases) (archived)
   * V2: [github.com/Pi4J/pi4j-v2/releases](https://github.com/Pi4J/pi4j-v2/releases)
 * **Source Code**: 
   * V1: [github.com/Pi4J/pi4j-v1/branches](https://github.com/Pi4J/pi4j-v1/branches) (archived)
   * V2: [github.com/Pi4J/pi4j-v2/branches](https://github.com/Pi4J/pi4j-v2/branches)
+
+## License
+
+Pi4J Version 2.0 and later is licensed under the Apache License,
+Version 2.0 (the "License"); you may not use this file except in
+compliance with the License.  You may obtain a copy of the License at:
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Copyright (C) 2012-2024 Pi4J
