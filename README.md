@@ -119,12 +119,9 @@ with your experience, ideas, and what you would like to contribute to the projec
  limitations under the License.
   
 ## Previous Releases
-
-For previous 1.x release notes and source code, please see the [archived V1 GitHub repository](https://github.com/Pi4J/pi4j-v1).
-
-  * **Releases**
-    * V1: [github.com/Pi4J/pi4j-v1/releases](https://github.com/Pi4J/pi4j-v1/releases)
-    * V2: [github.com/Pi4J/pi4j-v2/releases](https://github.com/Pi4J/pi4j-v2/releases)
-  * **Source Code**: 
-    * V1: [github.com/Pi4J/pi4j-v1/branches](https://github.com/Pi4J/pi4j-v1/branches)
-    * V2: [github.com/Pi4J/pi4j-v2/branches](https://github.com/Pi4J/pi4j-v2/branches)
+* **Releases**
+  * V1: [github.com/Pi4J/pi4j-v1/releases](https://github.com/Pi4J/pi4j-v1/releases) (archived)
+  * V2: [github.com/Pi4J/pi4j-v2/releases](https://github.com/Pi4J/pi4j-v2/releases)
+* **Source Code**: 
+  * V1: [github.com/Pi4J/pi4j-v1/branches](https://github.com/Pi4J/pi4j-v1/branches) (archived)
+  * V2: [github.com/Pi4J/pi4j-v2/branches](https://github.com/Pi4J/pi4j-v2/branches)
