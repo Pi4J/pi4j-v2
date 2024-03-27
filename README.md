@@ -16,7 +16,7 @@ Project Map: [![Project Map](https://sourcespy.com/shield.svg)](https://sourcesp
 
 ---
 
-## PROJECT INFORMATION for V2 of Pi4J
+## Project Information for V2 of Pi4J
 
 Project website: [pi4j.com](https://pi4j.com/).
 
@@ -34,7 +34,43 @@ Builds are available from:
 
 Copyright (C) 2012-2021 Pi4J
 
-## BUILD INSTRUCTIONS
+## Using Pi4J
+
+When you want to use Pi4J in your project, you should definitely check out [the Pi4J website](https://pi4j.com) where you can find a lot of information and many examples! 
+
+For example, for a minimal example to blink a LED ([fully explained here](https://pi4j.com/getting-started/minimal-example-application/)), you need to import the dependencies and use this code:
+
+```java
+var pi4j = Pi4J.newAutoContext();
+
+var led = pi4j.digitalOutput().create(PIN_LED);
+
+while (true) {
+    if (led.equals(DigitalState.HIGH)) {
+        led.low();
+    } else {
+        led.high();
+    }
+    Thread.sleep(500);
+}
+```
+
+## Contributing to Pi4J
+
+For full description of the code structure, how to compile... see
+the ["About the code" on our website](https://pi4j.com/architecture/about-the-code/).
+
+![Pi4J V2 code structure](assets/draw.io/pi4j-v2-code-structure.jpg)
+
+### Project Overview
+
+Starting with the Pi4J 2.0 builds, the Pi4J project is prioritizing focus
+on providing Java programs access, control and communication with the core
+I/O capabilities of the Raspberry Pi platform.
+
+Read all about it on [pi4j.com: "What’s New in 2.0?"](https://pi4j.com/about/new-in-v2/).
+
+### Build Instructions
 
 The Pi4J V2 codebase can be built using [Apache Maven 3.6.x](https://maven.apache.org/). and [Java JDK 11](https://openjdk.java.net/).
 The following command can be used to build the Pi4J V2 JARs:
@@ -55,13 +91,6 @@ mvn clean install -Pnative,docker
 
 > **NOTE:** A comprehensive set of build instructions can be found in the [Pi4J V2 Documentation](https://pi4j.com/architecture/about-the-code/build-instructions/).
 
-## CONTRIBUTING TO PI4J
-
-For full description of the code structure, how to compile... see 
-the ["About the code" on our website](https://pi4j.com/architecture/about-the-code/).
-
-![Pi4J V2 code structure](assets/draw.io/pi4j-v2-code-structure.jpg)
-
 ### Adding a feature or solving a problem
 
 If you have and idea to extend and improve Pi4J, please first create a ticket to discuss how 
@@ -76,7 +105,7 @@ the cause of the problem or even better provide a code fix!
 You want to become a member of the Pi4J-team? Great idea! Send a short message to frank@pi4j.com 
 with your experience, ideas, and what you would like to contribute to the project.
 
-## LICENSE
+## License
 
  Pi4J Version 2.0 and later is licensed under the Apache License,
  Version 2.0 (the "License"); you may not use this file except in
@@ -88,18 +117,14 @@ with your experience, ideas, and what you would like to contribute to the projec
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-
-## PROJECT OVERVIEW
-
-Starting with the Pi4J 2.0 builds, the Pi4J project is prioritizing focus
-on providing Java programs access, control and communication with the core
-I/O capabilities of the Raspberry Pi platform.  
-
-Read all about it on [pi4j.com](https://pi4j.com/).
   
-## PREVIOUS RELEASES
+## Previous Releases
 
-For previous 1.x release notes and source code, please see the [1.x GitHub repository](https://github.com/pi4J/pi4J).
+For previous 1.x release notes and source code, please see the [archived V1 GitHub repository](https://github.com/Pi4J/pi4j-v1).
 
-  * **Releases**: [github.com/Pi4J/pi4j/releases](https://github.com/Pi4J/pi4j/releases)
-  * **Source Code**: [github.com/Pi4J/pi4j/branches](https://github.com/Pi4J/pi4j/branches)
+  * **Releases**
+    * V1: [github.com/Pi4J/pi4j-v1/releases](https://github.com/Pi4J/pi4j-v1/releases)
+    * V2: [github.com/Pi4J/pi4j-v2/releases](https://github.com/Pi4J/pi4j-v2/releases)
+  * **Source Code**: 
+    * V1: [github.com/Pi4J/pi4j-v1/branches](https://github.com/Pi4J/pi4j-v1/branches)
+    * V2: [github.com/Pi4J/pi4j-v2/branches](https://github.com/Pi4J/pi4j-v2/branches)
