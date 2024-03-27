@@ -13,7 +13,6 @@
     <description>Pi4J Distribution Packages</description>
     <packaging>deb</packaging>
 
-
     <!-- PROJECT DEPENDENCIES -->
     <dependencies>
 
