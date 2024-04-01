@@ -135,7 +135,9 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
         if(this.config.initialValue() != null){
             try {
                 if(this.config.initialValue() <= 0){
-                    this.off();
+                    if(this.isOn()) {
+                        this.off();
+                    }
                 } else {
                     this.on(this.config.initialValue());
                 }

@@ -85,13 +85,18 @@ public class LinuxFsPwm extends PwmBase implements Pwm {
             if(!pwm.isExported()) {
                 logger.trace("exporting PWM [" + this.config.address() + "]; " + pwm.getPwmPath());
                 pwm.export();
+                // Delay to allow the SSD to persist the new directory and device partitions
+                Thread.sleep(250);
             } else{
                 logger.trace("PWM [" + this.config.address() + "] is already exported; " + pwm.getPwmPath());
             }
         } catch (java.io.IOException e) {
             logger.error(e.getMessage(), e);
             throw new InitializeException("Unable to export PWM [" + config.address() + "] @ <" + pwm.systemPath() + ">; " + e.getMessage(), e);
-        }
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage(), e);
+            throw new InitializeException("Programmed delay failure, unable to export PWM [" + config.address() + "] @ <" + pwm.systemPath() + ">; " + e.getMessage(), e);
+         }
 
         // [INITIALIZE STATE] initialize PWM pin state (via superclass impl)
         super.initialize(context);
