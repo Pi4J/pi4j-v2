@@ -124,7 +124,7 @@
 
 	<!-- DISTRIBUTION REPOSITORIES -->
 	<distributionManagement>
-		<downloadUrl>https://v2.pi4j.com/download</downloadUrl>
+		<downloadUrl>https://pi4j.com/download</downloadUrl>
 		<repository>
 			<id>sonatype-oss-staging</id>
 			<name>Sonatype Open Source Maven Repository</name>
@@ -254,42 +254,42 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- DEPENDENCY VERSIONS -->
+        <!--
+        Seems we are stuck at this version of ant-contrib. Bumping it leads to:
+        Error executing Ant tasks: 'org.apache.tools.ant.util.FileUtils
+        org.apache.tools.ant.util.FileUtils.getFileUtils()
+        -->
+        <ant-contrib.version>20020829</ant-contrib.version>
         <ant-jsch.version>1.10.8</ant-jsch.version>
         <jsch.version>0.1.55</jsch.version>
-        <ant-contrib.version>20020829</ant-contrib.version>
-        <junit.jupiter.version>5.6.2</junit.jupiter.version>
-        <junit.platform.version>1.6.2</junit.platform.version>
-        <slf4j.version>1.7.32</slf4j.version>
-        <jSerialComm.version>2.6.2</jSerialComm.version>
-        <gson.version>2.8.6</gson.version>
-        <json.version>20200518</json.version>
+        <junit.jupiter.version>5.10.2</junit.jupiter.version>
+        <slf4j.version>2.0.12</slf4j.version>
+        <jserialcomm.version>2.10.4</jserialcomm.version>
 
         <!-- PLUGIN VERSIONS -->
-        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
-        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
-        <maven-resource-plugin.version>3.2.0</maven-resource-plugin.version>
-        <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
+        <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
+        <exec-maven-plugin.version>3.2.0</exec-maven-plugin.version>
+        <jdeb.version>1.8</jdeb.version>
+        <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+        <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
-        <maven-scm-plugin.version>1.11.2</maven-scm-plugin.version>
         <maven-bundle-plugin.version>5.1.2</maven-bundle-plugin.version>
-        <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
+        <maven-gpg-plugin.version>3.2.1</maven-gpg-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
+        <maven-release-plugin.version>3.0.0-M4</maven-release-plugin.version>
+        <maven-resource-plugin.version>3.2.0</maven-resource-plugin.version>
+        <maven-scm-plugin.version>1.11.2</maven-scm-plugin.version>
+        <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
+        <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <native-maven-plugin.version>1.0-alpha-9</native-maven-plugin.version>
-        <maven-release-plugin.version>3.0.0-M4</maven-release-plugin.version>
-        <license-maven-plugin.version>2.0.0</license-maven-plugin.version>
-        <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
-        <jdeb.version>1.8</jdeb.version>
-        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
-        <s3-upload-maven-plugin.version>1.5</s3-upload-maven-plugin.version>
-        <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
 
         <!-- REPORTS VERSIONS -->
-        <maven-project-info-reports-plugin.version>3.1.1</maven-project-info-reports-plugin.version>
+        <maven-project-info-reports-plugin.version>3.5.0</maven-project-info-reports-plugin.version>
 
         <!-- SPECIAL ACCESS PROPERTIES -->
         <!-- These are only used by project committer/publisher -->
@@ -313,7 +313,6 @@
         <raspberrypi.password>raspberry</raspberrypi.password>
         <raspberrypi.deploydirectory>/home/pi/deploy</raspberrypi.deploydirectory>
         <raspberrypi.jvmOptions/>
-
 	</properties>
 
     <!-- PROJECT DEPENDENCIES -->
@@ -383,7 +382,7 @@
         <dependency>
             <groupId>com.fazecast</groupId>
             <artifactId>jSerialComm</artifactId>
-            <version>2.5.1</version>
+            <version>${jserialcomm.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -663,13 +662,6 @@
                     <groupId>org.vafer</groupId>
                     <artifactId>jdeb</artifactId>
                     <version>${jdeb.version}</version>
-                </plugin>
-
-                <!-- AWS S3 UPLOAD PLUGIN -->
-                <plugin>
-                    <groupId>com.bazaarvoice.maven.plugins</groupId>
-                    <artifactId>s3-upload-maven-plugin</artifactId>
-                    <version>${s3-upload-maven-plugin.version}</version>
                 </plugin>
 
                 <!-- ENFORCER PLUGIN -->
