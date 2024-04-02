@@ -254,34 +254,39 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- DEPENDENCY VERSIONS -->
+        <!--
+        Seems we are stuck at this version of ant-contrib. Bumping it leads to:
+        Error executing Ant tasks: 'org.apache.tools.ant.util.FileUtils
+        org.apache.tools.ant.util.FileUtils.getFileUtils()
+        -->
+        <ant-contrib.version>20020829</ant-contrib.version>
         <ant-jsch.version>1.10.8</ant-jsch.version>
         <jsch.version>0.1.55</jsch.version>
-        <ant-contrib.version>20020829</ant-contrib.version>
         <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <slf4j.version>2.0.12</slf4j.version>
         <jserialcomm.version>2.10.4</jserialcomm.version>
 
         <!-- PLUGIN VERSIONS -->
-        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
-        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
-        <maven-resource-plugin.version>3.2.0</maven-resource-plugin.version>
-        <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
-        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-        <maven-gpg-plugin.version>3.2.1</maven-gpg-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
-        <maven-scm-plugin.version>1.11.2</maven-scm-plugin.version>
-        <maven-bundle-plugin.version>5.1.2</maven-bundle-plugin.version>
+        <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
+        <exec-maven-plugin.version>3.2.0</exec-maven-plugin.version>
+        <jdeb.version>1.8</jdeb.version>
+        <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
+        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
+        <maven-bundle-plugin.version>5.1.2</maven-bundle-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
+        <maven-gpg-plugin.version>3.2.1</maven-gpg-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
+        <maven-release-plugin.version>3.0.0-M4</maven-release-plugin.version>
+        <maven-resource-plugin.version>3.2.0</maven-resource-plugin.version>
+        <maven-scm-plugin.version>1.11.2</maven-scm-plugin.version>
+        <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
+        <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <native-maven-plugin.version>1.0-alpha-9</native-maven-plugin.version>
-        <maven-release-plugin.version>3.0.0-M4</maven-release-plugin.version>
-        <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
-        <jdeb.version>1.8</jdeb.version>
-        <exec-maven-plugin.version>3.2.0</exec-maven-plugin.version>
-        <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
 
         <!-- REPORTS VERSIONS -->
         <maven-project-info-reports-plugin.version>3.5.0</maven-project-info-reports-plugin.version>
