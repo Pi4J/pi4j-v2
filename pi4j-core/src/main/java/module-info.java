@@ -26,10 +26,14 @@ module com.pi4j {
 
     // depends on SLF4J
     requires org.slf4j;
+    requires com.fasterxml.jackson.annotation;
 
 
     // exposed interfaces/classes
     exports com.pi4j;
+    exports com.pi4j.boardinfo.definition;
+    exports com.pi4j.boardinfo.model;
+    exports com.pi4j.boardinfo.util;
     exports com.pi4j.common;
     exports com.pi4j.config;
     exports com.pi4j.config.exception;

@@ -25,6 +25,7 @@ package com.pi4j.runtime.impl;
  * #L%
  */
 
+import com.pi4j.boardinfo.util.BoardModelDetection;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
 import com.pi4j.event.*;
@@ -248,6 +249,10 @@ public class DefaultRuntime implements Runtime {
     public Runtime initialize() throws InitializeException {
         logger.info("Initializing Pi4J context/runtime...");
         try {
+            // Output the type of board
+            var model = BoardModelDetection.getDetectedBoard();
+            logger.info("detected board model: {}", model.getBoardModel().getLabel());
+
             // clear plugins container
             plugins.clear();
 
