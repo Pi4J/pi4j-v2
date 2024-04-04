@@ -86,7 +86,7 @@ public class LinuxFsPwm extends PwmBase implements Pwm {
                 logger.trace("exporting PWM [" + this.config.address() + "]; " + pwm.getPwmPath());
                 pwm.export();
                 // Delay to allow the SSD to persist the new directory and device partitions
-                Thread.sleep(250);
+                Thread.sleep(70);
             } else{
                 logger.trace("PWM [" + this.config.address() + "] is already exported; " + pwm.getPwmPath());
             }
@@ -224,7 +224,9 @@ public class LinuxFsPwm extends PwmBase implements Pwm {
         // otherwise ... un-export the GPIO pin from the Linux file system impl
         try {
             logger.trace("un-exporting PWM [" + this.config.address() + "]; " + pwm.getPwmPath());
-            pwm.unexport();
+            if(pwm.isExported()) {
+                pwm.unexport();
+            }
         } catch (java.io.IOException e) {
             logger.error(e.getMessage(), e);
             throw new ShutdownException("Failed to UN-EXPORT PWM [" + config().address() + "] @ <" + pwm.systemPath() + ">; " + e.getMessage(), e);
