@@ -1,8 +1,5 @@
 package com.pi4j.boardinfo.definition;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum InstructionSet {
     ARM_V6_M("ARMv6-M"),
     ARM_V6("ARMv6"),

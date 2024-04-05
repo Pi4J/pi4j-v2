@@ -1,13 +1,10 @@
 package com.pi4j.boardinfo.definition;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum HeaderVersion {
     PICO("Pico", "Used on the Pico microcontroller", new ArrayList<>()),
     TYPE_1("Type 1", "Used on original Model B", Collections.singletonList(HeaderPins.HEADER_26_TYPE_1)),

@@ -1,11 +1,8 @@
 package com.pi4j.boardinfo.definition;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 /**
  * List of pin types in a header.
  */
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum PinType {
     POWER("Power", 0x990000),
     GROUND("Ground", 0x000000),

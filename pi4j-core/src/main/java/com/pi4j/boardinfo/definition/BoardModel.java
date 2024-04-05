@@ -1,6 +1,5 @@
 package com.pi4j.boardinfo.definition;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +19,6 @@ import static com.pi4j.boardinfo.definition.BoardType.*;
  * <a href="https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes-in-use">raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes-in-use</a>
  * <a href="https://www.raspberrypi-spy.co.uk/2012/09/checking-your-raspberry-pi-board-version/">raspberrypi-spy.co.uk/2012/09/checking-your-raspberry-pi-board-version/</a>
  */
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum BoardModel {
     MODEL_1_A("Raspberry Pi 1 Model A", SINGLE_BOARD_COMPUTER,
             new ArrayList<>(),

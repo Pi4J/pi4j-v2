@@ -1,8 +1,5 @@
 package com.pi4j.boardinfo.definition;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Cpu {
     ARM1176JZF_S("ARM1176JZF-S"),
     CORTEX_A53("Cortex-A53"),

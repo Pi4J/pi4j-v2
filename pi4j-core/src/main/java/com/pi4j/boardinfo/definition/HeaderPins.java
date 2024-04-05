@@ -1,6 +1,5 @@
 package com.pi4j.boardinfo.definition;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pi4j.boardinfo.model.HeaderPin;
 
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import java.util.List;
 /**
  * List of pins in a Raspberry Pi header.
  */
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum HeaderPins {
     HEADER_8("8pin header", get8PinsHeader()),
     HEADER_26_TYPE_1("26pin header - type 1", get26PinsHeader(1)),

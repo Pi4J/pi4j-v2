@@ -1,8 +1,5 @@
 package com.pi4j.boardinfo.definition;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Soc {
     BCM2710A1(InstructionSet.ARM_V8),
     BCM2711(InstructionSet.ARM_V8),

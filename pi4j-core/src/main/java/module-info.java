@@ -27,9 +27,6 @@ module com.pi4j {
     // depends on SLF4J
     requires org.slf4j;
 
-    // board info uses Jackson to be able to output as JSON
-    requires com.fasterxml.jackson.annotation;
-
     // exposed interfaces/classes
     exports com.pi4j;
     exports com.pi4j.boardinfo.definition;

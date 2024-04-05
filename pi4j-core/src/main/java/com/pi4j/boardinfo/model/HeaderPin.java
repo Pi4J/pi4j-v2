@@ -1,13 +1,11 @@
 package com.pi4j.boardinfo.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pi4j.boardinfo.definition.PinFunction;
 import com.pi4j.boardinfo.definition.PinType;
 
 /**
  * Describes a pin in the header.
  */
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public class HeaderPin {
     private final int pinNumber;
     private final PinType pinType;
