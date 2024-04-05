@@ -2,13 +2,13 @@ package com.pi4j.boardinfo.model;
 
 import com.pi4j.boardinfo.definition.BoardModel;
 
-public class DetectedBoard {
+public class BoardInfo {
 
     private final BoardModel boardModel;
     private final OperatingSystem operatingSystem;
     private final JavaInfo javaInfo;
 
-    public DetectedBoard(BoardModel boardModel, OperatingSystem operatingSystem, JavaInfo javaInfo) {
+    public BoardInfo(BoardModel boardModel, OperatingSystem operatingSystem, JavaInfo javaInfo) {
         this.boardModel = boardModel;
         this.operatingSystem = operatingSystem;
         this.javaInfo = javaInfo;
