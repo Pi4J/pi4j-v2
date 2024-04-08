@@ -44,7 +44,8 @@ public class LinuxPwm {
     public static String DEFAULT_SYSTEM_PATH = "/sys/class/pwm";
 
     /** Constant <code>DEFAULT_PWM_CHIP=0</code> */
-    public static int DEFAULT_PWM_CHIP = 0;
+    /** In Pi5 the chip is number 2 */
+    public static int DEFAULT_PWM_CHIP = 2;
 
     protected final String systemPath;
     protected final int chip;
