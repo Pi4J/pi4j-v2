@@ -25,6 +25,10 @@ package com.pi4j.context;
  * #L%
  */
 
+import com.pi4j.boardinfo.definition.BoardModel;
+import com.pi4j.boardinfo.model.BoardInfo;
+import com.pi4j.boardinfo.model.JavaInfo;
+import com.pi4j.boardinfo.model.OperatingSystem;
 import com.pi4j.common.Describable;
 import com.pi4j.common.Descriptor;
 import com.pi4j.config.Config;
@@ -304,6 +308,18 @@ public interface Context extends Describable, IOCreator, ProviderProvider, Initi
         // provider not found
         throw new ProviderNotFoundException(ioType);
     }
+
+    // ------------------------------------------------------------------------
+    // BOARD INFO ACCESSOR METHODS
+    // ------------------------------------------------------------------------
+
+    /**
+     * Return the BoardInfo containing more info about the
+     * {@link BoardModel}, {@link OperatingSystem}, and {@link JavaInfo}.
+     *
+     * @return {@link BoardInfo}
+     */
+    BoardInfo boardInfo();
 
     // ------------------------------------------------------------------------
     // I/O INSTANCE ACCESSOR/CREATOR METHODS
