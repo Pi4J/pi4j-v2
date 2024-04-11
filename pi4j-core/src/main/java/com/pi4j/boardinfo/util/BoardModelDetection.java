@@ -14,20 +14,20 @@ public class BoardModelDetection {
 
     private static final Logger logger = LoggerFactory.getLogger(BoardModelDetection.class);
 
-    private BoardModelDetection() {
-        // Hide constructor
+    private static final BoardModelDetection instance;
+    private final BoardInfo boardInfo;
+
+    static {
+        instance = new BoardModelDetection();
     }
 
-    public static BoardInfo current() {
-        var os = new OperatingSystem(System.getProperty("os.name"),
-                System.getProperty("os.version"),
-                System.getProperty("os.arch"));
+    private BoardModelDetection() {
+        var os = new OperatingSystem(System.getProperty("os.name"), System.getProperty("os.version"),
+            System.getProperty("os.arch"));
         logger.info("Detected OS: {}", os);
 
-        var java = new JavaInfo(System.getProperty("java.version"),
-                System.getProperty("java.runtime.version"),
-                System.getProperty("java.vendor"),
-                System.getProperty("java.vendor.version"));
+        var java = new JavaInfo(System.getProperty("java.version"), System.getProperty("java.runtime.version"),
+            System.getProperty("java.vendor"), System.getProperty("java.vendor.version"));
         logger.info("Detected Java: {}", java);
 
         // Example output: c03111
@@ -35,7 +35,8 @@ public class BoardModelDetection {
         var boardModelByBoardCode = BoardModel.getByBoardCode(boardVersionCode);
         if (boardModelByBoardCode != BoardModel.UNKNOWN) {
             logger.info("Detected board type {} by code: {}", boardModelByBoardCode.name(), boardVersionCode);
-            return new BoardInfo(boardModelByBoardCode, os, java);
+            this.boardInfo = new BoardInfo(boardModelByBoardCode, os, java);
+            return;
         }
 
         // Example output: Raspberry Pi 4 Model B Rev 1.1
@@ -43,13 +44,18 @@ public class BoardModelDetection {
         boardModelByBoardCode = BoardModel.getByBoardName(boardName);
         if (boardModelByBoardCode != BoardModel.UNKNOWN) {
             logger.info("Detected board type {} by name: {}", boardModelByBoardCode.name(), boardName);
-            return new BoardInfo(boardModelByBoardCode, os, java);
+            this.boardInfo = new BoardInfo(boardModelByBoardCode, os, java);
+            return;
         }
 
         // Maybe there are other ways how a board can be detected?
         // If so, this method can be further extended...
         logger.warn("Sorry, could not detect the board type");
-        return new BoardInfo(BoardModel.UNKNOWN, os, java);
+        this.boardInfo = new BoardInfo(BoardModel.UNKNOWN, os, java);
+    }
+
+    public static BoardInfo current() {
+        return instance.boardInfo;
     }
 
     public static String getBoardVersionCode() {
