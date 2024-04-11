@@ -1,5 +1,8 @@
 package com.pi4j.plugin.gpiod.provider.gpio.digital;
 
+import com.pi4j.boardinfo.definition.BoardModel;
+import com.pi4j.boardinfo.definition.Soc;
+import com.pi4j.boardinfo.util.BoardModelDetection;
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
@@ -34,8 +37,15 @@ public class GpioDDigitalInputProviderImpl extends DigitalInputProviderBase impl
 
     @Override
     public int getPriority() {
-        // GpioD should be used if available
-        return 150;
+        // the gpioD driver should be higher priority when on Pi5.
+        int rval = 0;
+        BoardModel model = BoardModelDetection.current().getBoardModel();
+        if(model.getSoc() == Soc.BCM2712) {
+            rval = 120;
+        }else{
+            rval = 50;
+        }
+        return(rval);
     }
 
     /**

@@ -27,6 +27,9 @@ package com.pi4j.plugin.linuxfs.provider.i2c;
  * #L%
  */
 
+import com.pi4j.boardinfo.definition.BoardModel;
+import com.pi4j.boardinfo.definition.Soc;
+import com.pi4j.boardinfo.util.BoardModelDetection;
 import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
@@ -47,8 +50,15 @@ public class LinuxFsI2CProviderImpl extends I2CProviderBase implements LinuxFsI2
 
     @Override
     public int getPriority() {
-        // the linux FS I2C driver should be used over the pigpio
-        return 150;
+        // the linux FS driver should be higher priority when on Pi5.
+        int rval = 0;
+        BoardModel model = BoardModelDetection.current().getBoardModel();
+        if(model.getSoc() == Soc.BCM2712) {
+            rval = 100;
+        }else{
+            rval = 50;
+        }
+        return(rval);
     }
 
     @Override

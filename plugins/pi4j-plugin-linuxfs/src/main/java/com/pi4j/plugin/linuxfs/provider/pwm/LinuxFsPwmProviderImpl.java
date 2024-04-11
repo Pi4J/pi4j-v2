@@ -27,6 +27,9 @@ package com.pi4j.plugin.linuxfs.provider.pwm;
  * #L%
  */
 
+import com.pi4j.boardinfo.definition.BoardModel;
+import com.pi4j.boardinfo.definition.Soc;
+import com.pi4j.boardinfo.util.BoardModelDetection;
 import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.exception.IOException;
 import com.pi4j.io.pwm.Pwm;
@@ -60,8 +63,15 @@ public class LinuxFsPwmProviderImpl extends PwmProviderBase implements LinuxFsPw
 
     @Override
     public int getPriority() {
-        // the linux FS PWM driver should not be used over the pigpio
-        return 50;
+        // the linux FS PWM driver should be higher priority than Pigpio on Pi5.
+        int rval = 0;
+        BoardModel model = BoardModelDetection.current().getBoardModel();
+        if(model.getSoc() == Soc.BCM2712) {
+            rval = 100;
+        }else{
+            rval = 50;
+        }
+        return(rval);
     }
 
     /**
@@ -71,7 +81,12 @@ public class LinuxFsPwmProviderImpl extends PwmProviderBase implements LinuxFsPw
         this.id = ID;
         this.name = NAME;
         this.pwmFileSystemPath = pwmFileSystemPath;
-        this.pwmChip = LinuxPwm.DEFAULT_PWM_CHIP;
+        BoardModel model = BoardModelDetection.current().getBoardModel();
+        if(model.getSoc() == Soc.BCM2712) {
+            this.pwmChip = LinuxPwm.DEFAULT_PI5_PWM_CHIP;
+        }else{
+            this.pwmChip = LinuxPwm.DEFAULT_LEGACY_PWM_CHIP;
+        }
     }
 
     /**

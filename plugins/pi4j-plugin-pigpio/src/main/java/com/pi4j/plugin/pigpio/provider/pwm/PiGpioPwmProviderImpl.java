@@ -27,6 +27,9 @@ package com.pi4j.plugin.pigpio.provider.pwm;
  * #L%
  */
 
+import com.pi4j.boardinfo.definition.BoardModel;
+import com.pi4j.boardinfo.definition.Soc;
+import com.pi4j.boardinfo.util.BoardModelDetection;
 import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
@@ -57,8 +60,15 @@ public class PiGpioPwmProviderImpl extends PwmProviderBase implements PiGpioPwmP
 
     @Override
     public int getPriority() {
-        // the pigpio PWM driver should be used over the default
-        return 100;
+        // the Pigpio driver should be higher priority when NOT on Pi5.
+        int rval = 0;
+        BoardModel model = BoardModelDetection.current().getBoardModel();
+        if(model.getSoc() != Soc.BCM2712) {
+            rval = 100;
+        }else{
+            rval = 50;
+        }
+        return(rval);
     }
 
     /**
