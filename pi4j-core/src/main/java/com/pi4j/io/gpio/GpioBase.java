@@ -47,9 +47,6 @@ public abstract class GpioBase<IO_TYPE extends Gpio<IO_TYPE, CONFIG_TYPE, PROVID
      */
     public GpioBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
         super(provider, config);
-        this.name = config.name();
-        this.id = config.id();
-        this.description = config.description();
     }
 
     /** {@inheritDoc} */
