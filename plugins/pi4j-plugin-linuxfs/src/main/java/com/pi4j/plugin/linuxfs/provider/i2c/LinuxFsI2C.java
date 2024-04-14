@@ -334,6 +334,14 @@ public class LinuxFsI2C extends I2CBase implements I2C {
     }
 
     @Override
+    public void execute(Action action) {
+        this.i2CBus.execute(this, file -> {
+            action.execute();
+            return null;
+        });
+    }
+
+    @Override
     public void close() {
         if (this.i2CBus != null)
             this.i2CBus.close();

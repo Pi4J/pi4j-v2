@@ -25,11 +25,11 @@ package com.pi4j.io.i2c;
  * #L%
  */
 
+import com.pi4j.common.Action;
 import com.pi4j.context.Context;
 import com.pi4j.io.IO;
 import com.pi4j.io.IODataReader;
 import com.pi4j.io.IODataWriter;
-
 
 /**
  * I2C I/O Interface for Pi4J I2C Bus/Device Communications
@@ -125,4 +125,11 @@ public interface I2C extends IO<I2C, I2CConfig, I2CProvider>,
     default I2CRegister register(int address){
         return getRegister(address);
     }
+
+    /**
+     * Executes the given runnable on the I2C bus, locking the bus for the duration of the given task
+     *
+     * @param action the action to perform
+     */
+    void execute(Action action);
 }
