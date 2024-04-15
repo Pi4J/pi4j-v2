@@ -26,7 +26,7 @@ package com.pi4j.context.impl;
  */
 
 import com.pi4j.boardinfo.model.BoardInfo;
-import com.pi4j.boardinfo.util.BoardModelDetection;
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
 import com.pi4j.context.ContextProperties;
@@ -104,7 +104,7 @@ public class DefaultContext implements Context {
         this.platforms = DefaultPlatforms.newInstance(this.runtime.platforms());
 
         // detect the board model
-        this.boardInfo = BoardModelDetection.current();
+        this.boardInfo = BoardInfoHelper.current();
         logger.info("Detected board model: {}", boardInfo.getBoardModel().getLabel());
         logger.info("Running on: {}", boardInfo.getOperatingSystem());
         logger.info("With Java version: {}", boardInfo.getJavaInfo());
