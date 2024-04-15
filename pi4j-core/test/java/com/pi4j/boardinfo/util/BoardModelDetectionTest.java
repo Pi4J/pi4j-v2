@@ -10,7 +10,7 @@ class BoardModelDetectionTest {
 
     @Test
     void testGetDetectedBoard() {
-        var detectedBoard = BoardModelDetection.current();
+        var detectedBoard = BoardInfoHelper.current();
 
         assertAll(
                 () -> assertEquals(detectedBoard.getOperatingSystem().getName(), System.getProperty("os.name")),

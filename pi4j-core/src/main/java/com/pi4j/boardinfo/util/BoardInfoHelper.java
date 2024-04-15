@@ -1,27 +1,25 @@
 package com.pi4j.boardinfo.util;
 
 import com.pi4j.boardinfo.definition.BoardModel;
-import com.pi4j.boardinfo.model.BoardInfo;
-import com.pi4j.boardinfo.model.JavaInfo;
-import com.pi4j.boardinfo.model.OperatingSystem;
+import com.pi4j.boardinfo.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.concurrent.TimeUnit;
 
-public class BoardModelDetection {
+public class BoardInfoHelper {
 
-    private static final Logger logger = LoggerFactory.getLogger(BoardModelDetection.class);
+    private static final Logger logger = LoggerFactory.getLogger(BoardInfoHelper.class);
 
-    private static final BoardModelDetection instance;
+    private static final BoardInfoHelper instance;
     private final BoardInfo boardInfo;
 
     static {
-        instance = new BoardModelDetection();
+        instance = new BoardInfoHelper();
     }
 
-    private BoardModelDetection() {
+    private BoardInfoHelper() {
         var os = new OperatingSystem(System.getProperty("os.name"), System.getProperty("os.version"),
             System.getProperty("os.arch"));
         logger.info("Detected OS: {}", os);
@@ -58,6 +56,14 @@ public class BoardModelDetection {
         return instance.boardInfo;
     }
 
+    public static boolean is32bit() {
+        return !is64bit();
+    }
+
+    public static boolean is64bit() {
+        return System.getProperty("sun.arch.data.model").equals("64");
+    }
+
     public static String getBoardVersionCode() {
         var output = getCommandOutput("cat /proc/cpuinfo | grep 'Revision' | awk '{print $3}'");
         if (output.isSuccess()) {
@@ -74,6 +80,25 @@ public class BoardModelDetection {
         }
         logger.error("Could not get the board name: {}", output.getErrorMessage());
         return "";
+    }
+
+    public static JvmMemory getJvmMemory() {
+        return new JvmMemory(Runtime.getRuntime());
+    }
+
+    public static BoardReading getBoardReading() {
+        return new BoardReading(
+            getCommandOutput("cat /proc/device-tree/model").getOutputMessage(),
+            // https://raspberry-projects.com/pi/command-line/detect-rpi-hardware-version
+            getCommandOutput("cat /proc/cpuinfo | grep 'Revision' | awk '{print $3}'").getOutputMessage(),
+            // https://linuxhint.com/commands-for-hardware-information-raspberry-pi/
+             getCommandOutput("vcgencmd measure_temp").getOutputMessage(),
+            getCommandOutput("uptime").getOutputMessage(),
+            // https://linuxhint.com/find-hardware-information-raspberry-pi/
+            getCommandOutput("vcgencmd measure_volts").getOutputMessage(),
+            // https://www.baeldung.com/linux/total-physical-memory
+            getCommandOutput("cat /proc/meminfo | head -n 1").getOutputMessage()
+        );
     }
 
     private static class CommandResult {
