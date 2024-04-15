@@ -48,9 +48,6 @@ public abstract class I2CBase extends IOBase<I2C, I2CConfig, I2CProvider> implem
      */
     public I2CBase(I2CProvider provider, I2CConfig config) {
         super(provider, config);
-        this.name = config.name();
-        this.id = config.id();
-        this.description = config.description();
         this.isOpen = true;
     }
 

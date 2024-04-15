@@ -60,6 +60,9 @@ public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig, P
      */
     public IOBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
         super();
+        this.id = config.id();
+        this.name = config.name();
+        this.description = config.description();
         this.provider = provider;
         this.config = config;
     }
