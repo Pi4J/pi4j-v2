@@ -57,9 +57,6 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
      */
     public PwmBase(PwmProvider provider, PwmConfig config) {
         super(provider, config);
-        this.name = config.name();
-        this.id = config.id();
-        this.description = config.description();
         for(PwmPreset preset : config.presets()){
             this.presets.put(preset.name().toLowerCase().trim(), preset);
         }
