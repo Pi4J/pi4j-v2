@@ -27,10 +27,8 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
  * #L%
  */
 
-import com.pi4j.boardinfo.definition.BoardModel;
-import com.pi4j.boardinfo.definition.Soc;
-import com.pi4j.boardinfo.util.BoardModelDetection;
-import com.pi4j.io.exception.IOAlreadyExistsException;
+
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
@@ -58,10 +56,9 @@ public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase
 
     @Override
     public int getPriority() {
-        // the linux FS Digital driver should be higher priority than Pigpio on Pi5.
+        // the linux FS Digital driver should be higher priority than Pigpio on RP1 chip.
         int rval = 0;
-        BoardModel model = BoardModelDetection.current().getBoardModel();
-        if(model.getSoc() == Soc.BCM2712) {
+        if(BoardInfoHelper.usesRP1()) {
             rval = 100;
         }else{
             rval = 50;

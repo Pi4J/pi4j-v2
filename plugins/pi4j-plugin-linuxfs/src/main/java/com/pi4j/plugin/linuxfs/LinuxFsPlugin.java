@@ -27,9 +27,8 @@ package com.pi4j.plugin.linuxfs;
  * #L%
  */
 
-import com.pi4j.boardinfo.definition.BoardModel;
-import com.pi4j.boardinfo.definition.Soc;
-import com.pi4j.boardinfo.util.BoardModelDetection;
+
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
 import com.pi4j.plugin.linuxfs.internal.LinuxGpio;
@@ -125,9 +124,8 @@ public class LinuxFsPlugin implements Plugin {
         String pwmFileSystemPath = DEFAULT_PWM_FILESYSTEM_PATH;
 
         int pwmChip;
-        BoardModel model = BoardModelDetection.current().getBoardModel();
-        if(model.getSoc() == Soc.BCM2712) {
-            pwmChip = LinuxPwm.DEFAULT_PI5_PWM_CHIP;
+        if(BoardInfoHelper.usesRP1()) {
+            pwmChip = LinuxPwm.DEFAULT_RP1_PWM_CHIP;
         }else{
             pwmChip = LinuxPwm.DEFAULT_LEGACY_PWM_CHIP;
         }

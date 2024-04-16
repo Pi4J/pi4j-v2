@@ -27,17 +27,14 @@ package com.pi4j.plugin.linuxfs.provider.pwm;
  * #L%
  */
 
-import com.pi4j.boardinfo.definition.BoardModel;
-import com.pi4j.boardinfo.definition.Soc;
-import com.pi4j.boardinfo.util.BoardModelDetection;
-import com.pi4j.io.exception.IOAlreadyExistsException;
+
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.io.exception.IOException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProviderBase;
 import com.pi4j.io.pwm.PwmType;
 import com.pi4j.plugin.linuxfs.internal.LinuxPwm;
-
 import static java.text.MessageFormat.format;
 
 /**
@@ -63,10 +60,9 @@ public class LinuxFsPwmProviderImpl extends PwmProviderBase implements LinuxFsPw
 
     @Override
     public int getPriority() {
-        // the linux FS PWM driver should be higher priority than Pigpio on Pi5.
+        // the linux FS PWM driver should be higher priority than Pigpio on RP1 chip
         int rval = 0;
-        BoardModel model = BoardModelDetection.current().getBoardModel();
-        if(model.getSoc() == Soc.BCM2712) {
+        if(BoardInfoHelper.usesRP1()) {
             rval = 100;
         }else{
             rval = 50;
@@ -81,9 +77,8 @@ public class LinuxFsPwmProviderImpl extends PwmProviderBase implements LinuxFsPw
         this.id = ID;
         this.name = NAME;
         this.pwmFileSystemPath = pwmFileSystemPath;
-        BoardModel model = BoardModelDetection.current().getBoardModel();
-        if(model.getSoc() == Soc.BCM2712) {
-            this.pwmChip = LinuxPwm.DEFAULT_PI5_PWM_CHIP;
+        if(BoardInfoHelper.usesRP1()) {
+            this.pwmChip = LinuxPwm.DEFAULT_RP1_PWM_CHIP;
         }else{
             this.pwmChip = LinuxPwm.DEFAULT_LEGACY_PWM_CHIP;
         }

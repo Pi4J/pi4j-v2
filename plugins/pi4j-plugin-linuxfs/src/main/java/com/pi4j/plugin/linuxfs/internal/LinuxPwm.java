@@ -27,9 +27,6 @@ package com.pi4j.plugin.linuxfs.internal;
  * #L%
  */
 
-import com.pi4j.boardinfo.definition.BoardModel;
-import com.pi4j.boardinfo.definition.Soc;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -47,16 +44,16 @@ public class LinuxPwm {
     public static String DEFAULT_SYSTEM_PATH = "/sys/class/pwm";
 
     /** Constant <code>DEFAULT_LEGACY_PWM_CHIP=0</code> */
-    /** In Pi Models Previous to Pi5 the chip is number 0 */
+    /** In Pi Models Previous to RP1 the chip is number 0 */
     public static int DEFAULT_LEGACY_PWM_CHIP = 0;
 
-    /** Constant <code>DEFAULT_PI5_PWM_CHIP=2</code> */
-    /** In Pi5 the chip is number 2 */
-    public static int DEFAULT_PI5_PWM_CHIP = 2;
+    /** Constant <code>DEFAULT_RP1_PWM_CHIP=2</code> */
+    /** In RP1 the chip is number 2 */
+    public static int DEFAULT_RP1_PWM_CHIP = 2;
 
     /** Constant <code>DEFAULT_PWM_CHIP=2</code> */
-    /** In Pi5 the chip is number 2 */
-    public static int DEFAULT_PWM_CHIP = DEFAULT_PI5_PWM_CHIP;
+    /** In RP1 the chip is number 2 */
+    public static int DEFAULT_PWM_CHIP = DEFAULT_RP1_PWM_CHIP;
 
 
     protected final String systemPath;

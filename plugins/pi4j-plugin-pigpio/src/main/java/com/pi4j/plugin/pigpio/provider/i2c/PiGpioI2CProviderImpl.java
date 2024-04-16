@@ -27,10 +27,8 @@ package com.pi4j.plugin.pigpio.provider.i2c;
  * #L%
  */
 
-import com.pi4j.boardinfo.definition.BoardModel;
-import com.pi4j.boardinfo.definition.Soc;
-import com.pi4j.boardinfo.util.BoardModelDetection;
-import com.pi4j.io.exception.IOAlreadyExistsException;
+
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProviderBase;
@@ -59,10 +57,9 @@ public class PiGpioI2CProviderImpl extends I2CProviderBase implements PiGpioI2CP
 
     @Override
     public int getPriority() {
-        // the Pigpio driver should be higher priority when NOT on Pi5.
+        // the Pigpio driver should be higher priority when NOT on RP1 chip
         int rval = 0;
-        BoardModel model = BoardModelDetection.current().getBoardModel();
-        if(model.getSoc() != Soc.BCM2712) {
+        if(!BoardInfoHelper.usesRP1()) {
             rval = 100;
         }else{
             rval = 50;
