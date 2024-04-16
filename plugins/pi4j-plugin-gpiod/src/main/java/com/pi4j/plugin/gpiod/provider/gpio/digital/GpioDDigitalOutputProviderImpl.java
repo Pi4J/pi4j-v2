@@ -27,6 +27,7 @@ package com.pi4j.plugin.gpiod.provider.gpio.digital;
  * #L%
  */
 
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.context.Context;
 import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
@@ -67,8 +68,14 @@ public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase im
 
     @Override
     public int getPriority() {
-        // GpioD should be used if available
-        return 150;
+        // the gpioD driver should be higher priority when on RP1 chip
+        int rval = 0;
+       if(BoardInfoHelper.usesRP1()) {
+            rval = 150;
+        }else{
+            rval = 150;
+        }
+        return(rval);
     }
 
     @Override

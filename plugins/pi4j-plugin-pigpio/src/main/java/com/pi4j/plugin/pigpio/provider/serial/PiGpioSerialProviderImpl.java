@@ -27,7 +27,7 @@ package com.pi4j.plugin.pigpio.provider.serial;
  * #L%
  */
 
-import com.pi4j.io.exception.IOAlreadyExistsException;
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProviderBase;
@@ -56,8 +56,14 @@ public class PiGpioSerialProviderImpl extends SerialProviderBase implements PiGp
 
     @Override
     public int getPriority() {
-        // the pigpio Serial driver should be used over the default
-        return 100;
+        // the Pigpio driver should be higher priority when NOT on Rp1 chip.
+        int rval = 0;
+        if(!BoardInfoHelper.usesRP1()) {
+            rval = 100;
+        }else{
+            rval = 50;
+        }
+        return(rval);
     }
 
     /**

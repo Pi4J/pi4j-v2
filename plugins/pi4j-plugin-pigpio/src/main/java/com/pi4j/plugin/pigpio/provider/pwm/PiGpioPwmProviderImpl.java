@@ -27,7 +27,8 @@ package com.pi4j.plugin.pigpio.provider.pwm;
  * #L%
  */
 
-import com.pi4j.io.exception.IOAlreadyExistsException;
+
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProviderBase;
@@ -57,8 +58,14 @@ public class PiGpioPwmProviderImpl extends PwmProviderBase implements PiGpioPwmP
 
     @Override
     public int getPriority() {
-        // the pigpio PWM driver should be used over the default
-        return 100;
+        // the Pigpio driver should be higher priority when NOT on RP1 chip.
+        int rval = 0;
+        if(!BoardInfoHelper.usesRP1()) {
+            rval = 100;
+        }else{
+            rval = 50;
+        }
+        return(rval);
     }
 
     /**

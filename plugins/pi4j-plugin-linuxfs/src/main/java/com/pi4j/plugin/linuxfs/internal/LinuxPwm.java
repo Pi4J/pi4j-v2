@@ -43,9 +43,18 @@ public class LinuxPwm {
     /** Constant <code>DEFAULT_SYSTEM_PATH="/sys/class/pwm"</code> */
     public static String DEFAULT_SYSTEM_PATH = "/sys/class/pwm";
 
-    /** Constant <code>DEFAULT_PWM_CHIP=0</code> */
-    /** In Pi5 the chip is number 2 */
-    public static int DEFAULT_PWM_CHIP = 2;
+    /** Constant <code>DEFAULT_LEGACY_PWM_CHIP=0</code> */
+    /** In Pi Models Previous to RP1 the chip is number 0 */
+    public static int DEFAULT_LEGACY_PWM_CHIP = 0;
+
+    /** Constant <code>DEFAULT_RP1_PWM_CHIP=2</code> */
+    /** In RP1 the chip is number 2 */
+    public static int DEFAULT_RP1_PWM_CHIP = 2;
+
+    /** Constant <code>DEFAULT_PWM_CHIP=2</code> */
+    /** In RP1 the chip is number 2 */
+    public static int DEFAULT_PWM_CHIP = DEFAULT_RP1_PWM_CHIP;
+
 
     protected final String systemPath;
     protected final int chip;
@@ -77,7 +86,8 @@ public class LinuxPwm {
      * @param systemPath a {@link String} object.
      * @param address a int.
      */
-    public LinuxPwm(String systemPath, int address){
+
+    public LinuxPwm(String systemPath, int address) {
         this(DEFAULT_SYSTEM_PATH, DEFAULT_PWM_CHIP, address);
     }
 
@@ -89,6 +99,8 @@ public class LinuxPwm {
     public LinuxPwm(int address){
         this(DEFAULT_SYSTEM_PATH, address);
     }
+
+
 
     /**
      * <p>channels.</p>

@@ -27,7 +27,8 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
  * #L%
  */
 
-import com.pi4j.io.exception.IOAlreadyExistsException;
+
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
@@ -54,8 +55,14 @@ public class LinuxFsDigitalInputProviderImpl extends DigitalInputProviderBase im
 
     @Override
     public int getPriority() {
-        // the linux FS DI driver should not be used over the pigpio
-        return 50;
+        // the linux FS Digital driver should be higher priority than Pigpio on RP1 chip
+        int rval = 0;
+        if(BoardInfoHelper.usesRP1()) {
+            rval = 100;
+        }else{
+            rval = 50;
+        }
+        return(rval);
     }
 
     /**

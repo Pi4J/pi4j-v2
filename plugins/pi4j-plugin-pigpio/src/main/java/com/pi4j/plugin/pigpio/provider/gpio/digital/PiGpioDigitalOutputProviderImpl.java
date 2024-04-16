@@ -27,7 +27,8 @@ package com.pi4j.plugin.pigpio.provider.gpio.digital;
  * #L%
  */
 
-import com.pi4j.io.exception.IOAlreadyExistsException;
+
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
@@ -56,8 +57,14 @@ public class PiGpioDigitalOutputProviderImpl extends DigitalOutputProviderBase i
 
     @Override
     public int getPriority() {
-        // the pigpio DO driver should be used over the default
-        return 100;
+        // the Pigpio driver should be higher priority when NOT on RP1 chip.
+        int rval = 0;
+        if(!BoardInfoHelper.usesRP1()) {
+            rval = 100;
+        }else{
+            rval = 50;
+        }
+        return(rval);
     }
 
     /**
