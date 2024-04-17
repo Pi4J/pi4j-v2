@@ -169,7 +169,7 @@ public enum BoardModel {
     ZERO_PCB_1_2("Raspberry Pi Zero PCB V1.2", SINGLE_BOARD_COMPUTER,
             Arrays.asList("900092", "920092"),
             PiModel.ZERO,
-            HeaderVersion.TYPE_2,
+            HeaderVersion.TYPE_3,
             LocalDate.of(2015, 11, 1),
             Soc.BCM2835,
             Cpu.ARM1176JZF_S, 1,
