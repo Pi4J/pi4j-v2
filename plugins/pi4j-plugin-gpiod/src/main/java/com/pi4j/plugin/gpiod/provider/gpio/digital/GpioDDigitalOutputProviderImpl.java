@@ -68,14 +68,8 @@ public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase im
 
     @Override
     public int getPriority() {
-        // the gpioD driver should be higher priority when on RP1 chip
-        int rval = 0;
-       if(BoardInfoHelper.usesRP1()) {
-            rval = 150;
-        }else{
-            rval = 150;
-        }
-        return(rval);
+        // the gpioD driver should be higher priority always
+        return(150);
     }
 
     @Override

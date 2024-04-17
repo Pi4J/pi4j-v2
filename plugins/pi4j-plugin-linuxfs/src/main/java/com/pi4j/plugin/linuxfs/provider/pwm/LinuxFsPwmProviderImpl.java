@@ -60,12 +60,10 @@ public class LinuxFsPwmProviderImpl extends PwmProviderBase implements LinuxFsPw
 
     @Override
     public int getPriority() {
-        // the linux FS PWM driver should be higher priority than Pigpio on RP1 chip
-        int rval = 0;
+        // the linux FS PWM driver should be higher priority on RP1 chip
+        int rval = 50;
         if(BoardInfoHelper.usesRP1()) {
             rval = 100;
-        }else{
-            rval = 50;
         }
         return(rval);
     }
