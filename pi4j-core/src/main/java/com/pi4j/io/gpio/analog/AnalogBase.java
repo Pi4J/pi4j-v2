@@ -80,14 +80,14 @@ public abstract class AnalogBase<ANALOG_TYPE
     @Override
     public ANALOG_TYPE addListener(AnalogValueChangeListener... listener) {
         valueChangeEventManager.add(listener);
-        return (ANALOG_TYPE)this;
+        return (ANALOG_TYPE) this;
     }
 
     /** {@inheritDoc} */
     @Override
     public ANALOG_TYPE removeListener(AnalogValueChangeListener... listener) {
         valueChangeEventManager.add(listener);
-        return (ANALOG_TYPE)this;
+        return (ANALOG_TYPE) this;
     }
 
     /** {@inheritDoc} */

@@ -22,18 +22,17 @@ package com.pi4j.plugin.linuxfs.provider.i2c;
  * #L%
  */
 
+import com.pi4j.io.i2c.I2C;
+import com.pi4j.io.i2c.I2CBase;
+import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.plugin.linuxfs.util.SystemUtil;
+
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.Objects;
-
-import com.pi4j.io.i2c.I2C;
-import com.pi4j.io.i2c.I2CBase;
-import com.pi4j.io.i2c.I2CConfig;
-import com.pi4j.io.i2c.I2CProvider;
-
-import  com.pi4j.plugin.linuxfs.util.SystemUtil;
 
 /**
  * <p>PiGpioI2C class.</p>
@@ -312,13 +311,12 @@ public class LinuxFsI2C extends I2CBase implements I2C {
        this.i2CBus.executeIOCTL(this, command, ioctlData, offsets);
 
         // move results back into user buffer
-        for(int i = 0; i <length; i++){   // can I assume length is safe and the readBuff data is not shorter ??   I think yes
-            buffer[i] = ioctlData.get(readBuffPosition +i );
-;        }
+        for (int i = 0; i < length; i++) {   // can I assume length is safe and the readBuff data is not shorter ??   I think yes
+            buffer[i] = ioctlData.get(readBuffPosition + i);
+        }
 
-        return (readLength);
+        return readLength;
     }
-
 
     /**
      * {@inheritDoc}

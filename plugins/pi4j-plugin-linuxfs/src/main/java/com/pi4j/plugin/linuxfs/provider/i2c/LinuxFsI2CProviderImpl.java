@@ -49,7 +49,7 @@ public class LinuxFsI2CProviderImpl extends I2CProviderBase implements LinuxFsI2
     @Override
     public int getPriority() {
        // the linux FS driver should always be higher priority
-       return(150);
+       return 150;
     }
 
     @Override

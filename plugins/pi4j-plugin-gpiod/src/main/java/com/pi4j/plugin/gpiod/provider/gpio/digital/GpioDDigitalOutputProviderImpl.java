@@ -69,7 +69,7 @@ public class GpioDDigitalOutputProviderImpl extends DigitalOutputProviderBase im
     @Override
     public int getPriority() {
         // the gpioD driver should be higher priority always
-        return(150);
+        return 150;
     }
 
     @Override

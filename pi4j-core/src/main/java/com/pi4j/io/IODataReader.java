@@ -512,7 +512,7 @@ public interface IODataReader extends Readable {
     default byte readByte() {
         int actual = read();
         if(actual < 0) throw new IOReadException("I2C READ ERROR; " + actual);
-        return (byte)actual;
+        return (byte) actual;
     }
 
     /**

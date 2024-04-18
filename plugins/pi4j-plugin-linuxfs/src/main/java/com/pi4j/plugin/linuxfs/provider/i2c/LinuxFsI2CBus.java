@@ -106,7 +106,7 @@ public class LinuxFsI2CBus {
             throw new Pi4JException("Failed to execute action for device " + i2c.device() + " on bus " + this.bus, e);
         }
 
-        return(rc);
+        return rc;
     }
 
     public <R> R execute(final I2C i2c, final CheckedFunction<LinuxFile, R> action) {
