@@ -115,7 +115,7 @@ public enum IOType {
     public <CB extends IOConfigBuilder>CB newConfigBuilder(Context context) {
         try {
             Method newInstance = getConfigBuilderClass().getMethod("newInstance", Context.class);
-            return (CB)newInstance.invoke(null, context);
+            return (CB) newInstance.invoke(null, context);
         } catch (Exception e) {
             throw new Pi4JException(e);
         }

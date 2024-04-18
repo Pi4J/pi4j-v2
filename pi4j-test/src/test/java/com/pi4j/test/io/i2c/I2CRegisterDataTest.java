@@ -343,7 +343,7 @@ public class I2CRegisterDataTest {
                 }
             }
         }
-        return (rval);
+        return rval;
     }
 
 

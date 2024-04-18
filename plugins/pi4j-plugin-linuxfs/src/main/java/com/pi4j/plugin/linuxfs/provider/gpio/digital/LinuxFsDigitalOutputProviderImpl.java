@@ -57,11 +57,7 @@ public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase
     @Override
     public int getPriority() {
         // the linux FS Digital driver should be higher priority on RP1 chip.
-        int rval = 50;
-        if(BoardInfoHelper.usesRP1()) {
-            rval = 100;
-        }
-        return(rval);
+        return BoardInfoHelper.usesRP1() ? 100 : 50;
     }
 
     /**

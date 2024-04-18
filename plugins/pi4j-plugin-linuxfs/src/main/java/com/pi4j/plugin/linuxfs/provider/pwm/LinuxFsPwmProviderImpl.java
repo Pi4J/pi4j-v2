@@ -35,6 +35,7 @@ import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProviderBase;
 import com.pi4j.io.pwm.PwmType;
 import com.pi4j.plugin.linuxfs.internal.LinuxPwm;
+
 import static java.text.MessageFormat.format;
 
 /**
@@ -61,11 +62,7 @@ public class LinuxFsPwmProviderImpl extends PwmProviderBase implements LinuxFsPw
     @Override
     public int getPriority() {
         // the linux FS PWM driver should be higher priority on RP1 chip
-        int rval = 50;
-        if(BoardInfoHelper.usesRP1()) {
-            rval = 100;
-        }
-        return(rval);
+        return BoardInfoHelper.usesRP1() ? 100 : 50;
     }
 
     /**

@@ -37,7 +37,7 @@ public class GpioDDigitalInputProviderImpl extends DigitalInputProviderBase impl
     @Override
     public int getPriority() {
         // the gpioD driver should be higher priority always
-        return(150);
+        return 150;
     }
 
     /**

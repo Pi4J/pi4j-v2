@@ -58,11 +58,7 @@ public class PiGpioI2CProviderImpl extends I2CProviderBase implements PiGpioI2CP
     @Override
     public int getPriority() {
         // the Pigpio driver should be higher priority when NOT on RP1 chip
-        int rval = 100;
-        if(BoardInfoHelper.usesRP1()) {
-            rval = 50;
-        }
-        return(rval);
+        return BoardInfoHelper.usesRP1() ? 50 : 100;
     }
 
     /**
