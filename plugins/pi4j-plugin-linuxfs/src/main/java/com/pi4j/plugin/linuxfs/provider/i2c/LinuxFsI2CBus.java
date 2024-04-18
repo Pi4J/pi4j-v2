@@ -79,9 +79,6 @@ public class LinuxFsI2CBus {
      */
     public int executeIOCTL(final I2C i2c, long command, ByteBuffer data, IntBuffer offsets){
         int rc = -1;
-        if (this.lastAddress != i2c.device()) {
-            this.lastAddress = i2c.device();
-        }
         try {
             if (this.lock.tryLock() || this.lock.tryLock(this.lockAquireTimeout, this.lockAquireTimeoutUnit)) {
 
