@@ -29,8 +29,11 @@ package com.pi4j.plugin.linuxfs.provider.i2c;
 
 
 import com.pi4j.boardinfo.util.BoardInfoHelper;
+import com.pi4j.context.Context;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.i2c.I2CProviderBase;
 
 import java.util.HashMap;
@@ -59,5 +62,12 @@ public class LinuxFsI2CProviderImpl extends I2CProviderBase implements LinuxFsI2
         LinuxFsI2C i2C = new LinuxFsI2C(i2CBus, this, config);
         this.context.registry().add(i2C);
         return i2C;
+    }
+
+    @Override
+    public I2CProvider shutdown(Context context) throws ShutdownException {
+        this.i2CBusMap.forEach(((busNr, bus) -> bus.close()));
+        this.i2CBusMap.clear();
+        return super.shutdown(context);
     }
 }

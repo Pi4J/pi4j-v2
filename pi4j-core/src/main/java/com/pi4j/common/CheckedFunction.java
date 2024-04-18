@@ -1,4 +1,4 @@
-package com.pi4j.plugin.linuxfs.provider.i2c;
+package com.pi4j.common;
 
 @FunctionalInterface
 public interface CheckedFunction<T, R> {

@@ -40,7 +40,7 @@ import java.util.Objects;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class LinuxFsI2C extends I2CBase implements I2C {
+public class LinuxFsI2C extends I2CBase<LinuxFsI2CBus> implements I2C {
 
     private final LinuxFsI2CBus i2CBus;
 
@@ -53,7 +53,7 @@ public class LinuxFsI2C extends I2CBase implements I2C {
      *     a {@link I2CConfig} object.
      */
     public LinuxFsI2C(LinuxFsI2CBus i2CBus, I2CProvider provider, I2CConfig config) {
-        super(provider, config);
+        super(provider, config, i2CBus);
         this.i2CBus = i2CBus;
     }
 
@@ -331,20 +331,5 @@ public class LinuxFsI2C extends I2CBase implements I2C {
         word = (buff[1] << 8)  | buff[0];
         return word;
 
-    }
-
-    @Override
-    public void execute(Action action) {
-        this.i2CBus.execute(this, file -> {
-            action.execute();
-            return null;
-        });
-    }
-
-    @Override
-    public void close() {
-        if (this.i2CBus != null)
-            this.i2CBus.close();
-        super.close();
     }
 }
