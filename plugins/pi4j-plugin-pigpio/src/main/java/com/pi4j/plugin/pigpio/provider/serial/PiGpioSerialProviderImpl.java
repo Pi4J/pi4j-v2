@@ -57,10 +57,8 @@ public class PiGpioSerialProviderImpl extends SerialProviderBase implements PiGp
     @Override
     public int getPriority() {
         // the Pigpio driver should be higher priority when NOT on Rp1 chip.
-        int rval = 0;
-        if(!BoardInfoHelper.usesRP1()) {
-            rval = 100;
-        }else{
+        int rval = 100;
+        if(BoardInfoHelper.usesRP1()) {
             rval = 50;
         }
         return(rval);

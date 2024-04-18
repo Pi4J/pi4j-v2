@@ -48,14 +48,8 @@ public class LinuxFsI2CProviderImpl extends I2CProviderBase implements LinuxFsI2
 
     @Override
     public int getPriority() {
-       // the linux FS driver should be higher priority when on RP1 chip
-       int rval = 0;
-       if(BoardInfoHelper.usesRP1()) {
-            rval = 150;
-        }else{
-            rval = 150;
-        }
-        return(rval);
+       // the linux FS driver should always be higher priority
+       return(150);
     }
 
     @Override

@@ -59,10 +59,8 @@ public class PiGpioPwmProviderImpl extends PwmProviderBase implements PiGpioPwmP
     @Override
     public int getPriority() {
         // the Pigpio driver should be higher priority when NOT on RP1 chip.
-        int rval = 0;
-        if(!BoardInfoHelper.usesRP1()) {
-            rval = 100;
-        }else{
+        int rval = 100;
+        if(BoardInfoHelper.usesRP1()) {
             rval = 50;
         }
         return(rval);
