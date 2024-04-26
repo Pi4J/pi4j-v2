@@ -44,7 +44,7 @@ import java.util.Objects;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class MockI2C extends I2CBase implements I2C, I2CRegisterDataReader, I2CRegisterDataWriter {
+public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterDataReader, I2CRegisterDataWriter {
 
     private static final Logger logger = LoggerFactory.getLogger(MockI2C.class);
 
@@ -58,7 +58,6 @@ public class MockI2C extends I2CBase implements I2C, I2CRegisterDataReader, I2CR
     protected ArrayDeque<Byte>[] registers = new ArrayDeque[512]; // 512 supported registers (0-511)
     protected ArrayDeque<Byte> raw = new ArrayDeque<>();
 
-
     /**
      * <p>Constructor for MockI2C.</p>
      *
@@ -66,12 +65,12 @@ public class MockI2C extends I2CBase implements I2C, I2CRegisterDataReader, I2CR
      * @param config a {@link com.pi4j.io.i2c.I2CConfig} object.
      */
     public MockI2C(I2CProvider provider, I2CConfig config){
-        super(provider, config);
+        super(provider, config, new MockI2CBus(config));
         logger.info(" [");
         logger.info(Mock.I2C_PROVIDER_NAME);
         logger.info("::");
         logger.info(this.id);
-        logger.info("] :: CREATE(BUS=" + config.bus() + "; DEVICE=" + config.device() + ")");
+        logger.info("] :: CREATE(BUS={}; DEVICE={})", config.bus(), config.device());
 
         logger.info("");
     }
@@ -83,7 +82,7 @@ public class MockI2C extends I2CBase implements I2C, I2CRegisterDataReader, I2CR
         logger.info(Mock.I2C_PROVIDER_NAME);
         logger.info("::");
         logger.info(this.id);
-        logger.info("] :: CLOSE(BUS=" + config.bus() + "; DEVICE=" + config.device() + ")");
+        logger.info("] :: CLOSE(BUS={}; DEVICE={})", config.bus(), config.device());
         logger.info("");
         super.close();
     }
@@ -129,8 +128,8 @@ public class MockI2C extends I2CBase implements I2C, I2CRegisterDataReader, I2CR
     @Override
     public int write(Charset charset, CharSequence data) {
         byte[] buffer = data.toString().getBytes(charset);
-        for(int p = 0; p < buffer.length; p++){
-            raw.add(buffer[p]); // add to internal buffer
+        for (byte b : buffer) {
+            raw.add(b); // add to internal buffer
         }
         logger.info(" [");
         logger.info(Mock.I2C_PROVIDER_NAME);
@@ -246,9 +245,9 @@ public class MockI2C extends I2CBase implements I2C, I2CRegisterDataReader, I2CR
         logger.info("::");
         logger.info(this.id);
         logger.info("] :: WRITEREGISTER(");
-        logger.info("Chip register offset Decimal : " + register + "  Hex : " +  String.format("%02X", register));
-        logger.info("offset = " + String.format("%02X", offset));
-        logger.info(",User data:     0x   "+ StringUtil.toHexString(data, offset, length));
+        logger.info("Chip register offset Decimal : {}  Hex : {}", register, String.format("%02X", register));
+        logger.info("offset = {}", String.format("%02X", offset));
+        logger.info(",User data:     0x   {}", StringUtil.toHexString(data, offset, length));
         logger.info(")");
         return length;
     }
@@ -270,9 +269,9 @@ public class MockI2C extends I2CBase implements I2C, I2CRegisterDataReader, I2CR
         logger.info("] :: WRITEREGISTER(");
         logger.info("REG= (two byte offset LSB first)");
         logger.info(StringUtil.toHexString(register, 0, register.length));
-        logger.info("Chip register offset Decimal : " + internalOffset + "  Hex : " +  String.format("%02X", internalOffset));
-        logger.info("offset = " + String.format("%02X", offset));
-        logger.info(",User data:     0x   "+ StringUtil.toHexString(data, offset, length));
+        logger.info("Chip register offset Decimal : {}  Hex : {}", internalOffset, String.format("%02X", internalOffset));
+        logger.info("offset = {}", String.format("%02X", offset));
+        logger.info(",User data:     0x   {}", StringUtil.toHexString(data, offset, length));
         logger.info(")");
         return length;
     }
@@ -285,8 +284,8 @@ public class MockI2C extends I2CBase implements I2C, I2CRegisterDataReader, I2CR
 
         if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
         byte[] buffer = data.toString().getBytes(charset);
-        for(int p = 0; p < buffer.length; p++){
-            registers[register].add(buffer[p]); // add to internal buffer
+        for (byte b : buffer) {
+            registers[register].add(b); // add to internal buffer
         }
 
         logger.info(" [");
@@ -348,8 +347,8 @@ public class MockI2C extends I2CBase implements I2C, I2CRegisterDataReader, I2CR
         logger.info("] :: READREGISTER(");
         logger.info("REG= (two byte offset LSB first)");
         logger.info(StringUtil.toHexString(register, 0, register.length));
-        logger.info("offset = " + String.format("%02X", offset));
-        logger.info("Chip register offset Decimal : " + internalOffset + "  Hex : " +  String.format("%02X", internalOffset));
+        logger.info("offset = {}", String.format("%02X", offset));
+        logger.info("Chip register offset Decimal : {}  Hex : {}", internalOffset, String.format("%02X", internalOffset));
         logger.info(", 0x");
         logger.info(StringUtil.toHexString(buffer, offset, length));
         logger.info(")");
@@ -374,10 +373,10 @@ public class MockI2C extends I2CBase implements I2C, I2CRegisterDataReader, I2CR
         logger.info("::");
         logger.info(this.id);
         logger.info("] :: READREGISTER(");
-        logger.info("offset = " + String.format("%02X", offset));
-        logger.info("Chip register offset Decimal : " + register + "  Hex : " +  String.format("%02X", register));
+        logger.info("offset = {}", String.format("%02X", offset));
+        logger.info("Chip register offset Decimal : {}  Hex : {}", register, String.format("%02X", register));
         logger.info(String.valueOf(register));
-         logger.info(", 0x");
+        logger.info(", 0x");
         logger.info(StringUtil.toHexString(buffer, offset, length));
         logger.info(")");
         return counter;
