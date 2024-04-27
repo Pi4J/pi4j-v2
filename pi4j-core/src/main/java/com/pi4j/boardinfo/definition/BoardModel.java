@@ -166,6 +166,16 @@ public enum BoardModel {
             Cpu.CORTEX_A72, 4,
             Collections.singletonList(1500),
             Arrays.asList(1024 * 1024, 2048 * 1024, 4096 * 1024, 8192 * 1024)),
+    // https://datasheets.raspberrypi.com/cm4s/cm4s-datasheet.pdf
+    COMPUTE_4S("Compute Module 4 SODIMM", STACK_ON_COMPUTER,
+        new ArrayList<>(), // Not known yet
+        PiModel.COMPUTE,
+        HeaderVersion.COMPUTE,
+        LocalDate.of(2020, 10, 1),
+        Soc.BCM2711,
+        Cpu.CORTEX_A72, 4,
+        Collections.singletonList(1500),
+        Arrays.asList(1024 * 1024, 2048 * 1024, 4096 * 1024, 8192 * 1024)),
     ZERO_PCB_1_2("Raspberry Pi Zero PCB V1.2", SINGLE_BOARD_COMPUTER,
             Arrays.asList("900092", "920092"),
             PiModel.ZERO,
