@@ -13,11 +13,14 @@ import java.util.stream.Collectors;
 import static com.pi4j.boardinfo.definition.BoardType.*;
 
 /**
- * Partially based on
- * <a href="https://en.wikipedia.org/wiki/Raspberry_Pi#Specifications">en.wikipedia.org/wiki/Raspberry_Pi</a>
- * <a href="https://oastic.com/posts/how-to-know-which-raspberry-do-you-have/">oastic.com/posts/how-to-know-which-raspberry-do-you-have</a>
- * <a href="https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes-in-use">raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes-in-use</a>
- * <a href="https://www.raspberrypi-spy.co.uk/2012/09/checking-your-raspberry-pi-board-version/">raspberrypi-spy.co.uk/2012/09/checking-your-raspberry-pi-board-version/</a>
+ * Partially based on:
+ *
+ * <ul>
+ *      <li>Board codes: <a href="https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes-in-use">raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes-in-use</a></li>
+ *      <li><a href="https://en.wikipedia.org/wiki/Raspberry_Pi#Specifications">en.wikipedia.org/wiki/Raspberry_Pi</a></li>
+ *      <li><a href="https://oastic.com/posts/how-to-know-which-raspberry-do-you-have/">oastic.com/posts/how-to-know-which-raspberry-do-you-have</a></li>
+ *      <li><a href="https://www.raspberrypi-spy.co.uk/2012/09/checking-your-raspberry-pi-board-version/">raspberrypi-spy.co.uk/2012/09/checking-your-raspberry-pi-board-version/</a></li>
+ * </ul>
  */
 public enum BoardModel {
     MODEL_1_A("Raspberry Pi 1 Model A", SINGLE_BOARD_COMPUTER,
