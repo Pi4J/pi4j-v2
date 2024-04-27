@@ -167,7 +167,7 @@ public enum BoardModel {
             Collections.singletonList(1500),
             Arrays.asList(1024 * 1024, 2048 * 1024, 4096 * 1024, 8192 * 1024)),
     // https://datasheets.raspberrypi.com/cm4s/cm4s-datasheet.pdf
-    COMPUTE_4S("Compute Module 4 SODIMM", STACK_ON_COMPUTER,
+    COMPUTE_4_SODIMM("Compute Module 4 SODIMM", STACK_ON_COMPUTER,
         new ArrayList<>(), // Not known yet
         PiModel.COMPUTE,
         HeaderVersion.COMPUTE,
