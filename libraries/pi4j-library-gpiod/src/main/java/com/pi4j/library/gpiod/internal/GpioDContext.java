@@ -1,10 +1,15 @@
 package com.pi4j.library.gpiod.internal;
 
+import com.pi4j.boardinfo.definition.BoardModel;
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class GpioDContext implements Closeable {
 
@@ -31,6 +36,11 @@ public class GpioDContext implements Closeable {
     }
 
     public synchronized void initialize() {
+        if (BoardInfoHelper.current().getBoardModel() == BoardModel.UNKNOWN) {
+            logger.warn("Can't initialize GpioD context, board model is unknown");
+            return;
+        }
+
         // already initialized
         if (this.gpioChip != null)
             return;
