@@ -108,9 +108,9 @@ public class LinuxFile extends RandomAccessFile {
      * @param command
      *     ioctl command
      * @param data
-     *     values in bytes for all structures, with 4 or 8 byte size holes for pointers
+     *     values in bytes for all structures, with 4 or 8 byte alignment enforced by filling holes before pointers
      * @param offsets
-     *     byte offsets of pointer at given index
+     *     ByteBuffer: offsets of pointer/ byte offset of pointedToData
      *
      * @throws IOException
      *     when something goes wrong
@@ -164,9 +164,9 @@ public class LinuxFile extends RandomAccessFile {
             if ((ptrOffset + wordSize) > data.capacity() || ptrOffset < 0)
                 throw new IndexOutOfBoundsException("invalid pointer offset specified in buffer: " + ptrOffset);
         }
-
-        final int response = directIOCTLStructure(this.fdHandle, command, data, data.position(), offsets,
-            offsets.position(), offsets.remaining());
+        int posFD = this.getPosixFD();
+        final int response = directIOCTLStructure(posFD, command, data, data.position(), offsets,
+            offsets.position(), offsets.limit());
 
         if (response < 0)
             throw new LinuxFileException();
@@ -214,7 +214,8 @@ public class LinuxFile extends RandomAccessFile {
 
         if (byteSize > localBufferSize)
             throw new ScratchBufferOverrun();
-
+        // if no buffer currently exists, new one always created.
+        // if buffer exists and limit is not equal to this getOffsetsBuffer, allocate new
         if (buf == null) {
             ByteBuffer bb = ByteBuffer.allocateDirect(localBufferSize);
 
@@ -223,19 +224,32 @@ public class LinuxFile extends RandomAccessFile {
 
             buf = bb.asIntBuffer();
             localOffsetsBuffer.set(buf);
-        }
+        } else if(buf.limit() != size) {
+            localOffsetsBuffer.remove();
+            ByteBuffer bb = ByteBuffer.allocateDirect(localBufferSize);
 
+            //keep native order, set before cast to IntBuffer
+            bb.order(ByteOrder.nativeOrder());
+
+            buf = bb.asIntBuffer();
+            localOffsetsBuffer.set(buf);
+        }
         return buf;
     }
 
-    protected synchronized ByteBuffer getDataBuffer(int size) {
+
+    protected  synchronized ByteBuffer getDataBuffer(int size) {
         ByteBuffer buf = localDataBuffer.get();
 
         if (size > localBufferSize)
             throw new ScratchBufferOverrun();
 
         if (buf == null) {
-            buf = ByteBuffer.allocateDirect(localBufferSize);
+            buf = ByteBuffer.allocateDirect(size);
+            localDataBuffer.set(buf);
+        }else if(buf.limit() != size){
+            localDataBuffer.remove();
+            buf = ByteBuffer.allocateDirect(size);
             localDataBuffer.set(buf);
         }
 

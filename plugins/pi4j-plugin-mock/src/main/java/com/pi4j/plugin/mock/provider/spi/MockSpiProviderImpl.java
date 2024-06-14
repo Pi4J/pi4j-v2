@@ -27,6 +27,7 @@ package com.pi4j.plugin.mock.provider.spi;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProviderBase;
@@ -37,19 +38,29 @@ import com.pi4j.io.spi.SpiProviderBase;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class MockSpiProviderImpl extends SpiProviderBase implements MockSpiProvider{
+public class MockSpiProviderImpl extends SpiProviderBase implements MockSpiProvider {
 
     /**
      * <p>Constructor for MockSpiProviderImpl.</p>
      */
-    public MockSpiProviderImpl(){
+    public MockSpiProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
 
-    /** {@inheritDoc} */
+    @Override
+    public int getPriority() {
+        // if the mock is loaded, then we most probably want to use it for testing
+        return 1000;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Spi create(SpiConfig config) {
-        return new MockSpi(this, config);
+        MockSpi spi = new MockSpi(this, config);
+        this.context.registry().add(spi);
+        return spi;
     }
 }

@@ -41,12 +41,23 @@ public interface LinuxFsDigitalInputProvider extends DigitalInputProvider {
     String NAME = LinuxFsPlugin.DIGITAL_INPUT_PROVIDER_NAME;
     /** Constant <code>ID="LinuxFs.DIGITAL_INPUT_PROVIDER_ID"</code> */
     String ID = LinuxFsPlugin.DIGITAL_INPUT_PROVIDER_ID;
+
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a {@link com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalInputProvider} object.
+     */
+    static LinuxFsDigitalInputProvider newInstance(String gpioFileSystemPath) {
+        return new LinuxFsDigitalInputProviderImpl(gpioFileSystemPath);
+    }
+
     /**
      * <p>newInstance.</p>
      *
      * @return a {@link com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalInputProvider} object.
      */
     static LinuxFsDigitalInputProvider newInstance() {
-        return new LinuxFsDigitalInputProviderImpl();
+        return new LinuxFsDigitalInputProviderImpl(LinuxFsPlugin.DEFAULT_GPIO_FILESYSTEM_PATH);
     }
+
 }

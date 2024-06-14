@@ -36,9 +36,7 @@ import com.pi4j.io.IOType;
 import com.pi4j.provider.Provider;
 import com.pi4j.provider.exception.ProviderInterfaceException;
 import com.pi4j.provider.exception.ProviderNotFoundException;
-import com.pi4j.provider.impl.ProviderProxyHandler;
 
-import java.lang.reflect.Proxy;
 import java.util.Map;
 
 /**
@@ -85,21 +83,11 @@ public interface Platform extends IOCreator, ProviderProvider, Extension<Platfor
     /** {@inheritDoc} */
     @Override
     default <T extends Provider> T provider(Class<T> providerClass) throws ProviderNotFoundException, ProviderInterfaceException {
-        for(Provider p : providers().values()){
-            if(providerClass.isAssignableFrom(p.getClass())){
-                return (T)p;
-            }
-            // check for Proxied provider instances, if a Proxy, then also check the underlying handlers source class
-            if (Proxy.isProxyClass(p.getClass())) {
-                if(Proxy.getInvocationHandler(p).getClass().isAssignableFrom(ProviderProxyHandler.class)){
-                    ProviderProxyHandler pp = (ProviderProxyHandler) Proxy.getInvocationHandler(p);
-                    if(providerClass.isAssignableFrom(pp.provider().getClass())){
-                        return (T) p;
-                    }
-                }
-            }
+        for (Provider p : providers().values()) {
+            if (providerClass.isAssignableFrom(p.getClass()))
+				return (T) p;
         }
-        if(providerClass.isInterface()){
+        if (providerClass.isInterface()) {
             throw new ProviderNotFoundException(providerClass);
         } else {
             throw new ProviderInterfaceException(providerClass);

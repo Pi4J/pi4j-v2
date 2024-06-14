@@ -27,6 +27,7 @@ package com.pi4j.plugin.raspberrypi.provider.i2c;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProviderBase;
@@ -42,15 +43,19 @@ public class RpiI2CProviderImpl extends I2CProviderBase implements RpiI2CProvide
     /**
      * <p>Constructor for RpiI2CProviderImpl.</p>
      */
-    public RpiI2CProviderImpl(){
+    public RpiI2CProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public I2C create(I2CConfig config) {
-        return new RpiI2C(this, config);
+        RpiI2C i2C = new RpiI2C(this, config);
+        this.context.registry().add(i2C);
+        return i2C;
     }
 
 }

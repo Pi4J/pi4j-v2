@@ -52,21 +52,19 @@ public class ManualProvidersCtorTest {
         PwmProvider pwmProvider = TestPwmProvider.newInstance();
         I2CProvider i2CProvider = TestI2CProvider.newInstance();
         SerialProvider serialProvider = TestSerialProvider.newInstance();
-        SerialProvider serialProvider2 = TestSerialProvider.newInstance("test-serial-provider-2");
 
         // Initialize Pi4J with a manually configured context
         // ...
         // Explicitly add the test providers into the
         // context for testing
-        pi4j = Pi4J.newContextBuilder()
-                .add(pwmProvider, i2CProvider, serialProvider, serialProvider2)
-                .build();
+        pi4j = Pi4J.newContextBuilder().add(pwmProvider, i2CProvider, serialProvider).build();
     }
 
     @AfterAll
     public void afterTest() {
         try {
-            pi4j.shutdown();
+            if (this.pi4j != null)
+                pi4j.shutdown();
         } catch (Pi4JException e) { /* do nothing */ }
     }
 
@@ -78,8 +76,8 @@ public class ManualProvidersCtorTest {
 
     @Test
     public void testProviderCount() {
-        // ensure that only 4 providers were detected/loaded into the Pi4J context
-        assertEquals(4 , pi4j.providers().all().size());
+        // ensure that only 3 providers were detected/loaded into the Pi4J context
+        assertEquals(3 , pi4j.providers().all().size());
 
         // print out the detected Pi4J platforms
         pi4j.platforms().describe().print(System.out);

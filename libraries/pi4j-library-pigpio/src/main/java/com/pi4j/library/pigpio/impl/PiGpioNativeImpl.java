@@ -36,6 +36,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static com.pi4j.library.pigpio.PiGpioConst.PI_IF_DISABLE_FIFO;
+import static com.pi4j.library.pigpio.PiGpioConst.PI_IF_DISABLE_SOCK;
 import static com.pi4j.library.pigpio.PiGpioConst.PI_TIME_RELATIVE;
 
 /**
@@ -47,17 +49,25 @@ import static com.pi4j.library.pigpio.PiGpioConst.PI_TIME_RELATIVE;
 public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private static final PiGpioNativeImpl instance;
+    static {
+        instance = new PiGpioNativeImpl();
+    }
+
     /**
-     * Creates a PiGpio instance using direct (native) JNI access to the
+     * <p>Creates a PiGpio instance using direct (native) JNI access to the
      * libpigpio.so shared library.  This instance may only be used
      * when running directly on the Raspberry Pi hardware and when the
      * PiGpio Daemon is not running.  PiGpio does not support accessing
-     * the native shared library while the daemon is running concurrently.
+     * the native shared library while the daemon is running concurrently.</p>
      *
-     * @return a {@link PiGpio} object.
+     * <p>This instance is a singleton, so that the runtime can be shutdown,
+     * as initialization of the pigpio can not be done twice in a JVM</p>
+     *
+     * @return the {@link PiGpio} instance
      */
     public static PiGpio newInstance() {
-        return new PiGpioNativeImpl();
+        return instance;
     }
 
     /**
@@ -88,7 +98,8 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
 
         if(!this.initialized) {
             // disable socket and pipes interfaces
-            int rslt = PIGPIO.gpioCfgInterfaces(3);
+            int rslt = PIGPIO.gpioCfgInterfaces(PI_IF_DISABLE_FIFO | PI_IF_DISABLE_SOCK);
+            validateResult(rslt);
 
             // initialize the PiGpio native library
             result = PIGPIO.gpioInitialise();

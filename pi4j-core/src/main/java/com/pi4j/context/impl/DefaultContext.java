@@ -25,6 +25,8 @@ package com.pi4j.context.impl;
  * #L%
  */
 
+import com.pi4j.boardinfo.model.BoardInfo;
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextConfig;
 import com.pi4j.context.ContextProperties;
@@ -32,6 +34,7 @@ import com.pi4j.event.InitializedListener;
 import com.pi4j.event.ShutdownListener;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.exception.ShutdownException;
+import com.pi4j.io.IO;
 import com.pi4j.platform.Platforms;
 import com.pi4j.platform.impl.DefaultPlatforms;
 import com.pi4j.provider.Providers;
@@ -61,6 +64,7 @@ public class DefaultContext implements Context {
     private Providers providers = null;
     private Platforms platforms = null;
     private Registry registry = null;
+    private BoardInfo boardInfo = null;
 
     /**
      * <p>newInstance.</p>
@@ -77,7 +81,7 @@ public class DefaultContext implements Context {
         logger.trace("new Pi4J runtime context initialized [config={}]", config);
 
         // validate config object exists
-        if(config == null){
+        if(config == null) {
             throw new LifecycleException("Unable to create new Pi4J runtime context; missing (ContextConfig) config object.");
         }
 
@@ -98,6 +102,12 @@ public class DefaultContext implements Context {
 
         // create API accessible platforms instance  (READ-ONLY ACCESS OBJECT)
         this.platforms = DefaultPlatforms.newInstance(this.runtime.platforms());
+
+        // detect the board model
+        this.boardInfo = BoardInfoHelper.current();
+        logger.info("Detected board model: {}", boardInfo.getBoardModel().getLabel());
+        logger.info("Running on: {}", boardInfo.getOperatingSystem());
+        logger.info("With Java version: {}", boardInfo.getJavaInfo());
 
         // initialize runtime now
         this.runtime.initialize();
@@ -129,11 +139,26 @@ public class DefaultContext implements Context {
 
     /** {@inheritDoc} */
     @Override
+    public BoardInfo boardInfo() { return this.boardInfo; }
+
+    /** {@inheritDoc} */
+    @Override
+    public Future<?> submitTask(Runnable task) {
+        return this.runtime.submitTask(task);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Context shutdown() throws ShutdownException {
         // shutdown the runtime
         this.runtime.shutdown();
         return this;
-    }
+	}
+
+	@Override
+	public <T extends IO> T shutdown(String id) {
+		return runtime.registry().remove(id);
+	}
 
     @Override
     public boolean isShutdown() {

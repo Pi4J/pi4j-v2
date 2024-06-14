@@ -28,7 +28,7 @@ package com.pi4j.plugin.linuxfs.provider.i2c;
  */
 
 /**
- * These are constants scraped directly from linux kernel (i2c-dev.h i2c.h). They are to
+ * These are constants scraped directly from linux kernel (i2c.h). They are to
  * be used with advanced I2C ioctl.
  */
 public class I2CConstants {

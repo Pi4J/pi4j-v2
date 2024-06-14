@@ -27,10 +27,7 @@ package com.pi4j.plugin.mock.provider.i2c;
  * #L%
  */
 
-import com.pi4j.io.i2c.I2C;
-import com.pi4j.io.i2c.I2CBase;
-import com.pi4j.io.i2c.I2CConfig;
-import com.pi4j.io.i2c.I2CProvider;
+import com.pi4j.io.i2c.*;
 import com.pi4j.plugin.mock.Mock;
 import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
@@ -46,7 +43,7 @@ import java.util.Objects;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class MockI2C extends I2CBase implements I2C {
+public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterDataReader, I2CRegisterDataWriter {
 
     private static final Logger logger = LoggerFactory.getLogger(MockI2C.class);
 
@@ -56,7 +53,8 @@ public class MockI2C extends I2CBase implements I2C {
      *  usage.  These are only intended to unit testing the
      *  Pi4J I2C APIs.
      */
-    protected ArrayDeque<Byte>[] registers = new ArrayDeque[256]; // 256 supported registers (0-255)
+    // Supporting two byte registers values, requires larger Array.  Limit register value to 0x200
+    protected ArrayDeque<Byte>[] registers = new ArrayDeque[512]; // 512 supported registers (0-511)
     protected ArrayDeque<Byte> raw = new ArrayDeque<>();
 
     /**
@@ -112,8 +110,8 @@ public class MockI2C extends I2CBase implements I2C {
     @Override
     public int write(Charset charset, CharSequence data) {
         byte[] buffer = data.toString().getBytes(charset);
-        for(int p = 0; p < buffer.length; p++){
-            raw.add(buffer[p]); // add to internal buffer
+        for (byte b : buffer) {
+            raw.add(b); // add to internal buffer
         }
         logger.debug("[{}::{}] :: WRITE(0x{})", Mock.I2C_PROVIDER_NAME, this.id, data);
         return data.length();
@@ -178,10 +176,10 @@ public class MockI2C extends I2CBase implements I2C {
     /** {@inheritDoc} */
     @Override
     public int writeRegister(int register, byte b) {
+
         if (registers[register] == null) {
             registers[register] = new ArrayDeque<Byte>();
         }
-
         registers[register].add(b);
 
         if (logger.isDebugEnabled()) {
@@ -196,9 +194,9 @@ public class MockI2C extends I2CBase implements I2C {
     @Override
     public int writeRegister(int register, byte[] data, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, data.length);
-
-        // add to internal buffer
-        if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
+        if (registers[register] == null) {
+            registers[register] = new ArrayDeque<Byte>();
+        }
         for(int p = offset; p-offset < length; p++){
             registers[register].add(data[p]);
         }
@@ -206,6 +204,26 @@ public class MockI2C extends I2CBase implements I2C {
         if (logger.isDebugEnabled()) {
             logger.debug("[{}::{}] :: WRITE(REG={}, 0x{})",
                 Mock.I2C_PROVIDER_NAME, this.id, register, StringUtil.toHexString(data, offset, length));
+        }
+
+        return length;
+    }
+
+    @Override
+    public int writeRegister(byte[] register, byte[] data, int offset, int length) {
+        Objects.checkFromIndexSize(offset, length, data.length);
+        int internalOffset = (register[0] & 0xff) + (register[1] << 8);
+
+        if(registers[internalOffset] == null) registers[internalOffset] = new ArrayDeque<Byte>();
+        for(int p = offset; p-offset < length; p++){
+            registers[internalOffset].add(data[p]);
+        }
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}::{}] :: WRITEREGISTER(REG=(two byte offset LSB first) {}, Chip register offset Decimal : {}  Hex : {}, offset = {}, User data: 0x{})",
+                Mock.I2C_PROVIDER_NAME, this.id, StringUtil.toHexString(register, 0, register.length),
+                internalOffset, String.format("%02X", internalOffset), String.format("%02X", offset),
+                StringUtil.toHexString(data, offset, length));
         }
 
         return length;
@@ -244,6 +262,37 @@ public class MockI2C extends I2CBase implements I2C {
         }
 
         return b;
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public int readRegister(byte[] register, byte[] buffer, int offset, int length) {
+        int internalOffset = (register[0] & 0xff) + (register[1] << 8);
+
+        if (registers[internalOffset] == null) {
+            return -1;
+        }
+        if (registers[internalOffset].isEmpty()) {
+            return -1;
+        }
+
+        int counter = 0;
+        for (int p = 0; p < length; p++) {
+            if(p+offset > buffer.length) break;
+            if(registers[internalOffset].isEmpty()) break;
+            buffer[offset + p] = registers[internalOffset].pop();
+            counter++;
+        }
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}::{}] :: READREGISTER(REG= (two byte offset LSB first) {}, offset = {}, Chip register offset Decimal : {}  Hex : {}, 0x{})",
+                Mock.I2C_PROVIDER_NAME, this.id, StringUtil.toHexString(register, 0, register.length),
+                String.format("%02X", offset), internalOffset, String.format("%02X", internalOffset),
+                StringUtil.toHexString(buffer, offset, length));
+        }
+
+        return counter;
     }
 
     /** {@inheritDoc} */

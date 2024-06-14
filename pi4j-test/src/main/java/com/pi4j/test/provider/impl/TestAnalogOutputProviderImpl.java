@@ -25,6 +25,7 @@ package com.pi4j.test.provider.impl;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 import com.pi4j.io.gpio.analog.AnalogOutputProviderBase;
@@ -42,30 +43,39 @@ public class TestAnalogOutputProviderImpl extends AnalogOutputProviderBase imple
     /**
      * <p>Constructor for TestAnalogOutputProviderImpl.</p>
      */
-    public TestAnalogOutputProviderImpl(){ super(); }
+    public TestAnalogOutputProviderImpl() {
+        super();
+    }
 
     /**
      * <p>Constructor for TestAnalogOutputProviderImpl.</p>
      *
      * @param id a {@link java.lang.String} object.
      */
-    public TestAnalogOutputProviderImpl(String id){
+    public TestAnalogOutputProviderImpl(String id) {
         super(id);
     }
 
     /**
      * <p>Constructor for TestAnalogOutputProviderImpl.</p>
      *
-     * @param id a {@link java.lang.String} object.
+     * @param id   a {@link java.lang.String} object.
      * @param name a {@link java.lang.String} object.
      */
-    public TestAnalogOutputProviderImpl(String id, String name){
+    public TestAnalogOutputProviderImpl(String id, String name) {
         super(id, name);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AnalogOutput create(AnalogOutputConfig config) {
-        return new TestAnalogOutput();
+        TestAnalogOutput output = new TestAnalogOutput();
+        if (this.context.registry().exists(output.id()))
+            throw new IOAlreadyExistsException(config.id());
+        output.initialize(this.context);
+        this.context.registry().add(output);
+        return output;
     }
 }

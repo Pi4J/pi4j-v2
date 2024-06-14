@@ -35,7 +35,7 @@ import com.pi4j.io.IODataWriter;
  * @author Robert Savage
  * @version $Id: $Id
  */
-public interface I2CRegister extends IODataWriter, IODataReader {
+public interface I2CRegister extends IODataWriter, IODataReader, I2CRegisterDataReader, I2CRegisterDataWriter {
     /**
      * <p>getAddress.</p>
      *

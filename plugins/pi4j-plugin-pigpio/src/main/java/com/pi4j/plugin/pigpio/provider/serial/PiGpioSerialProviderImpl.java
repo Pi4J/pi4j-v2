@@ -27,6 +27,7 @@ package com.pi4j.plugin.pigpio.provider.serial;
  * #L%
  */
 
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProviderBase;
@@ -47,19 +48,32 @@ public class PiGpioSerialProviderImpl extends SerialProviderBase implements PiGp
      *
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      */
-    public PiGpioSerialProviderImpl(PiGpio piGpio){
+    public PiGpioSerialProviderImpl(PiGpio piGpio) {
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
     }
 
-    /** {@inheritDoc} */
+    @Override
+    public int getPriority() {
+        // the Pigpio driver should be higher priority when NOT on Rp1 chip.
+        return BoardInfoHelper.usesRP1() ? 50 : 100;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Serial create(SerialConfig config) {
-        // initialize the PIGPIO library
-        if(!piGpio.isInitialized()) piGpio.initialize();
+        synchronized (this.piGpio) {
+            // initialize the PIGPIO library
+            if (!piGpio.isInitialized())
+                piGpio.initialize();
 
-        // create new I/O instance based on I/O config
-        return new PiGpioSerial(piGpio,this, config);
+            // create new I/O instance based on I/O config
+            PiGpioSerial serial = new PiGpioSerial(piGpio, this, config);
+            this.context.registry().add(serial);
+            return serial;
+        }
     }
 }

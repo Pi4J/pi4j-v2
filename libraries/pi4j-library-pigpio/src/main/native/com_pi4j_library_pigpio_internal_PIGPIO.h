@@ -895,8 +895,8 @@ JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_eventTrigger
 // * Method:    gpioCfgClock
 // * Signature: (III)I
 // */
-//JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioCfgClock
-//  (JNIEnv *, jclass, jint, jint, jint);
+JNIEXPORT jint JNICALL Java_com_pi4j_library_pigpio_internal_PIGPIO_gpioCfgClock
+  (JNIEnv *, jclass, jint, jint, jint);
 //
 ///*
 // * Class:     com_pi4j_library_pigpio_internal_PIGPIO

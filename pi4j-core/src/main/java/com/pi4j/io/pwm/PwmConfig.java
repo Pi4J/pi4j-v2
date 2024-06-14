@@ -40,6 +40,8 @@ public interface PwmConfig extends GpioConfig<PwmConfig>, AddressConfig<PwmConfi
 
     /** Constant <code>PWM_TYPE_KEY="pwm-type"</code> */
     String PWM_TYPE_KEY = "pwm-type";
+    /** Constant <code>POLARITY_KEY="polarity"</code> */
+    String POLARITY_KEY = "polarity";
     /** Constant <code>FREQUENCY_KEY="frequency"</code> */
     String FREQUENCY_KEY = "frequency";
     /** Constant <code>DUTY_CYCLE_KEY="duty-cycle"</code> */
@@ -117,6 +119,28 @@ public interface PwmConfig extends GpioConfig<PwmConfig>, AddressConfig<PwmConfi
      */
     default PwmType getPwmType(){
         return pwmType();
+    }
+
+    /**
+     * Get the configured polarity of this PWM instance. (Normal/Inversed)
+     * Please note that not all PWM providers support polarity. Please
+     * consult the documentation for your PWM provider to determine what
+     * support is available and what limitations may apply.
+     *
+     * @return the PwmPolarity for this PWM instance
+     */
+    PwmPolarity polarity();
+
+    /**
+     * Get the configured polarity of this PWM instance. (Normal/Inversed)
+     * Please note that not all PWM providers support polarity. Please
+     * consult the documentation for your PWM provider to determine what
+     * support is available and what limitations may apply.
+     *
+     * @return the PwmPolarity for this PWM instance
+     */
+    default PwmPolarity getPolarity(){
+        return polarity();
     }
 
     /**

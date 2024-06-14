@@ -27,10 +27,10 @@ package com.pi4j.plugin.mock.provider.gpio.analog;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.analog.AnalogOutput;
 import com.pi4j.io.gpio.analog.AnalogOutputConfig;
 import com.pi4j.io.gpio.analog.AnalogOutputProviderBase;
-
 
 /**
  * <p>MockAnalogOutputProviderImpl class.</p>
@@ -43,15 +43,24 @@ public class MockAnalogOutputProviderImpl extends AnalogOutputProviderBase imple
     /**
      * <p>Constructor for MockAnalogOutputProviderImpl.</p>
      */
-    public MockAnalogOutputProviderImpl(){
+    public MockAnalogOutputProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public AnalogOutput create(AnalogOutputConfig config) {
-        return new MockAnalogOutput(this, config);
+    public int getPriority() {
+        // if the mock is loaded, then we most probably want to use it for testing
+        return 1000;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public AnalogOutput create(AnalogOutputConfig config) {
+        MockAnalogOutput output = new MockAnalogOutput(this, config);
+        this.context.registry().add(output);
+        return output;
+    }
 }

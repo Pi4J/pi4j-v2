@@ -46,6 +46,7 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
     protected int frequency = 100;
     protected float dutyCycle = 50;
     protected boolean onState = false;
+    protected PwmPolarity polarity = PwmPolarity.NORMAL;
     protected Map<String, PwmPreset> presets = Collections.synchronizedMap(new HashMap<>());
 
     /**
@@ -56,9 +57,6 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
      */
     public PwmBase(PwmProvider provider, PwmConfig config) {
         super(provider, config);
-        this.name = config.name();
-        this.id = config.id();
-        this.description = config.description();
         for(PwmPreset preset : config.presets()){
             this.presets.put(preset.name().toLowerCase().trim(), preset);
         }
@@ -110,11 +108,33 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
     /** {@inheritDoc} */
     @Override
     public Pwm initialize(Context context) throws InitializeException {
+
+        // apply initial frequency value if configured
+        if (this.config.frequency() != null) {
+            this.frequency = config.frequency();
+        }
+
+        // apply initial duty-cycle value if configured
+        if (config.dutyCycle() != null) {
+            this.dutyCycle = config.dutyCycle();
+        } else {
+            this.dutyCycle = 50;  // default duty-cycle is 50% of total range
+        }
+
+        // apply initial polarity value if configured
+        if (config.polarity() != null) {
+            this.polarity = config.polarity();
+        } else {
+            this.polarity = PwmPolarity.NORMAL;
+        }
+
         // apply an initial value if configured
         if(this.config.initialValue() != null){
             try {
                 if(this.config.initialValue() <= 0){
-                    this.off();
+                    if(this.isOn()) {
+                        this.off();
+                    }
                 } else {
                     this.on(this.config.initialValue());
                 }
@@ -122,6 +142,7 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
                 throw new InitializeException(e);
             }
         }
+
         return this;
     }
 

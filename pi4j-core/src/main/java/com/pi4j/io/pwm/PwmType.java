@@ -28,7 +28,7 @@ import java.util.EnumSet;
  */
 
 /**
- * Digital Pin Pull Resistance Enumerations
+ * PWM Type Enumerations
  *
  * @author Robert Savage (<a
  *         href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
@@ -82,14 +82,14 @@ public enum PwmType {
     /**
      * <p>parse.</p>
      *
-     * @param pull a {@link java.lang.String} object.
+     * @param pwmType a {@link java.lang.String} object.
      * @return a {@link com.pi4j.io.pwm.PwmType} object.
      */
-    public static PwmType parse(String pull) {
-        if(pull.equalsIgnoreCase("0")) return PwmType.SOFTWARE;
-        if(pull.equalsIgnoreCase("1")) return PwmType.HARDWARE;
-        if(pull.toLowerCase().startsWith("h")) return PwmType.HARDWARE;
-        if(pull.toLowerCase().startsWith("s")) return PwmType.SOFTWARE;
+    public static PwmType parse(String pwmType) {
+        if(pwmType.equalsIgnoreCase("0")) return PwmType.SOFTWARE;
+        if(pwmType.equalsIgnoreCase("1")) return PwmType.HARDWARE;
+        if(pwmType.toLowerCase().startsWith("h")) return PwmType.HARDWARE;
+        if(pwmType.toLowerCase().startsWith("s")) return PwmType.SOFTWARE;
         return PwmType.SOFTWARE; // default
     }
 }

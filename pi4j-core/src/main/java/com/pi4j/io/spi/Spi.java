@@ -40,8 +40,12 @@ import java.nio.ByteBuffer;
  * @version $Id: $Id
  */
 public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IODataWriter, IODataReader {
+    /** Constant <code>DEFAULT_BUS</code> */
+    SpiBus DEFAULT_BUS = SpiBus.BUS_0;
     /** Constant <code>DEFAULT_MODE</code> */
     SpiMode DEFAULT_MODE = SpiMode.MODE_0;
+    /** Constant <code>DEFAULT_CHIP_SELECT</code> */
+    SpiChipSelect DEFAULT_CHIP_SELECT = SpiChipSelect.CS_0;
     /** Constant <code>DEFAULT_BAUD=1000000</code> */
     int DEFAULT_BAUD = 1000000; // 1MHz (range is 500kHz - 32MHz)
 

@@ -96,7 +96,6 @@ public class PiGpioPlugin implements Plugin {
     /** Constant <code>SERIAL_PROVIDER_ID="ID + -serial"</code> */
     public static final String SERIAL_PROVIDER_ID = ID + "-serial";
 
-
     protected PiGpio piGpio = null;
 
     /** Constant <code>PI4J_HOST_PROPERTY="pi4j.host"</code> */

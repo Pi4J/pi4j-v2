@@ -27,6 +27,7 @@ package com.pi4j.plugin.mock.provider.gpio.analog;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.analog.AnalogInput;
 import com.pi4j.io.gpio.analog.AnalogInputConfig;
 import com.pi4j.io.gpio.analog.AnalogInputProviderBase;
@@ -42,14 +43,24 @@ public class MockAnalogInputProviderImpl extends AnalogInputProviderBase impleme
     /**
      * <p>Constructor for MockAnalogInputProviderImpl.</p>
      */
-    public MockAnalogInputProviderImpl(){
+    public MockAnalogInputProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
 
-    /** {@inheritDoc} */
+    @Override
+    public int getPriority() {
+        // if the mock is loaded, then we most probably want to use it for testing
+        return 1000;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AnalogInput create(AnalogInputConfig config) {
-        return new MockAnalogInput(this, config);
+        MockAnalogInput input = new MockAnalogInput(this, config);
+        this.context.registry().add(input);
+        return input;
     }
 }

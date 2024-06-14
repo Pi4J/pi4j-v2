@@ -10,7 +10,7 @@ package com.pi4j.plugin.pigpio.provider.pwm;
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  https://pi4j.com/
  * **********************************************************************
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -27,6 +27,8 @@ package com.pi4j.plugin.pigpio.provider.pwm;
  * #L%
  */
 
+
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmProviderBase;
@@ -54,18 +56,31 @@ public class PiGpioPwmProviderImpl extends PwmProviderBase implements PiGpioPwmP
         this.piGpio = piGpio;
     }
 
-    /** {@inheritDoc} */
+    @Override
+    public int getPriority() {
+        // the Pigpio driver should be higher priority when NOT on RP1 chip.
+        return BoardInfoHelper.usesRP1() ? 50 : 100;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Pwm create(PwmConfig config) {
-        // initialize the PIGPIO library
-        if(!piGpio.isInitialized()) piGpio.initialize();
+        synchronized (this.piGpio) {
+            // initialize the PIGPIO library
+            if (!piGpio.isInitialized())
+                piGpio.initialize();
 
-        // create new I/O instance based on I/O config
-        if(config.pwmType() == PwmType.HARDWARE){
-            return new PiGpioPwmHardware(piGpio, this, config);
-        }
-        else {
-            return new PiGpioPwmSoftware(piGpio, this, config);
+            // create new I/O instance based on I/O config
+            Pwm pwm;
+            if (config.pwmType() == PwmType.HARDWARE) {
+                pwm = new PiGpioPwmHardware(piGpio, this, config);
+            } else {
+                pwm = new PiGpioPwmSoftware(piGpio, this, config);
+            }
+            this.context.registry().add(pwm);
+            return pwm;
         }
     }
 }

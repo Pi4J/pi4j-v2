@@ -27,6 +27,8 @@ package com.pi4j.io.i2c.impl;
 
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CRegister;
+import com.pi4j.io.i2c.I2CRegisterDataReader;
+import com.pi4j.io.i2c.I2CRegisterDataWriter;
 
 import java.nio.charset.Charset;
 import java.util.Objects;
@@ -37,7 +39,7 @@ import java.util.Objects;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class DefaultI2CRegister implements I2CRegister {
+public class DefaultI2CRegister implements I2CRegister, I2CRegisterDataReader, I2CRegisterDataWriter {
 
     protected final int address;
     protected final I2C i2c;
@@ -64,6 +66,8 @@ public class DefaultI2CRegister implements I2CRegister {
     public int write(byte b) {
         return this.i2c.writeRegister(this.address, b);
     }
+
+
 
     /**
      * {@inheritDoc}
@@ -111,5 +115,44 @@ public class DefaultI2CRegister implements I2CRegister {
     @Override
     public String readString(Charset charset, int length) {
         return this.i2c.readRegisterString(this.address, charset, length);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int readRegister(int register) {
+        return this.i2c.readRegister(register);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public int readRegister(byte[] register, byte[] buffer, int offset, int length) {
+        return this.i2c.readRegister(register,buffer,offset,length);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public int readRegister(int register, byte[] buffer, int offset, int length) {
+        return this.i2c.readRegister(register,buffer,offset,length);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public int writeRegister(int register, byte b) {
+        return this.i2c.writeRegister(register, b);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int writeRegister(int register, byte[] data, int offset, int length) {
+        return this.i2c.writeRegister(register,data,offset,length);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int writeRegister(byte[] register, byte[] data, int offset, int length) {
+        return this.i2c.writeRegister(register,data,offset,length);
     }
 }

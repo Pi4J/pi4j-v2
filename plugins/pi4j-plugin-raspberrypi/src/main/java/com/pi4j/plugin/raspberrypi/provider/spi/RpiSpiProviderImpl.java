@@ -27,6 +27,7 @@ package com.pi4j.plugin.raspberrypi.provider.spi;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProviderBase;
@@ -42,14 +43,18 @@ public class RpiSpiProviderImpl extends SpiProviderBase implements RpiSpiProvide
     /**
      * <p>Constructor for RpiSpiProviderImpl.</p>
      */
-    public RpiSpiProviderImpl(){
+    public RpiSpiProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Spi create(SpiConfig config) {
-        return new RpiSpi(this, config);
+        RpiSpi spi = new RpiSpi(this, config);
+        this.context.registry().add(spi);
+        return spi;
     }
 }

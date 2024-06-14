@@ -27,6 +27,7 @@ package com.pi4j.plugin.raspberrypi.provider.gpio.digital;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
@@ -42,14 +43,18 @@ public class RpiDigitalOutputProviderImpl extends DigitalOutputProviderBase impl
     /**
      * <p>Constructor for RpiDigitalOutputProviderImpl.</p>
      */
-    public RpiDigitalOutputProviderImpl(){
+    public RpiDigitalOutputProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
-        return new RpiDigitalOutput(this, config);
+        RpiDigitalOutput output = new RpiDigitalOutput(this, config);
+        this.context.registry().add(output);
+        return output;
     }
 }

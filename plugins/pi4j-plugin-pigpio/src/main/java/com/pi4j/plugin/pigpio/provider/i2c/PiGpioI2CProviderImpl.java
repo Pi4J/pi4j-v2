@@ -27,10 +27,15 @@ package com.pi4j.plugin.pigpio.provider.i2c;
  * #L%
  */
 
+
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProviderBase;
 import com.pi4j.library.pigpio.PiGpio;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>PiGpioI2CProviderImpl class.</p>
@@ -41,25 +46,42 @@ import com.pi4j.library.pigpio.PiGpio;
 public class PiGpioI2CProviderImpl extends I2CProviderBase implements PiGpioI2CProvider {
 
     final PiGpio piGpio;
+    private final Map<Integer, PiGpioI2CBus> i2CBusMap;
 
     /**
      * <p>Constructor for PiGpioI2CProviderImpl.</p>
      *
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      */
-    public PiGpioI2CProviderImpl(PiGpio piGpio){
+    public PiGpioI2CProviderImpl(PiGpio piGpio) {
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
+        this.i2CBusMap = new HashMap<>();
     }
 
-    /** {@inheritDoc} */
+    @Override
+    public int getPriority() {
+        // the Pigpio driver should be higher priority when NOT on RP1 chip
+        return BoardInfoHelper.usesRP1() ? 50 : 100;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public I2C create(I2CConfig config) {
-        // initialize the PIGPIO library
-        if(!piGpio.isInitialized()) piGpio.initialize();
+        synchronized (this.piGpio) {
+            // initialize the PIGPIO library
+            if (!this.piGpio.isInitialized())
+                this.piGpio.initialize();
 
-        // create new I/O instance based on I/O config
-        return new PiGpioI2C(piGpio,this, config);
+            PiGpioI2CBus i2CBus = this.i2CBusMap.computeIfAbsent(config.getBus(), busNr -> new PiGpioI2CBus(config));
+
+            // create new I/O instance based on I/O config
+            PiGpioI2C i2C = new PiGpioI2C(this.piGpio, i2CBus, this, config);
+            this.context.registry().add(i2C);
+            return i2C;
+        }
     }
 }

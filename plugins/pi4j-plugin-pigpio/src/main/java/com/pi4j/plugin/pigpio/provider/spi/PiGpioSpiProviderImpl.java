@@ -27,6 +27,7 @@ package com.pi4j.plugin.pigpio.provider.spi;
  * #L%
  */
 
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiProviderBase;
@@ -47,19 +48,32 @@ public class PiGpioSpiProviderImpl extends SpiProviderBase implements PiGpioSpiP
      *
      * @param piGpio a {@link com.pi4j.library.pigpio.PiGpio} object.
      */
-    public PiGpioSpiProviderImpl(PiGpio piGpio){
+    public PiGpioSpiProviderImpl(PiGpio piGpio) {
         this.id = ID;
         this.name = NAME;
         this.piGpio = piGpio;
     }
 
-    /** {@inheritDoc} */
+    @Override
+    public int getPriority() {
+        // the Pigpio driver should be higher priority when NOT on RP1 chip.
+        return BoardInfoHelper.usesRP1() ? 50 : 100;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Spi create(SpiConfig config) {
-        // initialize the PIGPIO library
-        if(!piGpio.isInitialized()) piGpio.initialize();
+        synchronized (this.piGpio) {
+            // initialize the PIGPIO library
+            if (!piGpio.isInitialized())
+                piGpio.initialize();
 
-        // create new I/O instance based on I/O config
-        return new PiGpioSpi(piGpio,this, config);
+            // create new I/O instance based on I/O config
+            PiGpioSpi spi = new PiGpioSpi(piGpio, this, config);
+            this.context.registry().add(spi);
+            return spi;
+        }
     }
 }

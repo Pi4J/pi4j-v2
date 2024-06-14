@@ -42,8 +42,9 @@ import com.pi4j.provider.Provider;
 public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig, PROVIDER_TYPE extends Provider>
         extends IdentityBase implements IO<IO_TYPE,CONFIG_TYPE, PROVIDER_TYPE> {
 
-    protected CONFIG_TYPE config = null;
-    protected PROVIDER_TYPE provider = null;
+    protected CONFIG_TYPE config;
+    protected PROVIDER_TYPE provider;
+    private Context context;
 
     /** {@inheritDoc} */
     @Override
@@ -59,6 +60,9 @@ public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig, P
      */
     public IOBase(PROVIDER_TYPE provider, CONFIG_TYPE config){
         super();
+        this.id = config.id();
+        this.name = config.name();
+        this.description = config.description();
         this.provider = provider;
         this.config = config;
     }
@@ -83,17 +87,21 @@ public abstract class IOBase<IO_TYPE extends IO, CONFIG_TYPE extends IOConfig, P
         return this.config;
     }
 
+    protected Context context() {
+        return this.context;
+    }
 
     /** {@inheritDoc} */
     @Override
     public IO_TYPE initialize(Context context) throws InitializeException {
-        return (IO_TYPE)this;
+        this.context = context;
+        return (IO_TYPE) this;
     }
 
     /** {@inheritDoc} */
     @Override
     public IO_TYPE shutdown(Context context) throws ShutdownException {
-        return (IO_TYPE)this;
+        return (IO_TYPE) this;
     }
 
     /** {@inheritDoc} */

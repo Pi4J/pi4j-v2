@@ -714,5 +714,21 @@ public class StringUtil {
             return defaultValue;
         }
     }
+
+    /**
+     * <p>parseLong.</p>
+     *
+     * @param str a {@link java.lang.String} object.
+     * @param defaultValue a {@link java.lang.Long} object.
+     * @return a int.
+     */
+    public static long parseLong(String str, Long defaultValue) {
+        try {
+            Long v = Long.parseLong(str);
+            return v.intValue();
+        } catch(NumberFormatException e){
+            return defaultValue;
+        }
+    }
 }
 

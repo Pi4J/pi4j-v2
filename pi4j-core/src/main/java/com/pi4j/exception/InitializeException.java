@@ -50,10 +50,19 @@ public class InitializeException extends Pi4JException {
     /**
      * Default Constructor
      *
-     * @param ex a {@link java.lang.Throwable} object.
+     * @param cause a {@link java.lang.Throwable} object.
      */
-    public InitializeException(Throwable ex){
-        super(ex.getMessage(), ex);
+    public InitializeException(Throwable cause){
+        super(cause.getMessage(), cause);
     }
 
+    /**
+     * Default Constructor
+     *
+     * @param message a {@link java.lang.String} object.
+     * @param cause a {@link java.lang.Throwable} object.
+     */
+    public InitializeException(String message, Throwable cause){
+        super(message, cause);
+    }
 }

@@ -27,9 +27,12 @@ package com.pi4j.plugin.linuxfs.provider.gpio.digital;
  * #L%
  */
 
+
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
+import com.pi4j.plugin.linuxfs.internal.LinuxGpio;
 
 /**
  * <p>LinuxFsDigitalOutputProviderImpl class.</p>
@@ -37,26 +40,35 @@ import com.pi4j.io.gpio.digital.DigitalOutputProviderBase;
  * @author Robert Savage (<a href="http://www.savagehomeautomation.com">http://www.savagehomeautomation.com</a>)
  * @version $Id: $Id
  */
-public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase implements LinuxFsDigitalOutputProvider {
+public class LinuxFsDigitalOutputProviderImpl extends DigitalOutputProviderBase
+    implements LinuxFsDigitalOutputProvider {
+
+    final String gpioFileSystemPath;
 
     /**
      * <p>Constructor for LinuxFsDigitalOutputProviderImpl.</p>
      */
-    public LinuxFsDigitalOutputProviderImpl(){
+    public LinuxFsDigitalOutputProviderImpl(String gpioFileSystemPath) {
         this.id = ID;
         this.name = NAME;
+        this.gpioFileSystemPath = gpioFileSystemPath;
     }
 
-    /** {@inheritDoc} */
+    @Override
+    public int getPriority() {
+        // the linux FS Digital driver should be higher priority on RP1 chip.
+        return BoardInfoHelper.usesRP1() ? 100 : 50;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
-
-        // export GPIO pin
-        // /sys/class/gpio
-
-        // set GPIO pin direction
-        // /sys/class/gpio/gpio{0}
-
-        return new LinuxFsDigitalOutput(this, config);
+        // create filesystem based GPIO instance using instance address (GPIO NUMBER)
+        LinuxGpio gpio = new LinuxGpio(this.gpioFileSystemPath, config.address());
+        LinuxFsDigitalOutput digitalOutput = new LinuxFsDigitalOutput(gpio, this, config);
+        this.context.registry().add(digitalOutput);
+        return digitalOutput;
     }
 }

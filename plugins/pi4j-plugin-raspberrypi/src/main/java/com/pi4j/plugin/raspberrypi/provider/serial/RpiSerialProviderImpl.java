@@ -27,10 +27,10 @@ package com.pi4j.plugin.raspberrypi.provider.serial;
  * #L%
  */
 
+import com.pi4j.io.exception.IOAlreadyExistsException;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialProviderBase;
-
 
 /**
  * <p>RpiSerialProviderImpl class.</p>
@@ -43,14 +43,18 @@ public class RpiSerialProviderImpl extends SerialProviderBase implements RpiSeri
     /**
      * <p>Constructor for RpiSerialProviderImpl.</p>
      */
-    public RpiSerialProviderImpl(){
+    public RpiSerialProviderImpl() {
         this.id = ID;
         this.name = NAME;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Serial create(SerialConfig config) {
-        return new RpiSerial(this, config);
+        RpiSerial serial = new RpiSerial(this, config);
+        this.context.registry().add(serial);
+        return serial;
     }
 }

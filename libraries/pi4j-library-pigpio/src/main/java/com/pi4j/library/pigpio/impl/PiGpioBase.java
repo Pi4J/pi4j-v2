@@ -28,6 +28,8 @@ package com.pi4j.library.pigpio.impl;
  */
 
 import com.pi4j.library.pigpio.*;
+import com.pi4j.library.pigpio.internal.PIGPIO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -527,5 +529,32 @@ public abstract class PiGpioBase implements PiGpio {
         String revisionString = Integer.toHexString((int)revision);
         logger.trace("[HARDWARE] <- REVISION (STRING): {}", revisionString);
         return revisionString;
+    }
+    
+    /**
+     * * {@inheritDoc}
+     * 
+     * Configures pigpio to use a particular sample rate timed by a specified peripheral.
+     * This function is only effective if called before gpioInitialise.
+     * The timings are provided by the specified peripheral (PWM or PCM).
+     * The default setting is 5 microseconds using the PCM peripheral.
+     *
+     * @param cfgMicros 1, 2, 4, 5, 8, 10
+     * @param cfgPeripheral 0 (PWM), 1 (PCM)
+     * @param cfgSource deprecated, value is ignored
+     * @return a int.
+     */
+    public int gpioCfgClock(int cfgMicros, int cfgPeripheral, int cfgSource) {
+    	logger.trace("[gpioCfgClock] -> STARTED");
+    	
+    	if(this.initialized) {
+    		logger.error("pigpio is already initialized - this call will have no effect");
+    		throw new PiGpioException("pigpio is already initialized - this call will have no effect");
+    	}
+    	
+    	int rc = PIGPIO.gpioCfgClock(cfgMicros, cfgPeripheral, cfgSource);
+    	logger.trace("[gpioCfgClock] <- FINISHED. Return code={}",rc);
+    	
+    	return rc;
     }
 }

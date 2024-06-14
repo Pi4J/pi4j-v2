@@ -117,6 +117,35 @@ public interface I2CRegisterDataWriter {
         return writeRegister(register, data, 0, length);
     }
 
+
+    /**
+     * Write a array of byte values with given offset (starting position)
+     * and length in the provided data array to a specific I2C device register.
+     *
+     * @param register Multi byte register address to write to
+     * @param data data array of bytes to be written
+     * @param offset offset in data buffer to start at
+     * @param length number of bytes to be written
+     * @return The number of bytes written, possibly zero
+     */
+    int writeRegister(byte[] register, byte[] data, int offset, int length);
+
+
+    /**
+     * Write an array of byte values starting with the first byte in the array
+     * up to the provided length to a specific I2C device register.
+     *
+     * @param register multi byte register address to write to
+     * @param data data array of bytes to be written
+     * @param length number of bytes to be written
+     * @return The number of bytes written, possibly zero
+     */
+    default int writeRegister(byte[] register, byte[] data, int length) {
+        return writeRegister(register, data, 0, length);
+    }
+
+
+
     /**
      * Write an array of byte values to a specific I2C device register.
      *
@@ -190,6 +219,7 @@ public interface I2CRegisterDataWriter {
         }
         return writeRegister(register, buffer.array(), offset, length);
     }
+
 
     /**
      * Write a buffer of byte values starting from the first byte in the buffer

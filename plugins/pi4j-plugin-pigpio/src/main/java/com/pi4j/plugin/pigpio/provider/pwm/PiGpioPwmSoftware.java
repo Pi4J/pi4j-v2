@@ -32,6 +32,7 @@ import com.pi4j.exception.InitializeException;
 import com.pi4j.io.exception.IOException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
+import com.pi4j.io.pwm.PwmPolarity;
 import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.library.pigpio.PiGpio;
 import com.pi4j.library.pigpio.PiGpioMode;
@@ -69,6 +70,13 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
     @Override
     public Pwm initialize(Context context) throws InitializeException {
         try {
+            // inversed polarity is not supported
+            if (config.polarity() != null) {
+                if(config.polarity() == PwmPolarity.INVERSED){
+                    throw new IOException("<PIGPIO> INVERSED POLARITY UNSUPPORTED; PWM PIN: " + this.address());
+                }
+            }
+
             // set pin mode to output
             piGpio.gpioSetMode(this.address(), PiGpioMode.OUTPUT);
 
@@ -85,15 +93,25 @@ public class PiGpioPwmSoftware extends PiGpioPwmBase implements Pwm {
                 this.frequency = this.actualFrequency;
             }
 
-            // initialize
-            super.initialize(context);
-
             // get current duty-cycle from config or set to default 50%
             if (config.dutyCycle() != null) {
                 this.dutyCycle = config.dutyCycle();
             } else {
                 // get updated duty-cycle value from PiGpio
                 this.dutyCycle = 50;  // default duty-cycle is 50% of total range
+            }
+
+            // apply an initial value if configured
+            if(config.initialValue() != null){
+                try {
+                    if(this.config.initialValue() <= 0){
+                        this.off();
+                    } else {
+                        this.on(this.config.initialValue());
+                    }
+                } catch (IOException e) {
+                    throw new InitializeException(e);
+                }
             }
         }
         catch (Exception e){

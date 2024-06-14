@@ -50,8 +50,10 @@ public interface DigitalInputConfigBuilder extends DigitalConfigBuilder<DigitalI
      *
      * @param microseconds a {@link java.lang.Long} object.
      * @return a {@link com.pi4j.io.gpio.digital.DigitalInputConfigBuilder} object.
+     * @see com.pi4j.io.gpio.digital.DigitalInput#DEFAULT_DEBOUNCE DEFAULT_DEBOUNCE
      */
     DigitalInputConfigBuilder debounce(Long microseconds);
+   
     /**
      * <p>debounce.</p>
      *

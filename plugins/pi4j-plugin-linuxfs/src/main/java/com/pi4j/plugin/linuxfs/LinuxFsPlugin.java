@@ -27,12 +27,19 @@ package com.pi4j.plugin.linuxfs;
  * #L%
  */
 
+
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.extension.Plugin;
 import com.pi4j.extension.PluginService;
+import com.pi4j.plugin.linuxfs.internal.LinuxGpio;
 import com.pi4j.plugin.linuxfs.provider.i2c.LinuxFsI2CProvider;
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalInputProvider;
 import com.pi4j.plugin.linuxfs.provider.gpio.digital.LinuxFsDigitalOutputProvider;
+import com.pi4j.plugin.linuxfs.provider.pwm.LinuxFsPwmProvider;
+import com.pi4j.plugin.linuxfs.internal.LinuxPwm;
 import com.pi4j.provider.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>LinuxFsPlugin class.</p>
@@ -85,9 +92,9 @@ public class LinuxFsPlugin implements Plugin {
      */
     public static final String DIGITAL_OUTPUT_PROVIDER_ID = ID + "-digital-output";
 
-//    // PWM Provider name and unique ID
-//    public static final String PWM_PROVIDER_NAME = NAME + " PWM Provider";
-//    public static final String PWM_PROVIDER_ID = ID + "-pwm";
+    // PWM Provider name and unique ID
+    public static final String PWM_PROVIDER_NAME = NAME + " PWM Provider";
+    public static final String PWM_PROVIDER_ID = ID + "-pwm";
 
     // I2C Provider name and unique ID
     public static final String I2C_PROVIDER_NAME = NAME + " I2C Provider";
@@ -101,19 +108,57 @@ public class LinuxFsPlugin implements Plugin {
 //    public static final String SERIAL_PROVIDER_NAME = NAME + " Serial Provider";
 //    public static final String SERIAL_PROVIDER_ID = ID + "-serial";
 
+    public static String DEFAULT_GPIO_FILESYSTEM_PATH = LinuxGpio.DEFAULT_SYSTEM_PATH;
+    public static String DEFAULT_PWM_FILESYSTEM_PATH = LinuxPwm.DEFAULT_SYSTEM_PATH;
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void initialize(PluginService service) {
 
-        Provider[] providers = { LinuxFsDigitalInputProvider.newInstance(),
-            LinuxFsDigitalOutputProvider.newInstance(),
+        // get Linux file system path for GPIO & PWM
+        String gpioFileSystemPath = DEFAULT_GPIO_FILESYSTEM_PATH;
+        String pwmFileSystemPath = DEFAULT_PWM_FILESYSTEM_PATH;
+
+        int pwmChip;
+        if(BoardInfoHelper.usesRP1()) {
+            pwmChip = LinuxPwm.DEFAULT_RP1_PWM_CHIP;
+        }else{
+            pwmChip = LinuxPwm.DEFAULT_LEGACY_PWM_CHIP;
+        }
+
+        // [GPIO] get overriding custom 'linux.gpio.system.path' setting from Pi4J context
+        if(service.context().properties().has("linux.gpio.system.path")){
+            gpioFileSystemPath = service.context().properties().get("linux.gpio.system.path", gpioFileSystemPath);
+        }
+
+        // [PWM] get overriding custom 'linux.gpio.system.path' setting from Pi4J context
+        if(service.context().properties().has("linux.pwm.system.path")){
+            pwmFileSystemPath = service.context().properties().get("linux.pwm.system.path", pwmFileSystemPath);
+        }
+
+        // [PWM] get overriding custom 'linux.gpio.system.path' setting from Pi4J context
+        if(service.context().properties().has("linux.pwm.chip")){
+            try {
+                pwmChip = Integer.parseInt(service.context().properties().get("linux.pwm.chip", Integer.toString(pwmChip)));
+            }
+            catch (Exception e){
+                logger.error(e.getMessage(), e);
+            }
+        }
+
+        // create & define supported Linux file system I/O providers that will be exposed to Pi4J via this plugin
+        Provider[] providers = {
+            LinuxFsDigitalInputProvider.newInstance(gpioFileSystemPath),
+            LinuxFsDigitalOutputProvider.newInstance(gpioFileSystemPath),
+            LinuxFsPwmProvider.newInstance(pwmFileSystemPath, pwmChip),
             LinuxFsI2CProvider.newInstance()
         };
 
         // register the LinuxFS I/O Providers with the plugin service
         service.register(providers);
-
     }
 }

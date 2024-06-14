@@ -26,9 +26,7 @@ package com.pi4j.io.spi.impl;
  */
 
 import com.pi4j.io.impl.IOAddressConfigBase;
-import com.pi4j.io.spi.Spi;
-import com.pi4j.io.spi.SpiConfig;
-import com.pi4j.io.spi.SpiMode;
+import com.pi4j.io.spi.*;
 import com.pi4j.util.StringUtil;
 
 import java.util.Map;
@@ -46,6 +44,10 @@ public class DefaultSpiConfig
     // private configuration properties
     protected final Integer baud;
     protected final SpiMode mode;
+    protected boolean modeUserProvided = false;  // indicate user supplied the value
+    protected final SpiBus bus;
+    protected boolean busUserProvided = false;  // indicate user supplied the value
+    protected final Long flags;
 
     /**
      * PRIVATE CONSTRUCTOR
@@ -62,11 +64,29 @@ public class DefaultSpiConfig
             this.baud = Spi.DEFAULT_BAUD;
         }
 
-        // load optional DATA BITS from properties
+        // load optional BUS from properties
+        if(properties.containsKey(BUS_KEY)){
+            this.bus = SpiBus.parse(properties.get(BUS_KEY));
+            this.busUserProvided = true;
+        } else {
+            this.bus = Spi.DEFAULT_BUS;
+            this.busUserProvided = false;
+        }
+
+        // load optional MODE from properties
         if(properties.containsKey(MODE_KEY)){
             this.mode = SpiMode.parse(properties.get(MODE_KEY));
+            this.modeUserProvided = true;
         } else {
             this.mode = Spi.DEFAULT_MODE;
+            this.modeUserProvided = false;
+        }
+
+        // load optional FLAGS BITS from properties
+        if(properties.containsKey(FLAGS_KEY)){
+            this.flags = StringUtil.parseLong(properties.get(FLAGS_KEY), null);
+        } else {
+            this.flags = 0L; // default flags (0)
         }
 
         // define default property values if any are missing (based on the required address value)
@@ -83,7 +103,44 @@ public class DefaultSpiConfig
 
     /** {@inheritDoc} */
     @Override
+    public boolean busUserProvided() {
+        return this.busUserProvided;
+    }
+
+
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean modeUserProvided()
+    {
+        return this.modeUserProvided;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SpiBus bus() {
+        return this.bus;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public SpiMode mode() {
         return this.mode;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Long flags() { return this.flags; }
+
+    /** {@inheritDoc} */
+    @Override
+    public Integer channel() {
+        return this.address();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SpiChipSelect chipSelect() {
+        return SpiChipSelect.getByNumber(this.address());
     }
 }
