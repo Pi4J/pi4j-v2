@@ -67,7 +67,7 @@ public class Main {
         About about = new About();
         about.enumerateProviders(pi4j);
         about.enumeratePlatforms(pi4j);
-        about.describeDeafultPlatform(pi4j);
+        about.describeDefaultPlatform(pi4j);
         for(var ioType : IOType.values()){
             about.enumerateProviders(pi4j, ioType);
         }

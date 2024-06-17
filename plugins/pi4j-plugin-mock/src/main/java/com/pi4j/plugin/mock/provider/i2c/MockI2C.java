@@ -27,7 +27,6 @@ package com.pi4j.plugin.mock.provider.i2c;
  * #L%
  */
 
-
 import com.pi4j.io.i2c.*;
 import com.pi4j.plugin.mock.Mock;
 import com.pi4j.util.StringUtil;
@@ -66,28 +65,17 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
      */
     public MockI2C(I2CProvider provider, I2CConfig config){
         super(provider, config, new MockI2CBus(config));
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: CREATE(BUS={}; DEVICE={})", config.bus(), config.device());
-
-        logger.info("");
+        logger.debug("[{}::{}] :: CREATE(BUS={}; DEVICE={})",
+            Mock.I2C_PROVIDER_NAME, this.id, config.bus(), config.device());
     }
 
     /** {@inheritDoc} */
     @Override
     public void close() {
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: CLOSE(BUS={}; DEVICE={})", config.bus(), config.device());
-        logger.info("");
         super.close();
+        logger.debug("[{}::{}] :: CLOSE(BUS={}; DEVICE={})",
+            Mock.I2C_PROVIDER_NAME, this.id, config.bus(), config.device());
     }
-
-
 
     // -------------------------------------------------------------------
     // RAW DEVICE WRITE FUNCTIONS
@@ -97,13 +85,10 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
     @Override
     public int write(byte b) {
         raw.add(b);
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: WRITE(0x");
-        logger.info(StringUtil.toHexString(b));
-        logger.info(")");
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}::{}] :: WRITE(0x{})",
+                Mock.I2C_PROVIDER_NAME, this.id, StringUtil.toHexString(b));
+        }
         return 0;
     }
 
@@ -114,13 +99,10 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
         for(int p = offset; p-offset < length; p++){
             raw.add(data[p]); // add to internal buffer
         }
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: WRITE(0x");
-        logger.info(StringUtil.toHexString(data, offset, length));
-        logger.info(")");
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}::{}] :: WRITE(0x{})",
+                Mock.I2C_PROVIDER_NAME, this.id, StringUtil.toHexString(data, offset, length));
+        }
         return length;
     }
 
@@ -131,13 +113,7 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
         for (byte b : buffer) {
             raw.add(b); // add to internal buffer
         }
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: WRITE(\"");
-        logger.info(data.toString());
-        logger.info("\")");
+        logger.debug("[{}::{}] :: WRITE(0x{})", Mock.I2C_PROVIDER_NAME, this.id, data);
         return data.length();
     }
 
@@ -150,14 +126,11 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
     public int read() {
         if(raw.isEmpty()) return -1;
         byte b = raw.pop();
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: READ(0x");
-        logger.info(StringUtil.toHexString(b));
-        logger.info(")");
-        return b & 0xff;
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}::{}] :: READ(0x{})",
+                Mock.I2C_PROVIDER_NAME, this.id, StringUtil.toHexString(b));
+        }
+        return b;
     }
 
     /** {@inheritDoc} */
@@ -174,13 +147,10 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
             counter++;
         }
 
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: READ(0x");
-        logger.info(StringUtil.toHexString(buffer, offset, length));
-        logger.info(")");
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}::{}] :: READ(0x{})",
+                Mock.I2C_PROVIDER_NAME, this.id, StringUtil.toHexString(buffer, offset, length));
+        }
 
         return counter;
     }
@@ -195,15 +165,7 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
             buffer[p] = raw.pop();
         }
         String result = new String(buffer, charset);
-
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: READ(\"");
-        logger.info(result);
-        logger.info("\")");
-
+        logger.debug("[{}::{}] :: READ()", Mock.I2C_PROVIDER_NAME, this.id, result);
         return result;
     }
 
@@ -215,40 +177,35 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
     @Override
     public int writeRegister(int register, byte b) {
 
-        if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
+        if (registers[register] == null) {
+            registers[register] = new ArrayDeque<Byte>();
+        }
         registers[register].add(b);
 
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: WRITE(");
-        logger.info("REG=");
-        logger.info(String.valueOf(register));
-        logger.info(", 0x");
-        logger.info(StringUtil.toHexString(b));
-        logger.info(")");
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}::{}] :: WRITE(REG={}, 0x{})",
+                Mock.I2C_PROVIDER_NAME, this.id, register, StringUtil.toHexString(b));
+        }
+
         return 0;
     }
 
-
-        /** {@inheritDoc} */
+    /** {@inheritDoc} */
     @Override
     public int writeRegister(int register, byte[] data, int offset, int length) {
         Objects.checkFromIndexSize(offset, length, data.length);
-        if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
+        if (registers[register] == null) {
+            registers[register] = new ArrayDeque<Byte>();
+        }
         for(int p = offset; p-offset < length; p++){
             registers[register].add(data[p]);
         }
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: WRITEREGISTER(");
-        logger.info("Chip register offset Decimal : {}  Hex : {}", register, String.format("%02X", register));
-        logger.info("offset = {}", String.format("%02X", offset));
-        logger.info(",User data:     0x   {}", StringUtil.toHexString(data, offset, length));
-        logger.info(")");
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}::{}] :: WRITE(REG={}, 0x{})",
+                Mock.I2C_PROVIDER_NAME, this.id, register, StringUtil.toHexString(data, offset, length));
+        }
+
         return length;
     }
 
@@ -262,42 +219,29 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
             registers[internalOffset].add(data[p]);
         }
 
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: WRITEREGISTER(");
-        logger.info("REG= (two byte offset LSB first)");
-        logger.info(StringUtil.toHexString(register, 0, register.length));
-        logger.info("Chip register offset Decimal : {}  Hex : {}", internalOffset, String.format("%02X", internalOffset));
-        logger.info("offset = {}", String.format("%02X", offset));
-        logger.info(",User data:     0x   {}", StringUtil.toHexString(data, offset, length));
-        logger.info(")");
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}::{}] :: WRITEREGISTER(REG=(two byte offset LSB first) {}, Chip register offset Decimal : {}  Hex : {}, offset = {}, User data: 0x{})",
+                Mock.I2C_PROVIDER_NAME, this.id, StringUtil.toHexString(register, 0, register.length),
+                internalOffset, String.format("%02X", internalOffset), String.format("%02X", offset),
+                StringUtil.toHexString(data, offset, length));
+        }
+
         return length;
     }
-
-
 
     /** {@inheritDoc} */
     @Override
     public int writeRegister(int register, Charset charset, CharSequence data) {
-
-        if(registers[register] == null) registers[register] = new ArrayDeque<Byte>();
+        if (registers[register] == null) {
+            registers[register] = new ArrayDeque<Byte>();
+        }
         byte[] buffer = data.toString().getBytes(charset);
-        for (byte b : buffer) {
-            registers[register].add(b); // add to internal buffer
+        for (int p = 0; p < buffer.length; p++) {
+            registers[register].add(buffer[p]); // add to internal buffer
         }
 
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: WRITE(");
-        logger.info("REG=");
-        logger.info(String.valueOf(register));
-        logger.info(", \"");
-        logger.info(String.valueOf(data));
-        logger.info("\")");
+        logger.debug("[{}::{}] :: WRITE(REG={}, 0x{})", Mock.I2C_PROVIDER_NAME, this.id, register, data);
+
         return data.length();
     }
 
@@ -311,16 +255,12 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
         if(registers[register] == null) throw new IllegalStateException("No available data to read");
         if(registers[register].isEmpty()) throw new IllegalStateException("No available data to read");
         byte b = registers[register].pop();
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: READ(");
-        logger.info("REG=");
-        logger.info(String.valueOf(register));
-        logger.info(", 0x");
-        logger.info(StringUtil.toHexString(b));
-        logger.info(")");
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}::{}] :: WRITE(REG={}, 0x{})",
+                Mock.I2C_PROVIDER_NAME, this.id, register, StringUtil.toHexString(b));
+        }
+
         return b;
     }
 
@@ -330,28 +270,28 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
     public int readRegister(byte[] register, byte[] buffer, int offset, int length) {
         int internalOffset = (register[0] & 0xff) + (register[1] << 8);
 
-        if(registers[internalOffset] == null) return -1;
-        if(registers[internalOffset].isEmpty()) return -1;
+        if (registers[internalOffset] == null) {
+            return -1;
+        }
+        if (registers[internalOffset].isEmpty()) {
+            return -1;
+        }
 
         int counter = 0;
-        for(int p = 0; p < length; p++) {
+        for (int p = 0; p < length; p++) {
             if(p+offset > buffer.length) break;
             if(registers[internalOffset].isEmpty()) break;
             buffer[offset + p] = registers[internalOffset].pop();
             counter++;
         }
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: READREGISTER(");
-        logger.info("REG= (two byte offset LSB first)");
-        logger.info(StringUtil.toHexString(register, 0, register.length));
-        logger.info("offset = {}", String.format("%02X", offset));
-        logger.info("Chip register offset Decimal : {}  Hex : {}", internalOffset, String.format("%02X", internalOffset));
-        logger.info(", 0x");
-        logger.info(StringUtil.toHexString(buffer, offset, length));
-        logger.info(")");
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}::{}] :: READREGISTER(REG= (two byte offset LSB first) {}, offset = {}, Chip register offset Decimal : {}  Hex : {}, 0x{})",
+                Mock.I2C_PROVIDER_NAME, this.id, StringUtil.toHexString(register, 0, register.length),
+                String.format("%02X", offset), internalOffset, String.format("%02X", internalOffset),
+                StringUtil.toHexString(buffer, offset, length));
+        }
+
         return counter;
     }
 
@@ -368,17 +308,12 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
             buffer[offset + p] = registers[register].pop();
             counter++;
         }
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: READREGISTER(");
-        logger.info("offset = {}", String.format("%02X", offset));
-        logger.info("Chip register offset Decimal : {}  Hex : {}", register, String.format("%02X", register));
-        logger.info(String.valueOf(register));
-        logger.info(", 0x");
-        logger.info(StringUtil.toHexString(buffer, offset, length));
-        logger.info(")");
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}::{}] :: WRITE(REG={}, 0x{})",
+                Mock.I2C_PROVIDER_NAME, this.id, register, StringUtil.toHexString(buffer, offset, length));
+        }
+
         return counter;
     }
 
@@ -395,16 +330,7 @@ public class MockI2C extends I2CBase<MockI2CBus> implements I2C, I2CRegisterData
         }
         String result = new String(buffer, charset);
 
-        logger.info(" [");
-        logger.info(Mock.I2C_PROVIDER_NAME);
-        logger.info("::");
-        logger.info(this.id);
-        logger.info("] :: READ(");
-        logger.info("REG=");
-        logger.info(String.valueOf(register));
-        logger.info(", \"");
-        logger.info(result);
-        logger.info("\")");
+        logger.debug("[{}::{}] :: WRITE(REG={}, 0x{})", Mock.I2C_PROVIDER_NAME, this.id, register, result);
 
         return result;
     }

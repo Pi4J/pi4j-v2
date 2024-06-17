@@ -105,12 +105,16 @@ public class About {
      * @param context a {@link com.pi4j.context.Context} object.
      * @throws Pi4JException if any.
      */
-    public void describeDeafultPlatform(Context context) throws Pi4JException {
+    public void describeDefaultPlatform(Context context) throws Pi4JException {
         logger.info("=====================================================");
         logger.info("DEFAULT (RUNTIME) PLATFORM ");
         logger.info("=====================================================");
-        logger.info("  " + context.platform().name() + " [" + context.platform().id() + "]");
-        context.platform().describe().print(System.out);
+        if (context.platform() == null) {
+            logger.warn("  NOT DEFINED");
+        } else {
+            logger.info("  {}} [{}}]", context.platform().name(), context.platform().id());
+            context.platform().describe().print(System.out);
+        }
     }
 
 //    public void enumeratePlatformProviders() throws Pi4JException {
