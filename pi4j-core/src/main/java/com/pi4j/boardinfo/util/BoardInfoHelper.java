@@ -64,6 +64,10 @@ public class BoardInfoHelper {
         return instance.boardInfo.getBoardModel() == BoardModel.MODEL_5_B;
     }
 
+    public static boolean runsOnRaspberryPi() {
+        return instance.boardInfo.getBoardModel() != BoardModel.UNKNOWN;
+    }
+
     public static boolean is32bit() {
         return !is64bit();
     }

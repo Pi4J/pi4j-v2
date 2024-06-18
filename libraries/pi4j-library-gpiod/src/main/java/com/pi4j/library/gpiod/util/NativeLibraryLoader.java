@@ -26,7 +26,6 @@ package com.pi4j.library.gpiod.util;
  * #L%
  */
 
-import com.pi4j.boardinfo.definition.BoardModel;
 import com.pi4j.boardinfo.util.BoardInfoHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -256,7 +255,7 @@ public class NativeLibraryLoader {
         }
 
         // Finally, load the library
-        if (BoardInfoHelper.current().getBoardModel() == BoardModel.UNKNOWN) {
+        if (!BoardInfoHelper.runsOnRaspberryPi()) {
             logger.warn("Can't load the library, board model is unknown");
         } else {
             System.load(target.toAbsolutePath().toString());
