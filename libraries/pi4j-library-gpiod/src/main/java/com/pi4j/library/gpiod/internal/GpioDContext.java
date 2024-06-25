@@ -1,6 +1,5 @@
 package com.pi4j.library.gpiod.internal;
 
-import com.pi4j.boardinfo.definition.BoardModel;
 import com.pi4j.boardinfo.util.BoardInfoHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,7 @@ public class GpioDContext implements Closeable {
     }
 
     public synchronized void initialize() {
-        if (BoardInfoHelper.current().getBoardModel() == BoardModel.UNKNOWN) {
+        if (!BoardInfoHelper.runningOnRaspberryPi()) {
             logger.warn("Can't initialize GpioD context, board model is unknown");
             return;
         }
