@@ -35,7 +35,7 @@ public class GpioDContext implements Closeable {
     }
 
     public synchronized void initialize() {
-        if (!BoardInfoHelper.runsOnRaspberryPi()) {
+        if (!BoardInfoHelper.runningOnRaspberryPi()) {
             logger.warn("Can't initialize GpioD context, board model is unknown");
             return;
         }

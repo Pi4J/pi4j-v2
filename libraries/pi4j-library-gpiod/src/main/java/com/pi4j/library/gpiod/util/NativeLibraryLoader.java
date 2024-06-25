@@ -255,7 +255,7 @@ public class NativeLibraryLoader {
         }
 
         // Finally, load the library
-        if (!BoardInfoHelper.runsOnRaspberryPi()) {
+        if (!BoardInfoHelper.runningOnRaspberryPi()) {
             logger.warn("Can't load the library, board model is unknown");
         } else {
             System.load(target.toAbsolutePath().toString());

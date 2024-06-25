@@ -64,7 +64,7 @@ public class BoardInfoHelper {
         return instance.boardInfo.getBoardModel() == BoardModel.MODEL_5_B;
     }
 
-    public static boolean runsOnRaspberryPi() {
+    public static boolean runningOnRaspberryPi() {
         return instance.boardInfo.getBoardModel() != BoardModel.UNKNOWN;
     }
 
