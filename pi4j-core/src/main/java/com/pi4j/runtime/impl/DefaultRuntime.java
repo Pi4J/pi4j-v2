@@ -304,7 +304,7 @@ public class DefaultRuntime implements Runtime {
             context().config().getProviders().forEach(provider -> {
                 Provider replaced = providers.put(provider.getType(), provider);
                 if (replaced != null) {
-                    logger.warn("Replacing auto detected provider {} {} with provider {} from context config",
+                    logger.info("Replacing auto detected provider {} {} with provider {} from context config",
                         replaced.getType(), replaced.getName(), provider.getName());
                 }
             });
@@ -375,11 +375,11 @@ public class DefaultRuntime implements Runtime {
                 if (existingProvider.getName().equals(provider.getName()))
                     throw new InitializeException(
                         provider.getType() + " with name " + provider.getName() + " is already registered.");
-                logger.warn("Ignoring provider {} {} with priority {} as lower priority than {} which has priority {}",
+                logger.info("Ignoring provider {} {} with priority {} as lower priority than {} which has priority {}",
                     provider.getType(), provider.getName(), provider.getPriority(), existingProvider.getName(),
                     existingProvider.getPriority());
             } else {
-                logger.warn("Replacing provider {} {} with priority {} with provider {} with higher priority {}",
+                logger.info("Replacing provider {} {} with priority {} with provider {} with higher priority {}",
                     existingProvider.getType(), existingProvider.getName(), existingProvider.getPriority(),
                     provider.getName(), provider.getPriority());
                 providers.put(provider.getType(), provider);

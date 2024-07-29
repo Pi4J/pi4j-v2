@@ -153,7 +153,7 @@ public class DefaultRuntimeRegistry implements RuntimeRegistry {
             shutdownInstance.shutdown(runtime.context());
             long took = System.currentTimeMillis() - start;
             if (took > 10)
-                logger.warn("Shutting down of IO " + shutdownInstance.getId() + " took " + took + "ms");
+                logger.info("Shutting down of IO {} took {}ms", shutdownInstance.getId(), took);
         } catch (LifecycleException e) {
             logger.error(e.getMessage(), e);
             throw new IOShutdownException(shutdownInstance, e);
