@@ -148,8 +148,9 @@ public class DefaultRuntimeProviders implements RuntimeProviders {
     public <T extends Provider> Map<String, T> all(Class<T> providerClass) {
 
         if(!providerClass.isInterface()){
-            logger.warn("Provider type [" + providerClass.getName() + "] requested; this is not an 'Interface'" +
-                    " and make not return a valid provider or may not be able to cast to the concrete class.");
+            logger.warn("Provider type [{}] requested; this is not an 'Interface' and make not return a valid " +
+                        "provider or may not be able to cast to the concrete class.",
+                providerClass.getName());
         }
 
         // create a map <io-id, io-instance> of providers that extend of the given io class

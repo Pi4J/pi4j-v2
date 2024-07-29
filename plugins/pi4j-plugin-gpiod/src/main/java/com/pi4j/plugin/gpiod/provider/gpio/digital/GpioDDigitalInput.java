@@ -99,7 +99,7 @@ public class GpioDDigitalInput extends DigitalInputBase implements DigitalInput 
             }
         }
 
-        logger.info("Shutdown input listener for " + this.id);
+        logger.info("Shutdown input listener for {}", this.id);
     }
 
     @Override

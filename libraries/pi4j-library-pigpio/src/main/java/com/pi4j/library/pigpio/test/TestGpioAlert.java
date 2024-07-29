@@ -67,8 +67,8 @@ public class TestGpioAlert {
         logger.info("PIGPIO INITIALIZED SUCCESSFULLY");
         logger.info("-----------------------------------------------------");
 
-        logger.info("PIGPIO VERSION   : " + piGpio.gpioVersion());
-        logger.info("PIGPIO HARDWARE  : " + piGpio.gpioHardwareRevision());
+        logger.info("PIGPIO VERSION   : {}", piGpio.gpioVersion());
+        logger.info("PIGPIO HARDWARE  : {}", piGpio.gpioHardwareRevision());
 
 
         piGpio.gpioSetMode(GPIO_PIN, PiGpioMode.INPUT);
@@ -78,7 +78,7 @@ public class TestGpioAlert {
         piGpio.addPinListener(GPIO_PIN, new PiGpioStateChangeListener() {
             @Override
             public void onChange(PiGpioStateChangeEvent event) {
-                logger.info("RECEIVED ALERT EVENT! " + event);
+                logger.info("RECEIVED ALERT EVENT! {}", event);
                 throw new PiGpioException("TEST");
             }
         });

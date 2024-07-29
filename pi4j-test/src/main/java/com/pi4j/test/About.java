@@ -66,7 +66,7 @@ public class About {
         logger.info(title);
         logger.info("=====================================================");
         for (Provider provider : context.providers().all().values()) {
-            logger.info("  " + provider.name() + " [" + provider.id() + "]; " + provider.type());
+            logger.info("  {} [{}]; {}", provider.name(), provider.id(), provider.type());
         }
     }
 
@@ -78,10 +78,10 @@ public class About {
      */
     public void enumerateProviders(Context context, IOType ioType) {
         logger.info("=====================================================");
-        logger.info(ioType + " PROVIDERS");
+        logger.info("{} PROVIDERS", ioType);
         logger.info("=====================================================");
         for(var provider : context.providers().all(ioType).values()){
-            logger.info("  " + provider.name() + " [" + provider.id() + "]; " + provider.type());
+            logger.info("  {} [{}]; {}", provider.name(), provider.id(), provider.type());
         }
     }
 
@@ -95,7 +95,7 @@ public class About {
         logger.info("PLATFORMS");
         logger.info("=====================================================");
         for (Platform platform : context.platforms().all().values()) {
-            logger.info("  " + platform.name() + " [" + platform.id() + "]; " + platform.getDescription());
+            logger.info("  {} [{}]; {}", platform.name(), platform.id(), platform.getDescription());
         }
     }
 

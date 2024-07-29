@@ -70,7 +70,7 @@ public class MockSerial extends SerialBase implements Serial {
         logger.info(Mock.SERIAL_PROVIDER_NAME);
         logger.info("::");
         logger.info(this.id);
-        logger.info("] :: OPEN(DEVICE=" + config.device() + "; BAUD=" + config.baud() + ")");
+        logger.info("] :: OPEN(DEVICE={}; BAUD={})", config.device(), config.baud());
         logger.info("");
     }
 
@@ -87,7 +87,7 @@ public class MockSerial extends SerialBase implements Serial {
         logger.info(Mock.SERIAL_PROVIDER_NAME);
         logger.info("::");
         logger.info(this.id);
-        logger.info("] :: CLOSE(DEVICE=" + config.device() + "; BAUD=" + config.baud() + ")");
+        logger.info("] :: CLOSE(DEVICE={}; BAUD={})", config.device(), config.baud());
         logger.info("");
         super.close();
     }

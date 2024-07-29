@@ -151,8 +151,8 @@ public class SpiRawDataTest {
             // read sample data using input stream
             byte[] result = spi.in().readNBytes(sample.length);
 
-            logger.info("[SAMPLE DATA] - 0x" + StringUtil.toHexString(sample));
-            logger.info("[READ DATA  ] - 0x" + StringUtil.toHexString(result));
+            logger.info("[SAMPLE DATA] - 0x{}", StringUtil.toHexString(sample));
+            logger.info("[READ DATA  ] - 0x{}", StringUtil.toHexString(result));
 
             // compare sample data against returned read data
             assertArrayEquals(sample, result);
