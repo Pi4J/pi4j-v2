@@ -68,7 +68,7 @@ public class LinuxFsPwm extends PwmBase implements Pwm {
      */
     @Override
     public Pwm initialize(Context context) throws InitializeException {
-        logger.trace("initializing PWM [" + this.config.address() + "]; " + pwm.getPwmPath());
+        logger.trace("initializing PWM [{}]; {}", this.config.address(), pwm.getPwmPath());
 
         // first determine if this PWM chipset supports this PWM channel/pin number
         try {
@@ -83,12 +83,12 @@ public class LinuxFsPwm extends PwmBase implements Pwm {
         // [EXPORT] requested PWM channel if its not already exported
         try {
             if(!pwm.isExported()) {
-                logger.trace("exporting PWM [" + this.config.address() + "]; " + pwm.getPwmPath());
+                logger.trace("exporting PWM [{}]; {}", this.config.address(), pwm.getPwmPath());
                 pwm.export();
                 // Delay to allow the SSD to persist the new directory and device partitions
                 Thread.sleep(70);
             } else{
-                logger.trace("PWM [" + this.config.address() + "] is already exported; " + pwm.getPwmPath());
+                logger.trace("PWM [{}] is already exported; {}", this.config.address(), pwm.getPwmPath());
             }
         } catch (java.io.IOException e) {
             logger.error(e.getMessage(), e);
@@ -123,22 +123,22 @@ public class LinuxFsPwm extends PwmBase implements Pwm {
             long period = Frequency.nanoseconds(this.frequency);
 
             // set PWM period in nanoseconds based on configured frequency
-            logger.trace("set 'period' of PWM [" + this.config.address() + "] to [" + Long.toUnsignedString(period) + "]; " + pwm.getPwmPath());
+            logger.trace("set 'period' of PWM [{}] to [{}]; {}", this.config.address(), Long.toUnsignedString(period), pwm.getPwmPath());
             pwm.period(period);
 
             // calculate duty cycle nanoseconds from configured duty cycle percentage
             long dcycle = Math.round(period * this.dutyCycle / 100);
 
             // set PWM duty-cycle nanoseconds
-            logger.trace("set 'duty_cycle' of PWM [" + this.config.address() + "] to [" + dcycle + "]; " + pwm.getPwmPath());
+            logger.trace("set 'duty_cycle' of PWM [{}] to [{}]; {}", this.config.address(), dcycle, pwm.getPwmPath());
             pwm.dutyCycle(dcycle);
 
             // set PWM polarity
-            logger.trace("set 'polarity' of PWM [" + this.config.address() + "] to [" + this.polarity.getName() + "]; " + pwm.getPwmPath());
+            logger.trace("set 'polarity' of PWM [{}] to [{}]; {}", this.config.address(), this.polarity.getName(), pwm.getPwmPath());
             pwm.polarity( (this.polarity == PwmPolarity.INVERSED) ? LinuxPwm.Polarity.INVERSED : LinuxPwm.Polarity.NORMAL);
 
             // enable PWM signal
-            logger.trace("enable PWM [" + this.config.address() + "]; " + pwm.getPwmPath());
+            logger.trace("enable PWM [{}]; {}", this.config.address(), pwm.getPwmPath());
             pwm.enable();
 
             // update tracking state
@@ -157,7 +157,7 @@ public class LinuxFsPwm extends PwmBase implements Pwm {
     public Pwm off() throws IOException{
         try {
             // disable PWM
-            logger.trace("disable PWM [" + this.config.address() + "]; " + pwm.getPwmPath());
+            logger.trace("disable PWM [{}]; {}", this.config.address(), pwm.getPwmPath());
             pwm.disable();
 
             // update tracking state
@@ -200,7 +200,7 @@ public class LinuxFsPwm extends PwmBase implements Pwm {
     /** {@inheritDoc} */
     @Override
     public Pwm shutdown(Context context) throws ShutdownException {
-        logger.trace("shutdown PWM [" + this.config.address() + "]; " + pwm.getPwmPath());
+        logger.trace("shutdown PWM [{}]; {}", this.config.address(), pwm.getPwmPath());
 
         // --------------------------------------------------------------------------
         // [ATTENTION]
@@ -223,7 +223,7 @@ public class LinuxFsPwm extends PwmBase implements Pwm {
 
         // otherwise ... un-export the GPIO pin from the Linux file system impl
         try {
-            logger.trace("un-exporting PWM [" + this.config.address() + "]; " + pwm.getPwmPath());
+            logger.trace("un-exporting PWM [{}]; {}", this.config.address(), pwm.getPwmPath());
             if(pwm.isExported()) {
                 pwm.unexport();
             }

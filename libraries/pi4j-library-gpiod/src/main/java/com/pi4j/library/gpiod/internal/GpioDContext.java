@@ -70,7 +70,7 @@ public class GpioDContext implements Closeable {
             throw new IllegalStateException("Couldn't identify gpiochip!");
 
         this.gpioChip = found;
-        logger.info("Using chip " + this.gpioChip.getName() + " " + this.gpioChip.getLabel());
+        logger.info("Using chip {} {}", this.gpioChip.getName(), this.gpioChip.getLabel());
     }
 
     public synchronized GpioLine getOrOpenLine(int offset) {

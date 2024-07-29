@@ -68,11 +68,11 @@ public class TestGpioAlertRaw {
         logger.info("Pi4J Library :: PIGPIO JNI (Raw) Wrapper Library");
         logger.info("-----------------------------------------------------");
         logger.info("-----------------------------------------------------");
-        logger.info("PIGPIO VERSION   : " + PIGPIO.gpioVersion());
-        logger.info("PIGPIO HARDWARE  : " + Integer.toHexString(PIGPIO.gpioHardwareRevision()));
+        logger.info("PIGPIO VERSION   : {}", PIGPIO.gpioVersion());
+        logger.info("PIGPIO HARDWARE  : {}", Integer.toHexString(PIGPIO.gpioHardwareRevision()));
         int init = PIGPIO.gpioInitialise();
         if(init < 0){
-            logger.error("ERROR; PIGPIO INIT FAILED; ERROR CODE: " + init);
+            logger.error("ERROR; PIGPIO INIT FAILED; ERROR CODE: {}", init);
         } else {
             logger.info("-----------------------------------------------------");
             logger.info("PIGPIO INITIALIZED SUCCESSFULLY");
@@ -84,7 +84,7 @@ public class TestGpioAlertRaw {
             PIGPIO.gpioSetAlertFunc(GPIO_PIN, new PiGpioAlertCallback() {
                 @Override
                 public void call(int pin, int state, long tick) {
-                    logger.info("RECEIVED ALERT EVENT! " + pin + " : " + state + " :" + tick);
+                    logger.info("RECEIVED ALERT EVENT! {} : {} :{}", pin, state, tick);
                 }
             });
 
@@ -98,7 +98,7 @@ public class TestGpioAlertRaw {
             PIGPIO.gpioSetAlertFuncEx(GPIO_PIN, new PiGpioAlertCallbackEx() {
                 @Override
                 public void call(int pin, int state, long tick, Object userdata) {
-                    logger.info("RECEIVED ALERT EVENT! " + pin + " : " + state + " :" + tick + " : " + userdata);
+                    logger.info("RECEIVED ALERT EVENT! {} : {} :{} : " + userdata, pin, state, tick);
                 }
             }, testdata);
 

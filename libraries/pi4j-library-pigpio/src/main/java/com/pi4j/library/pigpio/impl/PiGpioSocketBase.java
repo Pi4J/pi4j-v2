@@ -207,13 +207,13 @@ public abstract class PiGpioSocketBase extends PiGpioBase implements PiGpio {
                 var out = sck.getOutputStream();
 
                 // transmit packet
-                logger.trace("[TX] -> " + tx.toString());
+                logger.trace("[TX] -> {}", tx.toString());
                 out.write(PiGpioPacket.encode(tx));
                 out.flush();
 
                 // read receive packet
                 PiGpioPacket rx = PiGpioPacket.decode(in);
-                logger.trace("[RX] <- " + rx.toString());
+                logger.trace("[RX] <- {}", rx.toString());
                 return rx;
             } catch (SocketException se) {
                 // socket is no longer connected

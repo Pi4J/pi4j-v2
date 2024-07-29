@@ -68,8 +68,8 @@ public class TestPwmHardware {
         logger.info("PIGPIO INITIALIZED SUCCESSFULLY");
         logger.info("-----------------------------------------------------");
 
-        logger.info("PIGPIO VERSION   : " + piGpio.gpioVersion());
-        logger.info("PIGPIO HARDWARE  : " + piGpio.gpioHardwareRevision());
+        logger.info("PIGPIO VERSION   : {}", piGpio.gpioVersion());
+        logger.info("PIGPIO HARDWARE  : {}", piGpio.gpioHardwareRevision());
 
         // set pin ALT modes for PWM
         piGpio.gpioSetMode(19, PiGpioMode.ALT5);

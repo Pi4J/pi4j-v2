@@ -110,7 +110,7 @@ public class Main {
 
         input.bind(AnalogOutputBinding.newInstance(output1, output2));
 
-        logger.info("Inpur: " + input.name());
+        logger.info("Inpur: {}", input.name());
         //((TestAnalogInput)input).test(21).test(22).test(23);
 
         //output.value(12);

@@ -150,8 +150,8 @@ public class I2CRawDataTest {
             // read sample data using input stream
             byte[] result = i2c.in().readNBytes(sample.length);
 
-            logger.info("[SAMPLE DATA] - 0x" + StringUtil.toHexString(sample));
-            logger.info("[READ DATA  ] - 0x" + StringUtil.toHexString(result));
+            logger.info("[SAMPLE DATA] - 0x{}", StringUtil.toHexString(sample));
+            logger.info("[READ DATA  ] - 0x{}", StringUtil.toHexString(result));
 
             // copare sample data against returned read data
             assertArrayEquals(sample, result);

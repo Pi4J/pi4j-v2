@@ -260,7 +260,7 @@ public abstract class PiGpioBase implements PiGpio {
     protected void validateResult(long value, boolean throwException) {
         if(value < 0) {
             PiGpioError err = PiGpioError.from(value);
-            logger.warn("PIGPIO ERROR: " + err.name() + "; " + err.message());
+            logger.warn("PIGPIO ERROR: {}; {}", err.name(), err.message());
             if(throwException) {
                 throw new PiGpioException("PIGPIO ERROR: " + err.name() + "; " + err.message());
             }

@@ -66,15 +66,15 @@ public class LinuxFsDigitalInput extends DigitalInputBase implements DigitalInpu
 
     @Override
     public DigitalInput initialize(Context context) throws InitializeException {
-        logger.trace("initializing GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+        logger.trace("initializing GPIO [{}]; {}", this.config.address(), gpio.getPinPath());
 
         // [EXPORT] requested GPIO pin if its not already exported
         try {
             if(!gpio.isExported()) {
-                logger.trace("exporting GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+                logger.trace("exporting GPIO [{}]; {}", this.config.address(), gpio.getPinPath());
                 gpio.export();
             } else{
-                logger.trace("GPIO [" + this.config.address() + "] is already exported; " + gpio.getPinPath());
+                logger.trace("GPIO [{}] is already exported; {}", this.config.address(), gpio.getPinPath());
             }
         } catch (java.io.IOException e) {
             logger.error(e.getMessage(), e);
@@ -83,7 +83,7 @@ public class LinuxFsDigitalInput extends DigitalInputBase implements DigitalInpu
 
         // [INPUT] configure GPIO pin direction as digital input
         try {
-            logger.trace("set direction [IN] on GPIO " + gpio.getPinPath());
+            logger.trace("set direction [IN] on GPIO {}", gpio.getPinPath());
             gpio.direction(LinuxGpio.Direction.IN);
         } catch (java.io.IOException e) {
             logger.error(e.getMessage(), e);
@@ -121,11 +121,13 @@ public class LinuxFsDigitalInput extends DigitalInputBase implements DigitalInpu
         super.initialize(context);
 
         // [MONITOR] start background monitoring thread for GPIO state changes
-        logger.trace("start monitoring thread for GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+        logger.trace("start monitoring thread for GPIO [{}]; {}", this.config.address(), gpio.getPinPath());
         Runnable monitorTask = () -> {
 			try {
 				// create file system watcher
-				logger.trace("monitoring thread watching GPIO [" + LinuxFsDigitalInput.this.config.address() + "]; " + gpio.getPinPath());
+                logger.trace("monitoring thread watching GPIO [{}]; {}",
+                             LinuxFsDigitalInput.this.config.address(),
+                             gpio.getPinPath());
 				WatchService watchService = FileSystems.getDefault().newWatchService();
 				WatchKey key;
 
@@ -167,10 +169,10 @@ public class LinuxFsDigitalInput extends DigitalInputBase implements DigitalInpu
     /** {@inheritDoc} */
     @Override
     public DigitalInput shutdown(Context context) throws ShutdownException {
-        logger.trace("shutdown GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+        logger.trace("shutdown GPIO [{}]; {}", this.config.address(), gpio.getPinPath());
 
         // this line will execute immediately, not waiting for your task to complete
-        logger.trace("shutdown monitoring thread for GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+        logger.trace("shutdown monitoring thread for GPIO [{}]; {}", this.config.address(), gpio.getPinPath());
         if (this.inputListener != null) {
             if (!this.inputListener.cancel(true))
                 logger.error("Failed to cancel input listener!");
@@ -181,7 +183,7 @@ public class LinuxFsDigitalInput extends DigitalInputBase implements DigitalInpu
 
         // un-export the GPIO pin from the Linux file system impl
         try {
-            logger.trace("un-exporting GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+            logger.trace("un-exporting GPIO [{}]; {}", this.config.address(), gpio.getPinPath());
             gpio.unexport();
         } catch (java.io.IOException e) {
             logger.error(e.getMessage(), e);
@@ -194,7 +196,7 @@ public class LinuxFsDigitalInput extends DigitalInputBase implements DigitalInpu
 
     @Override
     public DigitalState state() {
-        logger.trace("get state on GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+        logger.trace("get state on GPIO [{}]; {}", this.config.address(), gpio.getPinPath());
         try {
             // acquire actual GPIO state directly from Linux file system impl
             this.state = gpio.state();

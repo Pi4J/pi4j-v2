@@ -62,15 +62,15 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
 
     @Override
     public DigitalOutput initialize(Context context) throws InitializeException {
-        logger.trace("initializing GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+        logger.trace("initializing GPIO [{}]; {}", this.config.address(), gpio.getPinPath());
 
         // [EXPORT] requested GPIO pin if its not already exported
         try {
             if(!gpio.isExported()) {
-                logger.trace("exporting GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+                logger.trace("exporting GPIO [{}]; {}", this.config.address(), gpio.getPinPath());
                 gpio.export();
             } else{
-                logger.trace("GPIO [" + this.config.address() + "] is already exported; " + gpio.getPinPath());
+                logger.trace("GPIO [{}] is already exported; {}", this.config.address(), gpio.getPinPath());
             }
         } catch (java.io.IOException e) {
             logger.error(e.getMessage(), e);
@@ -79,7 +79,7 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
 
         // [OUTPUT] configure GPIO pin direction as digital output
         try {
-            logger.trace("set direction [OUT] on GPIO " + gpio.getPinPath());
+            logger.trace("set direction [OUT] on GPIO {}", gpio.getPinPath());
             gpio.direction(LinuxGpio.Direction.OUT);
         } catch (java.io.IOException e) {
             logger.error(e.getMessage(), e);
@@ -104,7 +104,7 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
     /** {@inheritDoc} */
     @Override
     public DigitalOutput shutdown(Context context) throws ShutdownException {
-        logger.trace("shutdown GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+        logger.trace("shutdown GPIO [{}]; {}", this.config.address(), gpio.getPinPath());
 
         // --------------------------------------------------------------------------
         // [ATTENTION]
@@ -129,7 +129,7 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
 
         // otherwise ... un-export the GPIO pin from the Linux file system impl
         try {
-            logger.trace("un-exporting GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+            logger.trace("un-exporting GPIO [{}]; {}", this.config.address(), gpio.getPinPath());
             gpio.unexport();
         } catch (java.io.IOException e) {
             logger.error(e.getMessage(), e);
@@ -143,7 +143,7 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
     /** {@inheritDoc} */
     @Override
     public DigitalOutput state(DigitalState state) throws IOException {
-        logger.trace("set state [" + state.getName() + "] on GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+        logger.trace("set state [{}] on GPIO [{}]; {}", state.getName(), this.config.address(), gpio.getPinPath());
         try {
             // apply requested GPIO state via Linux FS
             gpio.state(state);
@@ -156,7 +156,7 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
 
     @Override
     public DigitalState state() {
-        logger.trace("get state on GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+        logger.trace("get state on GPIO [{}]; {}", this.config.address(), gpio.getPinPath());
 
         try {
             // acquire actual GPIO state directly from Linux file system impl
@@ -165,7 +165,10 @@ public class LinuxFsDigitalOutput extends DigitalOutputBase implements DigitalOu
             // update/sync internal state tracking variable if mismatch
             if(this.state != currentState) {
                 this.state = currentState;
-                logger.trace("state mismatch detected; sync internal state [" + this.state.getName() + "] on GPIO [" + this.config.address() + "]; " + gpio.getPinPath());
+                logger.trace("state mismatch detected; sync internal state [{}] on GPIO [{}]; {}",
+                             this.state.getName(),
+                             this.config.address(),
+                             gpio.getPinPath());
             }
         } catch (java.io.IOException e) {
             logger.error(e.getMessage(), e);
