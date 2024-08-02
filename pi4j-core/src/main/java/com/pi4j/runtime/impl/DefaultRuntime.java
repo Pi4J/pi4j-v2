@@ -110,15 +110,17 @@ public class DefaultRuntime implements Runtime {
 
         // listen for shutdown to properly clean up
         // TODO :: ADD PI4J INTERNAL SHUTDOWN CALLBACKS/EVENTS
-        java.lang.Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                // shutdown Pi4J
-                if (!isShutdown)
-                    shutdown();
-            } catch (Exception e) {
-                logger.error("Failed to shutdown Pi4J runtime", e);
-            }
-        }, "pi4j-shutdown"));
+        if (this.context.config().enableShutdownHook()) {
+            java.lang.Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    // shutdown Pi4J
+                    if (!isShutdown)
+                        shutdown();
+                } catch (Exception e) {
+                    logger.error("Failed to shutdown Pi4J runtime", e);
+                }
+            }, "pi4j-shutdown"));
+        }
     }
 
     /**
