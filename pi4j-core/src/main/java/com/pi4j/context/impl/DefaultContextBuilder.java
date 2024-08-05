@@ -54,7 +54,7 @@ public class DefaultContextBuilder implements ContextBuilder {
     protected boolean autoDetectPlatforms = false;
     protected boolean autoDetectProviders = false;
     protected boolean autoInject = false;
-    protected boolean enableShutdownHook = true;
+    protected boolean enableShutdownHook = false;
 
     // default platform identifier
     protected String defaultPlatformId = null;
