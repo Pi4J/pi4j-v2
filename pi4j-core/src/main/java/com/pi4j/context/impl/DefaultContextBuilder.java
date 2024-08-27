@@ -54,6 +54,7 @@ public class DefaultContextBuilder implements ContextBuilder {
     protected boolean autoDetectPlatforms = false;
     protected boolean autoDetectProviders = false;
     protected boolean autoInject = false;
+    protected boolean enableShutdownHook = false;
 
     // default platform identifier
     protected String defaultPlatformId = null;
@@ -159,6 +160,20 @@ public class DefaultContextBuilder implements ContextBuilder {
 
     /** {@inheritDoc} */
     @Override
+    public ContextBuilder enableShutdownHook() {
+        this.enableShutdownHook = true;
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public ContextBuilder disableShutdownHook() {
+        this.enableShutdownHook = false;
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public ContextBuilder property(String key, String value){
         this.properties.put(key, value);
         return this;
@@ -258,9 +273,15 @@ public class DefaultContextBuilder implements ContextBuilder {
             public boolean autoDetectMockPlugins() {
                 return builder.autoDetectMockPlugins;
             }
+
             @Override
             public boolean autoDetectPlatforms() {
                 return builder.autoDetectPlatforms;
+            }
+
+            @Override
+            public boolean enableShutdownHook() {
+                return builder.enableShutdownHook;
             }
 
             @Override
