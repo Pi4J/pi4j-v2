@@ -26,4 +26,12 @@ class BoardModelTest {
             () -> assertEquals(BoardModel.MODEL_4_B, BoardModel.getByBoardName("Raspberry Pi 4 Model B Rev 1.1"))
         );
     }
+
+    @Test
+    void testInstructionSetPico() {
+        assertAll(
+            () -> assertEquals(InstructionSet.ARM_V6_M, BoardModel.PICO.getSoc().getInstructionSet()),
+            () -> assertEquals(InstructionSet.ARM_V6_M, BoardModel.PICO_2.getSoc().getInstructionSet())
+        );
+    }
 }

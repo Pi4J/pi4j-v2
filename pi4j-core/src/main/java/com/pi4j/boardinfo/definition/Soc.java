@@ -10,6 +10,7 @@ public enum Soc {
     BCM2837(InstructionSet.ARM_V8),
     BCM2837B0(InstructionSet.ARM_V8),
     RP2040(InstructionSet.ARM_V6_M),
+    RP2350(InstructionSet.ARM_V6_M),
     UNKNOWN(InstructionSet.UNKNOWN);
 
     private final InstructionSet instructionSet;
