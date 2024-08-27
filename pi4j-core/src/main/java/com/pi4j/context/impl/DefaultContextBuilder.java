@@ -25,6 +25,7 @@ package com.pi4j.context.impl;
  * #L%
  */
 
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextBuilder;
 import com.pi4j.context.ContextConfig;
@@ -50,7 +51,7 @@ public class DefaultContextBuilder implements ContextBuilder {
     protected Logger logger = LoggerFactory.getLogger(DefaultContextBuilder.class);
 
     // auto detection flags
-    protected boolean autoDetectMockPlugins = false;
+    protected boolean autoDetectMockPlugins = !BoardInfoHelper.runningOnRaspberryPi();
     protected boolean autoDetectPlatforms = false;
     protected boolean autoDetectProviders = false;
     protected boolean autoInject = false;
