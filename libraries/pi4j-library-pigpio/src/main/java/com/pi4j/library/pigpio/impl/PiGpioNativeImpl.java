@@ -240,7 +240,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         validateReady();
         validatePin(pin);
         int result = PIGPIO.gpioSetMode(pin, mode.value());
-        logger.trace("[GPIO::MODE-SET] <- PIN: {}; MODE={}({}); SUCCESS={}", mode.name(), mode.value(), (result>=0));
+        logger.trace("[GPIO::MODE-SET] <- PIN: {}; MODE={}({}); SUCCESS={}", pin, mode.name(), mode.value(), (result>=0));
         validateResult(result); // Returns 0 if OK, otherwise PI_BAD_GPIO or PI_BAD_PUD.
     }
 
