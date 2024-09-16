@@ -1454,8 +1454,17 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         Objects.checkFromIndexSize(offset, length, data.length);
         validateHandle(handle);
         // write data array to SPI bus/channel
-        int result = PIGPIO.spiWrite(handle, data, offset, length);
-        logger.trace("[SPI::WRITE] <- HANDLE={}; SUCCESS={}", handle, (result>=0));
+        int result = 0;
+        byte[] someData = Arrays.copyOfRange(data, offset, length);
+        int chunksize = 4096;
+        int start = 0;
+        while (start < someData.length) {
+            int end = Math.min(someData.length, start + chunksize);
+            byte[] chunk = Arrays.copyOfRange(someData, start, end);
+            result += PIGPIO.spiWrite(handle, chunk, 0, chunk.length );
+            logger.trace("[SPI::WRITE] <- HANDLE={}; SUCCESS={}", handle, (result>=0));
+            start += chunksize;
+        }
         validateResult(result, false);
         return result;
     }
