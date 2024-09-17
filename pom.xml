@@ -274,10 +274,10 @@
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
         <maven-bundle-plugin.version>5.1.2</maven-bundle-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
         <maven-gpg-plugin.version>3.2.1</maven-gpg-plugin.version>
-        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
         <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <maven-release-plugin.version>3.0.0-M4</maven-release-plugin.version>
         <maven-resource-plugin.version>3.2.0</maven-resource-plugin.version>
@@ -668,7 +668,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.0.0-M2</version>
+                    <version>3.5.0</version>
                 </plugin>
 
                 <!-- Deploy to Maven plugin -->
