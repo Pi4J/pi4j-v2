@@ -131,11 +131,28 @@ public interface I2C
      */
     default int writeRead(byte[] writeBuffer, int writeSize, int writeOffset, byte[] readBuffer, int readSize,
         int readOffset) {
+
+        // Check bounds for writeBuffer
+        if (writeOffset < 0)
+            throw new IndexOutOfBoundsException("Write offset cannot be negative!");
+        if (writeOffset + writeSize > writeBuffer.length)
+            throw new IndexOutOfBoundsException(
+                String.format("Write operation out of bounds. Write buffer length is %d. Yet write offset + size is=%d",
+                    writeBuffer.length, writeOffset + writeSize));
+
+        // Check bounds for readBuffer
+        if (readOffset < 0)
+            throw new IndexOutOfBoundsException("Read offset cannot be negative!");
+        if (readOffset + readSize > readBuffer.length)
+            throw new IndexOutOfBoundsException(
+                String.format("Read operation out of bounds. Read buffer length is %d. Yet read offset + size is=%d",
+                    readBuffer.length, readOffset + readSize));
+
         return execute(() -> {
             int written = write(writeBuffer, writeOffset, writeSize);
-            if (written != writeOffset)
+            if (written != writeSize)
                 throw new IllegalStateException(
-                    "Expected to write " + writeOffset + " bytes but only wrote " + written + " bytes");
+                    "Expected to write " + writeSize + " bytes but only wrote " + written + " bytes");
             return read(readBuffer, readOffset, readSize);
         });
     }
