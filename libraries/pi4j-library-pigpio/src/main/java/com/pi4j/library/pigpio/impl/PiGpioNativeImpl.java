@@ -33,8 +33,10 @@ import com.pi4j.library.pigpio.internal.PiGpioAlertCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Scanner;
 
 import static com.pi4j.library.pigpio.PiGpioConst.PI_IF_DISABLE_FIFO;
 import static com.pi4j.library.pigpio.PiGpioConst.PI_IF_DISABLE_SOCK;
@@ -48,6 +50,8 @@ import static com.pi4j.library.pigpio.PiGpioConst.PI_TIME_RELATIVE;
  */
 public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private int SPI_BUFFSIZ = 4096;
 
     private static final PiGpioNativeImpl instance;
     static {
@@ -104,6 +108,16 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
             // initialize the PiGpio native library
             result = PIGPIO.gpioInitialise();
             validateResult(result);
+
+            try {
+                Scanner scanner = new Scanner(new File("/sys/module/spidev/parameters/bufsiz"));
+                if (scanner.hasNextInt()) {
+                    SPI_BUFFSIZ = scanner.nextInt();
+                }
+                logger.trace("[INITIALIZE] -> SPI_BUFFSIZ={}", SPI_BUFFSIZ);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
 
             // initialization successful
             this.initialized = true;
@@ -240,7 +254,7 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         validateReady();
         validatePin(pin);
         int result = PIGPIO.gpioSetMode(pin, mode.value());
-        logger.trace("[GPIO::MODE-SET] <- PIN: {}; MODE={}({}); SUCCESS={}", mode.name(), mode.value(), (result>=0));
+        logger.trace("[GPIO::MODE-SET] <- PIN: {}; MODE={}({}); SUCCESS={}", pin, mode.name(), mode.value(), (result>=0));
         validateResult(result); // Returns 0 if OK, otherwise PI_BAD_GPIO or PI_BAD_PUD.
     }
 
@@ -1454,8 +1468,16 @@ public class PiGpioNativeImpl extends PiGpioBase implements PiGpio {
         Objects.checkFromIndexSize(offset, length, data.length);
         validateHandle(handle);
         // write data array to SPI bus/channel
-        int result = PIGPIO.spiWrite(handle, data, offset, length);
-        logger.trace("[SPI::WRITE] <- HANDLE={}; SUCCESS={}", handle, (result>=0));
+        int result = 0;
+        byte[] someData = Arrays.copyOfRange(data, offset, length);
+        int start = 0;
+        while (start < someData.length) {
+            int end = Math.min(someData.length, start + SPI_BUFFSIZ);
+            byte[] chunk = Arrays.copyOfRange(someData, start, end);
+            result += PIGPIO.spiWrite(handle, chunk, 0, chunk.length );
+            logger.trace("[SPI::WRITE] <- HANDLE={}; SUCCESS={}", handle, (result>=0));
+            start += SPI_BUFFSIZ;
+        }
         validateResult(result, false);
         return result;
     }

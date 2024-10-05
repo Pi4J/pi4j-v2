@@ -13,7 +13,7 @@ public class BoardInfoHelper {
     private static final Logger logger = LoggerFactory.getLogger(BoardInfoHelper.class);
 
     private static final BoardInfoHelper instance;
-    private final BoardInfo boardInfo;
+    private BoardInfo boardInfo;
 
     static {
         instance = new BoardInfoHelper();
@@ -30,19 +30,23 @@ public class BoardInfoHelper {
 
         // Example output: c03111
         var boardVersionCode = getBoardVersionCode();
-        var boardModelByBoardCode = BoardModel.getByBoardCode(boardVersionCode);
-        if (boardModelByBoardCode != BoardModel.UNKNOWN) {
-            logger.info("Detected board type {} by code: {}", boardModelByBoardCode.name(), boardVersionCode);
-            this.boardInfo = new BoardInfo(boardModelByBoardCode, os, java);
-            return;
+        try {
+            var boardModelByBoardCode = BoardModel.getByBoardCode(boardVersionCode);
+            if (boardModelByBoardCode != BoardModel.UNKNOWN) {
+                logger.info("Detected board type {} by code: {}", boardModelByBoardCode.name(), boardVersionCode);
+                this.boardInfo = new BoardInfo(boardModelByBoardCode, os, java);
+                return;
+            }
+        } catch (Exception e) {
+            logger.warn("Could not detect the board type for code {}: {}", boardVersionCode, e.getMessage());
         }
 
         // Example output: Raspberry Pi 4 Model B Rev 1.1
         var boardName = getBoardName();
-        boardModelByBoardCode = BoardModel.getByBoardName(boardName);
-        if (boardModelByBoardCode != BoardModel.UNKNOWN) {
-            logger.info("Detected board type {} by name: {}", boardModelByBoardCode.name(), boardName);
-            this.boardInfo = new BoardInfo(boardModelByBoardCode, os, java);
+        var boardModelByBoardName = BoardModel.getByBoardName(boardName);
+        if (boardModelByBoardName != BoardModel.UNKNOWN) {
+            logger.info("Detected board type {} by name: {}", boardModelByBoardName.name(), boardName);
+            this.boardInfo = new BoardInfo(boardModelByBoardName, os, java);
             return;
         }
 

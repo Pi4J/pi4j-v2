@@ -7,6 +7,7 @@ public enum Cpu {
     CORTEX_A72("Cortex-A72"),
     CORTEX_A76("Cortex-A76"),
     CORTEX_MO_PLUS("Cortex-M0+"),
+    CORTEX_M33("Cortex-M33"),
     UNKNOWN("Unknown"),
     ;
 

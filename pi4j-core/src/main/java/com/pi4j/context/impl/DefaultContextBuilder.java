@@ -25,6 +25,7 @@ package com.pi4j.context.impl;
  * #L%
  */
 
+import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.context.Context;
 import com.pi4j.context.ContextBuilder;
 import com.pi4j.context.ContextConfig;
@@ -50,10 +51,11 @@ public class DefaultContextBuilder implements ContextBuilder {
     protected Logger logger = LoggerFactory.getLogger(DefaultContextBuilder.class);
 
     // auto detection flags
-    protected boolean autoDetectMockPlugins = false;
+    protected boolean autoDetectMockPlugins = !BoardInfoHelper.runningOnRaspberryPi();
     protected boolean autoDetectPlatforms = false;
     protected boolean autoDetectProviders = false;
     protected boolean autoInject = false;
+    protected boolean enableShutdownHook = false;
 
     // default platform identifier
     protected String defaultPlatformId = null;
@@ -159,6 +161,20 @@ public class DefaultContextBuilder implements ContextBuilder {
 
     /** {@inheritDoc} */
     @Override
+    public ContextBuilder enableShutdownHook() {
+        this.enableShutdownHook = true;
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public ContextBuilder disableShutdownHook() {
+        this.enableShutdownHook = false;
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public ContextBuilder property(String key, String value){
         this.properties.put(key, value);
         return this;
@@ -258,9 +274,15 @@ public class DefaultContextBuilder implements ContextBuilder {
             public boolean autoDetectMockPlugins() {
                 return builder.autoDetectMockPlugins;
             }
+
             @Override
             public boolean autoDetectPlatforms() {
                 return builder.autoDetectPlatforms;
+            }
+
+            @Override
+            public boolean enableShutdownHook() {
+                return builder.enableShutdownHook;
             }
 
             @Override
