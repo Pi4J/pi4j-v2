@@ -34,6 +34,7 @@ module com.pi4j.plugin.linuxfs {
     requires com.pi4j;
     requires com.pi4j.library.linuxfs;
     requires jsch;
+    requires com.sun.jna;
 
     exports com.pi4j.plugin.linuxfs;
     exports com.pi4j.plugin.linuxfs.provider.gpio.digital;
