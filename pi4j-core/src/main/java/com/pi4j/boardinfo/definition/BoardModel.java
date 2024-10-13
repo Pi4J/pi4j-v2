@@ -169,6 +169,15 @@ public enum BoardModel {
         Cpu.CORTEX_A72, 4,
         Collections.singletonList(1500),
         Arrays.asList(1024 * 1024, 2048 * 1024, 4096 * 1024, 8192 * 1024)),
+    RPI_COMPUTE_4("Raspberry Pi Compute Module 4", STACK_ON_COMPUTER,
+        Arrays.asList("a03140", "b03140", "c03140", "d03140", "a03141", "b03141", "c03141", "d03141"),
+        PiModel.COMPUTE,
+        HeaderVersion.COMPUTE,
+        LocalDate.of(2020, 10, 1),
+        Soc.BCM2711,
+        Cpu.CORTEX_A72, 4,
+        Collections.singletonList(1500),
+        Arrays.asList(1024 * 1024, 2048 * 1024, 4096 * 1024, 8192 * 1024)),
     // https://datasheets.raspberrypi.com/cm4s/cm4s-datasheet.pdf
     COMPUTE_4_SODIMM("Compute Module 4 SODIMM", STACK_ON_COMPUTER,
         new ArrayList<>(), // Not known yet
