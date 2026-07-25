@@ -10,12 +10,11 @@ import com.pi4j.util.Frequency;
 /**
  * Represents a single PWM (Pulse Width Modulation) I/O instance, generating a
  * square-wave signal with a configurable frequency and duty-cycle. A {@code Pwm}
- * is created by a {@link PwmProvider} from a {@link PwmConfig} and supports both
+ * is created from a {@link PwmConfig} and supports both
  * hardware and software generators (see {@link PwmType}). As an {@link OnOff}
- * device it can be enabled and disabled, and pre-defined frequency/duty-cycle
- * combinations can be stored and recalled as {@link PwmPreset} instances.
+ * device it can be enabled and disabled.
  */
-public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider>, OnOff<Pwm> {
+public interface Pwm extends IO<Pwm, PwmConfig>, OnOff<Pwm> {
 
     /** Multiplier for expressing a frequency in megahertz (cycles per second). */
     static final long MEGAHERTZ = Frequency.MEGAHERTZ;

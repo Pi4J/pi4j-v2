@@ -5,7 +5,6 @@ import com.pi4j.exception.InitializeException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CBase;
 import com.pi4j.io.i2c.I2CConfig;
-import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.plugin.ffm.common.file.FileDescriptorNative;
 import com.pi4j.plugin.ffm.providers.i2c.FFMI2CBus;
 import org.slf4j.Logger;
@@ -32,12 +31,11 @@ public class I2CFile extends I2CBase<FFMI2CBus> {
     /**
      * Creates a file-based I2C device bound to the given bus.
      *
-     * @param provider the {@link I2CProvider} that created this instance
      * @param config   the I2C configuration carrying the bus number and target slave device address
      * @param i2CBus   the shared {@link FFMI2CBus} wrapping the open {@code /dev/i2c-N} file descriptor
      */
-    public I2CFile(I2CProvider provider, I2CConfig config, FFMI2CBus i2CBus) {
-        super(provider, config, i2CBus);
+    public I2CFile(I2CConfig config, FFMI2CBus i2CBus) {
+        super(config, i2CBus);
     }
 
     /**

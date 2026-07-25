@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * {@code blink} behaviour. Concrete providers extend this class and override {@link #state(DigitalState)} to
  * actually drive the hardware.
  */
-public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, DigitalOutputConfig, DigitalOutputProvider> implements DigitalOutput {
+public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, DigitalOutputConfig> implements DigitalOutput {
 
     /** The current cached state of this output; {@link DigitalState#UNKNOWN} until first set. */
     protected DigitalState state = DigitalState.UNKNOWN;
@@ -24,11 +24,10 @@ public abstract class DigitalOutputBase extends DigitalBase<DigitalOutput, Digit
     /**
      * Creates a new digital output bound to the given provider and configuration.
      *
-     * @param provider the provider that created and manages this output instance
      * @param config   the configuration describing the pin address, initial state, shutdown state and identity
      */
-    public DigitalOutputBase(DigitalOutputProvider provider, DigitalOutputConfig config) {
-        super(provider, config);
+    public DigitalOutputBase(DigitalOutputConfig config) {
+        super(config);
     }
 
     /**

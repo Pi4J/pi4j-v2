@@ -2,18 +2,13 @@ package com.pi4j.plugin.ffm.common;
 
 import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.IOConfig;
+import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.plugin.ffm.common.permission.PermissionNative;
-import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalInputProviderImpl;
-import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalOutputProviderImpl;
-import com.pi4j.plugin.ffm.providers.i2c.FFMI2CProviderImpl;
-import com.pi4j.plugin.ffm.providers.pwm.FFMPwmProviderImpl;
-import com.pi4j.plugin.ffm.providers.spi.FFMSpiProviderImpl;
-import com.pi4j.provider.ProviderBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +55,7 @@ public class FFMPermissionHelper {
      * @throws Pi4JException if no matching group exists on the system, if the current user does not
      *                       belong to one, or if the provider type is not recognized
      */
-    public static void checkUserPermissions(ProviderBase<?, ?, ?> provider) {
+    public static void checkUserPermissions(IOType ioType) {
         // check if running with sudo
         // all access should be good, but this is not safe!
         if (RUN_AS_SUDO) {
@@ -109,12 +104,11 @@ public class FFMPermissionHelper {
         }
 
         // checking groups existence and user belonging to the groups
-        switch (provider) {
-            case FFMDigitalInputProviderImpl _, FFMDigitalOutputProviderImpl _, FFMPwmProviderImpl _ ->
+        switch (ioType) {
+            case DIGITAL_INPUT, DIGITAL_OUTPUT, PWM ->
                 checkGroups(osGroups, userGroups, "gpio", "dialout");
-            case FFMI2CProviderImpl _ -> checkGroups(osGroups, userGroups, "i2c");
-            case FFMSpiProviderImpl _ -> checkGroups(osGroups, userGroups, "spi");
-            default -> throw new Pi4JException("Unknown provider " + provider);
+            case I2C -> checkGroups(osGroups, userGroups, "i2c");
+            case SPI -> checkGroups(osGroups, userGroups, "spi");
         }
     }
 

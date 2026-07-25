@@ -9,12 +9,7 @@ import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.LifecycleException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.extension.Plugin;
-import com.pi4j.extension.impl.DefaultPluginService;
-import com.pi4j.extension.impl.PluginStore;
 import com.pi4j.io.IO;
-import com.pi4j.io.IOType;
-import com.pi4j.provider.Provider;
-import com.pi4j.provider.Providers;
 import com.pi4j.registry.Registry;
 import com.pi4j.util.ExecutorPool;
 import org.slf4j.Logger;
@@ -25,14 +20,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public class DefaultContext implements Context {
+public abstract class DefaultContext implements Context {
 
+    private static final Logger classLogger = LoggerFactory.getLogger(DefaultContext.class);
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private ContextConfig config = null;
     private BoardInfo boardInfo = null;
 
-    private final MutableProviders mutableProviders = new MutableProviders(this);
     private final List<Plugin> plugins = new ArrayList<>();
     private final EventManager<Context, ShutdownListener, ShutdownEvent> shutdownEventManager =new EventManager(this,
         (EventDelegate<ShutdownListener, ShutdownEvent>) (listener, event) -> listener.onShutdown(event));
@@ -46,7 +41,34 @@ public class DefaultContext implements Context {
     private volatile boolean isShutdown = false;
 
     public static Context newInstance(ContextConfig config) {
-        return new DefaultContext(config);
+        // only attempt to load platforms and providers from the classpath if an auto detect option is enabled
+        if (!config.autoDetectProviders() && !config.autoDetectMockPlugins()) {
+            throw new InitializeException("No auto-detection options enabled for Pi4J runtime context.");
+        }
+        try {
+            // detect available Pi4J Plugins by scanning the classpath looking for plugin instances
+            ServiceLoader<Plugin> serviceLoaderPlugins = ServiceLoader.load(Plugin.class);
+            for (Plugin plugin : serviceLoaderPlugins) {
+                if (plugin == null)
+                    continue;
+
+                try {
+                    // if auto-detect providers is enabled,
+                    //    OR
+                    // Detecting Mocks is enabled and this is a mock plugin
+                    // then add any detected providers to the collection to load
+                    if (config.autoDetectProviders() || (config.autoDetectMockPlugins() && plugin.isMock())) {
+                        return plugin.createContext(config);
+                    }
+                } catch (Exception ex) {
+                    // unable to initialize this provider instance
+                    classLogger.error("unable to 'initialize()' plugin: [{}]; {}", plugin.getClass().getName(), ex.getMessage(), ex);
+                }
+            }
+        } catch (Exception e) {
+            throw new InitializeException(e);
+        }
+        throw new InitializeException("No plugins found for Pi4J runtime context.");
     }
 
     /**
@@ -85,68 +107,7 @@ public class DefaultContext implements Context {
         logger.info("With Java version: {}", boardInfo.getJavaInfo());
 
         // initialize runtime now
-        logger.info("Initializing Pi4J context/runtime...");
-        try {
-            // clear plugins container
-            plugins.clear();
 
-            // container sets for providers to load
-            Map<IOType, Provider> providers = new HashMap<>();
-
-            // only attempt to load platforms and providers from the classpath if an auto detect option is enabled
-            if (config.autoDetectProviders()) {
-
-                // detect available Pi4J Plugins by scanning the classpath looking for plugin instances
-                ServiceLoader<Plugin> serviceLoaderPlugins = ServiceLoader.load(Plugin.class);
-                for (Plugin plugin : serviceLoaderPlugins) {
-                    if (plugin == null)
-                        continue;
-
-                    if (!config.autoDetectMockPlugins() && plugin.isMock()) {
-                        logger.trace("Ignoring mock plugin: [{}] in classpath", plugin.getClass().getName());
-                        continue;
-                    }
-
-                    logger.trace("detected plugin: [{}] in classpath; calling 'initialize()'",
-                        plugin.getClass().getName());
-                    try {
-                        // add plugin to internal cache
-                        this.plugins.add(plugin);
-
-                        PluginStore store = new PluginStore();
-                        plugin.initialize(DefaultPluginService.newInstance(this, store));
-
-                        // if auto-detect providers is enabled,
-                        //    OR
-                        // Detecting Mocks is enabled and this is a mock plugin
-                        // then add any detected providers to the collection to load
-                        if (config.autoDetectProviders() ||  (config.autoDetectMockPlugins() && plugin.isMock())) {
-                            store.providers.forEach(provider -> addProvider(provider, providers));
-                        }
-
-                    } catch (Exception ex) {
-                        // unable to initialize this provider instance
-                        logger.error("unable to 'initialize()' plugin: [{}]; {}", plugin.getClass().getName(),
-                            ex.getMessage(), ex);
-                    }
-                }
-            }
-
-            config().getProviders().forEach(provider -> {
-                Provider replaced = providers.put(provider.getType(), provider);
-                if (replaced != null) {
-                    logger.info("Replacing auto detected provider {} {} with provider {} from context config",
-                        replaced.getType(), replaced.getName(), provider.getName());
-                }
-            });
-
-            // initialize all providers
-            this.mutableProviders.initialize(providers.values());
-
-        } catch (Exception e) {
-            logger.error("failed to 'initialize(); '", e);
-            throw new InitializeException(e);
-        }
 
         logger.info("Pi4J context/runtime successfully initialized.");
 
@@ -156,40 +117,8 @@ public class DefaultContext implements Context {
         logger.debug("Pi4J runtime context successfully created & initialized.");
     }
 
-    /**
-     * <p>Adds providers to the given collection, to later be used in the runtime after initialization.</p>
-     * <p>This method validates the priority of a {@link Provider}, and guarantees, that we don't have multiple
-     * providers for the same {@link IOType}</p>
-     *
-     * @param provider
-     * @param providers
-     */
-    private void addProvider(Provider provider, Map<IOType, Provider> providers) {
-        if (!providers.containsKey(provider.getType())) {
-            providers.put(provider.getType(), provider);
-        } else {
-            Provider existingProvider = providers.get(provider.getType());
-            if (provider.getPriority() <= existingProvider.getPriority()) {
-                if (existingProvider.getName().equals(provider.getName()))
-                    throw new InitializeException(
-                        provider.getType() + " with name " + provider.getName() + " (" + provider.getId() + ") is already registered.");
-                logger.info("Ignoring provider {} {} ({}) with priority {} as lower priority than {} which has priority {}",
-                    provider.getType(), provider.getName(), provider.getId(), provider.getPriority(),
-                    existingProvider.getName(), existingProvider.getPriority());
-            } else {
-                logger.info("Replacing provider {} {} ({}) with priority {} with provider {} ({}) with higher priority {}",
-                    existingProvider.getType(), existingProvider.getName(), existingProvider.getId(), existingProvider.getPriority(),
-                    provider.getName(), provider.getId(), provider.getPriority());
-                providers.put(provider.getType(), provider);
-            }
-        }
-    }
-
     @Override
     public ContextConfig config() { return this.config; }
-
-    @Override
-    public Providers providers() { return mutableProviders; }
 
     @Override
     public Registry registry() { return this.mutableRegistry; }
@@ -222,18 +151,6 @@ public class DefaultContext implements Context {
 
             // remove all I/O instances
             this.mutableRegistry.shutdown();
-
-            // shutdown all providers
-            this.mutableProviders.shutdown();
-
-            // shutdown all plugins
-            for (Plugin plugin : this.plugins) {
-                try {
-                    plugin.shutdown(this);
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
 
             // shutdown executor pool
             this.executorPool.destroy();

@@ -6,7 +6,7 @@ import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfigBuilder;
 import com.pi4j.io.i2c.I2CImplementation;
 import com.pi4j.plugin.BaseSetup;
-import com.pi4j.plugin.ffm.providers.i2c.FFMI2CProviderImpl;
+import com.pi4j.plugin.ffm.providers.i2c.FFMI2CFactory;
 import org.openjdk.jmh.annotations.*;
 
 import java.io.IOException;
@@ -28,10 +28,8 @@ public class I2CFilePerformanceTest extends BaseSetup {
     @Setup
     public void setup() throws InterruptedException, IOException {
         setup("i2c");
-        this.pi4j = Pi4J.newContextBuilder()
-            .add(new FFMI2CProviderImpl())
-            .build();
-        this.i2c = pi4j.i2c().create(I2CConfigBuilder.newInstance()
+        this.pi4j = Pi4J.newAutoContext();
+        this.i2c = pi4j.create(I2CConfigBuilder.newInstance()
             .bus(99)
             .device(0x1C)
             .i2cImplementation(I2CImplementation.FILE));

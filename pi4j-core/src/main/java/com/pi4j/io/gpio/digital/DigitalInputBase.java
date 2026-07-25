@@ -5,14 +5,13 @@ package com.pi4j.io.gpio.digital;
  * with the digital-input type parameters. Provider-specific subclasses extend this to supply the
  * actual hardware or expander read behaviour.
  */
-public abstract class DigitalInputBase extends DigitalBase<DigitalInput, DigitalInputConfig, DigitalInputProvider> implements DigitalInput {
+public abstract class DigitalInputBase extends DigitalBase<DigitalInput, DigitalInputConfig> implements DigitalInput {
     /**
      * Creates a digital input bound to the given provider and configuration.
      *
-     * @param provider the {@link DigitalInputProvider} responsible for this input's underlying I/O
      * @param config the configuration describing this input (pin, pull resistance, debounce, etc.)
      */
-    public DigitalInputBase(DigitalInputProvider provider, DigitalInputConfig config){
-        super(provider, config);
+    public DigitalInputBase(DigitalInputConfig config){
+        super(config);
     }
 }

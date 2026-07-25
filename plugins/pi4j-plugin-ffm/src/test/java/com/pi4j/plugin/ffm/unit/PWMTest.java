@@ -7,7 +7,6 @@ import com.pi4j.io.pwm.PwmType;
 import com.pi4j.plugin.ffm.common.FFMPermissionHelper;
 import com.pi4j.plugin.ffm.mocks.FileDescriptorNativeMock;
 import com.pi4j.plugin.ffm.mocks.PermissionHelperMock;
-import com.pi4j.plugin.ffm.providers.pwm.FFMPwmProviderImpl;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -22,9 +21,7 @@ public class PWMTest {
 
     @BeforeAll
     public static void setup() {
-        pi4j = Pi4J.newContextBuilder()
-            .add(new FFMPwmProviderImpl())
-            .build();
+        pi4j = Pi4J.newAutoContext();
 
     }
 
@@ -42,7 +39,7 @@ public class PWMTest {
         var pwmPeriod = new FileDescriptorNativeMock.FileDescriptorTestData("/sys/class/pwm/pwmchip0/pwm0/period", 4, ("1").getBytes());
         try (var _ = FileDescriptorNativeMock.setup(pwmEnable, pwmDutyCycle, pwmPolarity, pwmPeriod)) {
 
-            pi4j.pwm().create(PwmConfigBuilder.newInstance(pi4j)
+            pi4j.create(PwmConfigBuilder.newInstance(pi4j)
                 .pwmType(PwmType.HARDWARE)
                 .chip(0)
                 .channel(0)
@@ -60,7 +57,7 @@ public class PWMTest {
         var pwmPolarity = new FileDescriptorNativeMock.FileDescriptorTestData(path + "/polarity", 3, ("normal").getBytes());
         var pwmPeriod = new FileDescriptorNativeMock.FileDescriptorTestData(path + "/period", 4, ("1").getBytes());
         try (var _ = FileDescriptorNativeMock.setup(pwmEnable, pwmDutyCycle, pwmPolarity, pwmPeriod)) {
-            var pwm = pi4j.pwm().create(PwmConfigBuilder.newInstance(pi4j)
+            var pwm = pi4j.create(PwmConfigBuilder.newInstance(pi4j)
                 .pwmType(PwmType.HARDWARE)
                 .chip(chip)
                 .channel(channel)
@@ -85,7 +82,7 @@ public class PWMTest {
         var pwmPeriod = new FileDescriptorNativeMock.FileDescriptorTestData(path + "/period", 4, ("1").getBytes());
 
         try (var _ = FileDescriptorNativeMock.setup(pwmEnable, pwmDutyCycle, pwmPolarity, pwmPeriod)) {
-            var pwm = pi4j.pwm().create(PwmConfigBuilder.newInstance(pi4j)
+            var pwm = pi4j.create(PwmConfigBuilder.newInstance(pi4j)
                 .pwmType(PwmType.HARDWARE)
                 .chip(chip)
                 .channel(channel)

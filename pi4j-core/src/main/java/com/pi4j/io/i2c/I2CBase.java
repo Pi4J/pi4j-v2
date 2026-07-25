@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
  *
  * @param <T> the concrete {@link I2CBus} type this device communicates over
  */
-public abstract class I2CBase<T extends I2CBus> extends IOBase<I2C, I2CConfig, I2CProvider> implements I2C {
+public abstract class I2CBase<T extends I2CBus> extends IOBase<I2C, I2CConfig> implements I2C {
 
     protected boolean isOpen;
     protected final T i2CBus;
@@ -22,12 +22,11 @@ public abstract class I2CBase<T extends I2CBus> extends IOBase<I2C, I2CConfig, I
     /**
      * Creates an I2C device bound to the given provider, configuration and bus, marking it as open.
      *
-     * @param provider the provider that created this device
      * @param config   the configuration describing the bus and device address
      * @param i2CBus   the bus instance used to serialize access for this device
      */
-    public I2CBase(I2CProvider provider, I2CConfig config, T i2CBus) {
-        super(provider, config);
+    public I2CBase(I2CConfig config, T i2CBus) {
+        super(config);
         this.isOpen = true;
         this.i2CBus = i2CBus;
     }

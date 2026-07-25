@@ -6,12 +6,11 @@ import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfigBuilder;
 import com.pi4j.io.i2c.I2CImplementation;
 import com.pi4j.plugin.BaseSetup;
-import com.pi4j.plugin.ffm.providers.i2c.FFMI2CProviderImpl;
+import com.pi4j.plugin.ffm.providers.i2c.FFMI2CFactory;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
@@ -28,10 +27,8 @@ public class I2CSMBusTest extends BaseSetup {
     public static void setup() throws InterruptedException, IOException {
         setup("i2c");
 
-        pi4j = Pi4J.newContextBuilder()
-            .add(new FFMI2CProviderImpl())
-            .build();
-        i2c = pi4j.i2c()
+        pi4j = Pi4J.newAutoContext();
+        i2c = pi4j
             .create(I2CConfigBuilder.newInstance()
                 .bus(99)
                 .device(0x1C)

@@ -8,7 +8,6 @@ module com.pi4j.test {
     requires org.slf4j.simple;
 
     uses com.pi4j.extension.Extension;
-    uses com.pi4j.provider.Provider;
 
     // Pi4J Mock Platform and Providers
     requires com.pi4j.plugin.mock;

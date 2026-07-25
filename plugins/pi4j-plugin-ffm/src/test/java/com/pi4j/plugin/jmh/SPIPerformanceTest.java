@@ -6,7 +6,6 @@ import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiBus;
 import com.pi4j.io.spi.SpiConfigBuilder;
 import com.pi4j.plugin.BaseSetup;
-import com.pi4j.plugin.ffm.providers.spi.FFMSpiProviderImpl;
 import org.openjdk.jmh.annotations.*;
 
 import java.io.IOException;
@@ -29,16 +28,14 @@ public class SPIPerformanceTest extends BaseSetup {
     @Setup
     public void setup() throws InterruptedException, IOException {
         setup("spi");
-        this.pi4j = Pi4J.newContextBuilder()
-            .add(new FFMSpiProviderImpl())
-            .build();
+        this.pi4j = Pi4J.newAutoContext();
         var config = SpiConfigBuilder.newInstance()
             .bus(SpiBus.BUS_0)
             .channel(0)
             .mode(0)
             .baud(50_000)
             .build();
-        this.spi = pi4j.spi().create(config);
+        this.spi = pi4j.create(config);
     }
 
     @TearDown

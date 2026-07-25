@@ -6,7 +6,6 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.plugin.BaseSetup;
-import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalOutputProviderImpl;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -28,11 +27,11 @@ public class GPIOOutputPerformanceTest extends BaseSetup {
     @Setup
     public void setup() throws InterruptedException, IOException {
         setup("gpio");
-        this.pi4j = Pi4J.newContextBuilder().add(new FFMDigitalOutputProviderImpl()).setGpioChipName("gpiochip2").build();
+        this.pi4j = Pi4J.newAutoContext();
         var config = DigitalOutputConfigBuilder.newInstance()
             .bcm(5)
             .build();
-        this.pin = pi4j.digitalOutput().create(config);
+        this.pin = pi4j.create(config);
     }
 
     @TearDown

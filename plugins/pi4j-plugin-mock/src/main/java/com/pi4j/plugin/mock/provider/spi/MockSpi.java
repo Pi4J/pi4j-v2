@@ -3,7 +3,6 @@ package com.pi4j.plugin.mock.provider.spi;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiBase;
 import com.pi4j.io.spi.SpiConfig;
-import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.plugin.mock.Mock;
 import com.pi4j.util.StringUtil;
 import org.slf4j.Logger;
@@ -32,11 +31,10 @@ public class MockSpi extends SpiBase implements Spi {
      * Creates a mock SPI instance for the given provider and configuration, logging the simulated
      * open with the configured channel and baud rate.
      *
-     * @param provider the {@link SpiProvider} that created this instance
      * @param config   the {@link SpiConfig} describing the SPI channel and baud rate
      */
-    public MockSpi(SpiProvider provider, SpiConfig config) {
-        super(provider, config);
+    public MockSpi(SpiConfig config) {
+        super(config);
         logPreamble = "[" + Mock.SPI_PROVIDER_NAME + "::" + this.id + "] ::";
         logger.info("{} OPEN(CHANNEL={}; BAUD={})", logPreamble, config.channel(), config.baud());
     }

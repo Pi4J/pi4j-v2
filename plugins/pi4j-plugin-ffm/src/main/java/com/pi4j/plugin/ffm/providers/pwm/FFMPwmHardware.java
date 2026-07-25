@@ -61,12 +61,26 @@ public class FFMPwmHardware extends PwmBase implements Pwm {
      * that the corresponding {@code /sys/class/pwm/pwmchipN} path is accessible with the required
      * permissions.
      *
-     * @param provider the {@link PwmProvider} that created this instance
      * @param config   the PWM configuration supplying the chip number, channel and optional initial
      *                 duty cycle, polarity and frequency
      */
-    public FFMPwmHardware(PwmProvider provider, PwmConfig config) {
-        super(provider, config);
+    public FFMPwmHardware(PwmConfig config) {
+        super(config);
+
+        if (config.pwmType() != PwmType.HARDWARE) {
+            throw new IOException("The FFM PWM provider only supports HARDWARE PWM");
+        }
+
+        // validate the config
+        if (config.chip() == null || config.channel() == null) {
+            throw new IllegalArgumentException("PWM Chip and Channel are needed for hardware PWM with the FFM I/O provider");
+        }
+
+        // Warn for unneeded config
+        if (config.pwmType() == PwmType.HARDWARE && config.bcm() != null) {
+            logger.warn("You specified a BCM value for the PWM, but this is not needed for hardware PWM. Please specify chip and channel instead.");
+        }
+
         this.chip = config.chip();
         this.channel = config.channel();
         FFMPermissionHelper.checkDevicePermissions(CHIP_PATH + chip, config);

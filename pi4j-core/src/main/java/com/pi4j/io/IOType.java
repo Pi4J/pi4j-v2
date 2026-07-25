@@ -5,14 +5,10 @@ import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.digital.*;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CConfigBuilder;
-import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmConfigBuilder;
-import com.pi4j.io.pwm.PwmProvider;
 import com.pi4j.io.spi.Spi;
-import com.pi4j.io.spi.SpiProvider;
-import com.pi4j.provider.Provider;
 
 import java.lang.reflect.Method;
 
@@ -20,45 +16,33 @@ import java.lang.reflect.Method;
  * Enumeration of the I/O categories supported by Pi4J.
  * <p>
  * Each constant binds together the four classes that make up one kind of I/O: its
- * {@link Provider}, its {@link IO} interface, its {@link IOConfig} and its {@link IOConfigBuilder}.
+ * {@link IO} interface, its {@link IOConfig} and its {@link IOConfigBuilder}.
  * It is used throughout the runtime to resolve providers, build configurations and classify
  * {@link IO} instances by their concrete type.
  */
 public enum IOType {
 
     /** Digital input pin (reads a logic HIGH/LOW state). */
-    DIGITAL_INPUT(DigitalInputProvider.class, DigitalInput.class, DigitalInputConfig.class, DigitalInputConfigBuilder.class),
+    DIGITAL_INPUT(DigitalInput.class, DigitalInputConfig.class, DigitalInputConfigBuilder.class),
     /** Digital output pin (drives a logic HIGH/LOW state). */
-    DIGITAL_OUTPUT(DigitalOutputProvider.class, DigitalOutput.class, DigitalOutputConfig.class, DigitalOutputConfigBuilder.class),
+    DIGITAL_OUTPUT(DigitalOutput.class, DigitalOutputConfig.class, DigitalOutputConfigBuilder.class),
     /** Pulse-width modulation output. */
-    PWM(PwmProvider.class, Pwm.class, PwmConfig.class, PwmConfigBuilder.class),
+    PWM(Pwm.class, PwmConfig.class, PwmConfigBuilder.class),
     /** I2C (Inter-Integrated Circuit) bus device. */
-    I2C(I2CProvider.class, com.pi4j.io.i2c.I2C.class, I2CConfig.class, I2CConfigBuilder.class),
+    I2C(com.pi4j.io.i2c.I2C.class, I2CConfig.class, I2CConfigBuilder.class),
     /** SPI (Serial Peripheral Interface) bus device. */
-    SPI(SpiProvider.class, Spi.class, I2CConfig.class, I2CConfigBuilder.class);
+    SPI(Spi.class, I2CConfig.class, I2CConfigBuilder.class);
 
-    private Class<? extends Provider> providerClass;
     private Class<? extends IO> ioClass;
     private Class<? extends IOConfig> configClass;
     private Class<? extends IOConfigBuilder> configBuilderClass;
 
-    IOType(Class<? extends Provider> providerClass,
-           Class<? extends IO> ioClass,
+    IOType(Class<? extends IO> ioClass,
            Class<? extends IOConfig> configClass,
            Class<? extends IOConfigBuilder> configBuilderClass) {
-        this.providerClass = providerClass;
         this.ioClass = ioClass;
         this.configClass = configClass;
         this.configBuilderClass = configBuilderClass;
-    }
-
-    /**
-     * Returns the {@link Provider} interface class associated with this I/O type.
-     *
-     * @return the provider class for this type
-     */
-    public Class<? extends Provider> getProviderClass() {
-        return providerClass;
     }
 
     /**
@@ -132,21 +116,6 @@ public enum IOType {
     }
 
     /**
-     * Returns the {@link Provider} class for the given I/O type.
-     *
-     * @param type the I/O type to look up
-     * @return the provider class, or {@code null} if {@code type} is not recognized
-     */
-    public static Class<? extends Provider> getProviderClass(IOType type) {
-        for (var typeInstance : IOType.values()) {
-            if (typeInstance.equals(type)) {
-                return typeInstance.getProviderClass();
-            }
-        }
-        return null;
-    }
-
-    /**
      * Returns the {@link IOConfig} class for the given I/O type.
      *
      * @param type the I/O type to look up
@@ -170,31 +139,6 @@ public enum IOType {
     public static IOType getByProviderClass(String name) {
         for (var type : IOType.values()) {
             if (type.name().equalsIgnoreCase(name)) {
-                return type;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Returns the I/O type reported by the given provider.
-     *
-     * @param provider the provider to query
-     * @return the provider's I/O type
-     */
-    public static IOType getByIO(Provider provider) {
-        return provider.type();
-    }
-
-    /**
-     * Returns the I/O type whose provider interface is assignable from the given provider class.
-     *
-     * @param providerClass the provider implementation class to classify
-     * @return the matching I/O type, or {@code null} if none matches
-     */
-    public static IOType getByProviderClass(Class<? extends Provider> providerClass) {
-        for (var type : IOType.values()) {
-            if (type.getProviderClass().isAssignableFrom(providerClass)) {
                 return type;
             }
         }

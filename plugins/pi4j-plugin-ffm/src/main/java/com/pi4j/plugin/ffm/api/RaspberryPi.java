@@ -16,10 +16,7 @@ import com.pi4j.io.pwm.PwmPolarity;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiMode;
-import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalInputProviderImpl;
-import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalOutputProviderImpl;
-import com.pi4j.plugin.ffm.providers.i2c.FFMI2CProviderImpl;
-import com.pi4j.plugin.ffm.providers.pwm.FFMPwmProviderImpl;
+import com.pi4j.plugin.ffm.providers.i2c.FFMI2CFactory;
 
 /**
  * Board-family facade grouping the Raspberry Pi board models supported by the FFM plugin. Concrete
@@ -44,14 +41,7 @@ public interface RaspberryPi extends Pi4JApi.API {
          * through {@link Pi4JApi#board(Class)}.
          */
         Model4B() {
-            this.context = Pi4J.newContextBuilder()
-                .add(
-                    new FFMDigitalOutputProviderImpl(),
-                    new FFMDigitalInputProviderImpl(),
-                    new FFMI2CProviderImpl(),
-                    new FFMPwmProviderImpl()
-                )
-                .build();
+            this.context = Pi4J.newAutoContext();
         }
 
         /**

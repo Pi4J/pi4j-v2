@@ -1,13 +1,11 @@
 package com.pi4j.test.provider.impl;
 
 import com.pi4j.io.exception.IOAlreadyExistsException;
-import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.io.gpio.digital.DigitalInputConfig;
-import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
+import com.pi4j.io.gpio.digital.*;
 import com.pi4j.test.provider.TestDigitalInput;
 import com.pi4j.test.provider.TestDigitalInputProvider;
 
-public class TestDigitalInputProviderImpl extends DigitalInputProviderBase implements TestDigitalInputProvider {
+public class TestDigitalInputProviderImpl extends DigitalProviderBase<DigitalInputProvider, DigitalInput, DigitalInputConfig> implements TestDigitalInputProvider, DigitalInputProvider {
 
     public TestDigitalInputProviderImpl() {
         super();

@@ -1,14 +1,10 @@
 package com.pi4j.context;
 
-import com.pi4j.provider.Provider;
-
-import java.util.Collection;
 
 /**
  * Immutable, read-only view of the settings used to create a Pi4J {@link Context}. Produced by a
  * {@link ContextBuilder} (via {@link ContextBuilder#toConfig()}) and exposed through {@link Context#config()},
- * it captures auto-detection flags, the default platform, the manually added {@link Provider}s and the
- * user-supplied properties.
+ * it captures auto-detection flags, the default platform and the user-supplied properties.
  *
  * @see ContextBuilder
  * @see Context
@@ -28,26 +24,6 @@ public interface ContextConfig {
      * @return {@code true} if the shutdown hook is enabled, {@code false} otherwise
      */
     boolean enableShutdownHook();
-
-    // **************************************************
-    // PROVIDERS
-    // **************************************************
-    /**
-     * Returns the providers that were explicitly added to the configuration (independent of any
-     * auto-detected providers).
-     *
-     * @return the collection of manually configured {@link Provider}s
-     */
-    Collection<Provider> providers();
-
-    /**
-     * Bean-style accessor for {@link #providers()}.
-     *
-     * @return the collection of manually configured {@link Provider}s
-     */
-    default Collection<Provider> getProviders(){
-        return providers();
-    }
 
     /**
      * Indicates whether provider implementations should be auto-detected on the classpath.

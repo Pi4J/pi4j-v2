@@ -11,7 +11,6 @@ import com.pi4j.plugin.ffm.mocks.FileDescriptorNativeMock;
 import com.pi4j.plugin.ffm.mocks.FileDescriptorNativeMock.FileDescriptorTestData;
 import com.pi4j.plugin.ffm.mocks.IoctlNativeMock;
 import com.pi4j.plugin.ffm.mocks.PermissionHelperMock;
-import com.pi4j.plugin.ffm.providers.spi.FFMSpiProviderImpl;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,9 +33,7 @@ public class SPITest {
 
     @BeforeAll
     public static void setup() {
-        pi4j = Pi4J.newContextBuilder()
-            .add(new FFMSpiProviderImpl())
-            .build();
+        pi4j = Pi4J.newAutoContext();
 
     }
 
@@ -51,7 +48,7 @@ public class SPITest {
         try (var _ = FileDescriptorNativeMock.setup();
              var _ = IoctlNativeMock.setup()) {
 
-            pi4j.spi().create(SpiConfigBuilder.newInstance()
+            pi4j.create(SpiConfigBuilder.newInstance()
                 .bus(SpiBus.BUS_0)
                 .channel(0)
                 .mode(0)
@@ -69,7 +66,7 @@ public class SPITest {
         try (var _ = FileDescriptorNativeMock.setup();
              var _ = IoctlNativeMock.setup(spiTestData)) {
 
-            var spi = pi4j.spi().create(SpiConfigBuilder.newInstance()
+            var spi = pi4j.create(SpiConfigBuilder.newInstance()
                 .bus(SpiBus.BUS_0)
                 .channel(1)
                 .mode(0)
@@ -97,7 +94,7 @@ public class SPITest {
         try (var _ = FileDescriptorNativeMock.setup();
              var _ = IoctlNativeMock.setup(spiTestData)) {
 
-            var spi = pi4j.spi().create(SpiConfigBuilder.newInstance()
+            var spi = pi4j.create(SpiConfigBuilder.newInstance()
                 .bus(SpiBus.BUS_0)
                 .channel(2)
                 .mode(0)
@@ -123,7 +120,7 @@ public class SPITest {
         try (var _ = FileDescriptorNativeMock.setup();
              var _ = IoctlNativeMock.setup(spiTestData)) {
 
-            var spi = pi4j.spi().create(SpiConfigBuilder.newInstance()
+            var spi = pi4j.create(SpiConfigBuilder.newInstance()
                 .bus(SpiBus.BUS_0)
                 .channel(3)
                 .mode(0)
@@ -147,7 +144,7 @@ public class SPITest {
         });
         try (var _ = FileDescriptorNativeMock.setup();
              var _ = IoctlNativeMock.setup(spiTestData)) {
-            var spi = pi4j.spi().create(SpiConfigBuilder.newInstance()
+            var spi = pi4j.create(SpiConfigBuilder.newInstance()
                 .bus(SpiBus.BUS_0)
                 .channel(4)
                 .mode(0)
@@ -175,7 +172,7 @@ public class SPITest {
         try (var _ = FileDescriptorNativeMock.setup(bufsiz);
              var _ = IoctlNativeMock.setup(spiTestData)) {
 
-            var spi = pi4j.spi().create(SpiConfigBuilder.newInstance()
+            var spi = pi4j.create(SpiConfigBuilder.newInstance()
                 .bus(SpiBus.BUS_0)
                 .channel(5)
                 .mode(0)
@@ -208,7 +205,7 @@ public class SPITest {
         try (var _ = FileDescriptorNativeMock.setup(bufsiz);
              var _ = IoctlNativeMock.setup(spiTestData)) {
 
-            var spi = pi4j.spi().create(SpiConfigBuilder.newInstance()
+            var spi = pi4j.create(SpiConfigBuilder.newInstance()
                 .bus(SpiBus.BUS_0)
                 .channel(6)
                 .mode(0)
@@ -258,7 +255,7 @@ public class SPITest {
         try (var _ = FileDescriptorNativeMock.setup(bufsiz);
              var _ = IoctlNativeMock.setup(spiTestData)) {
 
-            var spi = pi4j.spi().create(SpiConfigBuilder.newInstance()
+            var spi = pi4j.create(SpiConfigBuilder.newInstance()
                 .bus(SpiBus.BUS_0)
                 .channel(7)
                 .mode(0)

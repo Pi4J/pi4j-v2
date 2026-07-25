@@ -4,7 +4,6 @@ import com.pi4j.io.exception.IOException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmBase;
 import com.pi4j.io.pwm.PwmConfig;
-import com.pi4j.io.pwm.PwmProvider;
 
 
 /**
@@ -17,11 +16,10 @@ public class MockPwm extends PwmBase implements Pwm {
     /**
      * Creates a mock PWM instance for the given provider and configuration.
      *
-     * @param provider the {@link PwmProvider} that created this instance
      * @param config   the {@link PwmConfig} describing the PWM channel, frequency and duty cycle
      */
-    public MockPwm(PwmProvider provider, PwmConfig config){
-        super(provider, config);
+    public MockPwm(PwmConfig config){
+        super(config);
     }
 
     /**

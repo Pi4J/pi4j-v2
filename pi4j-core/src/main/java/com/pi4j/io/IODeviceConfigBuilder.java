@@ -1,7 +1,6 @@
 package com.pi4j.io;
 
 import com.pi4j.config.DeviceConfigBuilder;
-import com.pi4j.provider.Provider;
 
 /**
  * Builder contract for I/O configurations addressed by a bus/device pair.
@@ -23,12 +22,4 @@ public interface IODeviceConfigBuilder<BUILDER_TYPE, CONFIG_TYPE>
      * @return this builder for method chaining
      */
     BUILDER_TYPE provider(String provider);
-
-    /**
-     * Selects the I/O provider to use by its implementing class.
-     *
-     * @param providerClass the {@link Provider} implementation class to resolve
-     * @return this builder for method chaining
-     */
-    BUILDER_TYPE provider(Class<? extends Provider> providerClass);
 }

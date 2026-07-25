@@ -17,6 +17,7 @@ module com.pi4j {
     exports com.pi4j.config;
     exports com.pi4j.config.exception;
     exports com.pi4j.context;
+    exports com.pi4j.context.impl;
     exports com.pi4j.exception;
     exports com.pi4j.extension;
     exports com.pi4j.extension.exception;
@@ -28,8 +29,6 @@ module com.pi4j {
     exports com.pi4j.io.i2c;
     exports com.pi4j.io.pwm;
     exports com.pi4j.io.spi;
-    exports com.pi4j.provider;
-    exports com.pi4j.provider.exception;
     exports com.pi4j.registry;
     exports com.pi4j.util;
     exports com.pi4j.boardinfo.datareader;

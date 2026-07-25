@@ -4,7 +4,6 @@ import com.pi4j.boardinfo.util.BoardInfoHelper;
 import com.pi4j.config.Builder;
 import com.pi4j.context.impl.DefaultContext;
 import com.pi4j.exception.Pi4JException;
-import com.pi4j.provider.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,8 +11,7 @@ import java.util.*;
 
 /**
  * Fluent builder used to configure and create a Pi4J {@link Context}. It accumulates settings such as
- * the default platform, auto-detection behaviour for platforms and providers, the shutdown hook, manually
- * added {@link Provider}s and user properties, and finally produces either a {@link ContextConfig} (via
+ * the default platform, auto-detection behaviour for platforms and providers, the shutdown hook, user properties, and finally produces either a {@link ContextConfig} (via
  * {@link #toConfig()}) or a fully initialized {@link Context} (via {@link #build()}). Obtain an instance
  * with {@link #newInstance()}.
  *
@@ -31,9 +29,6 @@ public class ContextBuilder implements Builder<Context> {
     // default platform identifier
     protected String defaultPlatformId = null;
 
-    // extensibility modules
-    protected Collection<Provider> providers = Collections.synchronizedList(new ArrayList<>());
-
     // properties
     protected Map<String,String> properties = Collections.synchronizedMap(new HashMap<>());
 
@@ -49,18 +44,6 @@ public class ContextBuilder implements Builder<Context> {
 
     public static ContextBuilder newInstance(){
         return new ContextBuilder();
-    }
-
-    /**
-     * Adds one or more providers to be registered in the resulting context.
-     *
-     * @param provider the providers to add
-     * @return this builder instance for method chaining
-     */
-    public ContextBuilder add(Provider... provider) {
-        if(provider != null && provider.length > 0)
-            this.providers.addAll(List.of(provider));
-        return this;
     }
 
     /**
@@ -137,16 +120,9 @@ public class ContextBuilder implements Builder<Context> {
 
         // create a new context configuration object
         return new ContextConfig() {
-            private final Collection<Provider> providers = Collections.unmodifiableCollection(
-                new ArrayList<>(ContextBuilder.this.providers));
             private final boolean autoDetectMockPlugins = ContextBuilder.this.autoDetectMockPlugins;
             private final boolean enableShutdownHook = ContextBuilder.this.enableShutdownHook;
             private final boolean autoDetectProviders = ContextBuilder.this.autoDetectProviders;
-
-            @Override
-            public Collection<Provider> providers() {
-                return providers;
-            }
 
             @Override
             public boolean autoDetectMockPlugins() {

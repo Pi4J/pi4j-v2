@@ -8,8 +8,7 @@ import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.io.gpio.digital.PullResistance;
 import com.pi4j.plugin.BaseSetup;
-import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalInputProviderImpl;
-import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalOutputProviderImpl;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -31,15 +30,9 @@ public class GPIOTest extends BaseSetup {
     @BeforeAll
     public static void setup() throws IOException, InterruptedException {
         setup("gpio");
-        pi4j0 = Pi4J.newContextBuilder()
-            .add(new FFMDigitalInputProviderImpl(), new FFMDigitalOutputProviderImpl())
-            .build();
-        pi4j1 = Pi4J.newContextBuilder()
-            .add(new FFMDigitalInputProviderImpl())
-            .build();
-        pi4jNonExistent = Pi4J.newContextBuilder()
-            .add(new FFMDigitalInputProviderImpl())
-            .build();
+        pi4j0 = Pi4J.newAutoContext();
+        pi4j1 = Pi4J.newAutoContext();
+        pi4jNonExistent = Pi4J.newAutoContext();
     }
 
     @AfterAll
@@ -53,7 +46,7 @@ public class GPIOTest extends BaseSetup {
 
     @Test
     public void testInputUnavailable() {
-        assertThrows(Pi4JException.class, () -> pi4j1.digitalInput().create(
+        assertThrows(Pi4JException.class, () -> pi4j1.create(
             DigitalInputConfigBuilder.newInstance()
                 .bus(98)
                 .bcm(99)
@@ -63,7 +56,7 @@ public class GPIOTest extends BaseSetup {
 
     @Test
     public void testInputNonExistent() {
-        assertThrows(Pi4JException.class, () -> pi4jNonExistent.digitalInput().create(
+        assertThrows(Pi4JException.class, () -> pi4jNonExistent.create(
             DigitalInputConfigBuilder.newInstance()
                 .bus(99)
                 .bcm(0)
@@ -73,7 +66,7 @@ public class GPIOTest extends BaseSetup {
 
     @Test
     public void testInputCreate() {
-        var input = pi4j0.digitalInput().create(
+        var input = pi4j0.create(
             DigitalInputConfigBuilder.newInstance()
                 .bus(97)
                 .bcm(0)
@@ -84,7 +77,7 @@ public class GPIOTest extends BaseSetup {
 
     @Test
     public void testInputState() {
-        var input = pi4j0.digitalInput().create(
+        var input = pi4j0.create(
             DigitalInputConfigBuilder.newInstance()
                 .bus(97)
                 .bcm(1)
@@ -95,7 +88,7 @@ public class GPIOTest extends BaseSetup {
 
     @Test
     public void testInputIsOccupied() {
-        assertThrows(IllegalStateException.class, () -> pi4j0.digitalInput().create(
+        assertThrows(IllegalStateException.class, () -> pi4j0.create(
             DigitalInputConfigBuilder.newInstance()
                 .bus(97)
                 .bcm(2)
@@ -111,7 +104,7 @@ public class GPIOTest extends BaseSetup {
             .debounce(99L, TimeUnit.MICROSECONDS)
             .pull(PullResistance.PULL_DOWN)
             .build();
-        var input = pi4j0.digitalInput().create(config);
+        var input = pi4j0.create(config);
         assertEquals(99, input.config().debounce());
         assertEquals(3, input.bcm());
         assertEquals(PullResistance.PULL_DOWN, input.pull());
@@ -119,7 +112,7 @@ public class GPIOTest extends BaseSetup {
 
     @Test
     public void testOutputCreate() {
-        var output = pi4j0.digitalOutput().create(
+        var output = pi4j0.create(
             DigitalOutputConfigBuilder.newInstance()
                 .bus(97)
                 .bcm(4)
@@ -130,7 +123,7 @@ public class GPIOTest extends BaseSetup {
 
     @Test
     public void testOutputChangeState() {
-        var pin = pi4j0.digitalOutput().create(
+        var pin = pi4j0.create(
             DigitalOutputConfigBuilder.newInstance()
                 .bus(97)
                 .bcm(5)
@@ -149,7 +142,7 @@ public class GPIOTest extends BaseSetup {
             .bcm(6)
             .initial(DigitalState.HIGH)
             .build();
-        var output = pi4j0.digitalOutput().create(config);
+        var output = pi4j0.create(config);
         assertEquals(DigitalState.HIGH, output.config().initialState());
         assertEquals(6, output.bcm());
     }
@@ -166,7 +159,7 @@ public class GPIOTest extends BaseSetup {
             .bcm(7)
             .initial(DigitalState.HIGH)
             .build();
-        var output = pi4j0.digitalOutput().create(config);
+        var output = pi4j0.create(config);
         assertEquals(7, output.bcm());
         assertEquals(DigitalState.HIGH, output.config().initialState());
         assertEquals(DigitalState.HIGH, output.state());

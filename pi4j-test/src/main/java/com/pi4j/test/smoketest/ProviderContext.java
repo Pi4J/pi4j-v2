@@ -4,7 +4,7 @@ import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalInputProviderImpl;
 import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalOutputProviderImpl;
-import com.pi4j.plugin.ffm.providers.i2c.FFMI2CProviderImpl;
+import com.pi4j.plugin.ffm.providers.i2c.FFMI2CFactory;
 import com.pi4j.plugin.ffm.providers.pwm.FFMPwmProviderImpl;
 import com.pi4j.plugin.ffm.providers.spi.FFMSpiProviderImpl;
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ public class ProviderContext {
                 .newContextBuilder()
                 .add(new FFMDigitalOutputProviderImpl())
                 .add(new FFMDigitalInputProviderImpl())
-                .add(new FFMI2CProviderImpl())
+                .add(new FFMI2CFactory())
                 .add(new FFMSpiProviderImpl())
                 .add(new FFMPwmProviderImpl())
                 .build();

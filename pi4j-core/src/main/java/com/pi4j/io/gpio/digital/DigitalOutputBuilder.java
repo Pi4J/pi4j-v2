@@ -2,11 +2,9 @@ package com.pi4j.io.gpio.digital;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.impl.DefaultDigitalOutputBuilder;
-import com.pi4j.provider.Provider;
 
 /**
- * Fluent builder that collects the settings for a {@link DigitalOutput}, resolves the target
- * {@link DigitalOutputProvider}, and produces a fully initialized output instance via {@link #build()}.
+ * Fluent builder that collects the settings for a {@link DigitalOutput} and produces a fully initialized output instance via {@link #build()}.
  * Obtain an instance through {@link DigitalOutput#newBuilder(Context)}.
  */
 public interface DigitalOutputBuilder {
@@ -53,21 +51,6 @@ public interface DigitalOutputBuilder {
      * @return this builder for method chaining
      */
     DigitalOutputBuilder initial(DigitalState state);
-
-    /**
-     * Selects the provider that will create the output by its registered provider identifier.
-     *
-     * @param providerId the identifier of the {@link DigitalOutputProvider} to use
-     * @return this builder for method chaining
-     */
-    DigitalOutputBuilder provider(String providerId);
-    /**
-     * Selects the provider that will create the output by its implementation class.
-     *
-     * @param providerClass the {@link Provider} class to resolve and use
-     * @return this builder for method chaining
-     */
-    DigitalOutputBuilder provider(Class<? extends Provider> providerClass);
 
     /**
      * Creates a new digital output builder bound to the given Pi4J context.

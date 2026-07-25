@@ -10,7 +10,6 @@ import com.pi4j.event.InitializedEventProducer;
 import com.pi4j.event.ShutdownEventProducer;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.internal.IOCreator;
-import com.pi4j.internal.ProviderProvider;
 import com.pi4j.io.IO;
 import com.pi4j.io.IOConfig;
 import com.pi4j.io.IOType;
@@ -18,10 +17,6 @@ import com.pi4j.io.exception.IOException;
 import com.pi4j.io.exception.IOInvalidIDException;
 import com.pi4j.io.exception.IONotFoundException;
 import com.pi4j.io.exception.IOShutdownException;
-import com.pi4j.provider.Provider;
-import com.pi4j.provider.Providers;
-import com.pi4j.provider.exception.ProviderInterfaceException;
-import com.pi4j.provider.exception.ProviderNotFoundException;
 import com.pi4j.registry.Registry;
 import com.pi4j.util.StringUtil;
 
@@ -30,14 +25,14 @@ import java.util.concurrent.Future;
 /**
  * Central runtime state of a Pi4J application. The {@code Context} is created once (typically via
  * {@code Pi4J.newContext()} or a {@link ContextBuilder}) and owns the {@link Registry} of created I/O
- * instances, the set of available {@link Providers}, and the immutable {@link ContextConfig} that was
+ * instances and the immutable {@link ContextConfig} that was
  * used to build it. Callers use it to look up providers, create and access I/O instances, query board
  * information, and to shut everything down cleanly.
  *
  * @see ContextBuilder
  * @see ContextConfig
  */
-public interface Context extends Describable, IOCreator, ProviderProvider, InitializedEventProducer<Context>,
+public interface Context extends Describable, IOCreator, InitializedEventProducer<Context>,
     ShutdownEventProducer<Context> {
 
     /**
@@ -47,14 +42,6 @@ public interface Context extends Describable, IOCreator, ProviderProvider, Initi
      * @return the {@link ContextConfig} backing this context
      */
     ContextConfig config();
-
-    /**
-     * Returns the collection of providers available in this context, used to resolve a {@link Provider}
-     * for a given I/O type or provider id when creating I/O instances.
-     *
-     * @return the {@link Providers} repository for this context
-     */
-    Providers providers();
 
     /**
      * Returns the registry tracking every I/O instance that has been created and registered within this
@@ -98,115 +85,6 @@ public interface Context extends Describable, IOCreator, ProviderProvider, Initi
     boolean isShutdown();
 
     // ------------------------------------------------------------------------
-    // PROVIDER ACCESSOR METHODS
-    // ------------------------------------------------------------------------
-
-    /**
-     * Returns the provider registered under the given id.
-     *
-     * @param <T>        the expected {@link Provider} subtype
-     * @param providerId the unique id of the provider to look up
-     * @return the matching provider instance
-     * @throws ProviderNotFoundException if no provider is registered under the given id
-     */
-    default <T extends Provider> T provider(String providerId) throws ProviderNotFoundException {
-        return (T) providers().get(providerId);
-    }
-
-    /**
-     * Returns the provider registered under the given id, with the expected provider class supplied to
-     * drive the generic return type.
-     *
-     * @param <T>           the expected {@link Provider} subtype
-     * @param providerId    the unique id of the provider to look up
-     * @param providerClass the expected provider class
-     * @return the matching provider instance
-     * @throws ProviderNotFoundException if no provider is registered under the given id
-     */
-    default <T extends Provider> T provider(String providerId, Class<T> providerClass)
-        throws ProviderNotFoundException {
-        return (T) providers().get(providerId);
-    }
-
-
-    /**
-     * Indicates whether a provider is registered under the given id.
-     *
-     * @param providerId the provider id to test for
-     * @return {@code true} if a provider with this id exists, {@code false} otherwise
-     */
-    default boolean hasProvider(String providerId) {
-        try {
-            return providers().exists(providerId);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-
-    /**
-     * Indicates whether at least one provider is registered for the given I/O type.
-     *
-     * @param <T>    the {@link Provider} subtype
-     * @param ioType the {@link IOType} to test for
-     * @return {@code true} if a provider for this I/O type exists, {@code false} otherwise
-     */
-    default <T extends Provider> boolean hasProvider(IOType ioType) {
-        return providers().exists(ioType);
-    }
-
-    /**
-     * Indicates whether a provider assignable to the given provider class is registered.
-     *
-     * @param <T>           the {@link Provider} subtype
-     * @param providerClass the provider class to test for
-     * @return {@code true} if a matching provider exists, {@code false} otherwise
-     */
-    default <T extends Provider> boolean hasProvider(Class<T> providerClass) {
-        return providers().exists(providerClass);
-    }
-
-
-    /**
-     * Returns the default provider matching the given provider class.
-     *
-     * @param <T>           the expected {@link Provider} subtype
-     * @param providerClass the provider class to resolve
-     * @return the matching provider instance
-     * @throws ProviderNotFoundException  if no provider matching the class is registered
-     * @throws ProviderInterfaceException if the resolved provider does not implement the expected interface
-     */
-    default <T extends Provider> T provider(Class<T> providerClass)
-        throws ProviderNotFoundException, ProviderInterfaceException {
-
-        // return the default provider for this type (outside of default platform)
-        if (providers().exists(providerClass))
-            return providers().get(providerClass);
-
-        // provider not found
-        throw new ProviderNotFoundException(providerClass);
-    }
-
-
-    /**
-     * Returns the default provider for the given I/O type, used to create I/O instances when no explicit
-     * provider id is configured.
-     *
-     * @param <T>    the expected {@link Provider} subtype
-     * @param ioType the {@link IOType} to resolve a provider for
-     * @return the default provider for this I/O type
-     * @throws ProviderNotFoundException if no provider for this I/O type is registered
-     */
-    default <T extends Provider> T provider(IOType ioType) throws ProviderNotFoundException {
-        // return the default provider for this type (outside of default platform)
-        if (providers().exists(ioType))
-            return providers().get(ioType);
-
-        // provider not found
-        throw new ProviderNotFoundException(ioType);
-    }
-
-    // ------------------------------------------------------------------------
     // BOARD INFO ACCESSOR METHODS
     // ------------------------------------------------------------------------
 
@@ -222,27 +100,6 @@ public interface Context extends Describable, IOCreator, ProviderProvider, Initi
     // I/O INSTANCE ACCESSOR/CREATOR METHODS
     // ------------------------------------------------------------------------
 
-    @Override
-    default <I extends IO> I create(IOConfig config, IOType ioType) {
-        // create by explicitly configured IO <PROVIDER> from IO config
-        String providerId = config.provider();
-        if (StringUtil.isNotNullOrEmpty(providerId)) {
-            // resolve the provider and use it to create the IO instance
-            Provider provider = this.providers().get(providerId, ioType);
-            return (I) provider.create(config);
-        }
-
-        // get implicitly defined provider (defined by IO type)
-        // (this is the default or platform defined provider for this particular IO type)
-        if (ioType != null) {
-            // resolve the provider and use it to create the IO instance
-            Provider provider = this.provider(ioType);
-            return (I) provider.create(config);
-        }
-
-        // unable to resolve the IO type and thus unable to create I/O instance
-        throw new IOException("This IO instance [" + config.id() + "] could not be created because it does not define one of the following: 'PLATFORM', 'PROVIDER', or 'I/O TYPE'.");
-    }
 
     /**
      * shutdown and unregister a created IO.
@@ -347,7 +204,6 @@ public interface Context extends Describable, IOCreator, ProviderProvider, Initi
         Descriptor descriptor = Descriptor.create().category("CONTEXT").name("Runtime Context").type(this.getClass());
 
         descriptor.add(registry().describe());
-        descriptor.add(providers().describe());
         return descriptor;
     }
 

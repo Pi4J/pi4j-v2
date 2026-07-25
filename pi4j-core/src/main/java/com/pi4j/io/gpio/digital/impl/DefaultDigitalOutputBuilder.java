@@ -1,8 +1,8 @@
 package com.pi4j.io.gpio.digital.impl;
 
 import com.pi4j.context.Context;
+import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.digital.*;
-import com.pi4j.provider.Provider;
 import com.pi4j.util.StringUtil;
 
 
@@ -10,9 +10,6 @@ public class DefaultDigitalOutputBuilder implements DigitalOutputBuilder {
 
     private final Context context;
     private final DigitalOutputConfigBuilder builder;
-
-    private String providerId = null;
-    private Class<? extends Provider> providerClass = null;
 
     /**
      * Creates a new instance of {@link DefaultDigitalOutputBuilder} with the specified context.
@@ -69,17 +66,6 @@ public class DefaultDigitalOutputBuilder implements DigitalOutputBuilder {
         return this;
     }
 
-    @Override
-    public DigitalOutputBuilder provider(String providerId) {
-        this.providerId = providerId;
-        return this;
-    }
-
-    @Override
-    public DigitalOutputBuilder provider(Class<? extends Provider> providerClass) {
-        this.providerClass = providerClass;
-        return this;
-    }
 
     @Override
     public DigitalOutput build() {
@@ -87,14 +73,7 @@ public class DefaultDigitalOutputBuilder implements DigitalOutputBuilder {
         // create I/O instance config
         DigitalOutputConfig config = this.builder.build();
 
-        if (StringUtil.isNotNullOrEmpty(this.providerId)) {
-            return (DigitalOutput) context.provider(this.providerId).create(config);
-        }
-        if (this.providerClass != null) {
-            return (DigitalOutput) context.provider(this.providerClass).create(config);
-        }
-
         // use default digital output provider
-        return context.dout().create(config);
+        return context.create(config, IOType.DIGITAL_OUTPUT);
     }
 }

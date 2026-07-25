@@ -7,7 +7,6 @@ import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiBase;
 import com.pi4j.io.spi.SpiConfig;
-import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.plugin.ffm.common.FFMPermissionHelper;
 import com.pi4j.plugin.ffm.common.HexFormatter;
 import com.pi4j.plugin.ffm.common.file.FileDescriptorNative;
@@ -71,11 +70,10 @@ public class FFMSpi extends SpiBase implements Spi {
      * Creates an SPI instance, resolving the spidev device path ({@code /dev/spidevB.C}) from the bus
      * and channel in the configuration and verifying that it is accessible with the required permissions.
      *
-     * @param provider the {@link SpiProvider} that created this instance
      * @param config   the SPI configuration carrying the bus, channel, mode, baud rate and bit order
      */
-    public FFMSpi(SpiProvider provider, SpiConfig config) {
-        super(provider, config);
+    public FFMSpi(SpiConfig config) {
+        super(config);
         this.path = SPI_BUS + config.bus().getBus() + "." + config.channel();
         FFMPermissionHelper.checkDevicePermissions(path, config);
     }

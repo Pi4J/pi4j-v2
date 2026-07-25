@@ -6,13 +6,10 @@ import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfigBuilder;
 import com.pi4j.io.pwm.PwmType;
 import com.pi4j.plugin.BaseSetup;
-import com.pi4j.plugin.ffm.providers.pwm.FFMPwmProviderImpl;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.mockito.MockedStatic;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,10 +28,8 @@ public class PwmTest extends BaseSetup {
     public static void setup() throws InterruptedException, IOException {
         setup("pwm");
 
-        pi4j = Pi4J.newContextBuilder()
-            .add(new FFMPwmProviderImpl())
-            .build();
-        pwm = pi4j.pwm().create(PwmConfigBuilder.newInstance(pi4j)
+        pi4j = Pi4J.newAutoContext();
+        pwm = pi4j.create(PwmConfigBuilder.newInstance(pi4j)
             .pwmType(PwmType.HARDWARE)
             .chip(findMockPwmChip())
             .channel(0)

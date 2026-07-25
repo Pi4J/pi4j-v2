@@ -6,14 +6,11 @@ import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfigBuilder;
 import com.pi4j.io.pwm.PwmType;
 import com.pi4j.plugin.BaseSetup;
-import com.pi4j.plugin.ffm.providers.pwm.FFMPwmProviderImpl;
 import org.openjdk.jmh.annotations.*;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.fail;
 
 @Fork(value = 1)
 @State(Scope.Benchmark)
@@ -27,13 +24,13 @@ public class PWMPerformanceTest extends BaseSetup {
     @Setup
     public void setup() throws InterruptedException, IOException {
         setup("pwm");
-        this.pi4j = Pi4J.newContextBuilder().add(new FFMPwmProviderImpl()).build();
+        this.pi4j = Pi4J.newAutoContext();
         var config = PwmConfigBuilder.newInstance(pi4j)
             .pwmType(PwmType.HARDWARE)
             .chip(0)
             .channel(0)
             .build();
-        this.pwm = pi4j.pwm().create(config);
+        this.pwm = pi4j.create(config);
     }
 
     @TearDown
