@@ -30,7 +30,7 @@ public abstract class ConfigBuilderBase<
     /**
      * PRIVATE CONSTRUCTOR
      */
-    @Deprecated
+    @Deprecated(since="5.0")
     protected ConfigBuilderBase(Context context){
     }
 

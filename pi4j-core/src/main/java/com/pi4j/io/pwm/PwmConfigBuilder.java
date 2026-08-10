@@ -14,20 +14,24 @@ import com.pi4j.io.pwm.impl.DefaultPwmConfigBuilder;
 public interface PwmConfigBuilder extends
     IOConfigBuilder<PwmConfigBuilder, PwmConfig>,
     ConfigBuilder<PwmConfigBuilder, PwmConfig> {
+
     /**
      * Creates a new PWM configuration builder instance.
      *
      * @param context the Pi4J context the configuration will be bound to
      * @return a new, empty PWM configuration builder
+     * @deprecated Please use Pwm.newConfigBuilder() instead.
      */
-    @Deprecated
+    @Deprecated(since="5.0")
     static PwmConfigBuilder newInstance(Context context) {
         return DefaultPwmConfigBuilder.newInstance();
     }
 
     /**
-     * Creates a new PWM configuration builder instance.
+     * Internal method to create a new PWM configuration builder instance; please use Pwm.newConfigBuilder() instead.
+     *
      * @return a new, empty PWM configuration builder
+     * @deprecated Please use Pwm.newConfigBuilder() instead.
      */
     static PwmConfigBuilder newInstance() {
         return DefaultPwmConfigBuilder.newInstance();

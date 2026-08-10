@@ -30,9 +30,21 @@ public interface Pwm extends IO<Pwm, PwmConfig, PwmProvider>, OnOff<Pwm> {
      *
      * @param context the Pi4J context the configuration will be bound to
      * @return a new, empty PWM configuration builder
+     * @deprecated Please use newConfigBuilder() instead.
      */
+    @Deprecated(since="5.0")
     static PwmConfigBuilder newConfigBuilder(Context context) {
         return PwmConfigBuilder.newInstance(context);
+    }
+
+    /**
+     * Creates a new {@link PwmConfigBuilder} used to assemble a {@link PwmConfig}
+     * for a PWM instance.
+     *
+     * @return a new, empty PWM configuration builder
+     */
+    static PwmConfigBuilder newConfigBuilder() {
+        return PwmConfigBuilder.newInstance();
     }
 
     /**

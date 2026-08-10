@@ -20,13 +20,13 @@ public interface I2CConfigBuilder extends
      * @return a new {@link I2CConfigBuilder}
      * @deprecated As of version 5, please use {@link #newInstance()} instead.
      */
-    @Deprecated
+    @Deprecated(since="5.0")
     static I2CConfigBuilder newInstance(Context context)  {
         return DefaultI2CConfigBuilder.newInstance(context);
     }
 
     /**
-     * Creates a new builder instance.
+     * Internal method creating a new builder instance; please use I2C.newConfigBuilder() instead.
      *
      * @return a new {@link I2CConfigBuilder}
      */

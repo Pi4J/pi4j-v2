@@ -8,7 +8,10 @@ import com.pi4j.provider.Provider;
  * Fluent builder that collects the settings for a {@link DigitalOutput}, resolves the target
  * {@link DigitalOutputProvider}, and produces a fully initialized output instance via {@link #build()}.
  * Obtain an instance through {@link DigitalOutput#newBuilder(Context)}.
+ *
+ * @deprecated Please use context.create(DigitalInput.newConfigBuilder()....) like for other IO types.
  */
+@Deprecated(since="5.0")
 public interface DigitalOutputBuilder {
 
     /**

@@ -17,7 +17,7 @@ public class DefaultPwmConfigBuilder
     /**
      * @param context
      */
-    @Deprecated
+    @Deprecated(since="5.0")
     public static PwmConfigBuilder newInstance(Context context) {
         return newInstance();
     }

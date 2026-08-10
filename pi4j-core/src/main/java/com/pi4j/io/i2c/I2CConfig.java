@@ -36,18 +36,10 @@ public interface I2CConfig extends IOConfig, BusConfig, DeviceConfig {
      *
      * @param context the Pi4J runtime context (unused by the current implementation)
      * @return a new {@link I2CConfigBuilder} instance
-     * @deprecated As of version 5, please use {@link #newBuilder()} instead.
+     * @deprecated Please use I2C.newConfigBuilder() instead.
      */
+   @Deprecated(since="5.0")
     static I2CConfigBuilder newBuilder(Context context) {
-        return I2CConfigBuilder.newInstance(context);
-    }
-
-    /**
-     * Creates a new configuration builder.
-     *
-     * @return a new {@link I2CConfigBuilder} instance
-     */
-    static I2CConfigBuilder newBuilder() {
         return I2CConfigBuilder.newInstance();
     }
 

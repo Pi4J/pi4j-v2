@@ -16,15 +16,15 @@ public interface SpiConfigBuilder extends
      *
      * @param context the Pi4J runtime context
      * @return a new builder instance
-     * @deprecated use {@link #newInstance()} instead.
+     * @deprecated use Spi.newConfigBuilder() instead.
      */
-    @Deprecated
+    @Deprecated(since="5.0")
     static SpiConfigBuilder newInstance(Context context) {
         return DefaultSpiConfigBuilder.newInstance(context);
     }
 
     /**
-     * Creates a new {@code SpiConfigBuilder} instance.
+     * Internal method to create a new {@code SpiConfigBuilder} instance; please use Spi.newConfigBuilder() instead.
      *
      * @return a new builder instance
      */

@@ -17,7 +17,7 @@ public class DefaultI2CConfigBuilder
     /**
      * @param context
      */
-    @Deprecated
+    @Deprecated(since="5.0")
     public static I2CConfigBuilder newInstance(Context context) {
         return newInstance();
     }

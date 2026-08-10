@@ -35,19 +35,10 @@ public interface SpiConfig extends ChannelConfig, IOConfig {
      *
      * @param context the Pi4J runtime context
      * @return a new SPI configuration builder instance
-     * @deprecated As of version 5, please use {@link #newBuilder()} instead.
+     * @deprecated As of version 5, please use Spi.newConfigBuilder() instead.
      */
     @Deprecated
     static SpiConfigBuilder newBuilder(Context context) {
-        return SpiConfigBuilder.newInstance(context);
-    }
-
-    /**
-     * Creates a new {@link SpiConfigBuilder}.
-     *
-     * @return a new SPI configuration builder instance
-     */
-    static SpiConfigBuilder newBuilder() {
         return SpiConfigBuilder.newInstance();
     }
 

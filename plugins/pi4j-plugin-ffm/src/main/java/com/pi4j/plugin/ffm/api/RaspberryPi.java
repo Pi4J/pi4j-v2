@@ -4,17 +4,13 @@ import com.pi4j.Pi4J;
 import com.pi4j.boardinfo.model.HeaderPin;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.io.gpio.digital.DigitalInputConfig;
 import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.i2c.I2C;
-import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CImplementation;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfigBuilder;
 import com.pi4j.io.pwm.PwmPolarity;
 import com.pi4j.io.spi.Spi;
-import com.pi4j.io.spi.SpiConfig;
 import com.pi4j.io.spi.SpiMode;
 import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalInputProviderImpl;
 import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalOutputProviderImpl;
@@ -63,7 +59,7 @@ public interface RaspberryPi extends Pi4JApi.API {
          * @return a new {@link I2C} handle bound to bus 1 and the given address
          */
         public I2C i2c1(int device, I2CImplementation implementation) {
-            var config = I2CConfig.newBuilder()
+            var config = I2C.newConfigBuilder()
                 .bus(1)
                 .device(device)
                 .i2cImplementation(implementation)
@@ -90,7 +86,7 @@ public interface RaspberryPi extends Pi4JApi.API {
          * @return a new {@link Spi} handle bound to bus 0
          */
         public Spi spi0(int baudRate, SpiMode mode) {
-            var config = SpiConfig.newBuilder()
+            var config = Spi.newConfigBuilder()
                 .bus(0)
                 .baud(baudRate)
                 .mode(mode)
@@ -137,7 +133,7 @@ public interface RaspberryPi extends Pi4JApi.API {
          * @return a new {@link Spi} handle bound to bus 1
          */
         public Spi spi1() {
-            var config = SpiConfig.newBuilder()
+            var config = Spi.newConfigBuilder()
                 .bus(1)
                 .baud(40_000)
                 .mode(SpiMode.MODE_1)
@@ -214,7 +210,7 @@ public interface RaspberryPi extends Pi4JApi.API {
          * @return a new {@link DigitalInput} bound to the given line
          */
         public DigitalInput input(int pin) {
-            var config = DigitalInputConfig.newBuilder()
+            var config = DigitalInput.newConfigBuilder()
                 .bcm(pin)
                 .build();
             return context.create(config);
@@ -238,7 +234,7 @@ public interface RaspberryPi extends Pi4JApi.API {
          * @return a new {@link DigitalOutput} bound to the given line
          */
         public DigitalOutput output(int pin) {
-            var config = DigitalOutputConfig.newBuilder()
+            var config = DigitalOutput.newConfigBuilder()
                 .bcm(pin)
                 .build();
             return context.create(config);

@@ -51,8 +51,19 @@ public interface Spi extends IO<Spi, SpiConfig, SpiProvider>, AutoCloseable, IOD
      *
      * @param context the Pi4J runtime context (retained for API symmetry; not required to build the configuration)
      * @return a new SPI configuration builder instance
+     * @deprecated use newConfigBuilder() instead.
      */
+    @Deprecated(since="5.0")
     static SpiConfigBuilder newConfigBuilder(Context context) {
+        return SpiConfigBuilder.newInstance();
+    }
+
+    /**
+     * Creates a new {@link SpiConfigBuilder} for assembling an {@link SpiConfig}.
+     *
+     * @return a new SPI configuration builder instance
+     */
+    static SpiConfigBuilder newConfigBuilder() {
         return SpiConfigBuilder.newInstance();
     }
 

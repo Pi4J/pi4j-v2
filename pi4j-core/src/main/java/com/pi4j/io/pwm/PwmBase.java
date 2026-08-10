@@ -131,6 +131,6 @@ public abstract class PwmBase extends IOBase<Pwm, PwmConfig, PwmProvider> implem
                 throw new ShutdownException(e);
             }
         }
-        return this;
+        return super.shutdownInternal(context);
     }
 }

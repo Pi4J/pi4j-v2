@@ -19,7 +19,7 @@ public class DefaultDigitalOutputConfigBuilder
     /**
      * @param context
      */
-    @Deprecated
+    @Deprecated(since="5.0")
     public static DigitalOutputConfigBuilder newInstance(Context context) {
         return newInstance();
     }
