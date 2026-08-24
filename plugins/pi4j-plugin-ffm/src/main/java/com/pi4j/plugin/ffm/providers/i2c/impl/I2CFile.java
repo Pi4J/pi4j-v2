@@ -79,14 +79,16 @@ public class I2CFile extends I2CBase<FFMI2CBus> {
 
     @Override
     public int readRegister(int register) {
+        write(register) ;
         var buffer = new byte[1];
         var read = i2CBus.execute(this, (i2cFileDescriptor) -> FILE.read(i2cFileDescriptor, buffer, buffer.length));
         ByteBuffer.wrap(buffer).put(read);
-        return read.length;
+        return read[0];
     }
 
     @Override
     public int readRegister(byte[] register, byte[] buffer, int offset, int length) {
+        write(register,0, 1) ;
         var read = i2CBus.execute(this, (i2cFileDescriptor) -> FILE.read(i2cFileDescriptor, buffer, buffer.length));
         ByteBuffer.wrap(buffer).put(read);
         return read.length;
@@ -94,6 +96,7 @@ public class I2CFile extends I2CBase<FFMI2CBus> {
 
     @Override
     public int readRegister(int register, byte[] buffer, int offset, int length) {
+        write(register) ;
         var read = i2CBus.execute(this, (i2cFileDescriptor) -> FILE.read(i2cFileDescriptor, buffer, buffer.length));
         ByteBuffer.wrap(buffer).put(read);
         return read.length;
