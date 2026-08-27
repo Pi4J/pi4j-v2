@@ -28,7 +28,7 @@ public class DigitalInputTestCase extends TestCase {
             }
 
             // Initialize input
-            gpioInTest = createDigitalInput(providerContext.getContext(), 16, PullResistance.PULL_DOWN, 0);
+            gpioInTest = createDigitalInput(providerContext.getContext(), 42, PullResistance.PULL_DOWN, 0);
             Thread.sleep(100);
             if (gpioInTest.state() != DigitalState.LOW) {
                 return new TestResult(TEST_NAME, false, "Input has not the correct initial state");
